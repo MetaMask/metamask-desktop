@@ -66,6 +66,7 @@ function defineAndRunBuildTasks() {
     shouldLintFenceFiles,
     skipStats,
     version,
+    buildPlatform,
   } = parseArgv();
 
   const browserPlatforms = ['firefox', 'chrome', 'brave', 'opera'];
@@ -99,6 +100,7 @@ function defineAndRunBuildTasks() {
     policyOnly,
     shouldLintFenceFiles,
     version,
+    buildPlatform,
   });
 
   const { clean, reload, zip } = createEtcTasks({
@@ -179,6 +181,7 @@ function parseArgv() {
     Lockdown: 'lockdown',
     PolicyOnly: 'policy-only',
     SkipStats: 'skip-stats',
+    BuildPlatform: 'build-platform',
   };
 
   const argv = minimist(process.argv.slice(2), {
@@ -189,7 +192,11 @@ function parseArgv() {
       NamedArgs.PolicyOnly,
       NamedArgs.SkipStats,
     ],
-    string: [NamedArgs.BuildType, NamedArgs.BuildVersion],
+    string: [
+      NamedArgs.BuildType,
+      NamedArgs.BuildVersion,
+      NamedArgs.BuildPlatform,
+    ],
     default: {
       [NamedArgs.ApplyLavaMoat]: true,
       [NamedArgs.BuildType]: BuildType.main,
@@ -198,6 +205,7 @@ function parseArgv() {
       [NamedArgs.Lockdown]: true,
       [NamedArgs.PolicyOnly]: false,
       [NamedArgs.SkipStats]: false,
+      [NamedArgs.BuildPlatform]: 'extension',
     },
   });
 
@@ -236,6 +244,9 @@ function parseArgv() {
 
   const version = getVersion(buildType, buildVersion);
 
+  const buildPlatform = argv[NamedArgs.BuildPlatform];
+  // @todo Validate
+
   return {
     // Should we apply LavaMoat to the build output?
     applyLavaMoat: argv[NamedArgs.ApplyLavaMoat],
@@ -248,6 +259,7 @@ function parseArgv() {
     shouldLintFenceFiles,
     skipStats: argv[NamedArgs.SkipStats],
     version,
+    buildPlatform,
   };
 }
 

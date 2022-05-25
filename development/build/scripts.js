@@ -149,6 +149,7 @@ function createScriptTasks({
   shouldLintFenceFiles,
   policyOnly,
   version,
+  buildPlatform,
 }) {
   // internal tasks
   const core = {
@@ -177,6 +178,25 @@ function createScriptTasks({
   return { dev, test, testDev, prod };
 
   function createTasksForBuildJsExtension({ taskPrefix, devMode, testing }) {
+    if (buildPlatform === 'desktop') {
+      return createTask(
+        `${taskPrefix}:desktop`,
+        createFactoredBuild({
+          applyLavaMoat,
+          browserPlatforms: ['desktop'],
+          buildType,
+          devMode,
+          entryFiles: [`./app/scripts/desktop.js`],
+          ignoredFiles,
+          policyOnly,
+          shouldLintFenceFiles,
+          testing,
+          version,
+          buildPlatform,
+        }),
+      );
+    }
+
     const standardEntryPoints = ['background', 'ui', 'content-script'];
     const standardSubtask = createTask(
       `${taskPrefix}:standardEntryPoints`,
@@ -356,6 +376,7 @@ function createFactoredBuild({
   shouldLintFenceFiles,
   testing,
   version,
+  buildPlatform,
 }) {
   return async function () {
     // create bundler setup and apply defaults
@@ -416,19 +437,21 @@ function createFactoredBuild({
     events.on('configurePipeline', ({ pipeline }) => {
       // to be populated by the group-by-size transform
       sizeGroupMap = new Map();
-      pipeline.get('groups').unshift(
-        // factor modules
-        bifyModuleGroups.groupByFactor({
-          entryFileToLabel(filepath) {
-            return path.parse(filepath).name;
-          },
-        }),
-        // cap files at 2 mb
-        bifyModuleGroups.groupBySize({
-          sizeLimit: 2e6,
-          groupingMap: sizeGroupMap,
-        }),
-      );
+      if (buildPlatform !== 'desktop') {
+        pipeline.get('groups').unshift(
+          // factor modules
+          bifyModuleGroups.groupByFactor({
+            entryFileToLabel(filepath) {
+              return path.parse(filepath).name;
+            },
+          }),
+          // cap files at 2 mb
+          bifyModuleGroups.groupBySize({
+            sizeLimit: 2e6,
+            groupingMap: sizeGroupMap,
+          }),
+        );
+      }
       // converts each module group into a single vinyl file containing its bundle
       const moduleGroupPackerStream = streamFlatMap((moduleGroup) => {
         const filename = `${moduleGroup.label}.js`;
@@ -515,6 +538,9 @@ function createFactoredBuild({
             });
             break;
           }
+          case 'desktop':
+            // No HTML please
+            break;
           default: {
             throw new Error(
               `build/scripts - unknown groupLabel "${groupLabel}"`,
