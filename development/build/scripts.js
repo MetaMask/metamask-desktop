@@ -48,6 +48,7 @@ const metamaskrc = require('rc')('metamask', {
 const { streamFlatMap } = require('../stream-flat-map.js');
 const { BuildType } = require('../lib/build-type');
 
+const lavaMoatPolicyStream = require('../lavamoat-policy-stream.js');
 const {
   createTask,
   composeParallel,
@@ -464,13 +465,17 @@ function createFactoredBuild({
         return childStream;
       });
       pipeline.get('vinyl').unshift(moduleGroupPackerStream, buffer());
-      // add lavamoat policy loader file to packer output
-      moduleGroupPackerStream.push(
-        new Vinyl({
-          path: 'policy-load.js',
-          contents: lavapack.makePolicyLoaderStream(lavamoatOpts),
-        }),
-      );
+      if (buildPlatform === 'desktop') {
+        pipeline.get('vinyl').push(lavaMoatPolicyStream(lavamoatOpts));
+      } else {
+        // add lavamoat policy loader file to packer output
+        moduleGroupPackerStream.push(
+          new Vinyl({
+            path: 'policy-load.js',
+            contents: lavapack.makePolicyLoaderStream(lavamoatOpts),
+          }),
+        );
+      }
       // setup bundle destination
       browserPlatforms.forEach((platform) => {
         const dest = `./dist/${platform}/`;
