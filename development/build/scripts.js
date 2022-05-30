@@ -416,7 +416,7 @@ function createFactoredBuild({
     const lavamoatOpts = {
       policy: path.resolve(
         __dirname,
-        `../../lavamoat/browserify/${buildType}/policy.json`,
+        `../../lavamoat/browserify/${buildPlatform}/${buildType}/policy.json`,
       ),
       policyName: buildType,
       policyOverride: path.resolve(

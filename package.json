@@ -70,6 +70,7 @@
     "lavamoat:build:auto": "yarn lavamoat:build --writeAutoPolicy",
     "lavamoat:debug:build": "yarn lavamoat:build --writeAutoPolicyDebug --policydebug lavamoat/build-system/policy-debug.json",
     "lavamoat:background:auto": "./development/generate-lavamoat-policies.sh",
+    "lavamoat:desktop:auto": "./development/generate-lavamoat-policies-desktop.sh",
     "lavamoat:auto": "yarn lavamoat:build:auto && yarn lavamoat:background:auto"
   },
   "resolutions": {

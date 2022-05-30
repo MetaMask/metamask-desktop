@@ -27,7 +27,7 @@ function loadFile(path) {
 // Stream that prepends the LavaMoat policy and other LavaMoat deps to the output file
 function lavamoatDesktopStream(lavamoatOpts) {
   const stream = through2(write);
-  const policy = loadPolicy(lavamoatOpts);
+  const policy = loadPolicy({ policyPath: lavamoatOpts.policy });
   const policyLoaderContent = `LavaPack.loadPolicy(${JSON.stringify(
     policy,
     null,
