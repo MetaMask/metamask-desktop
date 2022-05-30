@@ -1,7 +1,7 @@
 const fs = require('fs');
 const through2 = require('through2').obj;
 
-module.exports = lavaMoatPolicyStream;
+module.exports = lavamoatDesktopStream;
 
 // Copied from makePolicyLoaderStream
 function loadPolicy({ debugMode, policyPath }) {
@@ -19,8 +19,13 @@ function loadPolicy({ debugMode, policyPath }) {
   return policy;
 }
 
-// Stream that prepends the LavaMoat policy to the output file
-function lavaMoatPolicyStream(lavamoatOpts) {
+function loadFile(path) {
+  const file = fs.readFileSync(path, 'utf8');
+  return Buffer.from(file, 'utf-8');
+}
+
+// Stream that prepends the LavaMoat policy and other LavaMoat deps to the output file
+function lavamoatDesktopStream(lavamoatOpts) {
   const stream = through2(write);
   const policy = loadPolicy(lavamoatOpts);
   const policyLoaderContent = `LavaPack.loadPolicy(${JSON.stringify(
@@ -28,12 +33,15 @@ function lavaMoatPolicyStream(lavamoatOpts) {
     null,
     2,
   )});`;
+  // @todo sentry-install.js
+  const lavaMoatRuntime = loadFile(require.resolve('@lavamoat/lavapack/src/runtime.js'));
+  const lockdownMore = loadFile(`./app/scripts/lockdown-more.js`);
   const policyBuffer = Buffer.from(policyLoaderContent, 'utf-8');
 
   return stream;
 
   function write(file, _, next) {
-    file.contents = Buffer.concat([policyBuffer, file.contents]);
+    file.contents = Buffer.concat([lavaMoatRuntime, lockdownMore, policyBuffer, file.contents]);
     next(null, file);
   }
 }

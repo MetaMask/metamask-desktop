@@ -48,7 +48,6 @@ const metamaskrc = require('rc')('metamask', {
 const { streamFlatMap } = require('../stream-flat-map.js');
 const { BuildType } = require('../lib/build-type');
 
-const lavaMoatPolicyStream = require('../lavamoat-policy-stream.js');
 const {
   createTask,
   composeParallel,
@@ -58,6 +57,7 @@ const {
 const {
   createRemoveFencedCodeTransform,
 } = require('./transforms/remove-fenced-code');
+const lavamoatDesktopStream = require('../lavamoat-desktop-stream.js');
 
 /**
  * The build environment. This describes the environment this build was produced in.
@@ -466,7 +466,7 @@ function createFactoredBuild({
       });
       pipeline.get('vinyl').unshift(moduleGroupPackerStream, buffer());
       if (buildPlatform === 'desktop') {
-        pipeline.get('vinyl').push(lavaMoatPolicyStream(lavamoatOpts));
+        pipeline.get('vinyl').push(lavamoatDesktopStream(lavamoatOpts));
       } else {
         // add lavamoat policy loader file to packer output
         moduleGroupPackerStream.push(
