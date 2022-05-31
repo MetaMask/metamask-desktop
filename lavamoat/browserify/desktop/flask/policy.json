@@ -2,10 +2,21 @@
   "resources": {
     "3box": {
       "globals": {
+        "Buffer.from": true,
         "console.error": true,
         "console.log": true,
         "console.warn": true,
         "fetch": true,
+        "process.env.ADDRESS_SERVER_URL": true,
+        "process.env.GRAPHQL_SERVER_URL": true,
+        "process.env.IFRAME_STORE_URL": true,
+        "process.env.IFRAME_STORE_VERSION": true,
+        "process.env.MUPORT_IPFS_HOST": true,
+        "process.env.MUPORT_IPFS_PORT": true,
+        "process.env.MUPORT_IPFS_PROTOCOL": true,
+        "process.env.PINNING_NODE": true,
+        "process.env.PINNING_ROOM": true,
+        "process.env.PROFILE_SERVER_URL": true,
         "setTimeout": true
       },
       "packages": {
@@ -32,8 +43,6 @@
         "3box>tweetnacl": true,
         "3box>tweetnacl-util": true,
         "@babel/runtime": true,
-        "browserify>buffer": true,
-        "browserify>process": true,
         "node-fetch": true
       }
     },
@@ -49,12 +58,12 @@
         "3box>ipfs>is-ipfs": true,
         "3box>orbit-db>orbit-db-access-controllers": true,
         "3box>orbit-db>orbit-db-io": true,
-        "browserify>events": true,
         "ethereumjs-wallet>safe-buffer": true
       }
     },
     "3box>3box-orbitdb-plugins>ipfs-log": {
       "globals": {
+        "Buffer.from": true,
         "clearTimeout": true,
         "console.warn": true,
         "setTimeout": true
@@ -64,7 +73,6 @@
         "3box>3box-orbitdb-plugins>ipfs-log>p-map": true,
         "3box>3box-orbitdb-plugins>ipfs-log>p-whilst": true,
         "3box>orbit-db>orbit-db-io": true,
-        "browserify>buffer": true,
         "jest>@jest/core>p-each-series": true
       }
     },
@@ -86,16 +94,20 @@
         "3box>tweetnacl": true,
         "3box>tweetnacl-util": true,
         "@babel/runtime": true,
-        "browserify>buffer": true,
         "ethers>@ethersproject/keccak256>js-sha3": true
       }
     },
     "3box>3id-resolver>did-jwt>base64url": {
-      "packages": {
-        "browserify>buffer": true
+      "globals": {
+        "Buffer.alloc": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true
       }
     },
     "3box>did-jwt": {
+      "globals": {
+        "Buffer.from": true
+      },
       "packages": {
         "3box>did-jwt>@stablelib/utf8": true,
         "3box>did-jwt>did-resolver": true,
@@ -103,36 +115,40 @@
         "3box>did-jwt>uport-base64url": true,
         "3box>ethers>elliptic": true,
         "3box>js-sha256": true,
-        "3box>tweetnacl": true,
-        "browserify>buffer": true
+        "3box>tweetnacl": true
       }
     },
     "3box>did-jwt>js-sha3": {
       "globals": {
-        "define": true
-      },
-      "packages": {
-        "browserify>process": true
-      }
-    },
-    "3box>did-jwt>uport-base64url": {
-      "packages": {
-        "browserify>buffer": true
+        "define": true,
+        "process": true
       }
     },
     "3box>ethers": {
       "globals": {
-        "MessageChannel": true,
-        "XMLHttpRequest": true,
-        "atob": true,
-        "btoa": true,
+        "Buffer.alloc": true,
+        "Buffer.concat": true,
+        "Buffer.from": true,
         "clearInterval": true,
         "clearTimeout": true,
         "console": true,
-        "crypto.getRandomValues": true,
-        "define": true,
         "setInterval": true,
         "setTimeout": true
+      },
+      "packages": {
+        "3box>ethers>aes-js": true,
+        "3box>ethers>elliptic": true,
+        "3box>ethers>hash.js": true,
+        "3box>ethers>js-sha3": true,
+        "3box>ethers>scrypt-js": true,
+        "3box>ethers>uuid": true,
+        "bn.js": true,
+        "web3>xmlhttprequest": true
+      }
+    },
+    "3box>ethers>aes-js": {
+      "globals": {
+        "define": true
       }
     },
     "3box>ethers>elliptic": {
@@ -150,9 +166,6 @@
       "globals": {
         "crypto": true,
         "msCrypto": true
-      },
-      "packages": {
-        "browserify>browser-resolve": true
       }
     },
     "3box>ethers>elliptic>hmac-drbg": {
@@ -160,6 +173,24 @@
         "3box>ethers>elliptic>minimalistic-crypto-utils": true,
         "3box>ethers>hash.js>minimalistic-assert": true,
         "ethers>@ethersproject/sha2>hash.js": true
+      }
+    },
+    "3box>ethers>hash.js": {
+      "packages": {
+        "3box>ethers>hash.js>minimalistic-assert": true,
+        "pumpify>inherits": true
+      }
+    },
+    "3box>ethers>js-sha3": {
+      "globals": {
+        "process": true
+      }
+    },
+    "3box>ethers>scrypt-js": {
+      "globals": {
+        "define": true,
+        "setImmediate": true,
+        "setTimeout": true
       }
     },
     "3box>events": {
@@ -177,11 +208,13 @@
     },
     "3box>graphql-request>cross-fetch": {
       "globals": {
-        "Blob": true,
-        "FileReader": true,
-        "FormData": true,
-        "URLSearchParams.prototype.isPrototypeOf": true,
-        "XMLHttpRequest": true
+        "Headers": "write",
+        "Request": "write",
+        "Response": "write",
+        "fetch": "write"
+      },
+      "packages": {
+        "node-fetch": true
       }
     },
     "3box>graphql-request>cross-fetch>node-fetch": {
@@ -195,16 +228,17 @@
       },
       "packages": {
         "3box>did-jwt>did-resolver": true,
-        "browserify>browser-resolve": true
+        "web3>xmlhttprequest": true
       }
     },
     "3box>ipfs": {
       "globals": {
-        "AbortController": true,
+        "Buffer": true,
+        "__dirname": true,
         "clearInterval": true,
         "clearTimeout": true,
         "console.log": true,
-        "fetch": true,
+        "setImmediate": true,
         "setInterval": true,
         "setTimeout": true
       },
@@ -236,9 +270,11 @@
         "3box>ipfs>ipfs-unixfs-importer": true,
         "3box>ipfs>ipfs-utils": true,
         "3box>ipfs>ipld": true,
-        "3box>ipfs>ipld-dag-cbor": true,
+        "3box>ipfs>ipld-bitcoin": true,
         "3box>ipfs>ipld-dag-pb": true,
-        "3box>ipfs>ipld-raw": true,
+        "3box>ipfs>ipld-ethereum": true,
+        "3box>ipfs>ipld-git": true,
+        "3box>ipfs>ipld-zcash": true,
         "3box>ipfs>ipns": true,
         "3box>ipfs>is-ipfs": true,
         "3box>ipfs>is-pull-stream": true,
@@ -250,9 +286,10 @@
         "3box>ipfs>libp2p-crypto": true,
         "3box>ipfs>libp2p-kad-dht": true,
         "3box>ipfs>libp2p-keychain": true,
+        "3box>ipfs>libp2p-mdns": true,
         "3box>ipfs>libp2p-record": true,
         "3box>ipfs>libp2p-secio": true,
-        "3box>ipfs>libp2p-webrtc-star": true,
+        "3box>ipfs>libp2p-tcp": true,
         "3box>ipfs>libp2p-websocket-star-multi": true,
         "3box>ipfs>libp2p-websockets": true,
         "3box>ipfs>mafmt": true,
@@ -270,6 +307,7 @@
         "3box>ipfs>protons": true,
         "3box>ipfs>pull-cat": true,
         "3box>ipfs>pull-defer": true,
+        "3box>ipfs>pull-file": true,
         "3box>ipfs>pull-mplex": true,
         "3box>ipfs>pull-pushable": true,
         "3box>ipfs>pull-sort": true,
@@ -283,23 +321,20 @@
         "3box>ipfs>superstruct": true,
         "3box>ipfs>varint": true,
         "@metamask/providers>is-stream": true,
-        "browserify>browser-resolve": true,
-        "browserify>buffer": true,
-        "browserify>events": true,
-        "browserify>insert-module-globals>is-buffer": true,
-        "browserify>timers-browserify": true,
-        "eslint>debug": true
+        "eslint>debug": true,
+        "lodash": true,
+        "node-fetch": true,
+        "nyc>glob": true
       }
     },
     "3box>ipfs-mini": {
-      "globals": {
-        "XMLHttpRequest": true
+      "packages": {
+        "web3>xmlhttprequest": true
       }
     },
     "3box>ipfs-postmsg-proxy>shortid": {
       "globals": {
-        "crypto": true,
-        "msCrypto": true
+        "process.env.NODE_UNIQUE_ID": true
       },
       "packages": {
         "nanoid": true
@@ -308,11 +343,11 @@
     "3box>ipfs>async": {
       "globals": {
         "clearTimeout": true,
+        "process": true,
+        "setImmediate": true,
         "setTimeout": true
       },
       "packages": {
-        "browserify>process": true,
-        "browserify>timers-browserify": true,
         "lodash": true
       }
     },
@@ -323,20 +358,29 @@
       }
     },
     "3box>ipfs>async-iterator-to-stream": {
+      "globals": {
+        "process.nextTick": true
+      },
       "packages": {
-        "3box>ipfs>async-iterator-to-stream>readable-stream": true,
-        "browserify>process": true
+        "3box>ipfs>async-iterator-to-stream>readable-stream": true
       }
     },
     "3box>ipfs>async-iterator-to-stream>readable-stream": {
+      "globals": {
+        "process.env.READABLE_STREAM": true,
+        "process.nextTick": true,
+        "process.stderr": true,
+        "process.stdout": true
+      },
       "packages": {
         "@storybook/api>util-deprecate": true,
-        "browserify>browser-resolve": true,
-        "browserify>buffer": true,
-        "browserify>events": true,
-        "browserify>process": true,
         "browserify>string_decoder": true,
         "pumpify>inherits": true
+      }
+    },
+    "3box>ipfs>base32.js": {
+      "globals": {
+        "Buffer": true
       }
     },
     "3box>ipfs>bignumber.js": {
@@ -346,19 +390,26 @@
       }
     },
     "3box>ipfs>bl": {
+      "globals": {
+        "Buffer.alloc": true,
+        "Buffer.allocUnsafe": true,
+        "Buffer.concat": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true
+      },
       "packages": {
-        "3box>ipfs>bl>readable-stream": true,
-        "browserify>buffer": true,
-        "browserify>util": true
+        "3box>ipfs>bl>readable-stream": true
       }
     },
     "3box>ipfs>bl>readable-stream": {
+      "globals": {
+        "process.env.READABLE_STREAM": true,
+        "process.nextTick": true,
+        "process.stderr": true,
+        "process.stdout": true
+      },
       "packages": {
         "@storybook/api>util-deprecate": true,
-        "browserify>browser-resolve": true,
-        "browserify>buffer": true,
-        "browserify>events": true,
-        "browserify>process": true,
         "browserify>string_decoder": true,
         "pumpify>inherits": true
       }
@@ -374,44 +425,44 @@
       }
     },
     "3box>ipfs>cids": {
+      "globals": {
+        "Buffer.concat": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true
+      },
       "packages": {
         "3box>ipfs>class-is": true,
         "3box>ipfs>multibase": true,
         "3box>ipfs>multicodec": true,
-        "3box>ipfs>multihashes": true,
-        "browserify>buffer": true,
-        "browserify>insert-module-globals>is-buffer": true
+        "3box>ipfs>multihashes": true
       }
     },
     "3box>ipfs>datastore-core": {
+      "globals": {
+        "Buffer.from": true
+      },
       "packages": {
         "3box>ipfs>async": true,
         "3box>ipfs>datastore-core>pull-many": true,
         "3box>ipfs>interface-datastore": true,
-        "3box>ipfs>pull-stream": true,
-        "browserify>buffer": true
+        "3box>ipfs>pull-stream": true
       }
     },
     "3box>ipfs>datastore-pubsub": {
+      "globals": {
+        "Buffer.from": true,
+        "Buffer.isBuffer": true
+      },
       "packages": {
         "3box>ipfs>err-code": true,
         "3box>ipfs>interface-datastore": true,
         "3box>ipfs>multibase": true,
-        "browserify>assert": true,
-        "browserify>buffer": true,
         "eslint>debug": true
-      }
-    },
-    "3box>ipfs>dlv": {
-      "globals": {
-        "define": true
       }
     },
     "3box>ipfs>fsm-event": {
       "packages": {
-        "3box>ipfs>fsm-event>fsm": true,
-        "browserify>assert": true,
-        "browserify>events": true
+        "3box>ipfs>fsm-event>fsm": true
       }
     },
     "3box>ipfs>human-to-milliseconds": {
@@ -420,22 +471,18 @@
       }
     },
     "3box>ipfs>interface-datastore": {
+      "globals": {
+        "Buffer.concat": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true
+      },
       "packages": {
         "3box>ipfs>async": true,
         "3box>ipfs>class-is": true,
         "3box>ipfs>err-code": true,
         "3box>ipfs>interface-datastore>uuid": true,
         "3box>ipfs>pull-defer": true,
-        "3box>ipfs>pull-stream": true,
-        "browserify>buffer": true,
-        "browserify>os-browserify": true,
-        "browserify>path-browserify": true
-      }
-    },
-    "3box>ipfs>interface-datastore>uuid": {
-      "globals": {
-        "crypto": true,
-        "msCrypto": true
+        "3box>ipfs>pull-stream": true
       }
     },
     "3box>ipfs>ipfs-bitswap": {
@@ -459,8 +506,6 @@
         "3box>ipfs>multicodec": true,
         "3box>ipfs>protons": true,
         "3box>ipfs>pull-stream": true,
-        "browserify>assert": true,
-        "browserify>events": true,
         "eslint>debug": true
       }
     },
@@ -478,30 +523,31 @@
     },
     "3box>ipfs>ipfs-bitswap>multihashing-async": {
       "globals": {
-        "crypto": true,
-        "msCrypto": true
+        "Buffer": true,
+        "process.nextTick": true
       },
       "packages": {
         "3box>ipfs>multihashes": true,
         "3box>ipfs>multihashing-async>murmurhash3js": true,
-        "3box>ipfs>multihashing-async>nodeify": true,
-        "browserify>buffer": true,
-        "browserify>process": true,
         "ethereumjs-util>ethereum-cryptography>blakejs": true,
         "ethers>@ethersproject/keccak256>js-sha3": true
       }
     },
     "3box>ipfs>ipfs-bitswap>varint-decoder": {
+      "globals": {
+        "Buffer.isBuffer": true
+      },
       "packages": {
-        "3box>ipfs>varint": true,
-        "browserify>insert-module-globals>is-buffer": true
+        "3box>ipfs>varint": true
       }
     },
     "3box>ipfs>ipfs-block": {
+      "globals": {
+        "Buffer.isBuffer": true
+      },
       "packages": {
         "3box>ipfs>cids": true,
-        "3box>ipfs>class-is": true,
-        "browserify>insert-module-globals>is-buffer": true
+        "3box>ipfs>class-is": true
       }
     },
     "3box>ipfs>ipfs-block-service": {
@@ -512,6 +558,8 @@
     "3box>ipfs>ipfs-mfs": {
       "globals": {
         "Blob": true,
+        "Buffer.alloc": true,
+        "Buffer.from": true,
         "FileReader": true
       },
       "packages": {
@@ -528,30 +576,29 @@
         "3box>ipfs>multicodec": true,
         "3box>ipfs>multihashes": true,
         "3box>ipfs>promisify-es6": true,
-        "browserify>assert": true,
-        "browserify>browser-resolve": true,
-        "browserify>buffer": true,
         "eslint>debug": true
       }
     },
     "3box>ipfs>ipfs-mfs>hamt-sharding": {
+      "globals": {
+        "Buffer.isBuffer": true
+      },
       "packages": {
-        "3box>ipfs>ipfs-mfs>hamt-sharding>sparse-array": true,
-        "browserify>insert-module-globals>is-buffer": true
+        "3box>ipfs>ipfs-mfs>hamt-sharding>sparse-array": true
       }
     },
     "3box>ipfs>ipfs-mfs>mortice": {
       "globals": {
-        "Worker": true
+        "Worker": true,
+        "process.on": true,
+        "process.removeListener": true,
+        "process.send": true
       },
       "packages": {
         "3box>ipfs-postmsg-proxy>shortid": true,
         "3box>ipfs>ipfs-mfs>mortice>observable-webworkers": true,
         "3box>ipfs>ipfs-mfs>mortice>promise-timeout": true,
-        "3box>ipfs>libp2p-kad-dht>p-queue": true,
-        "browserify>browser-resolve": true,
-        "browserify>events": true,
-        "browserify>process": true
+        "3box>ipfs>libp2p-kad-dht>p-queue": true
       }
     },
     "3box>ipfs>ipfs-mfs>mortice>promise-timeout": {
@@ -561,6 +608,10 @@
       }
     },
     "3box>ipfs>ipfs-repo": {
+      "globals": {
+        "Buffer.from": true,
+        "setImmediate": true
+      },
       "packages": {
         "3box>ipfs>async": true,
         "3box>ipfs>base32.js": true,
@@ -570,14 +621,12 @@
         "3box>ipfs>interface-datastore": true,
         "3box>ipfs>ipfs-block": true,
         "3box>ipfs>ipfs-repo>bignumber.js": true,
+        "3box>ipfs>ipfs-repo>datastore-fs": true,
         "3box>ipfs>ipfs-repo>datastore-level": true,
+        "3box>ipfs>ipfs-repo>proper-lockfile": true,
         "3box>ipfs>ipfs-repo>sort-keys": true,
         "3box>ipfs>just-safe-set": true,
         "3box>ipfs>pull-stream": true,
-        "browserify>assert": true,
-        "browserify>buffer": true,
-        "browserify>path-browserify": true,
-        "browserify>timers-browserify": true,
         "eslint>debug": true
       }
     },
@@ -587,14 +636,33 @@
         "define": true
       }
     },
+    "3box>ipfs>ipfs-repo>datastore-fs": {
+      "packages": {
+        "3box>ipfs>async": true,
+        "3box>ipfs>interface-datastore": true,
+        "3box>ipfs>ipfs-repo>datastore-fs>fast-write-atomic": true,
+        "3box>ipfs>pull-stream": true,
+        "fs-extra>graceful-fs": true,
+        "nock>mkdirp": true,
+        "nyc>glob": true
+      }
+    },
+    "3box>ipfs>ipfs-repo>datastore-fs>fast-write-atomic": {
+      "globals": {
+        "Buffer.byteLength": true,
+        "process.pid": true
+      }
+    },
     "3box>ipfs>ipfs-repo>datastore-level": {
+      "globals": {
+        "Buffer.from": true
+      },
       "packages": {
         "3box>ipfs>interface-datastore": true,
         "3box>ipfs>ipfs-repo>datastore-level>encoding-down": true,
-        "3box>ipfs>ipfs-repo>datastore-level>level-js": true,
+        "3box>ipfs>ipfs-repo>datastore-level>leveldown": true,
         "3box>ipfs>pull-stream": true,
-        "3box>orbit-db>orbit-db-keystore>levelup": true,
-        "browserify>buffer": true
+        "3box>orbit-db>orbit-db-keystore>levelup": true
       }
     },
     "3box>ipfs>ipfs-repo>datastore-level>encoding-down": {
@@ -606,10 +674,11 @@
       }
     },
     "3box>ipfs>ipfs-repo>datastore-level>encoding-down>abstract-leveldown": {
+      "globals": {
+        "process.nextTick": true
+      },
       "packages": {
         "3box>ipfs>ipfs-repo>datastore-level>encoding-down>abstract-leveldown>level-supports": true,
-        "3box>orbit-db>orbit-db-cache>level-js>immediate": true,
-        "browserify>buffer": true,
         "watchify>xtend": true
       }
     },
@@ -619,46 +688,59 @@
       }
     },
     "3box>ipfs>ipfs-repo>datastore-level>encoding-down>level-codec": {
-      "packages": {
-        "browserify>buffer": true
+      "globals": {
+        "Buffer.from": true,
+        "Buffer.isBuffer": true
       }
     },
-    "3box>ipfs>ipfs-repo>datastore-level>level-js": {
+    "3box>ipfs>ipfs-repo>datastore-level>leveldown": {
       "globals": {
-        "IDBKeyRange.bound": true,
-        "IDBKeyRange.lowerBound": true,
-        "IDBKeyRange.only": true,
-        "IDBKeyRange.upperBound": true,
-        "indexedDB.deleteDatabase": true,
-        "indexedDB.open": true
+        "Buffer.isBuffer": true,
+        "__dirname": true,
+        "process.nextTick": true
       },
       "packages": {
-        "3box>ipfs>ipfs-repo>datastore-level>level-js>abstract-leveldown": true,
-        "3box>ipfs>ipfs-repo>datastore-level>level-js>idb-readable-stream": true,
-        "3box>orbit-db>orbit-db-cache>level-js>ltgt": true,
-        "browserify>buffer": true,
-        "browserify>process": true,
-        "browserify>stream-browserify": true,
-        "browserify>util": true,
-        "watchify>xtend": true
+        "3box>ipfs>ipfs-repo>datastore-level>leveldown>abstract-leveldown": true,
+        "3box>ipfs>ipfs-repo>datastore-level>leveldown>node-gyp-build": true
       }
     },
-    "3box>ipfs>ipfs-repo>datastore-level>level-js>abstract-leveldown": {
-      "packages": {
-        "browserify>insert-module-globals>is-buffer": true,
-        "browserify>process": true,
-        "watchify>xtend": true
-      }
-    },
-    "3box>ipfs>ipfs-repo>datastore-level>level-js>idb-readable-stream": {
+    "3box>ipfs>ipfs-repo>datastore-level>leveldown>abstract-leveldown": {
       "globals": {
-        "IDBKeyRange.bound": true,
-        "IDBKeyRange.lowerBound": true,
-        "IDBKeyRange.upperBound": true
+        "process.nextTick": true
       },
       "packages": {
-        "browserify>stream-browserify": true,
+        "3box>ipfs>ipfs-repo>datastore-level>leveldown>abstract-leveldown>level-supports": true,
         "watchify>xtend": true
+      }
+    },
+    "3box>ipfs>ipfs-repo>datastore-level>leveldown>abstract-leveldown>level-supports": {
+      "packages": {
+        "watchify>xtend": true
+      }
+    },
+    "3box>ipfs>ipfs-repo>datastore-level>leveldown>node-gyp-build": {
+      "globals": {
+        "__non_webpack_require__": true,
+        "__webpack_require__": true,
+        "process": true
+      }
+    },
+    "3box>ipfs>ipfs-repo>proper-lockfile": {
+      "globals": {
+        "clearTimeout": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "3box>ipfs>ipfs-repo>proper-lockfile>retry": true,
+        "fs-extra>graceful-fs": true,
+        "nyc>signal-exit": true
+      }
+    },
+    "3box>ipfs>ipfs-repo>proper-lockfile>retry": {
+      "globals": {
+        "clearTimeout": true,
+        "console.log": true,
+        "setTimeout": true
       }
     },
     "3box>ipfs>ipfs-repo>sort-keys": {
@@ -672,18 +754,25 @@
       }
     },
     "3box>ipfs>ipfs-unixfs-exporter": {
+      "globals": {
+        "Buffer.alloc": true,
+        "Buffer.isBuffer": true
+      },
       "packages": {
         "3box>ipfs>cids": true,
         "3box>ipfs>err-code": true,
         "3box>ipfs>ipfs-mfs>async-iterator-last": true,
         "3box>ipfs>ipfs-mfs>hamt-sharding": true,
         "3box>ipfs>ipfs-unixfs": true,
-        "3box>ipfs>ipfs-unixfs-importer": true,
-        "browserify>buffer": true,
-        "browserify>insert-module-globals>is-buffer": true
+        "3box>ipfs>ipfs-unixfs-importer": true
       }
     },
     "3box>ipfs>ipfs-unixfs-importer": {
+      "globals": {
+        "Buffer.alloc": true,
+        "Buffer.concat": true,
+        "Buffer.from": true
+      },
       "packages": {
         "3box>ipfs>async-iterator-all": true,
         "3box>ipfs>bl": true,
@@ -698,15 +787,13 @@
         "3box>ipfs>multicodec": true,
         "3box>ipfs>multihashes": true,
         "3box>ipfs>superstruct": true,
-        "browserify>buffer": true,
         "rc>deep-extend": true
       }
     },
     "3box>ipfs>ipfs-unixfs-importer>rabin-wasm": {
       "globals": {
-        "Blob": true,
-        "Response": true,
-        "WebAssembly": true
+        "WebAssembly": true,
+        "__dirname": true
       },
       "packages": {
         "3box>ipfs>ipfs-unixfs-importer>rabin-wasm>assemblyscript": true
@@ -733,17 +820,22 @@
       }
     },
     "3box>ipfs>ipfs-utils>readable-stream": {
+      "globals": {
+        "process.env.READABLE_STREAM": true,
+        "process.nextTick": true,
+        "process.stderr": true,
+        "process.stdout": true
+      },
       "packages": {
         "@storybook/api>util-deprecate": true,
-        "browserify>browser-resolve": true,
-        "browserify>buffer": true,
-        "browserify>events": true,
-        "browserify>process": true,
         "browserify>string_decoder": true,
         "pumpify>inherits": true
       }
     },
     "3box>ipfs>ipld": {
+      "globals": {
+        "Buffer.isBuffer": true
+      },
       "packages": {
         "3box>ipfs>cids": true,
         "3box>ipfs>ipfs-block": true,
@@ -753,32 +845,305 @@
         "3box>ipfs>ipld>typical": true,
         "3box>ipfs>merge-options": true,
         "3box>ipfs>multicodec": true,
-        "3box>ipfs>promisify-es6": true,
-        "browserify>insert-module-globals>is-buffer": true
+        "3box>ipfs>promisify-es6": true
+      }
+    },
+    "3box>ipfs>ipld-bitcoin": {
+      "globals": {
+        "Buffer.isBuffer": true
+      },
+      "packages": {
+        "3box>ipfs>cids": true,
+        "3box>ipfs>ipld-bitcoin>bitcoinjs-lib": true,
+        "3box>ipfs>ipld-raw>multihashing-async": true,
+        "3box>ipfs>multicodec": true,
+        "3box>ipfs>multihashes": true
+      }
+    },
+    "3box>ipfs>ipld-bitcoin>bitcoinjs-lib": {
+      "globals": {
+        "Buffer": true,
+        "console.warn": true
+      },
+      "packages": {
+        "3box>ipfs>ipld-bitcoin>bitcoinjs-lib>bip174": true,
+        "3box>ipfs>ipld-bitcoin>bitcoinjs-lib>bip32": true,
+        "3box>ipfs>ipld-bitcoin>bitcoinjs-lib>merkle-lib": true,
+        "eth-trezor-keyring>hdkey>secp256k1>bip66": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>bitcoin-ops": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>pushdata-bitcoin": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>tiny-secp256k1": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>typeforce": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>varuint-bitcoin": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>wif": true,
+        "ethereumjs-util>create-hash": true,
+        "ethereumjs-wallet>bs58check": true,
+        "ethereumjs-wallet>randombytes": true,
+        "ethers>@ethersproject/providers>bech32": true
+      }
+    },
+    "3box>ipfs>ipld-bitcoin>bitcoinjs-lib>bip174": {
+      "globals": {
+        "Buffer.allocUnsafe": true,
+        "Buffer.concat": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true
+      }
+    },
+    "3box>ipfs>ipld-bitcoin>bitcoinjs-lib>bip32": {
+      "globals": {
+        "Buffer.alloc": true,
+        "Buffer.allocUnsafe": true,
+        "Buffer.from": true
+      },
+      "packages": {
+        "browserify>crypto-browserify>create-hmac": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>tiny-secp256k1": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>typeforce": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>wif": true,
+        "ethereumjs-util>create-hash": true,
+        "ethereumjs-wallet>bs58check": true
+      }
+    },
+    "3box>ipfs>ipld-bitcoin>bitcoinjs-lib>merkle-lib": {
+      "globals": {
+        "Buffer.concat": true
       }
     },
     "3box>ipfs>ipld-dag-cbor": {
+      "globals": {
+        "Buffer.concat": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true
+      },
       "packages": {
         "3box>ipfs>cids": true,
         "3box>ipfs>ipld-dag-cbor>is-circular": true,
         "3box>ipfs>ipld-raw>multihashing-async": true,
         "3box>ipfs>multicodec": true,
-        "browserify>buffer": true,
-        "browserify>insert-module-globals>is-buffer": true,
         "eth-lattice-keyring>gridplus-sdk>borc": true
       }
     },
     "3box>ipfs>ipld-dag-pb": {
+      "globals": {
+        "Buffer.alloc": true,
+        "Buffer.compare": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true
+      },
       "packages": {
         "3box>ipfs>cids": true,
         "3box>ipfs>class-is": true,
         "3box>ipfs>ipld-raw>multihashing-async": true,
         "3box>ipfs>multicodec": true,
         "3box>ipfs>protons": true,
-        "@storybook/client-api>stable": true,
-        "browserify>assert": true,
-        "browserify>buffer": true,
-        "browserify>insert-module-globals>is-buffer": true
+        "@storybook/client-api>stable": true
+      }
+    },
+    "3box>ipfs>ipld-ethereum": {
+      "globals": {
+        "Buffer.alloc": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true
+      },
+      "packages": {
+        "3box>ipfs>cids": true,
+        "3box>ipfs>ipld-ethereum>ethereumjs-account": true,
+        "3box>ipfs>ipld-ethereum>ethereumjs-block": true,
+        "3box>ipfs>ipld-ethereum>ethereumjs-tx": true,
+        "3box>ipfs>ipld-ethereum>merkle-patricia-tree": true,
+        "3box>ipfs>ipld-raw>multihashing-async": true,
+        "3box>ipfs>multicodec": true,
+        "3box>ipfs>multihashes": true,
+        "ethereumjs-util>rlp": true
+      }
+    },
+    "3box>ipfs>ipld-ethereum>ethereumjs-account": {
+      "packages": {
+        "3box>ipfs>ipld-ethereum>ethereumjs-account>ethereumjs-util": true,
+        "ethereumjs-util>rlp": true,
+        "ethereumjs-wallet>safe-buffer": true
+      }
+    },
+    "3box>ipfs>ipld-ethereum>ethereumjs-account>ethereumjs-util": {
+      "globals": {
+        "Buffer": true
+      },
+      "packages": {
+        "3box>ethers>elliptic": true,
+        "3box>ipfs>ipld-ethereum>ethereumjs-account>ethereumjs-util>ethjs-util": true,
+        "bn.js": true,
+        "ethereumjs-util>create-hash": true,
+        "ethereumjs-util>ethereum-cryptography": true,
+        "ethereumjs-util>rlp": true,
+        "ethereumjs-wallet>safe-buffer": true
+      }
+    },
+    "3box>ipfs>ipld-ethereum>ethereumjs-account>ethereumjs-util>ethjs-util": {
+      "globals": {
+        "Buffer": true
+      },
+      "packages": {
+        "ethjs>ethjs-util>is-hex-prefixed": true,
+        "ethjs>ethjs-util>strip-hex-prefix": true
+      }
+    },
+    "3box>ipfs>ipld-ethereum>ethereumjs-block": {
+      "globals": {
+        "Buffer.from": true
+      },
+      "packages": {
+        "3box>ipfs>ipld-ethereum>ethereumjs-block>ethereumjs-util": true,
+        "@metamask/controllers>web3-provider-engine>ethereumjs-vm>ethereumjs-common": true
+      }
+    },
+    "3box>ipfs>ipld-ethereum>ethereumjs-block>ethereumjs-util": {
+      "globals": {
+        "Buffer": true
+      },
+      "packages": {
+        "3box>ethers>elliptic": true,
+        "3box>ipfs>ipld-ethereum>ethereumjs-block>ethereumjs-util>ethjs-util": true,
+        "bn.js": true,
+        "ethereumjs-util>create-hash": true,
+        "ethereumjs-util>ethereum-cryptography": true,
+        "ethereumjs-util>rlp": true,
+        "ethereumjs-wallet>safe-buffer": true
+      }
+    },
+    "3box>ipfs>ipld-ethereum>ethereumjs-block>ethereumjs-util>ethjs-util": {
+      "globals": {
+        "Buffer": true
+      },
+      "packages": {
+        "ethjs>ethjs-util>is-hex-prefixed": true,
+        "ethjs>ethjs-util>strip-hex-prefix": true
+      }
+    },
+    "3box>ipfs>ipld-ethereum>ethereumjs-tx": {
+      "globals": {
+        "Buffer": true
+      },
+      "packages": {
+        "3box>ipfs>ipld-ethereum>ethereumjs-tx>ethereum-common": true,
+        "3box>ipfs>ipld-ethereum>ethereumjs-tx>ethereumjs-util": true
+      }
+    },
+    "3box>ipfs>ipld-ethereum>ethereumjs-tx>ethereumjs-util": {
+      "globals": {
+        "Buffer": true
+      },
+      "packages": {
+        "3box>ethers>elliptic": true,
+        "3box>ipfs>ipld-ethereum>ethereumjs-tx>ethereumjs-util>ethjs-util": true,
+        "bn.js": true,
+        "ethereumjs-util>create-hash": true,
+        "ethereumjs-util>ethereum-cryptography": true,
+        "ethereumjs-util>rlp": true,
+        "ethereumjs-wallet>safe-buffer": true
+      }
+    },
+    "3box>ipfs>ipld-ethereum>ethereumjs-tx>ethereumjs-util>ethjs-util": {
+      "globals": {
+        "Buffer": true
+      },
+      "packages": {
+        "ethjs>ethjs-util>is-hex-prefixed": true,
+        "ethjs>ethjs-util>strip-hex-prefix": true
+      }
+    },
+    "3box>ipfs>ipld-ethereum>merkle-patricia-tree": {
+      "globals": {
+        "Buffer": true
+      },
+      "packages": {
+        "3box>ipfs>ipld-ethereum>merkle-patricia-tree>ethereumjs-util": true,
+        "ethereumjs-util>rlp": true
+      }
+    },
+    "3box>ipfs>ipld-ethereum>merkle-patricia-tree>ethereumjs-util": {
+      "globals": {
+        "Buffer": true
+      },
+      "packages": {
+        "3box>ethers>elliptic": true,
+        "3box>ipfs>ipld-ethereum>merkle-patricia-tree>ethereumjs-util>ethjs-util": true,
+        "bn.js": true,
+        "ethereumjs-util>create-hash": true,
+        "ethereumjs-util>ethereum-cryptography": true,
+        "ethereumjs-util>rlp": true,
+        "ethereumjs-wallet>safe-buffer": true
+      }
+    },
+    "3box>ipfs>ipld-ethereum>merkle-patricia-tree>ethereumjs-util>ethjs-util": {
+      "globals": {
+        "Buffer": true
+      },
+      "packages": {
+        "ethjs>ethjs-util>is-hex-prefixed": true,
+        "ethjs>ethjs-util>strip-hex-prefix": true
+      }
+    },
+    "3box>ipfs>ipld-git": {
+      "globals": {
+        "Buffer.from": true,
+        "Buffer.isBuffer": true
+      },
+      "packages": {
+        "3box>ipfs>cids": true,
+        "3box>ipfs>ipld-git>smart-buffer": true,
+        "3box>ipfs>ipld-git>strftime": true,
+        "3box>ipfs>ipld-raw>multihashing-async": true,
+        "3box>ipfs>multicodec": true,
+        "3box>ipfs>multihashes": true
+      }
+    },
+    "3box>ipfs>ipld-git>smart-buffer": {
+      "globals": {
+        "Buffer.allocUnsafe": true,
+        "Buffer.byteLength": true,
+        "Buffer.isBuffer": true,
+        "Buffer.prototype.readBigInt64BE": true,
+        "Buffer.prototype.readBigInt64LE": true,
+        "Buffer.prototype.readBigUInt64BE": true,
+        "Buffer.prototype.readBigUInt64LE": true,
+        "Buffer.prototype.readDoubleBE": true,
+        "Buffer.prototype.readDoubleLE": true,
+        "Buffer.prototype.readFloatBE": true,
+        "Buffer.prototype.readFloatLE": true,
+        "Buffer.prototype.readInt16BE": true,
+        "Buffer.prototype.readInt16LE": true,
+        "Buffer.prototype.readInt32BE": true,
+        "Buffer.prototype.readInt32LE": true,
+        "Buffer.prototype.readInt8": true,
+        "Buffer.prototype.readUInt16BE": true,
+        "Buffer.prototype.readUInt16LE": true,
+        "Buffer.prototype.readUInt32BE": true,
+        "Buffer.prototype.readUInt32LE": true,
+        "Buffer.prototype.readUInt8": true,
+        "Buffer.prototype.writeBigInt64BE": true,
+        "Buffer.prototype.writeBigInt64LE": true,
+        "Buffer.prototype.writeBigUInt64BE": true,
+        "Buffer.prototype.writeBigUInt64LE": true,
+        "Buffer.prototype.writeDoubleBE": true,
+        "Buffer.prototype.writeDoubleLE": true,
+        "Buffer.prototype.writeFloatBE": true,
+        "Buffer.prototype.writeFloatLE": true,
+        "Buffer.prototype.writeInt16BE": true,
+        "Buffer.prototype.writeInt16LE": true,
+        "Buffer.prototype.writeInt32BE": true,
+        "Buffer.prototype.writeInt32LE": true,
+        "Buffer.prototype.writeInt8": true,
+        "Buffer.prototype.writeUInt16BE": true,
+        "Buffer.prototype.writeUInt16LE": true,
+        "Buffer.prototype.writeUInt32BE": true,
+        "Buffer.prototype.writeUInt32LE": true,
+        "Buffer.prototype.writeUInt8": true
+      }
+    },
+    "3box>ipfs>ipld-git>strftime": {
+      "globals": {
+        "console": true
       }
     },
     "3box>ipfs>ipld-raw": {
@@ -789,15 +1154,10 @@
       }
     },
     "3box>ipfs>ipld-raw>multihashing-async": {
-      "globals": {
-        "crypto": true,
-        "msCrypto": true
-      },
       "packages": {
         "3box>ipfs>err-code": true,
         "3box>ipfs>ipld-raw>multihashing-async>murmurhash3js-revisited": true,
         "3box>ipfs>multihashes": true,
-        "browserify>buffer": true,
         "ethereumjs-util>ethereum-cryptography>blakejs": true,
         "ethers>@ethersproject/keccak256>js-sha3": true
       }
@@ -807,12 +1167,47 @@
         "define": true
       }
     },
+    "3box>ipfs>ipld-zcash": {
+      "globals": {
+        "Buffer.isBuffer": true
+      },
+      "packages": {
+        "3box>ipfs>cids": true,
+        "3box>ipfs>ipld-raw>multihashing-async": true,
+        "3box>ipfs>ipld-zcash>zcash-bitcore-lib": true,
+        "3box>ipfs>multicodec": true,
+        "3box>ipfs>multihashes": true
+      }
+    },
+    "3box>ipfs>ipld-zcash>zcash-bitcore-lib": {
+      "globals": {
+        "Buffer": true,
+        "_.isObject": true,
+        "_bitcore": "write",
+        "console.error": true,
+        "crypto": true,
+        "msCrypto": true,
+        "process.browser": true
+      },
+      "packages": {
+        "3box>ethers>elliptic": true,
+        "3box>ipfs>ipld-zcash>zcash-bitcore-lib>bn.js": true,
+        "3box>ipfs>ipld-zcash>zcash-bitcore-lib>bs58": true,
+        "3box>ipfs>ipld-zcash>zcash-bitcore-lib>buffer-compare": true,
+        "3box>ipfs>ipld-zcash>zcash-bitcore-lib>inherits": true,
+        "lodash": true
+      }
+    },
     "3box>ipfs>ipld>typical": {
       "globals": {
         "define": true
       }
     },
     "3box>ipfs>ipns": {
+      "globals": {
+        "Buffer.concat": true,
+        "Buffer.from": true
+      },
       "packages": {
         "3box>ipfs>interface-datastore": true,
         "3box>ipfs>ipns>timestamp-nano": true,
@@ -821,29 +1216,28 @@
         "3box>ipfs>peer-id": true,
         "3box>ipfs>protons": true,
         "base32-encode": true,
-        "browserify>buffer": true,
         "eslint>debug": true
       }
     },
     "3box>ipfs>is-ipfs": {
+      "globals": {
+        "Buffer.from": true,
+        "Buffer.isBuffer": true
+      },
       "packages": {
         "3box>ipfs>bs58": true,
         "3box>ipfs>cids": true,
         "3box>ipfs>mafmt": true,
         "3box>ipfs>multiaddr": true,
         "3box>ipfs>multibase": true,
-        "3box>ipfs>multihashes": true,
-        "browserify>buffer": true
-      }
-    },
-    "3box>ipfs>iso-url": {
-      "globals": {
-        "URL": true,
-        "URLSearchParams": true,
-        "location": true
+        "3box>ipfs>multihashes": true
       }
     },
     "3box>ipfs>libp2p": {
+      "globals": {
+        "Buffer.isBuffer": true,
+        "process.env.LIBP2P_FORCE_PNET": true
+      },
       "packages": {
         "3box>ipfs>async": true,
         "3box>ipfs>err-code": true,
@@ -858,9 +1252,6 @@
         "3box>ipfs>peer-id": true,
         "3box>ipfs>peer-info": true,
         "3box>ipfs>superstruct": true,
-        "browserify>events": true,
-        "browserify>insert-module-globals>is-buffer": true,
-        "browserify>process": true,
         "eslint>debug": true,
         "pump>once": true
       }
@@ -876,26 +1267,26 @@
         "3box>ipfs>multiaddr": true,
         "3box>ipfs>peer-id": true,
         "3box>ipfs>peer-info": true,
-        "browserify>events": true,
         "eslint>debug": true
       }
     },
     "3box>ipfs>libp2p-crypto": {
       "globals": {
-        "crypto": true,
-        "msCrypto": true
+        "Buffer": true,
+        "process.env.LP2P_FORCE_CRYPTO_LIB": true
       },
       "packages": {
         "3box>ipfs>async": true,
         "3box>ipfs>bs58": true,
         "3box>ipfs>libp2p-crypto>asn1.js": true,
         "3box>ipfs>libp2p-crypto>iso-random-stream": true,
+        "3box>ipfs>libp2p-crypto>keypair": true,
         "3box>ipfs>libp2p-crypto>libp2p-crypto-secp256k1": true,
         "3box>ipfs>libp2p-crypto>multihashing-async": true,
+        "3box>ipfs>libp2p-crypto>pem-jwk": true,
+        "3box>ipfs>libp2p-crypto>ursa-optional": true,
         "3box>ipfs>protons": true,
         "3box>tweetnacl": true,
-        "browserify>buffer": true,
-        "ethereumjs-util>ethereum-cryptography>browserify-aes": true,
         "mockttp>node-forge": true
       }
     },
@@ -903,17 +1294,23 @@
       "packages": {
         "3box>ethers>hash.js>minimalistic-assert": true,
         "bn.js": true,
-        "browserify>buffer": true,
         "pumpify>inherits": true
       }
     },
-    "3box>ipfs>libp2p-crypto>iso-random-stream": {
+    "3box>ipfs>libp2p-crypto>keypair": {
       "globals": {
+        "DV": true,
+        "Worker": true,
+        "addEventListener": true,
         "crypto": true,
-        "msCrypto": true
-      },
-      "packages": {
-        "browserify>buffer": true
+        "document": true,
+        "emsaPkcs1v15encode": true,
+        "navigator": true,
+        "postMessage": true,
+        "process": true,
+        "removeEventListener": true,
+        "setImmediate": true,
+        "setTimeout": true
       }
     },
     "3box>ipfs>libp2p-crypto>libp2p-crypto-secp256k1": {
@@ -926,36 +1323,50 @@
     },
     "3box>ipfs>libp2p-crypto>libp2p-crypto-secp256k1>multihashing-async": {
       "globals": {
-        "crypto": true,
-        "msCrypto": true
+        "Buffer": true,
+        "process.nextTick": true
       },
       "packages": {
         "3box>ipfs>multihashes": true,
         "3box>ipfs>multihashing-async>murmurhash3js": true,
-        "3box>ipfs>multihashing-async>nodeify": true,
-        "browserify>buffer": true,
-        "browserify>process": true,
         "ethereumjs-util>ethereum-cryptography>blakejs": true,
         "ethers>@ethersproject/keccak256>js-sha3": true
       }
     },
     "3box>ipfs>libp2p-crypto>multihashing-async": {
       "globals": {
-        "crypto": true,
-        "msCrypto": true
+        "Buffer": true,
+        "process.nextTick": true
       },
       "packages": {
         "3box>ipfs>multihashes": true,
         "3box>ipfs>multihashing-async>murmurhash3js": true,
-        "3box>ipfs>multihashing-async>nodeify": true,
-        "browserify>buffer": true,
-        "browserify>process": true,
         "ethereumjs-util>ethereum-cryptography>blakejs": true,
         "ethers>@ethersproject/keccak256>js-sha3": true
       }
     },
+    "3box>ipfs>libp2p-crypto>pem-jwk": {
+      "globals": {
+        "Buffer.from": true
+      },
+      "packages": {
+        "3box>ipfs>libp2p-crypto>asn1.js": true
+      }
+    },
+    "3box>ipfs>libp2p-crypto>ursa-optional": {
+      "globals": {
+        "Buffer": true
+      },
+      "packages": {
+        "lavamoat>bindings": true
+      }
+    },
     "3box>ipfs>libp2p-kad-dht": {
       "globals": {
+        "Buffer.alloc": true,
+        "Buffer.concat": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true,
         "clearInterval": true,
         "clearTimeout": true,
         "setInterval": true,
@@ -986,10 +1397,6 @@
         "3box>ipfs>pull-stream-to-async-iterator": true,
         "3box>ipfs>varint": true,
         "@metamask/controllers>abort-controller": true,
-        "browserify>assert": true,
-        "browserify>buffer": true,
-        "browserify>events": true,
-        "browserify>insert-module-globals>is-buffer": true,
         "eslint>debug": true,
         "promise-to-callback": true
       }
@@ -1001,21 +1408,17 @@
     },
     "3box>ipfs>libp2p-kad-dht>k-bucket": {
       "packages": {
-        "browserify>events": true,
         "ethereumjs-wallet>randombytes": true
       }
     },
     "3box>ipfs>libp2p-kad-dht>multihashing-async": {
       "globals": {
-        "crypto": true,
-        "msCrypto": true
+        "Buffer": true,
+        "process.nextTick": true
       },
       "packages": {
         "3box>ipfs>multihashes": true,
         "3box>ipfs>multihashing-async>murmurhash3js": true,
-        "3box>ipfs>multihashing-async>nodeify": true,
-        "browserify>buffer": true,
-        "browserify>process": true,
         "ethereumjs-util>ethereum-cryptography>blakejs": true,
         "ethers>@ethersproject/keccak256>js-sha3": true
       }
@@ -1036,12 +1439,14 @@
       }
     },
     "3box>ipfs>libp2p-kad-dht>xor-distance": {
-      "packages": {
-        "browserify>buffer": true
+      "globals": {
+        "Buffer.allocUnsafe": true
       }
     },
     "3box>ipfs>libp2p-keychain": {
       "globals": {
+        "Buffer.from": true,
+        "Buffer.isBuffer": true,
         "setTimeout": true
       },
       "packages": {
@@ -1052,7 +1457,6 @@
         "3box>ipfs>libp2p-keychain>sanitize-filename": true,
         "3box>ipfs>merge-options": true,
         "3box>ipfs>pull-stream": true,
-        "browserify>buffer": true,
         "mockttp>node-forge": true
       }
     },
@@ -1062,20 +1466,68 @@
       }
     },
     "3box>ipfs>libp2p-keychain>sanitize-filename>truncate-utf8-bytes": {
+      "globals": {
+        "Buffer": true
+      }
+    },
+    "3box>ipfs>libp2p-mdns": {
+      "globals": {
+        "Buffer.from": true,
+        "clearInterval": true,
+        "clearTimeout": true,
+        "setInterval": true,
+        "setTimeout": true
+      },
       "packages": {
-        "3box>ipfs>libp2p-keychain>sanitize-filename>truncate-utf8-bytes>utf8-byte-length": true
+        "3box>ipfs>async": true,
+        "3box>ipfs>libp2p-mdns>multicast-dns": true,
+        "3box>ipfs>libp2p-tcp": true,
+        "3box>ipfs>multiaddr": true,
+        "3box>ipfs>peer-id": true,
+        "3box>ipfs>peer-info": true,
+        "eslint>debug": true
+      }
+    },
+    "3box>ipfs>libp2p-mdns>multicast-dns": {
+      "globals": {
+        "clearInterval": true,
+        "process.nextTick": true,
+        "setInterval": true
+      },
+      "packages": {
+        "3box>ipfs>libp2p-mdns>multicast-dns>dns-packet": true,
+        "3box>ipfs>libp2p-mdns>multicast-dns>thunky": true
+      }
+    },
+    "3box>ipfs>libp2p-mdns>multicast-dns>dns-packet": {
+      "globals": {
+        "Buffer.alloc": true,
+        "Buffer.allocUnsafe": true,
+        "Buffer.byteLength": true,
+        "Buffer.concat": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true
+      },
+      "packages": {
+        "react-devtools>ip": true
+      }
+    },
+    "3box>ipfs>libp2p-mdns>multicast-dns>thunky": {
+      "globals": {
+        "process.nextTick": true
       }
     },
     "3box>ipfs>libp2p-record": {
+      "globals": {
+        "Buffer.from": true,
+        "Buffer.isBuffer": true
+      },
       "packages": {
         "3box>ipfs>async": true,
         "3box>ipfs>err-code": true,
         "3box>ipfs>libp2p-record>buffer-split": true,
         "3box>ipfs>libp2p-record>multihashing-async": true,
-        "3box>ipfs>protons": true,
-        "browserify>assert": true,
-        "browserify>buffer": true,
-        "browserify>insert-module-globals>is-buffer": true
+        "3box>ipfs>protons": true
       }
     },
     "3box>ipfs>libp2p-record>buffer-split": {
@@ -1085,20 +1537,22 @@
     },
     "3box>ipfs>libp2p-record>multihashing-async": {
       "globals": {
-        "crypto": true,
-        "msCrypto": true
+        "Buffer": true,
+        "process.nextTick": true
       },
       "packages": {
         "3box>ipfs>multihashes": true,
         "3box>ipfs>multihashing-async>murmurhash3js": true,
-        "3box>ipfs>multihashing-async>nodeify": true,
-        "browserify>buffer": true,
-        "browserify>process": true,
         "ethereumjs-util>ethereum-cryptography>blakejs": true,
         "ethers>@ethersproject/keccak256>js-sha3": true
       }
     },
     "3box>ipfs>libp2p-secio": {
+      "globals": {
+        "Buffer.compare": true,
+        "Buffer.concat": true,
+        "Buffer.from": true
+      },
       "packages": {
         "3box>ipfs>async": true,
         "3box>ipfs>libp2p-crypto": true,
@@ -1111,23 +1565,18 @@
         "3box>ipfs>pull-defer": true,
         "3box>ipfs>pull-mplex>interface-connection": true,
         "3box>ipfs>pull-stream": true,
-        "browserify>assert": true,
-        "browserify>buffer": true,
         "eslint>debug": true,
         "pump>once": true
       }
     },
     "3box>ipfs>libp2p-secio>multihashing-async": {
       "globals": {
-        "crypto": true,
-        "msCrypto": true
+        "Buffer": true,
+        "process.nextTick": true
       },
       "packages": {
         "3box>ipfs>multihashes": true,
         "3box>ipfs>multihashing-async>murmurhash3js": true,
-        "3box>ipfs>multihashing-async>nodeify": true,
-        "browserify>buffer": true,
-        "browserify>process": true,
         "ethereumjs-util>ethereum-cryptography>blakejs": true,
         "ethers>@ethersproject/keccak256>js-sha3": true
       }
@@ -1142,12 +1591,11 @@
     },
     "3box>ipfs>libp2p-secio>pull-handshake>pull-reader": {
       "globals": {
+        "Buffer.concat": true,
+        "Buffer.isBuffer": true,
         "cb": true,
         "clearTimeout": true,
         "setTimeout": true
-      },
-      "packages": {
-        "browserify>buffer": true
       }
     },
     "3box>ipfs>libp2p-secio>pull-length-prefixed": {
@@ -1158,62 +1606,68 @@
         "ethereumjs-wallet>safe-buffer": true
       }
     },
-    "3box>ipfs>libp2p-webrtc-star": {
-      "packages": {
-        "3box>ipfs>async": true,
-        "3box>ipfs>class-is": true,
-        "3box>ipfs>libp2p-webrtc-star>simple-peer": true,
-        "3box>ipfs>libp2p-webrtc-star>socket.io-client": true,
-        "3box>ipfs>libp2p-webrtc-star>webrtcsupport": true,
-        "3box>ipfs>mafmt": true,
-        "3box>ipfs>multiaddr": true,
-        "3box>ipfs>peer-id": true,
-        "3box>ipfs>peer-info": true,
-        "3box>ipfs>pull-mplex>interface-connection": true,
-        "3box>ipfs>stream-to-pull-stream": true,
-        "browserify>events": true,
-        "eslint>debug": true,
-        "pump>once": true
-      }
-    },
-    "3box>ipfs>libp2p-webrtc-star>simple-peer": {
+    "3box>ipfs>libp2p-tcp": {
       "globals": {
-        "clearInterval": true,
-        "console.warn": true,
-        "setInterval": true,
+        "clearTimeout": true,
         "setTimeout": true
       },
       "packages": {
-        "3box>ipfs>libp2p-webrtc-star>simple-peer>get-browser-rtc": true,
-        "3box>ipfs>libp2p-webrtc-star>simple-peer>readable-stream": true,
-        "browserify>buffer": true,
-        "eslint>debug": true,
-        "ethereumjs-wallet>randombytes": true,
-        "pumpify>inherits": true
+        "3box>ipfs>class-is": true,
+        "3box>ipfs>libp2p-tcp>debug": true,
+        "3box>ipfs>libp2p-tcp>ip-address": true,
+        "3box>ipfs>libp2p-tcp>lodash.includes": true,
+        "3box>ipfs>libp2p-tcp>lodash.isfunction": true,
+        "3box>ipfs>libp2p-tcp>multiaddr": true,
+        "3box>ipfs>mafmt": true,
+        "3box>ipfs>pull-mplex>interface-connection": true,
+        "3box>ipfs>stream-to-pull-stream": true,
+        "pump>once": true
       }
     },
-    "3box>ipfs>libp2p-webrtc-star>simple-peer>get-browser-rtc": {
+    "3box>ipfs>libp2p-tcp>debug": {
       "globals": {
-        "RTCIceCandidate": true,
-        "RTCPeerConnection": true,
-        "RTCSessionDescription": true,
-        "mozRTCIceCandidate": true,
-        "mozRTCPeerConnection": true,
-        "mozRTCSessionDescription": true,
-        "webkitRTCIceCandidate": true,
-        "webkitRTCPeerConnection": true,
-        "webkitRTCSessionDescription": true
+        "console": true,
+        "document": true,
+        "localStorage": true,
+        "navigator": true,
+        "process": true
+      },
+      "packages": {
+        "analytics-node>ms": true,
+        "sinon>supports-color": true
       }
     },
-    "3box>ipfs>libp2p-webrtc-star>simple-peer>readable-stream": {
+    "3box>ipfs>libp2p-tcp>ip-address": {
       "packages": {
-        "@storybook/api>util-deprecate": true,
-        "browserify>browser-resolve": true,
-        "browserify>buffer": true,
-        "browserify>events": true,
-        "browserify>process": true,
-        "browserify>string_decoder": true,
-        "pumpify>inherits": true
+        "3box>ipfs>libp2p-tcp>ip-address>jsbn": true,
+        "3box>ipfs>libp2p-tcp>ip-address>sprintf-js": true,
+        "lodash": true
+      }
+    },
+    "3box>ipfs>libp2p-tcp>ip-address>jsbn": {
+      "globals": {
+        "crypto": true,
+        "navigator": true
+      }
+    },
+    "3box>ipfs>libp2p-tcp>ip-address>sprintf-js": {
+      "globals": {
+        "define": true
+      }
+    },
+    "3box>ipfs>libp2p-tcp>multiaddr": {
+      "globals": {
+        "Buffer": true
+      },
+      "packages": {
+        "3box>ipfs-postmsg-proxy>multiaddr>lodash.filter": true,
+        "3box>ipfs-postmsg-proxy>multiaddr>lodash.map": true,
+        "3box>ipfs>bs58": true,
+        "3box>ipfs>class-is": true,
+        "3box>ipfs>libp2p-tcp>ip-address": true,
+        "3box>ipfs>varint": true,
+        "react-devtools>ip": true,
+        "watchify>xtend": true
       }
     },
     "3box>ipfs>libp2p-webrtc-star>socket.io-client": {
@@ -1247,15 +1701,15 @@
       },
       "packages": {
         "3box>ipfs>libp2p-webrtc-star>socket.io-client>debug>ms": true,
-        "browserify>process": true
+        "sinon>supports-color": true
       }
     },
     "3box>ipfs>libp2p-webrtc-star>socket.io-client>engine.io-client": {
       "globals": {
+        "Buffer.byteLength": true,
         "MozWebSocket": true,
         "WebSocket": true,
         "XDomainRequest": true,
-        "XMLHttpRequest": true,
         "addEventListener": true,
         "attachEvent": true,
         "clearTimeout": true,
@@ -1268,13 +1722,12 @@
         "3box>ipfs>libp2p-webrtc-star>socket.io-client>engine.io-client>component-inherit": true,
         "3box>ipfs>libp2p-webrtc-star>socket.io-client>engine.io-client>debug": true,
         "3box>ipfs>libp2p-webrtc-star>socket.io-client>engine.io-client>engine.io-parser": true,
-        "3box>ipfs>libp2p-webrtc-star>socket.io-client>engine.io-client>has-cors": true,
+        "3box>ipfs>libp2p-webrtc-star>socket.io-client>engine.io-client>xmlhttprequest-ssl": true,
         "3box>ipfs>libp2p-webrtc-star>socket.io-client>engine.io-client>yeast": true,
         "3box>ipfs>libp2p-webrtc-star>socket.io-client>indexof": true,
         "3box>ipfs>libp2p-webrtc-star>socket.io-client>parseqs": true,
         "3box>ipfs>libp2p-webrtc-star>socket.io-client>parseuri": true,
-        "browserify>browser-resolve": true,
-        "browserify>buffer": true,
+        "mockttp>ws": true,
         "pubnub>superagent>component-emitter": true
       }
     },
@@ -1289,46 +1742,40 @@
       },
       "packages": {
         "3box>ipfs>libp2p-webrtc-star>socket.io-client>engine.io-client>debug>ms": true,
-        "browserify>process": true
+        "sinon>supports-color": true
       }
     },
     "3box>ipfs>libp2p-webrtc-star>socket.io-client>engine.io-client>engine.io-parser": {
       "globals": {
-        "FileReader": true,
-        "btoa": true,
-        "navigator": true
+        "Buffer.allocUnsafe": true,
+        "Buffer.concat": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true
       },
       "packages": {
         "3box>ipfs>libp2p-webrtc-star>socket.io-client>engine.io-client>engine.io-parser>after": true,
-        "3box>ipfs>libp2p-webrtc-star>socket.io-client>engine.io-client>engine.io-parser>arraybuffer.slice": true,
-        "3box>ipfs>libp2p-webrtc-star>socket.io-client>engine.io-client>engine.io-parser>blob": true,
-        "3box>ipfs>libp2p-webrtc-star>socket.io>engine.io>engine.io-parser>base64-arraybuffer": true,
         "3box>ipfs>libp2p-webrtc-star>socket.io>has-binary2": true
       }
     },
-    "3box>ipfs>libp2p-webrtc-star>socket.io-client>engine.io-client>engine.io-parser>blob": {
+    "3box>ipfs>libp2p-webrtc-star>socket.io-client>engine.io-client>xmlhttprequest-ssl": {
       "globals": {
-        "Blob": true,
-        "MSBlobBuilder": true,
-        "MozBlobBuilder": true,
-        "WebKitBlobBuilder": true
-      }
-    },
-    "3box>ipfs>libp2p-webrtc-star>socket.io-client>engine.io-client>has-cors": {
-      "globals": {
-        "XMLHttpRequest": true
+        "Buffer": true,
+        "console.warn": true,
+        "process.argv": true,
+        "process.pid": true,
+        "setImmediate": true
       }
     },
     "3box>ipfs>libp2p-webrtc-star>socket.io-client>socket.io-parser": {
       "globals": {
         "Blob": true,
+        "Buffer": true,
         "File": true,
         "FileReader": true
       },
       "packages": {
         "3box>ipfs>libp2p-webrtc-star>socket.io-client>socket.io-parser>debug": true,
         "3box>ipfs>libp2p-webrtc-star>socket.io-client>socket.io-parser>isarray": true,
-        "browserify>buffer": true,
         "pubnub>superagent>component-emitter": true
       }
     },
@@ -1343,39 +1790,17 @@
       },
       "packages": {
         "3box>ipfs>libp2p-webrtc-star>socket.io-client>socket.io-parser>debug>ms": true,
-        "browserify>process": true
+        "sinon>supports-color": true
       }
     },
     "3box>ipfs>libp2p-webrtc-star>socket.io>has-binary2": {
       "globals": {
         "Blob": true,
+        "Buffer": true,
         "File": true
       },
       "packages": {
-        "3box>ipfs>libp2p-webrtc-star>socket.io>has-binary2>isarray": true,
-        "browserify>buffer": true
-      }
-    },
-    "3box>ipfs>libp2p-webrtc-star>webrtcsupport": {
-      "globals": {
-        "AudioContext": true,
-        "MediaStream": true,
-        "RTCIceCandidate": true,
-        "RTCPeerConnection": true,
-        "RTCSessionDescription": true,
-        "document": true,
-        "location.protocol": true,
-        "mozRTCIceCandidate": true,
-        "mozRTCPeerConnection": true,
-        "mozRTCSessionDescription": true,
-        "navigator.getUserMedia": true,
-        "navigator.mozGetUserMedia": true,
-        "navigator.msGetUserMedia": true,
-        "navigator.userAgent.match": true,
-        "navigator.webkitGetUserMedia": true,
-        "webkitAudioContext": true,
-        "webkitMediaStream": true,
-        "webkitRTCPeerConnection": true
+        "3box>ipfs>libp2p-webrtc-star>socket.io>has-binary2>isarray": true
       }
     },
     "3box>ipfs>libp2p-websocket-star-multi": {
@@ -1387,13 +1812,13 @@
         "3box>ipfs>libp2p-websocket-star-multi>libp2p-websocket-star": true,
         "3box>ipfs>mafmt": true,
         "3box>ipfs>multiaddr": true,
-        "browserify>events": true,
         "eslint>debug": true,
         "pump>once": true
       }
     },
     "3box>ipfs>libp2p-websocket-star-multi>libp2p-websocket-star": {
       "globals": {
+        "Buffer.from": true,
         "console.error": true
       },
       "packages": {
@@ -1408,8 +1833,6 @@
         "3box>ipfs>peer-info": true,
         "3box>ipfs>pull-mplex>interface-connection": true,
         "3box>ipfs>pull-stream": true,
-        "browserify>buffer": true,
-        "browserify>events": true,
         "eslint>debug": true,
         "pump>once": true,
         "uuid": true
@@ -1417,19 +1840,14 @@
     },
     "3box>ipfs>libp2p-websocket-star-multi>libp2p-websocket-star>socket.io-pull-stream": {
       "globals": {
+        "Buffer.from": true,
         "console.error": true
       },
       "packages": {
         "3box>ipfs>libp2p-websocket-star-multi>libp2p-websocket-star>socket.io-pull-stream>data-queue": true,
         "3box>ipfs>libp2p-websocket-star-multi>libp2p-websocket-star>socket.io-pull-stream>debug": true,
         "3box>ipfs>libp2p-websocket-star-multi>libp2p-websocket-star>socket.io-pull-stream>uuid": true,
-        "3box>ipfs>pull-stream": true,
-        "browserify>buffer": true
-      }
-    },
-    "3box>ipfs>libp2p-websocket-star-multi>libp2p-websocket-star>socket.io-pull-stream>data-queue": {
-      "packages": {
-        "browserify>events": true
+        "3box>ipfs>pull-stream": true
       }
     },
     "3box>ipfs>libp2p-websocket-star-multi>libp2p-websocket-star>socket.io-pull-stream>debug": {
@@ -1442,13 +1860,7 @@
       },
       "packages": {
         "analytics-node>ms": true,
-        "browserify>process": true
-      }
-    },
-    "3box>ipfs>libp2p-websocket-star-multi>libp2p-websocket-star>socket.io-pull-stream>uuid": {
-      "globals": {
-        "crypto": true,
-        "msCrypto": true
+        "sinon>supports-color": true
       }
     },
     "3box>ipfs>libp2p-websockets": {
@@ -1459,36 +1871,25 @@
         "3box>ipfs>multiaddr": true,
         "3box>ipfs>multiaddr-to-uri": true,
         "3box>ipfs>pull-mplex>interface-connection": true,
-        "browserify>os-browserify": true,
         "eslint>debug": true
       }
     },
     "3box>ipfs>libp2p-websockets>pull-ws": {
       "globals": {
         "WebSocket": true,
-        "location": true
+        "location": true,
+        "process.nextTick": true,
+        "setImmediate": true
       },
       "packages": {
         "3box>ipfs>libp2p-websockets>pull-ws>relative-url": true,
-        "browserify>browser-resolve": true,
-        "browserify>events": true,
-        "browserify>https-browserify": true,
-        "browserify>process": true,
-        "browserify>stream-http": true,
-        "browserify>timers-browserify": true,
-        "browserify>url": true,
-        "ethereumjs-wallet>safe-buffer": true
-      }
-    },
-    "3box>ipfs>libp2p-websockets>pull-ws>relative-url": {
-      "packages": {
-        "browserify>url": true
+        "ethereumjs-wallet>safe-buffer": true,
+        "mockttp>ws": true
       }
     },
     "3box>ipfs>libp2p>libp2p-connection-manager": {
       "packages": {
         "3box>ipfs>libp2p>libp2p-connection-manager>latency-monitor": true,
-        "browserify>events": true,
         "eslint>debug": true
       }
     },
@@ -1498,13 +1899,12 @@
         "clearTimeout": true,
         "document": true,
         "performance": true,
+        "process": true,
         "setInterval": true,
         "setTimeout": true
       },
       "packages": {
         "3box>ipfs>libp2p>libp2p-connection-manager>latency-monitor>debug": true,
-        "browserify>events": true,
-        "browserify>process": true,
         "lodash": true
       }
     },
@@ -1518,8 +1918,7 @@
         "process": true
       },
       "packages": {
-        "3box>ipfs>libp2p>libp2p-connection-manager>latency-monitor>debug>ms": true,
-        "browserify>process": true
+        "3box>ipfs>libp2p>libp2p-connection-manager>latency-monitor>debug>ms": true
       }
     },
     "3box>ipfs>libp2p>libp2p-floodsub": {
@@ -1528,11 +1927,15 @@
         "3box>ipfs>libp2p-secio>pull-length-prefixed": true,
         "3box>ipfs>libp2p>libp2p-floodsub>libp2p-pubsub": true,
         "3box>ipfs>pull-stream": true,
-        "browserify>assert": true,
         "eslint>debug": true
       }
     },
     "3box>ipfs>libp2p>libp2p-floodsub>libp2p-pubsub": {
+      "globals": {
+        "Buffer.concat": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true
+      },
       "packages": {
         "3box>ipfs>async": true,
         "3box>ipfs>bs58": true,
@@ -1543,9 +1946,6 @@
         "3box>ipfs>protons": true,
         "3box>ipfs>pull-pushable": true,
         "3box>ipfs>pull-stream": true,
-        "browserify>buffer": true,
-        "browserify>events": true,
-        "browserify>insert-module-globals>is-buffer": true,
         "eslint>debug": true
       }
     },
@@ -1565,7 +1965,6 @@
         "3box>ipfs>libp2p-crypto": true,
         "3box>ipfs>libp2p-secio>pull-handshake": true,
         "3box>ipfs>pull-stream": true,
-        "browserify>events": true,
         "eslint>debug": true
       }
     },
@@ -1587,8 +1986,6 @@
         "3box>ipfs>peer-info": true,
         "3box>ipfs>pull-mplex>interface-connection": true,
         "3box>ipfs>pull-stream": true,
-        "browserify>assert": true,
-        "browserify>events": true,
         "eslint>debug": true,
         "pump>once": true
       }
@@ -1611,13 +2008,14 @@
         "3box>ipfs>protons": true,
         "3box>ipfs>pull-mplex>interface-connection": true,
         "3box>ipfs>pull-stream": true,
-        "browserify>events": true,
         "eslint>debug": true,
         "pump>once": true
       }
     },
     "3box>ipfs>libp2p>libp2p-switch>libp2p-identify": {
       "globals": {
+        "Buffer.alloc": true,
+        "Buffer.from": true,
         "console.warn": true
       },
       "packages": {
@@ -1626,11 +2024,15 @@
         "3box>ipfs>peer-id": true,
         "3box>ipfs>peer-info": true,
         "3box>ipfs>protons": true,
-        "3box>ipfs>pull-stream": true,
-        "browserify>buffer": true
+        "3box>ipfs>pull-stream": true
       }
     },
     "3box>ipfs>libp2p>libp2p-switch>multistream-select": {
+      "globals": {
+        "Buffer.concat": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true
+      },
       "packages": {
         "3box>ipfs>async": true,
         "3box>ipfs>err-code": true,
@@ -1640,23 +2042,20 @@
         "3box>ipfs>pull-mplex>interface-connection": true,
         "3box>ipfs>pull-stream": true,
         "3box>ipfs>varint": true,
-        "browserify>assert": true,
-        "browserify>buffer": true,
         "eslint>debug": true,
         "pump>once": true
       }
     },
     "3box>ipfs>libp2p>libp2p-switch>multistream-select>semver": {
       "globals": {
-        "console": true
-      },
-      "packages": {
-        "browserify>process": true
+        "console": true,
+        "process": true
       }
     },
     "3box>ipfs>libp2p>libp2p-switch>retimer": {
       "globals": {
         "clearTimeout": true,
+        "process.hrtime": true,
         "setTimeout": true
       }
     },
@@ -1671,13 +2070,15 @@
       }
     },
     "3box>ipfs>multiaddr": {
+      "globals": {
+        "Buffer": true
+      },
       "packages": {
         "3box>ipfs>bs58": true,
         "3box>ipfs>class-is": true,
         "3box>ipfs>multiaddr>hi-base32": true,
         "3box>ipfs>multiaddr>is-ip": true,
         "3box>ipfs>varint": true,
-        "browserify>buffer": true,
         "react-devtools>ip": true
       }
     },
@@ -1688,10 +2089,8 @@
     },
     "3box>ipfs>multiaddr>hi-base32": {
       "globals": {
-        "define": true
-      },
-      "packages": {
-        "browserify>process": true
+        "define": true,
+        "process": true
       }
     },
     "3box>ipfs>multiaddr>is-ip": {
@@ -1700,9 +2099,13 @@
       }
     },
     "3box>ipfs>multibase": {
+      "globals": {
+        "Buffer.concat": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true
+      },
       "packages": {
-        "3box>ipfs>multibase>base-x": true,
-        "browserify>buffer": true
+        "3box>ipfs>multibase>base-x": true
       }
     },
     "3box>ipfs>multibase>base-x": {
@@ -1711,29 +2114,34 @@
       }
     },
     "3box>ipfs>multicodec": {
+      "globals": {
+        "Buffer.concat": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true
+      },
       "packages": {
-        "3box>ipfs>varint": true,
-        "browserify>buffer": true
+        "3box>ipfs>varint": true
       }
     },
     "3box>ipfs>multihashes": {
+      "globals": {
+        "Buffer.concat": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true
+      },
       "packages": {
         "3box>ipfs>bs58": true,
-        "3box>ipfs>varint": true,
-        "browserify>buffer": true
+        "3box>ipfs>varint": true
       }
     },
     "3box>ipfs>multihashing-async": {
       "globals": {
-        "crypto": true,
-        "msCrypto": true
+        "Buffer": true,
+        "process.nextTick": true
       },
       "packages": {
         "3box>ipfs>multihashes": true,
         "3box>ipfs>multihashing-async>murmurhash3js": true,
-        "3box>ipfs>multihashing-async>nodeify": true,
-        "browserify>buffer": true,
-        "browserify>process": true,
         "ethereumjs-util>ethereum-cryptography>blakejs": true,
         "ethers>@ethersproject/keccak256>js-sha3": true
       }
@@ -1743,60 +2151,44 @@
         "define": true
       }
     },
-    "3box>ipfs>multihashing-async>nodeify": {
-      "globals": {
-        "setTimeout": true
-      },
-      "packages": {
-        "3box>ipfs>multihashing-async>nodeify>is-promise": true,
-        "3box>ipfs>multihashing-async>nodeify>promise": true,
-        "browserify>process": true,
-        "browserify>timers-browserify": true
-      }
-    },
-    "3box>ipfs>multihashing-async>nodeify>promise": {
-      "globals": {
-        "setImediate": true,
-        "setTimeout": true
-      },
-      "packages": {
-        "3box>ipfs>multihashing-async>nodeify>is-promise": true,
-        "browserify>process": true
-      }
-    },
     "3box>ipfs>peer-book": {
+      "globals": {
+        "Buffer.isBuffer": true
+      },
       "packages": {
         "3box>ipfs>bs58": true,
         "3box>ipfs>peer-id": true,
-        "3box>ipfs>peer-info": true,
-        "browserify>insert-module-globals>is-buffer": true
+        "3box>ipfs>peer-info": true
       }
     },
     "3box>ipfs>peer-id": {
+      "globals": {
+        "Buffer.from": true,
+        "Buffer.isBuffer": true
+      },
       "packages": {
         "3box>ipfs>async": true,
         "3box>ipfs>class-is": true,
         "3box>ipfs>libp2p-crypto": true,
-        "3box>ipfs>multihashes": true,
-        "browserify>assert": true,
-        "browserify>buffer": true
+        "3box>ipfs>multihashes": true
       }
     },
     "3box>ipfs>peer-info": {
       "packages": {
         "3box>ipfs>multiaddr": true,
         "3box>ipfs>peer-id": true,
-        "3box>ipfs>peer-info>unique-by": true,
-        "browserify>assert": true
+        "3box>ipfs>peer-info>unique-by": true
       }
     },
     "3box>ipfs>protons": {
+      "globals": {
+        "Buffer.allocUnsafe": true,
+        "Buffer.isBuffer": true
+      },
       "packages": {
         "3box>ipfs>protons>protocol-buffers-schema": true,
         "3box>ipfs>protons>signed-varint": true,
         "3box>ipfs>varint": true,
-        "browserify>buffer": true,
-        "browserify>insert-module-globals>is-buffer": true,
         "ethereumjs-wallet>safe-buffer": true
       }
     },
@@ -1805,7 +2197,23 @@
         "3box>ipfs>varint": true
       }
     },
+    "3box>ipfs>pull-file": {
+      "globals": {
+        "Buffer": true
+      },
+      "packages": {
+        "3box>ipfs>pull-file>pull-utf8-decoder": true
+      }
+    },
     "3box>ipfs>pull-mplex": {
+      "globals": {
+        "Buffer.alloc": true,
+        "Buffer.allocUnsafe": true,
+        "Buffer.byteLength": true,
+        "Buffer.concat": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true
+      },
       "packages": {
         "3box>ipfs>async": true,
         "3box>ipfs>pull-abortable": true,
@@ -1815,8 +2223,6 @@
         "3box>ipfs>pull-pushable": true,
         "3box>ipfs>pull-stream": true,
         "3box>ipfs>varint": true,
-        "browserify>buffer": true,
-        "browserify>events": true,
         "eslint>debug": true
       }
     },
@@ -1847,19 +2253,20 @@
       }
     },
     "3box>ipfs>pull-stream-to-stream": {
-      "packages": {
-        "browserify>process": true,
-        "browserify>stream-browserify": true,
-        "browserify>timers-browserify": true
+      "globals": {
+        "process.nextTick": true,
+        "setImmediate": true
       }
     },
     "3box>ipfs>readable-stream": {
+      "globals": {
+        "process.env.READABLE_STREAM": true,
+        "process.nextTick": true,
+        "process.stderr": true,
+        "process.stdout": true
+      },
       "packages": {
         "@storybook/api>util-deprecate": true,
-        "browserify>browser-resolve": true,
-        "browserify>buffer": true,
-        "browserify>events": true,
-        "browserify>process": true,
         "browserify>string_decoder": true,
         "pumpify>inherits": true
       }
@@ -1875,20 +2282,18 @@
     },
     "3box>ipfs>stream-to-pull-stream": {
       "globals": {
-        "console.error": true
+        "console.error": true,
+        "process.nextTick": true
       },
       "packages": {
         "3box>ipfs>pull-stream": true,
-        "3box>ipfs>stream-to-pull-stream>looper": true,
-        "browserify>process": true
+        "3box>ipfs>stream-to-pull-stream>looper": true
       }
     },
     "3box>js-sha256": {
       "globals": {
-        "define": true
-      },
-      "packages": {
-        "browserify>process": true
+        "define": true,
+        "process": true
       }
     },
     "3box>muport-did-resolver": {
@@ -1917,8 +2322,7 @@
         "3box>orbit-db>orbit-db-io": true,
         "3box>orbit-db>orbit-db-keystore": true,
         "3box>orbit-db>orbit-db-kvstore": true,
-        "3box>orbit-db>orbit-db-pubsub": true,
-        "browserify>path-browserify": true
+        "3box>orbit-db>orbit-db-pubsub": true
       }
     },
     "3box>orbit-db>ipfs-pubsub-1on1": {
@@ -1927,27 +2331,15 @@
         "setInterval": true
       },
       "packages": {
-        "3box>orbit-db>ipfs-pubsub-1on1>safe-buffer": true,
-        "browserify>events": true,
-        "browserify>path-browserify": true
-      }
-    },
-    "3box>orbit-db>ipfs-pubsub-1on1>safe-buffer": {
-      "packages": {
-        "browserify>buffer": true
+        "3box>orbit-db>ipfs-pubsub-1on1>safe-buffer": true
       }
     },
     "3box>orbit-db>logplease": {
       "globals": {
         "LOG": true,
         "console.error": true,
-        "console.log": true
-      },
-      "packages": {
-        "browserify>browser-resolve": true,
-        "browserify>events": true,
-        "browserify>process": true,
-        "browserify>util": true
+        "console.log": true,
+        "process": true
       }
     },
     "3box>orbit-db>orbit-db-access-controllers": {
@@ -1957,8 +2349,6 @@
       "packages": {
         "3box>orbit-db>orbit-db-access-controllers>p-map-series": true,
         "3box>orbit-db>orbit-db-io": true,
-        "browserify>events": true,
-        "browserify>path-browserify": true,
         "ethereumjs-wallet>safe-buffer": true
       }
     },
@@ -1970,53 +2360,42 @@
     "3box>orbit-db>orbit-db-cache": {
       "packages": {
         "3box>orbit-db>logplease": true,
-        "3box>orbit-db>orbit-db-cache>level-js": true,
-        "browserify>path-browserify": true
-      }
-    },
-    "3box>orbit-db>orbit-db-cache>level-js": {
-      "globals": {
-        "IDBKeyRange.bound": true,
-        "IDBKeyRange.lowerBound": true,
-        "IDBKeyRange.upperBound": true,
-        "indexedDB": true
-      },
-      "packages": {
-        "3box>orbit-db>orbit-db-cache>level-js>abstract-leveldown": true,
-        "3box>orbit-db>orbit-db-cache>level-js>immediate": true,
-        "3box>orbit-db>orbit-db-cache>level-js>ltgt": true,
-        "browserify>buffer": true,
-        "browserify>insert-module-globals>is-buffer": true,
-        "pumpify>inherits": true,
-        "stylelint>write-file-atomic>typedarray-to-buffer": true
+        "3box>orbit-db>orbit-db-cache>leveldown": true,
+        "nock>mkdirp": true
       }
     },
     "3box>orbit-db>orbit-db-cache>level-js>abstract-leveldown": {
+      "globals": {
+        "Buffer.isBuffer": true,
+        "process.nextTick": true
+      },
       "packages": {
-        "browserify>insert-module-globals>is-buffer": true,
-        "browserify>process": true,
         "watchify>xtend": true
       }
     },
-    "3box>orbit-db>orbit-db-cache>level-js>immediate": {
+    "3box>orbit-db>orbit-db-cache>leveldown": {
       "globals": {
-        "MessageChannel": true,
-        "MutationObserver": true,
-        "WebKitMutationObserver": true,
-        "clearTimeout": true,
-        "document.createElement": true,
-        "document.createTextNode": true,
-        "document.documentElement.appendChild": true,
-        "setImmediate": true,
-        "setTimeout": true
+        "Buffer.isBuffer": true,
+        "__dirname": true
       },
       "packages": {
-        "browserify>process": true
+        "3box>orbit-db>orbit-db-cache>level-js>abstract-leveldown": true,
+        "3box>orbit-db>orbit-db-cache>leveldown>fast-future": true,
+        "3box>orbit-db>orbit-db-cache>leveldown>node-gyp-build": true
       }
     },
-    "3box>orbit-db>orbit-db-cache>level-js>ltgt": {
-      "packages": {
-        "browserify>insert-module-globals>is-buffer": true
+    "3box>orbit-db>orbit-db-cache>leveldown>fast-future": {
+      "globals": {
+        "process.maxTickDepth": true,
+        "process.nextTick": true,
+        "setImmediate": true
+      }
+    },
+    "3box>orbit-db>orbit-db-cache>leveldown>node-gyp-build": {
+      "globals": {
+        "__non_webpack_require__": true,
+        "__webpack_require__": true,
+        "process": true
       }
     },
     "3box>orbit-db>orbit-db-counterstore": {
@@ -2048,10 +2427,12 @@
       }
     },
     "3box>orbit-db>orbit-db-io": {
+      "globals": {
+        "Buffer.from": true
+      },
       "packages": {
         "3box>ipfs>cids": true,
-        "3box>ipfs>ipld-dag-pb": true,
-        "browserify>buffer": true
+        "3box>ipfs>ipld-dag-pb": true
       }
     },
     "3box>orbit-db>orbit-db-keystore": {
@@ -2062,22 +2443,40 @@
       "packages": {
         "3box>ethers>elliptic": true,
         "3box>ipfs>libp2p-crypto": true,
-        "3box>orbit-db>orbit-db-cache>level-js": true,
+        "3box>orbit-db>orbit-db-keystore>leveldown": true,
         "3box>orbit-db>orbit-db-keystore>levelup": true,
         "3box>orbit-db>orbit-db-keystore>lru": true,
         "eth-trezor-keyring>hdkey>secp256k1": true,
-        "ethereumjs-wallet>safe-buffer": true
+        "ethereumjs-wallet>safe-buffer": true,
+        "nock>mkdirp": true
+      }
+    },
+    "3box>orbit-db>orbit-db-keystore>leveldown": {
+      "globals": {
+        "Buffer.isBuffer": true,
+        "__dirname": true,
+        "process.nextTick": true
+      },
+      "packages": {
+        "3box>orbit-db>orbit-db-cache>level-js>abstract-leveldown": true,
+        "3box>orbit-db>orbit-db-keystore>leveldown>node-gyp-build": true
+      }
+    },
+    "3box>orbit-db>orbit-db-keystore>leveldown>node-gyp-build": {
+      "globals": {
+        "__non_webpack_require__": true,
+        "__webpack_require__": true,
+        "process": true
       }
     },
     "3box>orbit-db>orbit-db-keystore>levelup": {
+      "globals": {
+        "process.nextTick": true
+      },
       "packages": {
         "3box>orbit-db>orbit-db-keystore>levelup>deferred-leveldown": true,
         "3box>orbit-db>orbit-db-keystore>levelup>level-errors": true,
         "3box>orbit-db>orbit-db-keystore>levelup>level-iterator-stream": true,
-        "browserify>assert": true,
-        "browserify>events": true,
-        "browserify>process": true,
-        "browserify>util": true,
         "watchify>xtend": true
       }
     },
@@ -2100,19 +2499,20 @@
       }
     },
     "3box>orbit-db>orbit-db-keystore>levelup>level-iterator-stream>readable-stream": {
+      "globals": {
+        "process.env.READABLE_STREAM": true,
+        "process.nextTick": true,
+        "process.stderr": true,
+        "process.stdout": true
+      },
       "packages": {
         "@storybook/api>util-deprecate": true,
-        "browserify>browser-resolve": true,
-        "browserify>buffer": true,
-        "browserify>events": true,
-        "browserify>process": true,
         "browserify>string_decoder": true,
         "pumpify>inherits": true
       }
     },
     "3box>orbit-db>orbit-db-keystore>lru": {
       "packages": {
-        "browserify>events": true,
         "pumpify>inherits": true
       }
     },
@@ -2122,11 +2522,13 @@
       }
     },
     "3box>orbit-db>orbit-db-pubsub": {
+      "globals": {
+        "Buffer.from": true
+      },
       "packages": {
         "3box>orbit-db>logplease": true,
         "3box>orbit-db>orbit-db-pubsub>ipfs-pubsub-peer-monitor": true,
-        "3box>orbit-db>orbit-db-pubsub>p-series": true,
-        "browserify>buffer": true
+        "3box>orbit-db>orbit-db-pubsub>p-series": true
       }
     },
     "3box>orbit-db>orbit-db-pubsub>ipfs-pubsub-peer-monitor": {
@@ -2134,9 +2536,6 @@
         "clearInterval": true,
         "setInterval": true,
         "setTimeout": true
-      },
-      "packages": {
-        "browserify>events": true
       }
     },
     "3box>orbit-db>orbit-db-pubsub>p-series": {
@@ -2146,13 +2545,15 @@
       }
     },
     "3box>orbit-db>orbit-db-pubsub>p-series>@sindresorhus/is": {
-      "packages": {
-        "browserify>insert-module-globals>is-buffer": true,
-        "browserify>util": true
+      "globals": {
+        "Buffer.isBuffer": true
       }
     },
     "3box>orbit-db>orbit-db-store": {
       "globals": {
+        "Buffer.alloc": true,
+        "Buffer.concat": true,
+        "Buffer.from": true,
         "clearInterval": true,
         "console.error": true,
         "console.warn": true,
@@ -2165,8 +2566,6 @@
         "3box>orbit-db>logplease": true,
         "3box>orbit-db>orbit-db-io": true,
         "3box>orbit-db>orbit-db-store>p-each-series": true,
-        "browserify>buffer": true,
-        "browserify>events": true,
         "readable-stream": true
       }
     },
@@ -2186,18 +2585,13 @@
         "crypto": true,
         "msCrypto": true,
         "nacl": "write"
-      },
-      "packages": {
-        "browserify>browser-resolve": true
       }
     },
     "3box>tweetnacl-util": {
       "globals": {
+        "Buffer": true,
         "atob": true,
         "btoa": true
-      },
-      "packages": {
-        "browserify>browser-resolve": true
       }
     },
     "@babel/runtime": {
@@ -2212,10 +2606,13 @@
       }
     },
     "@ethereumjs/common": {
+      "globals": {
+        "Buffer.alloc": true,
+        "Buffer.concat": true,
+        "Buffer.from": true
+      },
       "packages": {
         "@ethereumjs/common>crc-32": true,
-        "browserify>buffer": true,
-        "browserify>events": true,
         "ethereumjs-util": true
       }
     },
@@ -2226,55 +2623,64 @@
       }
     },
     "@ethereumjs/tx": {
+      "globals": {
+        "Buffer.concat": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true
+      },
       "packages": {
         "@ethereumjs/common": true,
-        "browserify>buffer": true,
-        "browserify>insert-module-globals>is-buffer": true,
         "ethereumjs-util": true
       }
     },
     "@keystonehq/bc-ur-registry-eth>@keystonehq/bc-ur-registry": {
       "globals": {
+        "Buffer": true,
         "define": true
       },
       "packages": {
         "@ngraveio/bc-ur": true,
-        "browserify>buffer": true,
         "ethereumjs-wallet>bs58check": true
       }
     },
     "@keystonehq/bc-ur-registry-eth>hdkey": {
       "packages": {
         "@keystonehq/bc-ur-registry-eth>hdkey>secp256k1": true,
-        "browserify>assert": true,
-        "browserify>crypto-browserify": true,
         "ethereumjs-wallet>bs58check": true,
         "ethereumjs-wallet>safe-buffer": true
       }
     },
     "@keystonehq/bc-ur-registry-eth>hdkey>secp256k1": {
+      "globals": {
+        "__dirname": true
+      },
       "packages": {
-        "3box>ethers>elliptic": true
+        "3box>ethers>elliptic": true,
+        "lavamoat>node-gyp-build": true
       }
     },
     "@keystonehq/metamask-airgapped-keyring": {
+      "globals": {
+        "Buffer.from": true
+      },
       "packages": {
         "@ethereumjs/tx": true,
         "@keystonehq/metamask-airgapped-keyring>@keystonehq/base-eth-keyring": true,
         "@keystonehq/metamask-airgapped-keyring>@keystonehq/bc-ur-registry-eth": true,
         "@keystonehq/metamask-airgapped-keyring>@metamask/obs-store": true,
-        "browserify>buffer": true,
-        "browserify>events": true,
         "ethereumjs-util>rlp": true,
         "uuid": true
       }
     },
     "@keystonehq/metamask-airgapped-keyring>@keystonehq/base-eth-keyring": {
+      "globals": {
+        "Buffer.concat": true,
+        "Buffer.from": true
+      },
       "packages": {
         "@keystonehq/bc-ur-registry-eth>hdkey": true,
         "@keystonehq/metamask-airgapped-keyring>@keystonehq/base-eth-keyring>@ethereumjs/tx": true,
         "@keystonehq/metamask-airgapped-keyring>@keystonehq/base-eth-keyring>@keystonehq/bc-ur-registry-eth": true,
-        "browserify>buffer": true,
         "ethereumjs-util": true,
         "uuid": true
       }
@@ -2282,24 +2688,27 @@
     "@keystonehq/metamask-airgapped-keyring>@keystonehq/base-eth-keyring>@ethereumjs/tx": {
       "packages": {
         "@ethereumjs/common": true,
-        "browserify>buffer": true,
         "ethereumjs-util": true
       }
     },
     "@keystonehq/metamask-airgapped-keyring>@keystonehq/base-eth-keyring>@keystonehq/bc-ur-registry-eth": {
+      "globals": {
+        "Buffer.from": true
+      },
       "packages": {
         "@keystonehq/bc-ur-registry-eth>@keystonehq/bc-ur-registry": true,
         "@keystonehq/bc-ur-registry-eth>hdkey": true,
-        "browserify>buffer": true,
         "ethereumjs-util": true,
         "uuid": true
       }
     },
     "@keystonehq/metamask-airgapped-keyring>@keystonehq/bc-ur-registry-eth": {
+      "globals": {
+        "Buffer.from": true
+      },
       "packages": {
         "@keystonehq/bc-ur-registry-eth>@keystonehq/bc-ur-registry": true,
         "@keystonehq/bc-ur-registry-eth>hdkey": true,
-        "browserify>buffer": true,
         "ethereumjs-util": true,
         "uuid": true
       }
@@ -2307,20 +2716,21 @@
     "@keystonehq/metamask-airgapped-keyring>@metamask/obs-store": {
       "packages": {
         "@keystonehq/metamask-airgapped-keyring>@metamask/obs-store>through2": true,
-        "browserify>stream-browserify": true,
         "json-rpc-engine>@metamask/safe-event-emitter": true
       }
     },
     "@keystonehq/metamask-airgapped-keyring>@metamask/obs-store>through2": {
+      "globals": {
+        "process.nextTick": true
+      },
       "packages": {
-        "browserify>process": true,
-        "browserify>util": true,
         "readable-stream": true,
         "watchify>xtend": true
       }
     },
     "@metamask/controllers": {
       "globals": {
+        "Buffer.from": true,
         "Headers": true,
         "URL": true,
         "clearInterval": true,
@@ -2346,8 +2756,6 @@
         "@metamask/controllers>web3-provider-engine": true,
         "@metamask/metamask-eth-abis": true,
         "@storybook/api>fast-deep-equal": true,
-        "browserify>buffer": true,
-        "browserify>events": true,
         "deep-freeze-strict": true,
         "eth-ens-namehash": true,
         "eth-json-rpc-infura": true,
@@ -2368,8 +2776,15 @@
       }
     },
     "@metamask/controllers>abort-controller": {
+      "packages": {
+        "@metamask/controllers>abort-controller>event-target-shim": true
+      }
+    },
+    "@metamask/controllers>abort-controller>event-target-shim": {
       "globals": {
-        "AbortController": true
+        "Event": true,
+        "EventTarget": true,
+        "console": true
       }
     },
     "@metamask/controllers>async-mutex": {
@@ -2392,6 +2807,7 @@
     },
     "@metamask/controllers>eth-method-registry>ethjs": {
       "globals": {
+        "Buffer": true,
         "clearInterval": true,
         "setInterval": true
       },
@@ -2401,7 +2817,6 @@
         "@metamask/controllers>eth-method-registry>ethjs>ethjs-contract": true,
         "@metamask/controllers>eth-method-registry>ethjs>ethjs-query": true,
         "@metamask/controllers>eth-method-registry>ethjs>js-sha3": true,
-        "browserify>buffer": true,
         "ethjs>ethjs-filter": true,
         "ethjs>ethjs-provider-http": true,
         "ethjs>ethjs-unit": true,
@@ -2410,10 +2825,12 @@
       }
     },
     "@metamask/controllers>eth-method-registry>ethjs>ethjs-abi": {
+      "globals": {
+        "Buffer": true
+      },
       "packages": {
         "@metamask/controllers>eth-method-registry>ethjs>bn.js": true,
         "@metamask/controllers>eth-method-registry>ethjs>js-sha3": true,
-        "browserify>buffer": true,
         "ethjs>number-to-bn": true
       }
     },
@@ -2428,10 +2845,12 @@
       }
     },
     "@metamask/controllers>eth-method-registry>ethjs>ethjs-contract>ethjs-abi": {
+      "globals": {
+        "Buffer": true
+      },
       "packages": {
         "@metamask/controllers>eth-method-registry>ethjs>bn.js": true,
         "@metamask/controllers>eth-method-registry>ethjs>js-sha3": true,
-        "browserify>buffer": true,
         "ethjs>number-to-bn": true
       }
     },
@@ -2447,8 +2866,8 @@
       }
     },
     "@metamask/controllers>eth-method-registry>ethjs>js-sha3": {
-      "packages": {
-        "browserify>process": true
+      "globals": {
+        "process": true
       }
     },
     "@metamask/controllers>eth-phishing-detect": {
@@ -2457,11 +2876,15 @@
       }
     },
     "@metamask/controllers>ethereumjs-wallet": {
+      "globals": {
+        "Buffer.alloc": true,
+        "Buffer.concat": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true
+      },
       "packages": {
         "@metamask/controllers>ethereumjs-wallet>uuid": true,
         "@truffle/codec>utf8": true,
-        "browserify>buffer": true,
-        "browserify>crypto-browserify": true,
         "ethereumjs-util": true,
         "ethereumjs-util>ethereum-cryptography": true,
         "ethereumjs-wallet>aes-js": true,
@@ -2470,29 +2893,15 @@
         "ethers>@ethersproject/json-wallets>scrypt-js": true
       }
     },
-    "@metamask/controllers>ethereumjs-wallet>uuid": {
-      "globals": {
-        "crypto": true,
-        "msCrypto": true
-      }
-    },
     "@metamask/controllers>isomorphic-fetch": {
       "globals": {
-        "fetch.bind": true
+        "Headers": "write",
+        "Request": "write",
+        "Response": "write",
+        "fetch": "write"
       },
       "packages": {
-        "@metamask/controllers>isomorphic-fetch>whatwg-fetch": true
-      }
-    },
-    "@metamask/controllers>isomorphic-fetch>whatwg-fetch": {
-      "globals": {
-        "Blob": true,
-        "FileReader": true,
-        "FormData": true,
-        "URLSearchParams.prototype.isPrototypeOf": true,
-        "XMLHttpRequest": true,
-        "define": true,
-        "setTimeout": true
+        "node-fetch": true
       }
     },
     "@metamask/controllers>multiformats": {
@@ -2509,6 +2918,7 @@
     },
     "@metamask/controllers>web3-provider-engine": {
       "globals": {
+        "Buffer.from": true,
         "WebSocket": true,
         "console": true,
         "setTimeout": true
@@ -2522,13 +2932,10 @@
         "@metamask/controllers>web3-provider-engine>eth-sig-util": true,
         "@metamask/controllers>web3-provider-engine>ethereumjs-util": true,
         "@metamask/controllers>web3-provider-engine>semaphore": true,
-        "browserify>browser-resolve": true,
-        "browserify>buffer": true,
-        "browserify>events": true,
-        "browserify>util": true,
         "eth-json-rpc-filters": true,
         "eth-json-rpc-infura": true,
         "lavamoat>json-stable-stringify": true,
+        "mockttp>ws": true,
         "watchify>xtend": true
       }
     },
@@ -2538,14 +2945,7 @@
         "setTimeout": true
       },
       "packages": {
-        "@metamask/controllers>web3-provider-engine>backoff>precond": true,
-        "browserify>events": true,
-        "browserify>util": true
-      }
-    },
-    "@metamask/controllers>web3-provider-engine>backoff>precond": {
-      "packages": {
-        "browserify>util": true
+        "@metamask/controllers>web3-provider-engine>backoff>precond": true
       }
     },
     "@metamask/controllers>web3-provider-engine>cross-fetch>node-fetch": {
@@ -2574,7 +2974,6 @@
       "packages": {
         "@metamask/controllers>web3-provider-engine>eth-json-rpc-middleware>json-rpc-engine": true,
         "@metamask/controllers>web3-provider-engine>eth-rpc-errors": true,
-        "browserify>url": true,
         "lavamoat>json-stable-stringify": true,
         "node-fetch": true,
         "source-map-explorer>btoa": true,
@@ -2598,31 +2997,35 @@
       }
     },
     "@metamask/controllers>web3-provider-engine>eth-sig-util>ethereumjs-abi": {
+      "globals": {
+        "Buffer": true
+      },
       "packages": {
         "@metamask/controllers>web3-provider-engine>eth-sig-util>ethereumjs-abi>ethereumjs-util": true,
-        "bn.js": true,
-        "browserify>buffer": true
+        "bn.js": true
       }
     },
     "@metamask/controllers>web3-provider-engine>eth-sig-util>ethereumjs-abi>ethereumjs-util": {
+      "globals": {
+        "Buffer": true
+      },
       "packages": {
         "3box>ethers>elliptic": true,
         "@metamask/controllers>web3-provider-engine>ethereumjs-util>ethjs-util": true,
         "bn.js": true,
-        "browserify>assert": true,
-        "browserify>buffer": true,
         "ethereumjs-util>create-hash": true,
         "ethereumjs-util>ethereum-cryptography": true,
         "ethereumjs-util>rlp": true
       }
     },
     "@metamask/controllers>web3-provider-engine>ethereumjs-util": {
+      "globals": {
+        "Buffer": true
+      },
       "packages": {
         "3box>ethers>elliptic": true,
         "@metamask/controllers>web3-provider-engine>ethereumjs-util>ethjs-util": true,
         "bn.js": true,
-        "browserify>assert": true,
-        "browserify>buffer": true,
         "ethereumjs-util>create-hash": true,
         "ethereumjs-util>ethereum-cryptography": true,
         "ethereumjs-util>rlp": true,
@@ -2630,8 +3033,10 @@
       }
     },
     "@metamask/controllers>web3-provider-engine>ethereumjs-util>ethjs-util": {
+      "globals": {
+        "Buffer": true
+      },
       "packages": {
-        "browserify>buffer": true,
         "ethjs>ethjs-util>is-hex-prefixed": true,
         "ethjs>ethjs-util>strip-hex-prefix": true
       }
@@ -2639,14 +3044,14 @@
     "@metamask/controllers>web3-provider-engine>semaphore": {
       "globals": {
         "define": true,
+        "process": true,
         "setTimeout": true
-      },
-      "packages": {
-        "browserify>process": true
       }
     },
     "@metamask/eth-ledger-bridge-keyring": {
       "globals": {
+        "Buffer.from": true,
+        "Buffer.isBuffer": true,
         "addEventListener": true,
         "console.log": true,
         "document.createElement": true,
@@ -2658,8 +3063,6 @@
         "@ethereumjs/tx": true,
         "@metamask/eth-ledger-bridge-keyring>eth-sig-util": true,
         "@metamask/eth-ledger-bridge-keyring>hdkey": true,
-        "browserify>buffer": true,
-        "browserify>events": true,
         "ethereumjs-util": true
       }
     },
@@ -2668,17 +3071,17 @@
         "3box>tweetnacl": true,
         "3box>tweetnacl-util": true,
         "@metamask/eth-ledger-bridge-keyring>eth-sig-util>ethereumjs-util": true,
-        "browserify>buffer": true,
         "ethereumjs-abi": true
       }
     },
     "@metamask/eth-ledger-bridge-keyring>eth-sig-util>ethereumjs-util": {
+      "globals": {
+        "Buffer": true
+      },
       "packages": {
         "3box>ethers>elliptic": true,
         "@metamask/eth-ledger-bridge-keyring>eth-sig-util>ethereumjs-util>ethjs-util": true,
         "bn.js": true,
-        "browserify>assert": true,
-        "browserify>buffer": true,
         "ethereumjs-util>create-hash": true,
         "ethereumjs-util>ethereum-cryptography": true,
         "ethereumjs-util>rlp": true,
@@ -2686,16 +3089,16 @@
       }
     },
     "@metamask/eth-ledger-bridge-keyring>eth-sig-util>ethereumjs-util>ethjs-util": {
+      "globals": {
+        "Buffer": true
+      },
       "packages": {
-        "browserify>buffer": true,
         "ethjs>ethjs-util>is-hex-prefixed": true,
         "ethjs>ethjs-util>strip-hex-prefix": true
       }
     },
     "@metamask/eth-ledger-bridge-keyring>hdkey": {
       "packages": {
-        "browserify>assert": true,
-        "browserify>crypto-browserify": true,
         "eth-trezor-keyring>hdkey>coinstring": true,
         "eth-trezor-keyring>hdkey>secp256k1": true,
         "ethereumjs-wallet>safe-buffer": true
@@ -2707,14 +3110,14 @@
       },
       "packages": {
         "@metamask/obs-store>through2": true,
-        "browserify>stream-browserify": true,
         "json-rpc-engine>@metamask/safe-event-emitter": true
       }
     },
     "@metamask/obs-store>through2": {
+      "globals": {
+        "process.nextTick": true
+      },
       "packages": {
-        "browserify>process": true,
-        "browserify>util": true,
         "readable-stream": true,
         "watchify>xtend": true
       }
@@ -2732,23 +3135,22 @@
       }
     },
     "@metamask/post-message-stream>readable-stream": {
+      "globals": {
+        "process.browser": true,
+        "process.env.READABLE_STREAM": true,
+        "process.stderr": true,
+        "process.stdout": true,
+        "process.version.slice": true,
+        "setImmediate": true
+      },
       "packages": {
         "@metamask/post-message-stream>readable-stream>safe-buffer": true,
         "@metamask/post-message-stream>readable-stream>string_decoder": true,
         "@storybook/api>util-deprecate": true,
-        "browserify>browser-resolve": true,
-        "browserify>events": true,
-        "browserify>process": true,
-        "browserify>timers-browserify": true,
         "pumpify>inherits": true,
         "readable-stream>core-util-is": true,
         "readable-stream>isarray": true,
         "vinyl>cloneable-readable>process-nextick-args": true
-      }
-    },
-    "@metamask/post-message-stream>readable-stream>safe-buffer": {
-      "packages": {
-        "browserify>buffer": true
       }
     },
     "@metamask/post-message-stream>readable-stream>string_decoder": {
@@ -2779,36 +3181,31 @@
       }
     },
     "@metamask/rpc-methods>@metamask/key-tree": {
+      "globals": {
+        "Buffer": true
+      },
       "packages": {
         "@metamask/rpc-methods>@metamask/key-tree>@noble/ed25519": true,
         "@metamask/rpc-methods>@metamask/key-tree>@noble/hashes": true,
         "@metamask/rpc-methods>@metamask/key-tree>@noble/secp256k1": true,
         "@metamask/rpc-methods>@metamask/key-tree>@scure/base": true,
-        "@metamask/rpc-methods>@metamask/key-tree>@scure/bip39": true,
-        "browserify>buffer": true
+        "@metamask/rpc-methods>@metamask/key-tree>@scure/bip39": true
       }
     },
     "@metamask/rpc-methods>@metamask/key-tree>@noble/ed25519": {
       "globals": {
         "crypto": true
-      },
-      "packages": {
-        "browserify>browser-resolve": true
       }
     },
     "@metamask/rpc-methods>@metamask/key-tree>@noble/hashes": {
       "globals": {
         "TextEncoder": true,
-        "crypto": true,
         "setTimeout": true
       }
     },
     "@metamask/rpc-methods>@metamask/key-tree>@noble/secp256k1": {
       "globals": {
         "crypto": true
-      },
-      "packages": {
-        "browserify>browser-resolve": true
       }
     },
     "@metamask/rpc-methods>@metamask/key-tree>@scure/base": {
@@ -2844,6 +3241,7 @@
     },
     "@metamask/smart-transactions-controller>@metamask/controllers": {
       "globals": {
+        "Buffer.from": true,
         "Headers": true,
         "URL": true,
         "clearInterval": true,
@@ -2870,8 +3268,6 @@
         "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-wallet": true,
         "@metamask/smart-transactions-controller>@metamask/controllers>nanoid": true,
         "@storybook/api>fast-deep-equal": true,
-        "browserify>buffer": true,
-        "browserify>events": true,
         "deep-freeze-strict": true,
         "eth-ens-namehash": true,
         "eth-json-rpc-infura": true,
@@ -2894,7 +3290,6 @@
       "packages": {
         "@metamask/smart-transactions-controller>@metamask/controllers>eth-keyring-controller>bip39": true,
         "@metamask/smart-transactions-controller>@metamask/controllers>eth-keyring-controller>eth-hd-keyring": true,
-        "browserify>events": true,
         "eth-keyring-controller>browser-passworder": true,
         "eth-keyring-controller>eth-simple-keyring": true,
         "eth-keyring-controller>obs-store": true,
@@ -2926,23 +3321,21 @@
       }
     },
     "@metamask/smart-transactions-controller>@metamask/controllers>eth-keyring-controller>eth-hd-keyring>ethereumjs-wallet": {
+      "globals": {
+        "Buffer.alloc": true,
+        "Buffer.concat": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true
+      },
       "packages": {
         "@metamask/smart-transactions-controller>@metamask/controllers>eth-keyring-controller>eth-hd-keyring>ethereumjs-wallet>uuid": true,
         "@truffle/codec>utf8": true,
-        "browserify>buffer": true,
-        "browserify>crypto-browserify": true,
         "ethereumjs-util": true,
         "ethereumjs-util>ethereum-cryptography": true,
         "ethereumjs-wallet>aes-js": true,
         "ethereumjs-wallet>bs58check": true,
         "ethereumjs-wallet>randombytes": true,
         "ethers>@ethersproject/json-wallets>scrypt-js": true
-      }
-    },
-    "@metamask/smart-transactions-controller>@metamask/controllers>eth-keyring-controller>eth-hd-keyring>ethereumjs-wallet>uuid": {
-      "globals": {
-        "crypto": true,
-        "msCrypto": true
       }
     },
     "@metamask/smart-transactions-controller>@metamask/controllers>eth-method-registry": {
@@ -2952,6 +3345,7 @@
     },
     "@metamask/smart-transactions-controller>@metamask/controllers>eth-method-registry>ethjs": {
       "globals": {
+        "Buffer": true,
         "clearInterval": true,
         "setInterval": true
       },
@@ -2961,7 +3355,6 @@
         "@metamask/smart-transactions-controller>@metamask/controllers>eth-method-registry>ethjs>ethjs-contract": true,
         "@metamask/smart-transactions-controller>@metamask/controllers>eth-method-registry>ethjs>ethjs-query": true,
         "@metamask/smart-transactions-controller>@metamask/controllers>eth-method-registry>ethjs>js-sha3": true,
-        "browserify>buffer": true,
         "ethjs>ethjs-filter": true,
         "ethjs>ethjs-provider-http": true,
         "ethjs>ethjs-unit": true,
@@ -2970,10 +3363,12 @@
       }
     },
     "@metamask/smart-transactions-controller>@metamask/controllers>eth-method-registry>ethjs>ethjs-abi": {
+      "globals": {
+        "Buffer": true
+      },
       "packages": {
         "@metamask/smart-transactions-controller>@metamask/controllers>eth-method-registry>ethjs>bn.js": true,
         "@metamask/smart-transactions-controller>@metamask/controllers>eth-method-registry>ethjs>js-sha3": true,
-        "browserify>buffer": true,
         "ethjs>number-to-bn": true
       }
     },
@@ -2988,10 +3383,12 @@
       }
     },
     "@metamask/smart-transactions-controller>@metamask/controllers>eth-method-registry>ethjs>ethjs-contract>ethjs-abi": {
+      "globals": {
+        "Buffer": true
+      },
       "packages": {
         "@metamask/smart-transactions-controller>@metamask/controllers>eth-method-registry>ethjs>bn.js": true,
         "@metamask/smart-transactions-controller>@metamask/controllers>eth-method-registry>ethjs>js-sha3": true,
-        "browserify>buffer": true,
         "ethjs>number-to-bn": true
       }
     },
@@ -3007,28 +3404,26 @@
       }
     },
     "@metamask/smart-transactions-controller>@metamask/controllers>eth-method-registry>ethjs>js-sha3": {
-      "packages": {
-        "browserify>process": true
+      "globals": {
+        "process": true
       }
     },
     "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-wallet": {
+      "globals": {
+        "Buffer.alloc": true,
+        "Buffer.concat": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true
+      },
       "packages": {
         "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-wallet>uuid": true,
         "@truffle/codec>utf8": true,
-        "browserify>buffer": true,
-        "browserify>crypto-browserify": true,
         "ethereumjs-util": true,
         "ethereumjs-util>ethereum-cryptography": true,
         "ethereumjs-wallet>aes-js": true,
         "ethereumjs-wallet>bs58check": true,
         "ethereumjs-wallet>randombytes": true,
         "ethers>@ethersproject/json-wallets>scrypt-js": true
-      }
-    },
-    "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-wallet>uuid": {
-      "globals": {
-        "crypto": true,
-        "msCrypto": true
       }
     },
     "@metamask/smart-transactions-controller>@metamask/controllers>nanoid": {
@@ -3052,6 +3447,7 @@
     },
     "@metamask/snap-controllers": {
       "globals": {
+        "Buffer.byteLength": true,
         "URL": true,
         "Worker": true,
         "clearTimeout": true,
@@ -3085,8 +3481,6 @@
         "@metamask/snap-controllers>readable-web-to-node-stream": true,
         "@metamask/snap-controllers>tar-stream": true,
         "@storybook/api>fast-deep-equal": true,
-        "browserify>buffer": true,
-        "browserify>crypto-browserify": true,
         "eth-rpc-errors": true,
         "json-rpc-engine": true,
         "json-rpc-engine>@metamask/safe-event-emitter": true,
@@ -3097,14 +3491,14 @@
     "@metamask/snap-controllers>@metamask/obs-store": {
       "packages": {
         "@metamask/snap-controllers>@metamask/obs-store>through2": true,
-        "browserify>stream-browserify": true,
         "json-rpc-engine>@metamask/safe-event-emitter": true
       }
     },
     "@metamask/snap-controllers>@metamask/obs-store>through2": {
+      "globals": {
+        "process.nextTick": true
+      },
       "packages": {
-        "browserify>process": true,
-        "browserify>util": true,
         "readable-stream": true,
         "watchify>xtend": true
       }
@@ -3115,26 +3509,31 @@
       }
     },
     "@metamask/snap-controllers>concat-stream": {
+      "globals": {
+        "Buffer.concat": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true
+      },
       "packages": {
         "@metamask/snap-controllers>concat-stream>readable-stream": true,
-        "browserify>buffer": true,
         "pumpify>inherits": true
       }
     },
     "@metamask/snap-controllers>concat-stream>readable-stream": {
+      "globals": {
+        "process.env.READABLE_STREAM": true,
+        "process.nextTick": true,
+        "process.stderr": true,
+        "process.stdout": true
+      },
       "packages": {
         "@storybook/api>util-deprecate": true,
-        "browserify>browser-resolve": true,
-        "browserify>buffer": true,
-        "browserify>events": true,
-        "browserify>process": true,
         "browserify>string_decoder": true,
         "pumpify>inherits": true
       }
     },
     "@metamask/snap-controllers>gunzip-maybe": {
       "packages": {
-        "@metamask/snap-controllers>gunzip-maybe>browserify-zlib": true,
         "@metamask/snap-controllers>gunzip-maybe>is-deflate": true,
         "@metamask/snap-controllers>gunzip-maybe>is-gzip": true,
         "@metamask/snap-controllers>gunzip-maybe>peek-stream": true,
@@ -3142,28 +3541,23 @@
         "@metamask/snap-controllers>gunzip-maybe>through2": true
       }
     },
-    "@metamask/snap-controllers>gunzip-maybe>browserify-zlib": {
-      "packages": {
-        "@metamask/snap-controllers>gunzip-maybe>browserify-zlib>pako": true,
-        "browserify>assert": true,
-        "browserify>buffer": true,
-        "browserify>process": true,
-        "browserify>util": true,
-        "readable-stream": true
-      }
-    },
     "@metamask/snap-controllers>gunzip-maybe>peek-stream": {
+      "globals": {
+        "Buffer.concat": true,
+        "Buffer.isBuffer": true
+      },
       "packages": {
         "@metamask/snap-controllers>gunzip-maybe>peek-stream>duplexify": true,
         "@metamask/snap-controllers>gunzip-maybe>peek-stream>through2": true,
-        "browserify>buffer": true,
         "terser>source-map-support>buffer-from": true
       }
     },
     "@metamask/snap-controllers>gunzip-maybe>peek-stream>duplexify": {
+      "globals": {
+        "Buffer": true,
+        "process.nextTick": true
+      },
       "packages": {
-        "browserify>buffer": true,
-        "browserify>process": true,
         "duplexify>stream-shift": true,
         "end-of-stream": true,
         "pumpify>inherits": true,
@@ -3171,9 +3565,10 @@
       }
     },
     "@metamask/snap-controllers>gunzip-maybe>peek-stream>through2": {
+      "globals": {
+        "process.nextTick": true
+      },
       "packages": {
-        "browserify>process": true,
-        "browserify>util": true,
         "readable-stream": true,
         "watchify>xtend": true
       }
@@ -3186,9 +3581,11 @@
       }
     },
     "@metamask/snap-controllers>gunzip-maybe>pumpify>duplexify": {
+      "globals": {
+        "Buffer": true,
+        "process.nextTick": true
+      },
       "packages": {
-        "browserify>buffer": true,
-        "browserify>process": true,
         "duplexify>stream-shift": true,
         "end-of-stream": true,
         "pumpify>inherits": true,
@@ -3197,15 +3594,15 @@
     },
     "@metamask/snap-controllers>gunzip-maybe>pumpify>pump": {
       "packages": {
-        "browserify>browser-resolve": true,
         "end-of-stream": true,
         "pump>once": true
       }
     },
     "@metamask/snap-controllers>gunzip-maybe>through2": {
+      "globals": {
+        "process.nextTick": true
+      },
       "packages": {
-        "browserify>process": true,
-        "browserify>util": true,
         "readable-stream": true,
         "watchify>xtend": true
       }
@@ -3230,25 +3627,30 @@
       }
     },
     "@metamask/snap-controllers>readable-web-to-node-stream>readable-stream": {
+      "globals": {
+        "process.env.READABLE_STREAM": true,
+        "process.nextTick": true,
+        "process.stderr": true,
+        "process.stdout": true
+      },
       "packages": {
         "@storybook/api>util-deprecate": true,
-        "browserify>browser-resolve": true,
-        "browserify>buffer": true,
-        "browserify>events": true,
-        "browserify>process": true,
         "browserify>string_decoder": true,
         "pumpify>inherits": true
       }
     },
     "@metamask/snap-controllers>tar-stream": {
+      "globals": {
+        "Buffer.alloc": true,
+        "Buffer.byteLength": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true,
+        "process.nextTick": true
+      },
       "packages": {
         "@metamask/snap-controllers>tar-stream>bl": true,
         "@metamask/snap-controllers>tar-stream>fs-constants": true,
         "@metamask/snap-controllers>tar-stream>readable-stream": true,
-        "browserify>buffer": true,
-        "browserify>process": true,
-        "browserify>string_decoder": true,
-        "browserify>util": true,
         "end-of-stream": true,
         "pumpify>inherits": true
       }
@@ -3256,51 +3658,42 @@
     "@metamask/snap-controllers>tar-stream>bl": {
       "packages": {
         "@metamask/snap-controllers>tar-stream>readable-stream": true,
-        "browserify>buffer": true,
         "pumpify>inherits": true
       }
     },
-    "@metamask/snap-controllers>tar-stream>fs-constants": {
-      "packages": {
-        "browserify>constants-browserify": true
-      }
-    },
     "@metamask/snap-controllers>tar-stream>readable-stream": {
+      "globals": {
+        "process.env.READABLE_STREAM": true,
+        "process.nextTick": true,
+        "process.stderr": true,
+        "process.stdout": true
+      },
       "packages": {
         "@storybook/api>util-deprecate": true,
-        "browserify>browser-resolve": true,
-        "browserify>buffer": true,
-        "browserify>events": true,
-        "browserify>process": true,
         "browserify>string_decoder": true,
         "pumpify>inherits": true
       }
     },
     "@ngraveio/bc-ur": {
+      "globals": {
+        "Buffer.alloc": true,
+        "Buffer.allocUnsafe": true,
+        "Buffer.concat": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true
+      },
       "packages": {
         "@ngraveio/bc-ur>@apocentre/alias-sampling": true,
         "@ngraveio/bc-ur>bignumber.js": true,
         "@ngraveio/bc-ur>crc": true,
         "@ngraveio/bc-ur>jsbi": true,
         "addons-linter>sha.js": true,
-        "browserify>assert": true,
-        "browserify>buffer": true,
         "pubnub>cbor-sync": true
       }
     },
     "@ngraveio/bc-ur>bignumber.js": {
       "globals": {
         "crypto": true,
-        "define": true
-      }
-    },
-    "@ngraveio/bc-ur>crc": {
-      "packages": {
-        "browserify>buffer": true
-      }
-    },
-    "@ngraveio/bc-ur>jsbi": {
-      "globals": {
         "define": true
       }
     },
@@ -3377,11 +3770,11 @@
         "clearTimeout": true,
         "console.error": true,
         "document": true,
+        "process": true,
         "setTimeout": true
       },
       "packages": {
-        "@sentry/browser>tslib": true,
-        "browserify>process": true
+        "@sentry/browser>tslib": true
       }
     },
     "@sentry/browser>tslib": {
@@ -3389,19 +3782,27 @@
         "define": true
       }
     },
+    "@sentry/cli>proxy-from-env": {
+      "globals": {
+        "process.env": true
+      }
+    },
     "@storybook/api>regenerator-runtime": {
       "globals": {
         "regeneratorRuntime": "write"
       }
     },
-    "@storybook/api>util-deprecate": {
+    "@storybook/client-api>stable": {
       "globals": {
-        "console.trace": true,
-        "console.warn": true,
-        "localStorage": true
+        "define": true
       }
     },
-    "@storybook/client-api>stable": {
+    "@storybook/react>babel-plugin-react-docgen>react-docgen>ast-types": {
+      "globals": {
+        "console.error": true
+      }
+    },
+    "addons-linter>esprima": {
       "globals": {
         "define": true
       }
@@ -3416,6 +3817,7 @@
       "globals": {
         "clearTimeout": true,
         "console.log": true,
+        "process": true,
         "setImmediate": true,
         "setTimeout": true
       },
@@ -3427,21 +3829,23 @@
         "analytics-node>md5": true,
         "analytics-node>ms": true,
         "analytics-node>remove-trailing-slash": true,
-        "analytics-node>uuid": true,
-        "browserify>assert": true,
-        "browserify>process": true
+        "analytics-node>uuid": true
       }
     },
     "analytics-node>@segment/loosely-validate-event": {
+      "globals": {
+        "Buffer.byteLength": true
+      },
       "packages": {
         "analytics-node>@segment/loosely-validate-event>component-type": true,
-        "analytics-node>@segment/loosely-validate-event>join-component": true,
-        "browserify>assert": true,
-        "browserify>buffer": true
+        "analytics-node>@segment/loosely-validate-event>join-component": true
       }
     },
     "analytics-node>axios": {
       "globals": {
+        "Buffer.concat": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true,
         "FormData": true,
         "URLSearchParams": true,
         "XMLHttpRequest": true,
@@ -3450,10 +3854,11 @@
         "document": true,
         "location.href": true,
         "navigator": true,
+        "process": true,
         "setTimeout": true
       },
       "packages": {
-        "browserify>process": true
+        "chromedriver>axios>follow-redirects": true
       }
     },
     "analytics-node>axios-retry": {
@@ -3471,16 +3876,10 @@
         "browserify>insert-module-globals>is-buffer": true
       }
     },
-    "analytics-node>uuid": {
-      "globals": {
-        "crypto": true,
-        "msCrypto": true
-      }
-    },
     "await-semaphore": {
-      "packages": {
-        "browserify>process": true,
-        "browserify>timers-browserify": true
+      "globals": {
+        "process": true,
+        "setImmediate": true
       }
     },
     "base32-encode": {
@@ -3497,129 +3896,11 @@
     "bn.js": {
       "globals": {
         "Buffer": true
-      },
-      "packages": {
-        "browserify>browser-resolve": true
-      }
-    },
-    "browserify>assert": {
-      "globals": {
-        "Buffer": true
-      },
-      "packages": {
-        "browserify>assert>util": true,
-        "react>object-assign": true
-      }
-    },
-    "browserify>assert>util": {
-      "globals": {
-        "console.error": true,
-        "console.log": true,
-        "console.trace": true,
-        "process": true
-      },
-      "packages": {
-        "browserify>assert>util>inherits": true,
-        "browserify>process": true
       }
     },
     "browserify>browser-resolve": {
       "packages": {
         "ethjs-query>babel-runtime>core-js": true
-      }
-    },
-    "browserify>buffer": {
-      "globals": {
-        "console": true
-      },
-      "packages": {
-        "base64-js": true,
-        "browserify>buffer>ieee754": true
-      }
-    },
-    "browserify>crypto-browserify": {
-      "packages": {
-        "browserify>crypto-browserify>browserify-cipher": true,
-        "browserify>crypto-browserify>browserify-sign": true,
-        "browserify>crypto-browserify>create-ecdh": true,
-        "browserify>crypto-browserify>create-hmac": true,
-        "browserify>crypto-browserify>diffie-hellman": true,
-        "browserify>crypto-browserify>pbkdf2": true,
-        "browserify>crypto-browserify>public-encrypt": true,
-        "browserify>crypto-browserify>randomfill": true,
-        "ethereumjs-util>create-hash": true,
-        "ethereumjs-wallet>randombytes": true
-      }
-    },
-    "browserify>crypto-browserify>browserify-cipher": {
-      "packages": {
-        "browserify>crypto-browserify>browserify-cipher>browserify-des": true,
-        "browserify>crypto-browserify>browserify-cipher>evp_bytestokey": true,
-        "ethereumjs-util>ethereum-cryptography>browserify-aes": true
-      }
-    },
-    "browserify>crypto-browserify>browserify-cipher>browserify-des": {
-      "packages": {
-        "browserify>buffer": true,
-        "browserify>crypto-browserify>browserify-cipher>browserify-des>des.js": true,
-        "ethereumjs-util>create-hash>cipher-base": true,
-        "pumpify>inherits": true
-      }
-    },
-    "browserify>crypto-browserify>browserify-cipher>browserify-des>des.js": {
-      "packages": {
-        "3box>ethers>hash.js>minimalistic-assert": true,
-        "pumpify>inherits": true
-      }
-    },
-    "browserify>crypto-browserify>browserify-cipher>evp_bytestokey": {
-      "packages": {
-        "ethereumjs-util>create-hash>md5.js": true,
-        "ethereumjs-wallet>safe-buffer": true
-      }
-    },
-    "browserify>crypto-browserify>browserify-sign": {
-      "packages": {
-        "3box>ethers>elliptic": true,
-        "bn.js": true,
-        "browserify>buffer": true,
-        "browserify>crypto-browserify>create-hmac": true,
-        "browserify>crypto-browserify>public-encrypt>browserify-rsa": true,
-        "browserify>crypto-browserify>public-encrypt>parse-asn1": true,
-        "browserify>stream-browserify": true,
-        "ethereumjs-util>create-hash": true,
-        "pumpify>inherits": true
-      }
-    },
-    "browserify>crypto-browserify>create-ecdh": {
-      "packages": {
-        "3box>ethers>elliptic": true,
-        "bn.js": true,
-        "browserify>buffer": true
-      }
-    },
-    "browserify>crypto-browserify>create-hmac": {
-      "packages": {
-        "addons-linter>sha.js": true,
-        "ethereumjs-util>create-hash": true,
-        "ethereumjs-util>create-hash>cipher-base": true,
-        "ethereumjs-util>create-hash>ripemd160": true,
-        "ethereumjs-wallet>safe-buffer": true,
-        "pumpify>inherits": true
-      }
-    },
-    "browserify>crypto-browserify>diffie-hellman": {
-      "packages": {
-        "bn.js": true,
-        "browserify>buffer": true,
-        "browserify>crypto-browserify>diffie-hellman>miller-rabin": true,
-        "ethereumjs-wallet>randombytes": true
-      }
-    },
-    "browserify>crypto-browserify>diffie-hellman>miller-rabin": {
-      "packages": {
-        "3box>ethers>elliptic>brorand": true,
-        "bn.js": true
       }
     },
     "browserify>crypto-browserify>pbkdf2": {
@@ -3631,132 +3912,8 @@
         "setTimeout": true
       },
       "packages": {
-        "addons-linter>sha.js": true,
-        "browserify>process": true,
-        "ethereumjs-util>create-hash": true,
-        "ethereumjs-util>create-hash>ripemd160": true,
+        "browserify>crypto-browserify>create-hmac": true,
         "ethereumjs-wallet>safe-buffer": true
-      }
-    },
-    "browserify>crypto-browserify>public-encrypt": {
-      "packages": {
-        "bn.js": true,
-        "browserify>buffer": true,
-        "browserify>crypto-browserify>public-encrypt>browserify-rsa": true,
-        "browserify>crypto-browserify>public-encrypt>parse-asn1": true,
-        "ethereumjs-util>create-hash": true,
-        "ethereumjs-wallet>randombytes": true
-      }
-    },
-    "browserify>crypto-browserify>public-encrypt>browserify-rsa": {
-      "packages": {
-        "bn.js": true,
-        "browserify>buffer": true,
-        "ethereumjs-wallet>randombytes": true
-      }
-    },
-    "browserify>crypto-browserify>public-encrypt>parse-asn1": {
-      "packages": {
-        "browserify>buffer": true,
-        "browserify>crypto-browserify>browserify-cipher>evp_bytestokey": true,
-        "browserify>crypto-browserify>pbkdf2": true,
-        "browserify>crypto-browserify>public-encrypt>parse-asn1>asn1.js": true,
-        "ethereumjs-util>ethereum-cryptography>browserify-aes": true
-      }
-    },
-    "browserify>crypto-browserify>public-encrypt>parse-asn1>asn1.js": {
-      "packages": {
-        "3box>ethers>hash.js>minimalistic-assert": true,
-        "bn.js": true,
-        "browserify>buffer": true,
-        "browserify>vm-browserify": true,
-        "pumpify>inherits": true
-      }
-    },
-    "browserify>crypto-browserify>randomfill": {
-      "globals": {
-        "crypto": true,
-        "msCrypto": true
-      },
-      "packages": {
-        "browserify>process": true,
-        "ethereumjs-wallet>randombytes": true,
-        "ethereumjs-wallet>safe-buffer": true
-      }
-    },
-    "browserify>events": {
-      "globals": {
-        "console": true
-      }
-    },
-    "browserify>https-browserify": {
-      "packages": {
-        "browserify>stream-http": true,
-        "browserify>url": true
-      }
-    },
-    "browserify>os-browserify": {
-      "globals": {
-        "location": true,
-        "navigator": true
-      }
-    },
-    "browserify>path-browserify": {
-      "packages": {
-        "browserify>process": true
-      }
-    },
-    "browserify>process": {
-      "globals": {
-        "clearTimeout": true,
-        "setTimeout": true
-      }
-    },
-    "browserify>punycode": {
-      "globals": {
-        "define": true
-      }
-    },
-    "browserify>stream-browserify": {
-      "packages": {
-        "browserify>events": true,
-        "pumpify>inherits": true,
-        "readable-stream": true
-      }
-    },
-    "browserify>stream-http": {
-      "globals": {
-        "AbortController": true,
-        "Blob": true,
-        "MSStreamReader": true,
-        "ReadableStream": true,
-        "WritableStream": true,
-        "XDomainRequest": true,
-        "XMLHttpRequest": true,
-        "clearTimeout": true,
-        "fetch": true,
-        "location.protocol.search": true,
-        "setTimeout": true
-      },
-      "packages": {
-        "browserify>buffer": true,
-        "browserify>process": true,
-        "browserify>stream-http>builtin-status-codes": true,
-        "browserify>stream-http>readable-stream": true,
-        "browserify>url": true,
-        "pumpify>inherits": true,
-        "watchify>xtend": true
-      }
-    },
-    "browserify>stream-http>readable-stream": {
-      "packages": {
-        "@storybook/api>util-deprecate": true,
-        "browserify>browser-resolve": true,
-        "browserify>buffer": true,
-        "browserify>events": true,
-        "browserify>process": true,
-        "browserify>string_decoder": true,
-        "pumpify>inherits": true
       }
     },
     "browserify>string_decoder": {
@@ -3764,40 +3921,13 @@
         "ethereumjs-wallet>safe-buffer": true
       }
     },
-    "browserify>timers-browserify": {
+    "chromedriver>axios>follow-redirects": {
       "globals": {
-        "clearInterval": true,
         "clearTimeout": true,
-        "setInterval": true,
         "setTimeout": true
       },
       "packages": {
-        "browserify>process": true
-      }
-    },
-    "browserify>url": {
-      "packages": {
-        "browserify>punycode": true,
-        "browserify>querystring-es3": true
-      }
-    },
-    "browserify>util": {
-      "globals": {
-        "console.error": true,
-        "console.log": true,
-        "console.trace": true,
-        "process": true
-      },
-      "packages": {
-        "browserify>process": true,
-        "browserify>util>inherits": true
-      }
-    },
-    "browserify>vm-browserify": {
-      "globals": {
-        "document.body.appendChild": true,
-        "document.body.removeChild": true,
-        "document.createElement": true
+        "eslint>debug": true
       }
     },
     "currency-formatter": {
@@ -3828,9 +3958,33 @@
       }
     },
     "end-of-stream": {
+      "globals": {
+        "process.nextTick": true
+      },
       "packages": {
-        "browserify>process": true,
         "pump>once": true
+      }
+    },
+    "enzyme>has": {
+      "packages": {
+        "mocha>object.assign>function-bind": true
+      }
+    },
+    "enzyme>object-inspect": {
+      "globals": {
+        "HTMLElement": true
+      }
+    },
+    "eslint-plugin-react>array-includes>get-intrinsic": {
+      "globals": {
+        "AggregateError": true,
+        "FinalizationRegistry": true,
+        "WeakRef": true
+      },
+      "packages": {
+        "enzyme>has": true,
+        "mocha>object.assign>function-bind": true,
+        "string.prototype.matchall>has-symbols": true
       }
     },
     "eslint>debug": {
@@ -3842,8 +3996,16 @@
         "process": true
       },
       "packages": {
-        "browserify>process": true,
-        "eslint>debug>ms": true
+        "eslint>debug>ms": true,
+        "sinon>supports-color": true
+      }
+    },
+    "eslint>minimatch": {
+      "globals": {
+        "console": true
+      },
+      "packages": {
+        "mocha>minimatch>brace-expansion": true
       }
     },
     "eslint>optionator>fast-levenshtein": {
@@ -3870,10 +4032,10 @@
     },
     "eth-ens-namehash": {
       "globals": {
+        "Buffer": true,
         "name": "write"
       },
       "packages": {
-        "browserify>buffer": true,
         "eth-ens-namehash>idna-uts46-hx": true,
         "eth-ens-namehash>js-sha3": true
       }
@@ -3881,14 +4043,11 @@
     "eth-ens-namehash>idna-uts46-hx": {
       "globals": {
         "define": true
-      },
-      "packages": {
-        "browserify>punycode": true
       }
     },
     "eth-ens-namehash>js-sha3": {
-      "packages": {
-        "browserify>process": true
+      "globals": {
+        "process": true
       }
     },
     "eth-json-rpc-filters": {
@@ -3947,13 +4106,14 @@
         "setTimeout": true
       },
       "packages": {
-        "browserify>browser-resolve": true,
         "eth-json-rpc-middleware>eth-sig-util": true,
         "eth-json-rpc-middleware>pify": true,
         "eth-rpc-errors": true,
         "json-rpc-engine": true,
         "json-rpc-engine>@metamask/safe-event-emitter": true,
         "lavamoat>json-stable-stringify": true,
+        "node-fetch": true,
+        "source-map-explorer>btoa": true,
         "vinyl>clone": true
       }
     },
@@ -3964,18 +4124,21 @@
       }
     },
     "eth-json-rpc-middleware>eth-sig-util>ethereumjs-abi": {
+      "globals": {
+        "Buffer": true
+      },
       "packages": {
         "bn.js": true,
-        "browserify>buffer": true,
         "eth-json-rpc-middleware>eth-sig-util>ethereumjs-abi>ethereumjs-util": true
       }
     },
     "eth-json-rpc-middleware>eth-sig-util>ethereumjs-abi>ethereumjs-util": {
+      "globals": {
+        "Buffer": true
+      },
       "packages": {
         "3box>ethers>elliptic": true,
         "bn.js": true,
-        "browserify>assert": true,
-        "browserify>buffer": true,
         "eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethjs-util": true,
         "ethereumjs-util>create-hash": true,
         "ethereumjs-util>ethereum-cryptography": true,
@@ -3983,11 +4146,12 @@
       }
     },
     "eth-json-rpc-middleware>eth-sig-util>ethereumjs-util": {
+      "globals": {
+        "Buffer": true
+      },
       "packages": {
         "3box>ethers>elliptic": true,
         "bn.js": true,
-        "browserify>assert": true,
-        "browserify>buffer": true,
         "eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethjs-util": true,
         "ethereumjs-util>create-hash": true,
         "ethereumjs-util>ethereum-cryptography": true,
@@ -3996,16 +4160,16 @@
       }
     },
     "eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethjs-util": {
+      "globals": {
+        "Buffer": true
+      },
       "packages": {
-        "browserify>buffer": true,
         "ethjs>ethjs-util>is-hex-prefixed": true,
         "ethjs>ethjs-util>strip-hex-prefix": true
       }
     },
     "eth-keyring-controller": {
       "packages": {
-        "browserify>buffer": true,
-        "browserify>events": true,
         "eth-keyring-controller>@metamask/bip39": true,
         "eth-keyring-controller>@metamask/eth-hd-keyring": true,
         "eth-keyring-controller>browser-passworder": true,
@@ -4015,16 +4179,22 @@
       }
     },
     "eth-keyring-controller>@metamask/bip39": {
+      "globals": {
+        "Buffer.alloc": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true
+      },
       "packages": {
-        "browserify>buffer": true,
         "browserify>crypto-browserify>pbkdf2": true,
         "ethereumjs-util>create-hash": true,
         "ethereumjs-wallet>randombytes": true
       }
     },
     "eth-keyring-controller>@metamask/eth-hd-keyring": {
+      "globals": {
+        "Buffer.from": true
+      },
       "packages": {
-        "browserify>buffer": true,
         "eth-keyring-controller>@metamask/bip39": true,
         "eth-keyring-controller>@metamask/eth-hd-keyring>ethereumjs-wallet": true,
         "eth-keyring-controller>eth-simple-keyring": true,
@@ -4032,10 +4202,14 @@
       }
     },
     "eth-keyring-controller>@metamask/eth-hd-keyring>ethereumjs-wallet": {
+      "globals": {
+        "Buffer.alloc": true,
+        "Buffer.concat": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true
+      },
       "packages": {
         "@truffle/codec>utf8": true,
-        "browserify>buffer": true,
-        "browserify>crypto-browserify": true,
         "eth-keyring-controller>@metamask/eth-hd-keyring>ethereumjs-wallet>uuid": true,
         "ethereumjs-util": true,
         "ethereumjs-util>ethereum-cryptography": true,
@@ -4043,12 +4217,6 @@
         "ethereumjs-wallet>bs58check": true,
         "ethereumjs-wallet>randombytes": true,
         "ethers>@ethersproject/json-wallets>scrypt-js": true
-      }
-    },
-    "eth-keyring-controller>@metamask/eth-hd-keyring>ethereumjs-wallet>uuid": {
-      "globals": {
-        "crypto": true,
-        "msCrypto": true
       }
     },
     "eth-keyring-controller>browser-passworder": {
@@ -4067,19 +4235,25 @@
       }
     },
     "eth-keyring-controller>eth-simple-keyring": {
+      "globals": {
+        "Buffer.concat": true,
+        "Buffer.from": true
+      },
       "packages": {
-        "browserify>buffer": true,
-        "browserify>events": true,
         "eth-keyring-controller>eth-simple-keyring>ethereumjs-wallet": true,
         "eth-sig-util": true,
         "ethereumjs-util": true
       }
     },
     "eth-keyring-controller>eth-simple-keyring>ethereumjs-wallet": {
+      "globals": {
+        "Buffer.alloc": true,
+        "Buffer.concat": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true
+      },
       "packages": {
         "@truffle/codec>utf8": true,
-        "browserify>buffer": true,
-        "browserify>crypto-browserify": true,
         "eth-keyring-controller>eth-simple-keyring>ethereumjs-wallet>uuid": true,
         "ethereumjs-util": true,
         "ethereumjs-util>ethereum-cryptography": true,
@@ -4087,12 +4261,6 @@
         "ethereumjs-wallet>bs58check": true,
         "ethereumjs-wallet>randombytes": true,
         "ethers>@ethersproject/json-wallets>scrypt-js": true
-      }
-    },
-    "eth-keyring-controller>eth-simple-keyring>ethereumjs-wallet>uuid": {
-      "globals": {
-        "crypto": true,
-        "msCrypto": true
       }
     },
     "eth-keyring-controller>obs-store": {
@@ -4103,6 +4271,8 @@
     },
     "eth-lattice-keyring": {
       "globals": {
+        "Buffer.concat": true,
+        "Buffer.from": true,
         "addEventListener": true,
         "browser": true,
         "clearInterval": true,
@@ -4115,9 +4285,6 @@
       "packages": {
         "@ethereumjs/common": true,
         "@ethereumjs/tx": true,
-        "browserify>buffer": true,
-        "browserify>crypto-browserify": true,
-        "browserify>events": true,
         "eth-lattice-keyring>bn.js": true,
         "eth-lattice-keyring>gridplus-sdk": true,
         "eth-lattice-keyring>rlp": true,
@@ -4128,13 +4295,14 @@
     "eth-lattice-keyring>bn.js": {
       "globals": {
         "Buffer": true
-      },
-      "packages": {
-        "browserify>browser-resolve": true
       }
     },
     "eth-lattice-keyring>gridplus-sdk": {
       "globals": {
+        "Buffer.alloc": true,
+        "Buffer.concat": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true,
         "console.warn": true,
         "setTimeout": true
       },
@@ -4144,7 +4312,6 @@
         "@ethereumjs/common>crc-32": true,
         "@ethereumjs/tx": true,
         "bn.js": true,
-        "browserify>buffer": true,
         "eth-lattice-keyring>gridplus-sdk>bech32": true,
         "eth-lattice-keyring>gridplus-sdk>bignumber.js": true,
         "eth-lattice-keyring>gridplus-sdk>bitwise": true,
@@ -4167,8 +4334,8 @@
       }
     },
     "eth-lattice-keyring>gridplus-sdk>bitwise": {
-      "packages": {
-        "browserify>buffer": true
+      "globals": {
+        "Buffer.alloc": true
       }
     },
     "eth-lattice-keyring>gridplus-sdk>borc": {
@@ -4177,7 +4344,6 @@
       },
       "packages": {
         "3box>ipfs>iso-url": true,
-        "browserify>buffer": true,
         "browserify>buffer>ieee754": true,
         "eth-lattice-keyring>gridplus-sdk>borc>bignumber.js": true
       }
@@ -4201,9 +4367,6 @@
     "eth-lattice-keyring>gridplus-sdk>eth-eip712-util-browser>bn.js": {
       "globals": {
         "Buffer": true
-      },
-      "packages": {
-        "browserify>browser-resolve": true
       }
     },
     "eth-lattice-keyring>gridplus-sdk>eth-eip712-util-browser>buffer": {
@@ -4221,8 +4384,12 @@
       }
     },
     "eth-lattice-keyring>gridplus-sdk>secp256k1": {
+      "globals": {
+        "__dirname": true
+      },
       "packages": {
-        "3box>ethers>elliptic": true
+        "3box>ethers>elliptic": true,
+        "lavamoat>node-gyp-build": true
       }
     },
     "eth-lattice-keyring>rlp": {
@@ -4231,8 +4398,12 @@
       }
     },
     "eth-lattice-keyring>secp256k1": {
+      "globals": {
+        "__dirname": true
+      },
       "packages": {
-        "3box>ethers>elliptic": true
+        "3box>ethers>elliptic": true,
+        "lavamoat>node-gyp-build": true
       }
     },
     "eth-method-registry": {
@@ -4252,20 +4423,25 @@
       }
     },
     "eth-sig-util": {
+      "globals": {
+        "Buffer.byteLength": true,
+        "Buffer.concat": true,
+        "Buffer.from": true
+      },
       "packages": {
         "3box>tweetnacl": true,
         "3box>tweetnacl-util": true,
-        "browserify>buffer": true,
         "eth-sig-util>ethereumjs-util": true,
         "ethereumjs-abi": true
       }
     },
     "eth-sig-util>ethereumjs-util": {
+      "globals": {
+        "Buffer": true
+      },
       "packages": {
         "3box>ethers>elliptic": true,
         "bn.js": true,
-        "browserify>assert": true,
-        "browserify>buffer": true,
         "eth-sig-util>ethereumjs-util>ethjs-util": true,
         "ethereumjs-util>create-hash": true,
         "ethereumjs-util>ethereum-cryptography": true,
@@ -4274,41 +4450,47 @@
       }
     },
     "eth-sig-util>ethereumjs-util>ethjs-util": {
+      "globals": {
+        "Buffer": true
+      },
       "packages": {
-        "browserify>buffer": true,
         "ethjs>ethjs-util>is-hex-prefixed": true,
         "ethjs>ethjs-util>strip-hex-prefix": true
       }
     },
     "eth-trezor-keyring": {
       "globals": {
+        "Buffer.from": true,
         "setTimeout": true
       },
       "packages": {
         "@ethereumjs/tx": true,
-        "browserify>buffer": true,
-        "browserify>events": true,
         "eth-trezor-keyring>hdkey": true,
         "eth-trezor-keyring>trezor-connect": true,
         "ethereumjs-util": true
       }
     },
     "eth-trezor-keyring>@metamask/eth-sig-util": {
+      "globals": {
+        "Buffer.byteLength": true,
+        "Buffer.concat": true,
+        "Buffer.from": true
+      },
       "packages": {
         "3box>tweetnacl": true,
         "3box>tweetnacl-util": true,
-        "browserify>buffer": true,
         "eth-trezor-keyring>@metamask/eth-sig-util>ethereumjs-util": true,
         "eth-trezor-keyring>@metamask/eth-sig-util>ethjs-util": true,
         "ethereumjs-abi": true
       }
     },
     "eth-trezor-keyring>@metamask/eth-sig-util>ethereumjs-util": {
+      "globals": {
+        "Buffer": true
+      },
       "packages": {
         "3box>ethers>elliptic": true,
         "bn.js": true,
-        "browserify>assert": true,
-        "browserify>buffer": true,
         "eth-trezor-keyring>@metamask/eth-sig-util>ethjs-util": true,
         "ethereumjs-util>create-hash": true,
         "ethereumjs-util>ethereum-cryptography": true,
@@ -4316,37 +4498,43 @@
       }
     },
     "eth-trezor-keyring>@metamask/eth-sig-util>ethjs-util": {
+      "globals": {
+        "Buffer": true
+      },
       "packages": {
-        "browserify>buffer": true,
         "ethjs>ethjs-util>is-hex-prefixed": true,
         "ethjs>ethjs-util>strip-hex-prefix": true
       }
     },
     "eth-trezor-keyring>hdkey": {
       "packages": {
-        "browserify>assert": true,
-        "browserify>crypto-browserify": true,
         "eth-trezor-keyring>hdkey>coinstring": true,
         "eth-trezor-keyring>hdkey>secp256k1": true,
         "ethereumjs-wallet>safe-buffer": true
       }
     },
     "eth-trezor-keyring>hdkey>coinstring": {
+      "globals": {
+        "Buffer": true
+      },
       "packages": {
-        "browserify>buffer": true,
         "eth-trezor-keyring>hdkey>coinstring>bs58": true,
         "ethereumjs-util>create-hash": true
       }
     },
     "eth-trezor-keyring>hdkey>secp256k1": {
+      "globals": {
+        "Buffer.isBuffer": true,
+        "console.error": true,
+        "process.env.DEBUG": true
+      },
       "packages": {
         "3box>ethers>elliptic": true,
         "bn.js": true,
-        "browserify>insert-module-globals>is-buffer": true,
         "eth-trezor-keyring>hdkey>secp256k1>bip66": true,
-        "eth-trezor-keyring>hdkey>secp256k1>drbg.js": true,
         "ethereumjs-util>create-hash": true,
-        "ethereumjs-wallet>safe-buffer": true
+        "ethereumjs-wallet>safe-buffer": true,
+        "lavamoat>bindings": true
       }
     },
     "eth-trezor-keyring>hdkey>secp256k1>bip66": {
@@ -4354,53 +4542,384 @@
         "ethereumjs-wallet>safe-buffer": true
       }
     },
-    "eth-trezor-keyring>hdkey>secp256k1>drbg.js": {
-      "packages": {
-        "browserify>buffer": true,
-        "browserify>crypto-browserify>create-hmac": true
-      }
-    },
     "eth-trezor-keyring>trezor-connect": {
       "globals": {
+        "AbortController": true,
+        "Buffer": true,
         "__TREZOR_CONNECT_SRC": true,
-        "addEventListener": true,
-        "btoa": true,
         "chrome": true,
-        "clearInterval": true,
         "clearTimeout": true,
         "console": true,
-        "document.body": true,
-        "document.createElement": true,
-        "document.createTextNode": true,
-        "document.getElementById": true,
-        "document.querySelectorAll": true,
+        "document.cookie": true,
+        "fetch": "write",
+        "localStorage": true,
         "location": true,
         "navigator": true,
-        "open": true,
-        "removeEventListener": true,
-        "setInterval": true,
         "setTimeout": true
       },
       "packages": {
         "3box>graphql-request>cross-fetch": true,
+        "3box>ipfs>bs58": true,
         "@babel/runtime": true,
-        "browserify>events": true,
-        "eth-trezor-keyring>@metamask/eth-sig-util": true
+        "eth-trezor-keyring>@metamask/eth-sig-util": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/connect-common": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/rollout": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/transport": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib": true,
+        "eth-trezor-keyring>trezor-connect>bignumber.js": true,
+        "eth-trezor-keyring>trezor-connect>cbor-web": true,
+        "eth-trezor-keyring>trezor-connect>parse-uri": true,
+        "eth-trezor-keyring>trezor-connect>tiny-worker": true,
+        "ethereumjs-wallet>bs58check": true,
+        "ethereumjs-wallet>randombytes": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link": {
+      "globals": {
+        "Worker": true,
+        "clearTimeout": true,
+        "console": true,
+        "onmessage": "write",
+        "postMessage": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>bignumber.js": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib": true,
+        "mockttp>ws": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>bignumber.js": {
+      "globals": {
+        "crypto": true,
+        "define": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib": {
+      "globals": {
+        "Buffer.concat": true,
+        "Buffer.from": true,
+        "TextEncoder": true,
+        "clearInterval": true,
+        "clearTimeout": true,
+        "console.log": true,
+        "setInterval": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib>bignumber.js": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib>jsonschema": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib>ripple-address-codec": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib>ripple-binary-codec": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib>ripple-keypairs": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib>ripple-lib-transactionparser": true,
+        "geckodriver>https-proxy-agent": true,
+        "lodash": true,
+        "mockttp>ws": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib>bignumber.js": {
+      "globals": {
+        "crypto": true,
+        "define": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib>ripple-address-codec": {
+      "globals": {
+        "Buffer.concat": true,
+        "Buffer.from": true
+      },
+      "packages": {
+        "3box>ipfs>bs58>base-x": true,
+        "ethereumjs-util>create-hash": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib>ripple-binary-codec": {
+      "packages": {
+        "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib>ripple-address-codec": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib>ripple-binary-codec>big-integer": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib>ripple-binary-codec>buffer": true,
+        "ethereumjs-util>create-hash": true,
+        "jest>jest-cli>jest-config>jest-environment-jsdom>jsdom>decimal.js": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib>ripple-binary-codec>big-integer": {
+      "globals": {
+        "define": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib>ripple-binary-codec>buffer": {
+      "globals": {
+        "console": true
+      },
+      "packages": {
+        "base64-js": true,
+        "browserify>buffer>ieee754": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib>ripple-keypairs": {
+      "globals": {
+        "Buffer.from": true
+      },
+      "packages": {
+        "3box>ethers>elliptic": true,
+        "3box>ethers>elliptic>brorand": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib>ripple-address-codec": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib>ripple-keypairs>bn.js": true,
+        "ethers>@ethersproject/sha2>hash.js": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib>ripple-keypairs>bn.js": {
+      "globals": {
+        "Buffer": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib>ripple-lib-transactionparser": {
+      "packages": {
+        "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib>ripple-lib-transactionparser>bignumber.js": true,
+        "lodash": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib>ripple-lib-transactionparser>bignumber.js": {
+      "globals": {
+        "crypto": true,
+        "define": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/rollout": {
+      "packages": {
+        "3box>graphql-request>cross-fetch": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/rollout>runtypes": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/transport": {
+      "globals": {
+        "Buffer.from": true,
+        "fetch": true,
+        "navigator.usb": true,
+        "onconnect": "write",
+        "setTimeout": true
+      },
+      "packages": {
+        "eth-trezor-keyring>trezor-connect>@trezor/transport>bytebuffer": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/transport>long": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/transport>protobufjs": true,
+        "lavamoat>json-stable-stringify": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/transport>bytebuffer": {
+      "globals": {
+        "bb": true,
+        "console": true
+      },
+      "packages": {
+        "eth-trezor-keyring>trezor-connect>@trezor/transport>bytebuffer>long": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/transport>bytebuffer>long": {
+      "globals": {
+        "define": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/transport>long": {
+      "globals": {
+        "WebAssembly.Instance": true,
+        "WebAssembly.Module": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/transport>protobufjs": {
+      "globals": {
+        "process": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "eth-trezor-keyring>trezor-connect>@trezor/transport>protobufjs>@protobufjs/aspromise": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/transport>protobufjs>@protobufjs/base64": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/transport>protobufjs>@protobufjs/codegen": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/transport>protobufjs>@protobufjs/eventemitter": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/transport>protobufjs>@protobufjs/fetch": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/transport>protobufjs>@protobufjs/float": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/transport>protobufjs>@protobufjs/inquire": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/transport>protobufjs>@protobufjs/path": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/transport>protobufjs>@protobufjs/pool": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/transport>protobufjs>@protobufjs/utf8": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/transport>protobufjs>@protobufjs/codegen": {
+      "globals": {
+        "console.log": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/transport>protobufjs>@protobufjs/fetch": {
+      "globals": {
+        "XMLHttpRequest": true
+      },
+      "packages": {
+        "eth-trezor-keyring>trezor-connect>@trezor/transport>protobufjs>@protobufjs/aspromise": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/transport>protobufjs>@protobufjs/inquire": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib": {
+      "globals": {
+        "Buffer.alloc": true,
+        "Buffer.allocUnsafe": true,
+        "Buffer.concat": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true
+      },
+      "packages": {
+        "3box>ipfs>bs58": true,
+        "bn.js": true,
+        "browserify>crypto-browserify>create-hmac": true,
+        "eth-trezor-keyring>hdkey>secp256k1>bip66": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>bchaddrjs": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>bech32": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>bitcoin-ops": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>blake-hash": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>int64-buffer": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>pushdata-bitcoin": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>tiny-secp256k1": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>typeforce": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>varuint-bitcoin": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>wif": true,
+        "ethereumjs-util>create-hash": true,
+        "ethereumjs-wallet>bs58check": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>bchaddrjs": {
+      "packages": {
+        "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>bchaddrjs>buffer": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>bchaddrjs>cashaddrjs": true,
+        "ethereumjs-wallet>bs58check": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>bchaddrjs>buffer": {
+      "globals": {
+        "console": true
+      },
+      "packages": {
+        "base64-js": true,
+        "browserify>buffer>ieee754": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>bchaddrjs>cashaddrjs": {
+      "packages": {
+        "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>bchaddrjs>cashaddrjs>big-integer": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>bchaddrjs>cashaddrjs>big-integer": {
+      "globals": {
+        "define": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>blake-hash": {
+      "globals": {
+        "Buffer.alloc": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true,
+        "__dirname": true
+      },
+      "packages": {
+        "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>blake-hash>readable-stream": true,
+        "lavamoat>node-gyp-build": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>blake-hash>readable-stream": {
+      "globals": {
+        "process.env.READABLE_STREAM": true,
+        "process.nextTick": true,
+        "process.stderr": true,
+        "process.stdout": true
+      },
+      "packages": {
+        "@storybook/api>util-deprecate": true,
+        "browserify>string_decoder": true,
+        "pumpify>inherits": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>int64-buffer": {
+      "globals": {
+        "Buffer": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>pushdata-bitcoin": {
+      "packages": {
+        "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>bitcoin-ops": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>tiny-secp256k1": {
+      "globals": {
+        "Buffer": true
+      },
+      "packages": {
+        "3box>ethers>elliptic": true,
+        "bn.js": true,
+        "browserify>crypto-browserify>create-hmac": true,
+        "lavamoat>bindings": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>typeforce": {
+      "globals": {
+        "Buffer.isBuffer": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>varuint-bitcoin": {
+      "packages": {
+        "ethereumjs-wallet>safe-buffer": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>wif": {
+      "globals": {
+        "Buffer": true
+      },
+      "packages": {
+        "ethereumjs-wallet>bs58check": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>bignumber.js": {
+      "globals": {
+        "crypto": true,
+        "define": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>cbor-web": {
+      "globals": {
+        "TextDecoder": true,
+        "URL": true,
+        "__magic__": true,
+        "clearTimeout": true,
+        "console": true,
+        "define": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "eth-trezor-keyring>trezor-connect>bignumber.js": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>tiny-worker": {
+      "globals": {
+        "__dirname": true,
+        "process.cwd": true,
+        "process.execArgv": true
       }
     },
     "ethereumjs-abi": {
+      "globals": {
+        "Buffer": true
+      },
       "packages": {
         "bn.js": true,
-        "browserify>buffer": true,
         "ethereumjs-abi>ethereumjs-util": true
       }
     },
     "ethereumjs-abi>ethereumjs-util": {
+      "globals": {
+        "Buffer": true
+      },
       "packages": {
         "3box>ethers>elliptic": true,
         "bn.js": true,
-        "browserify>assert": true,
-        "browserify>buffer": true,
         "ethereumjs-abi>ethereumjs-util>ethjs-util": true,
         "ethereumjs-util>create-hash": true,
         "ethereumjs-util>ethereum-cryptography": true,
@@ -4408,17 +4927,19 @@
       }
     },
     "ethereumjs-abi>ethereumjs-util>ethjs-util": {
+      "globals": {
+        "Buffer": true
+      },
       "packages": {
-        "browserify>buffer": true,
         "ethjs>ethjs-util>is-hex-prefixed": true,
         "ethjs>ethjs-util>strip-hex-prefix": true
       }
     },
     "ethereumjs-util": {
+      "globals": {
+        "Buffer": true
+      },
       "packages": {
-        "browserify>assert": true,
-        "browserify>buffer": true,
-        "browserify>insert-module-globals>is-buffer": true,
         "ethereumjs-util>bn.js": true,
         "ethereumjs-util>create-hash": true,
         "ethereumjs-util>ethereum-cryptography": true,
@@ -4429,71 +4950,18 @@
     "ethereumjs-util>bn.js": {
       "globals": {
         "Buffer": true
-      },
-      "packages": {
-        "browserify>browser-resolve": true
-      }
-    },
-    "ethereumjs-util>create-hash": {
-      "packages": {
-        "addons-linter>sha.js": true,
-        "ethereumjs-util>create-hash>cipher-base": true,
-        "ethereumjs-util>create-hash>md5.js": true,
-        "ethereumjs-util>create-hash>ripemd160": true,
-        "pumpify>inherits": true
-      }
-    },
-    "ethereumjs-util>create-hash>cipher-base": {
-      "packages": {
-        "browserify>stream-browserify": true,
-        "browserify>string_decoder": true,
-        "ethereumjs-wallet>safe-buffer": true,
-        "pumpify>inherits": true
-      }
-    },
-    "ethereumjs-util>create-hash>md5.js": {
-      "packages": {
-        "ethereumjs-util>create-hash>md5.js>hash-base": true,
-        "ethereumjs-wallet>safe-buffer": true,
-        "pumpify>inherits": true
-      }
-    },
-    "ethereumjs-util>create-hash>md5.js>hash-base": {
-      "packages": {
-        "ethereumjs-util>create-hash>md5.js>hash-base>readable-stream": true,
-        "ethereumjs-wallet>safe-buffer": true,
-        "pumpify>inherits": true
-      }
-    },
-    "ethereumjs-util>create-hash>md5.js>hash-base>readable-stream": {
-      "packages": {
-        "@storybook/api>util-deprecate": true,
-        "browserify>browser-resolve": true,
-        "browserify>buffer": true,
-        "browserify>events": true,
-        "browserify>process": true,
-        "browserify>string_decoder": true,
-        "pumpify>inherits": true
-      }
-    },
-    "ethereumjs-util>create-hash>ripemd160": {
-      "packages": {
-        "browserify>buffer": true,
-        "ethereumjs-util>create-hash>md5.js>hash-base": true,
-        "pumpify>inherits": true
       }
     },
     "ethereumjs-util>ethereum-cryptography": {
+      "globals": {
+        "Buffer.from": true
+      },
       "packages": {
-        "browserify>assert": true,
-        "browserify>buffer": true,
-        "browserify>crypto-browserify>create-hmac": true,
         "ethereumjs-util>ethereum-cryptography>keccak": true,
         "ethereumjs-util>ethereum-cryptography>secp256k1": true,
         "ethereumjs-wallet>bs58check": true,
         "ethereumjs-wallet>randombytes": true,
-        "ethereumjs-wallet>safe-buffer": true,
-        "ethers>@ethersproject/sha2>hash.js": true
+        "ethereumjs-wallet>safe-buffer": true
       }
     },
     "ethereumjs-util>ethereum-cryptography>blakejs": {
@@ -4502,68 +4970,67 @@
         "console.log": true
       }
     },
-    "ethereumjs-util>ethereum-cryptography>browserify-aes": {
-      "packages": {
-        "browserify>buffer": true,
-        "browserify>crypto-browserify>browserify-cipher>evp_bytestokey": true,
-        "ethereumjs-util>create-hash>cipher-base": true,
-        "ethereumjs-util>ethereum-cryptography>browserify-aes>buffer-xor": true,
-        "ethereumjs-wallet>safe-buffer": true,
-        "pumpify>inherits": true
-      }
-    },
-    "ethereumjs-util>ethereum-cryptography>browserify-aes>buffer-xor": {
-      "packages": {
-        "browserify>buffer": true
-      }
-    },
     "ethereumjs-util>ethereum-cryptography>keccak": {
+      "globals": {
+        "Buffer.alloc": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true,
+        "__dirname": true
+      },
       "packages": {
-        "browserify>buffer": true,
-        "ethereumjs-util>ethereum-cryptography>keccak>readable-stream": true
+        "ethereumjs-util>ethereum-cryptography>keccak>readable-stream": true,
+        "lavamoat>node-gyp-build": true
       }
     },
     "ethereumjs-util>ethereum-cryptography>keccak>readable-stream": {
+      "globals": {
+        "process.env.READABLE_STREAM": true,
+        "process.nextTick": true,
+        "process.stderr": true,
+        "process.stdout": true
+      },
       "packages": {
         "@storybook/api>util-deprecate": true,
-        "browserify>browser-resolve": true,
-        "browserify>buffer": true,
-        "browserify>events": true,
-        "browserify>process": true,
         "browserify>string_decoder": true,
         "pumpify>inherits": true
       }
     },
     "ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "globals": {
+        "__dirname": true
+      },
       "packages": {
-        "3box>ethers>elliptic": true
+        "3box>ethers>elliptic": true,
+        "lavamoat>node-gyp-build": true
       }
     },
     "ethereumjs-util>ethjs-util": {
+      "globals": {
+        "Buffer": true
+      },
       "packages": {
-        "browserify>buffer": true,
         "ethjs>ethjs-util>is-hex-prefixed": true,
         "ethjs>ethjs-util>strip-hex-prefix": true
       }
     },
     "ethereumjs-util>rlp": {
+      "globals": {
+        "Buffer.concat": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true
+      },
       "packages": {
-        "browserify>buffer": true,
         "ethereumjs-util>rlp>bn.js": true
       }
     },
     "ethereumjs-util>rlp>bn.js": {
       "globals": {
         "Buffer": true
-      },
-      "packages": {
-        "browserify>browser-resolve": true
       }
     },
     "ethereumjs-wallet": {
       "packages": {
         "@truffle/codec>utf8": true,
-        "browserify>crypto-browserify": true,
         "ethereumjs-wallet>aes-js": true,
         "ethereumjs-wallet>bs58check": true,
         "ethereumjs-wallet>ethereumjs-util": true,
@@ -4586,11 +5053,12 @@
       }
     },
     "ethereumjs-wallet>ethereumjs-util": {
+      "globals": {
+        "Buffer": true
+      },
       "packages": {
         "3box>ethers>elliptic": true,
         "bn.js": true,
-        "browserify>assert": true,
-        "browserify>buffer": true,
         "ethereumjs-util>create-hash": true,
         "ethereumjs-util>ethereum-cryptography": true,
         "ethereumjs-util>rlp": true,
@@ -4598,37 +5066,25 @@
       }
     },
     "ethereumjs-wallet>ethereumjs-util>ethjs-util": {
+      "globals": {
+        "Buffer": true
+      },
       "packages": {
-        "browserify>buffer": true,
         "ethjs>ethjs-util>is-hex-prefixed": true,
         "ethjs>ethjs-util>strip-hex-prefix": true
       }
     },
     "ethereumjs-wallet>randombytes": {
       "globals": {
-        "crypto": true,
-        "msCrypto": true
-      },
-      "packages": {
-        "browserify>process": true,
-        "ethereumjs-wallet>safe-buffer": true
-      }
-    },
-    "ethereumjs-wallet>safe-buffer": {
-      "packages": {
-        "browserify>buffer": true
+        "crypto.getRandomValues": true
       }
     },
     "ethereumjs-wallet>scryptsy": {
-      "packages": {
-        "browserify>buffer": true,
-        "browserify>crypto-browserify>pbkdf2": true
-      }
-    },
-    "ethereumjs-wallet>uuid": {
       "globals": {
-        "crypto": true,
-        "msCrypto": true
+        "Buffer": true
+      },
+      "packages": {
+        "browserify>crypto-browserify>pbkdf2": true
       }
     },
     "ethers": {
@@ -4703,8 +5159,7 @@
     },
     "ethers>@ethersproject/base64": {
       "globals": {
-        "atob": true,
-        "btoa": true
+        "Buffer.from": true
       },
       "packages": {
         "ethers>@ethersproject/bytes": true
@@ -4799,10 +5254,8 @@
     "ethers>@ethersproject/json-wallets>scrypt-js": {
       "globals": {
         "define": true,
+        "setImmediate": true,
         "setTimeout": true
-      },
-      "packages": {
-        "browserify>timers-browserify": true
       }
     },
     "ethers>@ethersproject/keccak256": {
@@ -4813,10 +5266,8 @@
     },
     "ethers>@ethersproject/keccak256>js-sha3": {
       "globals": {
-        "define": true
-      },
-      "packages": {
-        "browserify>process": true
+        "define": true,
+        "process": true
       }
     },
     "ethers>@ethersproject/logger": {
@@ -4830,9 +5281,11 @@
       }
     },
     "ethers>@ethersproject/pbkdf2": {
+      "globals": {
+        "Buffer.from": true
+      },
       "packages": {
-        "ethers>@ethersproject/bytes": true,
-        "ethers>@ethersproject/sha2": true
+        "ethers>@ethersproject/bytes": true
       }
     },
     "ethers>@ethersproject/properties": {
@@ -4842,7 +5295,8 @@
     },
     "ethers>@ethersproject/providers": {
       "globals": {
-        "WebSocket": true,
+        "Buffer.alloc": true,
+        "Buffer.concat": true,
         "clearInterval": true,
         "clearTimeout": true,
         "console.log": true,
@@ -4868,7 +5322,8 @@
         "ethers>@ethersproject/sha2": true,
         "ethers>@ethersproject/strings": true,
         "ethers>@ethersproject/transactions": true,
-        "ethers>@ethersproject/web": true
+        "ethers>@ethersproject/web": true,
+        "mockttp>ws": true
       }
     },
     "ethers>@ethersproject/random": {
@@ -4876,8 +5331,7 @@
         "crypto.getRandomValues": true
       },
       "packages": {
-        "ethers>@ethersproject/bytes": true,
-        "ethers>@ethersproject/logger": true
+        "ethers>@ethersproject/bytes": true
       }
     },
     "ethers>@ethersproject/rlp": {
@@ -4887,10 +5341,12 @@
       }
     },
     "ethers>@ethersproject/sha2": {
+      "globals": {
+        "Buffer.from": true
+      },
       "packages": {
         "ethers>@ethersproject/bytes": true,
-        "ethers>@ethersproject/logger": true,
-        "ethers>@ethersproject/sha2>hash.js": true
+        "ethers>@ethersproject/logger": true
       }
     },
     "ethers>@ethersproject/sha2>hash.js": {
@@ -4965,8 +5421,8 @@
     },
     "ethers>@ethersproject/web": {
       "globals": {
+        "Buffer.from": true,
         "clearTimeout": true,
-        "fetch": true,
         "setTimeout": true
       },
       "packages": {
@@ -4988,11 +5444,11 @@
     },
     "ethjs": {
       "globals": {
+        "Buffer": true,
         "clearInterval": true,
         "setInterval": true
       },
       "packages": {
-        "browserify>buffer": true,
         "ethjs-contract": true,
         "ethjs-query": true,
         "ethjs>bn.js": true,
@@ -5016,21 +5472,23 @@
       }
     },
     "ethjs-contract>ethjs-abi": {
+      "globals": {
+        "Buffer": true
+      },
       "packages": {
-        "browserify>buffer": true,
         "ethjs-contract>ethjs-abi>bn.js": true,
         "ethjs-contract>ethjs-abi>js-sha3": true,
         "ethjs>number-to-bn": true
       }
     },
     "ethjs-contract>ethjs-abi>js-sha3": {
-      "packages": {
-        "browserify>process": true
+      "globals": {
+        "process": true
       }
     },
     "ethjs-contract>js-sha3": {
-      "packages": {
-        "browserify>process": true
+      "globals": {
+        "process": true
       }
     },
     "ethjs-ens": {
@@ -5043,10 +5501,10 @@
     },
     "ethjs-ens>eth-ens-namehash": {
       "globals": {
+        "Buffer": true,
         "name": "write"
       },
       "packages": {
-        "browserify>buffer": true,
         "ethjs-ens>eth-ens-namehash>idna-uts46": true,
         "ethjs-ens>eth-ens-namehash>js-sha3": true
       }
@@ -5054,14 +5512,11 @@
     "ethjs-ens>eth-ens-namehash>idna-uts46": {
       "globals": {
         "define": true
-      },
-      "packages": {
-        "browserify>punycode": true
       }
     },
     "ethjs-ens>eth-ens-namehash>js-sha3": {
-      "packages": {
-        "browserify>process": true
+      "globals": {
+        "process": true
       }
     },
     "ethjs-ens>ethjs-contract": {
@@ -5079,8 +5534,8 @@
       }
     },
     "ethjs-ens>ethjs-contract>js-sha3": {
-      "packages": {
-        "browserify>process": true
+      "globals": {
+        "process": true
       }
     },
     "ethjs-ens>ethjs-query": {
@@ -5141,8 +5596,10 @@
       }
     },
     "ethjs>ethjs-abi": {
+      "globals": {
+        "Buffer": true
+      },
       "packages": {
-        "browserify>buffer": true,
         "ethjs>bn.js": true,
         "ethjs>js-sha3": true,
         "ethjs>number-to-bn": true
@@ -5161,7 +5618,10 @@
     },
     "ethjs>ethjs-provider-http>xhr2": {
       "globals": {
-        "XMLHttpRequest": true
+        "Buffer": true,
+        "console.warn": true,
+        "process.versions.node": true,
+        "process.versions.v8": true
       }
     },
     "ethjs>ethjs-unit": {
@@ -5171,8 +5631,10 @@
       }
     },
     "ethjs>ethjs-util": {
+      "globals": {
+        "Buffer": true
+      },
       "packages": {
-        "browserify>buffer": true,
         "ethjs>ethjs-util>is-hex-prefixed": true,
         "ethjs>ethjs-util>strip-hex-prefix": true
       }
@@ -5183,8 +5645,8 @@
       }
     },
     "ethjs>js-sha3": {
-      "packages": {
-        "browserify>process": true
+      "globals": {
+        "process": true
       }
     },
     "ethjs>number-to-bn": {
@@ -5204,6 +5666,127 @@
         "fast-json-patch>fast-deep-equal": true
       }
     },
+    "fs-extra": {
+      "globals": {
+        "Buffer": true,
+        "console.warn": true,
+        "process.arch": true,
+        "process.cwd": true,
+        "process.platform": true,
+        "process.umask": true,
+        "process.versions.node.split": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "fs-extra>graceful-fs": true,
+        "fs-extra>jsonfile": true,
+        "fs-extra>universalify": true
+      }
+    },
+    "fs-extra>graceful-fs": {
+      "globals": {
+        "console.error": true,
+        "process": true,
+        "setTimeout": true
+      }
+    },
+    "fs-extra>jsonfile": {
+      "globals": {
+        "Buffer.isBuffer": true
+      },
+      "packages": {
+        "fs-extra>graceful-fs": true
+      }
+    },
+    "ganache>bufferutil": {
+      "globals": {
+        "__dirname": true
+      },
+      "packages": {
+        "lavamoat>node-gyp-build": true
+      }
+    },
+    "ganache>utf-8-validate": {
+      "globals": {
+        "__dirname": true
+      },
+      "packages": {
+        "lavamoat>node-gyp-build": true
+      }
+    },
+    "geckodriver>https-proxy-agent": {
+      "globals": {
+        "Buffer.concat": true,
+        "Buffer.from": true
+      },
+      "packages": {
+        "eslint>debug": true,
+        "mockttp>@httptoolkit/proxy-agent>agent-base": true
+      }
+    },
+    "gulp-watch>path-is-absolute": {
+      "globals": {
+        "process.platform": true
+      }
+    },
+    "jest>jest-cli>jest-config>jest-environment-jsdom>jsdom>decimal.js": {
+      "globals": {
+        "crypto": true,
+        "define": true,
+        "self": true
+      }
+    },
+    "jsdom>escodegen": {
+      "globals": {
+        "sourceMap.SourceNode": true
+      },
+      "packages": {
+        "eslint>esutils": true,
+        "jsdom>escodegen>estraverse": true,
+        "jsdom>escodegen>source-map": true
+      }
+    },
+    "jsdom>request>combined-stream": {
+      "globals": {
+        "Buffer.isBuffer": true
+      },
+      "packages": {
+        "jsdom>request>combined-stream>delayed-stream": true
+      }
+    },
+    "jsdom>request>form-data": {
+      "globals": {
+        "Buffer.byteLength": true,
+        "Buffer.isBuffer": true,
+        "process.nextTick": true
+      },
+      "packages": {
+        "jsdom>request>combined-stream": true,
+        "jsdom>request>form-data>asynckit": true,
+        "koa>type-is>mime-types": true
+      }
+    },
+    "jsdom>request>form-data>asynckit": {
+      "globals": {
+        "process": true,
+        "setImmediate": true,
+        "setTimeout": true
+      }
+    },
+    "jsdom>whatwg-encoding>iconv-lite": {
+      "globals": {
+        "console.error": true,
+        "process": true
+      },
+      "packages": {
+        "jsdom>whatwg-encoding>iconv-lite>safer-buffer": true
+      }
+    },
+    "jsdom>whatwg-encoding>iconv-lite>safer-buffer": {
+      "globals": {
+        "process.binding": true
+      }
+    },
     "json-rpc-engine": {
       "packages": {
         "eth-rpc-errors": true,
@@ -5213,9 +5796,6 @@
     "json-rpc-engine>@metamask/safe-event-emitter": {
       "globals": {
         "setTimeout": true
-      },
-      "packages": {
-        "browserify>events": true
       }
     },
     "json-rpc-middleware-stream": {
@@ -5223,14 +5803,52 @@
         "readable-stream": true
       }
     },
-    "jsonschema": {
+    "koa>depd": {
+      "globals": {
+        "process": true
+      }
+    },
+    "koa>http-errors": {
       "packages": {
-        "browserify>url": true
+        "koa>depd": true,
+        "koa>http-errors>setprototypeof": true,
+        "koa>http-errors>toidentifier": true,
+        "koa>statuses": true,
+        "pumpify>inherits": true
+      }
+    },
+    "koa>type-is>mime-types": {
+      "packages": {
+        "koa>type-is>mime-types>mime-db": true
+      }
+    },
+    "lavamoat>bindings": {
+      "globals": {
+        "__dirname": true,
+        "__non_webpack_require__": true,
+        "__webpack_require__": true,
+        "process.arch": true,
+        "process.cwd": true,
+        "process.env.NODE_BINDINGS_ARROW": true,
+        "process.env.NODE_BINDINGS_COMPILED_DIR": true,
+        "process.platform": true,
+        "process.versions.modules": true,
+        "process.versions.node": true
+      },
+      "packages": {
+        "lavamoat>bindings>file-uri-to-path": true
       }
     },
     "lavamoat>json-stable-stringify": {
       "packages": {
         "lavamoat>json-stable-stringify>jsonify": true
+      }
+    },
+    "lavamoat>node-gyp-build": {
+      "globals": {
+        "__non_webpack_require__": true,
+        "__webpack_require__": true,
+        "process": true
       }
     },
     "localforage": {
@@ -5282,9 +5900,172 @@
         "Intl": true
       }
     },
+    "mocha>minimatch>brace-expansion": {
+      "packages": {
+        "mocha>minimatch>brace-expansion>concat-map": true,
+        "stylelint>balanced-match": true
+      }
+    },
+    "mockttp>@httptoolkit/proxy-agent>@httptoolkit/socks-proxy-agent>socks": {
+      "globals": {
+        "Buffer.allocUnsafe": true,
+        "Buffer.byteLength": true,
+        "Buffer.isBuffer": true,
+        "setImmediate": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "3box>ipfs>ipld-git>smart-buffer": true,
+        "react-devtools>ip": true
+      }
+    },
+    "mockttp>@httptoolkit/proxy-agent>agent-base": {
+      "globals": {
+        "clearTimeout": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "eslint>debug": true
+      }
+    },
+    "mockttp>@httptoolkit/proxy-agent>http-proxy-agent": {
+      "globals": {
+        "Buffer.from": true
+      },
+      "packages": {
+        "eslint>debug": true,
+        "mockttp>@httptoolkit/proxy-agent>agent-base": true,
+        "mockttp>@httptoolkit/proxy-agent>pac-proxy-agent>@tootallnate/once": true
+      }
+    },
+    "mockttp>@httptoolkit/proxy-agent>lru-cache": {
+      "packages": {
+        "mockttp>@httptoolkit/proxy-agent>lru-cache>yallist": true
+      }
+    },
+    "mockttp>@httptoolkit/proxy-agent>pac-proxy-agent": {
+      "packages": {
+        "eslint>debug": true,
+        "geckodriver>https-proxy-agent": true,
+        "mockttp>@httptoolkit/proxy-agent>agent-base": true,
+        "mockttp>@httptoolkit/proxy-agent>http-proxy-agent": true,
+        "mockttp>@httptoolkit/proxy-agent>pac-proxy-agent>@tootallnate/once": true,
+        "mockttp>@httptoolkit/proxy-agent>pac-proxy-agent>get-uri": true,
+        "mockttp>@httptoolkit/proxy-agent>pac-proxy-agent>pac-resolver": true,
+        "mockttp>body-parser>raw-body": true,
+        "pubnub>superagent-proxy>proxy-agent>socks-proxy-agent": true
+      }
+    },
+    "mockttp>@httptoolkit/proxy-agent>pac-proxy-agent>get-uri": {
+      "globals": {
+        "new": true,
+        "target": true
+      },
+      "packages": {
+        "eslint>debug": true,
+        "fs-extra": true,
+        "mockttp>@httptoolkit/proxy-agent>pac-proxy-agent>@tootallnate/once": true,
+        "mockttp>@httptoolkit/proxy-agent>pac-proxy-agent>get-uri>data-uri-to-buffer": true,
+        "mockttp>@httptoolkit/proxy-agent>pac-proxy-agent>get-uri>file-uri-to-path": true,
+        "mockttp>@httptoolkit/proxy-agent>pac-proxy-agent>get-uri>ftp": true
+      }
+    },
+    "mockttp>@httptoolkit/proxy-agent>pac-proxy-agent>get-uri>data-uri-to-buffer": {
+      "globals": {
+        "Buffer.from": true
+      }
+    },
+    "mockttp>@httptoolkit/proxy-agent>pac-proxy-agent>get-uri>ftp": {
+      "globals": {
+        "Buffer": true,
+        "clearTimeout": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "mockttp>@httptoolkit/proxy-agent>pac-proxy-agent>get-uri>ftp>readable-stream": true,
+        "mockttp>@httptoolkit/proxy-agent>pac-proxy-agent>get-uri>ftp>xregexp": true
+      }
+    },
+    "mockttp>@httptoolkit/proxy-agent>pac-proxy-agent>get-uri>ftp>readable-stream": {
+      "globals": {
+        "process.browser": true,
+        "process.env.READABLE_STREAM": true,
+        "process.nextTick": true,
+        "process.stderr": true,
+        "process.stdout": true
+      },
+      "packages": {
+        "mockttp>@httptoolkit/proxy-agent>pac-proxy-agent>get-uri>ftp>readable-stream>isarray": true,
+        "mockttp>@httptoolkit/proxy-agent>pac-proxy-agent>get-uri>ftp>readable-stream>string_decoder": true,
+        "pumpify>inherits": true,
+        "readable-stream>core-util-is": true
+      }
+    },
+    "mockttp>@httptoolkit/proxy-agent>pac-proxy-agent>pac-resolver": {
+      "globals": {
+        "Buffer.isBuffer": true,
+        "console.log": true
+      },
+      "packages": {
+        "mockttp>@httptoolkit/proxy-agent>pac-proxy-agent>pac-resolver>degenerator": true,
+        "mockttp>@httptoolkit/proxy-agent>pac-proxy-agent>pac-resolver>netmask": true,
+        "react-devtools>ip": true
+      }
+    },
+    "mockttp>@httptoolkit/proxy-agent>pac-proxy-agent>pac-resolver>degenerator": {
+      "packages": {
+        "@storybook/react>babel-plugin-react-docgen>react-docgen>ast-types": true,
+        "addons-linter>esprima": true,
+        "jsdom>escodegen": true,
+        "mockttp>@httptoolkit/proxy-agent>pac-proxy-agent>pac-resolver>degenerator>vm2": true
+      }
+    },
+    "mockttp>@httptoolkit/proxy-agent>pac-proxy-agent>pac-resolver>degenerator>vm2": {
+      "globals": {
+        "Buffer": true,
+        "URL": true,
+        "__dirname": true,
+        "clearImmediate": true,
+        "clearInterval": true,
+        "clearTimeout": true,
+        "console": true,
+        "process": true,
+        "setImmediate": true,
+        "setInterval": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "mockttp>@httptoolkit/proxy-agent>pac-proxy-agent>pac-resolver>degenerator>vm2>acorn": true,
+        "mockttp>@httptoolkit/proxy-agent>pac-proxy-agent>pac-resolver>degenerator>vm2>acorn-walk": true
+      }
+    },
+    "mockttp>@httptoolkit/proxy-agent>pac-proxy-agent>pac-resolver>degenerator>vm2>acorn": {
+      "globals": {
+        "console": true,
+        "define": true
+      }
+    },
+    "mockttp>@httptoolkit/proxy-agent>pac-proxy-agent>pac-resolver>degenerator>vm2>acorn-walk": {
+      "globals": {
+        "define": true
+      }
+    },
+    "mockttp>body-parser>raw-body": {
+      "globals": {
+        "Buffer.concat": true,
+        "process.nextTick": true
+      },
+      "packages": {
+        "jsdom>whatwg-encoding>iconv-lite": true,
+        "koa>http-errors": true,
+        "mockttp>body-parser>raw-body>bytes": true,
+        "mockttp>express>finalhandler>unpipe": true
+      }
+    },
     "mockttp>node-forge": {
       "globals": {
         "Blob": true,
+        "Buffer": true,
         "MutationObserver": true,
         "QuotaExceededError": true,
         "URL.createObjectURL": true,
@@ -5296,35 +6077,109 @@
         "localStorage": true,
         "navigator": true,
         "postMessage": true,
+        "process": true,
         "removeEventListener": true,
+        "setImmediate": true,
+        "setTimeout": true
+      }
+    },
+    "mockttp>ws": {
+      "globals": {
+        "Buffer.alloc": true,
+        "Buffer.allocUnsafe": true,
+        "Buffer.byteLength": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true,
+        "clearTimeout": true,
+        "process.nextTick": true,
         "setTimeout": true
       },
       "packages": {
-        "browserify>browser-resolve": true,
-        "browserify>process": true,
-        "browserify>timers-browserify": true
+        "ganache>bufferutil": true,
+        "ganache>utf-8-validate": true
       }
     },
     "nanoid": {
       "globals": {
-        "crypto": true,
-        "msCrypto": true,
-        "navigator": true
+        "Buffer.allocUnsafe": true,
+        "crypto.getRandomValues": true
+      }
+    },
+    "nock>qs": {
+      "packages": {
+        "string.prototype.matchall>side-channel": true
       }
     },
     "node-fetch": {
       "globals": {
+        "Buffer": true,
         "Headers": true,
         "Request": true,
         "Response": true,
-        "fetch": true
+        "clearTimeout": true,
+        "fetch": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "node-fetch>whatwg-url": true
+      }
+    },
+    "node-fetch>whatwg-url": {
+      "globals": {
+        "Buffer": true
+      },
+      "packages": {
+        "node-fetch>whatwg-url>tr46": true,
+        "node-fetch>whatwg-url>webidl-conversions": true
       }
     },
     "nonce-tracker": {
       "packages": {
         "await-semaphore": true,
-        "browserify>assert": true,
         "ethjs-query": true
+      }
+    },
+    "nyc>glob": {
+      "globals": {
+        "console.error": true,
+        "process.cwd": true,
+        "process.nextTick": true,
+        "process.platform": true
+      },
+      "packages": {
+        "eslint>minimatch": true,
+        "gulp-watch>path-is-absolute": true,
+        "nyc>glob>fs.realpath": true,
+        "nyc>glob>inflight": true,
+        "pump>once": true,
+        "pumpify>inherits": true
+      }
+    },
+    "nyc>glob>fs.realpath": {
+      "globals": {
+        "console.error": true,
+        "console.trace": true,
+        "process.env.NODE_DEBUG": true,
+        "process.nextTick": true,
+        "process.noDeprecation": true,
+        "process.platform": true,
+        "process.throwDeprecation": true,
+        "process.traceDeprecation": true,
+        "process.version": true
+      }
+    },
+    "nyc>glob>inflight": {
+      "globals": {
+        "process.nextTick": true
+      },
+      "packages": {
+        "pump>once": true,
+        "pump>once>wrappy": true
+      }
+    },
+    "nyc>signal-exit": {
+      "globals": {
+        "process": true
       }
     },
     "obj-multiplex": {
@@ -5345,10 +6200,8 @@
     },
     "promise-to-callback>set-immediate-shim": {
       "globals": {
+        "setImmediate": true,
         "setTimeout.apply": true
-      },
-      "packages": {
-        "browserify>timers-browserify": true
       }
     },
     "prop-types": {
@@ -5358,35 +6211,50 @@
     },
     "pubnub": {
       "globals": {
-        "ActiveXObject": true,
-        "XMLHttpRequest": true,
-        "addEventListener": true,
-        "btoa": true,
+        "Buffer.from": true,
         "clearInterval": true,
-        "clearTimeout": true,
         "console": true,
-        "define": true,
-        "localStorage.getItem": true,
-        "localStorage.setItem": true,
         "location": true,
-        "navigator": true,
-        "setInterval": true,
-        "setTimeout": true
+        "setInterval": true
+      },
+      "packages": {
+        "pubnub>agentkeepalive": true,
+        "pubnub>cbor-sync": true,
+        "pubnub>lil-uuid": true,
+        "pubnub>superagent": true,
+        "pubnub>superagent-proxy": true
+      }
+    },
+    "pubnub>agentkeepalive": {
+      "globals": {
+        "process.nextTick": true
+      },
+      "packages": {
+        "pubnub>agentkeepalive>humanize-ms": true
+      }
+    },
+    "pubnub>agentkeepalive>humanize-ms": {
+      "globals": {
+        "console.warn": true
+      },
+      "packages": {
+        "analytics-node>ms": true
       }
     },
     "pubnub>cbor-sync": {
       "globals": {
+        "Buffer": true,
         "define": true
-      },
-      "packages": {
-        "browserify>buffer": true
+      }
+    },
+    "pubnub>lil-uuid": {
+      "globals": {
+        "define": true
       }
     },
     "pubnub>superagent": {
       "globals": {
-        "ActiveXObject": true,
-        "XMLHttpRequest": true,
-        "btoa": true,
+        "Buffer": true,
         "clearTimeout": true,
         "console.error": true,
         "console.trace": true,
@@ -5394,13 +6262,72 @@
         "setTimeout": true
       },
       "packages": {
-        "pubnub>superagent>component-emitter": true
+        "jsdom>request>extend": true,
+        "jsdom>request>form-data": true,
+        "nock>qs": true,
+        "pubnub>superagent>debug": true,
+        "pubnub>superagent>formidable": true,
+        "pubnub>superagent>methods": true,
+        "pubnub>superagent>mime": true,
+        "web3>xhr2-cookies>cookiejar": true
+      }
+    },
+    "pubnub>superagent-proxy": {
+      "packages": {
+        "eslint>debug": true,
+        "pubnub>superagent-proxy>proxy-agent": true
+      }
+    },
+    "pubnub>superagent-proxy>proxy-agent": {
+      "packages": {
+        "@sentry/cli>proxy-from-env": true,
+        "eslint>debug": true,
+        "geckodriver>https-proxy-agent": true,
+        "mockttp>@httptoolkit/proxy-agent>agent-base": true,
+        "mockttp>@httptoolkit/proxy-agent>http-proxy-agent": true,
+        "mockttp>@httptoolkit/proxy-agent>lru-cache": true,
+        "mockttp>@httptoolkit/proxy-agent>pac-proxy-agent": true,
+        "pubnub>superagent-proxy>proxy-agent>socks-proxy-agent": true
+      }
+    },
+    "pubnub>superagent-proxy>proxy-agent>socks-proxy-agent": {
+      "packages": {
+        "eslint>debug": true,
+        "mockttp>@httptoolkit/proxy-agent>@httptoolkit/socks-proxy-agent>socks": true,
+        "mockttp>@httptoolkit/proxy-agent>agent-base": true
+      }
+    },
+    "pubnub>superagent>debug": {
+      "globals": {
+        "console": true,
+        "document": true,
+        "localStorage": true,
+        "navigator": true,
+        "process": true
+      },
+      "packages": {
+        "analytics-node>ms": true,
+        "sinon>supports-color": true
+      }
+    },
+    "pubnub>superagent>formidable": {
+      "globals": {
+        "Buffer": true,
+        "GENTLY": true,
+        "setTimeout": true
+      }
+    },
+    "pubnub>superagent>mime": {
+      "globals": {
+        "console.warn": true,
+        "process.env.DEBUG_MIME": true
       }
     },
     "pump": {
+      "globals": {
+        "process.version": true
+      },
       "packages": {
-        "browserify>browser-resolve": true,
-        "browserify>process": true,
         "end-of-stream": true,
         "pump>once": true
       }
@@ -5411,8 +6338,8 @@
       }
     },
     "rc>deep-extend": {
-      "packages": {
-        "browserify>buffer": true
+      "globals": {
+        "Buffer": true
       }
     },
     "react": {
@@ -5429,12 +6356,6 @@
         "react-devtools>react-devtools-core": true
       }
     },
-    "react-devtools>ip": {
-      "packages": {
-        "browserify>buffer": true,
-        "browserify>os-browserify": true
-      }
-    },
     "react-devtools>react-devtools-core": {
       "globals": {
         "WebSocket": true,
@@ -5447,12 +6368,16 @@
       }
     },
     "readable-stream": {
+      "globals": {
+        "process.browser": true,
+        "process.env.READABLE_STREAM": true,
+        "process.stderr": true,
+        "process.stdout": true,
+        "process.version.slice": true,
+        "setImmediate": true
+      },
       "packages": {
         "@storybook/api>util-deprecate": true,
-        "browserify>browser-resolve": true,
-        "browserify>events": true,
-        "browserify>process": true,
-        "browserify>timers-browserify": true,
         "pumpify>inherits": true,
         "readable-stream>core-util-is": true,
         "readable-stream>isarray": true,
@@ -5462,18 +6387,13 @@
       }
     },
     "readable-stream>core-util-is": {
-      "packages": {
-        "browserify>insert-module-globals>is-buffer": true
+      "globals": {
+        "Buffer.isBuffer": true
       }
     },
     "readable-stream>process-nextick-args": {
-      "packages": {
-        "browserify>process": true
-      }
-    },
-    "readable-stream>safe-buffer": {
-      "packages": {
-        "browserify>buffer": true
+      "globals": {
+        "process": true
       }
     },
     "readable-stream>string_decoder": {
@@ -5494,16 +6414,15 @@
         "setTimeout": true
       },
       "packages": {
-        "3box>events": true,
-        "browserify>util": true
+        "3box>events": true
       }
     },
     "semver": {
       "globals": {
-        "console.error": true
+        "console.error": true,
+        "process": true
       },
       "packages": {
-        "browserify>process": true,
         "semver>lru-cache": true
       }
     },
@@ -5512,40 +6431,62 @@
         "semver>lru-cache>yallist": true
       }
     },
-    "source-map-explorer>btoa": {
+    "sinon>supports-color": {
+      "globals": {
+        "process.env": true,
+        "process.platform": true
+      },
       "packages": {
-        "browserify>buffer": true
+        "sinon>supports-color>has-flag": true
       }
     },
-    "stylelint>write-file-atomic>typedarray-to-buffer": {
+    "sinon>supports-color>has-flag": {
+      "globals": {
+        "process.argv": true
+      }
+    },
+    "source-map-explorer>btoa": {
+      "globals": {
+        "Buffer": true
+      }
+    },
+    "string.prototype.matchall>call-bind": {
       "packages": {
-        "browserify>buffer": true,
-        "jsdom>request>is-typedarray": true
+        "eslint-plugin-react>array-includes>get-intrinsic": true,
+        "mocha>object.assign>function-bind": true
+      }
+    },
+    "string.prototype.matchall>side-channel": {
+      "packages": {
+        "enzyme>object-inspect": true,
+        "eslint-plugin-react>array-includes>get-intrinsic": true,
+        "string.prototype.matchall>call-bind": true
       }
     },
     "terser>source-map-support>buffer-from": {
-      "packages": {
-        "browserify>buffer": true
+      "globals": {
+        "Buffer": true
       }
     },
     "uuid": {
       "globals": {
-        "crypto": true,
-        "msCrypto": true
+        "Buffer.from": true
       }
     },
     "vinyl>clone": {
-      "packages": {
-        "browserify>buffer": true
+      "globals": {
+        "Buffer": true
       }
     },
     "vinyl>cloneable-readable>process-nextick-args": {
-      "packages": {
-        "browserify>process": true
+      "globals": {
+        "process.nextTick": true,
+        "process.version": true
       }
     },
     "web3": {
       "globals": {
+        "Buffer": true,
         "Web3": "write",
         "XMLHttpRequest": true,
         "clearTimeout": true,
@@ -5553,19 +6494,16 @@
         "setTimeout": true
       },
       "packages": {
-        "browserify>buffer": true,
         "web3>bignumber.js": true,
         "web3>crypto-js": true,
         "web3>utf8": true,
-        "web3>xhr2-cookies": true
+        "web3>xhr2-cookies": true,
+        "web3>xmlhttprequest": true
       }
     },
     "web3>bignumber.js": {
       "globals": {
         "define": true
-      },
-      "packages": {
-        "browserify>crypto-browserify": true
       }
     },
     "web3>crypto-js": {
@@ -5580,21 +6518,26 @@
     },
     "web3>xhr2-cookies": {
       "globals": {
-        "console.warn": true
+        "Buffer": true,
+        "console.warn": true,
+        "process.versions.node": true,
+        "process.versions.v8": true
       },
       "packages": {
-        "browserify>buffer": true,
-        "browserify>https-browserify": true,
-        "browserify>os-browserify": true,
-        "browserify>process": true,
-        "browserify>stream-http": true,
-        "browserify>url": true,
         "web3>xhr2-cookies>cookiejar": true
       }
     },
     "web3>xhr2-cookies>cookiejar": {
       "globals": {
         "console.warn": true
+      }
+    },
+    "web3>xmlhttprequest": {
+      "globals": {
+        "Buffer": true,
+        "console.warn": true,
+        "process.argv": true,
+        "process.pid": true
       }
     },
     "webextension-polyfill": {

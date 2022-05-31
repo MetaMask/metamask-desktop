@@ -405,6 +405,7 @@ function createFactoredBuild({
       reloadOnChange,
       shouldLintFenceFiles,
       testing,
+      buildPlatform
     });
 
     // set bundle entries
@@ -432,6 +433,11 @@ function createFactoredBuild({
     // note: this will remove lavapack, but its ok bc we manually readd it later
     Object.assign(bundlerOpts, bifyModuleGroups.plugin.args);
     bundlerOpts.plugin = [...bundlerOpts.plugin, [bifyModuleGroups.plugin]];
+
+    // Don't use browserify builtins for Buffer, process etc.
+    if (buildPlatform === 'desktop') {
+      Object.assign(bundlerOpts, { insertGlobalVars: undefined });
+    }
 
     // instrument pipeline
     let sizeGroupMap;
@@ -657,6 +663,7 @@ function setupBundlerDefaults(
     reloadOnChange,
     shouldLintFenceFiles,
     testing,
+    buildPlatform
   },
 ) {
   const { bundlerOpts } = buildConfiguration;
@@ -683,6 +690,14 @@ function setupBundlerDefaults(
     // For sourcemaps
     debug: true,
   });
+
+  if (buildPlatform === 'desktop') {
+    Object.assign(bundlerOpts, {
+      // Use Node.js dependencies for Desktop build
+      node: true,
+      ignoreMissing: true,
+    })
+  }
 
   // Ensure react-devtools are not included in non-dev builds
   if (!devMode || testing) {
