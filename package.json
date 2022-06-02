@@ -10,6 +10,7 @@
     "setup": "yarn install && yarn setup:postinstall",
     "setup:postinstall": "yarn patch-package && yarn allow-scripts",
     "start": "yarn build:dev dev --apply-lavamoat=false",
+    "start:desktop": "ELECTRON_ENABLE_LOGGING=1 electron app/scripts/desktop.js",
     "start:lavamoat": "yarn build:dev dev --apply-lavamoat=true",
     "dist": "yarn build prod",
     "build": "yarn lavamoat:build",
@@ -290,6 +291,7 @@
     "depcheck": "^1.4.2",
     "dependency-tree": "^8.1.1",
     "duplexify": "^4.1.1",
+    "electron": "^19.0.2",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.15.1",
     "eslint": "^7.23.0",
@@ -445,7 +447,8 @@
       "@keystonehq/bc-ur-registry-eth>hdkey>secp256k1": false,
       "@metamask/rpc-methods>@metamask/key-tree>secp256k1": false,
       "eth-lattice-keyring>gridplus-sdk>secp256k1": false,
-      "eth-lattice-keyring>secp256k1": false
+      "eth-lattice-keyring>secp256k1": false,
+      "electron": true
     }
   }
 }
