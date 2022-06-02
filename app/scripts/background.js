@@ -46,6 +46,25 @@ import setupEnsIpfsResolver from './lib/ens-ipfs/setup';
 import { getPlatform } from './lib/util';
 /* eslint-enable import/first */
 
+// desktop client - polyfill browser api
+if (navigator.userAgent.includes('Electron')) {
+  chrome.windows = {
+    getLastFocused: () => { return Promise.reject('"chrome.windows.getLastFocused" unsupported on electron') },
+    getCurrent: () => { return Promise.reject('"chrome.windows.getCurrent" unsupported on electron') },
+    getAll: () => { return Promise.reject('"chrome.windows.getAll" unsupported on electron') },
+    create: () => { return Promise.reject('"chrome.windows.create" unsupported on electron') },
+    update: () => { return Promise.reject('"chrome.windows.update" unsupported on electron') },
+    remove: () => { return Promise.reject('"chrome.windows.remove" unsupported on electron') },
+    onRemoved: {
+      addListener: () => { return console.warn('"chrome.windows.onRemoved.addListener" unsupported on electron') },
+    }
+  }
+  chrome.browserAction = {
+    setBadgeText: () => { return console.warn('"chrome.browserAction.setBadgeText" unsupported on electron') },
+    setBadgeBackgroundColor: () => { return console.warn('"chrome.browserAction.setBadgeBackgroundColor" unsupported on electron') },
+  }
+}
+
 const { sentry } = global;
 const firstTimeState = { ...rawFirstTimeState };
 
