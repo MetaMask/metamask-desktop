@@ -1,2 +1,6 @@
-import MetamaskController from './metamask-controller';
-const controller = new MetamaskController({});
+import { initialize } from './generic-background';
+
+const localStore = null; // @todo
+
+initialize({ localStore }).catch(log.error);
+

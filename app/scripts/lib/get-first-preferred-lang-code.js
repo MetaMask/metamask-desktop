@@ -1,4 +1,3 @@
-import browser from 'webextension-polyfill';
 import allLocales from '../../_locales/index.json';
 
 // mapping some browsers return hyphen instead underscore in locale codes (e.g. zh_TW -> zh-tw)
@@ -16,7 +15,7 @@ allLocales.forEach((locale) => {
  *
  * @returns {Promise<string>} Promises a locale code, either one from the user's preferred list that we have a translation for, or 'en'
  */
-export default async function getFirstPreferredLangCode() {
+export default async function getFirstPreferredLangCode(browser) {
   let userPreferredLocaleCodes;
 
   try {
