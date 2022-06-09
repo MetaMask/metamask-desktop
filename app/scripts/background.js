@@ -48,22 +48,6 @@ initialize({ localStore, triggerUi, openPopup, browser, platform, notificationMa
   }
 }
 
-/**
-* Opens the browser popup for user confirmation of watchAsset
-* then it waits until user interact with the UI
-*/
-async function openPopup() {
-  await triggerUi();
-  await new Promise((resolve) => {
-      const interval = setInterval(() => {
-          if (!notificationIsOpen) {
-              clearInterval(interval);
-              resolve();
-          }
-      }, SECOND);
-  });
-}
-
 
 // On first install, open a new tab with MetaMask
 browser.runtime.onInstalled.addListener(({ reason }) => {

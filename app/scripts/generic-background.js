@@ -111,7 +111,7 @@ let versionedData;
  *
  * @returns {Promise} Setup complete.
  */
-export async function initialize({ localStore: localStorage, openPopup, triggerUi, browser, notificationManager }) {
+export async function initialize({ localStore: localStorage, triggerUi, browser, notificationManager }) {
     const localStore = inTest ? new ReadOnlyNetworkStore() : localStorage;
 
     if (inTest || process.env.METAMASK_DEBUG) {
@@ -280,6 +280,7 @@ function setupController({ initState, initLangCode, openPopup, triggerUi, browse
         }
     }
 
+    // @todo Generalize comms layer
     //
     // connect to other contexts
     //
@@ -565,3 +566,19 @@ function setupController({ initState, initLangCode, openPopup, triggerUi, browse
 
     return Promise.resolve();
 }
+
+/**
+* Opens the browser popup for user confirmation of watchAsset
+* then it waits until user interact with the UI
+*/
+async function openPopup() {
+    await triggerUi();
+    await new Promise((resolve) => {
+        const interval = setInterval(() => {
+            if (!notificationIsOpen) {
+                clearInterval(interval);
+                resolve();
+            }
+        }, SECOND);
+    });
+  }
