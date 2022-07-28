@@ -152,6 +152,9 @@ import {
   ///: END:ONLY_INCLUDE_IN
 } from './controllers/permissions';
 import createRPCMethodTrackingMiddleware from './lib/createRPCMethodTrackingMiddleware';
+import { createWebSocketClient } from './snaps-desktop/client';
+import { SERVER_URL } from './snaps-desktop/constants';
+import { ProxyableControllerMessenger } from './snaps-desktop/ProxyableControllerMessenger'
 
 export const METAMASK_CONTROLLER_EVENTS = {
   // Fired after state changes that impact the extension badge (unapproved msg count)
@@ -192,7 +195,36 @@ export default class MetamaskController extends EventEmitter {
     this.getRequestAccountTabIds = opts.getRequestAccountTabIds;
     this.getOpenMetamaskTabsIds = opts.getOpenMetamaskTabsIds;
 
-    this.controllerMessenger = new ControllerMessenger();
+    this.controllerMessenger = new ProxyableControllerMessenger(
+      async (request) => this.client.requestEncrypted(request),
+      ['SnapController:add',
+        'SnapController:get',
+        'SnapController:handleRpcRequest',
+        'SnapController:getSnapState',
+        'SnapController:has',
+        'SnapController:updateSnapState',
+        'SnapController:clearSnapState',
+        'SnapController:updateBlockedSnaps',
+        'SnapController:removeSnapError',
+        'SnapController:disable',
+        'SnapController:enable',
+        'SnapController:remove',
+        'SnapController:getSnaps',
+        'SnapController:install',
+        'ExecutionService:executeSnap',
+        'ExecutionService:getRpcRequestHandler',
+        'ExecutionService:terminateSnap',
+        'ExecutionService:terminateAllSnaps']
+    );
+
+    const socket = new WebSocket(SERVER_URL);
+    this.client = createWebSocketClient(socket, {
+      'ControllerMessenger:proxyCall': this.controllerMessenger.handleProxyCall.bind(this.controllerMessenger),
+      'ControllerMessenger:proxyEvent': this.controllerMessenger.handleProxyEvent.bind(this.controllerMessenger),
+    });
+    socket.addEventListener('open', () => {
+      this.client.performHandshake();
+    })
 
     // observable state store
     this.store = new ComposableObservableStore({
@@ -627,80 +659,6 @@ export default class MetamaskController extends EventEmitter {
     });
 
     ///: BEGIN:ONLY_INCLUDE_IN(flask)
-    this.snapExecutionService = new IframeExecutionService({
-      iframeUrl: new URL(
-        'https://metamask.github.io/iframe-execution-environment/0.5.2',
-      ),
-      messenger: this.controllerMessenger.getRestricted({
-        name: 'ExecutionService',
-      }),
-      setupSnapProvider: this.setupSnapProvider.bind(this),
-    });
-
-    const snapControllerMessenger = this.controllerMessenger.getRestricted({
-      name: 'SnapController',
-      allowedEvents: [
-        'ExecutionService:unhandledError',
-        'ExecutionService:outboundRequest',
-        'ExecutionService:outboundResponse',
-      ],
-      allowedActions: [
-        `${this.permissionController.name}:getEndowments`,
-        `${this.permissionController.name}:getPermissions`,
-        `${this.permissionController.name}:hasPermission`,
-        `${this.permissionController.name}:hasPermissions`,
-        `${this.permissionController.name}:requestPermissions`,
-        `${this.permissionController.name}:revokeAllPermissions`,
-        `${this.permissionController.name}:revokePermissionForAllSubjects`,
-        'ExecutionService:executeSnap',
-        'ExecutionService:getRpcRequestHandler',
-        'ExecutionService:terminateSnap',
-        'ExecutionService:terminateAllSnaps',
-      ],
-    });
-
-    const SNAP_BLOCKLIST = [
-      {
-        id: 'npm:@consensys/starknet-snap',
-        versionRange: '<0.1.11',
-      },
-    ];
-
-    this.snapController = new SnapController({
-      environmentEndowmentPermissions: Object.values(EndowmentPermissions),
-      closeAllConnections: this.removeAllConnections.bind(this),
-      // Prefix subject with appKeyType to generate separate keys for separate uses
-      getAppKey: async (subject, appKeyType) => {
-        await this.appStateController.getUnlockPromise(true);
-        return this.getAppKeyForSubject(`${appKeyType}:${subject}`);
-      },
-      checkBlockList: async (snapsToCheck) => {
-        return Object.entries(snapsToCheck).reduce(
-          (acc, [snapId, snapVersion]) => {
-            const blockInfo = SNAP_BLOCKLIST.find(
-              (blocked) =>
-                blocked.id === snapId &&
-                satisfiesSemver(snapVersion, blocked.versionRange, {
-                  includePrerelease: true,
-                }),
-            );
-
-            const cur = blockInfo
-              ? {
-                  blocked: true,
-                  reason: blockInfo.reason,
-                  infoUrl: blockInfo.infoUrl,
-                }
-              : { blocked: false };
-            return { ...acc, [snapId]: cur };
-          },
-          {},
-        );
-      },
-      state: initState.SnapController,
-      messenger: snapControllerMessenger,
-    });
-
     this.notificationController = new NotificationController({
       messenger: this.controllerMessenger.getRestricted({
         name: 'NotificationController',
@@ -741,23 +699,23 @@ export default class MetamaskController extends EventEmitter {
 
     process.env.TOKEN_DETECTION_V2
       ? (this.detectTokensController = new DetectTokensController({
-          preferences: this.preferencesController,
-          tokensController: this.tokensController,
-          assetsContractController: this.assetsContractController,
-          network: this.networkController,
-          keyringMemStore: this.keyringController.memStore,
-          tokenList: this.tokenListController,
-          trackMetaMetricsEvent: this.metaMetricsController.trackEvent.bind(
-            this.metaMetricsController,
-          ),
-        }))
+        preferences: this.preferencesController,
+        tokensController: this.tokensController,
+        assetsContractController: this.assetsContractController,
+        network: this.networkController,
+        keyringMemStore: this.keyringController.memStore,
+        tokenList: this.tokenListController,
+        trackMetaMetricsEvent: this.metaMetricsController.trackEvent.bind(
+          this.metaMetricsController,
+        ),
+      }))
       : (this.detectTokensController = new DetectTokensController({
-          preferences: this.preferencesController,
-          tokensController: this.tokensController,
-          network: this.networkController,
-          keyringMemStore: this.keyringController.memStore,
-          tokenList: this.tokenListController,
-        }));
+        preferences: this.preferencesController,
+        tokensController: this.tokensController,
+        network: this.networkController,
+        keyringMemStore: this.keyringController.memStore,
+        tokenList: this.tokenListController,
+      }));
 
     this.addressBookController = new AddressBookController(
       undefined,
@@ -1040,7 +998,6 @@ export default class MetamaskController extends EventEmitter {
       SmartTransactionsController: this.smartTransactionsController,
       CollectiblesController: this.collectiblesController,
       ///: BEGIN:ONLY_INCLUDE_IN(flask)
-      SnapController: this.snapController,
       NotificationController: this.notificationController,
       ///: END:ONLY_INCLUDE_IN
     });
@@ -1081,7 +1038,6 @@ export default class MetamaskController extends EventEmitter {
         SmartTransactionsController: this.smartTransactionsController,
         CollectiblesController: this.collectiblesController,
         ///: BEGIN:ONLY_INCLUDE_IN(flask)
-        SnapController: this.snapController,
         NotificationController: this.notificationController,
         ///: END:ONLY_INCLUDE_IN
       },
@@ -1225,10 +1181,10 @@ export default class MetamaskController extends EventEmitter {
           params:
             newAccounts.length < 2
               ? // If the length is 1 or 0, the accounts are sorted by definition.
-                newAccounts
+              newAccounts
               : // If the length is 2 or greater, we have to execute
-                // `eth_accounts` vi this method.
-                await this.getPermittedAccounts(origin),
+              // `eth_accounts` vi this method.
+              await this.getPermittedAccounts(origin),
         });
       }
 
@@ -1269,7 +1225,7 @@ export default class MetamaskController extends EventEmitter {
     ///: BEGIN:ONLY_INCLUDE_IN(flask)
     // Record Snap metadata whenever a Snap is added to state.
     this.controllerMessenger.subscribe(
-      `${this.snapController.name}:snapAdded`,
+      `SnapController:snapAdded`,
       (snap, svgIcon = null) => {
         const {
           manifest: { proposedName },
@@ -1286,7 +1242,7 @@ export default class MetamaskController extends EventEmitter {
     );
 
     this.controllerMessenger.subscribe(
-      `${this.snapController.name}:snapInstalled`,
+      `SnapController:snapInstalled`,
       (truncatedSnap) => {
         this.metaMetricsController.trackEvent({
           event: 'Snap Installed',
@@ -1300,7 +1256,7 @@ export default class MetamaskController extends EventEmitter {
     );
 
     this.controllerMessenger.subscribe(
-      `${this.snapController.name}:snapUpdated`,
+      `SnapController:snapUpdated`,
       (newSnap, oldVersion) => {
         this.metaMetricsController.trackEvent({
           event: 'Snap Updated',
@@ -1315,7 +1271,7 @@ export default class MetamaskController extends EventEmitter {
     );
 
     this.controllerMessenger.subscribe(
-      `${this.snapController.name}:snapTerminated`,
+      `SnapController:snapTerminated`,
       (truncatedSnap) => {
         const approvals = Object.values(
           this.approvalController.state.pendingApprovals,
@@ -1836,12 +1792,22 @@ export default class MetamaskController extends EventEmitter {
 
       ///: BEGIN:ONLY_INCLUDE_IN(flask)
       // snaps
-      removeSnapError: this.snapController.removeSnapError.bind(
-        this.snapController,
+      removeSnapError: this.controllerMessenger.call.bind(
+        this.controllerMessenger,
+        'SnapController:removeSnapError',
       ),
-      disableSnap: this.snapController.disableSnap.bind(this.snapController),
-      enableSnap: this.snapController.enableSnap.bind(this.snapController),
-      removeSnap: this.snapController.removeSnap.bind(this.snapController),
+      disableSnap: this.controllerMessenger.call.bind(
+        this.controllerMessenger,
+        'SnapController:disable',
+      ),
+      enableSnap: this.controllerMessenger.call.bind(
+        this.controllerMessenger,
+        'SnapController:enable',
+      ),
+      removeSnap: this.controllerMessenger.call.bind(
+        this.controllerMessenger,
+        'SnapController:remove',
+      ),
       dismissNotifications: this.dismissNotifications.bind(this),
       markNotificationsAsRead: this.markNotificationsAsRead.bind(this),
       ///: END:ONLY_INCLUDE_IN
@@ -1985,8 +1951,8 @@ export default class MetamaskController extends EventEmitter {
       // DetectCollectibleController
       detectCollectibles: process.env.COLLECTIBLES_V1
         ? collectibleDetectionController.detectCollectibles.bind(
-            collectibleDetectionController,
-          )
+          collectibleDetectionController,
+        )
         : null,
 
       /** Token Detection V2 */
@@ -2571,9 +2537,8 @@ export default class MetamaskController extends EventEmitter {
    */
 
   getAccountLabel(name, index, hdPathDescription) {
-    return `${name[0].toUpperCase()}${name.slice(1)} ${
-      parseInt(index, 10) + 1
-    } ${hdPathDescription || ''}`.trim();
+    return `${name[0].toUpperCase()}${name.slice(1)} ${parseInt(index, 10) + 1
+      } ${hdPathDescription || ''}`.trim();
   }
 
   /**
@@ -3728,9 +3693,10 @@ export default class MetamaskController extends EventEmitter {
     engine.push(
       createSnapMethodMiddleware(subjectType === SUBJECT_TYPES.SNAP, {
         getAppKey: this.getAppKeyForSubject.bind(this, origin),
-        getSnaps: this.snapController.getPermittedSnaps.bind(
-          this.snapController,
-          origin,
+
+        getSnaps: this.controllerMessenger.call.bind(
+          this.controllerMessenger,
+          'SnapController:getSnaps',
         ),
         requestPermissions: async (requestedPermissions) => {
           const [
@@ -3747,10 +3713,11 @@ export default class MetamaskController extends EventEmitter {
           origin,
         ),
         getAccounts: this.getPermittedAccounts.bind(this, origin),
-        installSnaps: this.snapController.installSnaps.bind(
-          this.snapController,
-          origin,
-        ),
+        installSnaps: this.controllerMessenger.call.bind(
+          this.controllerMessenger,
+          'SnapController:install',
+          origin
+        )
       }),
     );
     ///: END:ONLY_INCLUDE_IN
