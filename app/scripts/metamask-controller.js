@@ -46,13 +46,6 @@ import {
   ///: END:ONLY_INCLUDE_IN
 } from '@metamask/controllers';
 import SmartTransactionsController from '@metamask/smart-transactions-controller';
-///: BEGIN:ONLY_INCLUDE_IN(flask)
-import {
-  SnapController,
-  IframeExecutionService,
-} from '@metamask/snap-controllers';
-import { satisfies as satisfiesSemver } from 'semver';
-///: END:ONLY_INCLUDE_IN
 
 import {
   ASSET_TYPES,
@@ -153,8 +146,9 @@ import {
 } from './controllers/permissions';
 import createRPCMethodTrackingMiddleware from './lib/createRPCMethodTrackingMiddleware';
 import { createWebSocketClient } from './snaps-desktop/client';
-import { SERVER_URL } from './snaps-desktop/constants';
 import { ProxyableControllerMessenger } from './snaps-desktop/ProxyableControllerMessenger'
+import { ProxyableStream } from './snaps-desktop/ProxyableStream' 
+import { PassThrough } from 'stream';
 
 export const METAMASK_CONTROLLER_EVENTS = {
   // Fired after state changes that impact the extension badge (unapproved msg count)
@@ -195,6 +189,8 @@ export default class MetamaskController extends EventEmitter {
     this.getRequestAccountTabIds = opts.getRequestAccountTabIds;
     this.getOpenMetamaskTabsIds = opts.getOpenMetamaskTabsIds;
 
+    this.proxyableStream = new ProxyableStream(async (request) => this.client.requestEncrypted(request));
+
     this.controllerMessenger = new ProxyableControllerMessenger(
       async (request) => this.client.requestEncrypted(request),
       ['SnapController:add',
@@ -217,10 +213,12 @@ export default class MetamaskController extends EventEmitter {
         'ExecutionService:terminateAllSnaps']
     );
 
-    const socket = new WebSocket(SERVER_URL);
+    const socket = new WebSocket('ws://localhost:8888');
     this.client = createWebSocketClient(socket, {
       'ControllerMessenger:proxyCall': this.controllerMessenger.handleProxyCall.bind(this.controllerMessenger),
       'ControllerMessenger:proxyEvent': this.controllerMessenger.handleProxyEvent.bind(this.controllerMessenger),
+      'ProxyableStream:open': this.setupSnapProvider.bind(this),
+      'ProxyableStream:write': this.proxyableStream.handleData.bind(this.proxyableStream),
     });
     socket.addEventListener('open', () => {
       this.client.performHandshake();
@@ -3526,10 +3524,11 @@ export default class MetamaskController extends EventEmitter {
   /**
    * For snaps running in workers.
    *
-   * @param snapId
-   * @param connectionStream
+   * @param request
    */
-  setupSnapProvider(snapId, connectionStream) {
+  async setupSnapProvider(request) {
+    const snapId = request.params[0]
+    const connectionStream = await this.proxyableStream.registerExtension(snapId);
     this.setupUntrustedCommunication({
       connectionStream,
       sender: { snapId },

@@ -1,1 +1,0 @@
-{"version":3,"file":"constants.js","sourceRoot":"","sources":["../src/constants.ts"],"names":[],"mappings":";;;AAAa,QAAA,WAAW,GAAG,IAAI,CAAC;AAEnB,QAAA,UAAU,GAAG,kBAAkB,mBAAW,EAAE,CAAC","sourcesContent":["export const SERVER_PORT = 8888;\n\nexport const SERVER_URL = `ws://localhost:${SERVER_PORT}`;\n"]}

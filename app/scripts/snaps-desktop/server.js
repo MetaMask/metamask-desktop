@@ -3,18 +3,20 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createWebSocketServer = void 0;
 const ws_1 = require("ws");
-const constants_1 = require("./constants");
 const client_1 = require("./client");
 /**
  * Create a new WebSocket server to handle (encrypted) JSON-RPC requests.
  *
- * @param handlers - Handlers to run for specific RPC methods.
+ * @param options - The server options.
+ * @param options.host - The host to bind the server to.
+ * @param options.port - The port to bind the server to.
+ * @param options.handlers - The handlers to run for specific RPC methods.
  * @returns An instance of the WebSocket server and the underlying client.
  */
-const createWebSocketServer = (handlers) => {
+const createWebSocketServer = ({ host = 'localhost', port = 8000, handlers, }) => {
     const server = new ws_1.WebSocketServer({
-        host: 'localhost',
-        port: constants_1.SERVER_PORT,
+        host,
+        port,
     });
     let client = null;
     server.on('connection', (socket) => {

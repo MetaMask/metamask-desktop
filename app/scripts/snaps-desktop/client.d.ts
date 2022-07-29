@@ -9,6 +9,7 @@ export declare enum EncryptedJsonRpcMethod {
 }
 export declare type Handlers = Record<string, Handler>;
 export declare type Handler = (request: JsonRpcRequest<unknown>) => Promise<string>;
+export declare type WebSocketClient = ReturnType<typeof createWebSocketClient>;
 /**
  * Create a WebSocket client from a WebSocket. This client can both send and receive JSON-RPC
  * requests.
