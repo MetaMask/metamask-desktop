@@ -45,6 +45,12 @@ import getObjStructure from './lib/getObjStructure';
 import setupEnsIpfsResolver from './lib/ens-ipfs/setup';
 import { getPlatform } from './lib/util';
 /* eslint-enable import/first */
+import WebSocketStream from './web-socket-stream';
+const {
+  CLIENT_RENDER_PROCESS_INTERNAL,
+  CLIENT_RENDER_PROCESS_EXTERNAL,
+  SOCKET_PORT
+} = require('../../shared/constants/desktop')
 
 // desktop client - polyfill browser api
 if (navigator.userAgent.includes('Electron')) {
@@ -103,6 +109,8 @@ const phishingPageUrl = new URL(process.env.PHISHING_WARNING_PAGE_URL);
 const ONE_SECOND_IN_MILLISECONDS = 1_000;
 // Timeout for initializing phishing warning page.
 const PHISHING_WARNING_PAGE_TIMEOUT = ONE_SECOND_IN_MILLISECONDS;
+
+const WEB_SOCKET_URL = `ws://localhost:${SOCKET_PORT}/?id=`
 
 /**
  * In case of MV3 we attach a "onConnect" event listener as soon as the application is initialised.
@@ -486,7 +494,13 @@ function setupController(initState, initLangCode, remoteSourcePort) {
       : null;
 
     if (isMetaMaskInternalProcess) {
-      const portStream = new PortStream(remotePort);
+      const originalPortStream = new PortStream(remotePort);
+
+      const portStream = new WebSocketStream(
+        new WebSocket(
+          `${WEB_SOCKET_URL}${CLIENT_RENDER_PROCESS_INTERNAL}`),
+        originalPortStream);
+
       // communication with popup
       controller.isClientOpen = true;
       controller.setupTrustedCommunication(portStream, remotePort.sender);
@@ -563,7 +577,13 @@ function setupController(initState, initLangCode, remoteSourcePort) {
 
   // communication with page or other extension
   function connectExternal(remotePort) {
-    const portStream = new PortStream(remotePort);
+    const originalPortStream = new PortStream(remotePort);
+
+    const portStream = new WebSocketStream(
+      new WebSocket(
+        `${WEB_SOCKET_URL}${CLIENT_RENDER_PROCESS_EXTERNAL}`),
+      originalPortStream);
+    
     controller.setupUntrustedCommunication({
       connectionStream: portStream,
       sender: remotePort.sender,

@@ -3,21 +3,40 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1 user-scalable=no">
-    <title>MetaMask</title>
+    <title>MetaMask Desktop</title>
     <style>
-      iframe {
-        width: 100%;
-        height: 100%;
-        border: 0;
-        position: absolute;
-        left: 0;
-        top: 0;
+      body {
+        font-family: system-ui;
+      }
+
+      th {
+        font-weight: bold;
+        text-align: right;
+      }
+
+      th, td {
+        padding: 4px;
+      }
+
+      .off {
+        color: red;
+      }
+
+      .on {
+        color: limegreen;
       }
     </style>
   </head>
   <body>
-    <iframe src="./background.html" style="display: none;"></iframe>
-    <iframe src="./home.html"></iframe>
-    <script src="./chromereload.js" type="text/javascript" charset="utf-8"></script>
+    <table>
+      <tr>
+        <th>Render Process</th>
+        <td id="render-process-status" class="off">Disconnected</td>
+      </tr>
+      <tr>
+        <th>Extension</th>
+        <td id="extension-status" class="off">Disconnected</td>
+      </tr>
+    </table>
   </body>
 </html>
