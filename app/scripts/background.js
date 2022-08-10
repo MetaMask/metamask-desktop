@@ -44,6 +44,7 @@ import getFirstPreferredLangCode from './lib/get-first-preferred-lang-code';
 import getObjStructure from './lib/getObjStructure';
 import setupEnsIpfsResolver from './lib/ens-ipfs/setup';
 import { getPlatform } from './lib/util';
+import ProxyWebSocketStream from './proxy-web-socket-stream'
 /* eslint-enable import/first */
 
 const { sentry } = global;
@@ -84,6 +85,11 @@ const phishingPageUrl = new URL(process.env.PHISHING_WARNING_PAGE_URL);
 const ONE_SECOND_IN_MILLISECONDS = 1_000;
 // Timeout for initializing phishing warning page.
 const PHISHING_WARNING_PAGE_TIMEOUT = ONE_SECOND_IN_MILLISECONDS;
+
+const WEB_SOCKET_URL = 'ws://localhost:7071/?id='
+
+const socketInternal = new WebSocket(`${WEB_SOCKET_URL}extensionInternal`)
+const socketExternal = new WebSocket(`${WEB_SOCKET_URL}extensionExternal`)
 
 /**
  * In case of MV3 we attach a "onConnect" event listener as soon as the application is initialised.
@@ -467,7 +473,9 @@ function setupController(initState, initLangCode, remoteSourcePort) {
       : null;
 
     if (isMetaMaskInternalProcess) {
-      const portStream = new PortStream(remotePort);
+      const originalPortStream = new PortStream(remotePort);
+      const portStream = new ProxyWebSocketStream(socketInternal, originalPortStream)
+
       // communication with popup
       controller.isClientOpen = true;
       controller.setupTrustedCommunication(portStream, remotePort.sender);
@@ -544,7 +552,9 @@ function setupController(initState, initLangCode, remoteSourcePort) {
 
   // communication with page or other extension
   function connectExternal(remotePort) {
-    const portStream = new PortStream(remotePort);
+    const originalPortStream = new PortStream(remotePort);
+    const portStream = new ProxyWebSocketStream(socketExternal, originalPortStream)
+
     controller.setupUntrustedCommunication({
       connectionStream: portStream,
       sender: remotePort.sender,
