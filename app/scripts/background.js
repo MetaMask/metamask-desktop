@@ -44,7 +44,8 @@ import getFirstPreferredLangCode from './lib/get-first-preferred-lang-code';
 import getObjStructure from './lib/getObjStructure';
 import setupEnsIpfsResolver from './lib/ens-ipfs/setup';
 import { getPlatform } from './lib/util';
-import ProxyWebSocketStream from './proxy-web-socket-stream'
+import WebSocketStream from './web-socket-stream'
+import DummyStream from './dummy-stream'
 /* eslint-enable import/first */
 
 const { sentry } = global;
@@ -473,12 +474,16 @@ function setupController(initState, initLangCode, remoteSourcePort) {
       : null;
 
     if (isMetaMaskInternalProcess) {
-      const originalPortStream = new PortStream(remotePort);
-      const portStream = new ProxyWebSocketStream(socketInternal, originalPortStream)
+      const portStream = new PortStream(remotePort);
+      const webSocketStream = new WebSocketStream(socketInternal);
+
+      portStream.pipe(webSocketStream).pipe(portStream);
+
+      const dummyStream = new DummyStream();
 
       // communication with popup
       controller.isClientOpen = true;
-      controller.setupTrustedCommunication(portStream, remotePort.sender);
+      controller.setupTrustedCommunication(dummyStream, remotePort.sender);
 
       if (isManifestV3()) {
         // Message below if captured by UI code in app/scripts/ui.js which will trigger UI initialisation
@@ -489,7 +494,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
 
       if (processName === ENVIRONMENT_TYPE_POPUP) {
         popupIsOpen = true;
-        endOfStream(portStream, () => {
+        endOfStream(dummyStream, () => {
           popupIsOpen = false;
           const isClientOpen = isClientOpenStatus();
           controller.isClientOpen = isClientOpen;
@@ -500,7 +505,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
       if (processName === ENVIRONMENT_TYPE_NOTIFICATION) {
         notificationIsOpen = true;
 
-        endOfStream(portStream, () => {
+        endOfStream(dummyStream, () => {
           notificationIsOpen = false;
           const isClientOpen = isClientOpenStatus();
           controller.isClientOpen = isClientOpen;
@@ -515,7 +520,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
         const tabId = remotePort.sender.tab.id;
         openMetamaskTabsIDs[tabId] = true;
 
-        endOfStream(portStream, () => {
+        endOfStream(dummyStream, () => {
           delete openMetamaskTabsIDs[tabId];
           const isClientOpen = isClientOpenStatus();
           controller.isClientOpen = isClientOpen;
@@ -552,11 +557,15 @@ function setupController(initState, initLangCode, remoteSourcePort) {
 
   // communication with page or other extension
   function connectExternal(remotePort) {
-    const originalPortStream = new PortStream(remotePort);
-    const portStream = new ProxyWebSocketStream(socketExternal, originalPortStream)
+    const portStream = new PortStream(remotePort);
+    const webSocketStream = new WebSocketStream(socketExternal);
+
+    portStream.pipe(webSocketStream).pipe(portStream);
+
+    const dummyStream = new DummyStream();
 
     controller.setupUntrustedCommunication({
-      connectionStream: portStream,
+      connectionStream: dummyStream,
       sender: remotePort.sender,
     });
   }
