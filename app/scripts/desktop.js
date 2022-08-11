@@ -23,12 +23,12 @@ async function main () {
 
   statusWindow.loadFile('../desktop.html')
 
-  const onExtensionConnected = () => {
-    statusWindow.webContents.send('extension-connected', true);
+  const onExtensionConnected = (isConnected) => {
+    statusWindow.webContents.send('extension-connected', isConnected);
   };
 
-  const onRenderProcessConnected = () => {
-    statusWindow.webContents.send('render-process-connected', true);
+  const onRenderProcessConnected = (isConnected) => {
+    statusWindow.webContents.send('render-process-connected', isConnected);
   }
 
   const webSocketServer = new WebSocketServer({ port: SOCKET_PORT });

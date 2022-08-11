@@ -22,23 +22,30 @@ module.exports = class WebSocketServerStream extends Duplex {
         console.log('Web socket connection', {clientId});
     
         if(this._client) {
-            console.log('Closing existing web socket connection', {clientId})
-            this._client.close()
+            console.log('Closing existing web socket connection', {clientId});
+            this._client.close();
         }
 
         this._client = ws;
 
-        ws.on('message', (message) => this._onMessage(message))
+        ws.on('message', (message) => this._onMessage(message));
+        ws.on('close', () => this._onClose());
 
-        this._callback();
+        this._callback(true);
     }
 
     _onMessage (message) {
         if(this._logging) {
-            this._logMessage('Received web socket message', this._clientId, message)
+            this._logMessage('Received web socket message', this._clientId, message);
         }
 
         this.push(JSON.parse(message));
+    }
+
+    _onClose () {
+        console.log('Lost connection to web socket client', {clientId: this._clientId});
+        this._client = undefined;
+        this._callback(false);
     }
 
     _read() {
