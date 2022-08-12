@@ -7,15 +7,15 @@
     <style>
       body {
         font-family: system-ui;
+        padding-left: 1rem;
       }
 
       th {
-        font-weight: bold;
         text-align: right;
       }
 
       th, td {
-        padding: 4px;
+        padding: 5px;
       }
 
       .off {
@@ -28,14 +28,34 @@
     </style>
   </head>
   <body>
+    <h2>Render Process</h2>
     <table>
       <tr>
-        <th>Render Process</th>
-        <td id="render-process-status" class="off">Disconnected</td>
+        <th>Internal</th>
+        <td id="renderProcessInternal" class="off">Disconnected</td>
       </tr>
       <tr>
-        <th>Extension</th>
-        <td id="extension-status" class="off">Disconnected</td>
+        <th>External</th>
+        <td id="renderProcessExternal" class="off">Disconnected</td>
+      </tr>
+      <tr>
+        <th>Browser Controller</th>
+        <td id="renderProcessBrowserController" class="off">Disconnected</td>
+      </tr>
+    </table>
+    <h2>Extension</h2>
+    <table>
+      <tr>
+        <th>Internal</th>
+        <td id="extensionInternal" class="off">Disconnected</td>
+      </tr>
+      <tr>
+        <th>External</th>
+        <td id="extensionExternal" class="off">Disconnected</td>
+      </tr>
+      <tr>
+        <th>Browser Controller</th>
+        <td id="extensionBrowserController" class="off">Disconnected</td>
       </tr>
     </table>
   </body>

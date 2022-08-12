@@ -51,7 +51,8 @@ import JsonRpcCompositeStreamRouter from './json-rpc-composite-stream-router';
 const {
   CLIENT_RENDER_PROCESS_INTERNAL,
   CLIENT_RENDER_PROCESS_EXTERNAL,
-  SOCKET_PORT
+  SOCKET_PORT,
+  BROWSER_ACTION_SHOW_POPUP
 } = require('../../shared/constants/desktop')
 
 // desktop client - polyfill browser api
@@ -113,6 +114,9 @@ const ONE_SECOND_IN_MILLISECONDS = 1_000;
 const PHISHING_WARNING_PAGE_TIMEOUT = ONE_SECOND_IN_MILLISECONDS;
 
 const WEB_SOCKET_URL = `ws://localhost:${SOCKET_PORT}/?id=`
+
+const browserControllerSocket = new WebSocket(`${WEB_SOCKET_URL}renderProcessBrowserController`);
+const browserControllerStream = new WebSocketStream(browserControllerSocket);
 
 /**
  * In case of MV3 we attach a "onConnect" event listener as soon as the application is initialised.
@@ -762,6 +766,9 @@ function setupController(initState, initLangCode, remoteSourcePort) {
  * Opens the browser popup for user confirmation
  */
 async function triggerUi() {
+  browserControllerStream.write(BROWSER_ACTION_SHOW_POPUP);
+  return;
+
   const tabs = await platform.getActiveTabs();
   const currentlyActiveMetamaskTab = Boolean(
     tabs.find((tab) => openMetamaskTabsIDs[tab.id]),
