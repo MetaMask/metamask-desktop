@@ -89,8 +89,20 @@ const PHISHING_WARNING_PAGE_TIMEOUT = ONE_SECOND_IN_MILLISECONDS;
 
 const WEB_SOCKET_URL = 'ws://localhost:7071/?id='
 
-const socketInternal = new WebSocket(`${WEB_SOCKET_URL}extensionInternal`)
-const socketExternal = new WebSocket(`${WEB_SOCKET_URL}extensionExternal`)
+const socketInternal = new WebSocket(`${WEB_SOCKET_URL}extensionInternal`);
+const socketExternal = new WebSocket(`${WEB_SOCKET_URL}extensionExternal`);
+const socketBrowserController = new WebSocket(`${WEB_SOCKET_URL}extensionBrowserController`);
+const socketBrowserStream = new WebSocketStream(socketBrowserController);
+
+socketBrowserStream.on('data', (data) => onBrowserControllerMessage(data));
+
+async function onBrowserControllerMessage(data) {
+  switch(data) {
+    case 'showPopup':
+      await notificationManager.showPopup();
+      return;
+  }
+}
 
 /**
  * In case of MV3 we attach a "onConnect" event listener as soon as the application is initialised.
