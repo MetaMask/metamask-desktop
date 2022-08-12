@@ -2,17 +2,27 @@ const { Duplex } = require("stream");
 
 module.exports = class CompositeStream extends Duplex {
 
-    constructor(streams) {
+    constructor(streams, tag, router) {
         super({ objectMode: true });
 
         this._streams = streams;
+        this._tag = tag;
+        this._router = router;
 
-        this._streams.forEach(stream => {
-            stream.on('data', (data) => this._onData(data));
+        this._ids = {};
+        
+        if(this._router) {
+            this._router._init(this._streams, this._tag);
+        }
+
+        this._streams.forEach((stream, index) => {
+            stream.on('data', (data) => this._onData(data, index));
         });
     }
 
-    _onData(data) {
+    _onData(data, index) {
+        if(this._router && !this._router._onData(data, index)) return;
+
         this.push(data);
     }
 
@@ -21,11 +31,19 @@ module.exports = class CompositeStream extends Duplex {
     }
 
     _write(msg, _encoding, cb) {
-        this._streams.forEach(stream => {
+        let streams = this._streams;
+
+        if(this._router) {
+            streams = this._router._onWrite(msg);
+
+            if(streams === undefined) return;
+        }
+
+        streams.forEach((stream, index) => {
             try {
                 stream.write(msg);
             } catch {
-                console.log('Failed to write to stream within composite')
+                console.log('Failed to write to stream within composite', JSON.stringify({index, tag: this._tag}));
             }
         });
 

@@ -35,7 +35,7 @@ module.exports = class WebSocketStream extends Duplex {
             if (socket.readyState === 1) {
                 callback();
             } else {
-                waitForSocketConnection(socket, callback);
+                this._waitForSocketConnection(socket, callback);
             }
         }, 500);
     }

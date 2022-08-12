@@ -47,6 +47,7 @@ import { getPlatform } from './lib/util';
 /* eslint-enable import/first */
 import WebSocketStream from './web-socket-stream';
 import CompositeStream from './composite-stream';
+import JsonRpcCompositeStreamRouter from './json-rpc-composite-stream-router';
 const {
   CLIENT_RENDER_PROCESS_INTERNAL,
   CLIENT_RENDER_PROCESS_EXTERNAL,
@@ -500,7 +501,9 @@ function setupController(initState, initLangCode, remoteSourcePort) {
       const webSocketStream = new WebSocketStream(new WebSocket(
         `${WEB_SOCKET_URL}${CLIENT_RENDER_PROCESS_INTERNAL}`));
 
-      const compositeStream = new CompositeStream([portStream, webSocketStream]);
+      const compositeStream = new CompositeStream(
+        [portStream, webSocketStream], 'Internal',
+          new JsonRpcCompositeStreamRouter({verbose: false}));
 
       // communication with popup
       controller.isClientOpen = true;
@@ -576,17 +579,25 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     }
   }
 
+  let externalWebSocketCreated = false;
+
   // communication with page or other extension
   function connectExternal(remotePort) {
     const portStream = new PortStream(remotePort);
+    let stream = portStream;
 
-    const webSocketStream = new WebSocketStream(new WebSocket(
-      `${WEB_SOCKET_URL}${CLIENT_RENDER_PROCESS_EXTERNAL}`));
+    if(!externalWebSocketCreated) {
+      const webSocket = new WebSocket(`${WEB_SOCKET_URL}${CLIENT_RENDER_PROCESS_EXTERNAL}`);
+      const webSocketStream = new WebSocketStream(webSocket);
+      
+      stream = new CompositeStream([portStream, webSocketStream], 'External',
+          new JsonRpcCompositeStreamRouter({verbose: false}));
 
-    const compositeStream = new CompositeStream([portStream, webSocketStream]);
+      externalWebSocketCreated = true;
+    }
 
     controller.setupUntrustedCommunication({
-      connectionStream: compositeStream,
+      connectionStream: stream,
       sender: remotePort.sender,
     });
   }
