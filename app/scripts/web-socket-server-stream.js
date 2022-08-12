@@ -45,7 +45,7 @@ module.exports = class WebSocketServerStream extends Duplex {
     _onClose () {
         console.log('Lost connection to web socket client', {clientId: this._clientId});
         this._client = undefined;
-        this._callback(clientId, false);
+        this._callback(this._clientId, false);
     }
 
     _read() {
