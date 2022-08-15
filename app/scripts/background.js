@@ -44,8 +44,7 @@ import getFirstPreferredLangCode from './lib/get-first-preferred-lang-code';
 import getObjStructure from './lib/getObjStructure';
 import setupEnsIpfsResolver from './lib/ens-ipfs/setup';
 import { getPlatform } from './lib/util';
-import WebSocketStream from './web-socket-stream'
-import DummyStream from './dummy-stream'
+import DesktopConnection from './desktop-connection';
 /* eslint-enable import/first */
 
 const { sentry } = global;
@@ -87,22 +86,7 @@ const ONE_SECOND_IN_MILLISECONDS = 1_000;
 // Timeout for initializing phishing warning page.
 const PHISHING_WARNING_PAGE_TIMEOUT = ONE_SECOND_IN_MILLISECONDS;
 
-const WEB_SOCKET_URL = 'ws://localhost:7071/?id='
-
-const socketInternal = new WebSocket(`${WEB_SOCKET_URL}extensionInternal`);
-const socketExternal = new WebSocket(`${WEB_SOCKET_URL}extensionExternal`);
-const socketBrowserController = new WebSocket(`${WEB_SOCKET_URL}extensionBrowserController`);
-const socketBrowserStream = new WebSocketStream(socketBrowserController);
-
-socketBrowserStream.on('data', (data) => onBrowserControllerMessage(data));
-
-async function onBrowserControllerMessage(data) {
-  switch(data) {
-    case 'showPopup':
-      await notificationManager.showPopup();
-      return;
-  }
-}
+const desktopConnection = new DesktopConnection(notificationManager);
 
 /**
  * In case of MV3 we attach a "onConnect" event listener as soon as the application is initialised.
@@ -486,16 +470,11 @@ function setupController(initState, initLangCode, remoteSourcePort) {
       : null;
 
     if (isMetaMaskInternalProcess) {
-      const portStream = new PortStream(remotePort);
-      const webSocketStream = new WebSocketStream(socketInternal);
-
-      portStream.pipe(webSocketStream).pipe(portStream);
-
-      const dummyStream = new DummyStream();
+      const portStream = desktopConnection.createStream(new PortStream(remotePort), { isInternal: true });
 
       // communication with popup
       controller.isClientOpen = true;
-      controller.setupTrustedCommunication(dummyStream, remotePort.sender);
+      controller.setupTrustedCommunication(portStream, remotePort.sender);
 
       if (isManifestV3()) {
         // Message below if captured by UI code in app/scripts/ui.js which will trigger UI initialisation
@@ -506,7 +485,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
 
       if (processName === ENVIRONMENT_TYPE_POPUP) {
         popupIsOpen = true;
-        endOfStream(dummyStream, () => {
+        endOfStream(portStream, () => {
           popupIsOpen = false;
           const isClientOpen = isClientOpenStatus();
           controller.isClientOpen = isClientOpen;
@@ -517,7 +496,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
       if (processName === ENVIRONMENT_TYPE_NOTIFICATION) {
         notificationIsOpen = true;
 
-        endOfStream(dummyStream, () => {
+        endOfStream(portStream, () => {
           notificationIsOpen = false;
           const isClientOpen = isClientOpenStatus();
           controller.isClientOpen = isClientOpen;
@@ -532,7 +511,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
         const tabId = remotePort.sender.tab.id;
         openMetamaskTabsIDs[tabId] = true;
 
-        endOfStream(dummyStream, () => {
+        endOfStream(portStream, () => {
           delete openMetamaskTabsIDs[tabId];
           const isClientOpen = isClientOpenStatus();
           controller.isClientOpen = isClientOpen;
@@ -569,15 +548,10 @@ function setupController(initState, initLangCode, remoteSourcePort) {
 
   // communication with page or other extension
   function connectExternal(remotePort) {
-    const portStream = new PortStream(remotePort);
-    const webSocketStream = new WebSocketStream(socketExternal);
-
-    portStream.pipe(webSocketStream).pipe(portStream);
-
-    const dummyStream = new DummyStream();
+    const portStream = desktopConnection.createStream(new PortStream(remotePort), { isInternal: false });
 
     controller.setupUntrustedCommunication({
-      connectionStream: dummyStream,
+      connectionStream: portStream,
       sender: remotePort.sender,
     });
   }
