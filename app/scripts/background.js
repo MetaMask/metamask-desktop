@@ -44,16 +44,8 @@ import getFirstPreferredLangCode from './lib/get-first-preferred-lang-code';
 import getObjStructure from './lib/getObjStructure';
 import setupEnsIpfsResolver from './lib/ens-ipfs/setup';
 import { getPlatform } from './lib/util';
+import { ExtensionConnection } from './extension-connection';
 /* eslint-enable import/first */
-import WebSocketStream from './web-socket-stream';
-import CompositeStream from './composite-stream';
-import JsonRpcCompositeStreamRouter from './json-rpc-composite-stream-router';
-const {
-  CLIENT_RENDER_PROCESS_INTERNAL,
-  CLIENT_RENDER_PROCESS_EXTERNAL,
-  SOCKET_PORT,
-  BROWSER_ACTION_SHOW_POPUP
-} = require('../../shared/constants/desktop')
 
 // desktop client - polyfill browser api
 if (navigator.userAgent.includes('Electron')) {
@@ -113,10 +105,7 @@ const ONE_SECOND_IN_MILLISECONDS = 1_000;
 // Timeout for initializing phishing warning page.
 const PHISHING_WARNING_PAGE_TIMEOUT = ONE_SECOND_IN_MILLISECONDS;
 
-const WEB_SOCKET_URL = `ws://localhost:${SOCKET_PORT}/?id=`
-
-const browserControllerSocket = new WebSocket(`${WEB_SOCKET_URL}renderProcessBrowserController`);
-const browserControllerStream = new WebSocketStream(browserControllerSocket);
+const extensionConnection = new ExtensionConnection();
 
 /**
  * In case of MV3 we attach a "onConnect" event listener as soon as the application is initialised.
@@ -500,18 +489,11 @@ function setupController(initState, initLangCode, remoteSourcePort) {
       : null;
 
     if (isMetaMaskInternalProcess) {
-      const portStream = new PortStream(remotePort);
-
-      const webSocketStream = new WebSocketStream(new WebSocket(
-        `${WEB_SOCKET_URL}${CLIENT_RENDER_PROCESS_INTERNAL}`));
-
-      const compositeStream = new CompositeStream(
-        [portStream, webSocketStream], 'Internal',
-          new JsonRpcCompositeStreamRouter({verbose: false}));
+      const portStream = extensionConnection.createStream(new PortStream(remotePort), { isInternal: true });
 
       // communication with popup
       controller.isClientOpen = true;
-      controller.setupTrustedCommunication(compositeStream, remotePort.sender);
+      controller.setupTrustedCommunication(portStream, remotePort.sender);
 
       if (isManifestV3()) {
         // Message below if captured by UI code in app/scripts/ui.js which will trigger UI initialisation
@@ -522,7 +504,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
 
       if (processName === ENVIRONMENT_TYPE_POPUP) {
         popupIsOpen = true;
-        endOfStream(compositeStream, () => {
+        endOfStream(portStream, () => {
           popupIsOpen = false;
           const isClientOpen = isClientOpenStatus();
           controller.isClientOpen = isClientOpen;
@@ -533,7 +515,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
       if (processName === ENVIRONMENT_TYPE_NOTIFICATION) {
         notificationIsOpen = true;
 
-        endOfStream(compositeStream, () => {
+        endOfStream(portStream, () => {
           notificationIsOpen = false;
           const isClientOpen = isClientOpenStatus();
           controller.isClientOpen = isClientOpen;
@@ -548,7 +530,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
         const tabId = remotePort.sender.tab.id;
         openMetamaskTabsIDs[tabId] = true;
 
-        endOfStream(compositeStream, () => {
+        endOfStream(portStream, () => {
           delete openMetamaskTabsIDs[tabId];
           const isClientOpen = isClientOpenStatus();
           controller.isClientOpen = isClientOpen;
@@ -583,25 +565,12 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     }
   }
 
-  let externalWebSocketCreated = false;
-
   // communication with page or other extension
   function connectExternal(remotePort) {
-    const portStream = new PortStream(remotePort);
-    let stream = portStream;
-
-    if(!externalWebSocketCreated) {
-      const webSocket = new WebSocket(`${WEB_SOCKET_URL}${CLIENT_RENDER_PROCESS_EXTERNAL}`);
-      const webSocketStream = new WebSocketStream(webSocket);
-      
-      stream = new CompositeStream([portStream, webSocketStream], 'External',
-          new JsonRpcCompositeStreamRouter({verbose: false}));
-
-      externalWebSocketCreated = true;
-    }
+    const portStream = extensionConnection.createStream(new PortStream(remotePort), { isInternal: false });
 
     controller.setupUntrustedCommunication({
-      connectionStream: stream,
+      connectionStream: portStream,
       sender: remotePort.sender,
     });
   }
@@ -766,7 +735,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
  * Opens the browser popup for user confirmation
  */
 async function triggerUi() {
-  browserControllerStream.write(BROWSER_ACTION_SHOW_POPUP);
+  extensionConnection.showPopup();
   return;
 
   const tabs = await platform.getActiveTabs();
