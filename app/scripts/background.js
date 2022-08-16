@@ -6,7 +6,7 @@ import endOfStream from 'end-of-stream';
 import pump from 'pump';
 import debounce from 'debounce-stream';
 import log from 'loglevel';
-import browser from 'webextension-polyfill';
+import browser from './node_browser';
 import { storeAsStream, storeTransformStream } from '@metamask/obs-store';
 import PortStream from 'extension-port-stream';
 import { captureException } from '@sentry/browser';
@@ -44,27 +44,8 @@ import getFirstPreferredLangCode from './lib/get-first-preferred-lang-code';
 import getObjStructure from './lib/getObjStructure';
 import setupEnsIpfsResolver from './lib/ens-ipfs/setup';
 import { getPlatform } from './lib/util';
-import { ExtensionConnection } from './extension-connection';
+import Desktop from './desktop';
 /* eslint-enable import/first */
-
-// desktop client - polyfill browser api
-if (navigator.userAgent.includes('Electron')) {
-  chrome.windows = {
-    getLastFocused: () => { return Promise.reject('"chrome.windows.getLastFocused" unsupported on electron') },
-    getCurrent: () => { return Promise.reject('"chrome.windows.getCurrent" unsupported on electron') },
-    getAll: () => { return Promise.reject('"chrome.windows.getAll" unsupported on electron') },
-    create: () => { return Promise.reject('"chrome.windows.create" unsupported on electron') },
-    update: () => { return Promise.reject('"chrome.windows.update" unsupported on electron') },
-    remove: () => { return Promise.reject('"chrome.windows.remove" unsupported on electron') },
-    onRemoved: {
-      addListener: () => { return console.warn('"chrome.windows.onRemoved.addListener" unsupported on electron') },
-    }
-  }
-  chrome.browserAction = {
-    setBadgeText: () => { return console.warn('"chrome.browserAction.setBadgeText" unsupported on electron') },
-    setBadgeBackgroundColor: () => { return console.warn('"chrome.browserAction.setBadgeBackgroundColor" unsupported on electron') },
-  }
-}
 
 const { sentry } = global;
 const firstTimeState = { ...rawFirstTimeState };
@@ -105,7 +86,8 @@ const ONE_SECOND_IN_MILLISECONDS = 1_000;
 // Timeout for initializing phishing warning page.
 const PHISHING_WARNING_PAGE_TIMEOUT = ONE_SECOND_IN_MILLISECONDS;
 
-const extensionConnection = new ExtensionConnection();
+const desktop = new Desktop();
+desktop.addGlobals();
 
 /**
  * In case of MV3 we attach a "onConnect" event listener as soon as the application is initialised.
@@ -190,7 +172,9 @@ async function initialize(remotePort) {
   const initState = await loadStateFromPersistence();
   const initLangCode = await getFirstPreferredLangCode();
   await setupController(initState, initLangCode, remotePort);
-  await loadPhishingWarningPage();
+  //await loadPhishingWarningPage();
+
+ 
   log.info('MetaMask initialization complete.');
 }
 
@@ -489,7 +473,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
       : null;
 
     if (isMetaMaskInternalProcess) {
-      const portStream = extensionConnection.createStream(new PortStream(remotePort), { isInternal: true });
+      const portStream = desktop.createStream({ isInternal: true });
 
       // communication with popup
       controller.isClientOpen = true;
@@ -567,7 +551,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
 
   // communication with page or other extension
   function connectExternal(remotePort) {
-    const portStream = extensionConnection.createStream(new PortStream(remotePort), { isInternal: false });
+    const portStream = desktop.createStream({ isInternal: false });
 
     controller.setupUntrustedCommunication({
       connectionStream: portStream,
@@ -724,6 +708,8 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     updateBadge();
   }
 
+  desktop.init(connectRemote, connectExternal);
+
   return Promise.resolve();
 }
 
@@ -735,7 +721,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
  * Opens the browser popup for user confirmation
  */
 async function triggerUi() {
-  extensionConnection.showPopup();
+  desktop.showPopup();
   return;
 
   const tabs = await platform.getActiveTabs();

@@ -1,5 +1,6 @@
 import { memoize } from 'lodash';
 import { SECOND } from '../constants/time';
+import fetch from 'node-fetch';
 
 const getFetchWithTimeout = memoize((timeout = SECOND * 30) => {
   if (!Number.isInteger(timeout) || timeout < 1) {
@@ -7,9 +8,9 @@ const getFetchWithTimeout = memoize((timeout = SECOND * 30) => {
   }
 
   return async function _fetch(url, opts) {
-    const abortController = new window.AbortController();
+    const abortController = new AbortController();
     const { signal } = abortController;
-    const f = window.fetch(url, {
+    const f = fetch(url, {
       ...opts,
       signal,
     });

@@ -1,4 +1,4 @@
-import browser from 'webextension-polyfill';
+import browser from '../node_browser';
 import log from 'loglevel';
 import { checkForError } from './util';
 
