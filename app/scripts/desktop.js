@@ -4,7 +4,6 @@ const { ENVIRONMENT_TYPE_FULLSCREEN } = require('../../shared/constants/app');
 const WebSocketServer  = require('ws').Server;
 const WebSocket = require('ws');
 const WebSocketServerStream = require('./web-socket-server-stream');
-const { initIframeGlobals } = require('./iframe-proxy');
 
 const WEB_SOCKET_PORT = 7071;
 const WEB_SOCKET_URL = `ws://localhost:${WEB_SOCKET_PORT}`
@@ -18,10 +17,6 @@ class Desktop {
     await app.whenReady();
 
     const statusWindow = await this._createStatusWindow();
-
-    initIframeGlobals((topic, data) => {
-      statusWindow.webContents.send(topic, data);
-    });
 
     const onSocketConnection = (clientId, isConnected) => {
       statusWindow.webContents.send('socket-connection', {clientId, isConnected});
@@ -84,7 +79,7 @@ class Desktop {
   async _createStatusWindow() {
     const statusWindow = new BrowserWindow({
       width: 320,
-      height: 265,
+      height: 205,
       webPreferences: {
         preload: path.resolve(__dirname, './preload.js')
       }
