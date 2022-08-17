@@ -4,8 +4,6 @@ const { ENVIRONMENT_TYPE_FULLSCREEN } = require('../../shared/constants/app');
 const WebSocketServer  = require('ws').Server;
 const WebSocket = require('ws');
 const WebSocketServerStream = require('./web-socket-server-stream');
-const CompositeStream = require('./composite-stream');
-const JsonRpcCompositeStreamRouter = require('./json-rpc-composite-stream-router');
 const { initIframeGlobals } = require('./iframe-proxy');
 
 const WEB_SOCKET_PORT = 7071;
@@ -16,10 +14,6 @@ const CLIENT_EXTENSION_BROWSER_CONTROLLER = 'extensionBrowserController';
 const BROWSER_ACTION_SHOW_POPUP = 'showPopup';
 
 class Desktop {
-  constructor() {
-    this._isExternalConnectionCreated = false;
-  }
-
   async init(connectRemote, connectExternal) {
     await app.whenReady();
 
@@ -45,22 +39,7 @@ class Desktop {
   }
 
   createStream (options) {
-    if(!options.isInternal && this._isExternalConnectionCreated) return undefined;
-    
-    const streamTag = options.isInternal ? 'Internal' : 'External';
-    const webSocketStream = options.isInternal ? this._extensionInternalStream : this._extensionExternalStream;
-
-    const compositeStream = new CompositeStream(
-        [webSocketStream], streamTag,
-            new JsonRpcCompositeStreamRouter({
-              verbose: process.env.VERBOSE === 'true'
-            }));
-
-    if(!options.isInternal) {
-        this._isExternalConnectionCreated = true;
-    }
-
-    return compositeStream;
+    return options.isInternal ? this._extensionInternalStream : this._extensionExternalStream;
   }
 
   showPopup() {
