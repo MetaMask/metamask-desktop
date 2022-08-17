@@ -6,6 +6,7 @@ const WebSocket = require('ws');
 const WebSocketServerStream = require('./web-socket-server-stream');
 const CompositeStream = require('./composite-stream');
 const JsonRpcCompositeStreamRouter = require('./json-rpc-composite-stream-router');
+const { initIframeGlobals } = require('./iframe-proxy');
 
 const WEB_SOCKET_PORT = 7071;
 const WEB_SOCKET_URL = `ws://localhost:${WEB_SOCKET_PORT}`
@@ -23,6 +24,10 @@ class Desktop {
     await app.whenReady();
 
     const statusWindow = await this._createStatusWindow();
+
+    initIframeGlobals((topic, data) => {
+      statusWindow.webContents.send(topic, data);
+    });
 
     const onSocketConnection = (clientId, isConnected) => {
       statusWindow.webContents.send('socket-connection', {clientId, isConnected});
@@ -64,14 +69,17 @@ class Desktop {
 
   addGlobals() {
     global.crypto = {
+      ...global.crypto,
       getRandomValues: require('polyfill-crypto.getrandomvalues'),
       subtle: require('node:crypto').webcrypto.subtle
     };
 
     global.window = {
+      ...global.window,
       navigator: {
         userAgent: 'Firefox'
-      }
+      },
+      postMessage: () => {}
     };
   
     console.log('Added missing globals');
@@ -97,7 +105,7 @@ class Desktop {
   async _createStatusWindow() {
     const statusWindow = new BrowserWindow({
       width: 320,
-      height: 215,
+      height: 265,
       webPreferences: {
         preload: path.resolve(__dirname, './preload.js')
       }

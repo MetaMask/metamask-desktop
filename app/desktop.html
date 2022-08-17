@@ -25,11 +25,19 @@
       .on {
         color: limegreen;
       }
+
+      .heading {
+        text-align: left;
+        font-size: 1.5rem;
+        padding: 0.5rem 0 0.5rem 0;
+      }
     </style>
   </head>
   <body>
-    <h2>Extension</h2>
     <table>
+      <tr>
+        <th colspan="2" class="heading">Extension Connections</th>
+      </tr>
       <tr>
         <th>Internal</th>
         <td id="extensionInternal" class="off">Disconnected</td>
@@ -41,6 +49,13 @@
       <tr>
         <th>Browser Controller</th>
         <td id="extensionBrowserController" class="off">Disconnected</td>
+      </tr>
+      <tr>
+        <th colspan="2" class="heading">Snaps</th>
+      </tr>
+      <tr>
+        <th>Job Count</th>
+        <td id="snapsCount" class="on">0</td>
       </tr>
     </table>
   </body>

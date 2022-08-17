@@ -2348,28 +2348,28 @@ export default class MetamaskController extends EventEmitter {
       log.error('Error while unlocking extension.', error);
     }
 
-    try {
-      const threeBoxSyncingAllowed =
-        this.threeBoxController.getThreeBoxSyncingState();
-      if (threeBoxSyncingAllowed && !this.threeBoxController.box) {
-        // 'await' intentionally omitted to avoid waiting for initialization
-        this.threeBoxController.init();
-        this.threeBoxController.turnThreeBoxSyncingOn();
-      } else if (threeBoxSyncingAllowed && this.threeBoxController.box) {
-        this.threeBoxController.turnThreeBoxSyncingOn();
-      }
-    } catch (error) {
-      log.error('Error while unlocking extension.', error);
-    }
+    // try {
+    //   const threeBoxSyncingAllowed =
+    //     this.threeBoxController.getThreeBoxSyncingState();
+    //   if (threeBoxSyncingAllowed && !this.threeBoxController.box) {
+    //     // 'await' intentionally omitted to avoid waiting for initialization
+    //     this.threeBoxController.init();
+    //     this.threeBoxController.turnThreeBoxSyncingOn();
+    //   } else if (threeBoxSyncingAllowed && this.threeBoxController.box) {
+    //     this.threeBoxController.turnThreeBoxSyncingOn();
+    //   }
+    // } catch (error) {
+    //   log.error('Error while unlocking extension.', error);
+    // }
 
     // This must be set as soon as possible to communicate to the
     // keyring's iframe and have the setting initialized properly
     // Optimistically called to not block MetaMask login due to
     // Ledger Keyring GitHub downtime
-    const transportPreference =
-      this.preferencesController.getLedgerTransportPreference();
+    // const transportPreference =
+    //   this.preferencesController.getLedgerTransportPreference();
 
-    this.setLedgerTransportPreference(transportPreference);
+    // this.setLedgerTransportPreference(transportPreference);
 
     return this.keyringController.fullUpdate();
   }
