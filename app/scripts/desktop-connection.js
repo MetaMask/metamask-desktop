@@ -1,35 +1,68 @@
 const WebSocketStream = require('./web-socket-stream');
-const DummyStream = require('./dummy-stream');
+const PortStream = require('extension-port-stream');
+const endOfStream = require('end-of-stream');
+const ObjectMultiplex = require('obj-multiplex');
 
 const WEB_SOCKET_URL = 'ws://localhost:7071';
-const CLIENT_ID_INTERNAL = 'extensionInternal';
-const CLIENT_ID_EXTERNAL = 'extensionExternal';
-const CLIENT_ID_BROWSER_CONTROLLER = 'extensionBrowserController';
+const CLIENT_ID_BROWSER_CONTROLLER = 'browserController';
+const CLIENT_ID_CONNECTION_CONTROLLER = 'connectionController';
+const CLIENT_ID_HANDSHAKES = 'handshakes';
 const BROWSER_ACTION_SHOW_POPUP = 'showPopup';
 
 module.exports = class DesktopConnection {
 
     constructor(notificationManager) {
         this._notificationManager = notificationManager;
+        this._clientIdCounter = 0;
+        this._multiplex = new ObjectMultiplex();
 
-        this._socketInternal = this._createWebSocket(CLIENT_ID_INTERNAL);
-        this._socketExternal = this._createWebSocket(CLIENT_ID_EXTERNAL);
+        const webSocket = this._createWebSocket();
 
-        const socketBrowserController = this._createWebSocket(CLIENT_ID_BROWSER_CONTROLLER);
-        this._socketBrowserStream = new WebSocketStream(socketBrowserController);
+        console.log('Created web socket connection');
 
-        this._socketBrowserStream.on('data', (data) => this._onBrowserControlMessage(data));
+        const webSocketStream = new WebSocketStream(webSocket);
+        webSocketStream.pipe(this._multiplex).pipe(webSocketStream);
+
+        const browserControllerStream = this._multiplex.createStream(CLIENT_ID_BROWSER_CONTROLLER);
+        browserControllerStream.on('data', (data) => this._onBrowserControlMessage(data));
+
+        this._connectionControllerStream = this._multiplex.createStream(CLIENT_ID_CONNECTION_CONTROLLER);
+        this._handshakeStream = this._multiplex.createStream(CLIENT_ID_HANDSHAKES);
 
         console.log('Connected to desktop');
     }
 
-    createStream(portStream, options) {
-        const webSocket = options.isInternal ? this._socketInternal : this._socketExternal;
-        const webSocketStream = new WebSocketStream(webSocket);
+    createStream(remotePort) {
+        const portStream = new PortStream(remotePort);
+        const clientId = this._getNextClientId();
+        const clientStream = this._multiplex.createStream(clientId);
 
-        portStream.pipe(webSocketStream).pipe(portStream);
+        portStream.pipe(clientStream).pipe(portStream);
 
-        return new DummyStream();
+        endOfStream(portStream, () => this._onPortStreamEnd(clientId, clientStream));
+
+        this._sendHandshake(remotePort, clientId);
+    }
+
+    _onPortStreamEnd(clientId, clientStream) {
+        console.log('Port stream closed', clientId);
+
+        clientStream.end();
+        this._connectionControllerStream.write({ clientId });
+    }
+
+    _sendHandshake(remotePort, clientId) {
+        const handshake = {
+            clientId,
+            remotePort: {
+                name: remotePort.name,
+                sender: remotePort.sender
+            }
+        };
+
+        console.log('Sending handshake', handshake);
+
+        this._handshakeStream.write(handshake);
     }
 
     _onBrowserControlMessage(data) {
@@ -43,7 +76,11 @@ module.exports = class DesktopConnection {
         }
     }
 
-    _createWebSocket(clientId) {
-        return new WebSocket(`${WEB_SOCKET_URL}/?id=${clientId}`);
+    _createWebSocket() {
+        return new WebSocket(`${WEB_SOCKET_URL}`);
+    }
+
+    _getNextClientId() {
+        return this._clientIdCounter++;
     }
 };

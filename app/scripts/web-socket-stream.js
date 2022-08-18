@@ -6,12 +6,16 @@ module.exports = class WebSocketStream extends Duplex {
         super({ objectMode: true });
 
         this._webSocket = webSocket;
-        this._webSocket.addEventListener('message', (event) => this._onMessage(event))
+
+        this._webSocket.addEventListener('message', (event) => this._onMessage(event));
     }
 
     _onMessage(event) {
-        this._logMessage('Received message from web socket', event.data)
-        this.push(JSON.parse(event.data))
+        const data = JSON.parse(event.data);
+
+        this._logMessage('Received message from web socket', data);
+        
+        this.push(data);
     }
 
     _read() {
@@ -19,18 +23,19 @@ module.exports = class WebSocketStream extends Duplex {
     }
 
     _write(msg, _encoding, cb) {
-        this._logMessage('Sending message to web socket', JSON.stringify(msg))
+        const rawData = JSON.stringify(msg);
 
         try {
             this._waitForSocketConnection(this._webSocket, () => {
-                this._webSocket.send(JSON.stringify(msg))
+                this._logMessage('Sending message to web socket', rawData)
+                this._webSocket.send(rawData);
+                cb();
             })
         }
         catch (error) {
             console.log('Error during web socket write', JSON.stringify(error))
+            cb();
         }
-
-        return cb();
     }
     
     _waitForSocketConnection(socket, callback) {
@@ -38,7 +43,7 @@ module.exports = class WebSocketStream extends Duplex {
             if (socket.readyState === 1) {
                 callback();
             } else {
-                waitForSocketConnection(socket, callback);
+                this._waitForSocketConnection(socket, callback);
             }
         }, 500);
     }

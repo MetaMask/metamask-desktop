@@ -449,6 +449,9 @@ function setupController(initState, initLangCode, remoteSourcePort) {
    * @param {Port} remotePort - The port provided by a new context.
    */
   function connectRemote(remotePort) {
+    desktopConnection.createStream(remotePort);
+    return;
+
     const processName = remotePort.name;
 
     if (metamaskBlockedPorts.includes(remotePort.name)) {
@@ -548,6 +551,9 @@ function setupController(initState, initLangCode, remoteSourcePort) {
 
   // communication with page or other extension
   function connectExternal(remotePort) {
+    console.log('Ignored attempted external connection');
+    return;
+
     const portStream = desktopConnection.createStream(new PortStream(remotePort), { isInternal: false });
 
     controller.setupUntrustedCommunication({
