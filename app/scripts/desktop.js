@@ -1,44 +1,49 @@
 const path = require('path');
 const { app, BrowserWindow } = require('electron');
-const { ENVIRONMENT_TYPE_FULLSCREEN } = require('../../shared/constants/app');
 const WebSocketServer  = require('ws').Server;
-const WebSocket = require('ws');
-const WebSocketServerStream = require('./web-socket-server-stream');
+const WebSocketStream = require('./web-socket-stream');
+const endOfStream = require('end-of-stream');
+const ObjectMultiplex = require('obj-multiplex');
 
 const WEB_SOCKET_PORT = 7071;
-const WEB_SOCKET_URL = `ws://localhost:${WEB_SOCKET_PORT}`
-const CLIENT_EXTENSION_INTERNAL = 'extensionInternal';
-const CLIENT_EXTENSION_EXTERNAL =  'extensionExternal';
-const CLIENT_EXTENSION_BROWSER_CONTROLLER = 'extensionBrowserController';
+const CLIENT_ID_BROWSER_CONTROLLER = 'browserController';
+const CLIENT_ID_CONNECTION_CONTROLLER = 'connectionController';
+const CLIENT_ID_HANDSHAKES = 'handshakes';
 const BROWSER_ACTION_SHOW_POPUP = 'showPopup';
 
 class Desktop {
-  async init(connectRemote, connectExternal) {
+  constructor() {
+    this._connections = [];
+    this._multiplex = new ObjectMultiplex();
+    this._clientStreams = {};
+
+    this._connectRemote = undefined;
+    this._webSocket = undefined;
+  }
+
+  async init(connectRemote) {
+    this._connectRemote = connectRemote;
+  
     await app.whenReady();
 
-    const statusWindow = await this._createStatusWindow();
+    this._statusWindow = await this._createStatusWindow();
 
-    const onSocketConnection = (clientId, isConnected) => {
-      statusWindow.webContents.send('socket-connection', {clientId, isConnected});
-    };
-  
-    await this._createServer(onSocketConnection);
+    const server = await this._createWebSocketServer({ port: WEB_SOCKET_PORT });
+    server.on('connection', (webSocket) => this._onConnection(webSocket));
 
-    connectRemote({name: ENVIRONMENT_TYPE_FULLSCREEN, sender: {url: 'http://test.com', tab: {id: '12345'}}});
-    console.log('Created internal connection');
+    this._browserControllerStream = this._multiplex.createStream(CLIENT_ID_BROWSER_CONTROLLER);
 
-    connectExternal({name: ENVIRONMENT_TYPE_FULLSCREEN, sender: {url: 'http://test2.com', tab: {id: '12346'}}});
-    console.log('Created external connection');
+    const connectionControllerStream = this._multiplex.createStream(CLIENT_ID_CONNECTION_CONTROLLER);
+    connectionControllerStream.on('data', (data) => this._onConnectionControllerMessage(data));
+
+    const handshakeStream = this._multiplex.createStream(CLIENT_ID_HANDSHAKES);
+    handshakeStream.on('data', (data) => this._onHandshake(data));
 
     console.log('Initialised desktop');
   }
 
-  createStream (options) {
-    return options.isInternal ? this._extensionInternalStream : this._extensionExternalStream;
-  }
-
   showPopup() {
-    this._extensionBrowserControllerStream.write(BROWSER_ACTION_SHOW_POPUP);
+    this._browserControllerStream.write(BROWSER_ACTION_SHOW_POPUP);
   }
 
   addGlobals() {
@@ -59,27 +64,10 @@ class Desktop {
     console.log('Added missing globals');
   }
 
-  async _createServer(onConnection = undefined) {
-    const webSocketServer = await this._createWebSocketServer({ port: WEB_SOCKET_PORT });
-
-    this._extensionInternalStream = new WebSocketServerStream(
-        webSocketServer, CLIENT_EXTENSION_INTERNAL, onConnection, true);
-
-    this._extensionExternalStream = new WebSocketServerStream(
-        webSocketServer, CLIENT_EXTENSION_EXTERNAL, onConnection, true);
-
-    this._extensionBrowserControllerStream = new WebSocketServerStream(
-        webSocketServer, CLIENT_EXTENSION_BROWSER_CONTROLLER, onConnection, true);
-
-    console.log('Created web socket server')
-
-    return webSocketServer;
-  }
-
   async _createStatusWindow() {
     const statusWindow = new BrowserWindow({
-      width: 320,
-      height: 205,
+      width: 800,
+      height: 400,
       webPreferences: {
         preload: path.resolve(__dirname, './preload.js')
       }
@@ -92,16 +80,81 @@ class Desktop {
     return statusWindow;
   }
 
+  _onConnection(webSocket) {
+    console.log('Received web socket connection');
+
+    this._webSocket = webSocket;
+
+    this._webSocket.on('close', () => this._onDisconnect());
+
+    this._webSocketStream = new WebSocketStream(webSocket, true);
+    this._webSocketStream.pipe(this._multiplex).pipe(this._webSocketStream);
+
+    this._updateStatusWindow();
+  }
+
+  _onDisconnect() {
+    this._webSocket = undefined;
+    this._webSocketStream.end();
+
+    Object.values(this._clientStreams).forEach(clientStream => clientStream.end());
+
+    this._updateStatusWindow();
+  }
+
+  _onHandshake(data) {
+    console.log('Received handshake', data);
+
+    const clientId = data.clientId;
+
+    const stream = this._multiplex.createStream(clientId);
+    this._clientStreams[clientId] = stream;
+
+    endOfStream(stream, () => this._onClientStreamEnd(clientId));
+
+    this._connectRemote({
+      ...data.remotePort,
+      stream,
+      onMessage: {
+        addListener: () => {}
+      }
+    });
+
+    this._connections.push(data);
+    this._updateStatusWindow();
+  }
+
+  _onClientStreamEnd(clientId) {
+    console.log('Client stream ended', clientId);
+
+    const index = this._connections.find(connection => connection.clientId === clientId);
+    this._connections.splice(index, 1);
+
+    delete this._clientStreams[clientId];
+    delete this._multiplex._substreams[clientId];
+    
+    this._updateStatusWindow();
+  }
+
+  _onConnectionControllerMessage(data) {
+    console.log('Received connection controller message', data);
+    this._clientStreams[data.clientId].end();    
+  }
+
   async _createWebSocketServer (options) {
     return new Promise((resolve) => {
         const server = new WebSocketServer(options, () => {
+            console.log('Created web socket server');
             resolve(server);
         });
     });
   }
 
-  _createWebSocket(clientId) {
-      return new WebSocket(`${WEB_SOCKET_URL}/?id=${clientId}`);
+  _updateStatusWindow() {
+    this._statusWindow.webContents.send('status', {
+      isWebSocketConnected: !!this._webSocket,
+      connections: this._connections
+    });
   }
 }
 

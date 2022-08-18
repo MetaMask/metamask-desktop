@@ -473,7 +473,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
       : null;
 
     if (isMetaMaskInternalProcess) {
-      const portStream = desktop.createStream({ isInternal: true });
+      const portStream = remotePort.stream;
 
       // communication with popup
       controller.isClientOpen = true;
@@ -551,7 +551,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
 
   // communication with page or other extension
   function connectExternal(remotePort) {
-    const portStream = desktop.createStream({ isInternal: false });
+    const portStream = remotePort.stream;
 
     controller.setupUntrustedCommunication({
       connectionStream: portStream,

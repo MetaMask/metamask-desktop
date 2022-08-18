@@ -7,15 +7,16 @@
     <style>
       body {
         font-family: system-ui;
-        padding-left: 1rem;
+        padding-left: 10px;
       }
 
-      th {
-        text-align: right;
+      table {
+        border-collapse: collapse;
       }
 
       th, td {
-        padding: 5px;
+        padding: 10px;
+        border: 1px solid lightgrey;
       }
 
       .off {
@@ -25,31 +26,21 @@
       .on {
         color: limegreen;
       }
-
-      .heading {
-        text-align: left;
-        font-size: 1.5rem;
-        padding: 0.5rem 0 0.5rem 0;
-      }
     </style>
   </head>
   <body>
-    <table>
-      <tr>
-        <th colspan="2" class="heading">Extension Connections</th>
-      </tr>
-      <tr>
-        <th>Internal</th>
-        <td id="extensionInternal" class="off">Disconnected</td>
-      </tr>
-      <tr>
-        <th>External</th>
-        <td id="extensionExternal" class="off">Disconnected</td>
-      </tr>
-      <tr>
-        <th>Browser Controller</th>
-        <td id="extensionBrowserController" class="off">Disconnected</td>
-      </tr>
+    <h2>Web Socket</h2>
+    <span id="web-socket" class="off">Disconnected</span>
+    <h2>Clients</h2>
+    <table id="connections" hidden>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>URL</th>
+        </tr>
+      </thead>
+      <tbody id="connections-table"></tbody>
     </table>
+    <p id="no-connections">None</p>
   </body>
 </html>
