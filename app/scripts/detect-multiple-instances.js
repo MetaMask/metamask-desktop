@@ -5,7 +5,7 @@
  * versions running simultaneously.
  */
 
-import browser from './node_browser';
+import browser from './desktop/node-browser';
 import {
   PLATFORM_CHROME,
   PLATFORM_FIREFOX,

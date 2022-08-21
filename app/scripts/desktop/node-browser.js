@@ -1,9 +1,10 @@
 const Store = require('electron-store');
 const store = new Store();
+const log = require('loglevel');
 
 const _warn = (name) => {
     if(process.env.VERBOSE !== 'true') return;
-    console.warn(`Browser method not supported - ${name}`);
+    log.debug(`Browser method not supported - ${name}`);
 };
 
 const _reject = (name) => {

@@ -1,5 +1,5 @@
 import log from 'loglevel';
-import browser from '../node_browser';
+import browser from '../desktop/node-browser';
 
 /**
  * Returns a middleware that intercepts `wallet_registerOnboarding` messages

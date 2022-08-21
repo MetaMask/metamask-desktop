@@ -1,7 +1,7 @@
 import pump from 'pump';
 import { WindowPostMessageStream } from '@metamask/post-message-stream';
 import ObjectMultiplex from 'obj-multiplex';
-import browser from './node_browser';
+import browser from './desktop/node-browser';
 import PortStream from 'extension-port-stream';
 import { obj as createThoughStream } from 'through2';
 

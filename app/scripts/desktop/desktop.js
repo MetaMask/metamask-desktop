@@ -4,6 +4,7 @@ const WebSocketServer  = require('ws').Server;
 const WebSocketStream = require('./web-socket-stream');
 const endOfStream = require('end-of-stream');
 const ObjectMultiplex = require('obj-multiplex');
+const log = require('loglevel');
 
 const WEB_SOCKET_PORT = 7071;
 const CLIENT_ID_BROWSER_CONTROLLER = 'browserController';
@@ -16,9 +17,6 @@ class Desktop {
     this._connections = [];
     this._multiplex = new ObjectMultiplex();
     this._clientStreams = {};
-
-    this._connectRemote = undefined;
-    this._webSocket = undefined;
   }
 
   async init(connectRemote) {
@@ -39,7 +37,7 @@ class Desktop {
     const handshakeStream = this._multiplex.createStream(CLIENT_ID_HANDSHAKES);
     handshakeStream.on('data', (data) => this._onHandshake(data));
 
-    console.log('Initialised desktop');
+    log.debug('Initialised desktop');
   }
 
   showPopup() {
@@ -61,7 +59,7 @@ class Desktop {
       postMessage: () => {}
     };
   
-    console.log('Added missing globals');
+    log.debug('Added missing globals');
   }
 
   async _createStatusWindow() {
@@ -69,26 +67,28 @@ class Desktop {
       width: 800,
       height: 400,
       webPreferences: {
-        preload: path.resolve(__dirname, './preload.js')
+        preload: path.resolve(__dirname, './status-preload.js')
       }
     });
   
     await statusWindow.loadFile('../desktop.html');
   
-    console.log('Created status window');
+    log.debug('Created status window');
   
     return statusWindow;
   }
 
   _onConnection(webSocket) {
-    console.log('Received web socket connection');
+    log.debug('Received web socket connection');
 
     this._webSocket = webSocket;
-
     this._webSocket.on('close', () => this._onDisconnect());
 
     this._webSocketStream = new WebSocketStream(webSocket, true);
-    this._webSocketStream.pipe(this._multiplex).pipe(this._webSocketStream);
+  
+    this._webSocketStream
+      .pipe(this._multiplex)
+      .pipe(this._webSocketStream);
 
     this._updateStatusWindow();
   }
@@ -103,7 +103,11 @@ class Desktop {
   }
 
   _onHandshake(data) {
-    console.log('Received handshake', data);
+    log.debug('Received handshake', { 
+      clientId: data.clientId,
+      name: data.remotePort.name,
+      url: data.remotePort.sender.url
+    });
 
     const clientId = data.clientId;
 
@@ -125,7 +129,7 @@ class Desktop {
   }
 
   _onClientStreamEnd(clientId) {
-    console.log('Client stream ended', clientId);
+    log.debug('Client stream ended', clientId);
 
     const index = this._connections.find(connection => connection.clientId === clientId);
     this._connections.splice(index, 1);
@@ -137,14 +141,14 @@ class Desktop {
   }
 
   _onConnectionControllerMessage(data) {
-    console.log('Received connection controller message', data);
+    log.debug('Received connection controller message', data);
     this._clientStreams[data.clientId].end();    
   }
 
   async _createWebSocketServer (options) {
     return new Promise((resolve) => {
         const server = new WebSocketServer(options, () => {
-            console.log('Created web socket server');
+            log.debug('Created web socket server');
             resolve(server);
         });
     });

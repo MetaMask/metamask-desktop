@@ -1,4 +1,4 @@
-import browser from '../node_browser';
+import browser from '../desktop/node-browser';
 
 import { getBlockExplorerLink } from '@metamask/etherscan-link';
 import { getEnvironmentType, checkForError } from '../lib/util';

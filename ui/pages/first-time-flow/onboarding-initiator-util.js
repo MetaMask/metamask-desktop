@@ -1,4 +1,4 @@
-import browser from '../../../app/scripts/node_browser';
+import browser from '../../../app/scripts/desktop/node-browser';
 import log from 'loglevel';
 
 export const returnToOnboardingInitiatorTab = async (onboardingInitiator) => {

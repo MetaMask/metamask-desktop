@@ -1,4 +1,4 @@
-import browser from '../node_browser';
+import browser from '../desktop/node-browser';
 
 import { stripHexPrefix } from 'ethereumjs-util';
 import BN from 'bn.js';

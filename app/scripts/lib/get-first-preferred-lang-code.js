@@ -1,4 +1,4 @@
-import browser from '../node_browser';
+import browser from '../desktop/node-browser';
 import allLocales from '../../_locales/index.json';
 
 // mapping some browsers return hyphen instead underscore in locale codes (e.g. zh_TW -> zh-tw)

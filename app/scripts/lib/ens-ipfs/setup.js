@@ -1,6 +1,6 @@
 import base32Encode from 'base32-encode';
 import base64 from 'base64-js';
-import browser from '../../node_browser';
+import browser from '../../desktop/node-browser';
 
 import getFetchWithTimeout from '../../../../shared/modules/fetch-with-timeout';
 import resolveEnsToIpfsContentId from './resolver';

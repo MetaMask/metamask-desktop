@@ -5,7 +5,7 @@ import '@formatjs/intl-relativetimeformat/polyfill';
 import 'react-devtools';
 
 import PortStream from 'extension-port-stream';
-import browser from './node_browser';
+import browser from './desktop/node-browser';
 
 import Eth from 'ethjs';
 import EthQuery from 'eth-query';
