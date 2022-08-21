@@ -1,4 +1,4 @@
-const { ipcRenderer, contextBridge } = require('electron');
+const { ipcRenderer } = require('electron');
 
 window.addEventListener('DOMContentLoaded', () => _onLoad());
 

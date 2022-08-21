@@ -1,6 +1,6 @@
 const endOfStream = require('end-of-stream');
 const ObjectMultiplex = require('obj-multiplex');
-const MainProcessStream = require('./main-process-stream');
+const MainProcessStream = require('./streams/main-process-stream');
 const log = require('./renderer-logger');
 
 const CLIENT_ID_BROWSER_CONTROLLER = 'browserController';

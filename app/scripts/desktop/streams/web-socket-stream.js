@@ -1,6 +1,6 @@
 const { Duplex } = require("stream");
-const log = require('./main-logger');
-const { prettyPrintRequest } = require('./utils');
+const log = require('../main-logger');
+const { flattenMessage } = require('../utils');
 
 module.exports = class WebSocketStream extends Duplex {
 
@@ -14,7 +14,7 @@ module.exports = class WebSocketStream extends Duplex {
     _onMessage (rawData) {
         const data = JSON.parse(rawData);
 
-        log.debug('Received web socket message', prettyPrintRequest(data));
+        log.debug('Received web socket message', flattenMessage(data));
 
         this.push(data);
     }
@@ -24,7 +24,7 @@ module.exports = class WebSocketStream extends Duplex {
     }
 
     _write(msg, encoding, cb) {
-        log.debug('Sending message to web socket', prettyPrintRequest(msg));
+        log.debug('Sending message to web socket', flattenMessage(msg));
         this._webSocket.send(JSON.stringify(msg));
         cb();
     }

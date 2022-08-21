@@ -1,4 +1,4 @@
-const prettyPrintRequest = (data) => {
+const flattenMessage = (data) => {
     let output = undefined;
     
     try {
@@ -23,5 +23,5 @@ const prettyPrintRequest = (data) => {
 };
 
 module.exports = {
-    prettyPrintRequest
+    flattenMessage
 };

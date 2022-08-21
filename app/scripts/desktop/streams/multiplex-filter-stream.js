@@ -1,6 +1,6 @@
 const { Transform } = require('stream');
 
-module.exports = class MultiplexFilter extends Transform {
+module.exports = class MultiplexFilterStream extends Transform {
 
     constructor(names) {
         super({ objectMode: true });
@@ -12,7 +12,7 @@ module.exports = class MultiplexFilter extends Transform {
         if(this._names.includes(chunk.name)) {
             callback(null, chunk);
         } else {
-            callback(null, Buffer.alloc(0));
+            callback();
         }
     }
 };

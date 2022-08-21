@@ -1,6 +1,6 @@
 const { Duplex } = require('stream');
-const log = require('./renderer-logger');
-const { prettyPrintRequest } = require('./utils');
+const log = require('../renderer-logger');
+const { flattenMessage } = require('../utils');
 
 module.exports = class MainProcessStream extends Duplex {
 
@@ -13,7 +13,7 @@ module.exports = class MainProcessStream extends Duplex {
     }
 
     _onMessage (data) {
-        log.debug('Received message from main process', prettyPrintRequest(data));
+        log.debug('Received message from main process', flattenMessage(data));
         this.push(data);
     }
 
@@ -22,7 +22,7 @@ module.exports = class MainProcessStream extends Duplex {
     }
 
     _write(msg, encoding, cb) {
-        log.debug('Sending message to main process', prettyPrintRequest(msg));
+        log.debug('Sending message to main process', flattenMessage(msg));
         window.electron.mainProcess.send(this._channel, msg);
         cb();
     }

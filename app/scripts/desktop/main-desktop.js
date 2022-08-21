@@ -1,11 +1,11 @@
 const path = require('path');
 const { app, BrowserWindow, session, webContents } = require('electron');
 const WebSocketServer  = require('ws').Server;
-const WebSocketStream = require('./web-socket-stream');
+const WebSocketStream = require('./streams/web-socket-stream');
 const ObjectMultiplex = require('obj-multiplex');
 const log = require('./main-logger');
-const RendererProcessStream = require('./renderer-process-stream');
-const MultiplexFilter = require('./multiplex-filter-stream');
+const RendererProcessStream = require('./streams/renderer-process-stream');
+const MultiplexFilterStream = require('./streams/multiplex-filter-stream');
 
 const WEB_SOCKET_PORT = 7071;
 const CLIENT_ID_CONNECTION_CONTROLLER = 'connectionController';
@@ -34,7 +34,7 @@ class Desktop {
     this._rendererStream = new RendererProcessStream(backgroundWindow, 'desktop');
 
     this._rendererStream
-      .pipe(new MultiplexFilter([CLIENT_ID_STATUS]))
+      .pipe(new MultiplexFilterStream([CLIENT_ID_STATUS]))
       .pipe(this._multiplex)
       .pipe(this._rendererStream);
 
