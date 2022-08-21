@@ -44,7 +44,7 @@ import getFirstPreferredLangCode from './lib/get-first-preferred-lang-code';
 import getObjStructure from './lib/getObjStructure';
 import setupEnsIpfsResolver from './lib/ens-ipfs/setup';
 import { getPlatform } from './lib/util';
-import { ExtensionConnection } from './extension-connection';
+import Desktop from './desktop/renderer-desktop';
 /* eslint-enable import/first */
 
 // desktop client - polyfill browser api
@@ -105,7 +105,7 @@ const ONE_SECOND_IN_MILLISECONDS = 1_000;
 // Timeout for initializing phishing warning page.
 const PHISHING_WARNING_PAGE_TIMEOUT = ONE_SECOND_IN_MILLISECONDS;
 
-const extensionConnection = new ExtensionConnection();
+const desktop = new Desktop();
 
 /**
  * In case of MV3 we attach a "onConnect" event listener as soon as the application is initialised.
@@ -474,22 +474,14 @@ function setupController(initState, initLangCode, remoteSourcePort) {
       return;
     }
 
-    let isMetaMaskInternalProcess = false;
-    const sourcePlatform = getPlatform();
-
-    if (sourcePlatform === PLATFORM_FIREFOX) {
-      isMetaMaskInternalProcess = metamaskInternalProcessHash[processName];
-    } else {
-      isMetaMaskInternalProcess =
-        remotePort.sender.origin === `chrome-extension://${browser.runtime.id}`;
-    }
+    let isMetaMaskInternalProcess = metamaskInternalProcessHash[processName];
 
     const senderUrl = remotePort.sender?.url
       ? new URL(remotePort.sender.url)
       : null;
 
     if (isMetaMaskInternalProcess) {
-      const portStream = extensionConnection.createStream(new PortStream(remotePort), { isInternal: true });
+      const portStream = remotePort.stream || new PortStream(remotePort);
 
       // communication with popup
       controller.isClientOpen = true;
@@ -567,7 +559,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
 
   // communication with page or other extension
   function connectExternal(remotePort) {
-    const portStream = extensionConnection.createStream(new PortStream(remotePort), { isInternal: false });
+    const portStream = remotePort.stream || new PortStream(remotePort);
 
     controller.setupUntrustedCommunication({
       connectionStream: portStream,
@@ -724,6 +716,8 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     updateBadge();
   }
 
+  desktop.init(connectRemote);
+
   return Promise.resolve();
 }
 
@@ -735,7 +729,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
  * Opens the browser popup for user confirmation
  */
 async function triggerUi() {
-  extensionConnection.showPopup();
+  desktop.showPopup();
   return;
 
   const tabs = await platform.getActiveTabs();
