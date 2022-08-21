@@ -473,7 +473,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
       : null;
 
     if (isMetaMaskInternalProcess) {
-      const portStream = desktopConnection.createStream(new PortStream(remotePort), { isInternal: true });
+      const portStream = new PortStream(remotePort);
 
       // communication with popup
       controller.isClientOpen = true;
@@ -554,7 +554,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     console.log('Ignored attempted external connection');
     return;
 
-    const portStream = desktopConnection.createStream(new PortStream(remotePort), { isInternal: false });
+    const portStream = new PortStream(remotePort);
 
     controller.setupUntrustedCommunication({
       connectionStream: portStream,
