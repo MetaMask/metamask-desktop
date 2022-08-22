@@ -1,0 +1,23 @@
+# File: .github/workflows/repo-sync.yml
+# TODO: Remove this action when move to metamask-extension repo
+on:
+  pull_request:
+    types: [opened, reopened]
+ # schedule:
+ # - cron:  "0 0 * * *" # At the end of every day
+  workflow_dispatch:
+
+jobs:
+  repo-sync:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        persist-credentials: false
+    - name: repo-sync
+      uses: repo-sync/github-sync@v2
+      with:
+        source_repo: "https://github.com/MetaMask/metamask-extension"
+        source_branch: "develop"
+        destination_branch: "feat/auto-rebase-git-actions"
+        github_token: ${{ secrets.GITHUB_TOKEN }}
