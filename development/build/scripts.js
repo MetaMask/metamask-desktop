@@ -57,6 +57,8 @@ const metamaskrc = {
     process.env.SENTRY_DSN_DEV ||
     'https://f59f3dd640d2429d9d0e2445a87ea8e1@sentry.io/273496',
   SIWE_V1: process.env.SIWE_V1,
+  METAMASK_DEBUG: process.env.METAMASK_DEBUG,
+  DESKTOP: process.env.DESKTOP,
   ...ini.parse(configContents),
 };
 
@@ -1093,13 +1095,14 @@ function getEnvironmentVariables({ buildTarget, buildType, version }) {
   return {
     COLLECTIBLES_V1: metamaskrc.COLLECTIBLES_V1 === '1',
     CONF: devMode ? metamaskrc : {},
+    DESKTOP: metamaskrc.DESKTOP,
     IN_TEST: testing,
     INFURA_PROJECT_ID: getInfuraProjectId({
       buildType,
       environment,
       testing,
     }),
-    METAMASK_DEBUG: devMode,
+    METAMASK_DEBUG: devMode || metamaskrc.METAMASK_DEBUG === '1',
     METAMASK_ENVIRONMENT: environment,
     METAMASK_VERSION: version,
     METAMASK_BUILD_TYPE: buildType,

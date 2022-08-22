@@ -1,4 +1,4 @@
-const flattenMessage = (data) => {
+export const flattenMessage = (data) => {
     let output = undefined;
     
     try {
@@ -20,8 +20,4 @@ const flattenMessage = (data) => {
     }
     
     return output;
-};
-
-module.exports = {
-    flattenMessage
 };

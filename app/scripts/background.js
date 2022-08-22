@@ -6,7 +6,7 @@ import endOfStream from 'end-of-stream';
 import pump from 'pump';
 import debounce from 'debounce-stream';
 import log from 'loglevel';
-import browser from './desktop/node-browser';
+import browser from './desktop/extension-polyfill';
 import { storeAsStream, storeTransformStream } from '@metamask/obs-store';
 import PortStream from 'extension-port-stream';
 import { captureException } from '@sentry/browser';
@@ -44,7 +44,19 @@ import getFirstPreferredLangCode from './lib/get-first-preferred-lang-code';
 import getObjStructure from './lib/getObjStructure';
 import setupEnsIpfsResolver from './lib/ens-ipfs/setup';
 import { getPlatform } from './lib/util';
-import Desktop from './desktop/desktop';
+import cfg from './desktop/config';
+
+let Desktop;
+let DesktopConnection;
+
+if(cfg().desktop.isApp) {
+  Desktop = require('./desktop/desktop').default;
+}
+
+if(cfg().desktop.isExtension) {
+  DesktopConnection = require('./desktop/desktop-connection').default;
+}
+
 /* eslint-enable import/first */
 
 const { sentry } = global;
@@ -86,8 +98,17 @@ const ONE_SECOND_IN_MILLISECONDS = 1_000;
 // Timeout for initializing phishing warning page.
 const PHISHING_WARNING_PAGE_TIMEOUT = ONE_SECOND_IN_MILLISECONDS;
 
-const desktop = new Desktop();
-desktop.addGlobals();
+let desktop;
+let desktopConnection;
+
+if(cfg().desktop.isApp) {
+  desktop = new Desktop();
+  desktop.addGlobals();
+}
+
+if(cfg().desktop.isExtension) {
+  desktopConnection = new DesktopConnection(notificationManager);
+}
 
 /**
  * In case of MV3 we attach a "onConnect" event listener as soon as the application is initialised.
@@ -452,6 +473,11 @@ function setupController(initState, initLangCode, remoteSourcePort) {
    * @param {Port} remotePort - The port provided by a new context.
    */
   function connectRemote(remotePort) {
+    if(cfg().desktop.isExtension) {
+      desktopConnection.createStream(remotePort);
+      return;
+    }
+
     const processName = remotePort.name;
 
     if (metamaskBlockedPorts.includes(remotePort.name)) {
@@ -473,7 +499,9 @@ function setupController(initState, initLangCode, remoteSourcePort) {
       : null;
 
     if (isMetaMaskInternalProcess) {
-      const portStream = remotePort.stream;
+      const portStream = cfg().desktop.isApp ?
+        remotePort.stream :
+        new PortStream(remotePort);
 
       // communication with popup
       controller.isClientOpen = true;
@@ -551,7 +579,14 @@ function setupController(initState, initLangCode, remoteSourcePort) {
 
   // communication with page or other extension
   function connectExternal(remotePort) {
-    const portStream = remotePort.stream;
+    if(cfg().desktop.isExtension) {
+      console.log('Ignored attempted external connection');
+      return;
+    }
+
+    const portStream = cfg().desktop.isApp ?
+      remotePort.stream :
+      new PortStream(remotePort);
 
     controller.setupUntrustedCommunication({
       connectionStream: portStream,
@@ -708,7 +743,9 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     updateBadge();
   }
 
-  desktop.init(connectRemote, connectExternal);
+  if(cfg().desktop.isApp) {
+    desktop.init(connectRemote);
+  }
 
   return Promise.resolve();
 }
@@ -721,8 +758,10 @@ function setupController(initState, initLangCode, remoteSourcePort) {
  * Opens the browser popup for user confirmation
  */
 async function triggerUi() {
-  desktop.showPopup();
-  return;
+  if(cfg().desktop.isApp) {
+    desktop.showPopup();
+    return;
+  }
 
   const tabs = await platform.getActiveTabs();
   const currentlyActiveMetamaskTab = Boolean(

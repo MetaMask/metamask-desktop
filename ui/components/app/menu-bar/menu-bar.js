@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import browser from '../../../../app/scripts/desktop/node-browser';
+import browser from '../../../../app/scripts/desktop/extension-polyfill';
 import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import SelectedAccount from '../selected-account';

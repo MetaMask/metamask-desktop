@@ -1,4 +1,4 @@
-import browser from '../desktop/node-browser';
+import browser from '../desktop/extension-polyfill';
 import log from 'loglevel';
 import { checkForError } from './util';
 

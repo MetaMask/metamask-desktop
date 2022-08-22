@@ -1,4 +1,4 @@
-import browser from '../desktop/node-browser';
+import browser from '../desktop/extension-polyfill';
 
 import { getBlockExplorerLink } from '@metamask/etherscan-link';
 import { getEnvironmentType, checkForError } from '../lib/util';

@@ -11,6 +11,7 @@
     "setup:postinstall": "yarn patch-package && yarn allow-scripts",
     "start": "yarn build:dev dev --apply-lavamoat=false",
     "build:desktop": "./development/build-desktop.sh",
+    "build:desktop:extension": "DESKTOP=EXTENSION yarn start --build-type flask",
     "start:desktop": "./development/run-desktop.sh",
     "start:lavamoat": "yarn build:dev dev --apply-lavamoat=true",
     "start:mv3": "ENABLE_MV3=true yarn build:dev dev --apply-lavamoat=false",

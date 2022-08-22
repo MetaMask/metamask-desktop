@@ -1,9 +1,9 @@
-const Store = require('electron-store');
+import Store from 'electron-store';
+import log from 'loglevel';
+
 const store = new Store();
-const log = require('loglevel');
 
 const _warn = (name) => {
-    if(process.env.VERBOSE !== 'true') return;
     log.debug(`Browser method not supported - ${name}`);
 };
 
@@ -11,7 +11,7 @@ const _reject = (name) => {
     return Promise.reject(`Browser method not supported - ${name}`);
 };
 
-module.exports = {
+export default {
     windows: {
         getLastFocused: () => _reject('windows.getLastFocused'),
         getCurrent: () => _reject('windows.getCurrent'),

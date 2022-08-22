@@ -1,18 +1,19 @@
-const path = require('path');
-const { app, BrowserWindow } = require('electron');
-const WebSocketServer  = require('ws').Server;
-const WebSocketStream = require('./web-socket-stream');
-const endOfStream = require('end-of-stream');
-const ObjectMultiplex = require('obj-multiplex');
-const log = require('loglevel');
+import path from 'path';
+import { app, BrowserWindow } from 'electron';
+import { Server as WebSocketServer } from 'ws';
+import WebSocketStream from './web-socket-stream';
+import endOfStream from 'end-of-stream';
+import ObjectMultiplex from 'obj-multiplex';
+import log from 'loglevel';
+import {
+  CLIENT_ID_BROWSER_CONTROLLER,
+  CLIENT_ID_CONNECTION_CONTROLLER,
+  CLIENT_ID_HANDSHAKES,
+  BROWSER_ACTION_SHOW_POPUP
+} from '../../../shared/constants/desktop';
+import cfg from './config';
 
-const WEB_SOCKET_PORT = 7071;
-const CLIENT_ID_BROWSER_CONTROLLER = 'browserController';
-const CLIENT_ID_CONNECTION_CONTROLLER = 'connectionController';
-const CLIENT_ID_HANDSHAKES = 'handshakes';
-const BROWSER_ACTION_SHOW_POPUP = 'showPopup';
-
-class Desktop {
+export default class Desktop {
   constructor() {
     this._connections = [];
     this._multiplex = new ObjectMultiplex();
@@ -26,7 +27,7 @@ class Desktop {
 
     this._statusWindow = await this._createStatusWindow();
 
-    const server = await this._createWebSocketServer({ port: WEB_SOCKET_PORT });
+    const server = await this._createWebSocketServer();
     server.on('connection', (webSocket) => this._onConnection(webSocket));
 
     this._browserControllerStream = this._multiplex.createStream(CLIENT_ID_BROWSER_CONTROLLER);
@@ -48,7 +49,8 @@ class Desktop {
     global.crypto = {
       ...global.crypto,
       getRandomValues: require('polyfill-crypto.getrandomvalues'),
-      subtle: require('node:crypto').webcrypto.subtle
+      // Ternary prevents LavaMoat failing as the library can't be found
+      subtle: require(cfg().desktop.isApp ? 'node:crypto' : '').webcrypto.subtle
     };
 
     global.window = {
@@ -145,9 +147,9 @@ class Desktop {
     this._clientStreams[data.clientId].end();    
   }
 
-  async _createWebSocketServer (options) {
+  async _createWebSocketServer () {
     return new Promise((resolve) => {
-        const server = new WebSocketServer(options, () => {
+        const server = new WebSocketServer({ port: cfg().desktop.webSocket.port }, () => {
             log.debug('Created web socket server');
             resolve(server);
         });
@@ -160,6 +162,4 @@ class Desktop {
       connections: this._connections
     });
   }
-}
-
-module.exports = Desktop;
+};

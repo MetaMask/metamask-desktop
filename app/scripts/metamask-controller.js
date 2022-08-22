@@ -50,6 +50,7 @@ import SmartTransactionsController from '@metamask/smart-transactions-controller
 import {
   SnapController,
   NodeThreadExecutionService,
+  IframeExecutionService
 } from '@metamask/snap-controllers';
 import { satisfies as satisfiesSemver } from 'semver';
 ///: END:ONLY_INCLUDE_IN
@@ -154,6 +155,7 @@ import {
   ///: END:ONLY_INCLUDE_IN
 } from './controllers/permissions';
 import createRPCMethodTrackingMiddleware from './lib/createRPCMethodTrackingMiddleware';
+import cfg from './desktop/config';
 
 export const METAMASK_CONTROLLER_EVENTS = {
   // Fired after state changes that impact the extension badge (unapproved msg count)
@@ -646,12 +648,24 @@ export default class MetamaskController extends EventEmitter {
     });
 
     ///: BEGIN:ONLY_INCLUDE_IN(flask)
-    this.snapExecutionService = new NodeThreadExecutionService({
-      messenger: this.controllerMessenger.getRestricted({
-        name: 'ExecutionService',
-      }),
-      setupSnapProvider: this.setupSnapProvider.bind(this),
-    });
+    if(cfg().desktop.isApp) {
+      this.snapExecutionService = new NodeThreadExecutionService({
+        messenger: this.controllerMessenger.getRestricted({
+          name: 'ExecutionService',
+        }),
+        setupSnapProvider: this.setupSnapProvider.bind(this),
+      });
+    } else {
+      this.snapExecutionService = new IframeExecutionService({
+        iframeUrl: new URL(
+          'https://metamask.github.io/iframe-execution-environment/0.5.2',
+        ),
+        messenger: this.controllerMessenger.getRestricted({
+          name: 'ExecutionService',
+        }),
+        setupSnapProvider: this.setupSnapProvider.bind(this),
+      });
+    }
 
     const snapControllerMessenger = this.controllerMessenger.getRestricted({
       name: 'SnapController',
