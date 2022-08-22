@@ -45,25 +45,6 @@ export default class Desktop {
     this._browserControllerStream.write(BROWSER_ACTION_SHOW_POPUP);
   }
 
-  addGlobals() {
-    global.crypto = {
-      ...global.crypto,
-      getRandomValues: require('polyfill-crypto.getrandomvalues'),
-      // Ternary prevents LavaMoat failing as the library can't be found
-      subtle: require(cfg().desktop.isApp ? 'node:crypto' : '').webcrypto.subtle
-    };
-
-    global.window = {
-      ...global.window,
-      navigator: {
-        userAgent: 'Firefox'
-      },
-      postMessage: () => {}
-    };
-  
-    log.debug('Added missing globals');
-  }
-
   async _createStatusWindow() {
     const statusWindow = new BrowserWindow({
       width: 800,

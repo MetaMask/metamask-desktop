@@ -19,7 +19,7 @@ import { stripHexPrefix } from 'ethereumjs-util';
 import log from 'loglevel';
 import TrezorKeyring from 'eth-trezor-keyring';
 import LedgerBridgeKeyring from '@metamask/eth-ledger-bridge-keyring';
-// import LatticeKeyring from 'eth-lattice-keyring';
+import LatticeKeyring from 'eth-lattice-keyring';
 import { MetaMaskKeyring as QRHardwareKeyring } from '@keystonehq/metamask-airgapped-keyring';
 import EthQuery from 'eth-query';
 import nanoid from 'nanoid';
@@ -123,7 +123,7 @@ import AppStateController from './controllers/app-state';
 import CachedBalancesController from './controllers/cached-balances';
 import AlertController from './controllers/alert';
 import OnboardingController from './controllers/onboarding';
-//import ThreeBoxController from './controllers/threebox';
+import ThreeBoxController from './controllers/threebox';
 import BackupController from './controllers/backup';
 import IncomingTransactionsController from './controllers/incoming-transactions';
 import MessageManager, { normalizeMsgData } from './lib/message-manager';
@@ -565,7 +565,7 @@ export default class MetamaskController extends EventEmitter {
     const additionalKeyrings = [
       TrezorKeyring,
       LedgerBridgeKeyring,
-      //LatticeKeyring,
+      LatticeKeyring,
       QRHardwareKeyring,
     ];
     this.keyringController = new KeyringController({
@@ -794,19 +794,19 @@ export default class MetamaskController extends EventEmitter {
       preferencesStore: this.preferencesController.store,
     });
 
-    // this.threeBoxController = new ThreeBoxController({
-    //   preferencesController: this.preferencesController,
-    //   addressBookController: this.addressBookController,
-    //   keyringController: this.keyringController,
-    //   initState: initState.ThreeBoxController,
-    //   getKeyringControllerState: this.keyringController.memStore.getState.bind(
-    //     this.keyringController.memStore,
-    //   ),
-    //   version,
-    //   trackMetaMetricsEvent: this.metaMetricsController.trackEvent.bind(
-    //     this.metaMetricsController,
-    //   ),
-    // });
+    this.threeBoxController = new ThreeBoxController({
+      preferencesController: this.preferencesController,
+      addressBookController: this.addressBookController,
+      keyringController: this.keyringController,
+      initState: initState.ThreeBoxController,
+      getKeyringControllerState: this.keyringController.memStore.getState.bind(
+        this.keyringController.memStore,
+      ),
+      version,
+      trackMetaMetricsEvent: this.metaMetricsController.trackEvent.bind(
+        this.metaMetricsController,
+      ),
+    });
 
     this.backupController = new BackupController({
       preferencesController: this.preferencesController,
@@ -1065,7 +1065,7 @@ export default class MetamaskController extends EventEmitter {
       PermissionController: this.permissionController,
       PermissionLogController: this.permissionLogController.store,
       SubjectMetadataController: this.subjectMetadataController,
-      // ThreeBoxController: this.threeBoxController.store,
+      ThreeBoxController: this.threeBoxController.store,
       BackupController: this.backupController,
       AnnouncementController: this.announcementController,
       GasFeeController: this.gasFeeController,
@@ -1104,7 +1104,7 @@ export default class MetamaskController extends EventEmitter {
         PermissionController: this.permissionController,
         PermissionLogController: this.permissionLogController.store,
         SubjectMetadataController: this.subjectMetadataController,
-        // ThreeBoxController: this.threeBoxController.store,
+        ThreeBoxController: this.threeBoxController.store,
         BackupController: this.backupController,
         SwapsController: this.swapsController.store,
         EnsController: this.ensController.store,
@@ -1537,7 +1537,7 @@ export default class MetamaskController extends EventEmitter {
       preferencesController,
       qrHardwareKeyring,
       swapsController,
-      // threeBoxController,
+      threeBoxController,
       tokensController,
       smartTransactionsController,
       txController,
@@ -1826,20 +1826,20 @@ export default class MetamaskController extends EventEmitter {
       setWeb3ShimUsageAlertDismissed:
         alertController.setWeb3ShimUsageAlertDismissed.bind(alertController),
 
-      // // 3Box
-      // setThreeBoxSyncingPermission:
-      //   threeBoxController.setThreeBoxSyncingPermission.bind(
-      //     threeBoxController,
-      //   ),
-      // restoreFromThreeBox:
-      //   threeBoxController.restoreFromThreeBox.bind(threeBoxController),
-      // setShowRestorePromptToFalse:
-      //   threeBoxController.setShowRestorePromptToFalse.bind(threeBoxController),
-      // getThreeBoxLastUpdated:
-      //   threeBoxController.getLastUpdated.bind(threeBoxController),
-      // turnThreeBoxSyncingOn:
-      //   threeBoxController.turnThreeBoxSyncingOn.bind(threeBoxController),
-      // initializeThreeBox: this.initializeThreeBox.bind(this),
+      // 3Box
+      setThreeBoxSyncingPermission:
+        threeBoxController.setThreeBoxSyncingPermission.bind(
+          threeBoxController,
+        ),
+      restoreFromThreeBox:
+        threeBoxController.restoreFromThreeBox.bind(threeBoxController),
+      setShowRestorePromptToFalse:
+        threeBoxController.setShowRestorePromptToFalse.bind(threeBoxController),
+      getThreeBoxLastUpdated:
+        threeBoxController.getLastUpdated.bind(threeBoxController),
+      turnThreeBoxSyncingOn:
+        threeBoxController.turnThreeBoxSyncingOn.bind(threeBoxController),
+      initializeThreeBox: this.initializeThreeBox.bind(this),
 
       // permissions
       removePermissionsFor:
@@ -2359,28 +2359,28 @@ export default class MetamaskController extends EventEmitter {
       log.error('Error while unlocking extension.', error);
     }
 
-    // try {
-    //   const threeBoxSyncingAllowed =
-    //     this.threeBoxController.getThreeBoxSyncingState();
-    //   if (threeBoxSyncingAllowed && !this.threeBoxController.box) {
-    //     // 'await' intentionally omitted to avoid waiting for initialization
-    //     this.threeBoxController.init();
-    //     this.threeBoxController.turnThreeBoxSyncingOn();
-    //   } else if (threeBoxSyncingAllowed && this.threeBoxController.box) {
-    //     this.threeBoxController.turnThreeBoxSyncingOn();
-    //   }
-    // } catch (error) {
-    //   log.error('Error while unlocking extension.', error);
-    // }
+    try {
+      const threeBoxSyncingAllowed =
+        this.threeBoxController.getThreeBoxSyncingState();
+      if (threeBoxSyncingAllowed && !this.threeBoxController.box) {
+        // 'await' intentionally omitted to avoid waiting for initialization
+        this.threeBoxController.init();
+        this.threeBoxController.turnThreeBoxSyncingOn();
+      } else if (threeBoxSyncingAllowed && this.threeBoxController.box) {
+        this.threeBoxController.turnThreeBoxSyncingOn();
+      }
+    } catch (error) {
+      log.error('Error while unlocking extension.', error);
+    }
 
     // This must be set as soon as possible to communicate to the
     // keyring's iframe and have the setting initialized properly
     // Optimistically called to not block MetaMask login due to
     // Ledger Keyring GitHub downtime
-    // const transportPreference =
-    //   this.preferencesController.getLedgerTransportPreference();
+    const transportPreference =
+      this.preferencesController.getLedgerTransportPreference();
 
-    // this.setLedgerTransportPreference(transportPreference);
+    this.setLedgerTransportPreference(transportPreference);
 
     return this.keyringController.fullUpdate();
   }
@@ -2438,9 +2438,9 @@ export default class MetamaskController extends EventEmitter {
       case DEVICE_NAMES.QR:
         keyringName = QRHardwareKeyring.type;
         break;
-      // case DEVICE_NAMES.LATTICE:
-      //   keyringName = LatticeKeyring.type;
-      //   break;
+      case DEVICE_NAMES.LATTICE:
+        keyringName = LatticeKeyring.type;
+        break;
       default:
         throw new Error(
           'MetamaskController:getKeyringForDevice - Unknown device',
@@ -4235,7 +4235,7 @@ export default class MetamaskController extends EventEmitter {
   }
 
   async initializeThreeBox() {
-    //await this.threeBoxController.init();
+    await this.threeBoxController.init();
   }
 
   /**

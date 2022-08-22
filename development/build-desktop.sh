@@ -2,6 +2,9 @@
 
 OUTPUT_DIR="dist_desktop"
 
+echo "Rebuilding leveldown for Electron to support 3box"
+yarn electron-rebuild -o leveldown
+
 echo "Removing existing build files"
 rm -rf $OUTPUT_DIR
 

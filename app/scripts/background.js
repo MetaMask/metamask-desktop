@@ -2,6 +2,7 @@
  * @file The entry point for the web extension singleton process.
  */
 
+import './desktop/globals';
 import endOfStream from 'end-of-stream';
 import pump from 'pump';
 import debounce from 'debounce-stream';
@@ -92,7 +93,7 @@ if (inTest || process.env.METAMASK_DEBUG) {
   global.metamaskGetState = localStore.get.bind(localStore);
 }
 
-const phishingPageUrl = new URL(process.env.PHISHING_WARNING_PAGE_URL);
+const phishingPageUrl = new URL(process.env.PHISHING_WARNING_PAGE_URL || 'http://test.com');
 
 const ONE_SECOND_IN_MILLISECONDS = 1_000;
 // Timeout for initializing phishing warning page.
@@ -103,7 +104,6 @@ let desktopConnection;
 
 if(cfg().desktop.isApp) {
   desktop = new Desktop();
-  desktop.addGlobals();
 }
 
 if(cfg().desktop.isExtension) {
@@ -193,8 +193,6 @@ async function initialize(remotePort) {
   const initState = await loadStateFromPersistence();
   const initLangCode = await getFirstPreferredLangCode();
   await setupController(initState, initLangCode, remotePort);
-  //await loadPhishingWarningPage();
-
  
   log.info('MetaMask initialization complete.');
 }
