@@ -165,6 +165,7 @@
     "currency-formatter": "^1.4.2",
     "debounce-stream": "^2.0.0",
     "deep-freeze-strict": "1.1.1",
+    "eciesjs": "^0.3.15",
     "electron-store": "^8.1.0",
     "electron-updater": "^5.2.1",
     "end-of-stream": "^1.4.4",
@@ -482,7 +483,8 @@
       "eth-lattice-keyring>gridplus-sdk>secp256k1": false,
       "eth-lattice-keyring>secp256k1": false,
       "electron": true,
-      "electron-rebuild>lzma-native": true
+      "electron-rebuild>lzma-native": true,
+      "eciesjs>secp256k1": false
     }
   }
 }

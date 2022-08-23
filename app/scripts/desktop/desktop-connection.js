@@ -22,7 +22,8 @@ export default class DesktopConnection {
 
         log.debug('Created web socket connection');
 
-        const webSocketStream = new WebSocketStream(webSocket);
+        const webSocketStream = new WebSocketStream(webSocket, { encryptionSecret: 'test123' });
+
         webSocketStream.pipe(this._multiplex).pipe(webSocketStream);
 
         const browserControllerStream = this._multiplex.createStream(CLIENT_ID_BROWSER_CONTROLLER);

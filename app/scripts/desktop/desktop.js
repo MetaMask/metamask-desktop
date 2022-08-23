@@ -5,14 +5,14 @@ import WebSocketStream from './web-socket-stream';
 import endOfStream from 'end-of-stream';
 import ObjectMultiplex from 'obj-multiplex';
 import log from 'loglevel';
+import cfg from './config';
+import updateCheck from './update-check';
 import {
   CLIENT_ID_BROWSER_CONTROLLER,
   CLIENT_ID_CONNECTION_CONTROLLER,
   CLIENT_ID_HANDSHAKES,
   BROWSER_ACTION_SHOW_POPUP
 } from '../../../shared/constants/desktop';
-import cfg from './config';
-import updateCheck from './update-check';
 
 export default class Desktop {
   constructor() {
@@ -72,7 +72,7 @@ export default class Desktop {
     this._webSocket = webSocket;
     this._webSocket.on('close', () => this._onDisconnect());
 
-    this._webSocketStream = new WebSocketStream(webSocket, true);
+    this._webSocketStream = new WebSocketStream(webSocket, { encryptionSecret: 'test123'});
   
     this._webSocketStream
       .pipe(this._multiplex)

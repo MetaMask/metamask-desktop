@@ -10,6 +10,7 @@ if(cfg().desktop.isApp) {
     };
 
     global.window = {
+        crypto: global.crypto,
         navigator: {
             userAgent: 'Firefox'
         },
