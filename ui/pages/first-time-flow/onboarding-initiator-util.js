@@ -1,4 +1,4 @@
-import browser from 'webextension-polyfill';
+import browser from '../../../app/scripts/desktop/extension-polyfill';
 import log from 'loglevel';
 
 export const returnToOnboardingInitiatorTab = async (onboardingInitiator) => {

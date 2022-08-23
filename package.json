@@ -10,6 +10,9 @@
     "setup": "yarn install && yarn setup:postinstall",
     "setup:postinstall": "yarn patch-package && yarn allow-scripts",
     "start": "yarn build:dev dev --apply-lavamoat=false",
+    "build:desktop": "./development/build-desktop.sh",
+    "build:desktop:extension": "DESKTOP=EXTENSION yarn start --build-type flask",
+    "start:desktop": "./development/run-desktop.sh",
     "start:lavamoat": "yarn build:dev dev --apply-lavamoat=true",
     "start:mv3": "ENABLE_MV3=true yarn build:dev dev --apply-lavamoat=false",
     "dist": "yarn build prod",
@@ -157,6 +160,8 @@
     "currency-formatter": "^1.4.2",
     "debounce-stream": "^2.0.0",
     "deep-freeze-strict": "1.1.1",
+    "electron-rebuild": "^3.2.9",
+    "electron-store": "^8.1.0",
     "end-of-stream": "^1.4.4",
     "eth-block-tracker": "^5.0.1",
     "eth-ens-namehash": "^2.0.8",
@@ -297,8 +302,8 @@
     "browser-util-inspect": "^0.2.0",
     "browserify": "^16.5.1",
     "chalk": "^3.0.0",
-    "chromedriver": "^103.0.0",
     "chokidar": "^3.5.3",
+    "chromedriver": "^103.0.0",
     "concurrently": "^5.2.0",
     "copy-webpack-plugin": "^6.0.3",
     "cross-spawn": "^7.0.3",
@@ -309,6 +314,7 @@
     "depcheck": "^1.4.2",
     "dependency-tree": "^8.1.2",
     "duplexify": "^4.1.1",
+    "electron": "^19.0.2",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.15.1",
     "eslint": "^8.20.0",
@@ -466,7 +472,9 @@
       "@keystonehq/bc-ur-registry-eth>hdkey>secp256k1": false,
       "@metamask/rpc-methods>@metamask/key-tree>secp256k1": false,
       "eth-lattice-keyring>gridplus-sdk>secp256k1": false,
-      "eth-lattice-keyring>secp256k1": false
+      "eth-lattice-keyring>secp256k1": false,
+      "electron": true,
+      "electron-rebuild>lzma-native": true
     }
   }
 }

@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1 user-scalable=no">
+    <title>MetaMask Desktop</title>
+    <style>
+      body {
+        font-family: system-ui;
+        padding-left: 10px;
+      }
+
+      table {
+        border-collapse: collapse;
+      }
+
+      th, td {
+        padding: 10px;
+        border: 1px solid lightgrey;
+      }
+
+      .off {
+        color: red;
+      }
+
+      .on {
+        color: limegreen;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Web Socket</h2>
+    <span id="web-socket" class="off">Disconnected</span>
+    <h2>Clients</h2>
+    <table id="connections" hidden>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>URL</th>
+        </tr>
+      </thead>
+      <tbody id="connections-table"></tbody>
+    </table>
+    <p id="no-connections">None</p>
+  </body>
+</html>
