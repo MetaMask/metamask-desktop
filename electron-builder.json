@@ -1,0 +1,45 @@
+{
+  "appId": "consensys.metamask.desktop",
+  "productName": "mmd",
+  "npmRebuild": false,
+  "asar": false,
+  "files": [
+    "dist_desktop/**/*",
+    "node_modules/**/*",
+    "package.json"
+  ],
+  "directories": {
+    "output": "builds_desktop"
+  },
+  "linux": {
+    "icon": "app/build-types/desktop/images/icon-512.png",
+    "target": "AppImage",
+    "category": "Utility",
+    "artifactName": "metamask-desktop-${version}.${ext}",
+    "publish": {
+      "provider": "github"
+    }
+  },
+  "mac": {
+    "icon": "app/build-types/desktop/images/icon.icns",
+    "target": [
+      {
+        "target": "dmg",
+        "arch": ["x64", "arm64"]
+      }
+    ]
+  },
+  "win": {
+    "icon": "app/build-types/desktop/images/icon-512.png",
+    "target": ["nsis","portable"]
+  },
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "deleteAppDataOnUninstall": true,
+    "artifactName": "metamask-desktop-${version}-setup.${ext}"
+  },
+  "portable":{
+    "artifactName": "metamask-desktop-${version}-portable.${ext}"
+  }
+}

@@ -32,6 +32,7 @@ coverage/
 jest-coverage/
 dist
 dist_desktop
+builds_desktop
 builds/
 builds.zip
 development/ts-migration-dashboard/build
