@@ -12,6 +12,7 @@ import {
   BROWSER_ACTION_SHOW_POPUP
 } from '../../../shared/constants/desktop';
 import cfg from './config';
+import updateCheck from './updateCheck';
 
 export default class Desktop {
   constructor() {
@@ -39,6 +40,8 @@ export default class Desktop {
     handshakeStream.on('data', (data) => this._onHandshake(data));
 
     log.debug('Initialised desktop');
+
+    updateCheck()
   }
 
   showPopup() {
