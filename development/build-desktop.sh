@@ -18,11 +18,23 @@ cp -r app/desktop.html $OUTPUT_DIR/app/desktop.html
 echo "Copying locales"
 cp -r app/_locales $OUTPUT_DIR/app
 
+# Export all shell variables
+set -a
+
+# Set desktop specific variables
+DESKTOP=APP
+
+# Add variables from .metamaskrc
+export $(cat .metamaskrc | grep -v ";" | xargs)
+
 echo "Transpiling JavaScript"
-babel . \
+babel --plugins transform-inline-environment-variables \
+    . \
     -d ./$OUTPUT_DIR \
     --watch \
     --ignore dist \
+    --ignore dist_desktop \
+    --ignore builds_desktop \
     --ignore development \
     --ignore node_modules \
     --ignore test \

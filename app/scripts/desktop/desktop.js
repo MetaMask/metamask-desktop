@@ -12,6 +12,7 @@ import {
   BROWSER_ACTION_SHOW_POPUP
 } from '../../../shared/constants/desktop';
 import cfg from './config';
+import updateCheck from './update-check';
 
 export default class Desktop {
   constructor() {
@@ -39,6 +40,8 @@ export default class Desktop {
     handshakeStream.on('data', (data) => this._onHandshake(data));
 
     log.debug('Initialised desktop');
+
+    updateCheck()
   }
 
   showPopup() {
@@ -51,10 +54,12 @@ export default class Desktop {
       height: 400,
       webPreferences: {
         preload: path.resolve(__dirname, './status-preload.js')
-      }
+      },
+      // Doesn not work because it's not currently being added to dist_desktop
+      //icon: path.resolve(__dirname, '../../build-types/desktop/images/icon-512.png')
     });
   
-    await statusWindow.loadFile('../desktop.html');
+    await statusWindow.loadFile(path.resolve(__dirname, '../../desktop.html'));
   
     log.debug('Created status window');
   

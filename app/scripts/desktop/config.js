@@ -21,7 +21,8 @@ const loadConfig = () => {
       webSocket: {
         port,
         url: `ws://localhost:${port}`,
-      }
+      },
+      enableUpdates: envStringMatch(process.env.DESKTOP_ENABLE_UPDATES, 'true')
     }
   }
 };
