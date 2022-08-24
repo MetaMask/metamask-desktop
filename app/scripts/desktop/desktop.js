@@ -12,7 +12,7 @@ import {
   BROWSER_ACTION_SHOW_POPUP
 } from '../../../shared/constants/desktop';
 import cfg from './config';
-import updateCheck from './updateCheck';
+import updateCheck from './update-check';
 
 export default class Desktop {
   constructor() {
