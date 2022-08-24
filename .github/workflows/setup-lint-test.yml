@@ -1,0 +1,39 @@
+# TODO: Remove this action when move to metamask-extension repository
+name: Setup, Lint, and Test
+
+on:
+  push:
+    branches: [main-desktop]
+  pull_request:
+
+jobs:
+  setup-lint-test:
+    name: Setup, Lint, and Test
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      # - name: Install Yarn
+      #   run: npm install -g yarn  # required to run locally using act
+      - run: yarn setup
+      - run: yarn yarn-deduplicate 
+      - run: yarn lint
+      - name: Run Jest Tests
+        run: yarn test:unit:jest --maxWorkers=2 --testTimeout=5000
+      - name: Run Mocha Tests
+        run: yarn test:unit:mocha
+      - name: Run Global Tests
+        run: yarn test:unit:global
+  all-jobs-pass:
+    name: All jobs pass
+    runs-on: ubuntu-20.04
+    needs:
+      - setup-lint-test
+    steps:
+      - run: echo "Great success!"
