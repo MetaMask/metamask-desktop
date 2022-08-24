@@ -1,11 +1,14 @@
 import cfg from './config';
 
+// eslint-disable-next-line import/no-mutable-exports
 let browser;
 
-if(cfg().desktop.isApp) {
-    browser = require('./node-browser');
+if (cfg().desktop.isApp) {
+  // eslint-disable-next-line node/global-require
+  browser = require('./node-browser');
 } else {
-    browser = require('webextension-polyfill');
+  // eslint-disable-next-line node/global-require
+  browser = require('webextension-polyfill');
 }
 
-module.exports = browser;
+export { browser };

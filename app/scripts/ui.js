@@ -5,7 +5,6 @@ import '@formatjs/intl-relativetimeformat/polyfill';
 import 'react-devtools';
 
 import PortStream from 'extension-port-stream';
-import browser from './desktop/extension-polyfill';
 
 import Eth from 'ethjs';
 import EthQuery from 'eth-query';
@@ -19,6 +18,7 @@ import {
 import { isManifestV3 } from '../../shared/modules/mv3.utils';
 import { SUPPORT_LINK } from '../../ui/helpers/constants/common';
 import { getErrorHtml } from '../../ui/helpers/utils/error-utils';
+import { browser } from './desktop/extension-polyfill';
 import ExtensionPlatform from './platforms/extension';
 import { setupMultiplex } from './lib/stream-utils';
 import { getEnvironmentType } from './lib/util';

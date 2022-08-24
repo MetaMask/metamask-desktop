@@ -8,27 +8,32 @@ autoUpdater.logger = log;
 
 autoUpdater.autoDownload = false;
 
-export default async () => {
+export const updateCheck = async () => {
   if (!cfg().desktop.enableUpdates || !autoUpdater.isUpdaterActive()) {
     log.debug('Updater not active');
     return;
   }
 
   autoUpdater.on('error', (error) => {
-    dialog.showErrorBox('Error: ', error == null ? 'unknown' : (error.stack || error).toString());
+    dialog.showErrorBox(
+      'Error: ',
+      error === null ? 'unknown' : (error.stack || error).toString(),
+    );
   });
 
   autoUpdater.on('update-available', () => {
-    dialog.showMessageBox({
-      type: 'info',
-      title: 'Found Updates',
-      message: 'Found updates, do you want update now?',
-      buttons: ['Sure', 'No']
-    }).then((messageBoxReturnValue) => {
-      if (messageBoxReturnValue.response === 0) {
-        autoUpdater.downloadUpdate();
-      }
-    });
+    dialog
+      .showMessageBox({
+        type: 'info',
+        title: 'Found Updates',
+        message: 'Found updates, do you want update now?',
+        buttons: ['Sure', 'No'],
+      })
+      .then((messageBoxReturnValue) => {
+        if (messageBoxReturnValue.response === 0) {
+          autoUpdater.downloadUpdate();
+        }
+      });
   });
 
   autoUpdater.on('update-not-available', () => {
@@ -36,17 +41,20 @@ export default async () => {
   });
 
   autoUpdater.on('update-downloaded', () => {
-    dialog.showMessageBox({
-      title: 'Install Updates',
-      message: 'Updates downloaded, application will be quit for update...'
-    }).then(() => {
-      setImmediate(() => autoUpdater.quitAndInstall());
-    });
+    dialog
+      .showMessageBox({
+        title: 'Install Updates',
+        message: 'Updates downloaded, application will be quit for update...',
+      })
+      .then(() => {
+        setImmediate(() => autoUpdater.quitAndInstall());
+      });
   });
 
   autoUpdater.on('download-progress', (progressInfo) => {
     log.debug('Download progress', progressInfo);
   });
 
+  // eslint-disable-next-line consistent-return
   return autoUpdater.checkForUpdates();
-}
+};

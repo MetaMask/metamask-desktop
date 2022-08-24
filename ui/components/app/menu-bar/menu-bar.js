@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
-import browser from '../../../../app/scripts/desktop/extension-polyfill';
 import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { browser } from '../../../../app/scripts/desktop/extension-polyfill';
 import SelectedAccount from '../selected-account';
 import ConnectedStatusIndicator from '../connected-status-indicator';
 import { getEnvironmentType } from '../../../../app/scripts/lib/util';

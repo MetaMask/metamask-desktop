@@ -50,7 +50,7 @@ import SmartTransactionsController from '@metamask/smart-transactions-controller
 import {
   SnapController,
   NodeThreadExecutionService,
-  IframeExecutionService
+  IframeExecutionService,
 } from '@metamask/snap-controllers';
 import { satisfies as satisfiesSemver } from 'semver';
 ///: END:ONLY_INCLUDE_IN
@@ -648,7 +648,7 @@ export default class MetamaskController extends EventEmitter {
     });
 
     ///: BEGIN:ONLY_INCLUDE_IN(flask)
-    if(cfg().desktop.isApp) {
+    if (cfg().desktop.isApp) {
       this.snapExecutionService = new NodeThreadExecutionService({
         messenger: this.controllerMessenger.getRestricted({
           name: 'ExecutionService',

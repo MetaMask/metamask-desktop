@@ -3,6 +3,8 @@ import sinon from 'sinon';
 import proxyquire from 'proxyquire';
 import nock from 'nock';
 import { cloneDeep } from 'lodash';
+// eslint-disable-next-line no-shadow
+import fetch from 'node-fetch';
 
 import waitUntilCalled from '../../../test/lib/wait-until-called';
 import {
@@ -1012,20 +1014,18 @@ describe('IncomingTransactionsController', function () {
     const FETCHED_TX = getFakeEtherscanTransaction({
       toAddress: ADDRESS_TO_FETCH_FOR,
     });
-    const mockFetch = sinon.stub().returns(
-      Promise.resolve({
-        json: () => Promise.resolve({ status: '1', result: [FETCHED_TX] }),
-      }),
-    );
-    let tempFetch;
+
+    let mockFetch;
     beforeEach(function () {
-      tempFetch = window.fetch;
-      window.fetch = mockFetch;
+      mockFetch = sinon.stub(fetch, 'default').returns(
+        Promise.resolve({
+          json: () => Promise.resolve({ status: '1', result: [FETCHED_TX] }),
+        }),
+      );
     });
 
     afterEach(function () {
-      window.fetch = tempFetch;
-      mockFetch.resetHistory();
+      mockFetch.restore();
     });
 
     it('should call fetch with the expected url when passed an address, block number and supported chainId', async function () {
@@ -1124,7 +1124,8 @@ describe('IncomingTransactionsController', function () {
     });
 
     it('should return empty tx array if status is 0', async function () {
-      const mockFetchStatusZero = sinon.stub().returns(
+      mockFetch.restore();
+      const mockFetchStatusZero = sinon.stub(fetch, 'default').returns(
         Promise.resolve({
           json: () => Promise.resolve({ status: '0', result: [FETCHED_TX] }),
         }),
@@ -1152,7 +1153,8 @@ describe('IncomingTransactionsController', function () {
     });
 
     it('should return empty tx array if result array is empty', async function () {
-      const mockFetchEmptyResult = sinon.stub().returns(
+      mockFetch.restore();
+      const mockFetchEmptyResult = sinon.stub(fetch, 'default').returns(
         Promise.resolve({
           json: () => Promise.resolve({ status: '1', result: [] }),
         }),

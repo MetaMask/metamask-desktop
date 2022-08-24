@@ -1,6 +1,6 @@
-import browser from '../desktop/extension-polyfill';
-
 import { getBlockExplorerLink } from '@metamask/etherscan-link';
+import { browser } from '../desktop/extension-polyfill';
+
 import { getEnvironmentType, checkForError } from '../lib/util';
 import { ENVIRONMENT_TYPE_BACKGROUND } from '../../../shared/constants/app';
 import { TRANSACTION_STATUSES } from '../../../shared/constants/transaction';
