@@ -8,17 +8,15 @@ autoUpdater.logger = log;
 
 autoUpdater.autoDownload = false;
 
-export default () => {
+export default async () => {
   if (!cfg().desktop.enableUpdates || !autoUpdater.isUpdaterActive()) {
     log.debug('Updater not active');
     return;
   }
 
-  autoUpdater.checkForUpdates()
-
   autoUpdater.on('error', (error) => {
     dialog.showErrorBox('Error: ', error == null ? 'unknown' : (error.stack || error).toString());
-  })
+  });
 
   autoUpdater.on('update-available', () => {
     dialog.showMessageBox({
@@ -31,14 +29,11 @@ export default () => {
         autoUpdater.downloadUpdate();
       }
     });
-  })
+  });
 
   autoUpdater.on('update-not-available', () => {
-    dialog.showMessageBox({
-      title: 'No Updates',
-      message: 'Current version is up-to-date.'
-    });
-  })
+    log.debug('Current version is up-to-date.');
+  });
 
   autoUpdater.on('update-downloaded', () => {
     dialog.showMessageBox({
@@ -47,9 +42,11 @@ export default () => {
     }).then(() => {
       setImmediate(() => autoUpdater.quitAndInstall());
     });
-  })
+  });
 
   autoUpdater.on('download-progress', (progressInfo) => {
     log.debug('Download progress', progressInfo);
-  })
+  });
+
+  return autoUpdater.checkForUpdates();
 }
