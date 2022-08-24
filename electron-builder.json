@@ -1,6 +1,6 @@
 {
   "appId": "consensys.metamask.desktop",
-  "productName": "mmd",
+  "productName": "Metamask Desktop",
   "npmRebuild": false,
   "asar": false,
   "files": [
