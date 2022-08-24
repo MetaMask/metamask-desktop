@@ -9,7 +9,7 @@ on:
 jobs:
   build-lint-test:
     name: Build, Lint, and Test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
         node-version: [16.x]
@@ -19,15 +19,33 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - run: yarn setup
+      # - name: Install Yarn
+      #   run: npm install -g yarn  # required to run locally using act
+      - name: Get Yarn cache directory
+        run: echo "::set-output name=YARN_CACHE_DIR::$(yarn config get cacheFolder)"
+        id: yarn-cache-dir
+      - name: Get Yarn version
+        run: echo "::set-output name=YARN_VERSION::$(yarn --version)"
+        id: yarn-version
+      - name: Cache yarn dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.yarn-cache-dir.outputs.YARN_CACHE_DIR }}
+          key: yarn-cache-${{ runner.os }}-${{ steps.yarn-version.outputs.YARN_VERSION }}-${{ hashFiles('yarn.lock') }}
+      - run: yarn why ethereumjs-abi
+      - run: yarn --frozen-lockfile
+      - run: yarn setup:postinstall
       - run: yarn yarn-deduplicate 
       - run: yarn lint
-      - run: yarn test:unit:jest
-      - run: yarn test:unit:mocha
-      - run: yarn test:unit:global
+      - name: Run Jest Tests
+        run: yarn test:unit:jest --maxWorkers=2 --testTimeout=5000
+      - name: Run Mocha Tests
+        run: yarn test:unit:mocha
+      - name: Run Global Tests
+        run: yarn test:unit:global
   all-jobs-pass:
     name: All jobs pass
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     needs:
       - build-lint-test
     steps:
