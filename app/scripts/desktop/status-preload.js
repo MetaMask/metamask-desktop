@@ -34,7 +34,7 @@ const _onStatusMessage = (data) => {
 
     _updateStatus('server', data.isServerReady, 'Ready', 'Not Ready');
     _updateStatus('extension', data.isExtensionConnected, 'Connected', 'Disconnected');
-    _updateStatus('security', data.isEncrypted, 'Encrypted', 'Unencrypted');
+    _updateStatus('security', data.isAuthenticated, 'Authenticated', 'Not Authenticated');
 
     if(data.connections.length) {
         connections.hidden = false;

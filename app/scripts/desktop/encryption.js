@@ -1,29 +1,19 @@
 import { encrypt as _encrypt, decrypt as _decrypt, PrivateKey } from 'eciesjs';
 
-let _keyCache = {};
+export const createKeyPair = () => {
+    const privateKey = new PrivateKey();
+    const { publicKey } = privateKey;
 
-export const encrypt = async (data, password) => {
-    const keys = await _createKeyPair(password);
-    return _encrypt(keys.publicKey.toHex(), Buffer.from(data, 'utf8')).toString('hex');
+    return {
+        privateKey: privateKey.toHex(),
+        publicKey: publicKey.toHex()
+    };
 };
 
-export const decrypt = async (data, password) => {
-    const keys = await _createKeyPair(password);
-    return _decrypt(keys.privateKey.toHex(), Buffer.from(data, 'hex')).toString('utf8');
+export const encrypt = (data, publicKey) => {
+    return _encrypt(publicKey, Buffer.from(data, 'utf8')).toString('hex');
 };
 
-const _createKeyPair = async (secret) => {
-    let keys = _keyCache[secret];
-
-    if(!keys) {
-        const hash = await window.crypto.subtle.digest('SHA-256', Buffer.from(secret, 'utf-8'));
-        const secretKey = hash.slice(0, 32);
-        const privateKey = new PrivateKey(Buffer.from(secretKey));
-        const { publicKey } = privateKey;
-
-        keys = { privateKey, publicKey };
-        _keyCache[secret] = keys;
-    }
-
-    return keys;
+export const decrypt = (data, privateKey) => {
+    return _decrypt(privateKey, Buffer.from(data, 'hex')).toString('utf8');
 };

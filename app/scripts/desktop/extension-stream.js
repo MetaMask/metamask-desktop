@@ -1,39 +1,39 @@
 import { Duplex } from 'stream';
 import log from 'loglevel';
 import { CLIENT_ID_HANDSHAKES } from '../../../shared/constants/desktop';
-import { flattenMessage } from './utils';
-import WebSocketStream from './web-socket-stream';
+import { flattenMessage, sendExtensionAuthentication, verifyDesktopAuthentication } from './utils';
+import EncryptedWebSocketStream from './encrypted-web-socket-stream';
 
 export default class ExtensionStream extends Duplex {
-  constructor(webSocket, encryptionSecret, mockState, onEncrypted) {
+  constructor(webSocket, password, mockState, onAuthenticated) {
     super({ objectMode: true });
 
-    this._webSocketStream = new WebSocketStream(webSocket);
-    this._encryptionSecret = encryptionSecret;
+    this._webSocketStream = new EncryptedWebSocketStream(webSocket);
+    this._password = password;
     this._mockState = mockState;
-    this._onEncrypted = onEncrypted;
-    this._isEncrypted = false;
+    this._onAuthenticated = onAuthenticated;
+    this._isAuthenticated = false;
 
     this._webSocketStream.on('data', (data) => this._onMessage(data));
+    
+    sendExtensionAuthentication(this._webSocketStream, this._password);
   }
 
-  isEncrypted() {
-    return this._isEncrypted;
+  isAuthenticated() {
+    return this._isAuthenticated;
   }
 
-  _onMessage(data) {
-    if (!this._isEncrypted) {
-      if (this._isEncryptedMessage(data)) {
-        log.debug('Detected first encrypted message');
-        this._enableEncryption();
-
-        // Re-process the message to decrypt it
-        this._webSocketStream._onMessage(data);
-
+  async _onMessage(data) {
+    if(!this._isAuthenticated) {
+      if(data.authentication) {
+        await this._onAuthentication(data.authentication);
         return;
       }
-
-      if (!this._isValidDecryptedMessage(data)) return;
+      
+      if(!this._isValidUnauthenticatedMessage(data)) {
+        log.debug('Ignoring secure message as not authenticated', flattenMessage(data));
+        return;
+      }
     }
 
     this.push(data);
@@ -44,12 +44,12 @@ export default class ExtensionStream extends Duplex {
   }
 
   _write(msg, encoding, cb) {
-    if (!this._isEncrypted) {
+    if (!this._isAuthenticated) {
       const jsonRpcMethod = msg.data?.data?.method;
       const result = msg.data?.data?.result;
 
       if (jsonRpcMethod || !result) {
-        log.debug('Skipped sending of insecure decrypted message', flattenMessage(msg));
+        log.debug('Skipped sending secure message as not authenticated', flattenMessage(msg));
         cb();
         return;
       }
@@ -62,24 +62,26 @@ export default class ExtensionStream extends Duplex {
     this._webSocketStream.write(msg, encoding, cb);
   }
 
-  _isValidDecryptedMessage(message) {
+  _isValidUnauthenticatedMessage(message) {
     if (message.name === CLIENT_ID_HANDSHAKES) return true;
 
     const jsonRpcMethod = message.data?.data?.method;
     if (jsonRpcMethod === 'getState') return true;
 
-    log.debug('Ignored insecure decrypted message', flattenMessage(message));
-
     return false;
   }
 
-  _enableEncryption() {
-    this._webSocketStream.setEncryptionSecret(this._encryptionSecret);
-    this._isEncrypted = true;
-    this._onEncrypted();
-  }
+  async _onAuthentication(authentication, time) {
+    log.debug('Received authentication', authentication);
 
-  _isEncryptedMessage(message) {
-    return typeof message === 'string';
+    this._isAuthenticated = verifyDesktopAuthentication(this._password, authentication);
+
+    if(this._isAuthenticated) {
+      log.debug('Authentication successful');
+    } else {
+      log.debug('Authentication failed');
+    }
+
+    this._onAuthenticated();
   }
 }

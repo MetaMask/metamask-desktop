@@ -1,16 +1,14 @@
 import { Duplex } from 'stream';
 import log from 'loglevel';
 import { flattenMessage } from './utils';
-import { encrypt, decrypt } from './encryption';
 
 export default class WebSocketStream extends Duplex {
 
-    constructor(webSocket, options) {
+    constructor(webSocket) {
         super({ objectMode: true });
 
         this._webSocket = webSocket;
         this._isBrowser = !this._webSocket.on;
-        this._options = { encryptionSecret: undefined, ...options };
 
         if(this._isBrowser) {
             this._webSocket.addEventListener('message', (event) => this._onMessage(event.data));
@@ -19,31 +17,14 @@ export default class WebSocketStream extends Duplex {
         }
     }
 
-    setEncryptionSecret(encryptionSecret) {
-        this._options.encryptionSecret = encryptionSecret;
-    }
-
-    async _onMessage (rawData) {
-        let decryptedData = rawData;
-        
-        if(this._options.encryptionSecret) {
-            log.debug('Received encrypted web socket message', rawData);
-            
-            try {
-                decryptedData = await decrypt(rawData, this._options.encryptionSecret);
-            } catch {
-                log.debug('Failed to decrypt web socket message');
-                return;
-            }
-        }
-
-        let data = decryptedData;
+    async _onMessage(rawData) {
+        let data = rawData;
         
         try {
-            data = JSON.parse(decryptedData);
+            data = JSON.parse(data);
         } catch {}
 
-        log.debug('Received web socket message', flattenMessage(data));
+        log.debug('Received web socket message');
 
         this.push(data);
     }
@@ -53,22 +34,16 @@ export default class WebSocketStream extends Duplex {
     }
 
     async _write(msg, encoding, cb) {
-        log.debug('Sending message to web socket', flattenMessage(msg));
+        log.debug('Sending message to web socket');
 
-        const rawData = JSON.stringify(msg);
-        let encryptedData = rawData;
-
-        if(this._options.encryptionSecret) {
-            encryptedData = await encrypt(rawData, this._options.encryptionSecret);
-            log.debug('Sending encrypted message to web socket', encryptedData);
-        }
+        const rawData = typeof msg !== 'string' ? JSON.stringify(msg) : msg;
 
         if(this._isBrowser) {
-            this._sendBrowser(encryptedData, cb);
+            this._sendBrowser(rawData, cb);
             return;
         }
 
-        this._webSocket.send(encryptedData);
+        this._webSocket.send(rawData);
         cb();
     }
 

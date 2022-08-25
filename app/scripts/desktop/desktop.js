@@ -150,7 +150,7 @@ export default class Desktop {
     this._statusWindow.webContents.send('status', {
       isServerReady: !!this._server,
       isExtensionConnected: !!this._webSocket,
-      isEncrypted: !!this._webSocketStream?.isEncrypted(),
+      isAuthenticated: !!this._webSocketStream?.isAuthenticated(),
       connections: this._connections
     });
   }
