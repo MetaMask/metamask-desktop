@@ -19,19 +19,31 @@ export default class WebSocketStream extends Duplex {
         }
     }
 
+    setEncryptionSecret(encryptionSecret) {
+        this._options.encryptionSecret = encryptionSecret;
+    }
+
     async _onMessage (rawData) {
         let decryptedData = rawData;
         
         if(this._options.encryptionSecret) {
             log.debug('Received encrypted web socket message', rawData);
-            decryptedData = await decrypt(rawData, this._options.encryptionSecret);
+            
+            try {
+                decryptedData = await decrypt(rawData, this._options.encryptionSecret);
+            } catch {
+                log.debug('Failed to decrypt web socket message');
+                return;
+            }
         }
 
-        const data = JSON.parse(decryptedData);
+        let data = decryptedData;
+        
+        try {
+            data = JSON.parse(decryptedData);
+        } catch {}
 
-        if(this._logging) {
-            log.debug('Received web socket message', flattenMessage(data));
-        }
+        log.debug('Received web socket message', flattenMessage(data));
 
         this.push(data);
     }

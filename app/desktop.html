@@ -14,6 +14,10 @@
         border-collapse: collapse;
       }
 
+      th {
+        text-align: right;
+      }
+
       th, td {
         padding: 10px;
         border: 1px solid lightgrey;
@@ -29,8 +33,24 @@
     </style>
   </head>
   <body>
-    <h2>Web Socket</h2>
-    <span id="web-socket" class="off">Disconnected</span>
+    <h2>Password</h2>
+    <input id="password" type="password"/>
+    <input id="save-button" type="button" value="Save"/>
+    <h2>Status</h2>
+    <table>
+      <tr>
+        <th>Server</th>
+        <td id="server" class="off">Not Started</td>
+      </tr>
+      <tr>
+        <th>Extension</th>
+        <td id="extension" class="off">Disconnected</td>
+      </tr>
+      <tr>
+        <th>Security</th>
+        <td id="security" class="off">Unencrypted</td>
+      </tr>
+    </table>
     <h2>Clients</h2>
     <table id="connections" hidden>
       <thead>

@@ -1,4 +1,4 @@
-import WebSocketStream from './web-socket-stream';
+import DesktopStream from './desktop-stream';
 import PortStream from 'extension-port-stream';
 import endOfStream from 'end-of-stream';
 import ObjectMultiplex from 'obj-multiplex';
@@ -22,7 +22,7 @@ export default class DesktopConnection {
 
         log.debug('Created web socket connection');
 
-        const webSocketStream = new WebSocketStream(webSocket, { encryptionSecret: 'test123' });
+        const webSocketStream = new DesktopStream(webSocket);
 
         webSocketStream.pipe(this._multiplex).pipe(webSocketStream);
 

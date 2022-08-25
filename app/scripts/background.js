@@ -102,8 +102,8 @@ const PHISHING_WARNING_PAGE_TIMEOUT = ONE_SECOND_IN_MILLISECONDS;
 let desktop;
 let desktopConnection;
 
-if(cfg().desktop.isApp) {
-  desktop = new Desktop();
+if(cfg().desktop.isApp) { 
+  desktop = new Desktop(getMockUIState());
 }
 
 if(cfg().desktop.isExtension) {
@@ -820,5 +820,26 @@ function setupSentryGetStateGlobal(store) {
       store: debugState,
       version: global.platform.getVersion(),
     };
+  };
+}
+
+function getMockUIState() {
+  let initState = firstTimeState;
+  initState.PreferencesController.currentLocale = 'en';
+
+  const controller = new MetamaskController({
+    infuraProjectId: process.env.INFURA_PROJECT_ID,
+    initState,
+    initLang: 'en',
+    platform,
+    notificationManager,
+    browser,
+  });
+
+  return {
+    ...controller.getState(),
+    isInitialized: true,
+    completedOnboarding: true,
+    network: '4'
   };
 }

@@ -1,7 +1,7 @@
 import path from 'path';
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import { Server as WebSocketServer } from 'ws';
-import WebSocketStream from './web-socket-stream';
+import ExtensionStream from './extension-stream';
 import endOfStream from 'end-of-stream';
 import ObjectMultiplex from 'obj-multiplex';
 import log from 'loglevel';
@@ -15,10 +15,11 @@ import {
 } from '../../../shared/constants/desktop';
 
 export default class Desktop {
-  constructor() {
+  constructor(mockState) {
     this._connections = [];
     this._multiplex = new ObjectMultiplex();
     this._clientStreams = {};
+    this._mockState = mockState;
   }
 
   async init(connectRemote) {
@@ -28,9 +29,6 @@ export default class Desktop {
 
     this._statusWindow = await this._createStatusWindow();
 
-    const server = await this._createWebSocketServer();
-    server.on('connection', (webSocket) => this._onConnection(webSocket));
-
     this._browserControllerStream = this._multiplex.createStream(CLIENT_ID_BROWSER_CONTROLLER);
 
     const connectionControllerStream = this._multiplex.createStream(CLIENT_ID_CONNECTION_CONTROLLER);
@@ -38,6 +36,10 @@ export default class Desktop {
 
     const handshakeStream = this._multiplex.createStream(CLIENT_ID_HANDSHAKES);
     handshakeStream.on('data', (data) => this._onHandshake(data));
+
+    ipcMain.handle('password', (event, data) => this._onPasswordSave(data));
+
+    this._updateStatusWindow();
 
     log.debug('Initialised desktop');
 
@@ -51,7 +53,7 @@ export default class Desktop {
   async _createStatusWindow() {
     const statusWindow = new BrowserWindow({
       width: 800,
-      height: 400,
+      height: 700,
       webPreferences: {
         preload: path.resolve(__dirname, './status-preload.js')
       },
@@ -72,7 +74,8 @@ export default class Desktop {
     this._webSocket = webSocket;
     this._webSocket.on('close', () => this._onDisconnect());
 
-    this._webSocketStream = new WebSocketStream(webSocket, { encryptionSecret: 'test123'});
+    this._webSocketStream = new ExtensionStream(
+      webSocket, this._encryptionSecret, this._mockState, () => this._updateStatusWindow());
   
     this._webSocketStream
       .pipe(this._multiplex)
@@ -84,6 +87,7 @@ export default class Desktop {
   _onDisconnect() {
     this._webSocket = undefined;
     this._webSocketStream.end();
+    this._webSocketStream = undefined;
 
     Object.values(this._clientStreams).forEach(clientStream => clientStream.end());
 
@@ -144,8 +148,20 @@ export default class Desktop {
 
   _updateStatusWindow() {
     this._statusWindow.webContents.send('status', {
-      isWebSocketConnected: !!this._webSocket,
+      isServerReady: !!this._server,
+      isExtensionConnected: !!this._webSocket,
+      isEncrypted: !!this._webSocketStream?.isEncrypted(),
       connections: this._connections
     });
+  }
+
+  async _onPasswordSave(password) {
+    console.log('Received password', password);
+    this._encryptionSecret = password;
+
+    this._server = await this._createWebSocketServer();
+    this._server.on('connection', (webSocket) => this._onConnection(webSocket));
+    
+    this._updateStatusWindow();
   }
 };
