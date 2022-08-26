@@ -201,6 +201,7 @@
     "json-rpc-engine": "^6.1.0",
     "json-rpc-middleware-stream": "^2.1.1",
     "jsonschema": "^1.2.4",
+    "keytar": "^7.9.0",
     "labeled-stream-splicer": "^2.0.2",
     "localforage": "^1.9.0",
     "lodash": "^4.17.21",
@@ -249,6 +250,7 @@
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
+    "@babel/cli": "^7.18.10",
     "@babel/code-frame": "^7.12.13",
     "@babel/core": "^7.12.1",
     "@babel/eslint-parser": "^7.13.14",
@@ -487,7 +489,8 @@
       "eth-lattice-keyring>gridplus-sdk>secp256k1": false,
       "eth-lattice-keyring>secp256k1": false,
       "electron": true,
-      "electron-rebuild>lzma-native": true
+      "electron-rebuild>lzma-native": true,
+      "keytar": false
     }
   }
 }
