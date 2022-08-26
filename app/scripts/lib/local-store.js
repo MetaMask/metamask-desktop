@@ -1,5 +1,5 @@
-import browser from '../desktop/extension-polyfill';
 import log from 'loglevel';
+import { browser } from '../desktop/extension-polyfill';
 import { checkForError } from './util';
 
 /**

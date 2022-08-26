@@ -1,13 +1,17 @@
-let configObject
+let configObject;
 
 const envStringMatch = (value, expected) => {
-    if(!value) return false;
-    return value.toLowerCase() === expected.toLowerCase();
+  if (!value) {
+    return false;
+  }
+  return value.toLowerCase() === expected.toLowerCase();
 };
 
 const envInt = (value, defaultValue) => {
-  if(!value) return defaultValue;
-  return parseInt(value);
+  if (!value) {
+    return defaultValue;
+  }
+  return parseInt(value, 10);
 };
 
 const loadConfig = () => {
@@ -22,9 +26,9 @@ const loadConfig = () => {
         port,
         url: `ws://localhost:${port}`,
       },
-      enableUpdates: envStringMatch(process.env.DESKTOP_ENABLE_UPDATES, 'true')
-    }
-  }
+      enableUpdates: envStringMatch(process.env.DESKTOP_ENABLE_UPDATES, 'true'),
+    },
+  };
 };
 
 export default function cfg() {
@@ -32,5 +36,5 @@ export default function cfg() {
     configObject = loadConfig();
   }
 
-  return configObject
-};
+  return configObject;
+}

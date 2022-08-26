@@ -7,7 +7,6 @@ import endOfStream from 'end-of-stream';
 import pump from 'pump';
 import debounce from 'debounce-stream';
 import log from 'loglevel';
-import browser from './desktop/extension-polyfill';
 import { storeAsStream, storeTransformStream } from '@metamask/obs-store';
 import PortStream from 'extension-port-stream';
 import { captureException } from '@sentry/browser';
@@ -26,6 +25,7 @@ import {
 } from '../../shared/constants/metametrics';
 import { isManifestV3 } from '../../shared/modules/mv3.utils';
 import { maskObject } from '../../shared/modules/object.utils';
+import { browser } from './desktop/extension-polyfill';
 import migrations from './migrations';
 import Migrator from './lib/migrator';
 import ExtensionPlatform from './platforms/extension';
@@ -50,11 +50,13 @@ import cfg from './desktop/config';
 let Desktop;
 let DesktopConnection;
 
-if(cfg().desktop.isApp) {
+if (cfg().desktop.isApp) {
+  // eslint-disable-next-line node/global-require
   Desktop = require('./desktop/desktop').default;
 }
 
-if(cfg().desktop.isExtension) {
+if (cfg().desktop.isExtension) {
+  // eslint-disable-next-line node/global-require
   DesktopConnection = require('./desktop/desktop-connection').default;
 }
 
@@ -93,7 +95,9 @@ if (inTest || process.env.METAMASK_DEBUG) {
   global.metamaskGetState = localStore.get.bind(localStore);
 }
 
-const phishingPageUrl = new URL(process.env.PHISHING_WARNING_PAGE_URL || 'http://test.com');
+const phishingPageUrl = new URL(
+  process.env.PHISHING_WARNING_PAGE_URL || 'http://test.com',
+);
 
 const ONE_SECOND_IN_MILLISECONDS = 1_000;
 // Timeout for initializing phishing warning page.
@@ -102,11 +106,11 @@ const PHISHING_WARNING_PAGE_TIMEOUT = ONE_SECOND_IN_MILLISECONDS;
 let desktop;
 let desktopConnection;
 
-if(cfg().desktop.isApp) {
+if (cfg().desktop.isApp) {
   desktop = new Desktop();
 }
 
-if(cfg().desktop.isExtension) {
+if (cfg().desktop.isExtension) {
   desktopConnection = new DesktopConnection(notificationManager);
 }
 
@@ -193,7 +197,7 @@ async function initialize(remotePort) {
   const initState = await loadStateFromPersistence();
   const initLangCode = await getFirstPreferredLangCode();
   await setupController(initState, initLangCode, remotePort);
- 
+
   log.info('MetaMask initialization complete.');
 }
 
@@ -210,6 +214,7 @@ class PhishingWarningPageTimeoutError extends Error {
  * Load the phishing warning page temporarily to ensure the service
  * worker has been registered, so that the warning page works offline.
  */
+// eslint-disable-next-line no-unused-vars
 async function loadPhishingWarningPage() {
   let iframe;
   try {
@@ -471,7 +476,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
    * @param {Port} remotePort - The port provided by a new context.
    */
   function connectRemote(remotePort) {
-    if(cfg().desktop.isExtension) {
+    if (cfg().desktop.isExtension) {
       desktopConnection.createStream(remotePort);
       return;
     }
@@ -497,9 +502,9 @@ function setupController(initState, initLangCode, remoteSourcePort) {
       : null;
 
     if (isMetaMaskInternalProcess) {
-      const portStream = cfg().desktop.isApp ?
-        remotePort.stream :
-        new PortStream(remotePort);
+      const portStream = cfg().desktop.isApp
+        ? remotePort.stream
+        : new PortStream(remotePort);
 
       // communication with popup
       controller.isClientOpen = true;
@@ -577,14 +582,14 @@ function setupController(initState, initLangCode, remoteSourcePort) {
 
   // communication with page or other extension
   function connectExternal(remotePort) {
-    if(cfg().desktop.isExtension) {
+    if (cfg().desktop.isExtension) {
       console.log('Ignored attempted external connection');
       return;
     }
 
-    const portStream = cfg().desktop.isApp ?
-      remotePort.stream :
-      new PortStream(remotePort);
+    const portStream = cfg().desktop.isApp
+      ? remotePort.stream
+      : new PortStream(remotePort);
 
     controller.setupUntrustedCommunication({
       connectionStream: portStream,
@@ -741,7 +746,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     updateBadge();
   }
 
-  if(cfg().desktop.isApp) {
+  if (cfg().desktop.isApp) {
     desktop.init(connectRemote);
   }
 
@@ -756,7 +761,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
  * Opens the browser popup for user confirmation
  */
 async function triggerUi() {
-  if(cfg().desktop.isApp) {
+  if (cfg().desktop.isApp) {
     desktop.showPopup();
     return;
   }

@@ -1,6 +1,7 @@
 import { memoize } from 'lodash';
-import { SECOND } from '../constants/time';
+// eslint-disable-next-line no-shadow
 import fetch from 'node-fetch';
+import { SECOND } from '../constants/time';
 
 const getFetchWithTimeout = memoize((timeout = SECOND * 30) => {
   if (!Number.isInteger(timeout) || timeout < 1) {

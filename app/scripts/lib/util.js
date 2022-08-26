@@ -1,8 +1,7 @@
-import browser from '../desktop/extension-polyfill';
-
 import { stripHexPrefix } from 'ethereumjs-util';
 import BN from 'bn.js';
 import { memoize } from 'lodash';
+import { browser } from '../desktop/extension-polyfill';
 import {
   MAINNET_CHAIN_ID,
   TEST_CHAINS,

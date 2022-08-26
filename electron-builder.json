@@ -1,16 +1,10 @@
 {
   "appId": "consensys.metamask.desktop",
-  "productName": "Metamask Desktop",
-  "npmRebuild": false,
   "asar": false,
-  "files": [
-    "dist_desktop/**/*",
-    "node_modules/**/*",
-    "package.json"
-  ],
   "directories": {
     "output": "builds_desktop"
   },
+  "files": ["dist_desktop/**/*", "node_modules/**/*", "package.json"],
   "linux": {
     "icon": "app/build-types/desktop/images/icon-512.png",
     "target": "AppImage",
@@ -29,17 +23,19 @@
       }
     ]
   },
-  "win": {
-    "icon": "app/build-types/desktop/images/icon-512.png",
-    "target": ["nsis","portable"]
-  },
+  "npmRebuild": false,
   "nsis": {
     "oneClick": false,
     "allowToChangeInstallationDirectory": true,
     "deleteAppDataOnUninstall": true,
     "artifactName": "metamask-desktop-${version}-setup.${ext}"
   },
-  "portable":{
+  "portable": {
     "artifactName": "metamask-desktop-${version}-portable.${ext}"
+  },
+  "productName": "Metamask Desktop",
+  "win": {
+    "icon": "app/build-types/desktop/images/icon-512.png",
+    "target": ["nsis", "portable"]
   }
 }
