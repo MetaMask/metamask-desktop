@@ -28,14 +28,8 @@ DESKTOP=APP
 export $(cat .metamaskrc | grep -v ";" | xargs)
 
 echo "Transpiling JavaScript"
-babel --plugins transform-inline-environment-variables \
-    . \
+babel . \
+    --extensions ".ts,.js" \
     -d ./$OUTPUT_DIR \
-    --watch \
-    --ignore dist \
-    --ignore dist_desktop \
-    --ignore builds_desktop \
-    --ignore development \
-    --ignore node_modules \
-    --ignore test \
-    --ignore .storybook
+    --config-file "./babel-desktop.config.js" \
+    --watch

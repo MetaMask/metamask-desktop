@@ -390,7 +390,9 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     },
   );
 
-  setupSentryGetStateGlobal(controller);
+  if (cfg().desktop.isExtension) {
+    setupSentryGetStateGlobal(controller);
+  }
 
   /**
    * Assigns the given state to the versioned object (with metadata), and returns that.

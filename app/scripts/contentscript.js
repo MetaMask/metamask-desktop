@@ -5,8 +5,8 @@ import PortStream from 'extension-port-stream';
 import { obj as createThoughStream } from 'through2';
 
 import { isManifestV3 } from '../../shared/modules/mv3.utils';
-import { browser } from './desktop/extension-polyfill';
 import shouldInjectProvider from '../../shared/modules/provider-injection';
+import { browser } from './desktop/extension-polyfill';
 
 // These require calls need to use require to be statically recognized by browserify
 const fs = require('fs');

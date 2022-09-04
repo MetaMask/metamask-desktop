@@ -1024,7 +1024,7 @@ async function getEnvironmentVariables({ buildTarget, buildType, version }) {
       environment,
       testing,
     }),
-    METAMASK_DEBUG: devMode || metamaskrc.METAMASK_DEBUG === '1',
+    METAMASK_DEBUG: devMode || config.METAMASK_DEBUG === '1',
     METAMASK_ENVIRONMENT: environment,
     METAMASK_VERSION: version,
     METAMASK_BUILD_TYPE: buildType,
