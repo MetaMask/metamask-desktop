@@ -11,9 +11,9 @@ import {
   CLIENT_ID_HANDSHAKES,
   BROWSER_ACTION_SHOW_POPUP,
 } from '../../../shared/constants/desktop';
-import WebSocketStream from './web-socket-stream';
 import cfg from './config';
 import { updateCheck } from './update-check';
+import EncryptedWebSocketStream from './encrypted-web-socket-stream';
 
 export default class Desktop {
   constructor() {
@@ -79,7 +79,7 @@ export default class Desktop {
     this._webSocket = webSocket;
     this._webSocket.on('close', () => this._onDisconnect());
 
-    this._webSocketStream = new WebSocketStream(webSocket, true);
+    this._webSocketStream = new EncryptedWebSocketStream(webSocket);
 
     this._webSocketStream.pipe(this._multiplex).pipe(this._webSocketStream);
 
