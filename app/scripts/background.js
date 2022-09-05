@@ -390,7 +390,10 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     },
   );
 
-  setupSentryGetStateGlobal(controller);
+  // TODO If we use sentry with desktop, this needs to be fixed
+  if (cfg().desktop.isExtension) {
+    setupSentryGetStateGlobal(controller);
+  }
 
   /**
    * Assigns the given state to the versioned object (with metadata), and returns that.
