@@ -21,9 +21,13 @@ jobs:
           node-version: ${{ matrix.node-version }}
       # - name: Install Yarn
       #   run: npm install -g yarn  # required to run locally using act
-      - run: yarn setup
-      - run: yarn yarn-deduplicate 
-      - run: yarn lint
+      - name: Run Setup
+        run: yarn setup
+      - run: yarn yarn-deduplicate
+      - name: Run Lint 
+        run: yarn lint
+      - name: Run Lint lockfile
+        run: yarn lint:lockfile
       - name: Run Jest Tests
         run: yarn test:unit:jest --maxWorkers=2 --testTimeout=5000
       - name: Run Mocha Tests

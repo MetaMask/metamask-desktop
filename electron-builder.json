@@ -33,7 +33,7 @@
   "portable": {
     "artifactName": "metamask-desktop-${version}-portable.${ext}"
   },
-  "productName": "Metamask Desktop",
+  "productName": "MetaMask Desktop",
   "win": {
     "icon": "app/build-types/desktop/images/icon-512.png",
     "target": ["nsis", "portable"]
