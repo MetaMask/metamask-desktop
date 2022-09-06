@@ -1,7 +1,5 @@
-import Store from 'electron-store';
 import log from 'loglevel';
-
-const store = new Store();
+import ObfuscatedStore from './storage';
 
 const _warn = (name) => {
   log.debug(`Browser method not supported - ${name}`);
@@ -32,10 +30,9 @@ export default {
   },
   storage: {
     local: {
-      get: () => Promise.resolve(store.store),
-      set: (data) => {
-        store.store = data;
-        return Promise.resolve();
+      get: () => ObfuscatedStore.getStore(),
+      set: async (data) => {
+        await ObfuscatedStore.setStore(data);
       },
     },
   },
