@@ -5,7 +5,7 @@ let browser;
 
 if (cfg().desktop.isApp) {
   // eslint-disable-next-line node/global-require
-  browser = require('./node-browser');
+  browser = require('./node-browser').default;
 } else {
   // eslint-disable-next-line node/global-require
   browser = require('webextension-polyfill');

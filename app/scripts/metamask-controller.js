@@ -396,6 +396,7 @@ export default class MetamaskController extends EventEmitter {
       ),
       version: this.platform.getVersion(),
       environment: process.env.METAMASK_ENVIRONMENT,
+      extension: this.extension,
       initState: initState.MetaMetricsController,
       captureException,
     });
@@ -658,7 +659,7 @@ export default class MetamaskController extends EventEmitter {
     } else {
       this.snapExecutionService = new IframeExecutionService({
         iframeUrl: new URL(
-          'https://metamask.github.io/iframe-execution-environment/0.5.2',
+          'https://metamask.github.io/iframe-execution-environment/0.7.0',
         ),
         messenger: this.controllerMessenger.getRestricted({
           name: 'ExecutionService',
@@ -689,6 +690,7 @@ export default class MetamaskController extends EventEmitter {
         'ExecutionService:getRpcRequestHandler',
         'ExecutionService:terminateSnap',
         'ExecutionService:terminateAllSnaps',
+        'ExecutionService:handleRpcRequest',
       ],
     });
 
@@ -1183,7 +1185,7 @@ export default class MetamaskController extends EventEmitter {
         ),
         handleSnapRpcRequest: this.controllerMessenger.call.bind(
           this.controllerMessenger,
-          'SnapController:handleRpcRequest',
+          'SnapController:handleRequest',
         ),
         getSnapState: this.controllerMessenger.call.bind(
           this.controllerMessenger,
@@ -1748,6 +1750,8 @@ export default class MetamaskController extends EventEmitter {
         appStateController.updateCollectibleDropDownState.bind(
           appStateController,
         ),
+      setFirstTimeUsedNetwork:
+        appStateController.setFirstTimeUsedNetwork.bind(appStateController),
       // EnsController
       tryReverseResolveAddress:
         ensController.reverseResolveAddress.bind(ensController),
@@ -1856,12 +1860,22 @@ export default class MetamaskController extends EventEmitter {
 
       ///: BEGIN:ONLY_INCLUDE_IN(flask)
       // snaps
-      removeSnapError: this.snapController.removeSnapError.bind(
-        this.snapController,
+      removeSnapError: this.controllerMessenger.call.bind(
+        this.controllerMessenger,
+        'SnapController:removeSnapError',
       ),
-      disableSnap: this.snapController.disableSnap.bind(this.snapController),
-      enableSnap: this.snapController.enableSnap.bind(this.snapController),
-      removeSnap: this.snapController.removeSnap.bind(this.snapController),
+      disableSnap: this.controllerMessenger.call.bind(
+        this.controllerMessenger,
+        'SnapController:disable',
+      ),
+      enableSnap: this.controllerMessenger.call.bind(
+        this.controllerMessenger,
+        'SnapController:enable',
+      ),
+      removeSnap: this.controllerMessenger.call.bind(
+        this.controllerMessenger,
+        'SnapController:remove',
+      ),
       dismissNotifications: this.dismissNotifications.bind(this),
       markNotificationsAsRead: this.markNotificationsAsRead.bind(this),
       ///: END:ONLY_INCLUDE_IN
@@ -2644,30 +2658,41 @@ export default class MetamaskController extends EventEmitter {
   /**
    * Adds a new account to the default (first) HD seed phrase Keyring.
    *
+   * @param accountCount
    * @returns {} keyState
    */
-  async addNewAccount() {
+  async addNewAccount(accountCount) {
     const primaryKeyring =
       this.keyringController.getKeyringsByType('HD Key Tree')[0];
     if (!primaryKeyring) {
       throw new Error('MetamaskController - No HD Key Tree found');
     }
     const { keyringController } = this;
-    const oldAccounts = await keyringController.getAccounts();
-    const keyState = await keyringController.addNewAccount(primaryKeyring);
-    const newAccounts = await keyringController.getAccounts();
+    const { identities: oldIdentities } =
+      this.preferencesController.store.getState();
 
-    await this.verifySeedPhrase();
+    if (Object.keys(oldIdentities).length === accountCount) {
+      const oldAccounts = await keyringController.getAccounts();
+      const keyState = await keyringController.addNewAccount(primaryKeyring);
+      const newAccounts = await keyringController.getAccounts();
 
-    this.preferencesController.setAddresses(newAccounts);
-    newAccounts.forEach((address) => {
-      if (!oldAccounts.includes(address)) {
-        this.preferencesController.setSelectedAddress(address);
-      }
-    });
+      await this.verifySeedPhrase();
 
-    const { identities } = this.preferencesController.store.getState();
-    return { ...keyState, identities };
+      this.preferencesController.setAddresses(newAccounts);
+      newAccounts.forEach((address) => {
+        if (!oldAccounts.includes(address)) {
+          this.preferencesController.setSelectedAddress(address);
+        }
+      });
+
+      const { identities } = this.preferencesController.store.getState();
+      return { ...keyState, identities };
+    }
+
+    return {
+      ...keyringController.memStore.getState(),
+      identities: oldIdentities,
+    };
   }
 
   /**
@@ -3756,8 +3781,9 @@ export default class MetamaskController extends EventEmitter {
         getUnlockPromise: this.appStateController.getUnlockPromise.bind(
           this.appStateController,
         ),
-        getSnaps: this.snapController.getPermittedSnaps.bind(
-          this.snapController,
+        getSnaps: this.controllerMessenger.call.bind(
+          this.controllerMessenger,
+          'SnapController:getSnaps',
           origin,
         ),
         requestPermissions: async (requestedPermissions) => {
@@ -3774,8 +3800,9 @@ export default class MetamaskController extends EventEmitter {
           origin,
         ),
         getAccounts: this.getPermittedAccounts.bind(this, origin),
-        installSnaps: this.snapController.installSnaps.bind(
-          this.snapController,
+        installSnaps: this.controllerMessenger.call.bind(
+          this.controllerMessenger,
+          'SnapController:install',
           origin,
         ),
       }),
