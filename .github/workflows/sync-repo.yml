@@ -1,0 +1,27 @@
+# TODO: Remove this action when move to metamask-extension repository
+name: Sync Repository
+
+on:
+  # pull_request:
+  #   types: [opened, reopened] # only for tests
+  schedule:
+    - cron: '3 0 * * *' # At the end of every day
+    # - cron: '*/15 * * * *' # only for test
+  workflow_dispatch:
+jobs:
+  sync-repo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of PAT (personal access token).
+          fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository.
+      - run: git config --global user.name '${{ secrets.SYNC_REPO_NAME }}'
+      - run: git config --global user.email '${{ secrets.SYNC_REPO_USER }}@users.noreply.github.com'
+      - run: git remote set-url origin https://${{ secrets.SYNC_REPO_USER }}:${{ secrets.SYNC_REPO_TOKEN }}@github.com/MetaMask/desktop.git
+      - run: git remote add tmp_upstream "https://github.com/MetaMask/metamask-extension.git" # SOURCE REPOSITORY
+      - run: git fetch tmp_upstream --quiet
+      - run: git remote --verbose
+      - run: git push origin "refs/remotes/tmp_upstream/develop:refs/heads/develop" --force # <SOURCE-BRANCH> : <DESTINATION-BRANCH>
+      - run: git remote rm tmp_upstream
+      - run: git remote --verbose
