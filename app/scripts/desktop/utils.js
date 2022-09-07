@@ -6,8 +6,6 @@ export const flattenMessage = (data) => {
     const multiplexData = data.data;
     const nestedStream = multiplexData?.name;
     const nestedData = multiplexData?.data;
-    // eslint-disable-next-line no-unused-vars
-    const id = nestedData?.id;
     const method = nestedData?.method;
     const result = nestedData?.result;
 

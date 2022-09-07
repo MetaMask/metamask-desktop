@@ -32,9 +32,9 @@ const _onStatusMessage = (data) => {
 };
 
 const _handleStatusMessage = () => {
-  // eslint-disable-next-line no-unused-vars
-  ipcRenderer.on('status', (event, data) => _onStatusMessage(data));
+  ipcRenderer.on('status', (_, data) => _onStatusMessage(data));
 };
+
 const _onLoad = () => {
   _handleStatusMessage();
 };

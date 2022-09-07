@@ -57,12 +57,12 @@ export default class WebSocketStream extends Duplex {
   }
 
   _waitForSocketConnection(socket, callback) {
-    setTimeout(() => {
-      if (socket.readyState === 1) {
-        callback();
-        return;
-      }
+    if (socket.readyState === 1) {
+      callback();
+      return;
+    }
 
+    setTimeout(() => {
       this._waitForSocketConnection(socket, callback);
     }, 500);
   }
