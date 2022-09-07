@@ -36,6 +36,7 @@ async function getConfig() {
     SWAPS_USE_DEV_APIS: process.env.SWAPS_USE_DEV_APIS,
     METAMASK_DEBUG: process.env.METAMASK_DEBUG,
     DESKTOP: process.env.DESKTOP,
+    DISABLE_WEB_SOCKET_ENCRYPTION: process.env.DISABLE_WEB_SOCKET_ENCRYPTION,
     ...ini.parse(configContents),
   };
 }

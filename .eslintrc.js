@@ -11,6 +11,7 @@ module.exports = {
     'development/charts/**',
     'development/ts-migration-dashboard/build/**',
     'dist/**/*',
+    'dist_desktop/**/*',
     'node_modules/**/*',
   ],
   overrides: [

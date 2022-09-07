@@ -1,6 +1,5 @@
 import { Duplex } from 'stream';
 import log from 'loglevel';
-import { flattenMessage } from './utils';
 
 export default class WebSocketStream extends Duplex {
   constructor(webSocket) {
@@ -18,12 +17,16 @@ export default class WebSocketStream extends Duplex {
     }
   }
 
-  _onMessage(rawData) {
-    const data = JSON.parse(rawData);
+  async _onMessage(rawData) {
+    let data = rawData;
 
-    if (this._logging) {
-      log.debug('Received web socket message', flattenMessage(data));
+    try {
+      data = JSON.parse(data);
+    } catch {
+      // Ignore as data is not a serialised object
     }
+
+    log.debug('Received web socket message');
 
     this.push(data);
   }
@@ -32,11 +35,10 @@ export default class WebSocketStream extends Duplex {
     return undefined;
   }
 
-  // eslint-disable-next-line no-unused-vars
-  _write(msg, encoding, cb) {
-    log.debug('Sending message to web socket', flattenMessage(msg));
+  async _write(msg, _, cb) {
+    log.debug('Sending message to web socket');
 
-    const rawData = JSON.stringify(msg);
+    const rawData = typeof msg === 'string' ? msg : JSON.stringify(msg);
 
     if (this._isBrowser) {
       this._sendBrowser(rawData, cb);
@@ -57,9 +59,11 @@ export default class WebSocketStream extends Duplex {
   _waitForSocketConnection(socket, callback) {
     setTimeout(() => {
       if (socket.readyState === 1) {
-        return callback();
+        callback();
+        return;
       }
-      return this._waitForSocketConnection(socket, callback);
+
+      this._waitForSocketConnection(socket, callback);
     }, 500);
   }
 }

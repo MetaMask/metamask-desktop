@@ -25,6 +25,7 @@ const loadConfig = () => {
       webSocket: {
         port,
         url: `ws://localhost:${port}`,
+        disableEncryption: process.env.DISABLE_WEB_SOCKET_ENCRYPTION,
       },
       enableUpdates: envStringMatch(process.env.DESKTOP_ENABLE_UPDATES, 'true'),
     },

@@ -10,6 +10,7 @@ import {
 } from '../../../shared/constants/desktop';
 import cfg from './config';
 import WebSocketStream from './web-socket-stream';
+import EncryptedWebSocketStream from './encrypted-web-socket-stream';
 
 export default class DesktopConnection {
   constructor(notificationManager) {
@@ -21,7 +22,10 @@ export default class DesktopConnection {
 
     log.debug('Created web socket connection');
 
-    const webSocketStream = new WebSocketStream(webSocket);
+    const webSocketStream = cfg().desktop.webSocket.disableEncryption
+      ? new WebSocketStream(webSocket)
+      : new EncryptedWebSocketStream(webSocket);
+
     webSocketStream.pipe(this._multiplex).pipe(webSocketStream);
 
     const browserControllerStream = this._multiplex.createStream(
