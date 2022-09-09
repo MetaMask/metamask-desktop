@@ -116,6 +116,7 @@ if (cfg().desktop.isApp) {
 
 if (cfg().desktop.isExtension) {
   desktopConnection = new DesktopConnection(notificationManager);
+  desktopConnection.init();
 }
 
 /**

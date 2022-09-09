@@ -1,35 +1,14 @@
 import WebSocketStream from './web-socket-stream';
+import {
+  DATA_MOCK,
+  STRING_DATA_MOCK,
+  createWebSocketBrowserMock,
+  createWebSocketNodeMock,
+  flushPromises,
+  simulateWebSocketMessage,
+} from './test/utils';
 
-const OBJECT_MOCK = {
-  test: 'value',
-};
-
-const STRING_MOCK = 'testString';
-
-const createWebSocketNodeMock = () => ({
-  on: jest.fn(),
-  send: jest.fn(),
-});
-
-const createWebSocketBrowserMock = () => ({
-  addEventListener: jest.fn(),
-  send: jest.fn(),
-  readyState: 1,
-});
-
-const flushPromises = () => new Promise((resolve) => setImmediate(resolve));
-
-const simulateWebSocketMessage = async (webSocketMock, data) => {
-  const addListenerMethod = webSocketMock.on || webSocketMock.addEventListener;
-  const eventHandler = addListenerMethod.mock.calls[0][1];
-  const request = webSocketMock.on ? data : { data };
-
-  eventHandler(request);
-
-  await flushPromises();
-};
-
-describe('WebSocketStream', () => {
+describe('Web Socket Stream', () => {
   describe('on data', () => {
     it.each([
       ['desktop', true],
@@ -46,13 +25,10 @@ describe('WebSocketStream', () => {
 
       webSocketStream.on('data', readCallback);
 
-      await simulateWebSocketMessage(
-        webSocketMock,
-        JSON.stringify(OBJECT_MOCK),
-      );
+      await simulateWebSocketMessage(webSocketMock, JSON.stringify(DATA_MOCK));
 
       expect(readCallback).toHaveBeenCalledTimes(1);
-      expect(readCallback).toHaveBeenCalledWith(OBJECT_MOCK);
+      expect(readCallback).toHaveBeenCalledWith(DATA_MOCK);
     });
 
     it.each([
@@ -70,10 +46,10 @@ describe('WebSocketStream', () => {
 
       webSocketStream.on('data', readCallback);
 
-      await simulateWebSocketMessage(webSocketMock, STRING_MOCK);
+      await simulateWebSocketMessage(webSocketMock, STRING_DATA_MOCK);
 
       expect(readCallback).toHaveBeenCalledTimes(1);
-      expect(readCallback).toHaveBeenCalledWith(STRING_MOCK);
+      expect(readCallback).toHaveBeenCalledWith(STRING_DATA_MOCK);
     });
   });
 
@@ -88,13 +64,13 @@ describe('WebSocketStream', () => {
 
       const webSocketStream = new WebSocketStream(webSocketMock);
 
-      webSocketStream.write(OBJECT_MOCK);
+      webSocketStream.write(DATA_MOCK);
 
       await flushPromises();
 
       expect(webSocketMock.send).toHaveBeenCalledTimes(1);
       expect(webSocketMock.send).toHaveBeenCalledWith(
-        JSON.stringify(OBJECT_MOCK),
+        JSON.stringify(DATA_MOCK),
       );
     });
 
@@ -108,12 +84,12 @@ describe('WebSocketStream', () => {
 
       const webSocketStream = new WebSocketStream(webSocketMock);
 
-      webSocketStream.write(STRING_MOCK);
+      webSocketStream.write(STRING_DATA_MOCK);
 
       await flushPromises();
 
       expect(webSocketMock.send).toHaveBeenCalledTimes(1);
-      expect(webSocketMock.send).toHaveBeenCalledWith(STRING_MOCK);
+      expect(webSocketMock.send).toHaveBeenCalledWith(STRING_DATA_MOCK);
     });
   });
 

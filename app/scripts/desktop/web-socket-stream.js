@@ -17,6 +17,10 @@ export default class WebSocketStream extends Duplex {
     }
   }
 
+  init() {
+    // For consistency with EncryptedWebSocketStream to avoid further code branches
+  }
+
   async _onMessage(rawData) {
     let data = rawData;
 

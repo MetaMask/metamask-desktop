@@ -260,6 +260,7 @@ module.exports = {
         'app/scripts/controllers/network/**/*.test.js',
         'app/scripts/controllers/permissions/**/*.test.js',
         'app/scripts/desktop/**/*.test.js',
+        'app/scripts/desktop/test/*.js',
         'app/scripts/lib/**/*.test.js',
         'app/scripts/migrations/*.test.js',
         'app/scripts/platforms/*.test.js',

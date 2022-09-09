@@ -7,11 +7,15 @@ import WebSocketStream from './web-socket-stream';
 export default class EncryptedWebSocketStream extends Duplex {
   constructor(webSocket) {
     super({ objectMode: true });
+    this._webSocket = webSocket;
+  }
 
+  init() {
     this.cork();
 
-    this._webSocketStream = new WebSocketStream(webSocket);
+    this._webSocketStream = new WebSocketStream(this._webSocket);
     this._webSocketStream.on('data', (data) => this._onMessage(data));
+
     this._keyPair = createKeyPair();
 
     this._webSocketStream.write({

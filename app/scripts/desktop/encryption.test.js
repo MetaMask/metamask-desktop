@@ -4,6 +4,12 @@ import {
   PrivateKey,
 } from 'eciesjs';
 import { createKeyPair, encrypt, decrypt } from './encryption';
+import {
+  ENCRYPTED_STRING_MOCK,
+  PRIVATE_KEY_MOCK,
+  PUBLIC_KEY_MOCK,
+  STRING_DATA_MOCK,
+} from './test/utils';
 
 jest.mock(
   'eciesjs',
@@ -15,11 +21,6 @@ jest.mock(
   { virtual: true },
 );
 
-const PUBLIC_KEY_MOCK = 'testPublicKey';
-const PRIVATE_KEY_MOCK = 'testPrivateKey';
-const DATA_MOCK = 'testData';
-const ENCRYPTED_DATA_MOCK = 'testEncryptedData';
-
 describe('Encryption', () => {
   beforeEach(() => {
     jest.resetAllMocks();
@@ -29,8 +30,8 @@ describe('Encryption', () => {
       publicKey: { toHex: () => PUBLIC_KEY_MOCK },
     });
 
-    eciesjsEncrypt.mockReturnValue(ENCRYPTED_DATA_MOCK);
-    eciesjsDecrypt.mockReturnValue(DATA_MOCK);
+    eciesjsEncrypt.mockReturnValue(ENCRYPTED_STRING_MOCK);
+    eciesjsDecrypt.mockReturnValue(STRING_DATA_MOCK);
   });
 
   describe('createKeyPair', () => {
@@ -44,26 +45,26 @@ describe('Encryption', () => {
 
   describe('encrypt', () => {
     it('encrypts data using eciesjs', async () => {
-      expect(encrypt(DATA_MOCK, PUBLIC_KEY_MOCK)).toStrictEqual(
-        ENCRYPTED_DATA_MOCK,
+      expect(encrypt(STRING_DATA_MOCK, PUBLIC_KEY_MOCK)).toStrictEqual(
+        ENCRYPTED_STRING_MOCK,
       );
       expect(eciesjsEncrypt).toHaveBeenCalledTimes(1);
       expect(eciesjsEncrypt).toHaveBeenCalledWith(
         PUBLIC_KEY_MOCK,
-        Buffer.from(DATA_MOCK, 'utf8'),
+        Buffer.from(STRING_DATA_MOCK, 'utf8'),
       );
     });
   });
 
   describe('decrypt', () => {
     it('decrypts data using eciesjs', async () => {
-      expect(decrypt(ENCRYPTED_DATA_MOCK, PRIVATE_KEY_MOCK)).toStrictEqual(
-        DATA_MOCK,
+      expect(decrypt(ENCRYPTED_STRING_MOCK, PRIVATE_KEY_MOCK)).toStrictEqual(
+        STRING_DATA_MOCK,
       );
       expect(eciesjsDecrypt).toHaveBeenCalledTimes(1);
       expect(eciesjsDecrypt).toHaveBeenCalledWith(
         PRIVATE_KEY_MOCK,
-        Buffer.from(ENCRYPTED_DATA_MOCK, 'hex'),
+        Buffer.from(ENCRYPTED_STRING_MOCK, 'hex'),
       );
     });
   });

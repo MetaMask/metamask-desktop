@@ -2,6 +2,7 @@ import { randomBytes } from 'crypto';
 import Store from 'electron-store';
 import keytar from 'keytar';
 import ObfuscatedStore from './storage';
+import { DATA_2_MOCK, PASSWORD_MOCK, STORE_MOCK } from './test/utils';
 
 jest.mock('electron-store', () => jest.fn(), { virtual: true });
 jest.mock('crypto', () => ({ randomBytes: jest.fn() }), { virtual: true });
@@ -11,10 +12,6 @@ jest.mock(
   () => ({ getPassword: jest.fn(), setPassword: jest.fn() }),
   { virtual: true },
 );
-
-const STORE_MOCK = { store: { test: 'value' } };
-const NEW_STORE_DATA_MOCK = { test2: 'value2' };
-const PASSWORD_MOCK = 'testPassword';
 
 describe('Obfuscated Store', () => {
   beforeEach(() => {
@@ -87,9 +84,9 @@ describe('Obfuscated Store', () => {
       keytar.getPassword.mockResolvedValue(PASSWORD_MOCK);
 
       const store = await ObfuscatedStore.init();
-      await ObfuscatedStore.setStore(NEW_STORE_DATA_MOCK);
+      await ObfuscatedStore.setStore(DATA_2_MOCK);
 
-      expect(store.store).toBe(NEW_STORE_DATA_MOCK);
+      expect(store.store).toBe(DATA_2_MOCK);
     });
 
     it('creates store and overrides store data if not initialized', async () => {
@@ -98,9 +95,9 @@ describe('Obfuscated Store', () => {
       Store.mockReturnValue(store);
       keytar.getPassword.mockResolvedValue(PASSWORD_MOCK);
 
-      await ObfuscatedStore.setStore(NEW_STORE_DATA_MOCK);
+      await ObfuscatedStore.setStore(DATA_2_MOCK);
 
-      expect(store.store).toBe(NEW_STORE_DATA_MOCK);
+      expect(store.store).toBe(DATA_2_MOCK);
     });
   });
 });

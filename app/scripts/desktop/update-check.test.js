@@ -3,6 +3,7 @@ import { dialog } from 'electron';
 import log from 'loglevel';
 import { updateCheck } from './update-check';
 import cfg from './config';
+import { simulateNodeEvent } from './test/utils';
 
 jest.mock(
   'electron-updater',
@@ -36,22 +37,6 @@ jest.mock(
   }),
   { virtual: true },
 );
-
-const flushPromises = () => new Promise((resolve) => setImmediate(resolve));
-
-const simulateUpdateEvent = async (eventName, data) => {
-  const listenerCall = autoUpdater.on.mock.calls.find(
-    (call) => call[0] === eventName,
-  );
-
-  if (!listenerCall) {
-    throw new Error(`Cannot find registered callback for event - ${eventName}`);
-  }
-
-  listenerCall[1](data);
-
-  await flushPromises();
-};
 
 describe('Update Check', () => {
   beforeEach(() => {
@@ -92,7 +77,7 @@ describe('Update Check', () => {
       ['error is null', null, 'unknown'],
     ])('displays error box if %s', async (_, error, errorBoxMessage) => {
       await updateCheck();
-      await simulateUpdateEvent('error', error);
+      await simulateNodeEvent(autoUpdater, 'error', error);
 
       expect(dialog.showErrorBox).toHaveBeenCalledTimes(1);
       expect(dialog.showErrorBox).toHaveBeenCalledWith(
@@ -107,7 +92,7 @@ describe('Update Check', () => {
       dialog.showMessageBox.mockResolvedValueOnce({ response: 1 });
 
       await updateCheck();
-      await simulateUpdateEvent('update-available');
+      await simulateNodeEvent(autoUpdater, 'update-available');
 
       expect(dialog.showMessageBox).toHaveBeenCalledTimes(1);
       expect(dialog.showMessageBox).toHaveBeenCalledWith(
@@ -119,7 +104,7 @@ describe('Update Check', () => {
       dialog.showMessageBox.mockResolvedValueOnce({ response: 1 });
 
       await updateCheck();
-      await simulateUpdateEvent('update-available');
+      await simulateNodeEvent(autoUpdater, 'update-available');
 
       expect(autoUpdater.downloadUpdate).toHaveBeenCalledTimes(0);
     });
@@ -128,7 +113,7 @@ describe('Update Check', () => {
       dialog.showMessageBox.mockResolvedValueOnce({ response: 0 });
 
       await updateCheck();
-      await simulateUpdateEvent('update-available');
+      await simulateNodeEvent(autoUpdater, 'update-available');
 
       expect(autoUpdater.downloadUpdate).toHaveBeenCalledTimes(1);
     });
@@ -137,7 +122,7 @@ describe('Update Check', () => {
   describe('on update-not-available', () => {
     it('logs to console', async () => {
       await updateCheck();
-      await simulateUpdateEvent('update-not-available');
+      await simulateNodeEvent(autoUpdater, 'update-not-available');
 
       expect(log.debug).toHaveBeenCalledTimes(1);
       expect(log.debug).toHaveBeenCalledWith('Current version is up-to-date.');
@@ -149,7 +134,7 @@ describe('Update Check', () => {
       dialog.showMessageBox.mockResolvedValueOnce({});
 
       await updateCheck();
-      await simulateUpdateEvent('update-downloaded');
+      await simulateNodeEvent(autoUpdater, 'update-downloaded');
 
       expect(dialog.showMessageBox).toHaveBeenCalledTimes(1);
       expect(dialog.showMessageBox).toHaveBeenCalledWith(
@@ -161,7 +146,7 @@ describe('Update Check', () => {
       dialog.showMessageBox.mockResolvedValueOnce({});
 
       await updateCheck();
-      await simulateUpdateEvent('update-downloaded');
+      await simulateNodeEvent(autoUpdater, 'update-downloaded');
 
       expect(autoUpdater.quitAndInstall).toHaveBeenCalledTimes(1);
     });
@@ -172,7 +157,12 @@ describe('Update Check', () => {
       const downloadProgressMock = { progress: 52 };
 
       await updateCheck();
-      await simulateUpdateEvent('download-progress', downloadProgressMock);
+
+      await simulateNodeEvent(
+        autoUpdater,
+        'download-progress',
+        downloadProgressMock,
+      );
 
       expect(log.debug).toHaveBeenCalledTimes(1);
       expect(log.debug).toHaveBeenCalledWith(

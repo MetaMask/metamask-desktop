@@ -1,140 +1,172 @@
+import ObjectMultiplex from 'obj-multiplex';
+import PortStream from 'extension-port-stream';
 import {
   CLIENT_ID_BROWSER_CONTROLLER,
   CLIENT_ID_CONNECTION_CONTROLLER,
   BROWSER_ACTION_SHOW_POPUP,
+  CLIENT_ID_HANDSHAKES,
 } from '../../../shared/constants/desktop';
 import DesktopConnection from './desktop-connection';
+import {
+  REMOTE_PORT_NAME_MOCK,
+  REMOTE_PORT_SENDER_MOCK,
+  createStreamMock,
+  simulateStreamMessage,
+  createRemotePortMock,
+  createNotificationManagerMock,
+  createMultiplexMock,
+  simulateNodeEvent,
+  createWebSocketBrowserMock,
+  createWebSocketStreamMock,
+} from './test/utils';
+import EncryptedWebSocketStream from './encrypted-web-socket-stream';
+import WebSocketStream from './web-socket-stream';
 import cfg from './config';
 
-const MESSAGE_MOCK = { test: 'value' };
-const REMOTE_PORT_NAME_MOCK = 'testPort';
-const REMOTE_PORT_SENDER_MOCK = { test2: 'value2' };
-
-const flushPromises = () => new Promise((resolve) => setImmediate(resolve));
-
-const createRemotePortMock = () => ({
-  onMessage: {
-    addListener: jest.fn(),
-  },
-  onDisconnect: {
-    addListener: jest.fn(),
-  },
-});
-
-const simulateRemotePortMessage = async (remotePortMock, data) => {
-  const eventHandler = remotePortMock.onMessage.addListener.mock.calls[0][0];
-  eventHandler(data);
-  await flushPromises();
-};
-
-const simulateRemotePortDisconnect = async (remotePortMock) => {
-  const eventHandler = remotePortMock.onDisconnect.addListener.mock.calls[0][0];
-  eventHandler();
-  await flushPromises();
-};
-
-const simulateWebSocketMessage = async (webSocketMock, data) => {
-  const eventHandler = webSocketMock.addEventListener.mock.calls.find(
-    (call) => call[0] === 'message',
-  )[1];
-  eventHandler({ data });
-  await flushPromises();
-};
-
-const webSocketMock = {
-  send: jest.fn(),
-  addEventListener: jest.fn(),
-  readyState: 1,
-};
-
-const notificationManagerMock = {
-  showPopup: jest.fn(),
-};
+jest.mock('./web-socket-stream', () => jest.fn(), { virtual: true });
+jest.mock('./encrypted-web-socket-stream', () => jest.fn(), { virtual: true });
+jest.mock('obj-multiplex', () => jest.fn(), { virtual: true });
+jest.mock('extension-port-stream', () => jest.fn(), { virtual: true });
 
 describe('Desktop Connection', () => {
+  let webSocketMock;
+  let webSocketStreamMock;
+  let multiplexMock;
+  let portStreamMock;
+  let notificationManagerMock;
+  let remotePortMock;
+  let desktopConnection;
+  const multiplexStreamMocks = {};
+
   beforeEach(() => {
     jest.resetAllMocks();
-    jest.spyOn(global, 'WebSocket').mockImplementation();
-    global.WebSocket.mockReturnValue(webSocketMock);
+
+    multiplexMock = createMultiplexMock();
+    multiplexMock.createStream.mockImplementation((name) => {
+      const newStream = createStreamMock();
+      multiplexStreamMocks[name] = newStream;
+      return newStream;
+    });
+
+    webSocketStreamMock = createWebSocketStreamMock();
+    webSocketStreamMock.pipe.mockReturnValue(multiplexMock);
+
+    portStreamMock = createStreamMock();
+    portStreamMock.pipe.mockImplementation((dest) => dest);
+
+    webSocketMock = createWebSocketBrowserMock();
+    notificationManagerMock = createNotificationManagerMock();
+    remotePortMock = createRemotePortMock();
+
+    ObjectMultiplex.mockReturnValue(multiplexMock);
+    WebSocketStream.mockReturnValue(webSocketStreamMock);
+    EncryptedWebSocketStream.mockReturnValue(webSocketStreamMock);
+    PortStream.mockReturnValue(portStreamMock);
+    jest.spyOn(global, 'WebSocket').mockImplementation(() => webSocketMock);
+
+    desktopConnection = new DesktopConnection(notificationManagerMock);
+
+    cfg().desktop.webSocket.disableEncryption = false;
+  });
+
+  describe('init', () => {
+    it('creates encrypted web socket stream piped to multiplex if encryption enabled', () => {
+      desktopConnection.init();
+
+      expect(EncryptedWebSocketStream).toHaveBeenCalledTimes(1);
+      expect(EncryptedWebSocketStream).toHaveBeenCalledWith(webSocketMock);
+
+      expect(webSocketStreamMock.pipe).toHaveBeenCalledTimes(1);
+      expect(webSocketStreamMock.pipe).toHaveBeenCalledWith(multiplexMock);
+
+      expect(multiplexMock.pipe).toHaveBeenCalledTimes(1);
+      expect(multiplexMock.pipe).toHaveBeenCalledWith(webSocketStreamMock);
+    });
+
+    it('creates standard web socket stream piped to multiplex if encryption disabled', () => {
+      cfg().desktop.webSocket.disableEncryption = true;
+
+      desktopConnection.init();
+
+      expect(WebSocketStream).toHaveBeenCalledTimes(1);
+      expect(WebSocketStream).toHaveBeenCalledWith(webSocketMock);
+
+      expect(webSocketStreamMock.pipe).toHaveBeenCalledTimes(1);
+      expect(webSocketStreamMock.pipe).toHaveBeenCalledWith(multiplexMock);
+
+      expect(multiplexMock.pipe).toHaveBeenCalledTimes(1);
+      expect(multiplexMock.pipe).toHaveBeenCalledWith(webSocketStreamMock);
+    });
+
+    it('creates multiplex streams', () => {
+      desktopConnection.init();
+
+      expect(multiplexMock.createStream).toHaveBeenCalledTimes(3);
+      expect(multiplexMock.createStream).toHaveBeenCalledWith(
+        CLIENT_ID_BROWSER_CONTROLLER,
+      );
+      expect(multiplexMock.createStream).toHaveBeenCalledWith(
+        CLIENT_ID_CONNECTION_CONTROLLER,
+      );
+      expect(multiplexMock.createStream).toHaveBeenCalledWith(
+        CLIENT_ID_HANDSHAKES,
+      );
+    });
   });
 
   describe('createStream', () => {
-    it('pipes remote port messages including client id to web socket', async () => {
-      cfg().desktop.webSocket.disableEncryption = true;
-
-      const desktopConnection = new DesktopConnection();
-      const remotePortMock = createRemotePortMock();
-
+    beforeEach(() => {
+      desktopConnection.init();
       desktopConnection.createStream(remotePortMock);
-
-      await simulateRemotePortMessage(remotePortMock, MESSAGE_MOCK);
-
-      expect(webSocketMock.send).toHaveBeenLastCalledWith(
-        JSON.stringify({ name: 1, data: MESSAGE_MOCK }),
-      );
     });
 
-    it('sends handshake to web socket', async () => {
-      cfg().desktop.webSocket.disableEncryption = true;
+    it('pipes remote port to new multiplex client stream', async () => {
+      expect(PortStream).toHaveBeenCalledTimes(1);
+      expect(PortStream).toHaveBeenCalledWith(remotePortMock);
 
-      const desktopConnection = new DesktopConnection();
-      const remotePortMock = {
-        ...createRemotePortMock(),
-        name: REMOTE_PORT_NAME_MOCK,
-        sender: REMOTE_PORT_SENDER_MOCK,
-      };
+      expect(multiplexMock.createStream).toHaveBeenCalledTimes(4);
+      expect(multiplexMock.createStream).toHaveBeenLastCalledWith(1);
 
-      desktopConnection.createStream(remotePortMock);
-      await flushPromises();
+      const clientStreamMock = multiplexStreamMocks[1];
 
-      expect(webSocketMock.send).toHaveBeenCalledTimes(1);
-      expect(webSocketMock.send).toHaveBeenCalledWith(
-        JSON.stringify({
-          name: 'handshakes',
-          data: {
-            clientId: 1,
-            remotePort: {
-              name: REMOTE_PORT_NAME_MOCK,
-              sender: REMOTE_PORT_SENDER_MOCK,
-            },
-          },
-        }),
-      );
+      expect(portStreamMock.pipe).toHaveBeenCalledTimes(1);
+      expect(portStreamMock.pipe).toHaveBeenCalledWith(clientStreamMock);
+
+      expect(clientStreamMock.pipe).toHaveBeenCalledTimes(1);
+      expect(clientStreamMock.pipe).toHaveBeenCalledWith(portStreamMock);
+    });
+
+    it('sends handshake to web socket stream', async () => {
+      const handshakeStreamMock = multiplexStreamMocks[CLIENT_ID_HANDSHAKES];
+
+      expect(handshakeStreamMock.write).toHaveBeenCalledTimes(1);
+      expect(handshakeStreamMock.write).toHaveBeenCalledWith({
+        clientId: 1,
+        remotePort: {
+          name: REMOTE_PORT_NAME_MOCK,
+          sender: REMOTE_PORT_SENDER_MOCK,
+        },
+      });
     });
 
     it('sends connection close message on port stream disconnect', async () => {
-      cfg().desktop.webSocket.disableEncryption = true;
+      await simulateNodeEvent(portStreamMock, 'finish');
 
-      const desktopConnection = new DesktopConnection();
-      const remotePortMock = createRemotePortMock();
+      const connectionControllerStreamMock =
+        multiplexStreamMocks[CLIENT_ID_CONNECTION_CONTROLLER];
 
-      desktopConnection.createStream(remotePortMock);
-      await simulateRemotePortDisconnect(remotePortMock);
-
-      expect(webSocketMock.send).toHaveBeenLastCalledWith(
-        JSON.stringify({
-          name: CLIENT_ID_CONNECTION_CONTROLLER,
-          data: {
-            clientId: 1,
-          },
-        }),
-      );
+      expect(connectionControllerStreamMock.write).toHaveBeenLastCalledWith({
+        clientId: 1,
+      });
     });
 
     it('shows popup on browser controller message', async () => {
-      cfg().desktop.webSocket.disableEncryption = true;
+      const browserControllerStreamMock =
+        multiplexStreamMocks[CLIENT_ID_BROWSER_CONTROLLER];
 
-      const desktopConnection = new DesktopConnection(notificationManagerMock);
-      const remotePortMock = createRemotePortMock();
-
-      desktopConnection.createStream(remotePortMock);
-
-      await simulateWebSocketMessage(
-        webSocketMock,
-        JSON.stringify({
-          name: CLIENT_ID_BROWSER_CONTROLLER,
-          data: BROWSER_ACTION_SHOW_POPUP,
-        }),
+      await simulateStreamMessage(
+        browserControllerStreamMock,
+        BROWSER_ACTION_SHOW_POPUP,
       );
 
       expect(notificationManagerMock.showPopup).toHaveBeenCalledTimes(1);

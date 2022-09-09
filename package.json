@@ -248,6 +248,7 @@
     "valid-url": "^1.0.9",
     "web3": "^0.20.7",
     "web3-stream-provider": "^4.0.0",
+    "ws": "^7.4.6",
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
@@ -492,7 +493,9 @@
       "electron": true,
       "electron-rebuild>lzma-native": true,
       "keytar": false,
-      "eciesjs>secp256k1": false
+      "eciesjs>secp256k1": false,
+      "ws>bufferutil": false,
+      "ws>utf-8-validate": false
     }
   }
 }
