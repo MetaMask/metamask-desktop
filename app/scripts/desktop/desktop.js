@@ -84,6 +84,7 @@ export default class Desktop {
       ? new WebSocketStream(this._webSocket)
       : new EncryptedWebSocketStream(this._webSocket);
 
+    this._webSocketStream.init();
     this._webSocketStream.pipe(this._multiplex).pipe(this._webSocketStream);
 
     this._updateStatusWindow();
@@ -132,6 +133,7 @@ export default class Desktop {
     const index = this._connections.find(
       (connection) => connection.clientId === clientId,
     );
+
     this._connections.splice(index, 1);
 
     delete this._clientStreams[clientId];

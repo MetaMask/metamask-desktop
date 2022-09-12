@@ -1,7 +1,6 @@
 import { dialog } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'loglevel';
-
 import cfg from './config';
 
 autoUpdater.logger = log;

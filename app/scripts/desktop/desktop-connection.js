@@ -17,7 +17,9 @@ export default class DesktopConnection {
     this._notificationManager = notificationManager;
     this._clientIdCounter = 1;
     this._multiplex = new ObjectMultiplex();
+  }
 
+  init() {
     const webSocket = this._createWebSocket();
 
     log.debug('Created web socket connection');
@@ -26,11 +28,13 @@ export default class DesktopConnection {
       ? new WebSocketStream(webSocket)
       : new EncryptedWebSocketStream(webSocket);
 
+    webSocketStream.init();
     webSocketStream.pipe(this._multiplex).pipe(webSocketStream);
 
     const browserControllerStream = this._multiplex.createStream(
       CLIENT_ID_BROWSER_CONTROLLER,
     );
+
     browserControllerStream.on('data', (data) =>
       this._onBrowserControlMessage(data),
     );
@@ -38,6 +42,7 @@ export default class DesktopConnection {
     this._connectionControllerStream = this._multiplex.createStream(
       CLIENT_ID_CONNECTION_CONTROLLER,
     );
+
     this._handshakeStream = this._multiplex.createStream(CLIENT_ID_HANDSHAKES);
 
     log.debug('Connected to desktop');

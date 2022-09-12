@@ -17,6 +17,10 @@ export default class WebSocketStream extends Duplex {
     }
   }
 
+  init() {
+    // For consistency with EncryptedWebSocketStream to avoid further code branches
+  }
+
   async _onMessage(rawData) {
     let data = rawData;
 
@@ -57,12 +61,12 @@ export default class WebSocketStream extends Duplex {
   }
 
   _waitForSocketConnection(socket, callback) {
-    setTimeout(() => {
-      if (socket.readyState === 1) {
-        callback();
-        return;
-      }
+    if (socket.readyState === 1) {
+      callback();
+      return;
+    }
 
+    setTimeout(() => {
       this._waitForSocketConnection(socket, callback);
     }, 500);
   }
