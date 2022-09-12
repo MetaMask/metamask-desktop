@@ -111,12 +111,8 @@ let desktop;
 let desktopConnection;
 
 if (cfg().desktop.isApp) {
-  desktop = new Desktop();
-}
-
-if (cfg().desktop.isExtension) {
-  desktopConnection = new DesktopConnection(notificationManager);
-  desktopConnection.init();
+  desktop = new Desktop(initialize);
+  desktop.init();
 }
 
 /**
@@ -201,9 +197,33 @@ if (isManifestV3) {
 async function initialize(remotePort) {
   const initState = await loadStateFromPersistence();
   const initLangCode = await getFirstPreferredLangCode();
+
+  await initDesktopConnection(initState);
   await setupController(initState, initLangCode, remotePort);
 
   log.info('MetaMask initialization complete.');
+}
+
+async function initDesktopConnection(state) {
+  if (
+    !cfg().desktop.isExtension ||
+    (state && state.PreferencesController.desktopEnabled !== true)
+  )
+    return;
+
+  desktopConnection = new DesktopConnection(notificationManager);
+  desktopConnection.init();
+}
+
+async function onDesktopEnabledToggle(isEnabled) {
+  log.debug('Detected desktop enabled toggle', { isEnabled });
+
+  if (cfg().desktop.isExtension && !desktopConnection && isEnabled) {
+    await initDesktopConnection();
+    await desktopConnection.transferState();
+  } else if (cfg().desktop.isApp && !isEnabled) {
+    desktop.disable();
+  }
 }
 
 /**
@@ -368,6 +388,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     getOpenMetamaskTabsIds: () => {
       return openMetamaskTabsIDs;
     },
+    onDesktopEnabledToggle,
   });
 
   setupEnsIpfsResolver({
@@ -484,7 +505,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
    * @param {Port} remotePort - The port provided by a new context.
    */
   function connectRemote(remotePort) {
-    if (cfg().desktop.isExtension) {
+    if (desktopConnection) {
       desktopConnection.createStream(remotePort);
       return;
     }
@@ -590,7 +611,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
 
   // communication with page or other extension
   function connectExternal(remotePort) {
-    if (cfg().desktop.isExtension) {
+    if (desktopConnection) {
       console.log('Ignored attempted external connection');
       return;
     }
@@ -755,7 +776,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
   }
 
   if (cfg().desktop.isApp) {
-    desktop.init(connectRemote);
+    desktop.setConnectRemote(connectRemote);
   }
 
   return Promise.resolve();

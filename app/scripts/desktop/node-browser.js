@@ -44,6 +44,7 @@ export default {
       version: '103.0.5060.134',
     }),
     getPlatformInfo: () => Promise.resolve({ os: 'mac' }),
+    setUninstallURL: () => _warn('runtime.setUninstallURL'),
     onInstalled: {
       addListener: () => _warn('runtime.onInstalled.addListener'),
     },

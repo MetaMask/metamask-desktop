@@ -7,10 +7,13 @@ import {
   CLIENT_ID_CONNECTION_CONTROLLER,
   CLIENT_ID_HANDSHAKES,
   BROWSER_ACTION_SHOW_POPUP,
+  CLIENT_ID_STATE,
+  CLIENT_ID_DISABLE,
 } from '../../../shared/constants/desktop';
 import cfg from './config';
 import WebSocketStream from './web-socket-stream';
 import EncryptedWebSocketStream from './encrypted-web-socket-stream';
+import { browser } from './extension-polyfill';
 
 export default class DesktopConnection {
   constructor(notificationManager) {
@@ -20,16 +23,7 @@ export default class DesktopConnection {
   }
 
   init() {
-    const webSocket = this._createWebSocket();
-
-    log.debug('Created web socket connection');
-
-    const webSocketStream = cfg().desktop.webSocket.disableEncryption
-      ? new WebSocketStream(webSocket)
-      : new EncryptedWebSocketStream(webSocket);
-
-    webSocketStream.init();
-    webSocketStream.pipe(this._multiplex).pipe(webSocketStream);
+    this._connect();
 
     const browserControllerStream = this._multiplex.createStream(
       CLIENT_ID_BROWSER_CONTROLLER,
@@ -44,11 +38,28 @@ export default class DesktopConnection {
     );
 
     this._handshakeStream = this._multiplex.createStream(CLIENT_ID_HANDSHAKES);
+    this._stateStream = this._multiplex.createStream(CLIENT_ID_STATE);
+
+    const disableStream = this._multiplex.createStream(CLIENT_ID_DISABLE);
+    disableStream.on('data', (data) => this._onDisable(data));
 
     log.debug('Connected to desktop');
   }
 
+  async transferState() {
+    const state = await browser.storage.local.get();
+    state.data.PreferencesController.desktopEnabled = true;
+
+    this._stateStream.write(state);
+
+    log.debug('Sent extension state to desktop');
+  }
+
   createStream(remotePort) {
+    if (!this._webSocketStream) {
+      this._connect();
+    }
+
     const portStream = new PortStream(remotePort);
     const clientId = this._getNextClientId();
     const clientStream = this._multiplex.createStream(clientId);
@@ -60,6 +71,34 @@ export default class DesktopConnection {
     );
 
     this._sendHandshake(remotePort, clientId);
+  }
+
+  async _onDisable(state) {
+    log.debug('Received desktop disable message');
+
+    await browser.storage.local.set(state);
+    log.debug('Synchronised state with desktop');
+
+    log.debug('Restarting extension');
+    browser.runtime.reload();
+  }
+
+  _connect() {
+    const webSocket = this._createWebSocket();
+    webSocket.addEventListener('close', () => this._onDisconnect());
+
+    this._webSocketStream = cfg().desktop.webSocket.disableEncryption
+      ? new WebSocketStream(webSocket)
+      : new EncryptedWebSocketStream(webSocket);
+
+    this._webSocketStream.init();
+    this._webSocketStream.pipe(this._multiplex).pipe(this._webSocketStream);
+
+    log.debug('Created web socket connection');
+  }
+
+  _onDisconnect() {
+    this._webSocketStream = undefined;
   }
 
   _onPortStreamEnd(clientId, clientStream) {

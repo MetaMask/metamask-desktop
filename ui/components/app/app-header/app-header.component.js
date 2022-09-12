@@ -111,6 +111,7 @@ export default class AppHeader extends PureComponent {
       disableNetworkIndicator,
       disabled,
       onClick,
+      desktopEnabled,
     } = this.props;
 
     return (
@@ -125,6 +126,9 @@ export default class AppHeader extends PureComponent {
               history.push(DEFAULT_ROUTE);
             }}
           />
+          {desktopEnabled && (
+            <MetaFoxLogo unsetIconHeight src="./images/logo/desktop.svg" />
+          )}
           <div className="app-header__account-menu-container">
             {!hideNetworkIndicator && (
               <div className="app-header__network-component-wrapper">

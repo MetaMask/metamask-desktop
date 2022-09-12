@@ -3878,6 +3878,18 @@ export function setCustomNetworkListEnabled(customNetworkListEnabled) {
   };
 }
 
+export function setDesktopEnabled(desktopEnabled) {
+  return async () => {
+    try {
+      await promisifiedBackground.setDesktopEnabled(
+        desktopEnabled,
+      );
+    } catch (error) {
+      log.error(error);
+    }
+  };
+}
+
 export function setFirstTimeUsedNetwork(chainId) {
   return submitRequestToBackground('setFirstTimeUsedNetwork', [chainId]);
 }

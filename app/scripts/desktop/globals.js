@@ -11,10 +11,26 @@ if (cfg().desktop.isApp) {
     subtle: require(cfg().desktop.isApp ? `node:crypto` : ``).webcrypto.subtle,
   };
 
+  global.navigator = {
+    userAgent: 'Firefox',
+  };
+
   global.window = {
-    navigator: {
-      userAgent: 'Firefox',
+    navigator: global.navigator,
+    location: {
+      href: 'test.com',
     },
     postMessage: () => undefined,
+    addEventListener: () => undefined,
+  };
+
+  global.document = {
+    createElement: () => ({
+      pathname: '/',
+      setAttribute: () => undefined,
+    }),
+    head: {
+      appendChild: () => undefined,
+    },
   };
 }

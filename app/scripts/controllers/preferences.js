@@ -70,6 +70,7 @@ export default class PreferencesController {
         : LEDGER_TRANSPORT_TYPES.U2F,
       theme: 'light',
       customNetworkListEnabled: false,
+      desktopEnabled: false,
       ...opts.initState,
     };
 
@@ -196,6 +197,17 @@ export default class PreferencesController {
   setCustomNetworkListEnabled(customNetworkListEnabled) {
     this.store.updateState({
       customNetworkListEnabled,
+    });
+  }
+
+  /**
+   * Setter for the `desktopEnabled` property
+   *
+   * @param desktopEnabled
+   */
+   setDesktopEnabled(desktopEnabled) {
+    this.store.updateState({
+      desktopEnabled,
     });
   }
 

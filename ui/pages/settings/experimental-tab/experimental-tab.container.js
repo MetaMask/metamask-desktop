@@ -7,6 +7,7 @@ import {
   setEIP1559V2Enabled,
   setTheme,
   setCustomNetworkListEnabled,
+  setDesktopEnabled,
 } from '../../../store/actions';
 import {
   getUseCollectibleDetection,
@@ -14,6 +15,7 @@ import {
   getEIP1559V2Enabled,
   getTheme,
   getIsCustomNetworkListEnabled,
+  getIsDesktopEnabled,
 } from '../../../selectors';
 import ExperimentalTab from './experimental-tab.component';
 
@@ -24,6 +26,7 @@ const mapStateToProps = (state) => {
     eip1559V2Enabled: getEIP1559V2Enabled(state),
     theme: getTheme(state),
     customNetworkListEnabled: getIsCustomNetworkListEnabled(state),
+    desktopEnabled: getIsDesktopEnabled(state),
   };
 };
 
@@ -36,6 +39,7 @@ const mapDispatchToProps = (dispatch) => {
     setTheme: (val) => dispatch(setTheme(val)),
     setCustomNetworkListEnabled: (val) =>
       dispatch(setCustomNetworkListEnabled(val)),
+    setDesktopEnabled: (val) => dispatch(setDesktopEnabled(val)),
   };
 };
 
