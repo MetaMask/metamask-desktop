@@ -8,6 +8,7 @@ export default class MetaFoxLogo extends PureComponent {
     onClick: PropTypes.func,
     unsetIconHeight: PropTypes.bool,
     isOnboarding: PropTypes.bool,
+    src: PropTypes.string,
   };
 
   static defaultProps = {

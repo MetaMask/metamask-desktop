@@ -26,6 +26,7 @@ export default class ExperimentalTab extends PureComponent {
     setTheme: PropTypes.func,
     customNetworkListEnabled: PropTypes.bool,
     setCustomNetworkListEnabled: PropTypes.func,
+    desktopEnabled: PropTypes.bool,
     setDesktopEnabled: PropTypes.func,
   };
 
@@ -288,8 +289,7 @@ export default class ExperimentalTab extends PureComponent {
 
   renderDesktopToggle() {
     const { t } = this.context;
-    const { desktopEnabled, setDesktopEnabled } =
-      this.props;
+    const { desktopEnabled, setDesktopEnabled } = this.props;
 
     return (
       <div ref={this.settingsRefs[5]} className="settings-page__content-row">

@@ -1137,7 +1137,7 @@ export function getIsCustomNetworkListEnabled(state) {
  * @param {*} state
  * @returns Boolean
  */
- export function getIsDesktopEnabled(state) {
+export function getIsDesktopEnabled(state) {
   return state.metamask.desktopEnabled;
 }
 

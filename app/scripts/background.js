@@ -208,8 +208,9 @@ async function initDesktopConnection(state) {
   if (
     !cfg().desktop.isExtension ||
     (state && state.PreferencesController.desktopEnabled !== true)
-  )
+  ) {
     return;
+  }
 
   desktopConnection = new DesktopConnection(notificationManager);
   desktopConnection.init();

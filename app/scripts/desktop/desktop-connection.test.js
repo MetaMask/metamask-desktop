@@ -5,6 +5,8 @@ import {
   CLIENT_ID_CONNECTION_CONTROLLER,
   BROWSER_ACTION_SHOW_POPUP,
   CLIENT_ID_HANDSHAKES,
+  CLIENT_ID_STATE,
+  CLIENT_ID_DISABLE,
 } from '../../../shared/constants/desktop';
 import DesktopConnection from './desktop-connection';
 import {
@@ -101,7 +103,7 @@ describe('Desktop Connection', () => {
     it('creates multiplex streams', () => {
       desktopConnection.init();
 
-      expect(multiplexMock.createStream).toHaveBeenCalledTimes(3);
+      expect(multiplexMock.createStream).toHaveBeenCalledTimes(5);
       expect(multiplexMock.createStream).toHaveBeenCalledWith(
         CLIENT_ID_BROWSER_CONTROLLER,
       );
@@ -110,6 +112,10 @@ describe('Desktop Connection', () => {
       );
       expect(multiplexMock.createStream).toHaveBeenCalledWith(
         CLIENT_ID_HANDSHAKES,
+      );
+      expect(multiplexMock.createStream).toHaveBeenCalledWith(CLIENT_ID_STATE);
+      expect(multiplexMock.createStream).toHaveBeenCalledWith(
+        CLIENT_ID_DISABLE,
       );
     });
   });
@@ -124,7 +130,7 @@ describe('Desktop Connection', () => {
       expect(PortStream).toHaveBeenCalledTimes(1);
       expect(PortStream).toHaveBeenCalledWith(remotePortMock);
 
-      expect(multiplexMock.createStream).toHaveBeenCalledTimes(4);
+      expect(multiplexMock.createStream).toHaveBeenCalledTimes(6);
       expect(multiplexMock.createStream).toHaveBeenLastCalledWith(1);
 
       const clientStreamMock = multiplexStreamMocks[1];

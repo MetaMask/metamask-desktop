@@ -205,7 +205,7 @@ export default class PreferencesController {
    *
    * @param desktopEnabled
    */
-   setDesktopEnabled(desktopEnabled) {
+  setDesktopEnabled(desktopEnabled) {
     this.store.updateState({
       desktopEnabled,
     });

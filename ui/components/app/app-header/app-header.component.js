@@ -24,6 +24,7 @@ export default class AppHeader extends PureComponent {
     unreadNotificationsCount: PropTypes.number,
     ///: END:ONLY_INCLUDE_IN
     onClick: PropTypes.func,
+    desktopEnabled: PropTypes.bool,
   };
 
   static contextTypes = {

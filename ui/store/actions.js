@@ -3881,9 +3881,7 @@ export function setCustomNetworkListEnabled(customNetworkListEnabled) {
 export function setDesktopEnabled(desktopEnabled) {
   return async () => {
     try {
-      await promisifiedBackground.setDesktopEnabled(
-        desktopEnabled,
-      );
+      await promisifiedBackground.setDesktopEnabled(desktopEnabled);
     } catch (error) {
       log.error(error);
     }
