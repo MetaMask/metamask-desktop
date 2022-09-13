@@ -1159,7 +1159,7 @@ export default class MetamaskController extends EventEmitter {
     checkForMultipleVersionsRunning();
 
     this._isDesktopEnabled =
-      opts.initState.PreferencesController?.desktopEnabled || false;
+      opts.initState?.PreferencesController?.desktopEnabled || false;
 
     this._onDesktopEnabledToggle = opts.onDesktopEnabledToggle;
   }
@@ -4050,7 +4050,7 @@ export default class MetamaskController extends EventEmitter {
       params: this.getProviderNetworkState(newState),
     });
 
-    if (newState.desktopEnabled !== this._isDesktopEnabled) {
+    if (this._onDesktopEnabledToggle && newState.desktopEnabled !== this._isDesktopEnabled) {
       this._isDesktopEnabled = newState.desktopEnabled;
       this._onDesktopEnabledToggle(this._isDesktopEnabled);
     }
