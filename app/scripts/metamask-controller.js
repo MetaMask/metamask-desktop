@@ -4050,7 +4050,10 @@ export default class MetamaskController extends EventEmitter {
       params: this.getProviderNetworkState(newState),
     });
 
-    if (this._onDesktopEnabledToggle && newState.desktopEnabled !== this._isDesktopEnabled) {
+    if (
+      this._onDesktopEnabledToggle &&
+      newState.desktopEnabled !== this._isDesktopEnabled
+    ) {
       this._isDesktopEnabled = newState.desktopEnabled;
       this._onDesktopEnabledToggle(this._isDesktopEnabled);
     }
