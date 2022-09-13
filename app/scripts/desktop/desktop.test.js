@@ -19,6 +19,7 @@ import {
   CLIENT_ID_2_MOCK,
   HANDSHAKE_MOCK,
   PORT_MOCK,
+  DATA_MOCK,
   createStreamMock,
   simulateStreamMessage,
   createMultiplexMock,
@@ -27,6 +28,7 @@ import {
   createWebSocketServer,
   createWebSocketStreamMock,
 } from './test/utils';
+import { browser } from './extension-polyfill';
 
 jest.mock('./web-socket-stream', () => jest.fn(), { virtual: true });
 jest.mock('./encrypted-web-socket-stream', () => jest.fn(), { virtual: true });
@@ -55,6 +57,16 @@ jest.mock(
   { virtual: true },
 );
 
+jest.mock(
+  './extension-polyfill',
+  () => ({
+    browser: { storage: { local: { get: jest.fn(), set: jest.fn() } } },
+  }),
+  {
+    virtual: true,
+  },
+);
+
 describe('Desktop', () => {
   let webSocketMock;
   let webSocketStreamMock;
@@ -62,6 +74,7 @@ describe('Desktop', () => {
   let desktop;
   let webSocketServerMock;
   let connectRemoteMock;
+  let backgroundInitialiseMock;
   const multiplexStreamMocks = {};
 
   beforeEach(() => {
@@ -80,6 +93,7 @@ describe('Desktop', () => {
     webSocketServerMock = createWebSocketServer();
     connectRemoteMock = jest.fn();
     webSocketMock = createWebSocketNodeMock();
+    backgroundInitialiseMock = jest.fn();
 
     ObjectMultiplex.mockReturnValue(multiplexMock);
     WebSocketStream.mockReturnValue(webSocketStreamMock);
@@ -100,7 +114,7 @@ describe('Desktop', () => {
 
     app.whenReady.mockResolvedValue({});
 
-    desktop = new Desktop();
+    desktop = new Desktop(backgroundInitialiseMock);
   });
 
   describe('init', () => {
@@ -151,6 +165,26 @@ describe('Desktop', () => {
       expect(browserControllerStreamMock.write).toHaveBeenCalledWith(
         BROWSER_ACTION_SHOW_POPUP,
       );
+    });
+  });
+
+  describe('disable', () => {
+    it('writes state to disable stream', async () => {
+      browser.storage.local.get.mockResolvedValue({
+        ...DATA_MOCK,
+        data: { PreferencesController: { desktopEnabled: true } },
+      });
+
+      await desktop.init();
+      await desktop.disable();
+
+      const disableStreamMock = multiplexStreamMocks[CLIENT_ID_DISABLE];
+
+      expect(disableStreamMock.write).toHaveBeenCalledTimes(1);
+      expect(disableStreamMock.write).toHaveBeenCalledWith({
+        ...DATA_MOCK,
+        data: { PreferencesController: { desktopEnabled: false } },
+      });
     });
   });
 
@@ -259,6 +293,24 @@ describe('Desktop', () => {
 
       const clientStreamMock = multiplexStreamMocks[CLIENT_ID_MOCK];
       expect(clientStreamMock.end).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('on extension state message', () => {
+    beforeEach(async () => {
+      await desktop.init();
+
+      const stateStreamMock = multiplexStreamMocks[CLIENT_ID_STATE];
+      await simulateStreamMessage(stateStreamMock, DATA_MOCK);
+    });
+
+    it('updates state', async () => {
+      expect(browser.storage.local.set).toHaveBeenCalledTimes(1);
+      expect(browser.storage.local.set).toHaveBeenCalledWith(DATA_MOCK);
+    });
+
+    it('initialses background script', async () => {
+      expect(backgroundInitialiseMock).toHaveBeenCalledTimes(1);
     });
   });
 });

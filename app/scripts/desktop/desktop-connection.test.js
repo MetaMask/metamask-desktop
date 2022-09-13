@@ -12,6 +12,7 @@ import DesktopConnection from './desktop-connection';
 import {
   REMOTE_PORT_NAME_MOCK,
   REMOTE_PORT_SENDER_MOCK,
+  DATA_MOCK,
   createStreamMock,
   simulateStreamMessage,
   createRemotePortMock,
@@ -20,15 +21,30 @@ import {
   simulateNodeEvent,
   createWebSocketBrowserMock,
   createWebSocketStreamMock,
+  simulateBrowserEvent,
 } from './test/utils';
 import EncryptedWebSocketStream from './encrypted-web-socket-stream';
 import WebSocketStream from './web-socket-stream';
 import cfg from './config';
+import { browser } from './extension-polyfill';
 
 jest.mock('./web-socket-stream', () => jest.fn(), { virtual: true });
 jest.mock('./encrypted-web-socket-stream', () => jest.fn(), { virtual: true });
 jest.mock('obj-multiplex', () => jest.fn(), { virtual: true });
 jest.mock('extension-port-stream', () => jest.fn(), { virtual: true });
+
+jest.mock(
+  './extension-polyfill',
+  () => ({
+    browser: {
+      storage: { local: { get: jest.fn(), set: jest.fn() } },
+      runtime: { reload: jest.fn() },
+    },
+  }),
+  {
+    virtual: true,
+  },
+);
 
 describe('Desktop Connection', () => {
   let webSocketMock;
@@ -72,33 +88,27 @@ describe('Desktop Connection', () => {
   });
 
   describe('init', () => {
-    it('creates encrypted web socket stream piped to multiplex if encryption enabled', () => {
-      desktopConnection.init();
+    it.each([
+      ['encrypted', 'enabled', EncryptedWebSocketStream, false],
+      ['standard', 'disabled', WebSocketStream, true],
+    ])(
+      'creates %s web socket stream piped to multiplex if encryption %s',
+      async (_, __, webSocketConstructor, disableEncryption) => {
+        cfg().desktop.webSocket.disableEncryption = disableEncryption;
 
-      expect(EncryptedWebSocketStream).toHaveBeenCalledTimes(1);
-      expect(EncryptedWebSocketStream).toHaveBeenCalledWith(webSocketMock);
+        desktopConnection.init();
+        desktopConnection.createStream(remotePortMock);
 
-      expect(webSocketStreamMock.pipe).toHaveBeenCalledTimes(1);
-      expect(webSocketStreamMock.pipe).toHaveBeenCalledWith(multiplexMock);
+        expect(webSocketConstructor).toHaveBeenCalledTimes(1);
+        expect(webSocketConstructor).toHaveBeenCalledWith(webSocketMock);
 
-      expect(multiplexMock.pipe).toHaveBeenCalledTimes(1);
-      expect(multiplexMock.pipe).toHaveBeenCalledWith(webSocketStreamMock);
-    });
+        expect(webSocketStreamMock.pipe).toHaveBeenCalledTimes(1);
+        expect(webSocketStreamMock.pipe).toHaveBeenCalledWith(multiplexMock);
 
-    it('creates standard web socket stream piped to multiplex if encryption disabled', () => {
-      cfg().desktop.webSocket.disableEncryption = true;
-
-      desktopConnection.init();
-
-      expect(WebSocketStream).toHaveBeenCalledTimes(1);
-      expect(WebSocketStream).toHaveBeenCalledWith(webSocketMock);
-
-      expect(webSocketStreamMock.pipe).toHaveBeenCalledTimes(1);
-      expect(webSocketStreamMock.pipe).toHaveBeenCalledWith(multiplexMock);
-
-      expect(multiplexMock.pipe).toHaveBeenCalledTimes(1);
-      expect(multiplexMock.pipe).toHaveBeenCalledWith(webSocketStreamMock);
-    });
+        expect(multiplexMock.pipe).toHaveBeenCalledTimes(1);
+        expect(multiplexMock.pipe).toHaveBeenCalledWith(webSocketStreamMock);
+      },
+    );
 
     it('creates multiplex streams', () => {
       desktopConnection.init();
@@ -121,12 +131,10 @@ describe('Desktop Connection', () => {
   });
 
   describe('createStream', () => {
-    beforeEach(() => {
+    it('pipes remote port to new multiplex client stream', async () => {
       desktopConnection.init();
       desktopConnection.createStream(remotePortMock);
-    });
 
-    it('pipes remote port to new multiplex client stream', async () => {
       expect(PortStream).toHaveBeenCalledTimes(1);
       expect(PortStream).toHaveBeenCalledWith(remotePortMock);
 
@@ -143,6 +151,9 @@ describe('Desktop Connection', () => {
     });
 
     it('sends handshake to web socket stream', async () => {
+      desktopConnection.init();
+      desktopConnection.createStream(remotePortMock);
+
       const handshakeStreamMock = multiplexStreamMocks[CLIENT_ID_HANDSHAKES];
 
       expect(handshakeStreamMock.write).toHaveBeenCalledTimes(1);
@@ -155,7 +166,64 @@ describe('Desktop Connection', () => {
       });
     });
 
-    it('sends connection close message on port stream disconnect', async () => {
+    describe('if web socket disconnected', () => {
+      it.each([
+        ['encrypted', 'enabled', EncryptedWebSocketStream, false],
+        ['standard', 'disabled', WebSocketStream, true],
+      ])(
+        'creates %s web socket stream piped to multiplex if encryption %s',
+        async (_, __, webSocketConstructor, disableEncryption) => {
+          cfg().desktop.webSocket.disableEncryption = disableEncryption;
+
+          desktopConnection.init();
+          await simulateBrowserEvent(webSocketMock, 'close');
+
+          desktopConnection.createStream(remotePortMock);
+
+          expect(webSocketConstructor).toHaveBeenCalledTimes(2);
+          expect(webSocketConstructor).toHaveBeenLastCalledWith(webSocketMock);
+
+          expect(webSocketStreamMock.pipe).toHaveBeenCalledTimes(2);
+          expect(webSocketStreamMock.pipe).toHaveBeenLastCalledWith(
+            multiplexMock,
+          );
+
+          expect(multiplexMock.pipe).toHaveBeenCalledTimes(2);
+          expect(multiplexMock.pipe).toHaveBeenLastCalledWith(
+            webSocketStreamMock,
+          );
+        },
+      );
+    });
+  });
+
+  describe('transferState', () => {
+    it('writes state to state stream', async () => {
+      browser.storage.local.get.mockResolvedValue({
+        ...DATA_MOCK,
+        data: { PreferencesController: { desktopEnabled: false } },
+      });
+
+      desktopConnection.init();
+      desktopConnection.createStream(remotePortMock);
+
+      await desktopConnection.transferState();
+
+      const stateStreamMock = multiplexStreamMocks[CLIENT_ID_STATE];
+
+      expect(stateStreamMock.write).toHaveBeenCalledTimes(1);
+      expect(stateStreamMock.write).toHaveBeenCalledWith({
+        ...DATA_MOCK,
+        data: { PreferencesController: { desktopEnabled: true } },
+      });
+    });
+  });
+
+  describe('on port stream disconnect', () => {
+    it('sends connection close message', async () => {
+      desktopConnection.init();
+      desktopConnection.createStream(remotePortMock);
+
       await simulateNodeEvent(portStreamMock, 'finish');
 
       const connectionControllerStreamMock =
@@ -165,8 +233,13 @@ describe('Desktop Connection', () => {
         clientId: 1,
       });
     });
+  });
 
-    it('shows popup on browser controller message', async () => {
+  describe('on browser controller message', () => {
+    it('shows popup', async () => {
+      desktopConnection.init();
+      desktopConnection.createStream(remotePortMock);
+
       const browserControllerStreamMock =
         multiplexStreamMocks[CLIENT_ID_BROWSER_CONTROLLER];
 
@@ -176,6 +249,37 @@ describe('Desktop Connection', () => {
       );
 
       expect(notificationManagerMock.showPopup).toHaveBeenCalledTimes(1);
+    });
+
+    it('does nothing if action not recognised', async () => {
+      desktopConnection.init();
+      desktopConnection.createStream(remotePortMock);
+
+      const browserControllerStreamMock =
+        multiplexStreamMocks[CLIENT_ID_BROWSER_CONTROLLER];
+
+      await simulateStreamMessage(browserControllerStreamMock, 'invalidAction');
+
+      expect(notificationManagerMock.showPopup).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  describe('on disable message', () => {
+    beforeEach(async () => {
+      desktopConnection.init();
+      desktopConnection.createStream(remotePortMock);
+
+      const disableStreamMock = multiplexStreamMocks[CLIENT_ID_DISABLE];
+      await simulateStreamMessage(disableStreamMock, DATA_MOCK);
+    });
+
+    it('updates state', async () => {
+      expect(browser.storage.local.set).toHaveBeenCalledTimes(1);
+      expect(browser.storage.local.set).toHaveBeenCalledWith(DATA_MOCK);
+    });
+
+    it('restarts extension', async () => {
+      expect(browser.runtime.reload).toHaveBeenCalledTimes(1);
     });
   });
 });

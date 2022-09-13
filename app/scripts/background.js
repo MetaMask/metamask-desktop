@@ -223,7 +223,7 @@ async function onDesktopEnabledToggle(isEnabled) {
     await initDesktopConnection();
     await desktopConnection.transferState();
   } else if (cfg().desktop.isApp && !isEnabled) {
-    desktop.disable();
+    await desktop.disable();
   }
 }
 
