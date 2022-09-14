@@ -107,12 +107,12 @@ const ONE_SECOND_IN_MILLISECONDS = 1_000;
 // Timeout for initializing phishing warning page.
 const PHISHING_WARNING_PAGE_TIMEOUT = ONE_SECOND_IN_MILLISECONDS;
 
-let desktop;
+let desktopApp;
 let desktopConnection;
 
 if (cfg().desktop.isApp) {
-  desktop = new Desktop(initialize);
-  desktop.init();
+  desktopApp = new Desktop(initialize);
+  desktopApp.init();
 }
 
 /**
@@ -198,13 +198,13 @@ async function initialize(remotePort) {
   const initState = await loadStateFromPersistence();
   const initLangCode = await getFirstPreferredLangCode();
 
-  await initDesktopConnection(initState);
+  initDesktopConnection(initState);
   await setupController(initState, initLangCode, remotePort);
 
   log.info('MetaMask initialization complete.');
 }
 
-async function initDesktopConnection(state) {
+function initDesktopConnection(state) {
   if (
     !cfg().desktop.isExtension ||
     (state && state.PreferencesController.desktopEnabled !== true)
@@ -223,7 +223,7 @@ async function onDesktopEnabledToggle(isEnabled) {
     await initDesktopConnection();
     await desktopConnection.transferState();
   } else if (cfg().desktop.isApp && !isEnabled) {
-    await desktop.disable();
+    await desktopApp.disable();
   }
 }
 
@@ -776,8 +776,8 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     updateBadge();
   }
 
-  if (cfg().desktop.isApp) {
-    desktop.setConnectRemote(connectRemote);
+  if (desktopApp) {
+    desktopApp.setConnectRemote(connectRemote);
   }
 
   return Promise.resolve();
@@ -791,8 +791,8 @@ function setupController(initState, initLangCode, remoteSourcePort) {
  * Opens the browser popup for user confirmation
  */
 async function triggerUi() {
-  if (cfg().desktop.isApp) {
-    desktop.showPopup();
+  if (desktopApp) {
+    desktopApp.showPopup();
     return;
   }
 
