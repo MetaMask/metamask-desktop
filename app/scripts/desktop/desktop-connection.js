@@ -55,7 +55,13 @@ export default class DesktopConnection {
     log.debug('Sent extension state to desktop');
   }
 
-  createStream(remotePort) {
+  /**
+   * Creates a connection with the MetaMask Desktop via a multiplexed stream.
+   *
+   * @param {Port} remotePort - The port provided by a new context.
+   * @param {boolean} isExternal - Whether or not the new context is external (page or other extension).
+   */
+  createStream(remotePort, isExternal) {
     if (!this._webSocketStream) {
       this._connect();
     }
@@ -70,7 +76,7 @@ export default class DesktopConnection {
       this._onPortStreamEnd(clientId, clientStream),
     );
 
-    this._sendHandshake(remotePort, clientId);
+    this._sendHandshake(remotePort, clientId, isExternal);
   }
 
   async _onDisable(state) {
@@ -108,13 +114,14 @@ export default class DesktopConnection {
     this._connectionControllerStream.write({ clientId });
   }
 
-  _sendHandshake(remotePort, clientId) {
+  _sendHandshake(remotePort, clientId, isExternal) {
     const handshake = {
       clientId,
       remotePort: {
         name: remotePort.name,
         sender: remotePort.sender,
       },
+      isExternal,
     };
 
     log.debug('Sending handshake', handshake);

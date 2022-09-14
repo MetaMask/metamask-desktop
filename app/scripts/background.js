@@ -507,7 +507,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
    */
   function connectRemote(remotePort) {
     if (desktopConnection) {
-      desktopConnection.createStream(remotePort);
+      desktopConnection.createStream(remotePort, false);
       return;
     }
 
@@ -613,7 +613,8 @@ function setupController(initState, initLangCode, remoteSourcePort) {
   // communication with page or other extension
   function connectExternal(remotePort) {
     if (desktopConnection) {
-      console.log('Ignored attempted external connection');
+      desktopConnection.createStream(remotePort, true);
+      console.debug('Create stream to external connection');
       return;
     }
 
@@ -777,7 +778,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
   }
 
   if (desktopApp) {
-    desktopApp.setConnectRemote(connectRemote);
+    desktopApp.setConnectRemote(connectRemote, connectExternal);
   }
 
   return Promise.resolve();

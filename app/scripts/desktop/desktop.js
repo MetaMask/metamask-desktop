@@ -125,6 +125,7 @@ export default class Desktop {
       clientId: data.clientId,
       name: data.remotePort.name,
       url: data.remotePort.sender.url,
+      isExternal: data.isExternal,
     });
 
     const { clientId } = data;
@@ -134,13 +135,23 @@ export default class Desktop {
 
     endOfStream(stream, () => this._onClientStreamEnd(clientId));
 
-    this._connectRemote({
-      ...data.remotePort,
-      stream,
-      onMessage: {
-        addListener: () => undefined,
-      },
-    });
+    if (data.isExternal) {
+      this._connectExternal({
+        ...data.remotePort,
+        stream,
+        onMessage: {
+          addListener: () => undefined,
+        },
+      });
+    } else {
+      this._connectRemote({
+        ...data.remotePort,
+        stream,
+        onMessage: {
+          addListener: () => undefined,
+        },
+      });
+    }
 
     this._connections.push(data);
     this._updateStatusWindow();
