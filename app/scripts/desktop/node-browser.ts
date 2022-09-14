@@ -1,17 +1,17 @@
 import log from 'loglevel';
 import ObfuscatedStore from './storage';
+import { Browser } from './types/browser';
 
-const _warn = (name) => {
+const _warn = (name: string) => {
   log.debug(`Browser method not supported - ${name}`);
 };
 
-const _reject = (name) => {
+const _reject = (name: string) => {
   // eslint-disable-next-line prefer-promise-reject-errors
   return Promise.reject(`Browser method not supported - ${name}`);
 };
 
-/* eslint import/no-anonymous-default-export: [2, {"allowObject": true}] */
-export default {
+const browser: Browser = {
   windows: {
     getLastFocused: () => _reject('windows.getLastFocused'),
     getCurrent: () => _reject('windows.getCurrent'),
@@ -31,7 +31,7 @@ export default {
   storage: {
     local: {
       get: () => ObfuscatedStore.getStore(),
-      set: async (data) => {
+      set: async (data: any) => {
         await ObfuscatedStore.setStore(data);
       },
     },
@@ -63,4 +63,6 @@ export default {
       addListener: () => _warn('webRequest.onErrorOccurred.addListener'),
     },
   },
-};
+} as unknown as Browser;
+
+export default browser;

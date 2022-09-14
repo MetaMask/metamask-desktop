@@ -1,8 +1,4 @@
-import {
-  encrypt as eciesjsEncrypt,
-  decrypt as eciesjsDecrypt,
-  PrivateKey,
-} from 'eciesjs';
+import eciesjs, { PrivateKey } from 'eciesjs';
 import { createKeyPair, encrypt, decrypt } from './encryption';
 import {
   ENCRYPTED_STRING_MOCK,
@@ -22,16 +18,20 @@ jest.mock(
 );
 
 describe('Encryption', () => {
+  let eciesjsMock: jest.Mocked<typeof eciesjs>;
+
   beforeEach(() => {
     jest.resetAllMocks();
 
-    PrivateKey.mockReturnValue({
+    eciesjsMock = eciesjs as any;
+
+    eciesjsMock.PrivateKey.mockReturnValue({
       toHex: () => PRIVATE_KEY_MOCK,
       publicKey: { toHex: () => PUBLIC_KEY_MOCK },
-    });
+    } as PrivateKey);
 
-    eciesjsEncrypt.mockReturnValue(ENCRYPTED_STRING_MOCK);
-    eciesjsDecrypt.mockReturnValue(STRING_DATA_MOCK);
+    eciesjsMock.encrypt.mockReturnValue(Buffer.from(ENCRYPTED_STRING_MOCK));
+    eciesjsMock.decrypt.mockReturnValue(Buffer.from(STRING_DATA_MOCK));
   });
 
   describe('createKeyPair', () => {
@@ -45,11 +45,14 @@ describe('Encryption', () => {
 
   describe('encrypt', () => {
     it('encrypts data using eciesjs', async () => {
-      expect(encrypt(STRING_DATA_MOCK, PUBLIC_KEY_MOCK)).toStrictEqual(
-        ENCRYPTED_STRING_MOCK,
+      const result = encrypt(STRING_DATA_MOCK, PUBLIC_KEY_MOCK);
+
+      expect(result).toStrictEqual(
+        Buffer.from(ENCRYPTED_STRING_MOCK).toString('hex'),
       );
-      expect(eciesjsEncrypt).toHaveBeenCalledTimes(1);
-      expect(eciesjsEncrypt).toHaveBeenCalledWith(
+
+      expect(eciesjsMock.encrypt).toHaveBeenCalledTimes(1);
+      expect(eciesjsMock.encrypt).toHaveBeenCalledWith(
         PUBLIC_KEY_MOCK,
         Buffer.from(STRING_DATA_MOCK, 'utf8'),
       );
@@ -58,11 +61,12 @@ describe('Encryption', () => {
 
   describe('decrypt', () => {
     it('decrypts data using eciesjs', async () => {
-      expect(decrypt(ENCRYPTED_STRING_MOCK, PRIVATE_KEY_MOCK)).toStrictEqual(
-        STRING_DATA_MOCK,
-      );
-      expect(eciesjsDecrypt).toHaveBeenCalledTimes(1);
-      expect(eciesjsDecrypt).toHaveBeenCalledWith(
+      const result = decrypt(ENCRYPTED_STRING_MOCK, PRIVATE_KEY_MOCK);
+
+      expect(result).toStrictEqual(STRING_DATA_MOCK);
+
+      expect(eciesjsMock.decrypt).toHaveBeenCalledTimes(1);
+      expect(eciesjsMock.decrypt).toHaveBeenCalledWith(
         PRIVATE_KEY_MOCK,
         Buffer.from(ENCRYPTED_STRING_MOCK, 'hex'),
       );

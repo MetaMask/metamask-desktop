@@ -1,4 +1,4 @@
-import WebSocketStream from './web-socket-stream';
+import { WebSocketStream } from './web-socket-stream';
 import {
   DATA_MOCK,
   STRING_DATA_MOCK,

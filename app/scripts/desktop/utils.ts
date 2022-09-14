@@ -1,4 +1,4 @@
-export const flattenMessage = (data) => {
+export const flattenMessage = (data: any) => {
   let output;
 
   try {

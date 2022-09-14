@@ -1,5 +1,5 @@
 import { autoUpdater } from 'electron-updater';
-import { dialog } from 'electron';
+import { dialog, MessageBoxReturnValue } from 'electron';
 import log from 'loglevel';
 import { updateCheck } from './update-check';
 import cfg from './config';
@@ -39,16 +39,26 @@ jest.mock(
 );
 
 describe('Update Check', () => {
+  let autoUpdaterMock: jest.Mocked<typeof autoUpdater>;
+  let dialogMock: jest.Mocked<typeof dialog>;
+  let logMock: jest.Mocked<typeof log>;
+
   beforeEach(() => {
     jest.resetAllMocks();
+
     cfg().desktop.enableUpdates = true;
-    autoUpdater.isUpdaterActive.mockReturnValue(true);
+
+    autoUpdaterMock = autoUpdater as any;
+    autoUpdaterMock.isUpdaterActive.mockReturnValue(true);
+
+    dialogMock = dialog as any;
+    logMock = log as any;
   });
 
   describe('updateCheck', () => {
     it('checks for updates', async () => {
       await updateCheck();
-      expect(autoUpdater.checkForUpdates).toHaveBeenCalledTimes(1);
+      expect(autoUpdaterMock.checkForUpdates).toHaveBeenCalledTimes(1);
     });
 
     it('does nothing if updates disabled', async () => {
@@ -56,17 +66,17 @@ describe('Update Check', () => {
 
       await updateCheck();
 
-      expect(autoUpdater.checkForUpdates).toHaveBeenCalledTimes(0);
-      expect(autoUpdater.on).toHaveBeenCalledTimes(0);
+      expect(autoUpdaterMock.checkForUpdates).toHaveBeenCalledTimes(0);
+      expect(autoUpdaterMock.on).toHaveBeenCalledTimes(0);
     });
 
     it('does nothing if updater not active', async () => {
-      autoUpdater.isUpdaterActive.mockReturnValue(false);
+      autoUpdaterMock.isUpdaterActive.mockReturnValue(false);
 
       await updateCheck();
 
-      expect(autoUpdater.checkForUpdates).toHaveBeenCalledTimes(0);
-      expect(autoUpdater.on).toHaveBeenCalledTimes(0);
+      expect(autoUpdaterMock.checkForUpdates).toHaveBeenCalledTimes(0);
+      expect(autoUpdaterMock.on).toHaveBeenCalledTimes(0);
     });
   });
 
@@ -77,10 +87,10 @@ describe('Update Check', () => {
       ['error is null', null, 'unknown'],
     ])('displays error box if %s', async (_, error, errorBoxMessage) => {
       await updateCheck();
-      await simulateNodeEvent(autoUpdater, 'error', error);
+      await simulateNodeEvent(autoUpdaterMock, 'error', error);
 
-      expect(dialog.showErrorBox).toHaveBeenCalledTimes(1);
-      expect(dialog.showErrorBox).toHaveBeenCalledWith(
+      expect(dialogMock.showErrorBox).toHaveBeenCalledTimes(1);
+      expect(dialogMock.showErrorBox).toHaveBeenCalledWith(
         expect.any(String),
         errorBoxMessage,
       );
@@ -89,64 +99,76 @@ describe('Update Check', () => {
 
   describe('on update-available', () => {
     it('displays message box', async () => {
-      dialog.showMessageBox.mockResolvedValueOnce({ response: 1 });
+      dialogMock.showMessageBox.mockResolvedValueOnce({
+        response: 1,
+      } as MessageBoxReturnValue);
 
       await updateCheck();
-      await simulateNodeEvent(autoUpdater, 'update-available');
+      await simulateNodeEvent(autoUpdaterMock, 'update-available');
 
-      expect(dialog.showMessageBox).toHaveBeenCalledTimes(1);
-      expect(dialog.showMessageBox).toHaveBeenCalledWith(
+      expect(dialogMock.showMessageBox).toHaveBeenCalledTimes(1);
+      expect(dialogMock.showMessageBox).toHaveBeenCalledWith(
         expect.objectContaining({ title: 'Found Updates' }),
       );
     });
 
     it('does nothing if message box cancelled', async () => {
-      dialog.showMessageBox.mockResolvedValueOnce({ response: 1 });
+      dialogMock.showMessageBox.mockResolvedValueOnce({
+        response: 1,
+      } as MessageBoxReturnValue);
 
       await updateCheck();
-      await simulateNodeEvent(autoUpdater, 'update-available');
+      await simulateNodeEvent(autoUpdaterMock, 'update-available');
 
-      expect(autoUpdater.downloadUpdate).toHaveBeenCalledTimes(0);
+      expect(autoUpdaterMock.downloadUpdate).toHaveBeenCalledTimes(0);
     });
 
     it('downloads update if message box confirmed', async () => {
-      dialog.showMessageBox.mockResolvedValueOnce({ response: 0 });
+      dialogMock.showMessageBox.mockResolvedValueOnce({
+        response: 0,
+      } as MessageBoxReturnValue);
 
       await updateCheck();
-      await simulateNodeEvent(autoUpdater, 'update-available');
+      await simulateNodeEvent(autoUpdaterMock, 'update-available');
 
-      expect(autoUpdater.downloadUpdate).toHaveBeenCalledTimes(1);
+      expect(autoUpdaterMock.downloadUpdate).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('on update-not-available', () => {
     it('logs to console', async () => {
       await updateCheck();
-      await simulateNodeEvent(autoUpdater, 'update-not-available');
+      await simulateNodeEvent(autoUpdaterMock, 'update-not-available');
 
-      expect(log.debug).toHaveBeenCalledTimes(1);
-      expect(log.debug).toHaveBeenCalledWith('Current version is up-to-date.');
+      expect(logMock.debug).toHaveBeenCalledTimes(1);
+      expect(logMock.debug).toHaveBeenCalledWith(
+        'Current version is up-to-date.',
+      );
     });
   });
 
   describe('on update-downloaded', () => {
     it('displays message box', async () => {
-      dialog.showMessageBox.mockResolvedValueOnce({});
+      dialogMock.showMessageBox.mockResolvedValueOnce(
+        {} as MessageBoxReturnValue,
+      );
 
       await updateCheck();
-      await simulateNodeEvent(autoUpdater, 'update-downloaded');
+      await simulateNodeEvent(autoUpdaterMock, 'update-downloaded');
 
-      expect(dialog.showMessageBox).toHaveBeenCalledTimes(1);
-      expect(dialog.showMessageBox).toHaveBeenCalledWith(
+      expect(dialogMock.showMessageBox).toHaveBeenCalledTimes(1);
+      expect(dialogMock.showMessageBox).toHaveBeenCalledWith(
         expect.objectContaining({ title: 'Install Updates' }),
       );
     });
 
     it('quits and installs once message box closed', async () => {
-      dialog.showMessageBox.mockResolvedValueOnce({});
+      dialogMock.showMessageBox.mockResolvedValueOnce(
+        {} as MessageBoxReturnValue,
+      );
 
       await updateCheck();
-      await simulateNodeEvent(autoUpdater, 'update-downloaded');
+      await simulateNodeEvent(autoUpdaterMock, 'update-downloaded');
 
       expect(autoUpdater.quitAndInstall).toHaveBeenCalledTimes(1);
     });
@@ -159,13 +181,13 @@ describe('Update Check', () => {
       await updateCheck();
 
       await simulateNodeEvent(
-        autoUpdater,
+        autoUpdaterMock,
         'download-progress',
         downloadProgressMock,
       );
 
-      expect(log.debug).toHaveBeenCalledTimes(1);
-      expect(log.debug).toHaveBeenCalledWith(
+      expect(logMock.debug).toHaveBeenCalledTimes(1);
+      expect(logMock.debug).toHaveBeenCalledWith(
         'Download progress',
         downloadProgressMock,
       );

@@ -1,8 +1,8 @@
+import { Duplex } from 'stream';
 import ObjectMultiplex from 'obj-multiplex';
 import { app, BrowserWindow } from 'electron';
 import { Server as WebSocketServer } from 'ws';
 import {
-  BROWSER_ACTION_SHOW_POPUP,
   CLIENT_ID_BROWSER_CONTROLLER,
   CLIENT_ID_CONNECTION_CONTROLLER,
   CLIENT_ID_DISABLE,
@@ -11,7 +11,7 @@ import {
 } from '../../../shared/constants/desktop';
 import Desktop from './desktop';
 import EncryptedWebSocketStream from './encrypted-web-socket-stream';
-import WebSocketStream from './web-socket-stream';
+import { NodeWebSocket, WebSocketStream } from './web-socket-stream';
 import cfg from './config';
 import { updateCheck } from './update-check';
 import {
@@ -29,11 +29,16 @@ import {
   createWebSocketStreamMock,
 } from './test/utils';
 import { browser } from './extension-polyfill';
+import { ClientId } from './types/desktop';
+import { BrowserControllerAction } from './types/message';
 
-jest.mock('./web-socket-stream', () => jest.fn(), { virtual: true });
 jest.mock('./encrypted-web-socket-stream', () => jest.fn(), { virtual: true });
 jest.mock('obj-multiplex', () => jest.fn(), { virtual: true });
 jest.mock('extension-port-stream', () => jest.fn(), { virtual: true });
+
+jest.mock('./web-socket-stream', () => ({ WebSocketStream: jest.fn() }), {
+  virtual: true,
+});
 
 jest.mock(
   './update-check',
@@ -68,53 +73,77 @@ jest.mock(
 );
 
 describe('Desktop', () => {
-  let webSocketMock;
-  let webSocketStreamMock;
-  let multiplexMock;
-  let desktop;
-  let webSocketServerMock;
-  let connectRemoteMock;
-  let connectExternalMock;
-  let backgroundInitialiseMock;
-  const multiplexStreamMocks = {};
+  let webSocketMock: jest.Mocked<NodeWebSocket>;
+  let webSocketStreamMock: jest.Mocked<WebSocketStream>;
+  let multiplexMock: jest.Mocked<ObjectMultiplex & Duplex>;
+  let webSocketServerMock: jest.Mocked<WebSocketServer>;
+  let connectRemoteMock: jest.Mocked<any>;
+  let backgroundInitialiseMock: jest.Mocked<any>;
+  let objectMultiplexConstructorMock: jest.Mocked<any>;
+  let webSocketStreamConstructorMock: jest.Mocked<any>;
+  let encryptedWebSocketStreamConstructorMock: jest.Mocked<any>;
+  let browserWindowConstructorMock: jest.Mocked<any>;
+  let webSocketServerConstructorMock: jest.Mocked<any>;
+  let appMock: jest.Mocked<typeof app>;
+  let updateCheckMock: jest.Mocked<any>;
+  let browserMock: jest.Mocked<any>;
+
+  const multiplexStreamMocks: { [clientId: ClientId]: jest.Mocked<Duplex> } =
+    {};
+
+  let desktop: Desktop;
 
   beforeEach(() => {
     jest.resetAllMocks();
 
+    webSocketMock = createWebSocketNodeMock();
+    webSocketStreamMock = createWebSocketStreamMock();
     multiplexMock = createMultiplexMock();
+    webSocketServerMock = createWebSocketServer();
+    connectRemoteMock = jest.fn();
+    backgroundInitialiseMock = jest.fn();
+    objectMultiplexConstructorMock = ObjectMultiplex;
+    webSocketStreamConstructorMock = WebSocketStream;
+    encryptedWebSocketStreamConstructorMock = EncryptedWebSocketStream;
+    browserWindowConstructorMock = BrowserWindow;
+    webSocketServerConstructorMock = WebSocketServer;
+    appMock = app as any;
+    updateCheckMock = updateCheck;
+    browserMock = browser;
+
     multiplexMock.createStream.mockImplementation((name) => {
       const newStream = createStreamMock();
       multiplexStreamMocks[name] = newStream;
-      return newStream;
+      return newStream as any;
     });
 
-    webSocketStreamMock = createWebSocketStreamMock();
-    webSocketStreamMock.pipe.mockReturnValue(multiplexMock);
+    webSocketStreamMock.pipe.mockReturnValue(multiplexMock as any);
+    objectMultiplexConstructorMock.mockReturnValue(multiplexMock);
+    webSocketStreamConstructorMock.mockReturnValue(webSocketStreamMock);
 
-    webSocketServerMock = createWebSocketServer();
-    connectRemoteMock = jest.fn();
-    connectExternalMock = jest.fn();
-    webSocketMock = createWebSocketNodeMock();
-    backgroundInitialiseMock = jest.fn();
+    encryptedWebSocketStreamConstructorMock.mockReturnValue(
+      webSocketStreamMock,
+    );
 
-    ObjectMultiplex.mockReturnValue(multiplexMock);
-    WebSocketStream.mockReturnValue(webSocketStreamMock);
-    EncryptedWebSocketStream.mockReturnValue(webSocketStreamMock);
-    jest.spyOn(global, 'WebSocket').mockImplementation(() => webSocketMock);
+    jest
+      .spyOn(global, 'WebSocket')
+      .mockImplementation(() => webSocketMock as any);
 
-    BrowserWindow.mockReturnValue({
+    browserWindowConstructorMock.mockReturnValue({
       loadFile: jest.fn(() => Promise.resolve()),
       webContents: {
         send: jest.fn(),
       },
     });
 
-    WebSocketServer.mockImplementation((_, cb) => {
-      setImmediate(() => cb());
-      return webSocketServerMock;
-    });
+    webSocketServerConstructorMock.mockImplementation(
+      (_: any, cb: () => void) => {
+        setImmediate(() => cb());
+        return webSocketServerMock;
+      },
+    );
 
-    app.whenReady.mockResolvedValue({});
+    appMock.whenReady.mockResolvedValue();
 
     desktop = new Desktop(backgroundInitialiseMock);
   });
@@ -125,8 +154,8 @@ describe('Desktop', () => {
 
       await desktop.init();
 
-      expect(WebSocketServer).toHaveBeenCalledTimes(1);
-      expect(WebSocketServer).toHaveBeenCalledWith(
+      expect(webSocketServerConstructorMock).toHaveBeenCalledTimes(1);
+      expect(webSocketServerConstructorMock).toHaveBeenCalledWith(
         { port: PORT_MOCK },
         expect.any(Function),
       );
@@ -150,7 +179,7 @@ describe('Desktop', () => {
 
     it('checks for updates', async () => {
       await desktop.init();
-      expect(updateCheck).toHaveBeenCalledTimes(1);
+      expect(updateCheckMock).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -165,14 +194,14 @@ describe('Desktop', () => {
 
       expect(browserControllerStreamMock.write).toHaveBeenCalledTimes(1);
       expect(browserControllerStreamMock.write).toHaveBeenCalledWith(
-        BROWSER_ACTION_SHOW_POPUP,
+        BrowserControllerAction.BROWSER_ACTION_SHOW_POPUP,
       );
     });
   });
 
   describe('disable', () => {
     it('writes state to disable stream', async () => {
-      browser.storage.local.get.mockResolvedValue({
+      browserMock.storage.local.get.mockResolvedValue({
         ...DATA_MOCK,
         data: { PreferencesController: { desktopEnabled: true } },
       });
@@ -196,8 +225,10 @@ describe('Desktop', () => {
 
       await simulateNodeEvent(webSocketServerMock, 'connection', webSocketMock);
 
-      expect(EncryptedWebSocketStream).toHaveBeenCalledTimes(1);
-      expect(EncryptedWebSocketStream).toHaveBeenCalledWith(webSocketMock);
+      expect(encryptedWebSocketStreamConstructorMock).toHaveBeenCalledTimes(1);
+      expect(encryptedWebSocketStreamConstructorMock).toHaveBeenCalledWith(
+        webSocketMock,
+      );
 
       expect(webSocketStreamMock.pipe).toHaveBeenCalledTimes(1);
       expect(webSocketStreamMock.pipe).toHaveBeenCalledWith(multiplexMock);
@@ -213,8 +244,10 @@ describe('Desktop', () => {
 
       await simulateNodeEvent(webSocketServerMock, 'connection', webSocketMock);
 
-      expect(WebSocketStream).toHaveBeenCalledTimes(1);
-      expect(WebSocketStream).toHaveBeenCalledWith(webSocketMock);
+      expect(webSocketStreamConstructorMock).toHaveBeenCalledTimes(1);
+      expect(webSocketStreamConstructorMock).toHaveBeenCalledWith(
+        webSocketMock,
+      );
 
       expect(webSocketStreamMock.pipe).toHaveBeenCalledTimes(1);
       expect(webSocketStreamMock.pipe).toHaveBeenCalledWith(multiplexMock);
@@ -232,7 +265,7 @@ describe('Desktop', () => {
   describe('on disconnect', () => {
     it('ends all multiplex client streams', async () => {
       await desktop.init();
-      desktop.setConnectCallbacks(connectRemoteMock, connectExternalMock);
+      desktop.setConnectCallbacks(connectRemoteMock, connectRemoteMock);
 
       await simulateNodeEvent(webSocketServerMock, 'connection', webSocketMock);
 
@@ -253,12 +286,10 @@ describe('Desktop', () => {
   });
 
   describe('on handshake', () => {
-    beforeEach(async () => {
+    it('creates background connection using new multiplex stream', async () => {
       await desktop.init();
-      desktop.setConnectCallbacks(connectRemoteMock, connectExternalMock);
-    });
+      desktop.setConnectCallbacks(connectRemoteMock, connectRemoteMock);
 
-    it('creates background remote connection using new multiplex stream', async () => {
       const handshakeStreamMock = multiplexStreamMocks[CLIENT_ID_HANDSHAKES];
 
       await simulateStreamMessage(handshakeStreamMock, HANDSHAKE_MOCK);
@@ -277,39 +308,13 @@ describe('Desktop', () => {
           addListener: expect.any(Function),
         },
       });
-      expect(connectExternalMock).toHaveBeenCalledTimes(0);
-    });
-
-    it('creates background external connection using new multiplex stream', async () => {
-      const handshakeStreamMock = multiplexStreamMocks[CLIENT_ID_HANDSHAKES];
-
-      await simulateStreamMessage(handshakeStreamMock, {
-        ...HANDSHAKE_MOCK,
-        isExternal: true,
-      });
-
-      expect(multiplexMock.createStream).toHaveBeenLastCalledWith(
-        CLIENT_ID_MOCK,
-      );
-
-      const newClientStream = multiplexStreamMocks[CLIENT_ID_MOCK];
-
-      expect(connectExternalMock).toHaveBeenCalledTimes(1);
-      expect(connectExternalMock).toHaveBeenCalledWith({
-        ...HANDSHAKE_MOCK.remotePort,
-        stream: newClientStream,
-        onMessage: {
-          addListener: expect.any(Function),
-        },
-      });
-      expect(connectRemoteMock).toHaveBeenCalledTimes(0);
     });
   });
 
   describe('on connection controller message', () => {
     it('ends multiplex client stream', async () => {
       await desktop.init();
-      desktop.setConnectCallbacks(connectRemoteMock, connectExternalMock);
+      desktop.setConnectCallbacks(connectRemoteMock, connectRemoteMock);
 
       const handshakeStreamMock = multiplexStreamMocks[CLIENT_ID_HANDSHAKES];
       await simulateStreamMessage(handshakeStreamMock, HANDSHAKE_MOCK);
@@ -335,8 +340,8 @@ describe('Desktop', () => {
     });
 
     it('updates state', async () => {
-      expect(browser.storage.local.set).toHaveBeenCalledTimes(1);
-      expect(browser.storage.local.set).toHaveBeenCalledWith(DATA_MOCK);
+      expect(browserMock.storage.local.set).toHaveBeenCalledTimes(1);
+      expect(browserMock.storage.local.set).toHaveBeenCalledWith(DATA_MOCK);
     });
 
     it('initialses background script', async () => {

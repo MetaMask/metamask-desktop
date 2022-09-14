@@ -14,42 +14,57 @@ jest.mock(
 );
 
 describe('Obfuscated Store', () => {
+  let electronStoreMock: jest.Mocked<any>;
+  let randomBytesMock: jest.Mocked<any>;
+  let keytarMock: jest.Mocked<typeof keytar>;
+
   beforeEach(() => {
     jest.resetAllMocks();
 
-    ObfuscatedStore.initialized = false;
-    ObfuscatedStore.appStore = undefined;
+    electronStoreMock = Store as any;
+    randomBytesMock = randomBytes;
+    keytarMock = keytar as any;
+
+    (ObfuscatedStore as any).appStore = undefined;
   });
 
   describe('init', () => {
     it('creates store using existing keytar password', async () => {
-      Store.mockReturnValue(STORE_MOCK);
-      keytar.getPassword.mockResolvedValue(PASSWORD_MOCK);
+      electronStoreMock.mockReturnValue(STORE_MOCK);
+      keytarMock.getPassword.mockResolvedValue(PASSWORD_MOCK);
 
       const store = await ObfuscatedStore.init();
 
       expect(store).toBe(STORE_MOCK);
-      expect(Store).toHaveBeenCalledTimes(1);
-      expect(Store).toHaveBeenCalledWith({ encryptionKey: PASSWORD_MOCK });
-      expect(keytar.getPassword).toHaveBeenCalledTimes(1);
-      expect(keytar.getPassword).toHaveBeenCalledWith(
+
+      expect(electronStoreMock).toHaveBeenCalledTimes(1);
+      expect(electronStoreMock).toHaveBeenCalledWith({
+        encryptionKey: PASSWORD_MOCK,
+      });
+
+      expect(keytarMock.getPassword).toHaveBeenCalledTimes(1);
+      expect(keytarMock.getPassword).toHaveBeenCalledWith(
         expect.any(String),
         expect.any(String),
       );
     });
 
     it('creates store with new keytar password', async () => {
-      Store.mockReturnValue(STORE_MOCK);
-      randomBytes.mockReturnValue({ toString: () => PASSWORD_MOCK });
-      keytar.setPassword.mockResolvedValue({});
+      electronStoreMock.mockReturnValue(STORE_MOCK);
+      randomBytesMock.mockReturnValue({ toString: () => PASSWORD_MOCK });
+      keytarMock.setPassword.mockResolvedValue();
 
       const store = await ObfuscatedStore.init();
 
       expect(store).toBe(STORE_MOCK);
-      expect(Store).toHaveBeenCalledTimes(1);
-      expect(Store).toHaveBeenCalledWith({ encryptionKey: PASSWORD_MOCK });
-      expect(keytar.setPassword).toHaveBeenCalledTimes(1);
-      expect(keytar.setPassword).toHaveBeenCalledWith(
+
+      expect(electronStoreMock).toHaveBeenCalledTimes(1);
+      expect(electronStoreMock).toHaveBeenCalledWith({
+        encryptionKey: PASSWORD_MOCK,
+      });
+
+      expect(keytarMock.setPassword).toHaveBeenCalledTimes(1);
+      expect(keytarMock.setPassword).toHaveBeenCalledWith(
         expect.any(String),
         expect.any(String),
         PASSWORD_MOCK,
@@ -59,8 +74,8 @@ describe('Obfuscated Store', () => {
 
   describe('getStore', () => {
     it('returns store data if initialized', async () => {
-      Store.mockReturnValue(STORE_MOCK);
-      keytar.getPassword.mockResolvedValue(PASSWORD_MOCK);
+      electronStoreMock.mockReturnValue(STORE_MOCK);
+      keytarMock.getPassword.mockResolvedValue(PASSWORD_MOCK);
 
       await ObfuscatedStore.init();
       const storeData = await ObfuscatedStore.getStore();
@@ -69,8 +84,8 @@ describe('Obfuscated Store', () => {
     });
 
     it('creates store and returns store data if not initialized', async () => {
-      Store.mockReturnValue(STORE_MOCK);
-      keytar.getPassword.mockResolvedValue(PASSWORD_MOCK);
+      electronStoreMock.mockReturnValue(STORE_MOCK);
+      keytarMock.getPassword.mockResolvedValue(PASSWORD_MOCK);
 
       const storeData = await ObfuscatedStore.getStore();
 
@@ -80,8 +95,8 @@ describe('Obfuscated Store', () => {
 
   describe('setStore', () => {
     it('overrides store data if initialized', async () => {
-      Store.mockReturnValue({ ...STORE_MOCK });
-      keytar.getPassword.mockResolvedValue(PASSWORD_MOCK);
+      electronStoreMock.mockReturnValue({ ...STORE_MOCK });
+      keytarMock.getPassword.mockResolvedValue(PASSWORD_MOCK);
 
       const store = await ObfuscatedStore.init();
       await ObfuscatedStore.setStore(DATA_2_MOCK);
@@ -92,8 +107,8 @@ describe('Obfuscated Store', () => {
     it('creates store and overrides store data if not initialized', async () => {
       const store = { ...STORE_MOCK };
 
-      Store.mockReturnValue(store);
-      keytar.getPassword.mockResolvedValue(PASSWORD_MOCK);
+      electronStoreMock.mockReturnValue(store);
+      keytarMock.getPassword.mockResolvedValue(PASSWORD_MOCK);
 
       await ObfuscatedStore.setStore(DATA_2_MOCK);
 

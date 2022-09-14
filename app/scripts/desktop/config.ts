@@ -1,13 +1,14 @@
-let configObject;
-
-const envStringMatch = (value, expected) => {
+const envStringMatch = (
+  value: string | undefined,
+  expected: string,
+): boolean => {
   if (!value) {
     return false;
   }
   return value.toLowerCase() === expected.toLowerCase();
 };
 
-const envInt = (value, defaultValue) => {
+const envInt = (value: string | undefined, defaultValue: number): number => {
   if (!value) {
     return defaultValue;
   }
@@ -25,14 +26,18 @@ const loadConfig = () => {
       webSocket: {
         port,
         url: `ws://localhost:${port}`,
-        disableEncryption: process.env.DISABLE_WEB_SOCKET_ENCRYPTION,
+        disableEncryption: Boolean(process.env.DISABLE_WEB_SOCKET_ENCRYPTION),
       },
       enableUpdates: envStringMatch(process.env.DESKTOP_ENABLE_UPDATES, 'true'),
     },
   };
 };
 
-export default function cfg() {
+export type ConfigType = ReturnType<typeof loadConfig>;
+
+let configObject: ConfigType;
+
+export default function cfg(): ConfigType {
   if (!configObject) {
     configObject = loadConfig();
   }
