@@ -74,6 +74,7 @@ describe('Desktop', () => {
   let desktop;
   let webSocketServerMock;
   let connectRemoteMock;
+  let connectExternalMock;
   let backgroundInitialiseMock;
   const multiplexStreamMocks = {};
 
@@ -92,6 +93,7 @@ describe('Desktop', () => {
 
     webSocketServerMock = createWebSocketServer();
     connectRemoteMock = jest.fn();
+    connectExternalMock = jest.fn();
     webSocketMock = createWebSocketNodeMock();
     backgroundInitialiseMock = jest.fn();
 
@@ -231,6 +233,7 @@ describe('Desktop', () => {
     it('ends all multiplex client streams', async () => {
       await desktop.init();
       desktop.setConnectRemote(connectRemoteMock);
+      desktop.setConnectExternal(connectExternalMock);
 
       await simulateNodeEvent(webSocketServerMock, 'connection', webSocketMock);
 
@@ -251,10 +254,13 @@ describe('Desktop', () => {
   });
 
   describe('on handshake', () => {
-    it('creates background connection using new multiplex stream', async () => {
+    beforeEach(async () => {
       await desktop.init();
       desktop.setConnectRemote(connectRemoteMock);
+      desktop.setConnectExternal(connectExternalMock);
+    });
 
+    it('creates background connection using new multiplex stream', async () => {
       const handshakeStreamMock = multiplexStreamMocks[CLIENT_ID_HANDSHAKES];
 
       await simulateStreamMessage(handshakeStreamMock, HANDSHAKE_MOCK);
@@ -273,6 +279,33 @@ describe('Desktop', () => {
           addListener: expect.any(Function),
         },
       });
+      expect(connectExternalMock).toHaveBeenCalledTimes(0);
+    });
+
+    it('creates background connection using new multiplex stream for external connection', async () => {
+      const handshakeStreamMock = multiplexStreamMocks[CLIENT_ID_HANDSHAKES];
+
+      await simulateStreamMessage(handshakeStreamMock, {
+        ...HANDSHAKE_MOCK,
+        isExternal: true,
+      });
+
+      expect(multiplexMock.createStream).toHaveBeenLastCalledWith(
+        CLIENT_ID_MOCK,
+      );
+
+      const newClientStream = multiplexStreamMocks[CLIENT_ID_MOCK];
+
+      expect(connectExternalMock).toHaveBeenCalledTimes(1);
+      expect(connectExternalMock).toHaveBeenCalledWith({
+        ...HANDSHAKE_MOCK.remotePort,
+        stream: newClientStream,
+        onMessage: {
+          addListener: expect.any(Function),
+        },
+      });
+
+      expect(connectRemoteMock).toHaveBeenCalledTimes(0);
     });
   });
 
@@ -280,6 +313,7 @@ describe('Desktop', () => {
     it('ends multiplex client stream', async () => {
       await desktop.init();
       desktop.setConnectRemote(connectRemoteMock);
+      desktop.setConnectExternal(connectExternalMock);
 
       const handshakeStreamMock = multiplexStreamMocks[CLIENT_ID_HANDSHAKES];
       await simulateStreamMessage(handshakeStreamMock, HANDSHAKE_MOCK);

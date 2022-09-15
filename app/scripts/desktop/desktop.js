@@ -71,6 +71,10 @@ export default class Desktop {
     this._connectRemote = connectRemote;
   }
 
+  setConnectExternal(connectExternal) {
+    this._connectExternal = connectExternal;
+  }
+
   showPopup() {
     this._browserControllerStream.write(BROWSER_ACTION_SHOW_POPUP);
   }
