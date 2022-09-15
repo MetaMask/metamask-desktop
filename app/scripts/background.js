@@ -778,7 +778,8 @@ function setupController(initState, initLangCode, remoteSourcePort) {
   }
 
   if (desktopApp) {
-    desktopApp.setConnectRemote(connectRemote, connectExternal);
+    desktopApp.setConnectRemote(connectRemote);
+    desktopApp.setConnectExternal(connectExternal);
   }
 
   return Promise.resolve();
