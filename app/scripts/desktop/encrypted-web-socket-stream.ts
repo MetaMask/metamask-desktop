@@ -23,11 +23,11 @@ export default class EncryptedWebSocketStream extends Duplex {
     this.webSocket = webSocket;
   }
 
-  init() {
+  public init() {
     this.cork();
 
     this.webSocketStream = new WebSocketStream(this.webSocket);
-    this.webSocketStream.on('data', (data) => this._onMessage(data));
+    this.webSocketStream.on('data', (data) => this.onMessage(data));
 
     this.keyPair = createKeyPair();
 
@@ -36,7 +36,34 @@ export default class EncryptedWebSocketStream extends Duplex {
     });
   }
 
-  async _onMessage(data: any) {
+  public _read() {
+    return undefined;
+  }
+
+  public async _write(msg: any, _: string, cb: () => void) {
+    if (!this.targetPublicKey) {
+      log.debug(
+        'Skipping sending message as waiting for public key',
+        flattenMessage(msg),
+      );
+      cb();
+      return;
+    }
+
+    log.debug('Sending encrypted message to web socket', flattenMessage(msg));
+
+    if (!this.webSocketStream) {
+      log.error('Web socket stream not initialised');
+      return;
+    }
+
+    const rawData = typeof msg === 'string' ? msg : JSON.stringify(msg);
+    const encryptedData = encrypt(rawData, this.targetPublicKey);
+
+    this.webSocketStream.write(encryptedData, undefined, cb);
+  }
+
+  private async onMessage(data: any) {
     if (!this.targetPublicKey) {
       if (data.publicKey) {
         this.targetPublicKey = data.publicKey;
@@ -74,35 +101,8 @@ export default class EncryptedWebSocketStream extends Duplex {
       // Ignore as data is not a serialised object
     }
 
-    log.debug('Decrypted web socket message', decryptedData);
+    log.debug('Decrypted web socket message', flattenMessage(decryptedData));
 
     this.push(decryptedData);
-  }
-
-  _read() {
-    return undefined;
-  }
-
-  async _write(msg: any, _: string, cb: () => void) {
-    if (!this.targetPublicKey) {
-      log.debug(
-        'Skipping sending message as waiting for public key',
-        flattenMessage(msg),
-      );
-      cb();
-      return;
-    }
-
-    log.debug('Sending encrypted message to web socket', JSON.stringify(msg));
-
-    if (!this.webSocketStream) {
-      log.error('Web socket stream not initialised');
-      return;
-    }
-
-    const rawData = typeof msg === 'string' ? msg : JSON.stringify(msg);
-    const encryptedData = encrypt(rawData, this.targetPublicKey);
-
-    this.webSocketStream.write(encryptedData, undefined, cb);
   }
 }

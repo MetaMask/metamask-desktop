@@ -19,20 +19,38 @@ export class WebSocketStream extends Duplex {
     if (this.isBrowser) {
       (this.webSocket as BrowserWebSocket).addEventListener(
         'message',
-        (event) => this._onMessage(event.data),
+        (event) => this.onMessage(event.data),
       );
     } else {
       (this.webSocket as NodeWebSocket).on('message', (message) =>
-        this._onMessage(message),
+        this.onMessage(message),
       );
     }
   }
 
-  init() {
+  public init() {
     // For consistency with EncryptedWebSocketStream to avoid further code branches
   }
 
-  async _onMessage(rawData: any) {
+  public _read() {
+    return undefined;
+  }
+
+  public async _write(msg: any, _: string, cb: () => void) {
+    log.debug('Sending message to web socket');
+
+    const rawData = typeof msg === 'string' ? msg : JSON.stringify(msg);
+
+    if (this.isBrowser) {
+      this.sendBrowser(rawData, cb);
+      return;
+    }
+
+    this.webSocket.send(rawData);
+    cb();
+  }
+
+  private async onMessage(rawData: any) {
     let data = rawData;
 
     try {
@@ -46,39 +64,24 @@ export class WebSocketStream extends Duplex {
     this.push(data);
   }
 
-  _read() {
-    return undefined;
-  }
-
-  async _write(msg: any, _: string, cb: () => void) {
-    log.debug('Sending message to web socket');
-
-    const rawData = typeof msg === 'string' ? msg : JSON.stringify(msg);
-
-    if (this.isBrowser) {
-      this._sendBrowser(rawData, cb);
-      return;
-    }
-
-    this.webSocket.send(rawData);
-    cb();
-  }
-
-  _sendBrowser(rawData: string, cb: () => void) {
-    this._waitForSocketConnection(this.webSocket as BrowserWebSocket, () => {
+  private sendBrowser(rawData: string, cb: () => void) {
+    this.waitForSocketConnection(this.webSocket as BrowserWebSocket, () => {
       this.webSocket.send(rawData);
       cb();
     });
   }
 
-  _waitForSocketConnection(socket: BrowserWebSocket, callback: () => void) {
+  private waitForSocketConnection(
+    socket: BrowserWebSocket,
+    callback: () => void,
+  ) {
     if (socket.readyState === 1) {
       callback();
       return;
     }
 
     setTimeout(() => {
-      this._waitForSocketConnection(socket, callback);
+      this.waitForSocketConnection(socket, callback);
     }, 500);
   }
 }

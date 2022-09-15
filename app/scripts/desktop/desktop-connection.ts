@@ -43,15 +43,15 @@ export default class DesktopConnection {
     this.multiplex = new ObjectMultiplex();
   }
 
-  init() {
-    this._connect();
+  public init() {
+    this.connect();
 
     const browserControllerStream = this.multiplex.createStream(
       CLIENT_ID_BROWSER_CONTROLLER,
     );
 
     browserControllerStream.on('data', (data: BrowserControllerMessage) =>
-      this._onBrowserControlMessage(data),
+      this.onBrowserControlMessage(data),
     );
 
     this.connectionControllerStream = this.multiplex.createStream(
@@ -62,12 +62,12 @@ export default class DesktopConnection {
     this.stateStream = this.multiplex.createStream(CLIENT_ID_STATE);
 
     const disableStream = this.multiplex.createStream(CLIENT_ID_DISABLE);
-    disableStream.on('data', (data: State) => this._onDisable(data));
+    disableStream.on('data', (data: State) => this.onDisable(data));
 
     log.debug('Connected to desktop');
   }
 
-  async transferState() {
+  public async transferState() {
     if (!this.stateStream) {
       log.error('State stream not initialised');
       return;
@@ -87,25 +87,23 @@ export default class DesktopConnection {
    * @param remotePort - The port provided by a new context.
    * @param isExternal - Whether or not the new context is external (page or other extension).
    */
-  createStream(remotePort: RemotePort, isExternal: boolean) {
+  public createStream(remotePort: RemotePort, isExternal: boolean) {
     if (!this.webSocketStream) {
-      this._connect();
+      this.connect();
     }
 
     const portStream = new PortStream(remotePort as any);
-    const clientId = this._getNextClientId();
+    const clientId = this.getNextClientId();
     const clientStream = this.multiplex.createStream(clientId);
 
     portStream.pipe(clientStream).pipe(portStream as unknown as Duplex);
 
-    endOfStream(portStream, () =>
-      this._onPortStreamEnd(clientId, clientStream),
-    );
+    endOfStream(portStream, () => this.onPortStreamEnd(clientId, clientStream));
 
-    this._sendHandshake(remotePort, clientId, isExternal);
+    this.sendHandshake(remotePort, clientId, isExternal);
   }
 
-  async _onDisable(state: State) {
+  private async onDisable(state: State) {
     log.debug('Received desktop disable message');
 
     await browser.storage.local.set(state);
@@ -115,9 +113,9 @@ export default class DesktopConnection {
     browser.runtime.reload();
   }
 
-  _connect() {
-    const webSocket = this._createWebSocket();
-    webSocket.addEventListener('close', () => this._onDisconnect());
+  private connect() {
+    const webSocket = this.createWebSocket();
+    webSocket.addEventListener('close', () => this.onDisconnect());
 
     this.webSocketStream = cfg().desktop.webSocket.disableEncryption
       ? new WebSocketStream(webSocket)
@@ -129,11 +127,11 @@ export default class DesktopConnection {
     log.debug('Created web socket connection');
   }
 
-  _onDisconnect() {
+  private onDisconnect() {
     this.webSocketStream = undefined;
   }
 
-  _onPortStreamEnd(clientId: ClientId, clientStream: Duplex) {
+  private onPortStreamEnd(clientId: ClientId, clientStream: Duplex) {
     log.debug('Port stream closed', clientId);
 
     clientStream.end();
@@ -146,7 +144,7 @@ export default class DesktopConnection {
     this.connectionControllerStream.write({ clientId });
   }
 
-  _sendHandshake(
+  private sendHandshake(
     remotePort: RemotePortData,
     clientId: ClientId,
     isExternal: boolean,
@@ -170,7 +168,7 @@ export default class DesktopConnection {
     this.handshakeStream.write(handshake);
   }
 
-  _onBrowserControlMessage(data: BrowserControllerMessage) {
+  private onBrowserControlMessage(data: BrowserControllerMessage) {
     switch (data) {
       case BrowserControllerAction.BROWSER_ACTION_SHOW_POPUP:
         this.notificationManager.showPopup();
@@ -180,12 +178,12 @@ export default class DesktopConnection {
     }
   }
 
-  _createWebSocket(): WebSocket {
+  private createWebSocket(): WebSocket {
     // eslint-disable-next-line no-undef
     return new WebSocket(`${cfg().desktop.webSocket.url}`);
   }
 
-  _getNextClientId(): ClientId {
+  private getNextClientId(): ClientId {
     /* eslint-disable-next-line no-plusplus */
     return this.clientIdCounter++;
   }

@@ -1,4 +1,4 @@
-import { encrypt as _encrypt, decrypt as _decrypt, PrivateKey } from 'eciesjs';
+import * as eciesjs from 'eciesjs';
 
 export interface KeyPair {
   privateKey: string;
@@ -6,19 +6,24 @@ export interface KeyPair {
 }
 
 export const createKeyPair = (): KeyPair => {
-  const privateKey = new PrivateKey();
-  const { publicKey } = privateKey;
+  const privateKeyObject = new eciesjs.PrivateKey();
+  const publicKeyObject = privateKeyObject.publicKey;
+  const privateKey = privateKeyObject.toHex();
+  const publicKey = publicKeyObject.toHex();
 
-  return {
-    privateKey: privateKey.toHex(),
-    publicKey: publicKey.toHex(),
-  };
+  return { privateKey, publicKey };
 };
 
-export const encrypt = (data: string, publicKey: string): string => {
-  return _encrypt(publicKey, Buffer.from(data, 'utf8')).toString('hex');
+export const encrypt = (data: string, publicKeyHex: string): string => {
+  const dataBuffer = Buffer.from(data, 'utf8');
+  const encryptedBuffer = eciesjs.encrypt(publicKeyHex, dataBuffer);
+
+  return encryptedBuffer.toString('hex');
 };
 
-export const decrypt = (data: string, privateKey: string): string => {
-  return _decrypt(privateKey, Buffer.from(data, 'hex')).toString('utf8');
+export const decrypt = (dataHex: string, privateKeyHex: string): string => {
+  const dataBuffer = Buffer.from(dataHex, 'hex');
+  const decryptedBuffer = eciesjs.decrypt(privateKeyHex, dataBuffer);
+
+  return decryptedBuffer.toString('utf8');
 };

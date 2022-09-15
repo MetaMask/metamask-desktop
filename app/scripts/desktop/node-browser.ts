@@ -2,31 +2,31 @@ import log from 'loglevel';
 import ObfuscatedStore from './storage';
 import { Browser } from './types/browser';
 
-const _warn = (name: string) => {
+const warn = (name: string) => {
   log.debug(`Browser method not supported - ${name}`);
 };
 
-const _reject = (name: string) => {
+const reject = (name: string) => {
   // eslint-disable-next-line prefer-promise-reject-errors
   return Promise.reject(`Browser method not supported - ${name}`);
 };
 
 const browser: Browser = {
   windows: {
-    getLastFocused: () => _reject('windows.getLastFocused'),
-    getCurrent: () => _reject('windows.getCurrent'),
-    getAll: () => _reject('windows.getAll'),
-    create: () => _reject('windows.create'),
-    update: () => _reject('windows.update'),
-    remove: () => _reject('windows.remove'),
+    getLastFocused: () => reject('windows.getLastFocused'),
+    getCurrent: () => reject('windows.getCurrent'),
+    getAll: () => reject('windows.getAll'),
+    create: () => reject('windows.create'),
+    update: () => reject('windows.update'),
+    remove: () => reject('windows.remove'),
     onRemoved: {
-      addListener: () => _warn('windows.onRemoved.addListener'),
+      addListener: () => warn('windows.onRemoved.addListener'),
     },
   },
   browserAction: {
-    setBadgeText: () => _warn('browserAction.setBadgeText'),
+    setBadgeText: () => warn('browserAction.setBadgeText'),
     setBadgeBackgroundColor: () =>
-      _warn('browserAction.setBadgeBackgroundColor'),
+      warn('browserAction.setBadgeBackgroundColor'),
   },
   storage: {
     local: {
@@ -44,23 +44,23 @@ const browser: Browser = {
       version: '103.0.5060.134',
     }),
     getPlatformInfo: () => Promise.resolve({ os: 'mac' }),
-    setUninstallURL: () => _warn('runtime.setUninstallURL'),
+    setUninstallURL: () => warn('runtime.setUninstallURL'),
     onInstalled: {
-      addListener: () => _warn('runtime.onInstalled.addListener'),
+      addListener: () => warn('runtime.onInstalled.addListener'),
     },
     onMessageExternal: {
-      addListener: () => _warn('runtime.onMessageExternal.addListener'),
+      addListener: () => warn('runtime.onMessageExternal.addListener'),
     },
     onConnect: {
-      addListener: () => _warn('runtime.onConnect.addListener'),
+      addListener: () => warn('runtime.onConnect.addListener'),
     },
     onConnectExternal: {
-      addListener: () => _warn('runtime.onConnectExternal.addListener'),
+      addListener: () => warn('runtime.onConnectExternal.addListener'),
     },
   },
   webRequest: {
     onErrorOccurred: {
-      addListener: () => _warn('webRequest.onErrorOccurred.addListener'),
+      addListener: () => warn('webRequest.onErrorOccurred.addListener'),
     },
   },
 } as unknown as Browser;

@@ -36,7 +36,7 @@ class ObfuscatedStore {
     this.initialOptions = initialOptions;
   }
 
-  async init(): Promise<Store<Record<string, unknown>>> {
+  public async init(): Promise<Store<Record<string, unknown>>> {
     if (this.appStore) {
       return this.appStore;
     }
@@ -51,7 +51,7 @@ class ObfuscatedStore {
     return this.appStore;
   }
 
-  async getStore(): Promise<Record<string, unknown>> {
+  public async getStore(): Promise<Record<string, unknown>> {
     if (!this.appStore) {
       await this.init();
     }
@@ -61,7 +61,7 @@ class ObfuscatedStore {
     return this.appStore!.store;
   }
 
-  async setStore(data: Record<string, unknown>) {
+  public async setStore(data: Record<string, unknown>) {
     if (!this.appStore) {
       await this.init();
     }
