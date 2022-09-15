@@ -1131,6 +1131,16 @@ export function getIsCustomNetworkListEnabled(state) {
   return state.metamask.customNetworkListEnabled;
 }
 
+/**
+ * To get the `desktopEnabled` value which determines whether we use the desktop app
+ *
+ * @param {*} state
+ * @returns Boolean
+ */
+export function getIsDesktopEnabled(state) {
+  return state.metamask.desktopEnabled;
+}
+
 export function getIsCustomNetwork(state) {
   const chainId = getCurrentChainId(state);
 

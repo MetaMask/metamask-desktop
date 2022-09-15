@@ -26,6 +26,8 @@ export default class ExperimentalTab extends PureComponent {
     setTheme: PropTypes.func,
     customNetworkListEnabled: PropTypes.bool,
     setCustomNetworkListEnabled: PropTypes.func,
+    desktopEnabled: PropTypes.bool,
+    setDesktopEnabled: PropTypes.func,
   };
 
   settingsRefs = Array(
@@ -285,6 +287,42 @@ export default class ExperimentalTab extends PureComponent {
     );
   }
 
+  renderDesktopToggle() {
+    const { t } = this.context;
+    const { desktopEnabled, setDesktopEnabled } = this.props;
+
+    return (
+      <div ref={this.settingsRefs[5]} className="settings-page__content-row">
+        <div className="settings-page__content-item">
+          <span>Enable desktop app</span>
+          <div className="settings-page__content-description">
+            Select this to run all background processes in the desktop app.
+          </div>
+        </div>
+        <div className="settings-page__content-item">
+          <div className="settings-page__content-item-col">
+            <ToggleButton
+              value={desktopEnabled}
+              onToggle={(value) => {
+                this.context.trackEvent({
+                  category: EVENT.CATEGORIES.SETTINGS,
+                  event: 'Enabled/Disable Desktop',
+                  properties: {
+                    action: 'Enabled/Disable Desktop',
+                    legacy_event: true,
+                  },
+                });
+                setDesktopEnabled(!value);
+              }}
+              offLabel={t('off')}
+              onLabel={t('on')}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   render() {
     return (
       <div className="settings-page__body">
@@ -293,6 +331,7 @@ export default class ExperimentalTab extends PureComponent {
         {this.renderEIP1559V2EnabledToggle()}
         {this.renderTheme()}
         {this.renderCustomNetworkListToggle()}
+        {this.renderDesktopToggle()}
       </div>
     );
   }

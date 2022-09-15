@@ -1,6 +1,5 @@
 import path from 'path';
 import { app, BrowserWindow } from 'electron';
-// eslint-disable-next-line
 import { Server as WebSocketServer } from 'ws';
 import endOfStream from 'end-of-stream';
 import ObjectMultiplex from 'obj-multiplex';
@@ -10,22 +9,24 @@ import {
   CLIENT_ID_CONNECTION_CONTROLLER,
   CLIENT_ID_HANDSHAKES,
   BROWSER_ACTION_SHOW_POPUP,
+  CLIENT_ID_STATE,
+  CLIENT_ID_DISABLE,
 } from '../../../shared/constants/desktop';
 import cfg from './config';
 import { updateCheck } from './update-check';
 import WebSocketStream from './web-socket-stream';
 import EncryptedWebSocketStream from './encrypted-web-socket-stream';
+import { browser } from './extension-polyfill';
 
 export default class Desktop {
-  constructor() {
+  constructor(backgroundInitialise) {
+    this._backgroundInitialise = backgroundInitialise;
     this._connections = [];
     this._multiplex = new ObjectMultiplex();
     this._clientStreams = {};
   }
 
-  async init(connectRemote) {
-    this._connectRemote = connectRemote;
-
+  async init() {
     await app.whenReady();
 
     this._statusWindow = await this._createStatusWindow();
@@ -47,9 +48,27 @@ export default class Desktop {
     const handshakeStream = this._multiplex.createStream(CLIENT_ID_HANDSHAKES);
     handshakeStream.on('data', (data) => this._onHandshake(data));
 
+    const stateStream = this._multiplex.createStream(CLIENT_ID_STATE);
+    stateStream.on('data', (data) => this._onExtensionState(data));
+
+    this._disableStream = this._multiplex.createStream(CLIENT_ID_DISABLE);
+
     log.debug('Initialised desktop');
 
     updateCheck();
+  }
+
+  async disable() {
+    log.debug('Disabling desktop usage');
+
+    const state = await browser.storage.local.get();
+    state.data.PreferencesController.desktopEnabled = false;
+
+    this._disableStream.write(state);
+  }
+
+  setConnectRemote(connectRemote) {
+    this._connectRemote = connectRemote;
   }
 
   showPopup() {
@@ -125,6 +144,16 @@ export default class Desktop {
 
     this._connections.push(data);
     this._updateStatusWindow();
+  }
+
+  async _onExtensionState(data) {
+    log.debug('Received extension state');
+
+    await browser.storage.local.set(data);
+    log.debug('Synchronised state with extension');
+
+    log.debug('Re-initialising background script');
+    await this._backgroundInitialise();
   }
 
   _onClientStreamEnd(clientId) {

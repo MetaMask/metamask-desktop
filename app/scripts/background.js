@@ -107,16 +107,12 @@ const ONE_SECOND_IN_MILLISECONDS = 1_000;
 // Timeout for initializing phishing warning page.
 const PHISHING_WARNING_PAGE_TIMEOUT = ONE_SECOND_IN_MILLISECONDS;
 
-let desktop;
+let desktopApp;
 let desktopConnection;
 
 if (cfg().desktop.isApp) {
-  desktop = new Desktop();
-}
-
-if (cfg().desktop.isExtension) {
-  desktopConnection = new DesktopConnection(notificationManager);
-  desktopConnection.init();
+  desktopApp = new Desktop(initialize);
+  desktopApp.init();
 }
 
 /**
@@ -201,9 +197,34 @@ if (isManifestV3) {
 async function initialize(remotePort) {
   const initState = await loadStateFromPersistence();
   const initLangCode = await getFirstPreferredLangCode();
+
+  initDesktopConnection(initState);
   await setupController(initState, initLangCode, remotePort);
 
   log.info('MetaMask initialization complete.');
+}
+
+function initDesktopConnection(state) {
+  if (
+    !cfg().desktop.isExtension ||
+    (state && state.PreferencesController.desktopEnabled !== true)
+  ) {
+    return;
+  }
+
+  desktopConnection = new DesktopConnection(notificationManager);
+  desktopConnection.init();
+}
+
+async function onDesktopEnabledToggle(isEnabled) {
+  log.debug('Detected desktop enabled toggle', { isEnabled });
+
+  if (cfg().desktop.isExtension && !desktopConnection && isEnabled) {
+    await initDesktopConnection();
+    await desktopConnection.transferState();
+  } else if (cfg().desktop.isApp && !isEnabled) {
+    await desktopApp.disable();
+  }
 }
 
 /**
@@ -368,6 +389,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     getOpenMetamaskTabsIds: () => {
       return openMetamaskTabsIDs;
     },
+    onDesktopEnabledToggle,
   });
 
   setupEnsIpfsResolver({
@@ -484,7 +506,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
    * @param {Port} remotePort - The port provided by a new context.
    */
   function connectRemote(remotePort) {
-    if (cfg().desktop.isExtension) {
+    if (desktopConnection) {
       desktopConnection.createStream(remotePort);
       return;
     }
@@ -590,7 +612,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
 
   // communication with page or other extension
   function connectExternal(remotePort) {
-    if (cfg().desktop.isExtension) {
+    if (desktopConnection) {
       console.log('Ignored attempted external connection');
       return;
     }
@@ -754,8 +776,8 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     updateBadge();
   }
 
-  if (cfg().desktop.isApp) {
-    desktop.init(connectRemote);
+  if (desktopApp) {
+    desktopApp.setConnectRemote(connectRemote);
   }
 
   return Promise.resolve();
@@ -769,8 +791,8 @@ function setupController(initState, initLangCode, remoteSourcePort) {
  * Opens the browser popup for user confirmation
  */
 async function triggerUi() {
-  if (cfg().desktop.isApp) {
-    desktop.showPopup();
+  if (desktopApp) {
+    desktopApp.showPopup();
     return;
   }
 
