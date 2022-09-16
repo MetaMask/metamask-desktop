@@ -1,10 +1,10 @@
-import { RemotePortData } from './background';
+import { ConnectionType, RemotePortData } from './background';
 import { ClientId } from './desktop';
 
 export interface HandshakeMessage {
   clientId: ClientId;
   remotePort: RemotePortData;
-  isExternal: boolean;
+  connectionType: ConnectionType;
 }
 
 export interface ConnectionControllerMessage {

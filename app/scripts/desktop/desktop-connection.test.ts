@@ -30,7 +30,7 @@ import EncryptedWebSocketStream from './encrypted-web-socket-stream';
 import { WebSocketStream, BrowserWebSocket } from './web-socket-stream';
 import cfg from './config';
 import { browser } from './extension-polyfill';
-import { RemotePort } from './types/background';
+import { ConnectionType, RemotePort } from './types/background';
 import { ClientId } from './types/desktop';
 import { BrowserControllerAction } from './types/message';
 
@@ -120,7 +120,7 @@ describe('Desktop Connection', () => {
         cfg().desktop.webSocket.disableEncryption = disableEncryption;
 
         desktopConnection.init();
-        desktopConnection.createStream(remotePortMock);
+        desktopConnection.createStream(remotePortMock, ConnectionType.INTERNAL);
 
         expect(webSocketConstructor).toHaveBeenCalledTimes(1);
         expect(webSocketConstructor).toHaveBeenCalledWith(webSocketMock);
@@ -153,10 +153,13 @@ describe('Desktop Connection', () => {
     });
   });
 
-  describe('createStream', () => {
+  describe.each([
+    { connectionType: ConnectionType.INTERNAL, name: `Internal` },
+    { connectionType: ConnectionType.EXTERNAL, name: `External` },
+  ])('createStream - $name Connection', ({ connectionType }) => {
     it('pipes remote port to new multiplex client stream', async () => {
       desktopConnection.init();
-      desktopConnection.createStream(remotePortMock);
+      desktopConnection.createStream(remotePortMock, connectionType);
 
       expect(portStreamConstructorMock).toHaveBeenCalledTimes(1);
       expect(portStreamConstructorMock).toHaveBeenCalledWith(remotePortMock);
@@ -175,13 +178,14 @@ describe('Desktop Connection', () => {
 
     it('sends handshake to web socket stream', async () => {
       desktopConnection.init();
-      desktopConnection.createStream(remotePortMock);
+      desktopConnection.createStream(remotePortMock, connectionType);
 
       const handshakeStreamMock = multiplexStreamMocks[CLIENT_ID_HANDSHAKES];
 
       expect(handshakeStreamMock.write).toHaveBeenCalledTimes(1);
       expect(handshakeStreamMock.write).toHaveBeenCalledWith({
         clientId: 1,
+        connectionType,
         remotePort: {
           name: REMOTE_PORT_NAME_MOCK,
           sender: REMOTE_PORT_SENDER_MOCK,
@@ -201,7 +205,10 @@ describe('Desktop Connection', () => {
           desktopConnection.init();
           await simulateBrowserEvent(webSocketMock, 'close');
 
-          desktopConnection.createStream(remotePortMock);
+          desktopConnection.createStream(
+            remotePortMock,
+            ConnectionType.INTERNAL,
+          );
 
           expect(webSocketConstructor).toHaveBeenCalledTimes(2);
           expect(webSocketConstructor).toHaveBeenLastCalledWith(webSocketMock);
@@ -228,7 +235,7 @@ describe('Desktop Connection', () => {
       });
 
       desktopConnection.init();
-      desktopConnection.createStream(remotePortMock);
+      desktopConnection.createStream(remotePortMock, ConnectionType.INTERNAL);
 
       await desktopConnection.transferState();
 
@@ -245,7 +252,7 @@ describe('Desktop Connection', () => {
   describe('on port stream disconnect', () => {
     it('sends connection close message', async () => {
       desktopConnection.init();
-      desktopConnection.createStream(remotePortMock);
+      desktopConnection.createStream(remotePortMock, ConnectionType.INTERNAL);
 
       await simulateNodeEvent(portStreamMock, 'finish');
 
@@ -261,7 +268,7 @@ describe('Desktop Connection', () => {
   describe('on browser controller message', () => {
     it('shows popup', async () => {
       desktopConnection.init();
-      desktopConnection.createStream(remotePortMock);
+      desktopConnection.createStream(remotePortMock, ConnectionType.INTERNAL);
 
       const browserControllerStreamMock =
         multiplexStreamMocks[CLIENT_ID_BROWSER_CONTROLLER];
@@ -276,7 +283,7 @@ describe('Desktop Connection', () => {
 
     it('does nothing if action not recognised', async () => {
       desktopConnection.init();
-      desktopConnection.createStream(remotePortMock);
+      desktopConnection.createStream(remotePortMock, ConnectionType.INTERNAL);
 
       const browserControllerStreamMock =
         multiplexStreamMocks[CLIENT_ID_BROWSER_CONTROLLER];
@@ -290,7 +297,7 @@ describe('Desktop Connection', () => {
   describe('on disable message', () => {
     beforeEach(async () => {
       desktopConnection.init();
-      desktopConnection.createStream(remotePortMock);
+      desktopConnection.createStream(remotePortMock, ConnectionType.INTERNAL);
 
       const disableStreamMock = multiplexStreamMocks[CLIENT_ID_DISABLE];
       await simulateStreamMessage(disableStreamMock, DATA_MOCK);

@@ -17,3 +17,8 @@ export interface RemotePort extends RemotePortData {
 export type ConnectRemoteFactory = (remotePort: RemotePort) => undefined;
 
 export type State = any;
+
+export enum ConnectionType {
+  INTERNAL = 'INTERNAL',
+  EXTERNAL = 'EXTERNAL',
+}

@@ -17,7 +17,7 @@ import { updateCheck } from './update-check';
 import { WebSocketStream } from './web-socket-stream';
 import EncryptedWebSocketStream from './encrypted-web-socket-stream';
 import { browser } from './extension-polyfill';
-import { ConnectRemoteFactory } from './types/background';
+import { ConnectionType, ConnectRemoteFactory } from './types/background';
 import {
   BrowserControllerAction,
   ConnectionControllerMessage,
@@ -180,15 +180,15 @@ export default class Desktop {
       clientId: data.clientId,
       name: data.remotePort.name,
       url: data.remotePort.sender.url,
-      isExternal: data.isExternal,
+      connectionType: data.connectionType,
     });
 
-    if (!this.connectRemote) {
-      log.error('Connect remote factory not provided');
+    if (!this.connectRemote || !this.connectExternal) {
+      log.error('Connect callbacks not set');
       return;
     }
 
-    const { clientId, isExternal } = data;
+    const { clientId, connectionType } = data;
 
     const stream = this.multiplex.createStream(clientId);
     this.clientStreams[clientId] = stream;
@@ -203,10 +203,17 @@ export default class Desktop {
       },
     };
 
-    if (isExternal) {
-      this.connectExternal!(connectArgs);
-    } else {
-      this.connectRemote!(connectArgs);
+    switch (connectionType) {
+      case ConnectionType.INTERNAL:
+        this.connectRemote(connectArgs);
+        break;
+
+      case ConnectionType.EXTERNAL:
+        this.connectExternal(connectArgs);
+        break;
+
+      default:
+        throw new Error(`Connection type not supported - ${connectionType}`);
     }
 
     this.connections.push(data);

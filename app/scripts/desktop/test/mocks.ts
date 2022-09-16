@@ -2,7 +2,7 @@ import { Duplex } from 'stream';
 import ObjectMultiplex from 'obj-multiplex';
 import { WebSocketServer } from 'ws';
 import NotificationManager from '../../lib/notification-manager';
-import { RemotePort } from '../types/background';
+import { ConnectionType, RemotePort } from '../types/background';
 import {
   BrowserWebSocket,
   NodeWebSocket,
@@ -31,6 +31,7 @@ export const RESULT_MOCK = 'testResult';
 
 export const HANDSHAKE_MOCK = {
   clientId: CLIENT_ID_MOCK,
+  connectionType: ConnectionType.INTERNAL,
   remotePort: { name: REMOTE_PORT_NAME_MOCK, sender: REMOTE_PORT_SENDER_MOCK },
 };
 

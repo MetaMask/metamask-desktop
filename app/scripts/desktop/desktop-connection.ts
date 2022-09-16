@@ -15,7 +15,12 @@ import cfg from './config';
 import { WebSocketStream } from './web-socket-stream';
 import EncryptedWebSocketStream from './encrypted-web-socket-stream';
 import { browser } from './extension-polyfill';
-import { RemotePort, RemotePortData, State } from './types/background';
+import {
+  ConnectionType,
+  RemotePort,
+  RemotePortData,
+  State,
+} from './types/background';
 import { ClientId } from './types/desktop';
 import {
   BrowserControllerAction,
@@ -85,9 +90,9 @@ export default class DesktopConnection {
    * Creates a connection with the MetaMask Desktop via a multiplexed stream.
    *
    * @param remotePort - The port provided by a new context.
-   * @param isExternal - Whether or not the new context is external (page or other extension).
+   * @param connectionType - Whether or not the new context is external (page or other extension).
    */
-  public createStream(remotePort: RemotePort, isExternal: boolean) {
+  public createStream(remotePort: RemotePort, connectionType: ConnectionType) {
     if (!this.webSocketStream) {
       this.connect();
     }
@@ -100,7 +105,7 @@ export default class DesktopConnection {
 
     endOfStream(portStream, () => this.onPortStreamEnd(clientId, clientStream));
 
-    this.sendHandshake(remotePort, clientId, isExternal);
+    this.sendHandshake(remotePort, clientId, connectionType);
   }
 
   private async onDisable(state: State) {
@@ -147,7 +152,7 @@ export default class DesktopConnection {
   private sendHandshake(
     remotePort: RemotePortData,
     clientId: ClientId,
-    isExternal: boolean,
+    connectionType: ConnectionType,
   ) {
     if (!this.handshakeStream) {
       log.error('Handshake stream not initialised');
@@ -156,11 +161,11 @@ export default class DesktopConnection {
 
     const handshake = {
       clientId,
+      connectionType,
       remotePort: {
         name: remotePort.name,
         sender: remotePort.sender,
       },
-      isExternal,
     };
 
     log.debug('Sending handshake', handshake);

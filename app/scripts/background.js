@@ -28,6 +28,10 @@ import {
 } from '../../shared/constants/metametrics';
 import { isManifestV3 } from '../../shared/modules/mv3.utils';
 import { maskObject } from '../../shared/modules/object.utils';
+import {
+  CONNECTION_TYPE_EXTERNAL,
+  CONNECTION_TYPE_INTERNAL,
+} from '../../shared/constants/desktop';
 import { browser } from './desktop/extension-polyfill';
 import migrations from './migrations';
 import Migrator from './lib/migrator';
@@ -507,7 +511,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
    */
   function connectRemote(remotePort) {
     if (desktopConnection) {
-      desktopConnection.createStream(remotePort, false);
+      desktopConnection.createStream(remotePort, CONNECTION_TYPE_INTERNAL);
       return;
     }
 
@@ -613,7 +617,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
   // communication with page or other extension
   function connectExternal(remotePort) {
     if (desktopConnection) {
-      desktopConnection.createStream(remotePort, true);
+      desktopConnection.createStream(remotePort, CONNECTION_TYPE_EXTERNAL);
       log.debug('Created stream for external connection');
       return;
     }
