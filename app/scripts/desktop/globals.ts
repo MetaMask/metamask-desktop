@@ -1,19 +1,15 @@
 import cfg from './config';
 
 if (cfg().desktop.isApp) {
-  global.self = {};
+  global.self = {} as unknown as Window & typeof globalThis;
 
-  global.crypto = {
-    // eslint-disable-next-line node/global-require
-    getRandomValues: require('polyfill-crypto.getrandomvalues'),
-    // Ternary prevents LavaMoat failing as the library can't be found
-    // eslint-disable-next-line
-    subtle: require(cfg().desktop.isApp ? `node:crypto` : ``).webcrypto.subtle,
-  };
+  // Ternary prevents LavaMoat failing as the library can't be found
+  // eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
+  global.crypto = require(cfg().desktop.isApp ? `node:crypto` : ``).webcrypto;
 
   global.navigator = {
     userAgent: 'Firefox',
-  };
+  } as Navigator;
 
   global.window = {
     navigator: global.navigator,
@@ -22,7 +18,7 @@ if (cfg().desktop.isApp) {
     },
     postMessage: () => undefined,
     addEventListener: () => undefined,
-  };
+  } as unknown as Window & typeof globalThis;
 
   global.document = {
     createElement: () => ({
@@ -32,5 +28,5 @@ if (cfg().desktop.isApp) {
     head: {
       appendChild: () => undefined,
     },
-  };
+  } as unknown as Document;
 }

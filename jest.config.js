@@ -36,7 +36,7 @@ module.exports = {
   testMatch: [
     '<rootDir>/ui/**/*.test.js',
     '<rootDir>/shared/**/*.test.js',
-    '<rootDir>/app/scripts/desktop/**/*.test.js',
+    '<rootDir>/app/scripts/desktop/**/*.test.{js,ts}',
     '<rootDir>/app/scripts/lib/**/*.test.js',
     '<rootDir>/app/scripts/migrations/*.test.js',
     '<rootDir>/app/scripts/platforms/*.test.js',

@@ -1,16 +1,15 @@
 import { dialog } from 'electron';
-import { autoUpdater } from 'electron-updater';
+import { autoUpdater, UpdateCheckResult } from 'electron-updater';
 import log from 'loglevel';
 import cfg from './config';
 
 autoUpdater.logger = log;
-
 autoUpdater.autoDownload = false;
 
-export const updateCheck = async () => {
+export const updateCheck = async (): Promise<UpdateCheckResult | null> => {
   if (!cfg().desktop.enableUpdates || !autoUpdater.isUpdaterActive()) {
     log.debug('Updater not active');
-    return;
+    return null;
   }
 
   autoUpdater.on('error', (error) => {
@@ -54,6 +53,5 @@ export const updateCheck = async () => {
     log.debug('Download progress', progressInfo);
   });
 
-  // eslint-disable-next-line consistent-return
   return autoUpdater.checkForUpdates();
 };

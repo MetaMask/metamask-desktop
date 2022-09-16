@@ -3,4 +3,5 @@ export const CLIENT_ID_CONNECTION_CONTROLLER = 'connectionController';
 export const CLIENT_ID_HANDSHAKES = 'handshakes';
 export const CLIENT_ID_STATE = 'state';
 export const CLIENT_ID_DISABLE = 'disable';
-export const BROWSER_ACTION_SHOW_POPUP = 'showPopup';
+export const CONNECTION_TYPE_INTERNAL = 'INTERNAL';
+export const CONNECTION_TYPE_EXTERNAL = 'EXTERNAL';
