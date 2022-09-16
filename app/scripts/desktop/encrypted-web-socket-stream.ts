@@ -63,7 +63,7 @@ export default class EncryptedWebSocketStream extends Duplex {
         ? await symmetricEncryption.encrypt(rawData, this.symmetricKey)
         : asymmetricEncryption.encrypt(rawData, this.targetPublicKey);
 
-    log.debug('Sending encrypted message to web socket', msg);
+    log.debug('Sending encrypted message to web socket', flattenMessage(msg));
 
     if (!this.webSocketStream) {
       log.error('Web socket stream not initialised');
