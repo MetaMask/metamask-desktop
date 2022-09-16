@@ -21,6 +21,7 @@ export const RESULT_MOCK = 'testResult';
 export const HANDSHAKE_MOCK = {
   clientId: CLIENT_ID_MOCK,
   remotePort: { name: REMOTE_PORT_NAME_MOCK, sender: REMOTE_PORT_SENDER_MOCK },
+  isExternal: false,
 };
 
 export const flushPromises = () =>

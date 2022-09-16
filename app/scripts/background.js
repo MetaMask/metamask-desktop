@@ -507,7 +507,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
    */
   function connectRemote(remotePort) {
     if (desktopConnection) {
-      desktopConnection.createStream(remotePort);
+      desktopConnection.createStream(remotePort, false);
       return;
     }
 
@@ -613,7 +613,8 @@ function setupController(initState, initLangCode, remoteSourcePort) {
   // communication with page or other extension
   function connectExternal(remotePort) {
     if (desktopConnection) {
-      console.log('Ignored attempted external connection');
+      desktopConnection.createStream(remotePort, true);
+      log.debug('Created stream for external connection');
       return;
     }
 
@@ -776,8 +777,13 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     updateBadge();
   }
 
+  /**
+   * Once setConnectCallbacks is set, the desktop app can be called by the extension through the websocket.
+   * Consequently, we set those functions only once the MetaMask Controller is fully configured, e. g. at the whole end of the setupController function.
+   * This guarantees the desktop app can only be called by the extension when fully setup.
+   */
   if (desktopApp) {
-    desktopApp.setConnectRemote(connectRemote);
+    desktopApp.setConnectCallbacks(connectRemote, connectExternal);
   }
 
   return Promise.resolve();

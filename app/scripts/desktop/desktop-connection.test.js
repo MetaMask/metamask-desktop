@@ -55,6 +55,7 @@ describe('Desktop Connection', () => {
   let remotePortMock;
   let desktopConnection;
   const multiplexStreamMocks = {};
+  const isExternalFalse = false;
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -97,7 +98,7 @@ describe('Desktop Connection', () => {
         cfg().desktop.webSocket.disableEncryption = disableEncryption;
 
         desktopConnection.init();
-        desktopConnection.createStream(remotePortMock);
+        desktopConnection.createStream(remotePortMock, isExternalFalse);
 
         expect(webSocketConstructor).toHaveBeenCalledTimes(1);
         expect(webSocketConstructor).toHaveBeenCalledWith(webSocketMock);
@@ -130,10 +131,13 @@ describe('Desktop Connection', () => {
     });
   });
 
-  describe('createStream', () => {
+  describe.each([
+    { isExternal: false, connectionType: `remote connection` },
+    { isExternal: true, connectionType: `external connection` },
+  ])(`createStream for $connectionType`, (isExternal) => {
     it('pipes remote port to new multiplex client stream', async () => {
       desktopConnection.init();
-      desktopConnection.createStream(remotePortMock);
+      desktopConnection.createStream(remotePortMock, isExternal);
 
       expect(PortStream).toHaveBeenCalledTimes(1);
       expect(PortStream).toHaveBeenCalledWith(remotePortMock);
@@ -152,13 +156,14 @@ describe('Desktop Connection', () => {
 
     it('sends handshake to web socket stream', async () => {
       desktopConnection.init();
-      desktopConnection.createStream(remotePortMock);
+      desktopConnection.createStream(remotePortMock, isExternal);
 
       const handshakeStreamMock = multiplexStreamMocks[CLIENT_ID_HANDSHAKES];
 
       expect(handshakeStreamMock.write).toHaveBeenCalledTimes(1);
       expect(handshakeStreamMock.write).toHaveBeenCalledWith({
         clientId: 1,
+        isExternal,
         remotePort: {
           name: REMOTE_PORT_NAME_MOCK,
           sender: REMOTE_PORT_SENDER_MOCK,
@@ -178,7 +183,7 @@ describe('Desktop Connection', () => {
           desktopConnection.init();
           await simulateBrowserEvent(webSocketMock, 'close');
 
-          desktopConnection.createStream(remotePortMock);
+          desktopConnection.createStream(remotePortMock, isExternal);
 
           expect(webSocketConstructor).toHaveBeenCalledTimes(2);
           expect(webSocketConstructor).toHaveBeenLastCalledWith(webSocketMock);
@@ -205,7 +210,7 @@ describe('Desktop Connection', () => {
       });
 
       desktopConnection.init();
-      desktopConnection.createStream(remotePortMock);
+      desktopConnection.createStream(remotePortMock, isExternalFalse);
 
       await desktopConnection.transferState();
 
@@ -222,7 +227,7 @@ describe('Desktop Connection', () => {
   describe('on port stream disconnect', () => {
     it('sends connection close message', async () => {
       desktopConnection.init();
-      desktopConnection.createStream(remotePortMock);
+      desktopConnection.createStream(remotePortMock, isExternalFalse);
 
       await simulateNodeEvent(portStreamMock, 'finish');
 
@@ -238,7 +243,7 @@ describe('Desktop Connection', () => {
   describe('on browser controller message', () => {
     it('shows popup', async () => {
       desktopConnection.init();
-      desktopConnection.createStream(remotePortMock);
+      desktopConnection.createStream(remotePortMock, isExternalFalse);
 
       const browserControllerStreamMock =
         multiplexStreamMocks[CLIENT_ID_BROWSER_CONTROLLER];
@@ -253,7 +258,7 @@ describe('Desktop Connection', () => {
 
     it('does nothing if action not recognised', async () => {
       desktopConnection.init();
-      desktopConnection.createStream(remotePortMock);
+      desktopConnection.createStream(remotePortMock, isExternalFalse);
 
       const browserControllerStreamMock =
         multiplexStreamMocks[CLIENT_ID_BROWSER_CONTROLLER];
@@ -267,7 +272,7 @@ describe('Desktop Connection', () => {
   describe('on disable message', () => {
     beforeEach(async () => {
       desktopConnection.init();
-      desktopConnection.createStream(remotePortMock);
+      desktopConnection.createStream(remotePortMock, isExternalFalse);
 
       const disableStreamMock = multiplexStreamMocks[CLIENT_ID_DISABLE];
       await simulateStreamMessage(disableStreamMock, DATA_MOCK);
