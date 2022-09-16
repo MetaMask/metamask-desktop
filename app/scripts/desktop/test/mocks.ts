@@ -12,11 +12,13 @@ import {
 export const PUBLIC_KEY_MOCK = 'testPublicKey';
 export const PRIVATE_KEY_MOCK = 'testPrivateKey';
 export const DECRYPTED_STRING_MOCK = 'testDecryptedData';
+export const DECRYPTED_BUFFER_MOCK = Buffer.from(DECRYPTED_STRING_MOCK);
 export const ENCRYPTED_STRING_MOCK = 'testEncryptedData';
 export const DATA_MOCK = { test: 'value' };
 export const DATA_2_MOCK = { test2: 'value2' };
 export const JSON_MOCK = '{"test":"value"}';
 export const STRING_DATA_MOCK = 'testStringData';
+export const STRING_DATA_BUFFER_MOCK = Buffer.from(STRING_DATA_MOCK);
 export const REMOTE_PORT_NAME_MOCK = 'testPort';
 export const REMOTE_PORT_SENDER_MOCK = { test2: 'value2' };
 export const CLIENT_ID_MOCK = 3;
@@ -28,6 +30,19 @@ export const STREAM_MOCK = 'testStream';
 export const TYPE_MOCK = 'testType';
 export const METHOD_MOCK = 'testMethod';
 export const RESULT_MOCK = 'testResult';
+export const KEY_MOCK = {} as CryptoKey;
+export const EXPORTED_KEY_MOCK = Buffer.from([1, 2, 3]);
+export const ENCRYPTED_BUFFER_MOCK = Buffer.from([4, 5, 6]);
+export const IV_BUFFER_MOCK = Buffer.from([7, 8, 9]);
+
+export const EXPORTED_KEY_HEX_MOCK =
+  Buffer.from(EXPORTED_KEY_MOCK).toString('hex');
+
+export const ENCRYPTED_HEX_MOCK = Buffer.from(ENCRYPTED_BUFFER_MOCK).toString(
+  'hex',
+);
+
+export const IV_HEX_MOCK = Buffer.from(IV_BUFFER_MOCK).toString('hex');
 
 export const HANDSHAKE_MOCK = {
   clientId: CLIENT_ID_MOCK,

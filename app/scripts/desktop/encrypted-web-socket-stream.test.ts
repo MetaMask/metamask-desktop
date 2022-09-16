@@ -1,6 +1,7 @@
 import EncryptedWebSocketStream from './encrypted-web-socket-stream';
 import { NodeWebSocket, WebSocketStream } from './web-socket-stream';
-import * as encryption from './encryption';
+import * as asymmetricEncryption from './asymmetric-encryption';
+import * as symmetricEncryption from './symmetric-encryption';
 import {
   PUBLIC_KEY_MOCK,
   PRIVATE_KEY_MOCK,
@@ -10,6 +11,8 @@ import {
   STRING_DATA_MOCK,
   createWebSocketNodeMock,
   createWebSocketStreamMock,
+  EXPORTED_KEY_HEX_MOCK,
+  IV_HEX_MOCK,
 } from './test/mocks';
 import { simulateNodeEvent } from './test/utils';
 
@@ -18,9 +21,19 @@ jest.mock('./web-socket-stream', () => ({ WebSocketStream: jest.fn() }), {
 });
 
 jest.mock(
-  './encryption',
+  './asymmetric-encryption',
   () => ({
     createKeyPair: jest.fn(),
+    decrypt: jest.fn(),
+    encrypt: jest.fn(),
+  }),
+  { virtual: true },
+);
+
+jest.mock(
+  './symmetric-encryption',
+  () => ({
+    createKey: jest.fn(),
     decrypt: jest.fn(),
     encrypt: jest.fn(),
   }),
@@ -31,7 +44,8 @@ describe('Encrypted Web Socket Stream', () => {
   let webSocketStreamConstructorMock: jest.Mocked<any>;
   let webSocketStreamMock: jest.Mocked<WebSocketStream>;
   let webSocketMock: jest.Mocked<NodeWebSocket>;
-  let encryptionMock: jest.Mocked<typeof encryption>;
+  let asymmetricEncryptionMock: jest.Mocked<typeof asymmetricEncryption>;
+  let symmetricEncryptionMock: jest.Mocked<typeof symmetricEncryption>;
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -39,19 +53,22 @@ describe('Encrypted Web Socket Stream', () => {
     webSocketStreamConstructorMock = WebSocketStream;
     webSocketStreamMock = createWebSocketStreamMock();
     webSocketMock = createWebSocketNodeMock();
-    encryptionMock = encryption as any;
+    asymmetricEncryptionMock = asymmetricEncryption as any;
+    symmetricEncryptionMock = symmetricEncryption as any;
 
     webSocketStreamConstructorMock.mockReturnValue(webSocketStreamMock);
 
-    encryptionMock.createKeyPair.mockReturnValue({
+    asymmetricEncryptionMock.createKeyPair.mockReturnValue({
       privateKey: PRIVATE_KEY_MOCK,
       publicKey: PUBLIC_KEY_MOCK,
     });
+
+    symmetricEncryptionMock.createKey.mockResolvedValue(EXPORTED_KEY_HEX_MOCK);
   });
 
   describe('init', () => {
     it('creates web socket stream using web socket', async () => {
-      new EncryptedWebSocketStream(webSocketMock).init();
+      await new EncryptedWebSocketStream(webSocketMock).init();
 
       expect(webSocketStreamConstructorMock).toHaveBeenCalledTimes(1);
       expect(webSocketStreamConstructorMock).toHaveBeenCalledWith(
@@ -60,9 +77,9 @@ describe('Encrypted Web Socket Stream', () => {
     });
 
     it('generates key pair and sends public key', async () => {
-      new EncryptedWebSocketStream(webSocketMock).init();
+      await new EncryptedWebSocketStream(webSocketMock).init();
 
-      expect(encryptionMock.createKeyPair).toHaveBeenCalledTimes(1);
+      expect(asymmetricEncryptionMock.createKeyPair).toHaveBeenCalledTimes(1);
 
       expect(webSocketStreamMock.write).toHaveBeenCalledTimes(1);
       expect(webSocketStreamMock.write).toHaveBeenCalledWith({
@@ -76,32 +93,48 @@ describe('Encrypted Web Socket Stream', () => {
       ['string', STRING_DATA_MOCK, STRING_DATA_MOCK],
       ['object', JSON_MOCK, DATA_MOCK],
     ])(
-      'decrypts message and returns %s if public key received',
-      async (_, decryptedData, pushedData) => {
+      'decrypts message and returns %s if public key and symmetric key received',
+      async (_, messageData, pushedData) => {
         const pushCallback = jest.fn();
 
         const encryptedWebSocketStream = new EncryptedWebSocketStream(
           webSocketMock,
         );
-        encryptedWebSocketStream.init();
+        await encryptedWebSocketStream.init();
         encryptedWebSocketStream.on('data', pushCallback);
 
-        encryptionMock.decrypt.mockReturnValue(decryptedData);
+        asymmetricEncryptionMock.decrypt.mockImplementationOnce(
+          (data: any) => data,
+        );
+
+        symmetricEncryptionMock.decrypt.mockImplementationOnce((data: any) =>
+          Promise.resolve(data),
+        );
 
         await simulateNodeEvent(webSocketStreamMock, 'data', {
           publicKey: PUBLIC_KEY_MOCK,
         });
 
-        await simulateNodeEvent(
-          webSocketStreamMock,
-          'data',
-          ENCRYPTED_STRING_MOCK,
+        await simulateNodeEvent(webSocketStreamMock, 'data', {
+          symmetricKey: EXPORTED_KEY_HEX_MOCK,
+        });
+
+        await simulateNodeEvent(webSocketStreamMock, 'data', {
+          data: messageData,
+          iv: IV_HEX_MOCK,
+        });
+
+        expect(asymmetricEncryptionMock.decrypt).toHaveBeenCalledTimes(1);
+        expect(asymmetricEncryptionMock.decrypt).toHaveBeenCalledWith(
+          { symmetricKey: EXPORTED_KEY_HEX_MOCK },
+          PRIVATE_KEY_MOCK,
         );
 
-        expect(encryptionMock.decrypt).toHaveBeenCalledTimes(1);
-        expect(encryptionMock.decrypt).toHaveBeenCalledWith(
-          ENCRYPTED_STRING_MOCK,
-          PRIVATE_KEY_MOCK,
+        expect(symmetricEncryptionMock.decrypt).toHaveBeenCalledTimes(1);
+        expect(symmetricEncryptionMock.decrypt).toHaveBeenCalledWith(
+          messageData,
+          EXPORTED_KEY_HEX_MOCK,
+          IV_HEX_MOCK,
         );
 
         expect(pushCallback).toHaveBeenCalledTimes(1);
@@ -124,7 +157,7 @@ describe('Encrypted Web Socket Stream', () => {
         ENCRYPTED_STRING_MOCK,
       );
 
-      expect(encryptionMock.decrypt).toHaveBeenCalledTimes(0);
+      expect(asymmetricEncryptionMock.decrypt).toHaveBeenCalledTimes(0);
       expect(pushCallback).toHaveBeenCalledTimes(0);
     });
   });
@@ -137,27 +170,34 @@ describe('Encrypted Web Socket Stream', () => {
 
   describe('write', () => {
     it.each([
-      ['string', STRING_DATA_MOCK, STRING_DATA_MOCK],
-      ['object', DATA_MOCK, JSON_MOCK],
+      ['string', STRING_DATA_MOCK],
+      ['object', DATA_MOCK],
     ])(
-      'encrypts %s message and writes to web socket stream if public key received',
-      async (_, data, dataToEncrypt) => {
+      'encrypts %s message and writes to web socket stream if public key and symmetric key received',
+      async (_, messageData) => {
         const encryptedWebSocketStream = new EncryptedWebSocketStream(
           webSocketMock,
         );
-        encryptedWebSocketStream.init();
+        await encryptedWebSocketStream.init();
 
-        encryptionMock.encrypt.mockReturnValue(ENCRYPTED_STRING_MOCK);
+        asymmetricEncryptionMock.decrypt.mockImplementation(
+          (data: any) => data,
+        );
+        asymmetricEncryptionMock.encrypt.mockReturnValue(ENCRYPTED_STRING_MOCK);
 
         await simulateNodeEvent(webSocketStreamMock, 'data', {
           publicKey: PUBLIC_KEY_MOCK,
         });
 
-        encryptedWebSocketStream.write(data);
+        await simulateNodeEvent(webSocketStreamMock, 'data', {
+          symmetricKey: EXPORTED_KEY_HEX_MOCK,
+        });
 
-        expect(encryptionMock.encrypt).toHaveBeenCalledTimes(1);
-        expect(encryptionMock.encrypt).toHaveBeenCalledWith(
-          dataToEncrypt,
+        encryptedWebSocketStream.write(messageData);
+
+        expect(asymmetricEncryptionMock.encrypt).toHaveBeenCalledTimes(1);
+        expect(asymmetricEncryptionMock.encrypt).toHaveBeenCalledWith(
+          JSON.stringify({ symmetricKey: EXPORTED_KEY_HEX_MOCK }),
           PUBLIC_KEY_MOCK,
         );
 
@@ -174,11 +214,11 @@ describe('Encrypted Web Socket Stream', () => {
       const encryptedWebSocketStream = new EncryptedWebSocketStream(
         webSocketMock,
       );
-      encryptedWebSocketStream.init();
+      await encryptedWebSocketStream.init();
 
       encryptedWebSocketStream.write(DATA_MOCK);
 
-      expect(encryption.encrypt).toHaveBeenCalledTimes(0);
+      expect(asymmetricEncryption.encrypt).toHaveBeenCalledTimes(0);
       expect(webSocketStreamMock.write).toHaveBeenCalledTimes(1);
     });
   });
