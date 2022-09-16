@@ -5,7 +5,7 @@ import {
   PRIVATE_KEY_MOCK,
   PUBLIC_KEY_MOCK,
   STRING_DATA_MOCK,
-} from './test/utils';
+} from './test/mocks';
 
 jest.mock(
   'eciesjs',

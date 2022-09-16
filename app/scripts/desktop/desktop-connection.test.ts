@@ -15,13 +15,15 @@ import {
   REMOTE_PORT_SENDER_MOCK,
   DATA_MOCK,
   createStreamMock,
-  simulateStreamMessage,
   createRemotePortMock,
   createNotificationManagerMock,
   createMultiplexMock,
-  simulateNodeEvent,
   createWebSocketBrowserMock,
   createWebSocketStreamMock,
+} from './test/mocks';
+import {
+  simulateStreamMessage,
+  simulateNodeEvent,
   simulateBrowserEvent,
 } from './test/utils';
 import EncryptedWebSocketStream from './encrypted-web-socket-stream';

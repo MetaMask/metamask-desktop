@@ -21,13 +21,12 @@ import {
   PORT_MOCK,
   DATA_MOCK,
   createStreamMock,
-  simulateStreamMessage,
   createMultiplexMock,
-  simulateNodeEvent,
   createWebSocketNodeMock,
-  createWebSocketServer,
+  createWebSocketServerMock,
   createWebSocketStreamMock,
-} from './test/utils';
+} from './test/mocks';
+import { simulateStreamMessage, simulateNodeEvent } from './test/utils';
 import { browser } from './extension-polyfill';
 import { ClientId } from './types/desktop';
 import { BrowserControllerAction } from './types/message';
@@ -99,7 +98,7 @@ describe('Desktop', () => {
     webSocketMock = createWebSocketNodeMock();
     webSocketStreamMock = createWebSocketStreamMock();
     multiplexMock = createMultiplexMock();
-    webSocketServerMock = createWebSocketServer();
+    webSocketServerMock = createWebSocketServerMock();
     connectRemoteMock = jest.fn();
     backgroundInitialiseMock = jest.fn();
     objectMultiplexConstructorMock = ObjectMultiplex;

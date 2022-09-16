@@ -9,9 +9,9 @@ import {
   DATA_MOCK,
   STRING_DATA_MOCK,
   createWebSocketNodeMock,
-  simulateNodeEvent,
   createWebSocketStreamMock,
-} from './test/utils';
+} from './test/mocks';
+import { simulateNodeEvent } from './test/utils';
 
 jest.mock('./web-socket-stream', () => ({ WebSocketStream: jest.fn() }), {
   virtual: true,
