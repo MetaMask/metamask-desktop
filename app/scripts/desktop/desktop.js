@@ -67,11 +67,8 @@ export default class Desktop {
     this._disableStream.write(state);
   }
 
-  setConnectRemote(connectRemote) {
+  setConnectCallbacks(connectRemote, connectExternal) {
     this._connectRemote = connectRemote;
-  }
-
-  setConnectExternal(connectExternal) {
     this._connectExternal = connectExternal;
   }
 
@@ -132,29 +129,24 @@ export default class Desktop {
       isExternal: data.isExternal,
     });
 
-    const { clientId } = data;
+    const { clientId, isExternal } = data;
 
     const stream = this._multiplex.createStream(clientId);
+    const connectArgs = {
+      ...data.remotePort,
+      stream,
+      onMessage: {
+        addListener: () => undefined,
+      },
+    };
     this._clientStreams[clientId] = stream;
 
     endOfStream(stream, () => this._onClientStreamEnd(clientId));
 
-    if (data.isExternal) {
-      this._connectExternal({
-        ...data.remotePort,
-        stream,
-        onMessage: {
-          addListener: () => undefined,
-        },
-      });
+    if (isExternal) {
+      this._connectExternal(connectArgs);
     } else {
-      this._connectRemote({
-        ...data.remotePort,
-        stream,
-        onMessage: {
-          addListener: () => undefined,
-        },
-      });
+      this._connectRemote(connectArgs);
     }
 
     this._connections.push(data);
