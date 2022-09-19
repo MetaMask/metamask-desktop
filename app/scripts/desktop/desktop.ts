@@ -25,6 +25,7 @@ import {
   StatusMessage,
 } from './types/message';
 import { ClientId } from './types/desktop';
+import { initIframeGlobals } from './iframe-proxy';
 
 export default class Desktop {
   private backgroundInitialise: () => Promise<void>;
@@ -60,6 +61,10 @@ export default class Desktop {
     await app.whenReady();
 
     this.statusWindow = await this.createStatusWindow();
+
+    initIframeGlobals((topic: any, data: any) => {
+      this.statusWindow?.webContents.send(topic, data);
+    });
 
     const server = await this.createWebSocketServer();
     server.on('connection', (webSocket) => this.onConnection(webSocket));
