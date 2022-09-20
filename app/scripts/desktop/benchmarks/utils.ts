@@ -1,5 +1,7 @@
 import '../globals';
 
+const DEFAULT_ITERATIONS = 10000;
+
 export const benchmark = async (
   iterations: number,
   test: (iterations: number, start: () => void) => void,
@@ -23,7 +25,10 @@ export const run = async (
     test: (iterations: number, start: () => void) => void;
   }[],
 ) => {
-  const iterations = process.argv[2] ? parseInt(process.argv[2], 10) : 1000;
+  const iterations = process.argv[2]
+    ? parseInt(process.argv[2], 10)
+    : DEFAULT_ITERATIONS;
+
   const results: { [name: string]: any } = {};
 
   for (const scenario of scenarios) {
