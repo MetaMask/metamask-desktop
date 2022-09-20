@@ -21,6 +21,8 @@
     "build:dev": "node development/build/index.js",
     "start:test": "SEGMENT_HOST='https://api.segment.io' SEGMENT_WRITE_KEY='FAKE' SENTRY_DSN_DEV=https://fake@sentry.io/0000000 yarn build testDev",
     "benchmark:chrome": "SELENIUM_BROWSER=chrome node test/e2e/benchmark.js",
+    "benchmark:desktop:encryption": "node dist_desktop/app/scripts/desktop/benchmarks/encryption.js",
+    "benchmark:desktop:web-socket-stream": "node dist_desktop/app/scripts/desktop/benchmarks/web-socket-stream.js",
     "mv3:stats:chrome": "SELENIUM_BROWSER=chrome ENABLE_MV3=true node test/e2e/mv3-perf-stats/index.js",
     "user-actions-benchmark:chrome": "SELENIUM_BROWSER=chrome node test/e2e/user-actions-benchmark.js",
     "benchmark:firefox": "SELENIUM_BROWSER=firefox node test/e2e/benchmark.js",

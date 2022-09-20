@@ -86,43 +86,53 @@ export default class EncryptedWebSocketStream extends Duplex {
     this.targetPublicKey = undefined;
     this.targetSymmetricKey = undefined;
 
-    if (mode === HandshakeMode.START) {
-      this.writeRaw(MESSAGE_HANDSHAKE_START);
-    }
+    const sendFirst = mode === HandshakeMode.START;
 
-    if ([HandshakeMode.START, HandshakeMode.WAIT].includes(mode)) {
-      await this.waitForMessage(async (data) =>
+    await this.handshakeStep(
+      () => {
+        this.writeRaw(MESSAGE_HANDSHAKE_START);
+      },
+      async (data: any) =>
         data === MESSAGE_HANDSHAKE_START ? data : undefined,
-      );
+      sendFirst,
+      mode === HandshakeMode.RECEIVED,
+    );
 
-      log.debug('Received handshake');
-    }
+    log.debug('Received handshake');
 
-    if ([HandshakeMode.WAIT, HandshakeMode.RECEIVED].includes(mode)) {
-      this.writeRaw(MESSAGE_HANDSHAKE_START);
-    }
-
-    this.writeRaw({ publicKey: this.asymmetricKeyPair?.publicKey });
-
-    this.targetPublicKey = await this.waitForMessage((data) => data.publicKey);
+    this.targetPublicKey = await this.handshakeStep(
+      () => {
+        this.writeRaw({ publicKey: this.asymmetricKeyPair?.publicKey });
+      },
+      async (data: any) => data.publicKey,
+      sendFirst,
+    );
 
     log.debug('Received public key', this.targetPublicKey);
 
-    this.writeAsymmetric({ symmetricKey: this.symmetricKey });
-
-    this.targetSymmetricKey = await this.waitForMessage((data) => {
-      const decryptedData = this.decryptAsymmetric(data);
-      return decryptedData?.symmetricKey;
-    });
+    this.targetSymmetricKey = await this.handshakeStep(
+      () => {
+        this.writeAsymmetric({ symmetricKey: this.symmetricKey });
+      },
+      async (data) => {
+        const decryptedData = this.decryptAsymmetric(data);
+        return decryptedData?.symmetricKey;
+      },
+      sendFirst,
+    );
 
     log.debug('Received symmetric key', this.targetSymmetricKey);
 
-    this.writeSymmetric(MESSAGE_HANDSHAKE_FINISH);
-
-    await this.waitForMessage(async (data) => {
-      const decryptedData = await this.decryptSymmetric(data);
-      return decryptedData === MESSAGE_HANDSHAKE_FINISH ? {} : undefined;
-    });
+    await this.handshakeStep(
+      () => {
+        this.writeSymmetric(MESSAGE_HANDSHAKE_FINISH);
+      },
+      async (data) => {
+        const decryptedData = await this.decryptSymmetric(data);
+        return decryptedData === MESSAGE_HANDSHAKE_FINISH ? {} : undefined;
+      },
+      sendFirst,
+    );
 
     log.debug('Completed handshake');
 
@@ -130,6 +140,29 @@ export default class EncryptedWebSocketStream extends Duplex {
     this.resume();
 
     this.peformingHandshake = false;
+  }
+
+  private async handshakeStep(
+    send: () => void,
+    responseFilter: (data: any) => Promise<any>,
+    sendFirst: boolean,
+    writeOnly = false,
+  ): Promise<any> {
+    if (sendFirst) {
+      send();
+    }
+
+    let data;
+
+    if (!writeOnly) {
+      data = await this.waitForMessage(responseFilter);
+    }
+
+    if (!sendFirst) {
+      send();
+    }
+
+    return data;
   }
 
   private async waitForMessage(

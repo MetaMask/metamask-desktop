@@ -19,61 +19,95 @@ const createWebSocketServer = async (): Promise<WS.Server> => {
   });
 };
 
-const test = async <T extends Duplex & { init: any }>(
+const waitForServerConnection = async (
+  server: WS.Server,
+): Promise<NodeWebSocket> => {
+  return new Promise((resolve) => {
+    const listener = async (webSocket: NodeWebSocket) => {
+      server.removeListener('connection', listener);
+      resolve(webSocket);
+    };
+
+    server.on('connection', listener);
+  });
+};
+
+const waitForWebSocketOpen = async (
+  webSocket: NodeWebSocket,
+): Promise<void> => {
+  return new Promise((resolve) => {
+    const listener = async () => {
+      webSocket.removeListener('open', listener);
+      resolve();
+    };
+
+    webSocket.on('open', listener);
+  });
+};
+
+const flushPromises = (): Promise<void> =>
+  new Promise((resolve) => setImmediate(resolve));
+
+const testTemplate = async <T extends Duplex & { init: any }>(
   iterations: number,
   start: () => void,
   createStream: (webSocket: BrowserWebSocket | NodeWebSocket) => T,
 ) => {
-  const server = await createWebSocketServer();
-  let serverStream: T;
   let count = 0;
-  let resolver: any;
-  const promise = new Promise((resolve) => {
-    resolver = resolve as any;
+  let resolver: () => void;
+
+  const promise = new Promise<void>((resolve) => {
+    resolver = resolve;
   });
 
-  server.on('connection', async (webSocket) => {
-    serverStream = createStream(webSocket);
-    await serverStream.init();
+  const server = await createWebSocketServer();
+  const serverConnectionPromise = waitForServerConnection(server);
+  const clientWebSocket = new WS('ws://localhost:123');
+  await waitForWebSocketOpen(clientWebSocket);
+  const clientStream = createStream(clientWebSocket);
+  const serverWebSocket = await serverConnectionPromise;
+  const serverStream = createStream(serverWebSocket);
+  await flushPromises();
 
-    serverStream.on('data', (_) => {
-      if (count < iterations) {
-        serverStream.write(DATA);
-        count += 1;
-      } else {
-        server.close();
-        resolver();
-      }
-    });
-  });
+  await Promise.all([
+    serverStream.init({ startHandshake: false }),
+    clientStream.init({ startHandshake: true }),
+  ]);
 
-  const clientStream = createStream(new WS('ws://localhost:123'));
-  await clientStream.init();
-
-  clientStream.on('data', (_) => {
+  const onMessage = async (stream: Duplex) => {
     if (count < iterations) {
-      clientStream.write(DATA);
+      stream.write(DATA);
+      await flushPromises();
       count += 1;
     } else {
       server.close();
       resolver();
     }
-  });
+  };
+
+  clientStream.on('data', () => onMessage(clientStream));
+  serverStream.on('data', () => onMessage(serverStream));
 
   start();
 
   clientStream.write(DATA);
+  await flushPromises();
+
   count += 1;
 
   return promise;
 };
 
 const standard = async (iterations: number, start: () => void) => {
-  await test(iterations, start, (webSocket) => new WebSocketStream(webSocket));
+  await testTemplate(
+    iterations,
+    start,
+    (webSocket) => new WebSocketStream(webSocket),
+  );
 };
 
 const encrypted = async (iterations: number, start: () => void) => {
-  await test(
+  await testTemplate(
     iterations,
     start,
     (webSocket) => new EncryptedWebSocketStream(webSocket),
