@@ -15,13 +15,11 @@ export const simulateEvent = async <T>(
   const { calls }: { calls: [[event: string, handler: (data: any) => void]] } =
     methodMock.mock;
 
-  const eventHandlerCall = calls.find((call) => call[0] === event);
-
-  if (!eventHandlerCall) {
-    throw new Error(`Cannot find event handler for event - ${event}`);
-  }
-
-  eventHandlerCall[1](data);
+  calls
+    .filter((call) => call[0] === event)
+    .forEach((call) => {
+      call[1](data);
+    });
 
   await flushPromises();
 };

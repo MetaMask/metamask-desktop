@@ -12,7 +12,7 @@ import {
   CLIENT_ID_DISABLE,
 } from '../../../shared/constants/desktop';
 import cfg from './config';
-import { WebSocketStream } from './web-socket-stream';
+import { BrowserWebSocket, WebSocketStream } from './web-socket-stream';
 import EncryptedWebSocketStream from './encrypted-web-socket-stream';
 import { browser } from './extension-polyfill';
 import {
@@ -34,6 +34,8 @@ export default class DesktopConnection {
 
   private multiplex: ObjectMultiplex;
 
+  private webSocket?: BrowserWebSocket;
+
   private webSocketStream?: WebSocketStream | EncryptedWebSocketStream;
 
   private connectionControllerStream?: Duplex;
@@ -48,8 +50,8 @@ export default class DesktopConnection {
     this.multiplex = new ObjectMultiplex();
   }
 
-  public init() {
-    this.connect();
+  public async init() {
+    await this.connect();
 
     const browserControllerStream = this.multiplex.createStream(
       CLIENT_ID_BROWSER_CONTROLLER,
@@ -92,12 +94,17 @@ export default class DesktopConnection {
    * @param remotePort - The port provided by a new context.
    * @param connectionType - Whether or not the new context is external (page or other extension).
    */
-  public createStream(remotePort: RemotePort, connectionType: ConnectionType) {
+  public async createStream(
+    remotePort: RemotePort,
+    connectionType: ConnectionType,
+  ) {
+    const portStream = new PortStream(remotePort as any);
+    portStream.pause();
+
     if (!this.webSocketStream) {
-      this.connect();
+      await this.connect();
     }
 
-    const portStream = new PortStream(remotePort as any);
     const clientId = this.getNextClientId();
     const clientStream = this.multiplex.createStream(clientId);
 
@@ -106,6 +113,8 @@ export default class DesktopConnection {
     endOfStream(portStream, () => this.onPortStreamEnd(clientId, clientStream));
 
     this.sendHandshake(remotePort, clientId, connectionType);
+
+    portStream.resume();
   }
 
   private async onDisable(state: State) {
@@ -118,22 +127,27 @@ export default class DesktopConnection {
     browser.runtime.reload();
   }
 
-  private connect() {
-    const webSocket = this.createWebSocket();
-    webSocket.addEventListener('close', () => this.onDisconnect());
+  private async connect() {
+    this.webSocket = await this.createWebSocket();
+    this.webSocket.addEventListener('close', () => this.onDisconnect());
 
     this.webSocketStream = cfg().desktop.webSocket.disableEncryption
-      ? new WebSocketStream(webSocket)
-      : new EncryptedWebSocketStream(webSocket);
+      ? new WebSocketStream(this.webSocket)
+      : new EncryptedWebSocketStream(this.webSocket);
 
-    this.webSocketStream.init();
+    await this.webSocketStream.init({ startHandshake: true });
     this.webSocketStream.pipe(this.multiplex).pipe(this.webSocketStream);
 
     log.debug('Created web socket connection');
   }
 
   private onDisconnect() {
+    log.debug('Web socket disconnected');
+
+    this.webSocketStream?.end();
     this.webSocketStream = undefined;
+
+    this.webSocket = undefined;
   }
 
   private onPortStreamEnd(clientId: ClientId, clientStream: Duplex) {
@@ -183,9 +197,13 @@ export default class DesktopConnection {
     }
   }
 
-  private createWebSocket(): WebSocket {
-    // eslint-disable-next-line no-undef
-    return new WebSocket(`${cfg().desktop.webSocket.url}`);
+  private async createWebSocket(): Promise<WebSocket> {
+    return new Promise((resolve) => {
+      const webSocket = new WebSocket(`${cfg().desktop.webSocket.url}`);
+      webSocket.addEventListener('open', () => {
+        resolve(webSocket);
+      });
+    });
   }
 
   private getNextClientId(): ClientId {

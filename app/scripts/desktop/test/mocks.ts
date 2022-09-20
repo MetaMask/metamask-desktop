@@ -57,15 +57,16 @@ export const createWebSocketServerMock = (): jest.Mocked<WebSocketServer> =>
 
 export const createWebSocketNodeMock = (): jest.Mocked<NodeWebSocket> =>
   ({
+    readyState: 1,
     on: jest.fn(),
     send: jest.fn(),
   } as unknown as jest.Mocked<NodeWebSocket>);
 
 export const createWebSocketBrowserMock = (): jest.Mocked<BrowserWebSocket> =>
   ({
+    readyState: 1,
     addEventListener: jest.fn(),
     send: jest.fn(),
-    readyState: 1,
   } as unknown as jest.Mocked<BrowserWebSocket>);
 
 export const createStreamMock = (): jest.Mocked<Duplex> =>
@@ -74,12 +75,15 @@ export const createStreamMock = (): jest.Mocked<Duplex> =>
     on: jest.fn(),
     pipe: jest.fn(),
     end: jest.fn(),
+    pause: jest.fn(),
+    resume: jest.fn(),
   } as unknown as jest.Mocked<Duplex>);
 
 export const createWebSocketStreamMock = (): jest.Mocked<WebSocketStream> =>
   ({
     ...createStreamMock(),
     init: jest.fn(),
+    removeListener: jest.fn(),
   } as unknown as jest.Mocked<WebSocketStream>);
 
 export const createRemotePortMock = (): jest.Mocked<RemotePort> =>
