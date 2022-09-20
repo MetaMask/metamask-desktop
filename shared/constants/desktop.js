@@ -5,3 +5,5 @@ export const CLIENT_ID_STATE = 'state';
 export const CLIENT_ID_DISABLE = 'disable';
 export const CONNECTION_TYPE_INTERNAL = 'INTERNAL';
 export const CONNECTION_TYPE_EXTERNAL = 'EXTERNAL';
+export const MESSAGE_HANDSHAKE_START = 'HSK';
+export const MESSAGE_HANDSHAKE_FINISH = 'DNE';

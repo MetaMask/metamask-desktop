@@ -141,7 +141,7 @@ export default class Desktop {
     return statusWindow;
   }
 
-  private onConnection(webSocket: WebSocket) {
+  private async onConnection(webSocket: WebSocket) {
     log.debug('Received web socket connection');
 
     this.webSocket = webSocket;
@@ -151,7 +151,7 @@ export default class Desktop {
       ? new WebSocketStream(this.webSocket)
       : new EncryptedWebSocketStream(this.webSocket);
 
-    this.webSocketStream.init();
+    await this.webSocketStream.init({ startHandshake: false });
     this.webSocketStream.pipe(this.multiplex).pipe(this.webSocketStream);
 
     this.updateStatusWindow();
@@ -164,6 +164,7 @@ export default class Desktop {
 
     if (this.webSocketStream) {
       this.webSocketStream.end();
+      this.webSocketStream = undefined;
     } else {
       log.error('Web socket stream not initialised');
     }
@@ -247,7 +248,7 @@ export default class Desktop {
 
   private onConnectionControllerMessage(data: ConnectionControllerMessage) {
     log.debug('Received connection controller message', data);
-    this.clientStreams[data.clientId as number].end();
+    this.clientStreams[data.clientId as number]?.end();
   }
 
   private async createWebSocketServer(): Promise<WebSocketServer> {
