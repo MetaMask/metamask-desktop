@@ -131,6 +131,7 @@ const initApp = async (remotePort) => {
 };
 
 if (isManifestV3) {
+  console.log(`>>>> is MV3`)
   browser.runtime.onConnect.addListener(initApp);
 } else {
   // initialization flow
@@ -682,7 +683,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
       label = String(count);
     }
     // browserAction has been replaced by action in MV3
-    if (isManifestV3) {
+    if (isManifestV3 && cfg().desktop.isExtension ) {
       browser.action.setBadgeText({ text: label });
       browser.action.setBadgeBackgroundColor({ color: '#037DD6' });
     } else {
