@@ -72,6 +72,7 @@ export default class MessageManager extends EventEmitter {
    * @returns {promise} after signature has been
    */
   async addUnapprovedMessageAsync(msgParams, req) {
+    console.log('HEREEEEEEEEEEEEEEEEEEEEEEEEEE', { msgParams, req });
     const msgId = this.addUnapprovedMessage(msgParams, req);
     return await new Promise((resolve, reject) => {
       // await finished

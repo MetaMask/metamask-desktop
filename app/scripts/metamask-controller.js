@@ -2929,11 +2929,15 @@ export default class MetamaskController extends EventEmitter {
     try {
       // sets the status op the message to 'approved'
       // and removes the metamaskId for signing
+      log.info('SIGN MESSAGE - PRE APPROVE');
       const cleanMsgParams = await this.messageManager.approveMessage(
         msgParams,
       );
+      log.info('SIGN MESSAGE - POST APPROVE', cleanMsgParams);
       const rawSig = await this.keyringController.signMessage(cleanMsgParams);
+      log.info('SIGN MESSAGE - POST SIGN', rawSig);
       this.messageManager.setMsgStatusSigned(msgId, rawSig);
+      log.info('SIGN MESSAGE - POST MSG STATUS');
       return this.getState();
     } catch (error) {
       log.info('MetaMaskController - eth_sign failed', error);

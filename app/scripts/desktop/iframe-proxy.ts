@@ -17,11 +17,35 @@ class IframeProxy {
       send('iframe', { id, method, args });
 
     this.contentWindow = {
-      postMessage: (data: any, targetOrigin: any) =>
-        this._contentWindowPostMessage(data, targetOrigin),
+      postMessage: (data: any, targetOrigin: any) => {
+        console.log('IFRAME POSTING MESSAGE', { data, targetOrigin });
+        return this._contentWindowPostMessage(data, targetOrigin);
+      },
     };
 
     this._send('createElement');
+  }
+
+  private _src: string | undefined;
+
+  public get src(): string | undefined {
+    return this._src;
+  }
+
+  public set src(_src: string | undefined) {
+    this._src = _src;
+    this.setAttribute('src', _src);
+  }
+
+  private _allow: string | undefined;
+
+  public get allow(): string | undefined {
+    return this._allow;
+  }
+
+  public set allow(_allow: string | undefined) {
+    this._allow = _allow;
+    this.setAttribute('allow', _allow);
   }
 
   setAttribute(name: any, value: any) {
@@ -36,6 +60,10 @@ class IframeProxy {
     this._send('appendChild');
   }
 
+  appendChildHead() {
+    this._send('appendChildHead');
+  }
+
   addEventListener(event: any, callback: any) {
     if (event !== 'load') {
       return;
@@ -45,8 +73,20 @@ class IframeProxy {
     this._send('addLoadEventListener');
   }
 
-  onLoad() {
+  onLoadCallback() {
     this._loadCallback();
+  }
+
+  public get onload():
+    | ((this: GlobalEventHandlers, ev: Event) => any)
+    | undefined {
+    return this._loadCallback;
+  }
+
+  public set onload(
+    _onload: ((this: GlobalEventHandlers, ev: Event) => any) | undefined,
+  ) {
+    this.addEventListener('load', _onload);
   }
 
   remove() {
@@ -64,6 +104,9 @@ export const initIframeGlobals = (send: any) => {
 
   global.document = global.document || {};
   global.document.body = global.document.body || {};
+  if (!global.document?.head) {
+    (global.document as any).head = {};
+  }
   global.window = global.window || {};
 
   global.document.createElement = (tag: any) => {
@@ -91,6 +134,10 @@ export const initIframeGlobals = (send: any) => {
     return iframe.appendChild();
   };
 
+  global.document.head.appendChild = (iframe: any) => {
+    return iframe.appendChildHead();
+  };
+
   const windowMessageCallbacks: any[] = [];
 
   global.window.addEventListener = (event: any, callback: any) => {
@@ -114,7 +161,7 @@ export const initIframeGlobals = (send: any) => {
 
   ipcMain.handle('iframe-load', (_event, data: any) => {
     const iframe = iframesById[data.id];
-    iframe.onLoad();
+    iframe.onLoadCallback();
   });
 
   ipcMain.handle('window-message', (_event, data: any) => {

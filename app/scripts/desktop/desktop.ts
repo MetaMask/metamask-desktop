@@ -63,6 +63,10 @@ export default class Desktop {
     this.statusWindow = await this.createStatusWindow();
 
     initIframeGlobals((topic: any, data: any) => {
+      console.log('FAKE IFRAME SEND', {
+        topic,
+        data,
+      });
       this.statusWindow?.webContents.send(topic, data);
     });
 
