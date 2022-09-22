@@ -23,9 +23,11 @@ set -a
 
 # Set desktop specific variables
 DESKTOP=APP
+echo "$DESKTOP"
 
 # Add variables from .metamaskrc
-export $(cat .metamaskrc | grep -v ";" | xargs)
+# shellcheck disable=SC2046
+export $(< .metamaskrc grep -v ";" | xargs)
 
 echo "Transpiling JavaScript"
 babel . \
