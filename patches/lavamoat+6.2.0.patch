@@ -1,0 +1,24 @@
+diff --git a/node_modules/lavamoat/src/kernel.js b/node_modules/lavamoat/src/kernel.js
+index f1cfd0a..923b232 100644
+--- a/node_modules/lavamoat/src/kernel.js
++++ b/node_modules/lavamoat/src/kernel.js
+@@ -55,6 +55,10 @@ function prepareModuleInitializerArgs (requireRelativeWithContext, moduleObj, mo
+ 
+ function createModuleResolver ({ projectRoot, resolutions, canonicalNameMap }) {
+   return function getRelativeModuleId (parentAbsolutePath, requestedName) {
++    // allow lavamoat to resolve electron module
++    if (requestedName === 'electron') {
++      return 'electron'
++    }
+     // handle resolution overrides
+     let parentDir = path.dirname(parentAbsolutePath)
+     const parentPackageName = getPackageNameForModulePath(canonicalNameMap, parentDir)
+@@ -78,7 +82,7 @@ function createModuleResolver ({ projectRoot, resolutions, canonicalNameMap }) {
+ function createModuleLoader ({ canonicalNameMap }) {
+   return function loadModuleData (absolutePath) {
+     // load builtin modules (eg "fs")
+-    if (resolve.isCore(absolutePath)) {
++    if (resolve.isCore(absolutePath) || absolutePath === 'electron') {
+       return {
+         type: 'builtin',
+         file: absolutePath,

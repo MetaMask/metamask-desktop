@@ -1,6 +1,7 @@
 import { memoize } from 'lodash';
 // eslint-disable-next-line no-shadow
 import fetch from 'node-fetch';
+import { AbortController as AbortControllerPolyfill } from 'abort-controller';
 import { SECOND } from '../constants/time';
 
 const getFetchWithTimeout = memoize((timeout = SECOND * 30) => {
@@ -9,7 +10,7 @@ const getFetchWithTimeout = memoize((timeout = SECOND * 30) => {
   }
 
   return async function _fetch(url, opts) {
-    const abortController = new AbortController();
+    const abortController = new AbortControllerPolyfill();
     const { signal } = abortController;
     const f = fetch(url, {
       ...opts,

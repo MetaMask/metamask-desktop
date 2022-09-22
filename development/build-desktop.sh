@@ -3,7 +3,7 @@
 OUTPUT_DIR="dist_desktop"
 
 echo "Rebuilding leveldown for Electron to support 3box"
-yarn electron-rebuild -o leveldown,keytar
+yarn electron-rebuild -v 14.2.9 -o leveldown,keytar
 
 echo "Removing existing build files"
 rm -rf $OUTPUT_DIR
@@ -31,5 +31,4 @@ echo "Transpiling JavaScript"
 babel . \
     -d ./$OUTPUT_DIR \
     --extensions ".ts,.js" \
-    --config-file "./babel-desktop.config.js" \
-    --watch
+    --config-file "./babel-desktop.config.js"

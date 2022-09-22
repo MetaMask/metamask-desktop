@@ -63,6 +63,12 @@ const browser: Browser = {
       addListener: () => warn('webRequest.onErrorOccurred.addListener'),
     },
   },
+  notifications: {
+    onClicked: {
+      hasListener: () => warn('notifications.onClicked.hasListener'),
+      addListener: () => warn('notifications.onClicked.addListener'),
+    },
+  },
 } as unknown as Browser;
 
 export default browser;
