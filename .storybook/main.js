@@ -23,9 +23,14 @@ module.exports = {
     config.context = process.cwd();
     config.node = {
       __filename: true,
+      __dirname: false,
+      fs: 'empty'
     };
     config.resolve.alias['webextension-polyfill'] = require.resolve(
       './__mocks__/webextension-polyfill.js',
+    );
+    config.resolve.alias['keytar'] = require.resolve(
+      './__mocks__/keytar.js',
     );
     config.module.strictExportPresence = true;
     config.module.rules.push({
