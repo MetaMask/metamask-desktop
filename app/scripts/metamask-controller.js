@@ -17,7 +17,8 @@ import {
 import { Mutex } from 'await-semaphore';
 import log from 'loglevel';
 import TrezorKeyring from 'eth-trezor-keyring';
-import LedgerBridgeKeyring from '@metamask/eth-ledger-bridge-keyring';
+// TODO THIS BREAKS LEDGER EXTENSION SUPPORT, WE NEED TO RECREATE KEYRING CONTROLLER DYNAMICALLY
+// import LedgerBridgeKeyring from '@metamask/eth-ledger-bridge-keyring';
 import LatticeKeyring from 'eth-lattice-keyring';
 import { MetaMaskKeyring as QRHardwareKeyring } from '@keystonehq/metamask-airgapped-keyring';
 import EthQuery from 'eth-query';
@@ -96,6 +97,7 @@ import { getTokenIdParam } from '../../ui/helpers/utils/token-util';
 import { isEqualCaseInsensitive } from '../../shared/modules/string-utils';
 import { parseStandardTokenTransactionData } from '../../shared/modules/transaction.utils';
 import { STATIC_MAINNET_TOKEN_LIST } from '../../shared/constants/tokens';
+import { LedgerBridgeKeyring } from './desktop/hw/ledger-keyring';
 import {
   getTokenValueParam,
   hexToDecimal,
@@ -2357,7 +2359,9 @@ export default class MetamaskController extends EventEmitter {
    * @returns {Promise<object>} The keyringController update.
    */
   async submitPassword(password) {
+    console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
     await this.keyringController.submitPassword(password);
+    console.log('BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB');
 
     try {
       await this.blockTracker.checkForLatestBlock();
