@@ -134,6 +134,8 @@
     "@fortawesome/fontawesome-free": "^5.13.0",
     "@keystonehq/bc-ur-registry-eth": "^0.12.1",
     "@keystonehq/metamask-airgapped-keyring": "^0.6.1",
+    "@ledgerhq/hw-app-eth": "^6.29.7",
+    "@ledgerhq/hw-transport-node-hid-noevents": "^6.27.4",
     "@material-ui/core": "^4.11.0",
     "@metamask/contract-metadata": "^1.31.0",
     "@metamask/controllers": "^30.3.0",
@@ -203,6 +205,7 @@
     "fast-json-patch": "^2.2.1",
     "fuse.js": "^3.2.0",
     "globalthis": "^1.0.1",
+    "hdkey": "^2.0.1",
     "human-standard-token-abi": "^2.0.0",
     "immer": "^9.0.6",
     "jest-junit": "^14.0.1",
@@ -306,6 +309,7 @@
     "@types/gulp-autoprefixer": "^0.0.33",
     "@types/gulp-dart-sass": "^1.0.1",
     "@types/gulp-sourcemaps": "^0.0.35",
+    "@types/hdkey": "^2.0.1",
     "@types/madge": "^5.0.0",
     "@types/node": "^17.0.21",
     "@types/pify": "^5.0.1",
@@ -512,7 +516,13 @@
       "keytar": true,
       "eciesjs>secp256k1": false,
       "ws>bufferutil": false,
-      "ws>utf-8-validate": false
+      "ws>utf-8-validate": false,
+      "@keystonehq/metamask-airgapped-keyring>@keystonehq/base-eth-keyring>hdkey>secp256k1": true,
+      "@keystonehq/metamask-airgapped-keyring>@keystonehq/bc-ur-registry-eth>hdkey>secp256k1": true,
+      "@metamask/controllers>@keystonehq/metamask-airgapped-keyring>@keystonehq/base-eth-keyring>hdkey>secp256k1": true,
+      "hdkey>secp256k1": true,
+      "@ledgerhq/hw-transport-node-hid-noevents>node-hid": true,
+      "@ledgerhq/hw-transport-node-hid-singleton>usb": true
     }
   }
 }
