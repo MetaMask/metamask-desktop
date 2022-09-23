@@ -11,7 +11,6 @@ echo "Set MV3 enable"
 ENABLE_MV3=true
 fi
 
-
 echo "Rebuilding leveldown for Electron to support 3box"
 yarn electron-rebuild -o leveldown,keytar
 

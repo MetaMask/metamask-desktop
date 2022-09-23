@@ -130,7 +130,7 @@ const initApp = async (remotePort) => {
   log.info('MetaMask initialization complete.');
 };
 
-if (isManifestV3  && cfg().desktop.isExtension) {
+if (isManifestV3 && cfg().desktop.isExtension) {
   browser.runtime.onConnect.addListener(initApp);
 } else {
   // initialization flow
