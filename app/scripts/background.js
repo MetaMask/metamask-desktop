@@ -130,8 +130,7 @@ const initApp = async (remotePort) => {
   log.info('MetaMask initialization complete.');
 };
 
-if (isManifestV3) {
-  console.log(`>>>> is MV3`)
+if (isManifestV3  && cfg().desktop.isExtension) {
   browser.runtime.onConnect.addListener(initApp);
 } else {
   // initialization flow
@@ -463,7 +462,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
   //
   // connect to other contexts
   //
-  if (isManifestV3 && remoteSourcePort) {
+  if (isManifestV3 && remoteSourcePort && cfg().desktop.isExtension) {
     connectRemote(remoteSourcePort);
   }
 
@@ -513,6 +512,14 @@ function setupController(initState, initLangCode, remoteSourcePort) {
   function connectRemote(remotePort) {
     if (desktopConnection) {
       desktopConnection.createStream(remotePort, CONNECTION_TYPE_INTERNAL);
+
+      // When in Desktop Mode the responsibility to send CONNECTION_READY is on the desktop app side
+      if (isManifestV3) {
+        // Message below if captured by UI code in app/scripts/ui.js which will trigger UI initialisation
+        // This ensures that UI is initialised only after background is ready
+        // It fixes the issue of blank screen coming when extension is loaded, the issue is very frequent in MV3
+        remotePort.postMessage({ name: 'CONNECTION_READY' });
+      }
       return;
     }
 
@@ -544,8 +551,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
       // communication with popup
       controller.isClientOpen = true;
       controller.setupTrustedCommunication(portStream, remotePort.sender);
-
-      if (isManifestV3) {
+      if (isManifestV3 && cfg().desktop.isExtension) {
         // Message below if captured by UI code in app/scripts/ui.js which will trigger UI initialisation
         // This ensures that UI is initialised only after background is ready
         // It fixes the issue of blank screen coming when extension is loaded, the issue is very frequent in MV3
@@ -683,7 +689,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
       label = String(count);
     }
     // browserAction has been replaced by action in MV3
-    if (isManifestV3 && cfg().desktop.isExtension ) {
+    if (isManifestV3) {
       browser.action.setBadgeText({ text: label });
       browser.action.setBadgeBackgroundColor({ color: '#037DD6' });
     } else {

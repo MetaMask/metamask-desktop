@@ -1,5 +1,4 @@
 import log from 'loglevel';
-import { isManifestV3 } from '../../../shared/modules/mv3.utils';
 import ObfuscatedStore from './storage';
 import { Browser } from './types/browser';
 
@@ -25,9 +24,13 @@ const browser: Browser = {
     },
   },
   browserAction: {
-    setBadgeText: () => isManifestV3 ? warn('action.setBadgeText') : warn('browserAction.setBadgeText'),
-    setBadgeBackgroundColor: () => isManifestV3 ? warn('action.setBadgeBackgroundColor') :
+    setBadgeText: () => warn('browserAction.setBadgeText'),
+    setBadgeBackgroundColor: () =>
       warn('browserAction.setBadgeBackgroundColor'),
+  },
+  action: {
+    setBadgeText: () => warn('action.setBadgeText'),
+    setBadgeBackgroundColor: () => warn('action.setBadgeBackgroundColor'),
   },
   storage: {
     local: {
