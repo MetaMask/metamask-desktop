@@ -1,21 +1,18 @@
-const keysByHex: { [hex: string]: CryptoKey } = {};
+const ALGORITHM = 'AES-GCM';
+const KEY_LENGTH = 256;
+const KEY_FORMAT = 'raw';
+const KEY_USAGES: KeyUsage[] = ['encrypt', 'decrypt'];
 
 const deserializeKey = async (keyHex: string): Promise<CryptoKey> => {
-  let key = keysByHex[keyHex];
+  const keyBuffer = Buffer.from(keyHex, 'hex');
 
-  if (!key) {
-    const keyBuffer = Buffer.from(keyHex, 'hex');
-
-    key = await global.crypto.subtle.importKey(
-      'raw',
-      keyBuffer,
-      { name: 'AES-GCM' },
-      false,
-      ['encrypt', 'decrypt'],
-    );
-
-    keysByHex[keyHex] = key;
-  }
+  const key = await global.crypto.subtle.importKey(
+    KEY_FORMAT,
+    keyBuffer,
+    { name: ALGORITHM },
+    false,
+    KEY_USAGES,
+  );
 
   return key;
 };
@@ -23,17 +20,15 @@ const deserializeKey = async (keyHex: string): Promise<CryptoKey> => {
 export const createKey = async (): Promise<string> => {
   const key = await global.crypto.subtle.generateKey(
     {
-      name: 'AES-GCM',
-      length: 256,
+      name: ALGORITHM,
+      length: KEY_LENGTH,
     },
     true,
-    ['encrypt', 'decrypt'],
+    KEY_USAGES,
   );
 
-  const keyBuffer = await global.crypto.subtle.exportKey('raw', key);
+  const keyBuffer = await global.crypto.subtle.exportKey(KEY_FORMAT, key);
   const keyHex = Buffer.from(keyBuffer).toString('hex');
-
-  keysByHex[keyHex] = key;
 
   return keyHex;
 };
@@ -45,7 +40,7 @@ export const encrypt = async (data: string, keyHex: string) => {
   const dataBuffer = Buffer.from(data, 'utf8');
 
   const encryptedArrayBuffer = await global.crypto.subtle.encrypt(
-    { name: 'AES-GCM', iv },
+    { name: ALGORITHM, iv },
     key,
     dataBuffer,
   );
@@ -65,7 +60,7 @@ export const decrypt = async (
   const dataBuffer = Buffer.from(data, 'hex');
 
   const decryptedArrayBuffer = await global.crypto.subtle.decrypt(
-    { name: 'AES-GCM', iv },
+    { name: ALGORITHM, iv },
     key,
     dataBuffer,
   );
