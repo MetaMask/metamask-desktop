@@ -1,5 +1,7 @@
 const path = require('path');
 const { promises: fs } = require('fs');
+const cp = require('child_process');
+const psTree = require('ps-tree');
 const BigNumber = require('bignumber.js');
 const mockttp = require('mockttp');
 const createStaticServer = require('../../development/create-static-server');
@@ -11,6 +13,7 @@ const PhishingWarningPageServer = require('./phishing-warning-page-server');
 const { buildWebDriver } = require('./webdriver');
 const { ensureXServerIsRunning } = require('./x-server');
 const GanacheSeeder = require('./seeder/ganache-seeder');
+require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` });
 
 const tinyDelayMs = 200;
 const regularDelayMs = tinyDelayMs * 2;
@@ -43,6 +46,16 @@ async function withFixtures(options, testSuite) {
   } = options;
   const fixtureServer = new FixtureServer();
   const ganacheServer = new Ganache();
+
+  // Open MM desktop
+  // console.info(
+  //   'Close MM Desktop App if for any chance did not get closed before',
+  // );
+  // cp.spawn('kill -9 `lsof -t -i:7071`', { shell: true });
+
+  console.info('Open MM Desktop App');
+  const desktop = cp.spawn('yarn start:desktop', { shell: true });
+
   const https = await mockttp.generateCACertificate();
   const mockServer = mockttp.getLocal({ https, cors: true });
   let secondaryGanacheServer;
@@ -74,6 +87,17 @@ async function withFixtures(options, testSuite) {
     }
     await fixtureServer.start();
     await fixtureServer.loadState(path.join(__dirname, 'fixtures', fixtures));
+
+    // Load state in electron app => copy state.json to config.json in electron
+    // eslint-disable-next-line no-implicit-globals
+    const statePath = path.resolve(
+      __dirname,
+      path.join(__dirname, 'fixtures', fixtures),
+      'state.json',
+    );
+    console.info(`NODE_ENV: .env.${process.env.NODE_ENV}`);
+    fs.copyFile(statePath, process.env.UBUNTU_ELECTRON_CONFIG_FILE_PATH);
+
     await phishingPageServer.start();
     if (dapp) {
       if (dappOptions?.numberOfDapps) {
@@ -145,6 +169,20 @@ async function withFixtures(options, testSuite) {
     throw error;
   } finally {
     if (!failed || process.env.E2E_LEAVE_RUNNING !== 'true') {
+      // Close MM desktop app
+      console.info('closing Desktop App');
+      // eslint-disable-next-line node/handle-callback-err
+      psTree(desktop.pid, function (_err, children) {
+        cp.spawn(
+          'kill',
+          ['-9'].concat(
+            children.map(function (p) {
+              return p.PID;
+            }),
+          ),
+        );
+      });
+
       await fixtureServer.stop();
       await ganacheServer.quit();
       if (ganacheOptions?.concurrent) {

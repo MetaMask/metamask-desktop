@@ -32,11 +32,11 @@ echo "Phishing Warning Page URL: $PHISHING_WARNING_PAGE_URL"
 
 # Add variables from .metamaskrc
 # shellcheck disable=SC2046
-export $(< .metamaskrc grep -v ";" | xargs)
+# export $(< .metamaskrc grep -v ";" | xargs)
 
 echo "Transpiling JavaScript"
 babel . \
     -d ./$OUTPUT_DIR \
     --extensions ".ts,.js" \
     --config-file "./babel-desktop.config.js" \
-    --watch
+    # --watch

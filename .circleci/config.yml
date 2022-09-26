@@ -17,18 +17,74 @@ executors:
 workflows:
   test_and_release:
     jobs:
-      - create_release_pull_request:
-          requires:
-            - prep-deps
-          filters:
-            branches:
-              only:
-                - /^Version-v(\d+)[.](\d+)[.](\d+)/
+      # - create_release_pull_request:
+      #     requires:
+      #       - prep-deps
+      #     filters:
+      #       branches:
+      #         only:
+      #           - /^Version-v(\d+)[.](\d+)[.](\d+)/
       - prep-deps
-      - test-deps-audit:
+      # - test-deps-audit:
+      #     requires:
+      #       - prep-deps
+      # - test-deps-depcheck:
+      #     requires:
+      #       - prep-deps
+      # - test-yarn-dedupe:
+      #     requires:
+      #       - prep-deps
+      # - validate-lavamoat-config:
+      #     filters:
+      #       branches:
+      #         only:
+      #           - /^Version-v(\d+)[.](\d+)[.](\d+)|master/
+      #     requires:
+      #       - prep-deps
+      # - prep-build:
+      #     requires:
+      #       - prep-deps
+      # - prep-build-beta:
+      #     requires:
+      #       - prep-deps
+      # - prep-build-flask:
+      #     requires:
+      #       - prep-deps
+      # - prep-build-test:
+      #     requires:
+      #       - prep-deps
+      - prep-build-test-nolavamoat:
           requires:
             - prep-deps
-      - test-deps-depcheck:
+      # - prep-build-test-mv3:
+      #     requires:
+      #       - prep-deps
+      # - prep-build-test-flask:
+      #     requires:
+      #       - prep-deps
+      # - test-storybook:
+      #     requires:
+      #       - prep-deps
+      # - prep-build-storybook:
+      #     requires:
+      #       - test-storybook
+      # - prep-build-ts-migration-dashboard:
+      #     requires:
+      #       - prep-deps
+      # - test-lint:
+      #     requires:
+      #       - prep-deps
+      # - test-lint-shellcheck
+      # - test-lint-lockfile:
+      #     requires:
+      #       - prep-deps
+      # - test-lint-changelog:
+      #     requires:
+      #       - prep-deps
+      # - test-e2e-chrome:
+      #     requires:
+      #       - prep-build-test
+      - test-e2e-desktop-chrome:
           requires:
             - prep-deps
       - test-yarn-dedupe:
@@ -388,6 +444,30 @@ jobs:
             - dist-test
             - builds-test
 
+  prep-build-test-nolavamoat:
+    executor: node-browsers-medium-plus
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Build extension for testing
+          command: yarn build:desktop:extension:test
+      - run:
+          name: Build desktop app for testing
+          command: yarn build:desktop
+      - run:
+          name: Move test build to 'dist-test' to avoid conflict with production build
+          command: mv ./dist ./dist-test
+      - run:
+          name: Move test zips to 'builds-test' to avoid conflict with production build
+          command: mv ./builds ./builds-test
+      - persist_to_workspace:
+          root: .
+          paths:
+            - dist-test
+            - builds-test            
+
   prep-build-storybook:
     executor: node-browsers-medium-plus
     steps:
@@ -567,6 +647,33 @@ jobs:
       - store_artifacts:
           path: test-artifacts
           destination: test-artifacts
+
+  test-e2e-desktop-chrome:
+    executor: node-browsers
+    steps:
+      - checkout
+      - run:
+          name: Re-Install Chrome
+          command: ./.circleci/scripts/chrome-install.sh
+      - attach_workspace:
+          at: .
+      - run:
+          name: Move test build to dist
+          command: mv ./dist-test ./dist
+      - run:
+          name: Move test zips to builds
+          command: mv ./builds-test ./builds
+      - run:
+          name: test:e2e:chrome
+          command: |
+            if .circleci/scripts/test-run-e2e.sh
+            then
+              yarn test:e2e:chrome --retries 2
+            fi
+          no_output_timeout: 20m
+      - store_artifacts:
+          path: test-artifacts
+          destination: test-artifacts          
 
   test-e2e-firefox-snaps:
     executor: node-browsers

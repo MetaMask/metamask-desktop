@@ -103,6 +103,7 @@ class FixtureServer {
     } else {
       const data = await fs.readFile(statePath);
       const rawState = JSON.parse(data.toString('utf-8'));
+      rawState.data.PreferencesController.desktopEnabled = true;
       state = performStateSubstitutions(rawState);
       this._initialStateCache.set(statePath, state);
     }
