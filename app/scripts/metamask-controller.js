@@ -15,7 +15,6 @@ import {
   ethErrors,
 } from 'eth-rpc-errors';
 import { Mutex } from 'await-semaphore';
-import { stripHexPrefix } from 'ethereumjs-util';
 import log from 'loglevel';
 import TrezorKeyring from 'eth-trezor-keyring';
 import LedgerBridgeKeyring from '@metamask/eth-ledger-bridge-keyring';
@@ -52,7 +51,6 @@ import {
   NodeThreadExecutionService,
   IframeExecutionService,
 } from '@metamask/snap-controllers';
-import { satisfies as satisfiesSemver } from 'semver';
 ///: END:ONLY_INCLUDE_IN
 
 import {
@@ -66,7 +64,7 @@ import {
   GAS_DEV_API_BASE_URL,
   SWAPS_CLIENT_ID,
 } from '../../shared/constants/swaps';
-import { MAINNET_CHAIN_ID } from '../../shared/constants/network';
+import { CHAIN_IDS } from '../../shared/constants/network';
 import {
   DEVICE_NAMES,
   KEYRING_TYPES,
@@ -79,7 +77,10 @@ import {
   ///: END:ONLY_INCLUDE_IN
 } from '../../shared/constants/permissions';
 import { UI_NOTIFICATIONS } from '../../shared/notifications';
-import { toChecksumHexAddress } from '../../shared/modules/hexstring-utils';
+import {
+  toChecksumHexAddress,
+  stripHexPrefix,
+} from '../../shared/modules/hexstring-utils';
 import { MILLISECOND } from '../../shared/constants/time';
 import {
   ORIGIN_METAMASK,
@@ -91,14 +92,14 @@ import {
 } from '../../shared/constants/app';
 import { EVENT, EVENT_NAMES } from '../../shared/constants/metametrics';
 
-import { hexToDecimal } from '../../ui/helpers/utils/conversions.util';
-import {
-  getTokenIdParam,
-  getTokenValueParam,
-} from '../../ui/helpers/utils/token-util';
+import { getTokenIdParam } from '../../ui/helpers/utils/token-util';
 import { isEqualCaseInsensitive } from '../../shared/modules/string-utils';
 import { parseStandardTokenTransactionData } from '../../shared/modules/transaction.utils';
 import { STATIC_MAINNET_TOKEN_LIST } from '../../shared/constants/tokens';
+import {
+  getTokenValueParam,
+  hexToDecimal,
+} from '../../shared/lib/metamask-controller-utils';
 import {
   onMessageReceived,
   checkForMultipleVersionsRunning,
@@ -157,6 +158,8 @@ import {
 import createRPCMethodTrackingMiddleware from './lib/createRPCMethodTrackingMiddleware';
 ///: BEGIN:ONLY_INCLUDE_IN(flask)
 import cfg from './desktop/config';
+import { checkSnapsBlockList } from './flask/snaps-utilities';
+import { SNAP_BLOCKLIST } from './flask/snaps-blocklist';
 ///: END:ONLY_INCLUDE_IN
 
 export const METAMASK_CONTROLLER_EVENTS = {
@@ -435,11 +438,11 @@ export default class MetamaskController extends EventEmitter {
       EIP1559APIEndpoint: `${gasApiBaseUrl}/networks/<chain_id>/suggestedGasFees`,
       getCurrentNetworkLegacyGasAPICompatibility: () => {
         const chainId = this.networkController.getCurrentChainId();
-        return process.env.IN_TEST || chainId === MAINNET_CHAIN_ID;
+        return process.env.IN_TEST || chainId === CHAIN_IDS.MAINNET;
       },
       getChainId: () => {
         return process.env.IN_TEST
-          ? MAINNET_CHAIN_ID
+          ? CHAIN_IDS.MAINNET
           : this.networkController.getCurrentChainId();
       },
     });
@@ -661,7 +664,7 @@ export default class MetamaskController extends EventEmitter {
     } else {
       this.snapExecutionService = new IframeExecutionService({
         iframeUrl: new URL(
-          'https://metamask.github.io/iframe-execution-environment/0.7.0',
+          'https://metamask.github.io/iframe-execution-environment/0.8.0',
         ),
         messenger: this.controllerMessenger.getRestricted({
           name: 'ExecutionService',
@@ -696,13 +699,6 @@ export default class MetamaskController extends EventEmitter {
       ],
     });
 
-    const SNAP_BLOCKLIST = [
-      {
-        id: 'npm:@consensys/starknet-snap',
-        versionRange: '<0.1.11',
-      },
-    ];
-
     this.snapController = new SnapController({
       environmentEndowmentPermissions: Object.values(EndowmentPermissions),
       closeAllConnections: this.removeAllConnections.bind(this),
@@ -712,27 +708,7 @@ export default class MetamaskController extends EventEmitter {
         return this.getAppKeyForSubject(`${appKeyType}:${subject}`);
       },
       checkBlockList: async (snapsToCheck) => {
-        return Object.entries(snapsToCheck).reduce(
-          (acc, [snapId, snapVersion]) => {
-            const blockInfo = SNAP_BLOCKLIST.find(
-              (blocked) =>
-                blocked.id === snapId &&
-                satisfiesSemver(snapVersion, blocked.versionRange, {
-                  includePrerelease: true,
-                }),
-            );
-
-            const cur = blockInfo
-              ? {
-                  blocked: true,
-                  reason: blockInfo.reason,
-                  infoUrl: blockInfo.infoUrl,
-                }
-              : { blocked: false };
-            return { ...acc, [snapId]: cur };
-          },
-          {},
-        );
+        return checkSnapsBlockList(snapsToCheck, SNAP_BLOCKLIST);
       },
       state: initState.SnapController,
       messenger: snapControllerMessenger,
@@ -1748,6 +1724,8 @@ export default class MetamaskController extends EventEmitter {
         appStateController.setShowTestnetMessageInDropdown.bind(
           appStateController,
         ),
+      setShowPortfolioTooltip:
+        appStateController.setShowPortfolioTooltip.bind(appStateController),
       setCollectiblesDetectionNoticeDismissed:
         appStateController.setCollectiblesDetectionNoticeDismissed.bind(
           appStateController,
@@ -1885,6 +1863,10 @@ export default class MetamaskController extends EventEmitter {
       removeSnap: this.controllerMessenger.call.bind(
         this.controllerMessenger,
         'SnapController:remove',
+      ),
+      handleSnapRequest: this.controllerMessenger.call.bind(
+        this.controllerMessenger,
+        'SnapController:handleRequest',
       ),
       dismissNotifications: this.dismissNotifications.bind(this),
       markNotificationsAsRead: this.markNotificationsAsRead.bind(this),
@@ -2281,7 +2263,7 @@ export default class MetamaskController extends EventEmitter {
     const isTokenDetectionInactiveInMainnet =
       !useTokenDetection &&
       this.networkController.store.getState().provider.chainId ===
-        MAINNET_CHAIN_ID;
+        CHAIN_IDS.MAINNET;
     const { tokenList } = this.tokenListController.state;
     const caseInSensitiveTokenList = isTokenDetectionInactiveInMainnet
       ? STATIC_MAINNET_TOKEN_LIST
@@ -3322,18 +3304,14 @@ export default class MetamaskController extends EventEmitter {
    *  './controllers/transactions'
    * ).CustomGasSettings} [customGasSettings] - overrides to use for gas params
    *  instead of allowing this method to generate them
-   * @param newTxMetaProps
+   * @param options
    * @returns {object} MetaMask state
    */
-  async createSpeedUpTransaction(
-    originalTxId,
-    customGasSettings,
-    newTxMetaProps,
-  ) {
+  async createSpeedUpTransaction(originalTxId, customGasSettings, options) {
     await this.txController.createSpeedUpTransaction(
       originalTxId,
       customGasSettings,
-      newTxMetaProps,
+      options,
     );
     const state = await this.getState();
     return state;
