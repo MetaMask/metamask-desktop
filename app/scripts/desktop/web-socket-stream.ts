@@ -41,13 +41,10 @@ export class WebSocketStream extends Duplex {
 
     const rawData = typeof msg === 'string' ? msg : JSON.stringify(msg);
 
-    if (this.isBrowser) {
-      this.sendBrowser(rawData, cb);
-      return;
-    }
-
-    this.webSocket.send(rawData);
-    cb();
+    this.waitForSocketConnection(this.webSocket, () => {
+      this.webSocket.send(rawData);
+      cb();
+    });
   }
 
   private async onMessage(rawData: any) {
@@ -64,15 +61,8 @@ export class WebSocketStream extends Duplex {
     this.push(data);
   }
 
-  private sendBrowser(rawData: string, cb: () => void) {
-    this.waitForSocketConnection(this.webSocket as BrowserWebSocket, () => {
-      this.webSocket.send(rawData);
-      cb();
-    });
-  }
-
   private waitForSocketConnection(
-    socket: BrowserWebSocket,
+    socket: BrowserWebSocket | NodeWebSocket,
     callback: () => void,
   ) {
     if (socket.readyState === 1) {

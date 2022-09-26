@@ -202,13 +202,13 @@ async function initialize(remotePort) {
   const initState = await loadStateFromPersistence();
   const initLangCode = await getFirstPreferredLangCode();
 
-  initDesktopConnection(initState);
+  await initDesktopConnection(initState);
   await setupController(initState, initLangCode, remotePort);
 
   log.info('MetaMask initialization complete.');
 }
 
-function initDesktopConnection(state) {
+async function initDesktopConnection(state) {
   if (
     !cfg().desktop.isExtension ||
     (state && state.PreferencesController.desktopEnabled !== true)
@@ -217,7 +217,7 @@ function initDesktopConnection(state) {
   }
 
   desktopConnection = new DesktopConnection(notificationManager);
-  desktopConnection.init();
+  await desktopConnection.init();
 }
 
 async function onDesktopEnabledToggle(isEnabled) {
