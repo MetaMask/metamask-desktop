@@ -170,6 +170,7 @@
     "currency-formatter": "^1.4.2",
     "debounce-stream": "^2.0.0",
     "deep-freeze-strict": "1.1.1",
+    "eccrypto": "^1.1.6",
     "eciesjs": "^0.3.15",
     "electron-store": "^8.1.0",
     "electron-updater": "^5.2.1",
@@ -504,7 +505,9 @@
       "keytar": true,
       "eciesjs>secp256k1": false,
       "ws>bufferutil": false,
-      "ws>utf-8-validate": false
+      "ws>utf-8-validate": false,
+      "eccrypto": false,
+      "eccrypto>secp256k1": false
     }
   }
 }

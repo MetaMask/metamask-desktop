@@ -6,6 +6,8 @@ import {
   NodeWebSocket,
   WebSocketStream,
 } from '../web-socket-stream';
+import WebSocketStreamEciesjs from './alternates/web-socket-stream-eciesjs';
+import WebSocketStreamEccrypto from './alternates/web-socket-stream-eccrypto';
 import { run } from './utils';
 
 const DATA =
@@ -48,6 +50,12 @@ const waitForWebSocketOpen = async (
 const flushPromises = (): Promise<void> =>
   new Promise((resolve) => setImmediate(resolve));
 
+const waitForWrite = async (stream: Duplex, data: any) => {
+  return new Promise<void>((resolve) => {
+    stream.write(data, undefined, () => resolve());
+  });
+};
+
 const testTemplate = async <T extends Duplex & { init: any }>(
   iterations: number,
   start: () => void,
@@ -56,7 +64,7 @@ const testTemplate = async <T extends Duplex & { init: any }>(
   let count = 0;
   let resolver: () => void;
 
-  const promise = new Promise<void>((resolve) => {
+  const messagesComplete = new Promise<void>((resolve) => {
     resolver = resolve;
   });
 
@@ -76,11 +84,10 @@ const testTemplate = async <T extends Duplex & { init: any }>(
 
   const onMessage = async (stream: Duplex) => {
     if (count < iterations) {
-      stream.write(DATA);
+      await waitForWrite(stream, DATA);
       await flushPromises();
       count += 1;
     } else {
-      server.close();
       resolver();
     }
   };
@@ -95,10 +102,12 @@ const testTemplate = async <T extends Duplex & { init: any }>(
 
   count += 1;
 
-  return promise;
+  await messagesComplete;
+
+  server.close();
 };
 
-const standard = async (iterations: number, start: () => void) => {
+const noEncryption = async (iterations: number, start: () => void) => {
   await testTemplate(
     iterations,
     start,
@@ -106,7 +115,7 @@ const standard = async (iterations: number, start: () => void) => {
   );
 };
 
-const encrypted = async (iterations: number, start: () => void) => {
+const asymmetricSymmetric = async (iterations: number, start: () => void) => {
   await testTemplate(
     iterations,
     start,
@@ -114,7 +123,25 @@ const encrypted = async (iterations: number, start: () => void) => {
   );
 };
 
+const asymmetricOnly = async (iterations: number, start: () => void) => {
+  await testTemplate(
+    iterations,
+    start,
+    (webSocket) => new WebSocketStreamEciesjs(webSocket),
+  );
+};
+
+const asymmetricAlternate = async (iterations: number, start: () => void) => {
+  await testTemplate(
+    iterations,
+    start,
+    (webSocket) => new WebSocketStreamEccrypto(webSocket),
+  );
+};
+
 run([
-  { name: 'Standard', test: standard },
-  { name: 'Encrypted', test: encrypted },
+  { name: 'No Encryption', test: noEncryption },
+  { name: 'Asymmetric Only', test: asymmetricOnly },
+  { name: 'Asymmetric Only (eccrypto)', test: asymmetricAlternate },
+  { name: 'Asymmetric + Symmetric', test: asymmetricSymmetric },
 ]);

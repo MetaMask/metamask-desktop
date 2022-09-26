@@ -2,7 +2,8 @@ import '../globals';
 
 const DEFAULT_ITERATIONS = 10000;
 
-export const benchmark = async (
+const benchmark = async (
+  name: string,
   iterations: number,
   test: (iterations: number, start: () => void) => void,
 ) => {
@@ -13,10 +14,10 @@ export const benchmark = async (
   });
 
   const end = new Date().getTime();
-  const duration = end - startTime;
-  const average = duration / iterations;
+  const total = end - startTime;
+  const average = total / iterations;
 
-  return { duration, average };
+  return { name, total, average };
 };
 
 export const run = async (
@@ -29,13 +30,17 @@ export const run = async (
     ? parseInt(process.argv[2], 10)
     : DEFAULT_ITERATIONS;
 
-  const results: { [name: string]: any } = {};
+  const results = [];
 
   for (const scenario of scenarios) {
     console.log('Running scenario', { name: scenario.name });
-    results[scenario.name] = await benchmark(iterations, scenario.test);
+
+    const result = await benchmark(scenario.name, iterations, scenario.test);
+    results.push(result);
   }
 
-  console.log(`\nResults - Iterations: ${iterations}`);
-  console.table(results, ['duration', 'average']);
+  results.sort((a, b) => a.average - b.average);
+
+  console.log(`\nIterations: ${iterations}`);
+  console.table(results, ['name', 'total', 'average']);
 };
