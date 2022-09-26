@@ -155,7 +155,9 @@ import {
   ///: END:ONLY_INCLUDE_IN
 } from './controllers/permissions';
 import createRPCMethodTrackingMiddleware from './lib/createRPCMethodTrackingMiddleware';
+///: BEGIN:ONLY_INCLUDE_IN(flask)
 import cfg from './desktop/config';
+///: END:ONLY_INCLUDE_IN
 
 export const METAMASK_CONTROLLER_EVENTS = {
   // Fired after state changes that impact the extension badge (unapproved msg count)

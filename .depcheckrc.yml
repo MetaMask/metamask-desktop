@@ -46,6 +46,9 @@ ignores:
   - 'resolve-url-loader'
   # jest environments
   - 'jest-environment-jsdom'
+  - '@babel/cli'
+  - 'babel-plugin-transform-inline-environment-variables'
+  - 'electron-rebuild'
 
 # files depcheck should not parse
 ignorePatterns:
