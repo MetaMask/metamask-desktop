@@ -1,4 +1,4 @@
-import { Duplex } from 'stream';
+import { Duplex, EventEmitter } from 'stream';
 import PortStream from 'extension-port-stream';
 import endOfStream from 'end-of-stream';
 import ObjectMultiplex from 'obj-multiplex';
@@ -28,6 +28,8 @@ import {
 } from './types/message';
 
 export default class DesktopConnection {
+  private static instance: DesktopConnection;
+
   private notificationManager: NotificationManager;
 
   private clientIdCounter: number;
@@ -44,7 +46,56 @@ export default class DesktopConnection {
 
   private stateStream?: Duplex;
 
-  constructor(notificationManager: NotificationManager) {
+  public static async initIfEnabled(
+    notificationManager: NotificationManager,
+    state: any,
+  ) {
+    if (state && state.PreferencesController.desktopEnabled !== true) {
+      return;
+    }
+
+    await DesktopConnection.init(notificationManager);
+  }
+
+  public static getInstance(): DesktopConnection {
+    return DesktopConnection.instance;
+  }
+
+  public static hasInstance(): boolean {
+    return Boolean(DesktopConnection.getInstance());
+  }
+
+  public static registerCallbacks(
+    metaMaskController: EventEmitter,
+    notificationManager: NotificationManager,
+  ) {
+    metaMaskController.on('update', (state) =>
+      DesktopConnection.onStateUpdate(state, notificationManager),
+    );
+
+    log.debug('Registered desktop connection callbacks');
+  }
+
+  private static async onStateUpdate(
+    state: any,
+    notificationManager: NotificationManager,
+  ) {
+    const desktopEnabled = state.desktopEnabled as boolean;
+
+    if (!DesktopConnection.hasInstance() && desktopEnabled === true) {
+      log.debug('Desktop enabled');
+
+      await DesktopConnection.init(notificationManager);
+      await DesktopConnection.getInstance().transferState();
+    }
+  }
+
+  private static async init(notificationManager: NotificationManager) {
+    DesktopConnection.instance = new DesktopConnection(notificationManager);
+    await DesktopConnection.instance.init();
+  }
+
+  private constructor(notificationManager: NotificationManager) {
     this.notificationManager = notificationManager;
     this.clientIdCounter = 1;
     this.multiplex = new ObjectMultiplex();

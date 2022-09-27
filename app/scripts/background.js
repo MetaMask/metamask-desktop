@@ -111,12 +111,8 @@ const ONE_SECOND_IN_MILLISECONDS = 1_000;
 // Timeout for initializing phishing warning page.
 const PHISHING_WARNING_PAGE_TIMEOUT = ONE_SECOND_IN_MILLISECONDS;
 
-let desktopApp;
-let desktopConnection;
-
 if (cfg().desktop.isApp) {
-  desktopApp = new Desktop(initialize);
-  desktopApp.init();
+  Desktop.init(initialize);
 }
 
 /**
@@ -202,7 +198,10 @@ async function initialize(remotePort) {
   const initState = await loadStateFromPersistence();
   const initLangCode = await getFirstPreferredLangCode();
 
-  await initDesktopConnection(initState);
+  if (cfg().desktop.isExtension) {
+    await DesktopConnection.initIfEnabled(notificationManager, initState);
+  }
+
   await setupController(initState, initLangCode, remotePort);
 
   if (!cfg().desktop.isApp) {
@@ -210,29 +209,6 @@ async function initialize(remotePort) {
   }
 
   log.info('MetaMask initialization complete.');
-}
-
-async function initDesktopConnection(state) {
-  if (
-    !cfg().desktop.isExtension ||
-    (state && state.PreferencesController.desktopEnabled !== true)
-  ) {
-    return;
-  }
-
-  desktopConnection = new DesktopConnection(notificationManager);
-  await desktopConnection.init();
-}
-
-async function onDesktopEnabledToggle(isEnabled) {
-  log.debug('Detected desktop enabled toggle', { isEnabled });
-
-  if (cfg().desktop.isExtension && !desktopConnection && isEnabled) {
-    await initDesktopConnection();
-    await desktopConnection.transferState();
-  } else if (cfg().desktop.isApp && !isEnabled) {
-    await desktopApp.disable();
-  }
 }
 
 /**
@@ -397,7 +373,6 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     getOpenMetamaskTabsIds: () => {
       return openMetamaskTabsIDs;
     },
-    onDesktopEnabledToggle,
   });
 
   setupEnsIpfsResolver({
@@ -514,8 +489,11 @@ function setupController(initState, initLangCode, remoteSourcePort) {
    * @param {Port} remotePort - The port provided by a new context.
    */
   function connectRemote(remotePort) {
-    if (desktopConnection) {
-      desktopConnection.createStream(remotePort, CONNECTION_TYPE_INTERNAL);
+    if (DesktopConnection?.hasInstance()) {
+      DesktopConnection?.getInstance().createStream(
+        remotePort,
+        CONNECTION_TYPE_INTERNAL,
+      );
 
       // When in Desktop Mode the responsibility to send CONNECTION_READY is on the desktop app side
       if (isManifestV3) {
@@ -630,9 +608,11 @@ function setupController(initState, initLangCode, remoteSourcePort) {
 
   // communication with page or other extension
   function connectExternal(remotePort) {
-    if (desktopConnection) {
-      desktopConnection.createStream(remotePort, CONNECTION_TYPE_EXTERNAL);
-      log.debug('Created stream for external connection');
+    if (DesktopConnection?.hasInstance()) {
+      DesktopConnection?.getInstance().createStream(
+        remotePort,
+        CONNECTION_TYPE_EXTERNAL,
+      );
       return;
     }
 
@@ -796,13 +776,17 @@ function setupController(initState, initLangCode, remoteSourcePort) {
   }
 
   /**
-   * Once setConnectCallbacks is set, the desktop app can be called by the extension through the websocket.
+   * Once registerCallbacks is set, the desktop app can be called by the extension through the websocket.
    * Consequently, we set those functions only once the MetaMask Controller is fully configured, e. g. at the whole end of the setupController function.
    * This guarantees the desktop app can only be called by the extension when fully setup.
    */
-  if (desktopApp) {
-    desktopApp.setConnectCallbacks(connectRemote, connectExternal);
-  }
+  Desktop?.getInstance()?.registerCallbacks(
+    connectRemote,
+    connectExternal,
+    controller,
+  );
+
+  DesktopConnection?.registerCallbacks(controller, notificationManager);
 
   return Promise.resolve();
 }
@@ -815,8 +799,8 @@ function setupController(initState, initLangCode, remoteSourcePort) {
  * Opens the browser popup for user confirmation
  */
 async function triggerUi() {
-  if (desktopApp) {
-    desktopApp.showPopup();
+  if (Desktop.hasInstance()) {
+    Desktop.getInstance().showPopup();
     return;
   }
 

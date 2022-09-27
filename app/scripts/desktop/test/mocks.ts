@@ -1,4 +1,4 @@
-import { Duplex } from 'stream';
+import { Duplex, EventEmitter } from 'stream';
 import ObjectMultiplex from 'obj-multiplex';
 import { WebSocketServer } from 'ws';
 import NotificationManager from '../../lib/notification-manager';
@@ -109,3 +109,8 @@ export const createMultiplexMock = (): jest.Mocked<ObjectMultiplex & Duplex> =>
     ...createStreamMock(),
     createStream: jest.fn(),
   } as unknown as jest.Mocked<ObjectMultiplex>);
+
+export const createEventEmitterMock = (): jest.Mocked<EventEmitter> =>
+  ({
+    on: jest.fn(),
+  } as any);

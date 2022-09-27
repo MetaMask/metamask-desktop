@@ -1,5 +1,5 @@
 import path from 'path';
-import { Duplex } from 'stream';
+import { Duplex, EventEmitter } from 'stream';
 import { app, BrowserWindow } from 'electron';
 import { Server as WebSocketServer, WebSocket } from 'ws';
 import endOfStream from 'end-of-stream';
@@ -27,6 +27,8 @@ import {
 import { ClientId } from './types/desktop';
 
 export default class Desktop {
+  private static instance: Desktop;
+
   private backgroundInitialise: () => Promise<void>;
 
   private connections: HandshakeMessage[];
@@ -49,7 +51,20 @@ export default class Desktop {
 
   private statusWindow?: BrowserWindow;
 
-  constructor(backgroundInitialise: () => Promise<void>) {
+  public static async init(backgroundInitialise: () => Promise<void>) {
+    Desktop.instance = new Desktop(backgroundInitialise);
+    await Desktop.instance.init();
+  }
+
+  public static getInstance(): Desktop {
+    return Desktop.instance;
+  }
+
+  public static hasInstance(): boolean {
+    return Boolean(Desktop.instance);
+  }
+
+  private constructor(backgroundInitialise: () => Promise<void>) {
     this.backgroundInitialise = backgroundInitialise;
     this.connections = [];
     this.multiplex = new ObjectMultiplex();
@@ -90,26 +105,15 @@ export default class Desktop {
     updateCheck();
   }
 
-  public async disable() {
-    log.debug('Disabling desktop usage');
-
-    if (!this.disableStream) {
-      log.error('Disable stream not initialised');
-      return;
-    }
-
-    const state = await browser.storage.local.get();
-    state.data.PreferencesController.desktopEnabled = false;
-
-    this.disableStream.write(state);
-  }
-
-  public setConnectCallbacks(
+  public registerCallbacks(
     connectRemote: ConnectRemoteFactory,
     connectExternal: ConnectRemoteFactory,
+    metaMaskController: EventEmitter,
   ) {
     this.connectRemote = connectRemote;
     this.connectExternal = connectExternal;
+
+    metaMaskController.on('update', (state) => this.onStateUpdate(state));
   }
 
   public showPopup() {
@@ -121,6 +125,20 @@ export default class Desktop {
     this.browserControllerStream.write(
       BrowserControllerAction.BROWSER_ACTION_SHOW_POPUP,
     );
+  }
+
+  private async disable() {
+    log.debug('Desktop disabled');
+
+    if (!this.disableStream) {
+      log.error('Disable stream not initialised');
+      return;
+    }
+
+    const state = await browser.storage.local.get();
+    state.data.PreferencesController.desktopEnabled = false;
+
+    this.disableStream.write(state);
   }
 
   private async createStatusWindow() {
@@ -249,6 +267,12 @@ export default class Desktop {
   private onConnectionControllerMessage(data: ConnectionControllerMessage) {
     log.debug('Received connection controller message', data);
     this.clientStreams[data.clientId as number]?.end();
+  }
+
+  private async onStateUpdate(state: any) {
+    if (state.desktopEnabled === false) {
+      await this.disable();
+    }
   }
 
   private async createWebSocketServer(): Promise<WebSocketServer> {

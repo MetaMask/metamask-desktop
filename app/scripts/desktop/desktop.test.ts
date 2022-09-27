@@ -1,4 +1,4 @@
-import { Duplex } from 'stream';
+import { Duplex, EventEmitter } from 'stream';
 import ObjectMultiplex from 'obj-multiplex';
 import { app, BrowserWindow } from 'electron';
 import { Server as WebSocketServer } from 'ws';
@@ -25,6 +25,7 @@ import {
   createWebSocketNodeMock,
   createWebSocketServerMock,
   createWebSocketStreamMock,
+  createEventEmitterMock,
 } from './test/mocks';
 import { simulateStreamMessage, simulateNodeEvent } from './test/utils';
 import { browser } from './extension-polyfill';
@@ -88,6 +89,7 @@ describe('Desktop', () => {
   let appMock: jest.Mocked<typeof app>;
   let updateCheckMock: jest.Mocked<any>;
   let browserMock: jest.Mocked<any>;
+  let metaMaskController: jest.Mocked<EventEmitter>;
 
   const multiplexStreamMocks: { [clientId: ClientId]: jest.Mocked<Duplex> } =
     {};
@@ -112,6 +114,7 @@ describe('Desktop', () => {
     appMock = app as any;
     updateCheckMock = updateCheck;
     browserMock = browser;
+    metaMaskController = createEventEmitterMock();
 
     multiplexMock.createStream.mockImplementation((name) => {
       const newStream = createStreamMock();
@@ -267,7 +270,11 @@ describe('Desktop', () => {
   describe('on disconnect', () => {
     it('ends all multiplex client streams', async () => {
       await desktop.init();
-      desktop.setConnectCallbacks(connectRemoteMock, connectExternalMock);
+      desktop.registerCallbacks(
+        connectRemoteMock,
+        connectExternalMock,
+        metaMaskController,
+      );
 
       await simulateNodeEvent(webSocketServerMock, 'connection', webSocketMock);
 
@@ -303,7 +310,11 @@ describe('Desktop', () => {
       'creates background $name connection using new multiplex stream',
       async ({ connectionType, callback }) => {
         await desktop.init();
-        desktop.setConnectCallbacks(connectRemoteMock, connectExternalMock);
+        desktop.registerCallbacks(
+          connectRemoteMock,
+          connectExternalMock,
+          metaMaskController,
+        );
 
         const handshakeStreamMock = multiplexStreamMocks[CLIENT_ID_HANDSHAKES];
 
@@ -333,7 +344,11 @@ describe('Desktop', () => {
   describe('on connection controller message', () => {
     it('ends multiplex client stream', async () => {
       await desktop.init();
-      desktop.setConnectCallbacks(connectRemoteMock, connectExternalMock);
+      desktop.registerCallbacks(
+        connectRemoteMock,
+        connectExternalMock,
+        metaMaskController,
+      );
 
       const handshakeStreamMock = multiplexStreamMocks[CLIENT_ID_HANDSHAKES];
       await simulateStreamMessage(handshakeStreamMock, HANDSHAKE_MOCK);

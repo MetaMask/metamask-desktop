@@ -1135,11 +1135,6 @@ export default class MetamaskController extends EventEmitter {
     this.extension.runtime.onMessageExternal.addListener(onMessageReceived);
     // Fire a ping message to check if other extensions are running
     checkForMultipleVersionsRunning();
-
-    this._isDesktopEnabled =
-      opts.initState?.PreferencesController?.desktopEnabled || false;
-
-    this._onDesktopEnabledToggle = opts.onDesktopEnabledToggle;
   }
 
   ///: BEGIN:ONLY_INCLUDE_IN(flask)
@@ -4029,14 +4024,6 @@ export default class MetamaskController extends EventEmitter {
       method: NOTIFICATION_NAMES.chainChanged,
       params: this.getProviderNetworkState(newState),
     });
-
-    if (
-      this._onDesktopEnabledToggle &&
-      newState.desktopEnabled !== this._isDesktopEnabled
-    ) {
-      this._isDesktopEnabled = newState.desktopEnabled;
-      this._onDesktopEnabledToggle(this._isDesktopEnabled);
-    }
   }
 
   // misc
