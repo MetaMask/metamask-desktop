@@ -5,8 +5,6 @@ import { TEN_SECONDS_IN_MILLISECONDS } from '../../../shared/lib/transactions-co
 
 class DisconnectError extends Error {}
 
-class DisconnectError extends Error {}
-
 class MetaRPCClient {
   constructor(connectionStream) {
     this.connectionStream = connectionStream;

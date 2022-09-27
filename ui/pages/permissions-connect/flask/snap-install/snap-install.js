@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React, { useCallback, useState } from 'react';
-import { flatMap } from '@metamask/snap-utils';
 import { PageContainerFooter } from '../../../../components/ui/page-container';
 import PermissionsConnectPermissionList from '../../../../components/app/permissions-connect-permission-list';
 import PermissionsConnectFooter from '../../../../components/app/permissions-connect-footer';

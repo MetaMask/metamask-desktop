@@ -18,7 +18,7 @@ const configurationPropertyNames = [
   'SIWE_V1',
   'SWAPS_USE_DEV_APIS',
   'DESKTOP',
-  'DISABLE_WEB_SOCKET_ENCRYPTION'
+  'DISABLE_WEB_SOCKET_ENCRYPTION',
 ];
 
 const productionConfigurationPropertyNames = [
