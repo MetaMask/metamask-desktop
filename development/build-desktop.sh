@@ -2,15 +2,6 @@
 
 OUTPUT_DIR="dist_desktop"
 
-# Set MV3 specific variable
-MV3_ENABLE=$1
-
-if [ "$MV3_ENABLE" == "mv3_enable" ];
-then
-echo "Set MV3 enable"
-ENABLE_MV3=true
-fi
-
 echo "Rebuilding leveldown for Electron to support 3box"
 yarn electron-rebuild -o leveldown,keytar
 
