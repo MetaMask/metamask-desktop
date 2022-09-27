@@ -9,11 +9,24 @@ import { TransactionFactory } from '@ethereumjs/tx';
 const pathBase = 'm';
 const hdPathString = `${pathBase}/44'/60'/0'`;
 
+const MAX_INDEX = 1000;
 const NETWORK_API_URLS = {
   ropsten: 'http://api-ropsten.etherscan.io',
   kovan: 'http://api-kovan.etherscan.io',
   rinkeby: 'https://api-rinkeby.etherscan.io',
   mainnet: 'https://api.etherscan.io',
+};
+
+export type LedgerKeyringProperties = {
+  hdPath: string;
+  accounts: string[];
+  accountDetails: LedgerKeyringAccountDetails;
+  implementFullBIP44: boolean;
+  accountIndexes: { [key: string]: number };
+};
+
+export type LedgerKeyringAccountDetails = {
+  [key: string]: { bip44: boolean; hdPath: string };
 };
 
 export class LedgerBridgeKeyring extends EventEmitter {
@@ -22,13 +35,13 @@ export class LedgerBridgeKeyring extends EventEmitter {
 
   public type = LedgerBridgeKeyring.type;
 
-  public hdPath!: string;
+  public hdPath!: string; // Assigned in deserialize
 
-  public accounts!: any[];
+  public accounts!: string[]; // Assigned in deserialize
 
-  public accountDetails!: { [key: string]: { bip44: boolean; hdPath: string } };
+  public accountDetails!: LedgerKeyringAccountDetails; // Assigned in deserialize
 
-  public implementFullBIP44!: boolean;
+  public implementFullBIP44!: boolean; // Assigned in deserialize
 
   public page = 0;
 
@@ -36,21 +49,22 @@ export class LedgerBridgeKeyring extends EventEmitter {
 
   public unlockedAccount = 0;
 
-  public network = 'mainnet';
+  public hdk: HDKey;
 
-  public hdk: any;
+  public eth: Eth | undefined;
 
-  public paths: any = {};
+  public transport: TransportNodeHid | undefined;
 
-  public eth!: Eth;
+  // This only seems to be used for _migrateAccountDetails
+  public paths: { [key: string]: number } = {};
 
-  constructor(opts: any = {}) {
+  public constructor(opts: Partial<LedgerKeyringProperties> = {}) {
     super();
     this.deserialize(opts);
     this.hdk = new HDKey();
   }
 
-  serialize() {
+  public serialize(): Promise<Partial<LedgerKeyringProperties>> {
     return Promise.resolve({
       hdPath: this.hdPath,
       accounts: this.accounts,
@@ -59,14 +73,13 @@ export class LedgerBridgeKeyring extends EventEmitter {
     });
   }
 
-  deserialize(opts: any = {}) {
-    // console.log('DESERIALIZE', opts);
+  public deserialize(opts: Partial<LedgerKeyringProperties> = {}) {
     this.hdPath = opts.hdPath || hdPathString;
     this.accounts = opts.accounts || [];
     this.accountDetails = opts.accountDetails || {};
-    // if (!opts.accountDetails) {
-    //   this._migrateAccountDetails(opts);
-    // }
+    if (!opts.accountDetails) {
+      this._migrateAccountDetails(opts);
+    }
 
     this.implementFullBIP44 = opts.implementFullBIP44 || false;
 
@@ -81,18 +94,15 @@ export class LedgerBridgeKeyring extends EventEmitter {
   }
 
   public getFirstPage() {
-    console.log('LEDGER KEYRIN - GETFIRSTPAGE');
     this.page = 0;
     return this.__getPage(1);
   }
 
   public getNextPage() {
-    console.log('LEDGER KEYRIN - GETNEXTPAGE');
     return this.__getPage(1);
   }
 
   public getPreviousPage() {
-    console.log('LEDGER KEYRIN - GETPREVIOUSPAGE');
     return this.__getPage(-1);
   }
 
@@ -114,7 +124,6 @@ export class LedgerBridgeKeyring extends EventEmitter {
   }
 
   public setAccountToUnlock(index: string) {
-    console.log('LEDGER KEYRING - SETACCOUNTTOUNLOCK', index);
     this.unlockedAccount = parseInt(index, 10);
   }
 
@@ -172,23 +181,37 @@ export class LedgerBridgeKeyring extends EventEmitter {
     this.hdk = new HDKey();
   }
 
+  // TODO Still not implemented
+  // public updateTransportMethod() {
+  //   throw new Error('TO BE IMPLEMENTED WITH LEDGER LIVE SUPPORT');
+  // }
+
   public signMessage(withAccount: string, data: string) {
     return this.signPersonalMessage(withAccount, data);
   }
 
   // For personal_sign, we need to prefix the message:
   public async signPersonalMessage(withAccount: string, message: string) {
-    console.log('SIGN 1', { withAccount, message });
     const hdPath = await this.unlockAccountByAddress(withAccount);
 
-    console.log('SIGN 2', { hdPath });
+    let payload: {
+      v: number;
+      s: string;
+      r: string;
+    };
+    try {
+      await this.makeApp();
 
-    const payload = await this.eth.signPersonalMessage(
-      hdPath,
-      ethUtil.stripHexPrefix(message),
-    );
-
-    console.log('SIGN 3', { payload });
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      payload = await this.eth!.signPersonalMessage(
+        hdPath,
+        ethUtil.stripHexPrefix(message),
+      );
+    } catch (error) {
+      throw this.ledgerErrToMessage(error);
+    } finally {
+      await this.cleanUp();
+    }
 
     const v1 = payload.v - 27;
     const v2 = v1.toString(16);
@@ -199,8 +222,6 @@ export class LedgerBridgeKeyring extends EventEmitter {
       data: message,
       sig: signature,
     });
-
-    console.log('SIGN 4', { signature, addressSignedWith });
 
     if (
       ethUtil.toChecksumAddress(addressSignedWith) !==
@@ -241,11 +262,25 @@ export class LedgerBridgeKeyring extends EventEmitter {
 
     const hdPath = await this.unlockAccountByAddress(withAccount);
 
-    const payload = await this.eth.signEIP712HashedMessage(
-      hdPath,
-      domainSeparatorHex,
-      hashStructMessageHex,
-    );
+    let payload: {
+      v: number;
+      s: string;
+      r: string;
+    };
+    try {
+      await this.makeApp();
+
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      payload = await this.eth!.signEIP712HashedMessage(
+        hdPath,
+        domainSeparatorHex,
+        hashStructMessageHex,
+      );
+    } catch (error) {
+      throw this.ledgerErrToMessage(error);
+    } finally {
+      await this.cleanUp();
+    }
 
     const v1 = payload.v - 27;
     const v2 = v1.toString(16);
@@ -340,7 +375,16 @@ export class LedgerBridgeKeyring extends EventEmitter {
   private async _signTransaction(address: string, rawTxHex: string) {
     const hdPath = await this.unlockAccountByAddress(address);
 
-    return this.eth.signTransaction(hdPath, rawTxHex);
+    try {
+      await this.makeApp();
+
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      return this.eth!.signTransaction(hdPath, rawTxHex);
+    } catch (error) {
+      throw this.ledgerErrToMessage(error);
+    } finally {
+      await this.cleanUp();
+    }
   }
 
   private async unlockAccountByAddress(address: string) {
@@ -383,7 +427,6 @@ export class LedgerBridgeKeyring extends EventEmitter {
   }
 
   private async _getAccountsBIP44(from: number, to: number) {
-    console.log('LEDGER KEYRIN - ACCBIP44');
     const accounts = [];
 
     for (let i = from; i < to; i++) {
@@ -405,12 +448,10 @@ export class LedgerBridgeKeyring extends EventEmitter {
         break;
       }
     }
-    console.log('LEDGER KEYRIN - ACCBIP44 END', accounts);
     return accounts;
   }
 
   private _getAccountsLegacy(from: number, to: number) {
-    console.log('LEDGER KEYRIN - ACCLEGACY END');
     const accounts = [];
 
     for (let i = from; i < to; i++) {
@@ -422,7 +463,6 @@ export class LedgerBridgeKeyring extends EventEmitter {
       });
       this.paths[ethUtil.toChecksumAddress(address)] = i;
     }
-    console.log('LEDGER KEYRIN - ACCLEGACY END', accounts);
     return accounts;
   }
 
@@ -431,11 +471,6 @@ export class LedgerBridgeKeyring extends EventEmitter {
     const address = ethUtil
       .publicToAddress(dkey.publicKey, true)
       .toString('hex');
-
-    console.log('LEDGER KEYRIN - ADDRESSFROMINDEX', {
-      address,
-      derive: `${pathBase}/${i}`,
-    });
 
     return ethUtil.toChecksumAddress(`0x${address}`);
   }
@@ -452,7 +487,9 @@ export class LedgerBridgeKeyring extends EventEmitter {
   }
 
   private async _hasPreviousTransactions(address: string) {
-    const apiUrl = this._getApiUrl();
+    // TODO: Only possible option in eth-ledger-brigde-keyring
+    // Definitely needs reviewing
+    const apiUrl = NETWORK_API_URLS.mainnet;
     const response = await window.fetch(
       `${apiUrl}/api?module=account&action=txlist&address=${address}&tag=latest&page=1&offset=1`,
     );
@@ -463,31 +500,33 @@ export class LedgerBridgeKeyring extends EventEmitter {
     return false;
   }
 
-  // TODO: Needs reviewing
-  private _getApiUrl() {
-    return NETWORK_API_URLS.mainnet;
-  }
+  private async makeApp() {
+    this.transport = await TransportNodeHid.open('');
 
-  private _toLedgerPath(path: string) {
-    return path.toString().replace('m/', '');
+    this.eth = new Eth(this.transport);
   }
 
   private async unlock(hdPath = '', updateHdk = true) {
-    console.log('LEDGER KEYRING - UNLOCK', {
-      hdPath,
-      updateHdk,
-      unlocked: this.isUnlocked(),
-    });
     if (this.isUnlocked() && !hdPath) {
       return Promise.resolve('already unlocked');
     }
-    const path = hdPath ? this._toLedgerPath(hdPath) : this.hdPath;
+    const path = hdPath ? hdPath.replace('m/', '') : this.hdPath;
 
-    const transport = await TransportNodeHid.open('');
+    let addressData: {
+      publicKey: string;
+      address: string;
+      chainCode?: string;
+    };
+    try {
+      await this.makeApp();
 
-    this.eth = new Eth(transport);
-
-    const addressData = await this.eth.getAddress(path, false, true);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      addressData = await this.eth!.getAddress(path, false, true);
+    } catch (error) {
+      throw this.ledgerErrToMessage(error);
+    } finally {
+      await this.cleanUp();
+    }
 
     if (updateHdk) {
       this.hdk.publicKey = Buffer.from(addressData.publicKey, 'hex');
@@ -496,15 +535,101 @@ export class LedgerBridgeKeyring extends EventEmitter {
       }
     }
 
-    console.log('LEDGER KEYRING - UNLOCK END', {
-      hdPath,
-      updateHdk,
-      unlocked: this.isUnlocked(),
-      path,
-      deviceModel: transport?.deviceModel?.productName,
-      address: addressData.address,
-    });
-
     return addressData.address;
+  }
+
+  // This is likely code from an old migration, as accountIndexes is no longer being generated
+  private _migrateAccountDetails(opts: Partial<LedgerKeyringProperties>) {
+    if (this._isLedgerLiveHdPath() && opts.accountIndexes) {
+      for (const account of Object.keys(opts.accountIndexes)) {
+        this.accountDetails[account] = {
+          bip44: true,
+          hdPath: this._getPathForIndex(opts.accountIndexes[account]),
+        };
+      }
+    }
+
+    // try to migrate non-LedgerLive accounts too
+    if (!this._isLedgerLiveHdPath()) {
+      this.accounts
+        .filter(
+          (account) =>
+            !Object.keys(this.accountDetails).includes(
+              ethUtil.toChecksumAddress(account),
+            ),
+        )
+        .forEach((account) => {
+          try {
+            this.accountDetails[ethUtil.toChecksumAddress(account)] = {
+              bip44: false,
+              hdPath: this._pathFromAddress(account),
+            };
+          } catch (e) {
+            console.log(`failed to migrate account ${account}`);
+          }
+        });
+    }
+  }
+
+  private _pathFromAddress(address: string) {
+    const checksummedAddress = ethUtil.toChecksumAddress(address);
+    let index = this.paths[checksummedAddress];
+    if (typeof index === 'undefined') {
+      for (let i = 0; i < MAX_INDEX; i++) {
+        if (checksummedAddress === this._addressFromIndex(i)) {
+          index = i;
+          break;
+        }
+      }
+    }
+
+    if (typeof index === 'undefined') {
+      throw new Error('Unknown address');
+    }
+    return this._getPathForIndex(index);
+  }
+
+  private async cleanUp() {
+    this.eth = undefined;
+    if (this.transport) {
+      await this.transport.close();
+      this.transport = undefined;
+    }
+  }
+
+  private ledgerErrToMessage(err: any) {
+    const isU2FError = Boolean(err) && Boolean(err.metaData);
+
+    // https://developers.yubico.com/U2F/Libraries/Client_error_codes.html
+    if (isU2FError) {
+      if (err.metaData.code === 5) {
+        return new Error('LEDGER_TIMEOUT');
+      }
+      return err.metaData.type;
+    }
+
+    const isWrongAppError = String(err.message || err).includes('6804');
+    if (isWrongAppError) {
+      return new Error('LEDGER_WRONG_APP');
+    }
+
+    const isLedgerLockedError = err.message?.includes('OpenFailed');
+    const isStringError = typeof err === 'string';
+    if (isLedgerLockedError || (isStringError && err.includes('6801'))) {
+      return new Error('LEDGER_LOCKED');
+    }
+
+    const isErrorWithId =
+      // eslint-disable-next-line no-prototype-builtins
+      err.hasOwnProperty('id') && err.hasOwnProperty('message');
+    if (isErrorWithId) {
+      // Browser doesn't support U2F
+      if (err.message.includes('U2F not supported')) {
+        return new Error('U2F_NOT_SUPPORTED');
+      }
+    }
+
+    // Other
+    return err;
   }
 }
