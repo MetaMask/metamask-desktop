@@ -2399,9 +2399,7 @@ export default class MetamaskController extends EventEmitter {
    * @returns {Promise<object>} The keyringController update.
    */
   async submitPassword(password) {
-    console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
     await this.keyringController.submitPassword(password);
-    console.log('BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB');
 
     try {
       await this.blockTracker.checkForLatestBlock();
