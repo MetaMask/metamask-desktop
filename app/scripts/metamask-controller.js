@@ -17,8 +17,6 @@ import {
 import { Mutex } from 'await-semaphore';
 import log from 'loglevel';
 import TrezorKeyring from 'eth-trezor-keyring';
-// TODO THIS BREAKS LEDGER EXTENSION SUPPORT, WE NEED TO RECREATE KEYRING CONTROLLER DYNAMICALLY
-// import LedgerBridgeKeyring from '@metamask/eth-ledger-bridge-keyring';
 import LatticeKeyring from 'eth-lattice-keyring';
 import { MetaMaskKeyring as QRHardwareKeyring } from '@keystonehq/metamask-airgapped-keyring';
 import EthQuery from 'eth-query';
@@ -97,7 +95,6 @@ import { getTokenIdParam } from '../../ui/helpers/utils/token-util';
 import { isEqualCaseInsensitive } from '../../shared/modules/string-utils';
 import { parseStandardTokenTransactionData } from '../../shared/modules/transaction.utils';
 import { STATIC_MAINNET_TOKEN_LIST } from '../../shared/constants/tokens';
-import { LedgerBridgeKeyring } from './desktop/hw/ledger-keyring';
 import {
   getTokenValueParam,
   hexToDecimal,
@@ -163,6 +160,10 @@ import cfg from './desktop/config';
 import { checkSnapsBlockList } from './flask/snaps-utilities';
 import { SNAP_BLOCKLIST } from './flask/snaps-blocklist';
 ///: END:ONLY_INCLUDE_IN
+
+const LedgerBridgeKeyring = cfg().desktop.isApp
+  ? require('./desktop/hw/ledger-keyring').LedgerBridgeKeyring
+  : require('@metamask/eth-ledger-bridge-keyring');
 
 export const METAMASK_CONTROLLER_EVENTS = {
   // Fired after state changes that impact the extension badge (unapproved msg count)
