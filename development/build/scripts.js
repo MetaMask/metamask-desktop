@@ -29,6 +29,7 @@ const bifyModuleGroups = require('bify-module-groups');
 
 const { streamFlatMap } = require('../stream-flat-map');
 const { BuildType } = require('../lib/build-type');
+const { generateIconNames } = require('../generate-icon-names');
 const { BUILD_TARGETS, ENVIRONMENT } = require('./constants');
 const { getConfig, getProductionConfig } = require('./config');
 const {
@@ -1016,11 +1017,13 @@ async function getEnvironmentVariables({ buildTarget, buildType, version }) {
 
   const devMode = isDevBuild(buildTarget);
   const testing = isTestBuild(buildTarget);
+  const iconNames = await generateIconNames();
   return {
     COLLECTIBLES_V1: config.COLLECTIBLES_V1 === '1',
     CONF: devMode ? config : {},
     DESKTOP: config.DESKTOP,
     DISABLE_WEB_SOCKET_ENCRYPTION: config.DISABLE_WEB_SOCKET_ENCRYPTION === '1',
+    ICON_NAMES: iconNames,
     IN_TEST: testing,
     INFURA_PROJECT_ID: getInfuraProjectId({
       buildType,
@@ -1035,6 +1038,7 @@ async function getEnvironmentVariables({ buildTarget, buildType, version }) {
     NODE_ENV: devMode ? ENVIRONMENT.DEVELOPMENT : ENVIRONMENT.PRODUCTION,
     ONBOARDING_V2: config.ONBOARDING_V2 === '1',
     PHISHING_WARNING_PAGE_URL: getPhishingWarningPageUrl({ config, testing }),
+    PORTFOLIO_URL: config.PORTFOLIO_URL || 'https://portfolio.metamask.io',
     PUBNUB_PUB_KEY: config.PUBNUB_PUB_KEY || '',
     PUBNUB_SUB_KEY: config.PUBNUB_SUB_KEY || '',
     SEGMENT_HOST: config.SEGMENT_HOST,

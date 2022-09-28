@@ -24,6 +24,7 @@ module.exports = function (api) {
       'types',
       '*.config.js',
       '**/*.test.js',
+      'storybook-build',
     ],
   };
 };

@@ -83,7 +83,8 @@
       },
       "packages": {
         "@babel/cli>@jridgewell/trace-mapping": true,
-        "@babel/core>@ampproject/remapping>@jridgewell/gen-mapping": true
+        "@babel/core>@ampproject/remapping>@jridgewell/gen-mapping": true,
+        "terser>@jridgewell/source-map>@jridgewell/trace-mapping": true
       }
     },
     "@babel/core>@ampproject/remapping>@jridgewell/gen-mapping": {
@@ -92,7 +93,8 @@
       },
       "packages": {
         "@babel/cli>@jridgewell/trace-mapping>@jridgewell/sourcemap-codec": true,
-        "terser>@jridgewell/source-map>@jridgewell/gen-mapping>@jridgewell/set-array": true
+        "terser>@jridgewell/source-map>@jridgewell/gen-mapping>@jridgewell/set-array": true,
+        "terser>@jridgewell/source-map>@jridgewell/gen-mapping>@jridgewell/sourcemap-codec": true
       }
     },
     "@babel/core>@babel/generator": {
@@ -2176,18 +2178,13 @@
     },
     "enzyme>is-regex": {
       "packages": {
-        "enzyme>is-regex>has-tostringtag": true,
+        "koa>is-generator-function>has-tostringtag": true,
         "string.prototype.matchall>call-bind": true
-      }
-    },
-    "enzyme>is-regex>has-tostringtag": {
-      "packages": {
-        "string.prototype.matchall>has-symbols": true
       }
     },
     "enzyme>is-string": {
       "packages": {
-        "enzyme>is-regex>has-tostringtag": true
+        "koa>is-generator-function>has-tostringtag": true
       }
     },
     "enzyme>object-inspect": {
@@ -6208,6 +6205,11 @@
         "jsdom>escodegen>source-map": true
       }
     },
+    "koa>is-generator-function>has-tostringtag": {
+      "packages": {
+        "string.prototype.matchall>has-symbols": true
+      }
+    },
     "labeled-stream-splicer": {
       "packages": {
         "labeled-stream-splicer>stream-splicer": true,
@@ -6553,7 +6555,7 @@
     },
     "nock>deep-equal>is-date-object": {
       "packages": {
-        "enzyme>is-regex>has-tostringtag": true
+        "koa>is-generator-function>has-tostringtag": true
       }
     },
     "nock>mkdirp": {
@@ -7687,10 +7689,33 @@
       "packages": {
         "@babel/cli>@jridgewell/trace-mapping": true,
         "@babel/cli>@jridgewell/trace-mapping>@jridgewell/sourcemap-codec": true,
-        "terser>@jridgewell/source-map>@jridgewell/gen-mapping>@jridgewell/set-array": true
+        "terser>@jridgewell/source-map>@jridgewell/gen-mapping>@jridgewell/set-array": true,
+        "terser>@jridgewell/source-map>@jridgewell/gen-mapping>@jridgewell/sourcemap-codec": true,
+        "terser>@jridgewell/source-map>@jridgewell/trace-mapping": true
       }
     },
     "terser>@jridgewell/source-map>@jridgewell/gen-mapping>@jridgewell/set-array": {
+      "globals": {
+        "define": true
+      }
+    },
+    "terser>@jridgewell/source-map>@jridgewell/gen-mapping>@jridgewell/sourcemap-codec": {
+      "globals": {
+        "Buffer": true,
+        "TextDecoder": true,
+        "define": true
+      }
+    },
+    "terser>@jridgewell/source-map>@jridgewell/trace-mapping": {
+      "globals": {
+        "define": true
+      },
+      "packages": {
+        "terser>@jridgewell/source-map>@jridgewell/gen-mapping>@jridgewell/sourcemap-codec": true,
+        "terser>@jridgewell/source-map>@jridgewell/trace-mapping>@jridgewell/resolve-uri": true
+      }
+    },
+    "terser>@jridgewell/source-map>@jridgewell/trace-mapping>@jridgewell/resolve-uri": {
       "globals": {
         "define": true
       }

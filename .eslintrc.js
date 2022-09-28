@@ -260,6 +260,7 @@ module.exports = {
       files: [
         '**/__snapshots__/*.snap',
         'app/scripts/controllers/network/**/*.test.js',
+        'app/scripts/controllers/network/provider-api-tests/*.js',
         'app/scripts/controllers/permissions/**/*.test.js',
         'app/scripts/desktop/**/*.test.{js,ts}',
         'app/scripts/desktop/test/*.{js,ts}',
@@ -268,10 +269,11 @@ module.exports = {
         'app/scripts/platforms/*.test.js',
         'development/**/*.test.js',
         'shared/**/*.test.js',
-        'test/jest/*.js',
         'test/helpers/*.js',
+        'test/jest/*.js',
         'ui/**/*.test.js',
         'ui/__mocks__/*.js',
+        'shared/lib/error-utils.test.js',
       ],
       extends: ['@metamask/eslint-config-jest'],
       parserOptions: {
