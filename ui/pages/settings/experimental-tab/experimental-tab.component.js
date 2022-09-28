@@ -6,6 +6,9 @@ import {
   handleSettingsRefs,
 } from '../../../helpers/utils/settings-search';
 import { EVENT } from '../../../../shared/constants/metametrics';
+import Button from '../../../components/ui/button';
+import { DESKTOP_SYNC_ROUTE } from '../../../helpers/constants/routes';
+import { THEME_TYPE } from './experimental-tab.constant';
 
 export default class ExperimentalTab extends PureComponent {
   static contextTypes = {
@@ -267,6 +270,37 @@ export default class ExperimentalTab extends PureComponent {
     );
   }
 
+  renderDesktopSync() {
+    const { t } = this.context;
+    const { history } = this.props;
+
+    return (
+      <div
+        ref={this.settingsRefs[6]}
+        className="settings-page__content-row"
+        data-testid="advanced-setting-desktop-sync"
+      >
+        <div className="settings-page__content-item">
+          <span>Sync with Desktop</span>
+        </div>
+        <div className="settings-page__content-item">
+          <div className="settings-page__content-item-col">
+            <Button
+              type="secondary"
+              large
+              onClick={(event) => {
+                event.preventDefault();
+                history.push(DESKTOP_SYNC_ROUTE);
+              }}
+            >
+              Sync With Desktop
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   render() {
     return (
       <div className="settings-page__body">
@@ -275,6 +309,7 @@ export default class ExperimentalTab extends PureComponent {
         {this.renderEIP1559V2EnabledToggle()}
         {this.renderCustomNetworkListToggle()}
         {this.renderDesktopToggle()}
+        {this.renderDesktopSync()}
       </div>
     );
   }
