@@ -58,6 +58,22 @@ async function getConfig() {
   }
 
   return {
+    COLLECTIBLES_V1: process.env.COLLECTIBLES_V1,
+    INFURA_PROJECT_ID: process.env.INFURA_PROJECT_ID,
+    ONBOARDING_V2: process.env.ONBOARDING_V2,
+    PHISHING_WARNING_PAGE_URL: process.env.PHISHING_WARNING_PAGE_URL,
+    PUBNUB_PUB_KEY: process.env.PUBNUB_PUB_KEY,
+    PUBNUB_SUB_KEY: process.env.PUBNUB_SUB_KEY,
+    SEGMENT_HOST: process.env.SEGMENT_HOST,
+    SEGMENT_WRITE_KEY: process.env.SEGMENT_WRITE_KEY,
+    SENTRY_DSN_DEV:
+      process.env.SENTRY_DSN_DEV ??
+      'https://f59f3dd640d2429d9d0e2445a87ea8e1@sentry.io/273496',
+    SIWE_V1: process.env.SIWE_V1,
+    SWAPS_USE_DEV_APIS: process.env.SWAPS_USE_DEV_APIS,
+    METAMASK_DEBUG: process.env.METAMASK_DEBUG,
+    DESKTOP: process.env.DESKTOP,
+    DISABLE_WEB_SOCKET_ENCRYPTION: process.env.DISABLE_WEB_SOCKET_ENCRYPTION,
     ...ini.parse(configContents),
     ...environmentVariables,
   };

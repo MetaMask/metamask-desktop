@@ -28,6 +28,10 @@ const browser: Browser = {
     setBadgeBackgroundColor: () =>
       warn('browserAction.setBadgeBackgroundColor'),
   },
+  action: {
+    setBadgeText: () => warn('action.setBadgeText'),
+    setBadgeBackgroundColor: () => warn('action.setBadgeBackgroundColor'),
+  },
   storage: {
     local: {
       get: () => ObfuscatedStore.getStore(),

@@ -23,6 +23,7 @@ const loadConfig = () => {
     desktop: {
       isApp: envStringMatch(process.env.DESKTOP, 'APP'),
       isExtension: envStringMatch(process.env.DESKTOP, 'EXTENSION'),
+      mv3: Boolean(process.env.ENABLE_MV3),
       webSocket: {
         port,
         url: `ws://localhost:${port}`,
