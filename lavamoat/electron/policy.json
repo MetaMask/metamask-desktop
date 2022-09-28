@@ -43,7 +43,7 @@
         "3box>tweetnacl": true,
         "3box>tweetnacl-util": true,
         "@babel/runtime": true,
-        "node-fetch": true
+        "3box>node-fetch": true
       }
     },
     "3box>3box-orbitdb-plugins": {
@@ -183,7 +183,7 @@
         "3box>ethers>hash.js>minimalistic-assert": true,
         "bn.js": true,
         "ethers>@ethersproject/sha2>hash.js": true,
-        "pumpify>inherits": true
+        "readable-stream>inherits": true
       }
     },
     "3box>ethers>elliptic>brorand": {
@@ -205,7 +205,7 @@
     "3box>ethers>hash.js": {
       "packages": {
         "3box>ethers>hash.js>minimalistic-assert": true,
-        "pumpify>inherits": true
+        "readable-stream>inherits": true
       }
     },
     "3box>ethers>js-sha3": {
@@ -246,7 +246,7 @@
         "fetch": "write"
       },
       "packages": {
-        "node-fetch": true
+        "3box>node-fetch": true
       }
     },
     "3box>graphql-request>cross-fetch>node-fetch": {
@@ -290,6 +290,7 @@
         "setTimeout": true
       },
       "packages": {
+        "3box>ipfs>async": true,
         "3box>ipfs>async-iterator-all": true,
         "3box>ipfs>async-iterator-to-pull-stream": true,
         "3box>ipfs>async-iterator-to-stream": true,
@@ -304,6 +305,7 @@
         "3box>ipfs>err-code": true,
         "3box>ipfs>fnv1a": true,
         "3box>ipfs>fsm-event": true,
+        "3box>ipfs>glob": true,
         "3box>ipfs>human-to-milliseconds": true,
         "3box>ipfs>interface-datastore": true,
         "3box>ipfs>ipfs-bitswap": true,
@@ -366,12 +368,10 @@
         "3box>ipfs>stream-to-pull-stream": true,
         "3box>ipfs>superstruct": true,
         "3box>ipfs>varint": true,
+        "@truffle/codec>debug": true,
         "@metamask/providers>is-stream": true,
-        "gh-pages>async": true,
         "lodash": true,
-        "madge>debug": true,
-        "node-fetch": true,
-        "nyc>glob": true
+        "3box>node-fetch": true
       }
     },
     "3box>ipfs-mini": {
@@ -389,6 +389,17 @@
       },
       "packages": {
         "nanoid": true
+      }
+    },
+    "3box>ipfs>async": {
+      "globals": {
+        "clearTimeout": true,
+        "process": true,
+        "setImmediate": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "lodash": true
       }
     },
     "3box>ipfs>async-iterator-to-pull-stream": {
@@ -419,9 +430,9 @@
         "process.stdout": true
       },
       "packages": {
-        "@storybook/api>util-deprecate": true,
-        "browserify>string_decoder": true,
-        "pumpify>inherits": true
+        "3box>ipfs>readable-stream>string_decoder": true,
+        "readable-stream>inherits": true,
+        "readable-stream>util-deprecate": true
       }
     },
     "3box>ipfs>base32.js": {
@@ -464,9 +475,9 @@
         "process.stdout": true
       },
       "packages": {
-        "@storybook/api>util-deprecate": true,
-        "browserify>string_decoder": true,
-        "pumpify>inherits": true
+        "3box>ipfs>readable-stream>string_decoder": true,
+        "readable-stream>inherits": true,
+        "readable-stream>util-deprecate": true
       }
     },
     "3box>ipfs>bs58": {
@@ -497,10 +508,10 @@
         "Buffer.from": true
       },
       "packages": {
+        "3box>ipfs>async": true,
         "3box>ipfs>datastore-core>pull-many": true,
         "3box>ipfs>interface-datastore": true,
-        "3box>ipfs>pull-stream": true,
-        "gh-pages>async": true
+        "3box>ipfs>pull-stream": true
       }
     },
     "3box>ipfs>datastore-pubsub": {
@@ -515,7 +526,7 @@
         "3box>ipfs>err-code": true,
         "3box>ipfs>interface-datastore": true,
         "3box>ipfs>multibase": true,
-        "madge>debug": true
+        "@truffle/codec>debug": true
       }
     },
     "3box>ipfs>fsm-event": {
@@ -526,6 +537,86 @@
       },
       "packages": {
         "3box>ipfs>fsm-event>fsm": true
+      }
+    },
+    "3box>ipfs>glob": {
+      "builtin": {
+        "assert": true,
+        "events.EventEmitter": true,
+        "fs": true,
+        "path.join": true,
+        "path.resolve": true,
+        "util": true
+      },
+      "globals": {
+        "console.error": true,
+        "process.cwd": true,
+        "process.nextTick": true,
+        "process.platform": true
+      },
+      "packages": {
+        "3box>ipfs>glob>fs.realpath": true,
+        "3box>ipfs>glob>inflight": true,
+        "3box>ipfs>glob>minimatch": true,
+        "3box>ipfs>glob>path-is-absolute": true,
+        "pump>once": true,
+        "readable-stream>inherits": true
+      }
+    },
+    "3box>ipfs>glob>fs.realpath": {
+      "builtin": {
+        "fs.lstat": true,
+        "fs.lstatSync": true,
+        "fs.readlink": true,
+        "fs.readlinkSync": true,
+        "fs.realpath": true,
+        "fs.realpathSync": true,
+        "fs.stat": true,
+        "fs.statSync": true,
+        "path.normalize": true,
+        "path.resolve": true
+      },
+      "globals": {
+        "console.error": true,
+        "console.trace": true,
+        "process.env.NODE_DEBUG": true,
+        "process.nextTick": true,
+        "process.noDeprecation": true,
+        "process.platform": true,
+        "process.throwDeprecation": true,
+        "process.traceDeprecation": true,
+        "process.version": true
+      }
+    },
+    "3box>ipfs>glob>inflight": {
+      "globals": {
+        "process.nextTick": true
+      },
+      "packages": {
+        "pump>once": true,
+        "pump>once>wrappy": true
+      }
+    },
+    "3box>ipfs>glob>minimatch": {
+      "builtin": {
+        "path": true
+      },
+      "globals": {
+        "console": true
+      },
+      "packages": {
+        "3box>ipfs>glob>minimatch>brace-expansion": true
+      }
+    },
+    "3box>ipfs>glob>minimatch>brace-expansion": {
+      "packages": {
+        "3box>ipfs>glob>minimatch>brace-expansion>balanced-match": true,
+        "3box>ipfs>glob>minimatch>brace-expansion>concat-map": true
+      }
+    },
+    "3box>ipfs>glob>path-is-absolute": {
+      "globals": {
+        "process.platform": true
       }
     },
     "3box>ipfs>human-to-milliseconds": {
@@ -544,12 +635,12 @@
         "Buffer.isBuffer": true
       },
       "packages": {
+        "3box>ipfs>async": true,
         "3box>ipfs>class-is": true,
         "3box>ipfs>err-code": true,
         "3box>ipfs>interface-datastore>uuid": true,
         "3box>ipfs>pull-defer": true,
-        "3box>ipfs>pull-stream": true,
-        "gh-pages>async": true
+        "3box>ipfs>pull-stream": true
       }
     },
     "3box>ipfs>interface-datastore>uuid": {
@@ -569,6 +660,7 @@
         "setTimeout": true
       },
       "packages": {
+        "3box>ipfs>async": true,
         "3box>ipfs>cids": true,
         "3box>ipfs>ipfs-bitswap>bignumber.js": true,
         "3box>ipfs>ipfs-bitswap>just-debounce-it": true,
@@ -581,8 +673,7 @@
         "3box>ipfs>multicodec": true,
         "3box>ipfs>protons": true,
         "3box>ipfs>pull-stream": true,
-        "gh-pages>async": true,
-        "madge>debug": true
+        "@truffle/codec>debug": true
       }
     },
     "3box>ipfs>ipfs-bitswap>bignumber.js": {
@@ -631,7 +722,7 @@
     },
     "3box>ipfs>ipfs-block-service": {
       "packages": {
-        "gh-pages>async": true
+        "3box>ipfs>async": true
       }
     },
     "3box>ipfs>ipfs-mfs": {
@@ -659,7 +750,7 @@
         "3box>ipfs>multicodec": true,
         "3box>ipfs>multihashes": true,
         "3box>ipfs>promisify-es6": true,
-        "madge>debug": true
+        "@truffle/codec>debug": true
       }
     },
     "3box>ipfs>ipfs-mfs>hamt-sharding": {
@@ -706,6 +797,7 @@
         "setImmediate": true
       },
       "packages": {
+        "3box>ipfs>async": true,
         "3box>ipfs>base32.js": true,
         "3box>ipfs>cids": true,
         "3box>ipfs>datastore-core": true,
@@ -719,8 +811,7 @@
         "3box>ipfs>ipfs-repo>sort-keys": true,
         "3box>ipfs>just-safe-set": true,
         "3box>ipfs>pull-stream": true,
-        "gh-pages>async": true,
-        "madge>debug": true
+        "@truffle/codec>debug": true
       }
     },
     "3box>ipfs>ipfs-repo>bignumber.js": {
@@ -737,13 +828,13 @@
         "path.sep": true
       },
       "packages": {
+        "3box>ipfs>async": true,
+        "3box>ipfs>glob": true,
         "3box>ipfs>interface-datastore": true,
         "3box>ipfs>ipfs-repo>datastore-fs>fast-write-atomic": true,
+        "3box>ipfs>mkdirp": true,
         "3box>ipfs>pull-stream": true,
-        "fs-extra>graceful-fs": true,
-        "gh-pages>async": true,
-        "nock>mkdirp": true,
-        "nyc>glob": true
+        "electron-updater>fs-extra>graceful-fs": true
       }
     },
     "3box>ipfs>ipfs-repo>datastore-fs>fast-write-atomic": {
@@ -779,7 +870,7 @@
         "3box>ipfs>ipfs-repo>datastore-level>encoding-down>abstract-leveldown": true,
         "3box>ipfs>ipfs-repo>datastore-level>encoding-down>level-codec": true,
         "3box>orbit-db>orbit-db-keystore>levelup>level-errors": true,
-        "pumpify>inherits": true
+        "readable-stream>inherits": true
       }
     },
     "3box>ipfs>ipfs-repo>datastore-level>encoding-down>abstract-leveldown": {
@@ -791,12 +882,12 @@
       },
       "packages": {
         "3box>ipfs>ipfs-repo>datastore-level>encoding-down>abstract-leveldown>level-supports": true,
-        "watchify>xtend": true
+        "eth-query>xtend": true
       }
     },
     "3box>ipfs>ipfs-repo>datastore-level>encoding-down>abstract-leveldown>level-supports": {
       "packages": {
-        "watchify>xtend": true
+        "eth-query>xtend": true
       }
     },
     "3box>ipfs>ipfs-repo>datastore-level>encoding-down>level-codec": {
@@ -814,7 +905,6 @@
         "__dirname": true,
         "process.nextTick": true
       },
-      "native": true,
       "packages": {
         "3box>ipfs>ipfs-repo>datastore-level>leveldown>abstract-leveldown": true,
         "3box>ipfs>ipfs-repo>datastore-level>leveldown>node-gyp-build": true
@@ -829,12 +919,12 @@
       },
       "packages": {
         "3box>ipfs>ipfs-repo>datastore-level>leveldown>abstract-leveldown>level-supports": true,
-        "watchify>xtend": true
+        "eth-query>xtend": true
       }
     },
     "3box>ipfs>ipfs-repo>datastore-level>leveldown>abstract-leveldown>level-supports": {
       "packages": {
-        "watchify>xtend": true
+        "eth-query>xtend": true
       }
     },
     "3box>ipfs>ipfs-repo>datastore-level>leveldown>node-gyp-build": {
@@ -862,8 +952,8 @@
       },
       "packages": {
         "3box>ipfs>ipfs-repo>proper-lockfile>retry": true,
-        "fs-extra>graceful-fs": true,
-        "nyc>signal-exit": true
+        "3box>ipfs>ipfs-repo>proper-lockfile>signal-exit": true,
+        "electron-updater>fs-extra>graceful-fs": true
       }
     },
     "3box>ipfs>ipfs-repo>proper-lockfile>retry": {
@@ -873,9 +963,18 @@
         "setTimeout": true
       }
     },
+    "3box>ipfs>ipfs-repo>proper-lockfile>signal-exit": {
+      "builtin": {
+        "assert.equal": true,
+        "events": true
+      },
+      "globals": {
+        "process": true
+      }
+    },
     "3box>ipfs>ipfs-repo>sort-keys": {
       "packages": {
-        "geckodriver>got>is-plain-obj": true
+        "3box>ipfs>merge-options>is-plain-obj": true
       }
     },
     "3box>ipfs>ipfs-unixfs": {
@@ -911,13 +1010,18 @@
         "3box>ipfs>ipfs-unixfs": true,
         "3box>ipfs>ipfs-unixfs-importer>async-iterator-batch": true,
         "3box>ipfs>ipfs-unixfs-importer>async-iterator-first": true,
+        "3box>ipfs>ipfs-unixfs-importer>deep-extend": true,
         "3box>ipfs>ipfs-unixfs-importer>rabin-wasm": true,
         "3box>ipfs>ipld-dag-pb": true,
         "3box>ipfs>ipld-raw>multihashing-async": true,
         "3box>ipfs>multicodec": true,
         "3box>ipfs>multihashes": true,
-        "3box>ipfs>superstruct": true,
-        "madge>rc>deep-extend": true
+        "3box>ipfs>superstruct": true
+      }
+    },
+    "3box>ipfs>ipfs-unixfs-importer>deep-extend": {
+      "globals": {
+        "Buffer": true
       }
     },
     "3box>ipfs>ipfs-unixfs-importer>rabin-wasm": {
@@ -966,9 +1070,9 @@
         "process.stdout": true
       },
       "packages": {
-        "@storybook/api>util-deprecate": true,
-        "browserify>string_decoder": true,
-        "pumpify>inherits": true
+        "3box>ipfs>readable-stream>string_decoder": true,
+        "readable-stream>inherits": true,
+        "readable-stream>util-deprecate": true
       }
     },
     "3box>ipfs>ipld": {
@@ -1036,11 +1140,11 @@
         "Buffer.from": true
       },
       "packages": {
-        "browserify>crypto-browserify>create-hmac": true,
         "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>tiny-secp256k1": true,
         "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>typeforce": true,
         "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>wif": true,
         "ethereumjs-util>create-hash": true,
+        "ethereumjs-util>ethereum-cryptography>create-hmac": true,
         "ethereumjs-wallet>bs58check": true
       }
     },
@@ -1076,10 +1180,15 @@
       "packages": {
         "3box>ipfs>cids": true,
         "3box>ipfs>class-is": true,
+        "3box>ipfs>ipld-dag-pb>stable": true,
         "3box>ipfs>ipld-raw>multihashing-async": true,
         "3box>ipfs>multicodec": true,
-        "3box>ipfs>protons": true,
-        "@storybook/react>@storybook/store>stable": true
+        "3box>ipfs>protons": true
+      }
+    },
+    "3box>ipfs>ipld-dag-pb>stable": {
+      "globals": {
+        "define": true
       }
     },
     "3box>ipfs>ipld-ethereum": {
@@ -1390,8 +1499,8 @@
         "3box>ipfs>multihashes": true,
         "3box>ipfs>peer-id": true,
         "3box>ipfs>protons": true,
-        "base32-encode": true,
-        "madge>debug": true
+        "@truffle/codec>debug": true,
+        "base32-encode": true
       }
     },
     "3box>ipfs>is-ipfs": {
@@ -1424,6 +1533,7 @@
         "process.env.LIBP2P_FORCE_PNET": true
       },
       "packages": {
+        "3box>ipfs>async": true,
         "3box>ipfs>err-code": true,
         "3box>ipfs>fsm-event": true,
         "3box>ipfs>libp2p-websockets": true,
@@ -1436,8 +1546,7 @@
         "3box>ipfs>peer-id": true,
         "3box>ipfs>peer-info": true,
         "3box>ipfs>superstruct": true,
-        "gh-pages>async": true,
-        "madge>debug": true,
+        "@truffle/codec>debug": true,
         "pump>once": true
       }
     },
@@ -1450,12 +1559,12 @@
         "setInterval": true
       },
       "packages": {
+        "3box>ipfs>async": true,
         "3box>ipfs>mafmt": true,
         "3box>ipfs>multiaddr": true,
         "3box>ipfs>peer-id": true,
         "3box>ipfs>peer-info": true,
-        "gh-pages>async": true,
-        "madge>debug": true
+        "@truffle/codec>debug": true
       }
     },
     "3box>ipfs>libp2p-crypto": {
@@ -1472,18 +1581,18 @@
         "process.env.LP2P_FORCE_CRYPTO_LIB": true
       },
       "packages": {
+        "3box>ipfs>async": true,
         "3box>ipfs>bs58": true,
         "3box>ipfs>libp2p-crypto>asn1.js": true,
         "3box>ipfs>libp2p-crypto>iso-random-stream": true,
         "3box>ipfs>libp2p-crypto>keypair": true,
         "3box>ipfs>libp2p-crypto>libp2p-crypto-secp256k1": true,
         "3box>ipfs>libp2p-crypto>multihashing-async": true,
+        "3box>ipfs>libp2p-crypto>node-forge": true,
         "3box>ipfs>libp2p-crypto>pem-jwk": true,
         "3box>ipfs>libp2p-crypto>ursa-optional": true,
         "3box>ipfs>protons": true,
-        "3box>tweetnacl": true,
-        "gh-pages>async": true,
-        "mockttp>node-forge": true
+        "3box>tweetnacl": true
       }
     },
     "3box>ipfs>libp2p-crypto>asn1.js": {
@@ -1493,7 +1602,7 @@
       "packages": {
         "3box>ethers>hash.js>minimalistic-assert": true,
         "bn.js": true,
-        "pumpify>inherits": true
+        "readable-stream>inherits": true
       }
     },
     "3box>ipfs>libp2p-crypto>iso-random-stream": {
@@ -1522,10 +1631,10 @@
     },
     "3box>ipfs>libp2p-crypto>libp2p-crypto-secp256k1": {
       "packages": {
+        "3box>ipfs>async": true,
         "3box>ipfs>bs58": true,
         "3box>ipfs>libp2p-crypto>libp2p-crypto-secp256k1>multihashing-async": true,
-        "eth-trezor-keyring>hdkey>secp256k1": true,
-        "gh-pages>async": true
+        "eth-trezor-keyring>hdkey>secp256k1": true
       }
     },
     "3box>ipfs>libp2p-crypto>libp2p-crypto-secp256k1>multihashing-async": {
@@ -1556,6 +1665,30 @@
         "3box>ipfs>multihashing-async>murmurhash3js": true,
         "ethereumjs-util>ethereum-cryptography>blakejs": true,
         "ethers>@ethersproject/keccak256>js-sha3": true
+      }
+    },
+    "3box>ipfs>libp2p-crypto>node-forge": {
+      "builtin": {
+        "crypto": true
+      },
+      "globals": {
+        "Blob": true,
+        "Buffer": true,
+        "MutationObserver": true,
+        "QuotaExceededError": true,
+        "URL.createObjectURL": true,
+        "URL.revokeObjectURL": true,
+        "Worker": true,
+        "addEventListener": true,
+        "document": true,
+        "jQuery": true,
+        "localStorage": true,
+        "navigator": true,
+        "postMessage": true,
+        "process": true,
+        "removeEventListener": true,
+        "setImmediate": true,
+        "setTimeout": true
       }
     },
     "3box>ipfs>libp2p-crypto>pem-jwk": {
@@ -1597,6 +1730,7 @@
         "setTimeout": true
       },
       "packages": {
+        "3box>ipfs>async": true,
         "3box>ipfs>base32.js": true,
         "3box>ipfs>cids": true,
         "3box>ipfs>err-code": true,
@@ -1619,9 +1753,8 @@
         "3box>ipfs>pull-stream": true,
         "3box>ipfs>pull-stream-to-async-iterator": true,
         "3box>ipfs>varint": true,
+        "@truffle/codec>debug": true,
         "abort-controller": true,
-        "gh-pages>async": true,
-        "madge>debug": true,
         "promise-to-callback": true
       }
     },
@@ -1660,7 +1793,7 @@
         "setTimeout": true
       },
       "packages": {
-        "mockttp>@httptoolkit/subscriptions-transport-ws>eventemitter3": true
+        "3box>ipfs>libp2p-kad-dht>p-queue>eventemitter3": true
       }
     },
     "3box>ipfs>libp2p-kad-dht>p-times": {
@@ -1680,14 +1813,24 @@
         "setTimeout": true
       },
       "packages": {
+        "3box>ipfs>async": true,
         "3box>ipfs>err-code": true,
         "3box>ipfs>interface-datastore": true,
         "3box>ipfs>libp2p-crypto": true,
+        "3box>ipfs>libp2p-crypto>node-forge": true,
+        "3box>ipfs>libp2p-keychain>sanitize-filename": true,
         "3box>ipfs>merge-options": true,
-        "3box>ipfs>pull-stream": true,
-        "electron-builder>app-builder-lib>sanitize-filename": true,
-        "gh-pages>async": true,
-        "mockttp>node-forge": true
+        "3box>ipfs>pull-stream": true
+      }
+    },
+    "3box>ipfs>libp2p-keychain>sanitize-filename": {
+      "packages": {
+        "3box>ipfs>libp2p-keychain>sanitize-filename>truncate-utf8-bytes": true
+      }
+    },
+    "3box>ipfs>libp2p-keychain>sanitize-filename>truncate-utf8-bytes": {
+      "globals": {
+        "Buffer": true
       }
     },
     "3box>ipfs>libp2p-mdns": {
@@ -1704,13 +1847,13 @@
         "setTimeout": true
       },
       "packages": {
+        "3box>ipfs>async": true,
         "3box>ipfs>libp2p-mdns>multicast-dns": true,
         "3box>ipfs>libp2p-tcp": true,
         "3box>ipfs>multiaddr": true,
         "3box>ipfs>peer-id": true,
         "3box>ipfs>peer-info": true,
-        "gh-pages>async": true,
-        "madge>debug": true
+        "@truffle/codec>debug": true
       }
     },
     "3box>ipfs>libp2p-mdns>multicast-dns": {
@@ -1739,7 +1882,7 @@
         "Buffer.isBuffer": true
       },
       "packages": {
-        "react-devtools>ip": true
+        "3box>ipfs>multiaddr>ip": true
       }
     },
     "3box>ipfs>libp2p-mdns>multicast-dns>thunky": {
@@ -1756,11 +1899,11 @@
         "Buffer.isBuffer": true
       },
       "packages": {
+        "3box>ipfs>async": true,
         "3box>ipfs>err-code": true,
         "3box>ipfs>libp2p-record>buffer-split": true,
         "3box>ipfs>libp2p-record>multihashing-async": true,
-        "3box>ipfs>protons": true,
-        "gh-pages>async": true
+        "3box>ipfs>protons": true
       }
     },
     "3box>ipfs>libp2p-record>buffer-split": {
@@ -1793,6 +1936,7 @@
         "Buffer.from": true
       },
       "packages": {
+        "3box>ipfs>async": true,
         "3box>ipfs>libp2p-crypto": true,
         "3box>ipfs>libp2p-secio>multihashing-async": true,
         "3box>ipfs>libp2p-secio>pull-handshake": true,
@@ -1803,8 +1947,7 @@
         "3box>ipfs>pull-defer": true,
         "3box>ipfs>pull-mplex>interface-connection": true,
         "3box>ipfs>pull-stream": true,
-        "gh-pages>async": true,
-        "madge>debug": true,
+        "@truffle/codec>debug": true,
         "pump>once": true
       }
     },
@@ -1885,8 +2028,7 @@
         "process": true
       },
       "packages": {
-        "analytics-node>ms": true,
-        "sinon>supports-color": true
+        "analytics-node>ms": true
       }
     },
     "3box>ipfs>libp2p-tcp>ip-address": {
@@ -1917,9 +2059,9 @@
         "3box>ipfs>bs58": true,
         "3box>ipfs>class-is": true,
         "3box>ipfs>libp2p-tcp>ip-address": true,
+        "3box>ipfs>multiaddr>ip": true,
         "3box>ipfs>varint": true,
-        "react-devtools>ip": true,
-        "watchify>xtend": true
+        "eth-query>xtend": true
       }
     },
     "3box>ipfs>libp2p-webrtc-star>socket.io-client": {
@@ -1929,6 +2071,7 @@
         "setTimeout": true
       },
       "packages": {
+        "3box>ipfs>libp2p-webrtc-star>socket.io-client>backo2": true,
         "3box>ipfs>libp2p-webrtc-star>socket.io-client>component-bind": true,
         "3box>ipfs>libp2p-webrtc-star>socket.io-client>debug": true,
         "3box>ipfs>libp2p-webrtc-star>socket.io-client>engine.io-client": true,
@@ -1938,7 +2081,6 @@
         "3box>ipfs>libp2p-webrtc-star>socket.io-client>socket.io-parser": true,
         "3box>ipfs>libp2p-webrtc-star>socket.io-client>to-array": true,
         "3box>ipfs>libp2p-webrtc-star>socket.io>has-binary2": true,
-        "mockttp>@httptoolkit/subscriptions-transport-ws>backo2": true,
         "pubnub>superagent>component-emitter": true
       }
     },
@@ -1956,8 +2098,7 @@
         "process": true
       },
       "packages": {
-        "3box>ipfs>libp2p-webrtc-star>socket.io-client>debug>ms": true,
-        "sinon>supports-color": true
+        "3box>ipfs>libp2p-webrtc-star>socket.io-client>debug>ms": true
       }
     },
     "3box>ipfs>libp2p-webrtc-star>socket.io-client>engine.io-client": {
@@ -2001,8 +2142,7 @@
         "process": true
       },
       "packages": {
-        "3box>ipfs>libp2p-webrtc-star>socket.io-client>engine.io-client>debug>ms": true,
-        "sinon>supports-color": true
+        "3box>ipfs>libp2p-webrtc-star>socket.io-client>engine.io-client>debug>ms": true
       }
     },
     "3box>ipfs>libp2p-webrtc-star>socket.io-client>engine.io-client>engine.io-parser": {
@@ -2064,8 +2204,7 @@
         "process": true
       },
       "packages": {
-        "3box>ipfs>libp2p-webrtc-star>socket.io-client>socket.io-parser>debug>ms": true,
-        "sinon>supports-color": true
+        "3box>ipfs>libp2p-webrtc-star>socket.io-client>socket.io-parser>debug>ms": true
       }
     },
     "3box>ipfs>libp2p-webrtc-star>socket.io>has-binary2": {
@@ -2086,11 +2225,11 @@
         "setTimeout": true
       },
       "packages": {
+        "3box>ipfs>async": true,
         "3box>ipfs>libp2p-websocket-star-multi>libp2p-websocket-star": true,
         "3box>ipfs>mafmt": true,
         "3box>ipfs>multiaddr": true,
-        "gh-pages>async": true,
-        "madge>debug": true,
+        "@truffle/codec>debug": true,
         "pump>once": true
       }
     },
@@ -2103,6 +2242,7 @@
         "console.error": true
       },
       "packages": {
+        "3box>ipfs>async": true,
         "3box>ipfs>class-is": true,
         "3box>ipfs>libp2p-crypto": true,
         "3box>ipfs>libp2p-webrtc-star>socket.io-client": true,
@@ -2113,8 +2253,7 @@
         "3box>ipfs>peer-info": true,
         "3box>ipfs>pull-mplex>interface-connection": true,
         "3box>ipfs>pull-stream": true,
-        "gh-pages>async": true,
-        "madge>debug": true,
+        "@truffle/codec>debug": true,
         "pump>once": true,
         "uuid": true
       }
@@ -2149,8 +2288,7 @@
         "process": true
       },
       "packages": {
-        "analytics-node>ms": true,
-        "sinon>supports-color": true
+        "analytics-node>ms": true
       }
     },
     "3box>ipfs>libp2p-websocket-star-multi>libp2p-websocket-star>socket.io-pull-stream>uuid": {
@@ -2169,7 +2307,7 @@
         "3box>ipfs>multiaddr": true,
         "3box>ipfs>multiaddr-to-uri": true,
         "3box>ipfs>pull-mplex>interface-connection": true,
-        "madge>debug": true
+        "@truffle/codec>debug": true
       }
     },
     "3box>ipfs>libp2p-websockets>pull-ws": {
@@ -2221,9 +2359,7 @@
       },
       "packages": {
         "3box>ipfs>libp2p-websockets>pull-ws>ws>options": true,
-        "3box>ipfs>libp2p-websockets>pull-ws>ws>ultron": true,
-        "ws>bufferutil": true,
-        "ws>utf-8-validate": true
+        "3box>ipfs>libp2p-websockets>pull-ws>ws>ultron": true
       }
     },
     "3box>ipfs>libp2p-websockets>pull-ws>ws>options": {
@@ -2238,7 +2374,7 @@
       },
       "packages": {
         "3box>ipfs>libp2p>libp2p-connection-manager>latency-monitor": true,
-        "madge>debug": true
+        "@truffle/codec>debug": true
       }
     },
     "3box>ipfs>libp2p>libp2p-connection-manager>latency-monitor": {
@@ -2284,11 +2420,11 @@
         "assert": true
       },
       "packages": {
+        "3box>ipfs>async": true,
         "3box>ipfs>libp2p-secio>pull-length-prefixed": true,
         "3box>ipfs>libp2p>libp2p-floodsub>libp2p-pubsub": true,
         "3box>ipfs>pull-stream": true,
-        "gh-pages>async": true,
-        "madge>debug": true
+        "@truffle/codec>debug": true
       }
     },
     "3box>ipfs>libp2p>libp2p-floodsub>libp2p-pubsub": {
@@ -2301,6 +2437,7 @@
         "Buffer.isBuffer": true
       },
       "packages": {
+        "3box>ipfs>async": true,
         "3box>ipfs>bs58": true,
         "3box>ipfs>err-code": true,
         "3box>ipfs>libp2p-crypto": true,
@@ -2309,8 +2446,7 @@
         "3box>ipfs>protons": true,
         "3box>ipfs>pull-pushable": true,
         "3box>ipfs>pull-stream": true,
-        "gh-pages>async": true,
-        "madge>debug": true
+        "@truffle/codec>debug": true
       }
     },
     "3box>ipfs>libp2p>libp2p-floodsub>libp2p-pubsub>time-cache": {
@@ -2332,7 +2468,7 @@
         "3box>ipfs>libp2p-crypto": true,
         "3box>ipfs>libp2p-secio>pull-handshake": true,
         "3box>ipfs>pull-stream": true,
-        "madge>debug": true
+        "@truffle/codec>debug": true
       }
     },
     "3box>ipfs>libp2p>libp2p-switch": {
@@ -2341,6 +2477,7 @@
         "events": true
       },
       "packages": {
+        "3box>ipfs>async": true,
         "3box>ipfs>class-is": true,
         "3box>ipfs>err-code": true,
         "3box>ipfs>fsm-event": true,
@@ -2356,8 +2493,7 @@
         "3box>ipfs>peer-info": true,
         "3box>ipfs>pull-mplex>interface-connection": true,
         "3box>ipfs>pull-stream": true,
-        "gh-pages>async": true,
-        "madge>debug": true,
+        "@truffle/codec>debug": true,
         "pump>once": true
       }
     },
@@ -2372,6 +2508,7 @@
         "events.EventEmitter": true
       },
       "packages": {
+        "3box>ipfs>async": true,
         "3box>ipfs>libp2p-secio>pull-handshake": true,
         "3box>ipfs>libp2p-secio>pull-length-prefixed": true,
         "3box>ipfs>mafmt": true,
@@ -2381,8 +2518,7 @@
         "3box>ipfs>protons": true,
         "3box>ipfs>pull-mplex>interface-connection": true,
         "3box>ipfs>pull-stream": true,
-        "gh-pages>async": true,
-        "madge>debug": true,
+        "@truffle/codec>debug": true,
         "pump>once": true
       }
     },
@@ -2411,6 +2547,7 @@
         "Buffer.isBuffer": true
       },
       "packages": {
+        "3box>ipfs>async": true,
         "3box>ipfs>err-code": true,
         "3box>ipfs>libp2p-secio>pull-handshake": true,
         "3box>ipfs>libp2p-secio>pull-length-prefixed": true,
@@ -2418,8 +2555,7 @@
         "3box>ipfs>pull-mplex>interface-connection": true,
         "3box>ipfs>pull-stream": true,
         "3box>ipfs>varint": true,
-        "gh-pages>async": true,
-        "madge>debug": true,
+        "@truffle/codec>debug": true,
         "pump>once": true
       }
     },
@@ -2443,7 +2579,22 @@
     },
     "3box>ipfs>merge-options": {
       "packages": {
-        "geckodriver>got>is-plain-obj": true
+        "3box>ipfs>merge-options>is-plain-obj": true
+      }
+    },
+    "3box>ipfs>mime-types": {
+      "builtin": {
+        "path.extname": true
+      },
+      "packages": {
+        "3box>ipfs>mime-types>mime-db": true
+      }
+    },
+    "3box>ipfs>mkdirp": {
+      "builtin": {
+        "fs": true,
+        "path.dirname": true,
+        "path.resolve": true
       }
     },
     "3box>ipfs>multiaddr": {
@@ -2454,9 +2605,9 @@
         "3box>ipfs>bs58": true,
         "3box>ipfs>class-is": true,
         "3box>ipfs>multiaddr>hi-base32": true,
+        "3box>ipfs>multiaddr>ip": true,
         "3box>ipfs>multiaddr>is-ip": true,
-        "3box>ipfs>varint": true,
-        "react-devtools>ip": true
+        "3box>ipfs>varint": true
       }
     },
     "3box>ipfs>multiaddr-to-uri": {
@@ -2470,9 +2621,15 @@
         "process": true
       }
     },
+    "3box>ipfs>multiaddr>ip": {
+      "builtin": {
+        "buffer.Buffer": true,
+        "os.networkInterfaces": true
+      }
+    },
     "3box>ipfs>multiaddr>is-ip": {
       "packages": {
-        "chromedriver>tcp-port-used>is2>ip-regex": true
+        "3box>ipfs>multiaddr>is-ip>ip-regex": true
       }
     },
     "3box>ipfs>multibase": {
@@ -2550,10 +2707,10 @@
         "Buffer.isBuffer": true
       },
       "packages": {
+        "3box>ipfs>async": true,
         "3box>ipfs>class-is": true,
         "3box>ipfs>libp2p-crypto": true,
-        "3box>ipfs>multihashes": true,
-        "gh-pages>async": true
+        "3box>ipfs>multihashes": true
       }
     },
     "3box>ipfs>peer-info": {
@@ -2615,6 +2772,7 @@
         "Buffer.isBuffer": true
       },
       "packages": {
+        "3box>ipfs>async": true,
         "3box>ipfs>pull-abortable": true,
         "3box>ipfs>pull-mplex>interface-connection": true,
         "3box>ipfs>pull-mplex>looper": true,
@@ -2622,8 +2780,7 @@
         "3box>ipfs>pull-pushable": true,
         "3box>ipfs>pull-stream": true,
         "3box>ipfs>varint": true,
-        "gh-pages>async": true,
-        "madge>debug": true
+        "@truffle/codec>debug": true
       }
     },
     "3box>ipfs>pull-mplex>interface-connection": {
@@ -2675,9 +2832,14 @@
         "process.stdout": true
       },
       "packages": {
-        "@storybook/api>util-deprecate": true,
-        "browserify>string_decoder": true,
-        "pumpify>inherits": true
+        "3box>ipfs>readable-stream>string_decoder": true,
+        "readable-stream>inherits": true,
+        "readable-stream>util-deprecate": true
+      }
+    },
+    "3box>ipfs>readable-stream>string_decoder": {
+      "packages": {
+        "ethereumjs-wallet>safe-buffer": true
       }
     },
     "3box>ipfs>receptacle": {
@@ -2704,6 +2866,12 @@
         "process.env.NODE_ENV": true
       }
     },
+    "3box>ipfs>yargs>find-up>locate-path>path-exists": {
+      "builtin": {
+        "fs.access": true,
+        "fs.accessSync": true
+      }
+    },
     "3box>js-sha256": {
       "builtin": {
         "buffer.Buffer": true,
@@ -2718,7 +2886,7 @@
       "packages": {
         "3box>did-jwt>did-resolver": true,
         "@babel/runtime": true,
-        "node-fetch": true
+        "3box>node-fetch": true
       }
     },
     "3box>orbit-db": {
@@ -2799,12 +2967,13 @@
     },
     "3box>orbit-db>orbit-db-cache": {
       "builtin": {
-        "path.join": true
+        "path.join": true,
+        "orbit-db-cache/node_modules/leveldown": true
       },
       "packages": {
+        "3box>ipfs>mkdirp": true,
         "3box>orbit-db>logplease": true,
-        "3box>orbit-db>orbit-db-cache>leveldown": true,
-        "nock>mkdirp": true
+        "3box>orbit-db>orbit-db-cache>leveldown": true
       }
     },
     "3box>orbit-db>orbit-db-cache>level-js>abstract-leveldown": {
@@ -2813,7 +2982,7 @@
         "process.nextTick": true
       },
       "packages": {
-        "watchify>xtend": true
+        "eth-query>xtend": true
       }
     },
     "3box>orbit-db>orbit-db-cache>leveldown": {
@@ -2824,7 +2993,6 @@
         "Buffer.isBuffer": true,
         "__dirname": true
       },
-      "native": true,
       "packages": {
         "3box>orbit-db>orbit-db-cache>level-js>abstract-leveldown": true,
         "3box>orbit-db>orbit-db-cache>leveldown>fast-future": true,
@@ -2894,6 +3062,9 @@
       }
     },
     "3box>orbit-db>orbit-db-keystore": {
+      "builtin": {
+        "orbit-db-cache/node_modules/leveldown": true
+      },
       "globals": {
         "console.error": true,
         "console.log": true
@@ -2901,12 +3072,12 @@
       "packages": {
         "3box>ethers>elliptic": true,
         "3box>ipfs>libp2p-crypto": true,
+        "3box>ipfs>mkdirp": true,
         "3box>orbit-db>orbit-db-keystore>leveldown": true,
         "3box>orbit-db>orbit-db-keystore>levelup": true,
         "3box>orbit-db>orbit-db-keystore>lru": true,
         "eth-trezor-keyring>hdkey>secp256k1": true,
-        "ethereumjs-wallet>safe-buffer": true,
-        "nock>mkdirp": true
+        "ethereumjs-wallet>safe-buffer": true
       }
     },
     "3box>orbit-db>orbit-db-keystore>leveldown": {
@@ -2918,7 +3089,6 @@
         "__dirname": true,
         "process.nextTick": true
       },
-      "native": true,
       "packages": {
         "3box>orbit-db>orbit-db-cache>level-js>abstract-leveldown": true,
         "3box>orbit-db>orbit-db-keystore>leveldown>node-gyp-build": true
@@ -2955,25 +3125,30 @@
         "3box>orbit-db>orbit-db-keystore>levelup>deferred-leveldown": true,
         "3box>orbit-db>orbit-db-keystore>levelup>level-errors": true,
         "3box>orbit-db>orbit-db-keystore>levelup>level-iterator-stream": true,
-        "watchify>xtend": true
+        "eth-query>xtend": true
       }
     },
     "3box>orbit-db>orbit-db-keystore>levelup>deferred-leveldown": {
       "packages": {
         "3box>orbit-db>orbit-db-cache>level-js>abstract-leveldown": true,
-        "pumpify>inherits": true
+        "readable-stream>inherits": true
       }
     },
     "3box>orbit-db>orbit-db-keystore>levelup>level-errors": {
       "packages": {
-        "webpack>memory-fs>errno": true
+        "3box>orbit-db>orbit-db-keystore>levelup>level-errors>errno": true
+      }
+    },
+    "3box>orbit-db>orbit-db-keystore>levelup>level-errors>errno": {
+      "packages": {
+        "@metamask/controllers>web3-provider-engine>ethereumjs-vm>merkle-patricia-tree>levelup>prr": true
       }
     },
     "3box>orbit-db>orbit-db-keystore>levelup>level-iterator-stream": {
       "packages": {
         "3box>orbit-db>orbit-db-keystore>levelup>level-iterator-stream>readable-stream": true,
-        "pumpify>inherits": true,
-        "watchify>xtend": true
+        "eth-query>xtend": true,
+        "readable-stream>inherits": true
       }
     },
     "3box>orbit-db>orbit-db-keystore>levelup>level-iterator-stream>readable-stream": {
@@ -2990,9 +3165,9 @@
         "process.stdout": true
       },
       "packages": {
-        "@storybook/api>util-deprecate": true,
-        "browserify>string_decoder": true,
-        "pumpify>inherits": true
+        "3box>ipfs>readable-stream>string_decoder": true,
+        "readable-stream>inherits": true,
+        "readable-stream>util-deprecate": true
       }
     },
     "3box>orbit-db>orbit-db-keystore>lru": {
@@ -3000,7 +3175,7 @@
         "events.EventEmitter": true
       },
       "packages": {
-        "pumpify>inherits": true
+        "readable-stream>inherits": true
       }
     },
     "3box>orbit-db>orbit-db-kvstore": {
@@ -3093,27 +3268,6 @@
         "btoa": true
       }
     },
-    "@babel/cli>@jridgewell/trace-mapping": {
-      "globals": {
-        "define": true
-      },
-      "packages": {
-        "@babel/cli>@jridgewell/trace-mapping>@jridgewell/resolve-uri": true,
-        "@babel/cli>@jridgewell/trace-mapping>@jridgewell/sourcemap-codec": true
-      }
-    },
-    "@babel/cli>@jridgewell/trace-mapping>@jridgewell/resolve-uri": {
-      "globals": {
-        "define": true
-      }
-    },
-    "@babel/cli>@jridgewell/trace-mapping>@jridgewell/sourcemap-codec": {
-      "globals": {
-        "Buffer": true,
-        "TextDecoder": true,
-        "define": true
-      }
-    },
     "@babel/code-frame": {
       "globals": {
         "console.warn": true,
@@ -3146,13 +3300,13 @@
         "@babel/core>@babel/helpers": true,
         "@babel/core>@babel/parser": true,
         "@babel/core>@babel/template": true,
+        "@babel/core>@babel/traverse": true,
         "@babel/core>@babel/types": true,
+        "@babel/core>convert-source-map": true,
+        "@truffle/codec>debug": true,
         "@babel/core>gensync": true,
-        "@babel/core>semver": true,
-        "depcheck>@babel/traverse": true,
-        "depcheck>json5": true,
-        "madge>debug": true,
-        "nyc>convert-source-map": true
+        "@babel/core>json5": true,
+        "@babel/core>semver": true
       }
     },
     "@babel/core>@ampproject/remapping": {
@@ -3160,8 +3314,8 @@
         "define": true
       },
       "packages": {
-        "@babel/cli>@jridgewell/trace-mapping": true,
-        "@babel/core>@ampproject/remapping>@jridgewell/gen-mapping": true
+        "@babel/core>@ampproject/remapping>@jridgewell/gen-mapping": true,
+        "@babel/core>@ampproject/remapping>@jridgewell/trace-mapping": true
       }
     },
     "@babel/core>@ampproject/remapping>@jridgewell/gen-mapping": {
@@ -3169,8 +3323,22 @@
         "define": true
       },
       "packages": {
-        "@babel/cli>@jridgewell/trace-mapping>@jridgewell/sourcemap-codec": true,
-        "terser>@jridgewell/source-map>@jridgewell/gen-mapping>@jridgewell/set-array": true
+        "@babel/core>@babel/generator>@jridgewell/gen-mapping>@jridgewell/set-array": true,
+        "@babel/core>@babel/generator>@jridgewell/gen-mapping>@jridgewell/sourcemap-codec": true
+      }
+    },
+    "@babel/core>@ampproject/remapping>@jridgewell/trace-mapping": {
+      "globals": {
+        "define": true
+      },
+      "packages": {
+        "@babel/core>@ampproject/remapping>@jridgewell/trace-mapping>@jridgewell/resolve-uri": true,
+        "@babel/core>@babel/generator>@jridgewell/gen-mapping>@jridgewell/sourcemap-codec": true
+      }
+    },
+    "@babel/core>@ampproject/remapping>@jridgewell/trace-mapping>@jridgewell/resolve-uri": {
+      "globals": {
+        "define": true
       }
     },
     "@babel/core>@babel/generator": {
@@ -3178,9 +3346,31 @@
         "console.error": true
       },
       "packages": {
+        "@babel/core>@babel/generator>@jridgewell/gen-mapping": true,
         "@babel/core>@babel/generator>jsesc": true,
-        "@babel/core>@babel/types": true,
-        "terser>@jridgewell/source-map>@jridgewell/gen-mapping": true
+        "@babel/core>@babel/types": true
+      }
+    },
+    "@babel/core>@babel/generator>@jridgewell/gen-mapping": {
+      "globals": {
+        "define": true
+      },
+      "packages": {
+        "@babel/core>@ampproject/remapping>@jridgewell/trace-mapping": true,
+        "@babel/core>@babel/generator>@jridgewell/gen-mapping>@jridgewell/set-array": true,
+        "@babel/core>@babel/generator>@jridgewell/gen-mapping>@jridgewell/sourcemap-codec": true
+      }
+    },
+    "@babel/core>@babel/generator>@jridgewell/gen-mapping>@jridgewell/set-array": {
+      "globals": {
+        "define": true
+      }
+    },
+    "@babel/core>@babel/generator>@jridgewell/gen-mapping>@jridgewell/sourcemap-codec": {
+      "globals": {
+        "Buffer": true,
+        "TextDecoder": true,
+        "define": true
       }
     },
     "@babel/core>@babel/generator>jsesc": {
@@ -3194,10 +3384,38 @@
         "process.versions.node": true
       },
       "packages": {
-        "@babel/core>@babel/helper-compilation-targets>semver": true,
-        "@babel/preset-env>@babel/compat-data": true,
-        "@babel/preset-env>@babel/helper-validator-option": true,
-        "stylelint>autoprefixer>browserslist": true
+        "@babel/core>@babel/helper-compilation-targets>@babel/compat-data": true,
+        "@babel/core>@babel/helper-compilation-targets>@babel/helper-validator-option": true,
+        "@babel/core>@babel/helper-compilation-targets>browserslist": true,
+        "@babel/core>@babel/helper-compilation-targets>semver": true
+      }
+    },
+    "@babel/core>@babel/helper-compilation-targets>browserslist": {
+      "builtin": {
+        "fs.existsSync": true,
+        "fs.readFileSync": true,
+        "fs.statSync": true,
+        "path.basename": true,
+        "path.dirname": true,
+        "path.join": true,
+        "path.resolve": true
+      },
+      "globals": {
+        "console.warn": true,
+        "process.env.BROWSERSLIST": true,
+        "process.env.BROWSERSLIST_CONFIG": true,
+        "process.env.BROWSERSLIST_DANGEROUS_EXTEND": true,
+        "process.env.BROWSERSLIST_DISABLE_CACHE": true,
+        "process.env.BROWSERSLIST_ENV": true,
+        "process.env.BROWSERSLIST_IGNORE_OLD_DATA": true,
+        "process.env.BROWSERSLIST_STATS": true,
+        "process.env.NODE_ENV": true,
+        "process.versions.node": true
+      },
+      "packages": {
+        "@babel/core>@babel/helper-compilation-targets>browserslist>caniuse-lite": true,
+        "@babel/core>@babel/helper-compilation-targets>browserslist>electron-to-chromium": true,
+        "@babel/core>@babel/helper-compilation-targets>browserslist>node-releases": true
       }
     },
     "@babel/core>@babel/helper-compilation-targets>semver": {
@@ -3216,10 +3434,10 @@
         "@babel/core>@babel/helper-module-transforms>@babel/helper-module-imports": true,
         "@babel/core>@babel/helper-module-transforms>@babel/helper-simple-access": true,
         "@babel/core>@babel/template": true,
+        "@babel/core>@babel/traverse": true,
+        "@babel/core>@babel/traverse>@babel/helper-environment-visitor": true,
+        "@babel/core>@babel/traverse>@babel/helper-split-export-declaration": true,
         "@babel/core>@babel/types": true,
-        "depcheck>@babel/traverse": true,
-        "depcheck>@babel/traverse>@babel/helper-environment-visitor": true,
-        "depcheck>@babel/traverse>@babel/helper-split-export-declaration": true,
         "lavamoat>@babel/highlight>@babel/helper-validator-identifier": true
       }
     },
@@ -3239,14 +3457,48 @@
     "@babel/core>@babel/helpers": {
       "packages": {
         "@babel/core>@babel/template": true,
-        "@babel/core>@babel/types": true,
-        "depcheck>@babel/traverse": true
+        "@babel/core>@babel/traverse": true,
+        "@babel/core>@babel/types": true
       }
     },
     "@babel/core>@babel/template": {
       "packages": {
         "@babel/code-frame": true,
         "@babel/core>@babel/parser": true,
+        "@babel/core>@babel/types": true
+      }
+    },
+    "@babel/core>@babel/traverse": {
+      "globals": {
+        "console.log": true,
+        "console.trace": true
+      },
+      "packages": {
+        "@babel/code-frame": true,
+        "@babel/core>@babel/generator": true,
+        "@babel/core>@babel/parser": true,
+        "@babel/core>@babel/traverse>@babel/helper-environment-visitor": true,
+        "@babel/core>@babel/traverse>@babel/helper-function-name": true,
+        "@babel/core>@babel/traverse>@babel/helper-hoist-variables": true,
+        "@babel/core>@babel/traverse>@babel/helper-split-export-declaration": true,
+        "@babel/core>@babel/traverse>globals": true,
+        "@babel/core>@babel/types": true,
+        "@truffle/codec>debug": true
+      }
+    },
+    "@babel/core>@babel/traverse>@babel/helper-function-name": {
+      "packages": {
+        "@babel/core>@babel/template": true,
+        "@babel/core>@babel/types": true
+      }
+    },
+    "@babel/core>@babel/traverse>@babel/helper-hoist-variables": {
+      "packages": {
+        "@babel/core>@babel/types": true
+      }
+    },
+    "@babel/core>@babel/traverse>@babel/helper-split-export-declaration": {
+      "packages": {
         "@babel/core>@babel/types": true
       }
     },
@@ -3261,6 +3513,43 @@
         "lavamoat>@babel/highlight>@babel/helper-validator-identifier": true
       }
     },
+    "@babel/core>convert-source-map": {
+      "builtin": {
+        "fs.readFileSync": true,
+        "path.resolve": true
+      },
+      "packages": {
+        "@babel/core>convert-source-map>safe-buffer": true
+      }
+    },
+    "@babel/core>convert-source-map>safe-buffer": {
+      "builtin": {
+        "buffer": true
+      }
+    },
+    "@babel/core>debug": {
+      "builtin": {
+        "tty.isatty": true,
+        "util.deprecate": true,
+        "util.format": true,
+        "util.inspect": true
+      },
+      "globals": {
+        "console": true,
+        "document": true,
+        "localStorage": true,
+        "navigator": true,
+        "process": true
+      },
+      "packages": {
+        "@babel/core>debug>ms": true
+      }
+    },
+    "@babel/core>json5": {
+      "globals": {
+        "console.warn": true
+      }
+    },
     "@babel/core>semver": {
       "globals": {
         "console": true,
@@ -3268,6 +3557,11 @@
       }
     },
     "@babel/runtime": {
+      "globals": {
+        "regeneratorRuntime": "write"
+      }
+    },
+    "@babel/runtime>regenerator-runtime": {
       "globals": {
         "regeneratorRuntime": "write"
       }
@@ -3534,8 +3828,8 @@
         "process.nextTick": true
       },
       "packages": {
-        "readable-stream": true,
-        "watchify>xtend": true
+        "eth-query>xtend": true,
+        "readable-stream": true
       }
     },
     "@metamask/controllers": {
@@ -3567,9 +3861,9 @@
         "@metamask/controllers>nanoid": true,
         "@metamask/controllers>web3-provider-engine": true,
         "@metamask/metamask-eth-abis": true,
+        "@metamask/snap-utils>fast-deep-equal": true,
         "abort-controller": true,
         "deep-freeze-strict": true,
-        "eslint>fast-deep-equal": true,
         "eth-ens-namehash": true,
         "eth-json-rpc-infura": true,
         "eth-keyring-controller": true,
@@ -3668,7 +3962,17 @@
     },
     "@metamask/controllers>eth-phishing-detect": {
       "packages": {
-        "eslint>optionator>fast-levenshtein": true
+        "@metamask/controllers>eth-phishing-detect>fast-levenshtein": true
+      }
+    },
+    "@metamask/controllers>eth-phishing-detect>fast-levenshtein": {
+      "globals": {
+        "Intl": true,
+        "Levenshtein": "write",
+        "console.log": true,
+        "define": true,
+        "importScripts": true,
+        "postMessage": true
       }
     },
     "@metamask/controllers>ethereumjs-wallet": {
@@ -3708,7 +4012,7 @@
         "fetch": "write"
       },
       "packages": {
-        "node-fetch": true
+        "3box>node-fetch": true
       }
     },
     "@metamask/controllers>multiformats": {
@@ -3740,6 +4044,7 @@
         "setTimeout": true
       },
       "packages": {
+        "3box>ipfs>async": true,
         "@ethereumjs/tx": true,
         "@metamask/controllers>web3-provider-engine>backoff": true,
         "@metamask/controllers>web3-provider-engine>eth-block-tracker": true,
@@ -3750,9 +4055,8 @@
         "@metamask/controllers>web3-provider-engine>ws": true,
         "eth-json-rpc-filters": true,
         "eth-json-rpc-infura": true,
-        "gh-pages>async": true,
-        "lavamoat>json-stable-stringify": true,
-        "watchify>xtend": true
+        "eth-query>xtend": true,
+        "lavamoat>json-stable-stringify": true
       }
     },
     "@metamask/controllers>web3-provider-engine>backoff": {
@@ -3803,10 +4107,10 @@
       "packages": {
         "@metamask/controllers>web3-provider-engine>eth-json-rpc-middleware>json-rpc-engine": true,
         "@metamask/controllers>web3-provider-engine>eth-rpc-errors": true,
+        "eth-json-rpc-middleware>btoa": true,
+        "eth-json-rpc-middleware>clone": true,
         "lavamoat>json-stable-stringify": true,
-        "node-fetch": true,
-        "source-map-explorer>btoa": true,
-        "vinyl>clone": true
+        "3box>node-fetch": true
       }
     },
     "@metamask/controllers>web3-provider-engine>eth-json-rpc-middleware>node-fetch": {
@@ -3911,9 +4215,12 @@
         "setTimeout": true
       },
       "packages": {
-        "remote-redux-devtools>socketcluster-client>ws>async-limiter": true,
-        "ws>bufferutil": true,
-        "ws>utf-8-validate": true
+        "@metamask/controllers>web3-provider-engine>ws>async-limiter": true
+      }
+    },
+    "@metamask/controllers>web3-provider-engine>ws>async-limiter": {
+      "globals": {
+        "process.nextTick": true
       }
     },
     "@metamask/eth-ledger-bridge-keyring": {
@@ -4021,8 +4328,14 @@
         "process.nextTick": true
       },
       "packages": {
-        "readable-stream": true,
-        "watchify>xtend": true
+        "eth-query>xtend": true,
+        "readable-stream": true
+      }
+    },
+    "@metamask/post-message-stream>readable-stream>process-nextick-args": {
+      "globals": {
+        "process.nextTick": true,
+        "process.version": true
       }
     },
     "@metamask/providers>@metamask/object-multiplex": {
@@ -4220,13 +4533,13 @@
         "setImmediate": true
       },
       "packages": {
+        "@metamask/post-message-stream>readable-stream>process-nextick-args": true,
         "@metamask/snap-controllers>@metamask/post-message-stream>readable-stream>string_decoder": true,
         "@metamask/snap-controllers>json-rpc-middleware-stream>readable-stream>safe-buffer": true,
-        "@storybook/api>util-deprecate": true,
-        "pumpify>inherits": true,
         "readable-stream>core-util-is": true,
+        "readable-stream>inherits": true,
         "readable-stream>isarray": true,
-        "vinyl>cloneable-readable>process-nextick-args": true
+        "readable-stream>util-deprecate": true
       }
     },
     "@metamask/snap-controllers>@metamask/post-message-stream>readable-stream>string_decoder": {
@@ -4247,7 +4560,7 @@
       },
       "packages": {
         "@metamask/snap-controllers>concat-stream>readable-stream": true,
-        "pumpify>inherits": true
+        "readable-stream>inherits": true
       }
     },
     "@metamask/snap-controllers>concat-stream>readable-stream": {
@@ -4264,9 +4577,9 @@
         "process.stdout": true
       },
       "packages": {
-        "@storybook/api>util-deprecate": true,
-        "browserify>string_decoder": true,
-        "pumpify>inherits": true
+        "3box>ipfs>readable-stream>string_decoder": true,
+        "readable-stream>inherits": true,
+        "readable-stream>util-deprecate": true
       }
     },
     "@metamask/snap-controllers>gunzip-maybe": {
@@ -4288,9 +4601,14 @@
         "Buffer.isBuffer": true
       },
       "packages": {
+        "@metamask/snap-controllers>gunzip-maybe>peek-stream>buffer-from": true,
         "@metamask/snap-controllers>gunzip-maybe>peek-stream>duplexify": true,
-        "@metamask/snap-controllers>gunzip-maybe>peek-stream>through2": true,
-        "terser>source-map-support>buffer-from": true
+        "@metamask/snap-controllers>gunzip-maybe>peek-stream>through2": true
+      }
+    },
+    "@metamask/snap-controllers>gunzip-maybe>peek-stream>buffer-from": {
+      "globals": {
+        "Buffer": true
       }
     },
     "@metamask/snap-controllers>gunzip-maybe>peek-stream>duplexify": {
@@ -4299,10 +4617,10 @@
         "process.nextTick": true
       },
       "packages": {
-        "duplexify>stream-shift": true,
+        "@metamask/snap-controllers>gunzip-maybe>pumpify>duplexify>stream-shift": true,
         "end-of-stream": true,
-        "pumpify>inherits": true,
-        "readable-stream": true
+        "readable-stream": true,
+        "readable-stream>inherits": true
       }
     },
     "@metamask/snap-controllers>gunzip-maybe>peek-stream>through2": {
@@ -4313,15 +4631,15 @@
         "process.nextTick": true
       },
       "packages": {
-        "readable-stream": true,
-        "watchify>xtend": true
+        "eth-query>xtend": true,
+        "readable-stream": true
       }
     },
     "@metamask/snap-controllers>gunzip-maybe>pumpify": {
       "packages": {
         "@metamask/snap-controllers>gunzip-maybe>pumpify>duplexify": true,
         "@metamask/snap-controllers>gunzip-maybe>pumpify>pump": true,
-        "pumpify>inherits": true
+        "readable-stream>inherits": true
       }
     },
     "@metamask/snap-controllers>gunzip-maybe>pumpify>duplexify": {
@@ -4330,10 +4648,10 @@
         "process.nextTick": true
       },
       "packages": {
-        "duplexify>stream-shift": true,
+        "@metamask/snap-controllers>gunzip-maybe>pumpify>duplexify>stream-shift": true,
         "end-of-stream": true,
-        "pumpify>inherits": true,
-        "readable-stream": true
+        "readable-stream": true,
+        "readable-stream>inherits": true
       }
     },
     "@metamask/snap-controllers>gunzip-maybe>pumpify>pump": {
@@ -4353,8 +4671,8 @@
         "process.nextTick": true
       },
       "packages": {
-        "readable-stream": true,
-        "watchify>xtend": true
+        "eth-query>xtend": true,
+        "readable-stream": true
       }
     },
     "@metamask/snap-controllers>json-rpc-middleware-stream": {
@@ -4384,10 +4702,10 @@
         "@metamask/snap-controllers>json-rpc-middleware-stream>readable-stream>process-nextick-args": true,
         "@metamask/snap-controllers>json-rpc-middleware-stream>readable-stream>safe-buffer": true,
         "@metamask/snap-controllers>json-rpc-middleware-stream>readable-stream>string_decoder": true,
-        "@storybook/api>util-deprecate": true,
-        "pumpify>inherits": true,
         "readable-stream>core-util-is": true,
-        "readable-stream>isarray": true
+        "readable-stream>inherits": true,
+        "readable-stream>isarray": true,
+        "readable-stream>util-deprecate": true
       }
     },
     "@metamask/snap-controllers>json-rpc-middleware-stream>readable-stream>process-nextick-args": {
@@ -4432,9 +4750,9 @@
         "process.stdout": true
       },
       "packages": {
-        "@storybook/api>util-deprecate": true,
-        "browserify>string_decoder": true,
-        "pumpify>inherits": true
+        "3box>ipfs>readable-stream>string_decoder": true,
+        "readable-stream>inherits": true,
+        "readable-stream>util-deprecate": true
       }
     },
     "@metamask/snap-controllers>tar-stream": {
@@ -4454,7 +4772,7 @@
         "@metamask/snap-controllers>tar-stream>fs-constants": true,
         "@metamask/snap-controllers>tar-stream>readable-stream": true,
         "end-of-stream": true,
-        "pumpify>inherits": true
+        "readable-stream>inherits": true
       }
     },
     "@metamask/snap-controllers>tar-stream>bl": {
@@ -4467,7 +4785,7 @@
       },
       "packages": {
         "@metamask/snap-controllers>tar-stream>readable-stream": true,
-        "pumpify>inherits": true
+        "readable-stream>inherits": true
       }
     },
     "@metamask/snap-controllers>tar-stream>fs-constants": {
@@ -4490,9 +4808,9 @@
         "process.stdout": true
       },
       "packages": {
-        "@storybook/api>util-deprecate": true,
-        "browserify>string_decoder": true,
-        "pumpify>inherits": true
+        "3box>ipfs>readable-stream>string_decoder": true,
+        "readable-stream>inherits": true,
+        "readable-stream>util-deprecate": true
       }
     },
     "@metamask/snap-utils": {
@@ -4514,15 +4832,22 @@
       "packages": {
         "@babel/core": true,
         "@babel/core>@babel/types": true,
+        "@metamask/snap-utils>@babel/core": true,
+        "@metamask/snap-utils>@babel/core>@babel/types": true,
         "@metamask/snap-utils>ajv": true,
+        "@metamask/snap-utils>fast-deep-equal": true,
         "@metamask/snap-utils>rfdc": true,
-        "eslint>fast-deep-equal": true,
-        "semver": true
+        "@truffle/codec>semver": true
       }
     },
     "@metamask/snap-utils>@metamask/utils": {
       "packages": {
-        "eslint>fast-deep-equal": true
+        "@metamask/snap-utils>fast-deep-equal": true
+      }
+    },
+    "@metamask/snap-utils>ajv>uri-js": {
+      "globals": {
+        "define": true
       }
     },
     "@metamask/snap-utils>rfdc": {
@@ -4546,7 +4871,7 @@
         "@ngraveio/bc-ur>bignumber.js": true,
         "@ngraveio/bc-ur>crc": true,
         "@ngraveio/bc-ur>jsbi": true,
-        "addons-linter>sha.js": true,
+        "@ngraveio/bc-ur>sha.js": true,
         "pubnub>cbor-sync": true
       }
     },
@@ -4559,6 +4884,12 @@
     "@ngraveio/bc-ur>crc": {
       "builtin": {
         "buffer.Buffer": true
+      }
+    },
+    "@ngraveio/bc-ur>sha.js": {
+      "packages": {
+        "ethereumjs-wallet>safe-buffer": true,
+        "readable-stream>inherits": true
       }
     },
     "@peculiar/webcrypto": {
@@ -4691,22 +5022,6 @@
         "define": true
       }
     },
-    "@sentry/cli>https-proxy-agent": {
-      "builtin": {
-        "assert": true,
-        "net": true,
-        "tls": true,
-        "url": true
-      },
-      "globals": {
-        "Buffer.concat": true,
-        "Buffer.from": true
-      },
-      "packages": {
-        "madge>debug": true,
-        "mockttp>@httptoolkit/proxy-agent>agent-base": true
-      }
-    },
     "@sentry/integrations": {
       "globals": {
         "clearTimeout": true,
@@ -4770,26 +5085,6 @@
         "mode": true
       }
     },
-    "@storybook/api>regenerator-runtime": {
-      "globals": {
-        "regeneratorRuntime": "write"
-      }
-    },
-    "@storybook/api>util-deprecate": {
-      "builtin": {
-        "util.deprecate": true
-      }
-    },
-    "@storybook/core>@storybook/core-server>x-default-browser>default-browser-id>bplist-parser>big-integer": {
-      "globals": {
-        "define": true
-      }
-    },
-    "@storybook/react>@storybook/store>stable": {
-      "globals": {
-        "define": true
-      }
-    },
     "abort-controller": {
       "packages": {
         "abort-controller>event-target-shim": true
@@ -4800,12 +5095,6 @@
         "Event": true,
         "EventTarget": true,
         "console": true
-      }
-    },
-    "addons-linter>sha.js": {
-      "packages": {
-        "ethereumjs-wallet>safe-buffer": true,
-        "pumpify>inherits": true
       }
     },
     "analytics-node": {
@@ -4865,7 +5154,7 @@
         "setTimeout": true
       },
       "packages": {
-        "chromedriver>axios>follow-redirects": true
+        "analytics-node>axios>follow-redirects": true
       }
     },
     "analytics-node>axios-retry": {
@@ -4873,14 +5162,34 @@
         "setTimeout": true
       },
       "packages": {
-        "geckodriver>got>is-retry-allowed": true
+        "analytics-node>axios-retry>is-retry-allowed": true
+      }
+    },
+    "analytics-node>axios>follow-redirects": {
+      "builtin": {
+        "assert.equal": true,
+        "http": true,
+        "https": true,
+        "stream.Writable.call": true,
+        "stream.Writable.prototype": true,
+        "url.URL": true,
+        "url.format": true,
+        "url.parse": true,
+        "url.resolve": true
+      },
+      "globals": {
+        "clearTimeout": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "@truffle/codec>debug": true
       }
     },
     "analytics-node>md5": {
       "packages": {
         "analytics-node>md5>charenc": true,
         "analytics-node>md5>crypt": true,
-        "browserify>insert-module-globals>is-buffer": true
+        "analytics-node>md5>is-buffer": true
       }
     },
     "analytics-node>uuid": {
@@ -4911,79 +5220,6 @@
       },
       "globals": {
         "Buffer": true
-      }
-    },
-    "browserify>crypto-browserify>create-hmac": {
-      "builtin": {
-        "crypto.createHmac": true
-      }
-    },
-    "browserify>crypto-browserify>pbkdf2": {
-      "builtin": {
-        "crypto.pbkdf2": true,
-        "crypto.pbkdf2Sync": true
-      },
-      "globals": {
-        "crypto": true,
-        "process": true,
-        "queueMicrotask": true,
-        "setImmediate": true,
-        "setTimeout": true
-      },
-      "packages": {
-        "browserify>crypto-browserify>create-hmac": true,
-        "ethereumjs-wallet>safe-buffer": true
-      }
-    },
-    "browserify>string_decoder": {
-      "packages": {
-        "ethereumjs-wallet>safe-buffer": true
-      }
-    },
-    "chromedriver>axios>follow-redirects": {
-      "builtin": {
-        "assert.equal": true,
-        "http": true,
-        "https": true,
-        "stream.Writable.call": true,
-        "stream.Writable.prototype": true,
-        "url.URL": true,
-        "url.format": true,
-        "url.parse": true,
-        "url.resolve": true
-      },
-      "globals": {
-        "clearTimeout": true,
-        "setTimeout": true
-      },
-      "packages": {
-        "madge>debug": true
-      }
-    },
-    "chromedriver>axios>form-data": {
-      "builtin": {
-        "fs.stat": true,
-        "http.request": true,
-        "https.request": true,
-        "path.basename": true,
-        "path.normalize": true,
-        "stream.Stream": true,
-        "url.parse": true,
-        "util.inherits": true,
-        "util.isArray": true
-      },
-      "globals": {
-        "Buffer.alloc": true,
-        "Buffer.byteLength": true,
-        "Buffer.concat": true,
-        "Buffer.from": true,
-        "Buffer.isBuffer": true,
-        "process.nextTick": true
-      },
-      "packages": {
-        "jsdom>request>combined-stream": true,
-        "jsdom>request>form-data>asynckit": true,
-        "koa>type-is>mime-types": true
       }
     },
     "currency-formatter": {
@@ -5029,51 +5265,12 @@
         "process.nextTick": true
       }
     },
-    "depcheck>@babel/traverse": {
-      "globals": {
-        "console.log": true,
-        "console.trace": true
-      },
-      "packages": {
-        "@babel/code-frame": true,
-        "@babel/core>@babel/generator": true,
-        "@babel/core>@babel/parser": true,
-        "@babel/core>@babel/types": true,
-        "depcheck>@babel/traverse>@babel/helper-environment-visitor": true,
-        "depcheck>@babel/traverse>@babel/helper-function-name": true,
-        "depcheck>@babel/traverse>@babel/helper-hoist-variables": true,
-        "depcheck>@babel/traverse>@babel/helper-split-export-declaration": true,
-        "depcheck>@babel/traverse>globals": true,
-        "madge>debug": true
-      }
-    },
-    "depcheck>@babel/traverse>@babel/helper-function-name": {
-      "packages": {
-        "@babel/core>@babel/template": true,
-        "@babel/core>@babel/types": true
-      }
-    },
-    "depcheck>@babel/traverse>@babel/helper-hoist-variables": {
-      "packages": {
-        "@babel/core>@babel/types": true
-      }
-    },
-    "depcheck>@babel/traverse>@babel/helper-split-export-declaration": {
-      "packages": {
-        "@babel/core>@babel/types": true
-      }
-    },
     "depcheck>@vue/compiler-sfc>postcss>nanoid": {
       "builtin": {
         "crypto.randomFillSync": true
       },
       "globals": {
         "Buffer.allocUnsafe": true
-      }
-    },
-    "depcheck>json5": {
-      "globals": {
-        "console.warn": true
       }
     },
     "eciesjs": {
@@ -5108,25 +5305,59 @@
         "lavamoat>node-gyp-build": true
       }
     },
-    "electron": {
+    "electron-log": {
       "builtin": {
+        "electron": true,
+        "events": true,
+        "fs.closeSync": true,
         "fs.existsSync": true,
+        "fs.mkdirSync": true,
+        "fs.openSync": true,
         "fs.readFileSync": true,
-        "path.join": true
+        "fs.readSync": true,
+        "fs.readdirSync": true,
+        "fs.renameSync": true,
+        "fs.statSync": true,
+        "fs.writeFile": true,
+        "fs.writeFileSync": true,
+        "http": true,
+        "https": true,
+        "os.EOL": true,
+        "os.homedir": true,
+        "os.release": true,
+        "os.tmpdir": true,
+        "os.type": true,
+        "path": true,
+        "querystring.stringify": true,
+        "url.fileURLToPath": true,
+        "url.parse": true,
+        "util": true
       },
       "globals": {
-        "__dirname": true,
-        "process.env.ELECTRON_OVERRIDE_DIST_PATH": true
-      }
-    },
-    "electron-builder>app-builder-lib>sanitize-filename": {
-      "packages": {
-        "electron-builder>app-builder-lib>sanitize-filename>truncate-utf8-bytes": true
-      }
-    },
-    "electron-builder>app-builder-lib>sanitize-filename>truncate-utf8-bytes": {
-      "globals": {
-        "Buffer": true
+        "Buffer.alloc": true,
+        "Buffer.byteLength": true,
+        "Buffer.from": true,
+        "addEventListener": true,
+        "console": true,
+        "process.argv.filter": true,
+        "process.cwd": true,
+        "process.env.APPDATA": true,
+        "process.env.ELECTRON_IS_DEV": true,
+        "process.env.FORCE_STYLES": true,
+        "process.env.HOME": true,
+        "process.env.NODE_ENV": true,
+        "process.env.XDG_CONFIG_HOME": true,
+        "process.execPath": true,
+        "process.on": true,
+        "process.platform": true,
+        "process.removeListener": true,
+        "process.resourcesPath": true,
+        "process.stderr": true,
+        "process.stdout": true,
+        "process.type": true,
+        "process.versions.electron": true,
+        "removeEventListener": true,
+        "setTimeout": true
       }
     },
     "electron-store": {
@@ -5136,7 +5367,6 @@
         "path.join": true
       },
       "packages": {
-        "electron": true,
         "electron-store>conf": true
       }
     },
@@ -5171,10 +5401,10 @@
         "electron-store>conf>atomically": true,
         "electron-store>conf>debounce-fn": true,
         "electron-store>conf>dot-prop": true,
+        "electron-store>conf>env-paths": true,
         "electron-store>conf>onetime": true,
         "electron-store>conf>pkg-up": true,
-        "electron>@electron/get>env-paths": true,
-        "semver": true
+        "@truffle/codec>semver": true
       }
     },
     "electron-store>conf>ajv": {
@@ -5182,9 +5412,9 @@
         "console": true
       },
       "packages": {
-        "electron-store>conf>ajv>json-schema-traverse": true,
-        "eslint>ajv>uri-js": true,
-        "eslint>fast-deep-equal": true
+        "@metamask/snap-utils>ajv>uri-js": true,
+        "@metamask/snap-utils>fast-deep-equal": true,
+        "electron-store>conf>ajv>json-schema-traverse": true
       }
     },
     "electron-store>conf>ajv-formats": {
@@ -5244,9 +5474,21 @@
         "electron-store>conf>dot-prop>is-obj": true
       }
     },
+    "electron-store>conf>env-paths": {
+      "builtin": {
+        "os.homedir": true,
+        "os.tmpdir": true,
+        "path.basename": true,
+        "path.join": true
+      },
+      "globals": {
+        "process.env": true,
+        "process.platform": true
+      }
+    },
     "electron-store>conf>onetime": {
       "packages": {
-        "addons-linter>os-locale>mem>mimic-fn": true
+        "electron-store>conf>onetime>mimic-fn": true
       }
     },
     "electron-store>conf>pkg-up": {
@@ -5273,8 +5515,8 @@
         "process.cwd": true
       },
       "packages": {
-        "electron-store>conf>pkg-up>find-up>locate-path>p-locate": true,
-        "mocha>find-up>locate-path>path-exists": true
+        "3box>ipfs>yargs>find-up>locate-path>path-exists": true,
+        "electron-store>conf>pkg-up>find-up>locate-path>p-locate": true
       }
     },
     "electron-store>conf>pkg-up>find-up>locate-path>p-locate": {
@@ -5284,7 +5526,7 @@
     },
     "electron-store>conf>pkg-up>find-up>locate-path>p-locate>p-limit": {
       "packages": {
-        "nyc>find-up>locate-path>p-locate>p-limit>p-try": true
+        "3box>ipfs>yargs>find-up>locate-path>p-locate>p-limit>p-try": true
       }
     },
     "electron-updater": {
@@ -5328,13 +5570,12 @@
       },
       "packages": {
         "@truffle/codec>lodash.escaperegexp": true,
-        "electron": true,
         "electron-updater>builder-util-runtime": true,
         "electron-updater>fs-extra": true,
+        "electron-updater>js-yaml": true,
         "electron-updater>lazy-val": true,
-        "enzyme>lodash.isequal": true,
-        "eslint>js-yaml": true,
-        "semver": true
+        "electron-updater>lodash.isequal": true,
+        "@truffle/codec>semver": true
       }
     },
     "electron-updater>builder-util-runtime": {
@@ -5355,8 +5596,17 @@
         "process.versions.electron": true
       },
       "packages": {
-        "jsdom>sax": true,
-        "madge>debug": true
+        "@truffle/codec>debug": true,
+        "electron-updater>builder-util-runtime>sax": true
+      }
+    },
+    "electron-updater>builder-util-runtime>sax": {
+      "builtin": {
+        "stream.Stream": true,
+        "string_decoder.StringDecoder": true
+      },
+      "globals": {
+        "Buffer": true
       }
     },
     "electron-updater>fs-extra": {
@@ -5382,7 +5632,7 @@
       "packages": {
         "electron-updater>fs-extra>jsonfile": true,
         "electron-updater>fs-extra>universalify": true,
-        "fs-extra>graceful-fs": true
+        "electron-updater>fs-extra>graceful-fs": true
       }
     },
     "electron-updater>fs-extra>jsonfile": {
@@ -5394,19 +5644,7 @@
       },
       "packages": {
         "electron-updater>fs-extra>universalify": true,
-        "fs-extra>graceful-fs": true
-      }
-    },
-    "electron>@electron/get>env-paths": {
-      "builtin": {
-        "os.homedir": true,
-        "os.tmpdir": true,
-        "path.basename": true,
-        "path.join": true
-      },
-      "globals": {
-        "process.env": true,
-        "process.platform": true
+        "electron-updater>fs-extra>graceful-fs": true
       }
     },
     "end-of-stream": {
@@ -5415,46 +5653,6 @@
       },
       "packages": {
         "pump>once": true
-      }
-    },
-    "enzyme>has": {
-      "packages": {
-        "mocha>object.assign>function-bind": true
-      }
-    },
-    "enzyme>object-inspect": {
-      "builtin": {
-        "util.inspect": true
-      },
-      "globals": {
-        "HTMLElement": true,
-        "WeakRef": true
-      }
-    },
-    "eslint>ajv>uri-js": {
-      "globals": {
-        "define": true
-      }
-    },
-    "eslint>minimatch": {
-      "builtin": {
-        "path": true
-      },
-      "globals": {
-        "console": true
-      },
-      "packages": {
-        "mocha>minimatch>brace-expansion": true
-      }
-    },
-    "eslint>optionator>fast-levenshtein": {
-      "globals": {
-        "Intl": true,
-        "Levenshtein": "write",
-        "console.log": true,
-        "define": true,
-        "importScripts": true,
-        "postMessage": true
       }
     },
     "eth-block-tracker": {
@@ -5520,7 +5718,7 @@
         "eth-json-rpc-infura>eth-json-rpc-middleware": true,
         "eth-json-rpc-infura>eth-rpc-errors": true,
         "eth-json-rpc-infura>json-rpc-engine": true,
-        "node-fetch": true
+        "3box>node-fetch": true
       }
     },
     "eth-json-rpc-infura>eth-json-rpc-middleware": {
@@ -5548,15 +5746,25 @@
         "setTimeout": true
       },
       "packages": {
+        "eth-json-rpc-middleware>btoa": true,
+        "eth-json-rpc-middleware>clone": true,
         "eth-json-rpc-middleware>eth-sig-util": true,
         "eth-json-rpc-middleware>pify": true,
         "eth-rpc-errors": true,
         "json-rpc-engine": true,
         "json-rpc-engine>@metamask/safe-event-emitter": true,
         "lavamoat>json-stable-stringify": true,
-        "node-fetch": true,
-        "source-map-explorer>btoa": true,
-        "vinyl>clone": true
+        "3box>node-fetch": true
+      }
+    },
+    "eth-json-rpc-middleware>btoa": {
+      "globals": {
+        "Buffer": true
+      }
+    },
+    "eth-json-rpc-middleware>clone": {
+      "globals": {
+        "Buffer": true
       }
     },
     "eth-json-rpc-middleware>eth-sig-util": {
@@ -5637,8 +5845,8 @@
         "Buffer.isBuffer": true
       },
       "packages": {
-        "browserify>crypto-browserify>pbkdf2": true,
         "ethereumjs-util>create-hash": true,
+        "ethereumjs-util>ethereum-cryptography>pbkdf2": true,
         "ethereumjs-wallet>randombytes": true
       }
     },
@@ -5742,8 +5950,8 @@
     },
     "eth-keyring-controller>obs-store": {
       "packages": {
-        "safe-event-emitter": true,
-        "watchify>xtend": true
+        "eth-query>xtend": true,
+        "safe-event-emitter": true
       }
     },
     "eth-lattice-keyring": {
@@ -5835,8 +6043,8 @@
         "console": true
       },
       "packages": {
+        "3box>did-jwt>buffer>ieee754": true,
         "3box>ipfs>iso-url": true,
-        "browserify>buffer>ieee754": true,
         "eth-lattice-keyring>gridplus-sdk>borc>bignumber.js": true
       }
     },
@@ -5869,8 +6077,8 @@
         "console": true
       },
       "packages": {
-        "base64-js": true,
-        "browserify>buffer>ieee754": true
+        "3box>did-jwt>buffer>ieee754": true,
+        "base64-js": true
       }
     },
     "eth-lattice-keyring>gridplus-sdk>rlp": {
@@ -5918,15 +6126,41 @@
         "setTimeout": true
       },
       "packages": {
-        "chromedriver>axios>form-data": true,
-        "electron-builder>app-builder-lib>electron-publish>mime": true,
+        "@truffle/codec>debug": true,
+        "eth-lattice-keyring>gridplus-sdk>superagent>form-data": true,
         "eth-lattice-keyring>gridplus-sdk>superagent>formidable": true,
+        "eth-lattice-keyring>gridplus-sdk>superagent>mime": true,
         "eth-rpc-errors>fast-safe-stringify": true,
-        "madge>debug": true,
-        "nock>qs": true,
         "pubnub>superagent>methods": true,
-        "semver": true,
-        "web3>xhr2-cookies>cookiejar": true
+        "pubnub>superagent>qs": true,
+        "web3>xhr2-cookies>cookiejar": true,
+        "@truffle/codec>semver": true
+      }
+    },
+    "eth-lattice-keyring>gridplus-sdk>superagent>form-data": {
+      "builtin": {
+        "fs.stat": true,
+        "http.request": true,
+        "https.request": true,
+        "path.basename": true,
+        "path.normalize": true,
+        "stream.Stream": true,
+        "url.parse": true,
+        "util.inherits": true,
+        "util.isArray": true
+      },
+      "globals": {
+        "Buffer.alloc": true,
+        "Buffer.byteLength": true,
+        "Buffer.concat": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true,
+        "process.nextTick": true
+      },
+      "packages": {
+        "3box>ipfs>mime-types": true,
+        "pubnub>superagent>form-data>asynckit": true,
+        "pubnub>superagent>form-data>combined-stream": true
       }
     },
     "eth-lattice-keyring>gridplus-sdk>superagent>formidable": {
@@ -5953,10 +6187,16 @@
         "__dirname": true
       },
       "packages": {
+        "eth-lattice-keyring>gridplus-sdk>superagent>formidable>dezalgo": true,
         "eth-lattice-keyring>gridplus-sdk>superagent>formidable>hexoid": true,
         "eth-lattice-keyring>gridplus-sdk>superagent>formidable>qs": true,
-        "pump>once": true,
-        "read-installed>readdir-scoped-modules>dezalgo": true
+        "pump>once": true
+      }
+    },
+    "eth-lattice-keyring>gridplus-sdk>superagent>formidable>dezalgo": {
+      "packages": {
+        "pump>once>wrappy": true,
+        "react-dnd>dnd-core>asap": true
       }
     },
     "eth-lattice-keyring>rlp": {
@@ -5981,7 +6221,7 @@
     "eth-query": {
       "packages": {
         "eth-query>json-rpc-random-id": true,
-        "watchify>xtend": true
+        "eth-query>xtend": true
       }
     },
     "eth-rpc-errors": {
@@ -6203,7 +6443,6 @@
         "setTimeout": true
       },
       "packages": {
-        "@sentry/cli>https-proxy-agent": true,
         "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib>bignumber.js": true,
         "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib>jsonschema": true,
         "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib>ripple-address-codec": true,
@@ -6211,6 +6450,7 @@
         "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib>ripple-keypairs": true,
         "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib>ripple-lib-transactionparser": true,
         "lodash": true,
+        "pubnub>superagent-proxy>proxy-agent>https-proxy-agent": true,
         "ws": true
       }
     },
@@ -6247,11 +6487,16 @@
         "assert.strict.ok": true
       },
       "packages": {
-        "@storybook/core>@storybook/core-server>x-default-browser>default-browser-id>bplist-parser>big-integer": true,
         "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib>ripple-address-codec": true,
+        "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib>ripple-binary-codec>big-integer": true,
         "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib>ripple-binary-codec>buffer": true,
-        "ethereumjs-util>create-hash": true,
-        "jest-environment-jsdom>jsdom>decimal.js": true
+        "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib>ripple-binary-codec>decimal.js": true,
+        "ethereumjs-util>create-hash": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib>ripple-binary-codec>big-integer": {
+      "globals": {
+        "define": true
       }
     },
     "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib>ripple-binary-codec>buffer": {
@@ -6259,8 +6504,15 @@
         "console": true
       },
       "packages": {
-        "base64-js": true,
-        "browserify>buffer>ieee754": true
+        "3box>did-jwt>buffer>ieee754": true,
+        "base64-js": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib>ripple-binary-codec>decimal.js": {
+      "globals": {
+        "crypto": true,
+        "define": true,
+        "self": true
       }
     },
     "eth-trezor-keyring>trezor-connect>@trezor/blockchain-link>ripple-lib>ripple-keypairs": {
@@ -6394,7 +6646,6 @@
       "packages": {
         "3box>ipfs>bs58": true,
         "bn.js": true,
-        "browserify>crypto-browserify>create-hmac": true,
         "eth-trezor-keyring>hdkey>secp256k1>bip66": true,
         "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>bchaddrjs": true,
         "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>bech32": true,
@@ -6407,6 +6658,7 @@
         "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>varuint-bitcoin": true,
         "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>wif": true,
         "ethereumjs-util>create-hash": true,
+        "ethereumjs-util>ethereum-cryptography>create-hmac": true,
         "ethereumjs-wallet>bs58check": true
       }
     },
@@ -6422,8 +6674,8 @@
         "console": true
       },
       "packages": {
-        "base64-js": true,
-        "browserify>buffer>ieee754": true
+        "3box>did-jwt>buffer>ieee754": true,
+        "base64-js": true
       }
     },
     "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>bchaddrjs>cashaddrjs": {
@@ -6462,9 +6714,9 @@
         "process.stdout": true
       },
       "packages": {
-        "@storybook/api>util-deprecate": true,
-        "browserify>string_decoder": true,
-        "pumpify>inherits": true
+        "3box>ipfs>readable-stream>string_decoder": true,
+        "readable-stream>inherits": true,
+        "readable-stream>util-deprecate": true
       }
     },
     "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>int64-buffer": {
@@ -6484,7 +6736,7 @@
       "packages": {
         "3box>ethers>elliptic": true,
         "bn.js": true,
-        "browserify>crypto-browserify>create-hmac": true,
+        "ethereumjs-util>ethereum-cryptography>create-hmac": true,
         "lavamoat>bindings": true
       }
     },
@@ -6627,6 +6879,11 @@
         "console.log": true
       }
     },
+    "ethereumjs-util>ethereum-cryptography>create-hmac": {
+      "builtin": {
+        "crypto.createHmac": true
+      }
+    },
     "ethereumjs-util>ethereum-cryptography>keccak": {
       "globals": {
         "Buffer.alloc": true,
@@ -6653,9 +6910,26 @@
         "process.stdout": true
       },
       "packages": {
-        "@storybook/api>util-deprecate": true,
-        "browserify>string_decoder": true,
-        "pumpify>inherits": true
+        "3box>ipfs>readable-stream>string_decoder": true,
+        "readable-stream>inherits": true,
+        "readable-stream>util-deprecate": true
+      }
+    },
+    "ethereumjs-util>ethereum-cryptography>pbkdf2": {
+      "builtin": {
+        "crypto.pbkdf2": true,
+        "crypto.pbkdf2Sync": true
+      },
+      "globals": {
+        "crypto": true,
+        "process": true,
+        "queueMicrotask": true,
+        "setImmediate": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "ethereumjs-util>ethereum-cryptography>create-hmac": true,
+        "ethereumjs-wallet>safe-buffer": true
       }
     },
     "ethereumjs-util>ethereum-cryptography>secp256k1": {
@@ -6767,7 +7041,7 @@
         "Buffer": true
       },
       "packages": {
-        "browserify>crypto-browserify>pbkdf2": true
+        "ethereumjs-util>ethereum-cryptography>pbkdf2": true
       }
     },
     "ethereumjs-wallet>uuid": {
@@ -7053,7 +7327,7 @@
     "ethers>@ethersproject/sha2>hash.js": {
       "packages": {
         "3box>ethers>hash.js>minimalistic-assert": true,
-        "pumpify>inherits": true
+        "readable-stream>inherits": true
       }
     },
     "ethers>@ethersproject/signing-key": {
@@ -7211,7 +7485,7 @@
     "ethjs-query>babel-runtime": {
       "packages": {
         "@babel/runtime": true,
-        "@storybook/api>regenerator-runtime": true,
+        "@babel/runtime>regenerator-runtime": true,
         "ethjs-query>babel-runtime>core-js": true
       }
     },
@@ -7341,80 +7615,15 @@
         "setTimeout": true
       }
     },
-    "gh-pages>async": {
-      "globals": {
-        "clearTimeout": true,
-        "process": true,
-        "setImmediate": true,
-        "setTimeout": true
-      },
-      "packages": {
-        "lodash": true
-      }
-    },
-    "gulp-watch>path-is-absolute": {
-      "globals": {
-        "process.platform": true
-      }
-    },
     "immer": {
       "globals": {
         "process.env.NODE_ENV": true
-      }
-    },
-    "jest-environment-jsdom>jsdom>decimal.js": {
-      "globals": {
-        "crypto": true,
-        "define": true,
-        "self": true
       }
     },
     "js-sha256": {
       "builtin": {
         "buffer": true,
         "crypto": true
-      }
-    },
-    "jsdom>request>combined-stream": {
-      "builtin": {
-        "stream.Stream": true,
-        "util.inherits": true
-      },
-      "globals": {
-        "Buffer.isBuffer": true
-      },
-      "packages": {
-        "jsdom>request>combined-stream>delayed-stream": true
-      }
-    },
-    "jsdom>request>combined-stream>delayed-stream": {
-      "builtin": {
-        "stream.Stream": true,
-        "util.inherits": true
-      }
-    },
-    "jsdom>request>form-data>asynckit": {
-      "globals": {
-        "process": true,
-        "setImmediate": true,
-        "setTimeout": true
-      }
-    },
-    "jsdom>sax": {
-      "builtin": {
-        "stream.Stream": true,
-        "string_decoder.StringDecoder": true
-      },
-      "globals": {
-        "Buffer": true
-      }
-    },
-    "jsdom>whatwg-encoding>iconv-lite>safer-buffer": {
-      "builtin": {
-        "buffer": true
-      },
-      "globals": {
-        "process.binding": true
       }
     },
     "json-rpc-engine": {
@@ -7445,19 +7654,12 @@
     "keytar": {
       "native": true
     },
-    "koa>type-is>mime-types": {
-      "builtin": {
-        "path.extname": true
-      },
-      "packages": {
-        "koa>type-is>mime-types>mime-db": true
-      }
-    },
     "lavamoat>@babel/highlight": {
       "packages": {
         "lavamoat>@babel/highlight>@babel/helper-validator-identifier": true,
         "lavamoat>@babel/highlight>chalk": true,
-        "loose-envify>js-tokens": true
+        "loose-envify>js-tokens": true,
+        "react>loose-envify>js-tokens": true
       }
     },
     "lavamoat>@babel/highlight>chalk": {
@@ -7467,8 +7669,8 @@
       },
       "packages": {
         "lavamoat>@babel/highlight>chalk>ansi-styles": true,
-        "lavamoat>@babel/highlight>chalk>supports-color": true,
-        "mocha>escape-string-regexp": true
+        "lavamoat>@babel/highlight>chalk>escape-string-regexp": true,
+        "lavamoat>@babel/highlight>chalk>supports-color": true
       }
     },
     "lavamoat>@babel/highlight>chalk>ansi-styles": {
@@ -7488,7 +7690,12 @@
         "process.versions.node.split": true
       },
       "packages": {
-        "mocha>supports-color>has-flag": true
+        "lavamoat>@babel/highlight>chalk>supports-color>has-flag": true
+      }
+    },
+    "lavamoat>@babel/highlight>chalk>supports-color>has-flag": {
+      "globals": {
+        "process.argv": true
       }
     },
     "lavamoat>bindings": {
@@ -7542,6 +7749,38 @@
         "process": true
       }
     },
+    "lavamoat>object.fromentries>call-bind": {
+      "packages": {
+        "lavamoat>object.fromentries>call-bind>function-bind": true,
+        "lavamoat>object.fromentries>call-bind>get-intrinsic": true
+      }
+    },
+    "lavamoat>object.fromentries>call-bind>get-intrinsic": {
+      "globals": {
+        "AggregateError": true,
+        "FinalizationRegistry": true,
+        "WeakRef": true
+      },
+      "packages": {
+        "lavamoat>object.fromentries>call-bind>function-bind": true,
+        "lavamoat>object.fromentries>es-abstract>has-symbols": true,
+        "lavamoat>resolve>is-core-module>has": true
+      }
+    },
+    "lavamoat>object.fromentries>es-abstract>object-inspect": {
+      "builtin": {
+        "util.inspect": true
+      },
+      "globals": {
+        "HTMLElement": true,
+        "WeakRef": true
+      }
+    },
+    "lavamoat>resolve>is-core-module>has": {
+      "packages": {
+        "lavamoat>object.fromentries>call-bind>function-bind": true
+      }
+    },
     "localforage": {
       "globals": {
         "Blob": true,
@@ -7592,83 +7831,6 @@
         "Intl": true
       }
     },
-    "madge>debug": {
-      "builtin": {
-        "tty.isatty": true,
-        "util.deprecate": true,
-        "util.format": true,
-        "util.inspect": true
-      },
-      "globals": {
-        "console": true,
-        "document": true,
-        "localStorage": true,
-        "navigator": true,
-        "process": true
-      },
-      "packages": {
-        "madge>debug>ms": true,
-        "sinon>supports-color": true
-      }
-    },
-    "madge>rc>deep-extend": {
-      "globals": {
-        "Buffer": true
-      }
-    },
-    "mocha>find-up>locate-path>path-exists": {
-      "builtin": {
-        "fs.access": true,
-        "fs.accessSync": true
-      }
-    },
-    "mocha>minimatch>brace-expansion": {
-      "packages": {
-        "mocha>minimatch>brace-expansion>concat-map": true,
-        "stylelint>balanced-match": true
-      }
-    },
-    "mocha>supports-color>has-flag": {
-      "globals": {
-        "process.argv": true
-      }
-    },
-    "mockttp>@httptoolkit/proxy-agent>agent-base": {
-      "builtin": {
-        "events.EventEmitter": true
-      },
-      "globals": {
-        "clearTimeout": true,
-        "setTimeout": true
-      },
-      "packages": {
-        "madge>debug": true
-      }
-    },
-    "mockttp>node-forge": {
-      "builtin": {
-        "crypto": true
-      },
-      "globals": {
-        "Blob": true,
-        "Buffer": true,
-        "MutationObserver": true,
-        "QuotaExceededError": true,
-        "URL.createObjectURL": true,
-        "URL.revokeObjectURL": true,
-        "Worker": true,
-        "addEventListener": true,
-        "document": true,
-        "jQuery": true,
-        "localStorage": true,
-        "navigator": true,
-        "postMessage": true,
-        "process": true,
-        "removeEventListener": true,
-        "setImmediate": true,
-        "setTimeout": true
-      }
-    },
     "nanoid": {
       "builtin": {
         "crypto.randomBytes": true,
@@ -7676,18 +7838,6 @@
       },
       "globals": {
         "Buffer.allocUnsafe": true
-      }
-    },
-    "nock>mkdirp": {
-      "builtin": {
-        "fs": true,
-        "path.dirname": true,
-        "path.resolve": true
-      }
-    },
-    "nock>qs": {
-      "packages": {
-        "string.prototype.matchall>side-channel": true
       }
     },
     "node-fetch": {
@@ -7708,29 +7858,7 @@
         "setTimeout": true
       },
       "packages": {
-        "node-fetch>encoding": true,
         "node-fetch>whatwg-url": true
-      }
-    },
-    "node-fetch>encoding": {
-      "globals": {
-        "Buffer.from": true,
-        "console.error": true
-      },
-      "packages": {
-        "node-fetch>encoding>iconv-lite": true
-      }
-    },
-    "node-fetch>encoding>iconv-lite": {
-      "builtin": {
-        "stream": true,
-        "string_decoder.StringDecoder": true
-      },
-      "globals": {
-        "console.error": true
-      },
-      "packages": {
-        "jsdom>whatwg-encoding>iconv-lite>safer-buffer": true
       }
     },
     "node-fetch>whatwg-url": {
@@ -7758,87 +7886,6 @@
       "packages": {
         "await-semaphore": true,
         "ethjs-query": true
-      }
-    },
-    "nyc>convert-source-map": {
-      "builtin": {
-        "fs.readFileSync": true,
-        "path.resolve": true
-      },
-      "packages": {
-        "nyc>convert-source-map>safe-buffer": true
-      }
-    },
-    "nyc>convert-source-map>safe-buffer": {
-      "builtin": {
-        "buffer": true
-      }
-    },
-    "nyc>glob": {
-      "builtin": {
-        "assert": true,
-        "events.EventEmitter": true,
-        "fs": true,
-        "path.join": true,
-        "path.resolve": true,
-        "util": true
-      },
-      "globals": {
-        "console.error": true,
-        "process.cwd": true,
-        "process.nextTick": true,
-        "process.platform": true
-      },
-      "packages": {
-        "eslint>minimatch": true,
-        "gulp-watch>path-is-absolute": true,
-        "nyc>glob>fs.realpath": true,
-        "nyc>glob>inflight": true,
-        "pump>once": true,
-        "pumpify>inherits": true
-      }
-    },
-    "nyc>glob>fs.realpath": {
-      "builtin": {
-        "fs.lstat": true,
-        "fs.lstatSync": true,
-        "fs.readlink": true,
-        "fs.readlinkSync": true,
-        "fs.realpath": true,
-        "fs.realpathSync": true,
-        "fs.stat": true,
-        "fs.statSync": true,
-        "path.normalize": true,
-        "path.resolve": true
-      },
-      "globals": {
-        "console.error": true,
-        "console.trace": true,
-        "process.env.NODE_DEBUG": true,
-        "process.nextTick": true,
-        "process.noDeprecation": true,
-        "process.platform": true,
-        "process.throwDeprecation": true,
-        "process.traceDeprecation": true,
-        "process.version": true
-      }
-    },
-    "nyc>glob>inflight": {
-      "globals": {
-        "process.nextTick": true
-      },
-      "packages": {
-        "pump>once": true,
-        "pump>once>wrappy": true
-      }
-    },
-    "nyc>signal-exit": {
-      "builtin": {
-        "assert.equal": true,
-        "events": true
-      },
-      "globals": {
-        "process": true
       }
     },
     "obj-multiplex": {
@@ -7875,9 +7922,74 @@
         "define": true
       }
     },
+    "pubnub>superagent-proxy>proxy-agent>agent-base": {
+      "builtin": {
+        "events.EventEmitter": true
+      },
+      "globals": {
+        "clearTimeout": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "@truffle/codec>debug": true
+      }
+    },
+    "pubnub>superagent-proxy>proxy-agent>https-proxy-agent": {
+      "builtin": {
+        "assert": true,
+        "net": true,
+        "tls": true,
+        "url": true
+      },
+      "globals": {
+        "Buffer.concat": true,
+        "Buffer.from": true
+      },
+      "packages": {
+        "@truffle/codec>debug": true,
+        "pubnub>superagent-proxy>proxy-agent>agent-base": true
+      }
+    },
+    "pubnub>superagent>form-data>asynckit": {
+      "globals": {
+        "process": true,
+        "setImmediate": true,
+        "setTimeout": true
+      }
+    },
+    "pubnub>superagent>form-data>combined-stream": {
+      "builtin": {
+        "stream.Stream": true,
+        "util.inherits": true
+      },
+      "globals": {
+        "Buffer.isBuffer": true
+      },
+      "packages": {
+        "pubnub>superagent>form-data>combined-stream>delayed-stream": true
+      }
+    },
+    "pubnub>superagent>form-data>combined-stream>delayed-stream": {
+      "builtin": {
+        "stream.Stream": true,
+        "util.inherits": true
+      }
+    },
     "pubnub>superagent>methods": {
       "builtin": {
         "http.METHODS": true
+      }
+    },
+    "pubnub>superagent>qs": {
+      "packages": {
+        "pubnub>superagent>qs>side-channel": true
+      }
+    },
+    "pubnub>superagent>qs>side-channel": {
+      "packages": {
+        "lavamoat>object.fromentries>call-bind": true,
+        "lavamoat>object.fromentries>call-bind>get-intrinsic": true,
+        "lavamoat>object.fromentries>es-abstract>object-inspect": true
       }
     },
     "pump": {
@@ -7897,11 +8009,6 @@
         "pump>once>wrappy": true
       }
     },
-    "pumpify>inherits": {
-      "builtin": {
-        "util.inherits": true
-      }
-    },
     "react": {
       "globals": {
         "console": true,
@@ -7912,12 +8019,6 @@
         "react>object-assign": true
       }
     },
-    "react-devtools>ip": {
-      "builtin": {
-        "buffer.Buffer": true,
-        "os.networkInterfaces": true
-      }
-    },
     "react-dnd>dnd-core>asap": {
       "builtin": {
         "domain": true
@@ -7926,12 +8027,6 @@
         "process.domain": "write",
         "process.nextTick": true,
         "setImmediate": true
-      }
-    },
-    "read-installed>readdir-scoped-modules>dezalgo": {
-      "packages": {
-        "pump>once>wrappy": true,
-        "react-dnd>dnd-core>asap": true
       }
     },
     "readable-stream": {
@@ -7949,18 +8044,23 @@
         "setImmediate": true
       },
       "packages": {
-        "@storybook/api>util-deprecate": true,
-        "pumpify>inherits": true,
         "readable-stream>core-util-is": true,
+        "readable-stream>inherits": true,
         "readable-stream>isarray": true,
         "readable-stream>process-nextick-args": true,
         "readable-stream>safe-buffer": true,
-        "readable-stream>string_decoder": true
+        "readable-stream>string_decoder": true,
+        "readable-stream>util-deprecate": true
       }
     },
     "readable-stream>core-util-is": {
       "globals": {
         "Buffer.isBuffer": true
+      }
+    },
+    "readable-stream>inherits": {
+      "builtin": {
+        "util.inherits": true
       }
     },
     "readable-stream>process-nextick-args": {
@@ -7978,6 +8078,11 @@
         "readable-stream>safe-buffer": true
       }
     },
+    "readable-stream>util-deprecate": {
+      "builtin": {
+        "util.deprecate": true
+      }
+    },
     "redux": {
       "globals": {
         "console": true,
@@ -7985,11 +8090,6 @@
       },
       "packages": {
         "@babel/runtime": true
-      }
-    },
-    "remote-redux-devtools>socketcluster-client>ws>async-limiter": {
-      "globals": {
-        "process.nextTick": true
       }
     },
     "safe-event-emitter": {
@@ -8017,119 +8117,12 @@
         "semver>lru-cache>yallist": true
       }
     },
-    "sinon>supports-color": {
-      "builtin": {
-        "os.release": true,
-        "tty.isatty": true
-      },
-      "globals": {
-        "process.env": true,
-        "process.platform": true
-      },
-      "packages": {
-        "sinon>supports-color>has-flag": true
-      }
-    },
-    "sinon>supports-color>has-flag": {
-      "globals": {
-        "process.argv": true
-      }
-    },
-    "source-map-explorer>btoa": {
-      "globals": {
-        "Buffer": true
-      }
-    },
-    "string.prototype.matchall>call-bind": {
-      "packages": {
-        "mocha>object.assign>function-bind": true,
-        "string.prototype.matchall>get-intrinsic": true
-      }
-    },
-    "string.prototype.matchall>get-intrinsic": {
-      "globals": {
-        "AggregateError": true,
-        "FinalizationRegistry": true,
-        "WeakRef": true
-      },
-      "packages": {
-        "enzyme>has": true,
-        "mocha>object.assign>function-bind": true,
-        "string.prototype.matchall>has-symbols": true
-      }
-    },
-    "string.prototype.matchall>side-channel": {
-      "packages": {
-        "enzyme>object-inspect": true,
-        "string.prototype.matchall>call-bind": true,
-        "string.prototype.matchall>get-intrinsic": true
-      }
-    },
-    "stylelint>autoprefixer>browserslist": {
-      "builtin": {
-        "fs.existsSync": true,
-        "fs.readFileSync": true,
-        "fs.statSync": true,
-        "path.basename": true,
-        "path.dirname": true,
-        "path.join": true,
-        "path.resolve": true
-      },
-      "globals": {
-        "console.warn": true,
-        "process.env.BROWSERSLIST": true,
-        "process.env.BROWSERSLIST_CONFIG": true,
-        "process.env.BROWSERSLIST_DANGEROUS_EXTEND": true,
-        "process.env.BROWSERSLIST_DISABLE_CACHE": true,
-        "process.env.BROWSERSLIST_ENV": true,
-        "process.env.BROWSERSLIST_IGNORE_OLD_DATA": true,
-        "process.env.BROWSERSLIST_STATS": true,
-        "process.env.NODE_ENV": true,
-        "process.versions.node": true
-      },
-      "packages": {
-        "stylelint>autoprefixer>browserslist>electron-to-chromium": true,
-        "stylelint>autoprefixer>browserslist>node-releases": true,
-        "stylelint>autoprefixer>caniuse-lite": true
-      }
-    },
-    "terser>@jridgewell/source-map>@jridgewell/gen-mapping": {
-      "globals": {
-        "define": true
-      },
-      "packages": {
-        "@babel/cli>@jridgewell/trace-mapping": true,
-        "@babel/cli>@jridgewell/trace-mapping>@jridgewell/sourcemap-codec": true,
-        "terser>@jridgewell/source-map>@jridgewell/gen-mapping>@jridgewell/set-array": true
-      }
-    },
-    "terser>@jridgewell/source-map>@jridgewell/gen-mapping>@jridgewell/set-array": {
-      "globals": {
-        "define": true
-      }
-    },
-    "terser>source-map-support>buffer-from": {
-      "globals": {
-        "Buffer": true
-      }
-    },
     "uuid": {
       "builtin": {
         "crypto": true
       },
       "globals": {
         "Buffer.from": true
-      }
-    },
-    "vinyl>clone": {
-      "globals": {
-        "Buffer": true
-      }
-    },
-    "vinyl>cloneable-readable>process-nextick-args": {
-      "globals": {
-        "process.nextTick": true,
-        "process.version": true
       }
     },
     "web3": {
@@ -8219,11 +8212,6 @@
         "define": true
       }
     },
-    "webpack>memory-fs>errno": {
-      "packages": {
-        "webpack>memory-fs>errno>prr": true
-      }
-    },
     "ws": {
       "builtin": {
         "crypto.createHash": true,
@@ -8254,28 +8242,126 @@
         "clearTimeout": true,
         "process.nextTick": true,
         "setTimeout": true
-      },
-      "packages": {
-        "ws>bufferutil": true,
-        "ws>utf-8-validate": true
       }
     },
-    "ws>bufferutil": {
-      "globals": {
-        "__dirname": true
-      },
-      "native": true,
+    "@truffle/codec>semver>lru-cache": {
       "packages": {
-        "lavamoat>node-gyp-build": true
+        "@truffle/codec>semver>lru-cache>yallist": true
       }
     },
-    "ws>utf-8-validate": {
-      "globals": {
-        "__dirname": true
-      },
-      "native": true,
+    "@truffle/codec>semver": {
       "packages": {
-        "lavamoat>node-gyp-build": true
+        "@truffle/codec>semver>lru-cache": true
+      }
+    },
+    "3box>node-fetch": {
+      "builtin": {
+        "http": true,
+        "https": true,
+        "stream": true,
+        "url": true,
+        "zlib": true
+      },
+      "globals": {
+        "Buffer": true,
+        "Headers": true,
+        "Request": true,
+        "Response": true,
+        "clearTimeout": true,
+        "fetch": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "3box>node-fetch>whatwg-url": true
+      }
+    },
+    "3box>node-fetch>whatwg-url": {
+      "builtin": {
+        "punycode": true
+      },
+      "packages": {
+        "3box>node-fetch>whatwg-url>webidl-conversions": true,
+        "3box>node-fetch>whatwg-url>tr46": true
+      }
+    },
+    "3box>node-fetch>whatwg-url>tr46": {
+      "builtin": {
+        "punycode": true
+      }
+    },
+    "@truffle/codec>debug": {
+      "globals": {
+        "console": true
+      },
+      "packages": {
+        "@truffle/codec>debug>ms": true
+      }
+    },
+    "@metamask/snap-utils>@babel/core>@babel/types": {
+      "globals": {
+        "process":true
+      },
+      "packages": {
+        "@metamask/snap-utils>@babel/core>@babel/types>to-fast-properties": true,
+        "lavamoat>@babel/highlight>@babel/helper-validator-identifier": true,
+        "@metamask/snap-utils>@babel/core>@babel/types>@babel/helper-string-parser": true
+      }
+    },
+    "@metamask/snap-utils>@babel/core": {
+      "builtin": {
+        "assert": true,
+        "fs": true,
+        "module": true,
+        "path": true,
+        "url": true,
+        "util": true
+      },
+      "globals": {
+        "console.error": true,
+        "console.log": true,
+        "process": true
+      },
+      "packages": {
+        "@metamask/snap-utils>@babel/core>@babel/types": true,
+        "@metamask/snap-utils>@babel/core>gensync": true,
+        "@metamask/snap-utils>@babel/core>semver": true,
+        "@metamask/snap-utils>@babel/core>@babel/template": true,
+        "@truffle/codec>debug": true
+      }
+    },
+    "@metamask/snap-utils>@babel/core>semver": {
+      "globals": {
+        "console": true,
+        "process": true
+      }
+    },
+    "@metamask/snap-utils>@babel/core>@babel/template": {
+      "packages": {
+        "@metamask/snap-utils>@babel/core>@babel/types": true,
+        "lavamoat>lavamoat-tofu>@babel/parser": true,
+        "lavamoat>@babel/code-frame": true
+      }
+    },
+    "lavamoat>@babel/code-frame": {
+      "packages": {
+        "lavamoat>@babel/highlight": true
+      }
+    },
+    "electron-updater>fs-extra>graceful-fs": {
+      "builtin": {
+        "assert.equal": true,
+        "constants.O_SYMLINK": true,
+        "constants.O_WRONLY": true,
+        "constants.hasOwnProperty": true,
+        "fs": true,
+        "stream.Stream.call": true,
+        "util": true
+      },
+      "globals": {
+        "clearTimeout": true,
+        "console.error": true,
+        "process": true,
+        "setTimeout": true
       }
     }
   }

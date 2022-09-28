@@ -4,7 +4,7 @@
   "directories": {
     "output": "builds_desktop"
   },
-  "files": ["dist_desktop/**/*", "node_modules/**/*", "package.json"],
+  "files": ["dist_desktop/**/*", "node_modules/**/*", "package.json", "lavamoat/electron/**/*"],
   "linux": {
     "icon": "app/build-types/desktop/images/icon-512.png",
     "target": "AppImage",

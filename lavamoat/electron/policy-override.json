@@ -1,0 +1,491 @@
+{
+  "resources": {
+    "keytar": {
+      "native": true
+    },
+    "ethjs-query>babel-runtime": {
+      "packages": {
+        "@babel/runtime": true
+      }
+    },
+    "@metamask/controllers>web3-provider-engine>eth-json-rpc-middleware>node-fetch": {
+      "globals": {
+        "fetch": true
+      }
+    },
+    "@metamask/controllers>web3-provider-engine>cross-fetch>node-fetch": {
+      "globals": {
+        "fetch": true
+      }
+    },
+    "3box>graphql-request>cross-fetch>node-fetch": {
+      "globals": {
+        "fetch": true
+      }
+    },
+    "lodash": {
+      "globals": {
+        "setTimeout": true,
+        "clearTimeout": true
+      }
+    },
+    "ethers>@ethersproject/random": {
+      "globals": {
+        "crypto.getRandomValues": true
+      }
+    },
+    "eth-keyring-controller>browser-passworder": {
+      "globals": {
+        "crypto": true
+      }
+    },
+    "ethereumjs-wallet>randombytes": {
+      "globals": {
+        "crypto.getRandomValues": true
+      }
+    },
+    "web3": {
+      "globals": {
+        "XMLHttpRequest": true
+      }
+    },
+    "node-fetch": {
+      "globals": {
+        "fetch": true,
+        "Headers": true,
+        "Request": true,
+        "Response": true
+      }
+    },
+    "nanoid": {
+      "builtin": {
+        "crypto.randomFillSync": true
+      },
+      "globals": {
+        "Buffer.allocUnsafe": true
+      }
+    },
+    "@metamask/snap-controllers>nanoid": {
+      "builtin": {
+        "crypto.randomFillSync": true
+      },
+      "globals": {
+        "Buffer.allocUnsafe": true
+      }
+    },
+    "@metamask/controllers>nanoid": {
+      "builtin": {
+        "crypto": true
+      },
+      "globals": {
+        "Buffer.allocUnsafe": true
+      }
+    },
+    "@metamask/smart-transactions-controller>@metamask/controllers>nanoid": {
+      "builtin": {
+        "crypto.randomFillSync": true
+      },
+      "globals": {
+        "Buffer.allocUnsafe": true
+      }
+    },
+    "@metamask/eth-ledger-bridge-keyring": {
+      "globals": {
+        "window.fetch": true,
+        "window.addEventListener": true,
+        "window.removeEventListener": true
+      }
+    },
+    "depcheck>@vue/compiler-sfc>postcss>nanoid": {
+      "builtin": {
+        "crypto.randomFillSync": true
+      },
+      "globals": {
+        "Buffer.allocUnsafe": true
+      }
+    },
+    "3box>orbit-db>orbit-db-cache>leveldown>node-gyp-build": {
+      "packages": {
+        "3box>orbit-db>orbit-db-cache>leveldown": true
+      }
+    },
+    "3box>orbit-db>orbit-db-keystore>leveldown>node-gyp-build": {
+      "packages": {
+        "3box>orbit-db>orbit-db-keystore>leveldown": true
+      }
+    },
+    "js-sha256": {
+      "builtin": {
+        "crypto": true,
+        "buffer": true
+      }
+    },
+    "electron-updater": {
+      "builtin": {
+        "electron": true
+      },
+      "packages": {
+        "@truffle/codec>semver": true
+      }
+    },
+    "electron-store": {
+      "builtin": {
+        "electron": true
+      }
+    },
+    "electron-log": {
+      "builtin": {
+        "electron": true
+      }
+    },
+    "3box": {
+      "packages": {
+        "3box>node-fetch": true
+      }
+    },
+    "3box>graphql-request>cross-fetch": {
+      "packages": {
+        "3box>node-fetch": true
+      }
+    },
+    "3box>ipfs": {
+      "packages": {
+        "@truffle/codec>debug": true,
+        "3box>node-fetch": true
+      }
+    },
+    "3box>ipfs>datastore-pubsub": {
+      "packages": {
+        "@truffle/codec>debug": true
+      }
+    },
+    "3box>ipfs>ipfs-bitswap": {
+      "packages": {
+        "@truffle/codec>debug": true
+      }
+    },
+    "3box>ipfs>ipfs-mfs": {
+      "packages": {
+        "@truffle/codec>debug": true
+      }
+    },
+    "3box>ipfs>ipfs-repo": {
+      "packages": {
+        "@truffle/codec>debug": true
+      }
+    },
+    "3box>ipfs>ipfs-repo>datastore-fs": {
+      "packages": {
+        "electron-updater>fs-extra>graceful-fs": true
+      }
+    },
+    "3box>ipfs>ipfs-repo>proper-lockfile": {
+      "packages": {
+        "electron-updater>fs-extra>graceful-fs": true
+      }
+    },
+    "3box>ipfs>ipns": {
+      "packages": {
+        "@truffle/codec>debug": true
+      }
+    },
+    "3box>ipfs>libp2p": {
+      "packages": {
+        "@truffle/codec>debug": true
+      }
+    },
+    "3box>ipfs>libp2p-bootstrap": {
+      "packages": {
+        "@truffle/codec>debug": true
+      }
+    },
+    "3box>ipfs>libp2p-kad-dht": {
+      "packages": {
+        "@truffle/codec>debug": true
+      }
+    },
+    "3box>ipfs>libp2p-mdns": {
+      "packages": {
+        "@truffle/codec>debug": true
+      }
+    },
+    "3box>ipfs>libp2p-secio": {
+      "packages": {
+        "@truffle/codec>debug": true
+      }
+    },
+    "3box>ipfs>libp2p-websocket-star-multi": {
+      "packages": {
+        "@truffle/codec>debug": true
+      }
+    },
+    "3box>ipfs>libp2p-websocket-star-multi>libp2p-websocket-star": {
+      "packages": {
+        "@truffle/codec>debug": true
+      }
+    },
+    "3box>ipfs>libp2p-websockets": {
+      "packages": {
+        "@truffle/codec>debug": true
+      }
+    },
+    "3box>ipfs>libp2p>libp2p-connection-manager": {
+      "packages": {
+        "@truffle/codec>debug": true
+      }
+    },
+    "3box>ipfs>libp2p>libp2p-floodsub": {
+      "packages": {
+        "@truffle/codec>debug": true
+      }
+    },
+    "3box>ipfs>libp2p>libp2p-floodsub>libp2p-pubsub": {
+      "packages": {
+        "@truffle/codec>debug": true
+      }
+    },
+    "3box>ipfs>libp2p>libp2p-ping": {
+      "packages": {
+        "@truffle/codec>debug": true
+      }
+    },
+    "3box>ipfs>libp2p>libp2p-switch": {
+      "packages": {
+        "@truffle/codec>debug": true
+      }
+    },
+    "3box>ipfs>libp2p>libp2p-switch>libp2p-circuit": {
+      "packages": {
+        "@truffle/codec>debug": true
+      }
+    },
+    "3box>ipfs>libp2p>libp2p-switch>multistream-select": {
+      "packages": {
+        "@truffle/codec>debug": true
+      }
+    },
+    "3box>ipfs>pull-mplex": {
+      "packages": {
+        "@truffle/codec>debug": true
+      }
+    },
+    "3box>muport-did-resolver": {
+      "packages": {
+        "3box>node-fetch": true
+      }
+    },
+    "3box>orbit-db>orbit-db-cache": {
+      "builtin": {
+        "orbit-db-cache/node_modules/leveldown": true
+      }
+    },
+    "3box>orbit-db>orbit-db-keystore": {
+      "builtin": {
+        "orbit-db-cache/node_modules/leveldown": true
+      }
+    },
+    "@babel/core": {
+      "packages": {
+        "@truffle/codec>debug": true,
+      }
+    },
+    "@babel/core>@babel/traverse": {
+      "packages": {
+        "@truffle/codec>debug": true
+      }
+    },
+    "@metamask/controllers>isomorphic-fetch": {
+      "packages": {
+        "3box>node-fetch": true
+      }
+    },
+    "@metamask/controllers>web3-provider-engine>eth-json-rpc-middleware": {
+      "packages": {
+        "3box>node-fetch": true
+      }
+    },
+    "@metamask/snap-utils": {
+      "packages": {
+        "@metamask/snap-utils>@babel/core": true,
+        "@metamask/snap-utils>@babel/core>@babel/types": true,
+        "@truffle/codec>semver": true
+      }
+    },
+    "analytics-node>axios>follow-redirects": {
+      "packages": {
+        "@truffle/codec>debug": true
+      }
+    },
+    "electron-store>conf": {
+      "packages": {
+        "@truffle/codec>semver": true
+      }
+    },
+    "electron-updater>builder-util-runtime": {
+      "packages": {
+        "@truffle/codec>debug": true
+      }
+    },
+    "electron-updater>fs-extra": {
+      "packages": {
+        "electron-updater>fs-extra>graceful-fs": true
+      }
+    },
+    "electron-updater>fs-extra>jsonfile": {
+      "packages": {
+        "electron-updater>fs-extra>graceful-fs": true
+      }
+    },
+    "eth-json-rpc-infura": {
+      "packages": {
+        "3box>node-fetch": true
+      }
+    },
+    "eth-json-rpc-middleware": {
+      "packages": {
+        "3box>node-fetch": true
+      }
+    },
+    "eth-lattice-keyring>gridplus-sdk>superagent": {
+      "packages": {
+        "@truffle/codec>debug": true,
+        "@truffle/codec>semver": true
+      }
+    },
+    "lavamoat>@babel/highlight": {
+      "packages": {
+        "react>loose-envify>js-tokens": true
+      }
+    },
+    "pubnub>superagent-proxy>proxy-agent>agent-base": {
+      "packages": {
+        "@truffle/codec>debug": true
+      }
+    },
+    "pubnub>superagent-proxy>proxy-agent>https-proxy-agent": {
+      "packages": {
+        "@truffle/codec>debug": true
+      }
+    },
+    "@truffle/codec>semver>lru-cache": {
+      "packages": {
+        "@truffle/codec>semver>lru-cache>yallist": true
+      }
+    },
+    "@truffle/codec>semver": {
+      "packages": {
+        "@truffle/codec>semver>lru-cache": true
+      }
+    },
+    "3box>node-fetch": {
+      "builtin": {
+        "http": true,
+        "https": true,
+        "stream": true,
+        "url": true,
+        "zlib": true
+      },
+      "globals": {
+        "Buffer": true,
+        "Headers": true,
+        "Request": true,
+        "Response": true,
+        "clearTimeout": true,
+        "fetch": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "3box>node-fetch>whatwg-url": true
+      }
+    },
+    "3box>node-fetch>whatwg-url": {
+      "builtin": {
+        "punycode": true
+      },
+      "packages": {
+        "3box>node-fetch>whatwg-url>webidl-conversions": true,
+        "3box>node-fetch>whatwg-url>tr46": true
+      }
+    },
+    "3box>node-fetch>whatwg-url>tr46": {
+      "builtin": {
+        "punycode": true
+      }
+    },
+    "@truffle/codec>debug": {
+      "globals": {
+        "console": true
+      },
+      "packages": {
+        "@truffle/codec>debug>ms": true
+      }
+    },
+    "@metamask/snap-utils>@babel/core>@babel/types": {
+      "globals": {
+        "process":true
+      },
+      "packages": {
+        "@metamask/snap-utils>@babel/core>@babel/types>to-fast-properties": true,
+        "lavamoat>@babel/highlight>@babel/helper-validator-identifier": true,
+        "@metamask/snap-utils>@babel/core>@babel/types>@babel/helper-string-parser": true
+      }
+    },
+    "@metamask/snap-utils>@babel/core": {
+      "builtin": {
+        "assert": true,
+        "fs": true,
+        "module": true,
+        "path": true,
+        "url": true,
+        "util": true
+      },
+      "globals": {
+        "console.error": true,
+        "console.log": true,
+        "process": true
+      },
+      "packages": {
+        "@metamask/snap-utils>@babel/core>@babel/types": true,
+        "@metamask/snap-utils>@babel/core>gensync": true,
+        "@metamask/snap-utils>@babel/core>semver": true,
+        "@metamask/snap-utils>@babel/core>@babel/template": true,
+        "@truffle/codec>debug": true
+      }
+    },
+    "@metamask/snap-utils>@babel/core>semver": {
+      "globals": {
+        "console": true,
+        "process": true
+      }
+    },
+    "@metamask/snap-utils>@babel/core>@babel/template": {
+      "packages": {
+        "@metamask/snap-utils>@babel/core>@babel/types": true,
+        "lavamoat>lavamoat-tofu>@babel/parser": true,
+        "lavamoat>@babel/code-frame": true
+      }
+    },
+    "lavamoat>@babel/code-frame": {
+      "packages": {
+        "lavamoat>@babel/highlight": true
+      }
+    },
+    "electron-updater>fs-extra>graceful-fs": {
+      "builtin": {
+        "assert.equal": true,
+        "constants.O_SYMLINK": true,
+        "constants.O_WRONLY": true,
+        "constants.hasOwnProperty": true,
+        "fs": true,
+        "stream.Stream.call": true,
+        "util": true
+      },
+      "globals": {
+        "clearTimeout": true,
+        "console.error": true,
+        "process": true,
+        "setTimeout": true
+      }
+    }
+  }
+}
