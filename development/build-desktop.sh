@@ -13,7 +13,7 @@ mkdir $OUTPUT_DIR
 mkdir $OUTPUT_DIR/app
 
 echo "Copying HTML"
-cp -r app/desktop.html $OUTPUT_DIR/app/desktop.html
+cp -r app/desktop-onboarding.html $OUTPUT_DIR/app/desktop-onboarding.html
 
 echo "Copying locales"
 cp -r app/_locales $OUTPUT_DIR/app

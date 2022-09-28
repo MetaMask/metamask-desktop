@@ -1,6 +1,6 @@
 import { Duplex, EventEmitter } from 'stream';
 import path from 'path';
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import { Server as WebSocketServer, WebSocket } from 'ws';
 import endOfStream from 'end-of-stream';
 import ObjectMultiplex from 'obj-multiplex';
@@ -12,6 +12,7 @@ import {
   CLIENT_ID_STATE,
   CLIENT_ID_DISABLE,
 } from '../../../shared/constants/desktop';
+import { validate } from '../../../shared/modules/totp';
 import cfg from './config';
 import { updateCheck } from './update-check';
 import { WebSocketStream } from './web-socket-stream';
@@ -59,6 +60,8 @@ export default class Desktop {
 
   private hasBeenInitializedWithExtensionState?: boolean;
 
+  private isPaired?: boolean;
+
   public static async init(backgroundInitialise: () => Promise<void>) {
     Desktop.instance = new Desktop(backgroundInitialise);
     await Desktop.instance.init();
@@ -93,34 +96,20 @@ export default class Desktop {
   public async init() {
     await app.whenReady();
 
+    ipcMain.handle('otp', (event, data) => this.onOtpSubmit(data));
+
     this.statusWindow = await this.createStatusWindow();
 
-    const server = await this.createWebSocketServer();
-    server.on('connection', (webSocket) => this.onConnection(webSocket));
+    const state = await browser.storage.local.get();
+    // TODO: Change the name to isDesktopPaired
+    // this.isPaired = state.data.PreferencesController.desktopEnabled;
+    this.isPaired = false;
 
-    const browserControllerStream = this.multiplex.createStream(
-      CLIENT_ID_BROWSER_CONTROLLER,
-    );
-    registerRequestStream(browserControllerStream);
-
-    const endConnectionStream = this.multiplex.createStream(
-      CLIENT_ID_END_CONNECTION,
-    );
-    endConnectionStream.on('data', (data: EndConnectionMessage) =>
-      this.onEndConnectionMessage(data),
-    );
-
-    const newConnectionStream = this.multiplex.createStream(
-      CLIENT_ID_NEW_CONNECTION,
-    );
-    newConnectionStream.on('data', (data: NewConnectionMessage) =>
-      this.onNewConnectionMessage(data),
-    );
-
-    this.stateStream = this.multiplex.createStream(CLIENT_ID_STATE);
-    this.stateStream.on('data', (data: any) => this.onExtensionState(data));
-
-    this.disableStream = this.multiplex.createStream(CLIENT_ID_DISABLE);
+    if (!this.isPaired) {
+      await this.initConnections();
+    } else {
+      this.updateStatusWindow();
+    }
 
     log.debug('Initialised desktop');
 
@@ -193,7 +182,11 @@ export default class Desktop {
       // icon: path.resolve(__dirname, '../../build-types/desktop/images/icon-512.png')
     });
 
-    await statusWindow.loadFile(path.resolve(__dirname, '../../desktop.html'));
+    await statusWindow.loadFile(
+      path.resolve(__dirname, '../../desktop-onboarding.html'),
+    );
+
+    //statusWindow.webContents.openDevTools();
 
     log.debug('Created status window');
 
@@ -340,8 +333,65 @@ export default class Desktop {
     const statusMessage: StatusMessage = {
       isWebSocketConnected: Boolean(this.webSocket),
       connections: this.connections,
+      isDesktopSynced: Boolean(this.enableDesktop),
     };
 
     this.statusWindow.webContents.send('status', statusMessage);
+  }
+
+  private async onOtpSubmit(otp: string) {
+    log.debug('Received OTP', otp);
+    const isValid = await validate(otp);
+
+    if (isValid === 0) {
+      this.initConnections();
+      this.enableDesktop();
+      console.debug('valid OTP');
+    } else {
+      console.debug('OTP not valid');
+    }
+  }
+
+  private async initConnections() {
+    const server = await this.createWebSocketServer();
+    server.on('connection', (webSocket) => this.onConnection(webSocket));
+
+    const browserControllerStream = this.multiplex.createStream(
+      CLIENT_ID_BROWSER_CONTROLLER,
+    );
+    registerRequestStream(browserControllerStream);
+
+    const endConnectionStream = this.multiplex.createStream(
+      CLIENT_ID_END_CONNECTION,
+    );
+    endConnectionStream.on('data', (data: EndConnectionMessage) =>
+      this.onEndConnectionMessage(data),
+    );
+
+    const newConnectionStream = this.multiplex.createStream(
+      CLIENT_ID_NEW_CONNECTION,
+    );
+    newConnectionStream.on('data', (data: NewConnectionMessage) =>
+      this.onNewConnectionMessage(data),
+    );
+
+    this.stateStream = this.multiplex.createStream(CLIENT_ID_STATE);
+    this.stateStream.on('data', (data: any) => this.onExtensionState(data));
+
+    this.disableStream = this.multiplex.createStream(CLIENT_ID_DISABLE);
+  }
+
+  public async enableDesktop() {
+    log.debug('Enabling desktop usage');
+
+    if (!this.disableStream) {
+      log.error('Disable stream not initialised');
+      return;
+    }
+
+    const state = await browser.storage.local.get();
+    state.data.PreferencesController.desktopEnabled = true;
+
+    this.disableStream.write(state);
   }
 }

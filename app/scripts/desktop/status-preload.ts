@@ -55,10 +55,56 @@ const updateWebSocketStatus = (data: StatusMessage) => {
 const onStatusMessage = (data: StatusMessage) => {
   updateWebSocketStatus(data);
   updateConnections(data);
+  if (data.isDesktopSynced) {
+    updateDesktopSynced();
+  }
 };
 
 const onLoad = () => {
   ipcRenderer.on('status', (_, data: StatusMessage) => onStatusMessage(data));
+  loadOtpInput();
+  handleOtpChange();
 };
 
 window.addEventListener('DOMContentLoaded', () => onLoad());
+
+const loadOtpInput = () => {
+  const startButton = document.getElementById('start-button');
+  const startDiv = document.getElementById('start-div');
+
+  const otpInput = document.getElementById('input-otp');
+
+  if (!otpInput || !startDiv || !startButton) {
+    console.error('Cannot find element');
+    return;
+  }
+
+  startButton.addEventListener('click', () => {
+
+    otpInput.className = 'show';
+    startDiv.className = 'hide';
+  });
+};
+
+const handleOtpChange = () => {
+  const submitButton = document.getElementById('submit-button')!;
+  submitButton.addEventListener('click', () => {
+    const otpInput = (document.getElementById('otp-value') as HTMLInputElement)
+      .value;
+    onOtpSubmit(otpInput);
+  });
+};
+
+const onOtpSubmit = (value: string) => {
+  ipcRenderer.invoke('otp', value);
+};
+
+const updateDesktopSynced = () => {
+  const mainContentDiv = document.getElementById('main-content')!;
+
+
+  mainContentDiv.innerHTML = `    <h2>All set, fox</h2>
+    <span>Some explainer about using the extension as usual but keep this \n app open and check the alerts.</span>
+    <div><button id="connections-button" >Connections Page</button></div>`;
+
+};
