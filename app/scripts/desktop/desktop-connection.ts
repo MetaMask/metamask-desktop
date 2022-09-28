@@ -1,4 +1,4 @@
-import { Duplex, EventEmitter } from 'stream';
+import { Duplex, EventEmitter, PassThrough } from 'stream';
 import PortStream from 'extension-port-stream';
 import endOfStream from 'end-of-stream';
 import ObjectMultiplex from 'obj-multiplex';
@@ -26,6 +26,8 @@ import {
   BrowserControllerAction,
   BrowserControllerMessage,
 } from './types/message';
+
+const TIMEOUT_CONNECT = 5000;
 
 export default class DesktopConnection {
   private static instance: DesktopConnection;
@@ -92,7 +94,12 @@ export default class DesktopConnection {
 
   private static async init(notificationManager: NotificationManager) {
     DesktopConnection.instance = new DesktopConnection(notificationManager);
-    await DesktopConnection.instance.init();
+
+    try {
+      await DesktopConnection.instance.init();
+    } catch (error) {
+      log.error('Failed to initialise desktop connection');
+    }
   }
 
   private constructor(notificationManager: NotificationManager) {
@@ -117,7 +124,11 @@ export default class DesktopConnection {
     );
 
     this.handshakeStream = this.multiplex.createStream(CLIENT_ID_HANDSHAKES);
+
     this.stateStream = this.multiplex.createStream(CLIENT_ID_STATE);
+    this.stateStream.on('data', (rawState: State) =>
+      this.onDesktopState(rawState),
+    );
 
     const disableStream = this.multiplex.createStream(CLIENT_ID_DISABLE);
     disableStream.on('data', (data: State) => this.onDisable(data));
@@ -151,21 +162,43 @@ export default class DesktopConnection {
   ) {
     const portStream = new PortStream(remotePort as any);
     portStream.pause();
+    portStream.on('data', (data) => this.onUIMessage(data, portStream as any));
+
+    const bufferedReadStream = new PassThrough({ objectMode: true });
+    bufferedReadStream.pause();
+
+    const bufferedWriteStream = new PassThrough({ objectMode: true });
+
+    portStream.pipe(bufferedReadStream);
+    bufferedWriteStream.pipe(portStream as any);
+
+    portStream.resume();
 
     if (!this.webSocketStream) {
-      await this.connect();
+      try {
+        await this.connect();
+      } catch (error) {
+        log.error('Failed to create desktop stream as reconnect failed');
+        return;
+      }
     }
 
     const clientId = this.getNextClientId();
     const clientStream = this.multiplex.createStream(clientId);
 
-    portStream.pipe(clientStream).pipe(portStream as unknown as Duplex);
+    bufferedReadStream
+      .pipe(clientStream)
+      .pipe(bufferedWriteStream as unknown as Duplex);
 
-    endOfStream(portStream, () => this.onPortStreamEnd(clientId, clientStream));
+    endOfStream(portStream, () => {
+      bufferedReadStream.destroy();
+      bufferedWriteStream.destroy();
+      this.onPortStreamEnd(clientId, clientStream);
+    });
 
     this.sendHandshake(remotePort, clientId, connectionType);
 
-    portStream.resume();
+    bufferedReadStream.resume();
   }
 
   private async onDisable(state: State) {
@@ -214,6 +247,27 @@ export default class DesktopConnection {
     this.connectionControllerStream.write({ clientId });
   }
 
+  private async onDesktopState(rawState: State) {
+    await browser.storage.local.set(rawState);
+    log.debug('Synchronised state with desktop');
+  }
+
+  private async onUIMessage(data: any, stream: Duplex) {
+    const method = data.data?.method;
+    const id = data.data?.id;
+
+    if (method === 'disableDesktop') {
+      await this.disable();
+    }
+
+    if (method === 'getDesktopEnabled') {
+      stream.write({
+        name: data.name,
+        data: { jsonrpc: '2.0', result: true, id },
+      });
+    }
+  }
+
   private sendHandshake(
     remotePort: RemotePortData,
     clientId: ClientId,
@@ -248,12 +302,30 @@ export default class DesktopConnection {
     }
   }
 
+  private async disable() {
+    log.debug('Disabling desktop app');
+
+    const rawState = await browser.storage.local.get();
+    rawState.data.PreferencesController.desktopEnabled = false;
+    await browser.storage.local.set(rawState);
+
+    log.debug('Restarting extension');
+    browser.runtime.reload();
+  }
+
   private async createWebSocket(): Promise<WebSocket> {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       const webSocket = new WebSocket(`${cfg().desktop.webSocket.url}`);
+
       webSocket.addEventListener('open', () => {
         resolve(webSocket);
       });
+
+      setTimeout(() => {
+        const message = 'Timeout connecting to web socket server';
+        log.error(message);
+        reject(new Error(message));
+      }, TIMEOUT_CONNECT);
     });
   }
 

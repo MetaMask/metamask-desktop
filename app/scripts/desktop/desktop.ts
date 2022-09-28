@@ -17,7 +17,11 @@ import { updateCheck } from './update-check';
 import { WebSocketStream } from './web-socket-stream';
 import EncryptedWebSocketStream from './encrypted-web-socket-stream';
 import { browser } from './extension-polyfill';
-import { ConnectionType, ConnectRemoteFactory } from './types/background';
+import {
+  ConnectionType,
+  ConnectRemoteFactory,
+  State,
+} from './types/background';
 import {
   BrowserControllerAction,
   ConnectionControllerMessage,
@@ -48,6 +52,8 @@ export default class Desktop {
   private browserControllerStream?: Duplex;
 
   private disableStream?: Duplex;
+
+  private stateStream?: Duplex;
 
   private statusWindow?: BrowserWindow;
 
@@ -95,8 +101,8 @@ export default class Desktop {
       this.onHandshake(data),
     );
 
-    const stateStream = this.multiplex.createStream(CLIENT_ID_STATE);
-    stateStream.on('data', (data: any) => this.onExtensionState(data));
+    this.stateStream = this.multiplex.createStream(CLIENT_ID_STATE);
+    this.stateStream.on('data', (data: any) => this.onExtensionState(data));
 
     this.disableStream = this.multiplex.createStream(CLIENT_ID_DISABLE);
 
@@ -125,6 +131,16 @@ export default class Desktop {
     this.browserControllerStream.write(
       BrowserControllerAction.BROWSER_ACTION_SHOW_POPUP,
     );
+  }
+
+  public transferState(rawState: State) {
+    if (!this.webSocketStream) {
+      return;
+    }
+
+    this.stateStream?.write(rawState);
+
+    log.debug('Sent state to extension');
   }
 
   private async disable() {

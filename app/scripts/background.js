@@ -424,9 +424,12 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     if (localStore.isSupported) {
       try {
         await localStore.set(state);
+
         if (dataPersistenceFailing) {
           dataPersistenceFailing = false;
         }
+
+        Desktop?.getInstance()?.transferState(state);
       } catch (err) {
         // log error so we dont break the pipeline
         if (!dataPersistenceFailing) {
@@ -799,7 +802,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
  * Opens the browser popup for user confirmation
  */
 async function triggerUi() {
-  if (Desktop.hasInstance()) {
+  if (Desktop?.hasInstance()) {
     Desktop.getInstance().showPopup();
     return;
   }

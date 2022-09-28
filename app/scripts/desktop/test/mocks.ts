@@ -77,6 +77,8 @@ export const createStreamMock = (): jest.Mocked<Duplex> =>
     end: jest.fn(),
     pause: jest.fn(),
     resume: jest.fn(),
+    once: jest.fn(),
+    emit: jest.fn(),
   } as unknown as jest.Mocked<Duplex>);
 
 export const createWebSocketStreamMock = (): jest.Mocked<WebSocketStream> =>
