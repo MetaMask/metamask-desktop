@@ -73,6 +73,12 @@ jest.mock(
   },
 );
 
+const removeInstance = () => {
+  // eslint-disable-next-line
+  // @ts-ignore
+  Desktop.instance = undefined;
+};
+
 describe('Desktop', () => {
   let webSocketMock: jest.Mocked<NodeWebSocket>;
   let webSocketStreamMock: jest.Mocked<WebSocketStream>;
@@ -150,7 +156,63 @@ describe('Desktop', () => {
 
     appMock.whenReady.mockResolvedValue();
 
-    desktop = new Desktop(backgroundInitialiseMock);
+    removeInstance();
+
+    desktop = Desktop.newInstance(backgroundInitialiseMock);
+  });
+
+  describe('static init', () => {
+    beforeEach(() => {
+      removeInstance();
+    });
+
+    it('creates and initialises', async () => {
+      await Desktop.init(backgroundInitialiseMock);
+
+      expect(Desktop.getInstance()).toBeDefined();
+      expect(webSocketServerConstructorMock).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('newInstance', () => {
+    beforeEach(() => {
+      removeInstance();
+    });
+
+    it('creates a new instance if none exists', () => {
+      expect(Desktop.getInstance()).toBeUndefined();
+
+      const instance = Desktop.newInstance(backgroundInitialiseMock);
+
+      expect(Desktop.getInstance()).toBeDefined();
+      expect(Desktop.getInstance()).toBe(instance);
+    });
+
+    it('returns old instance if one already exists', () => {
+      expect(Desktop.getInstance()).toBeUndefined();
+
+      const firstInstance = Desktop.newInstance(backgroundInitialiseMock);
+      const secondInstance = Desktop.newInstance(backgroundInitialiseMock);
+
+      expect(Desktop.getInstance()).toBeDefined();
+      expect(Desktop.getInstance()).toBe(firstInstance);
+      expect(secondInstance).toBe(firstInstance);
+    });
+  });
+
+  describe('hasInstance', () => {
+    beforeEach(() => {
+      removeInstance();
+    });
+
+    it('returns false if no instance created', () => {
+      expect(Desktop.hasInstance()).toBe(false);
+    });
+
+    it('returns true if instance created', () => {
+      Desktop.newInstance(backgroundInitialiseMock);
+      expect(Desktop.hasInstance()).toBe(true);
+    });
   });
 
   describe('init', () => {
@@ -204,15 +266,25 @@ describe('Desktop', () => {
     });
   });
 
-  describe('disable', () => {
-    it('writes state to disable stream', async () => {
+  describe('on state update', () => {
+    const simulateStateUpdate = async (state: any) => {
       browserMock.storage.local.get.mockResolvedValue({
         ...DATA_MOCK,
         data: { PreferencesController: { desktopEnabled: true } },
       });
 
+      desktop.registerCallbacks(
+        connectRemoteMock,
+        connectExternalMock,
+        metaMaskController,
+      );
+
       await desktop.init();
-      await desktop.disable();
+      await simulateNodeEvent(metaMaskController, 'update', state);
+    };
+
+    it('writes state to disable stream if desktop disabled', async () => {
+      await simulateStateUpdate({ desktopEnabled: false });
 
       const disableStreamMock = multiplexStreamMocks[CLIENT_ID_DISABLE];
 
@@ -221,6 +293,28 @@ describe('Desktop', () => {
         ...DATA_MOCK,
         data: { PreferencesController: { desktopEnabled: false } },
       });
+    });
+
+    it('does nothing if desktop enabled', async () => {
+      await simulateStateUpdate({ desktopEnabled: true });
+
+      const disableStreamMock = multiplexStreamMocks[CLIENT_ID_DISABLE];
+
+      expect(disableStreamMock.write).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  describe('transferState', () => {
+    it('writes state to state stream', async () => {
+      await desktop.init();
+      await simulateNodeEvent(webSocketServerMock, 'connection', webSocketMock);
+
+      desktop.transferState(DATA_MOCK);
+
+      const stateStreamMock = multiplexStreamMocks[CLIENT_ID_STATE];
+
+      expect(stateStreamMock.write).toHaveBeenCalledTimes(1);
+      expect(stateStreamMock.write).toHaveBeenCalledWith(DATA_MOCK);
     });
   });
 

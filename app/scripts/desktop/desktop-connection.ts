@@ -59,6 +59,19 @@ export default class DesktopConnection {
     await DesktopConnection.init(notificationManager);
   }
 
+  public static newInstance(
+    notificationManager: NotificationManager,
+  ): DesktopConnection {
+    if (DesktopConnection.hasInstance()) {
+      return DesktopConnection.getInstance();
+    }
+
+    const newInstance = new DesktopConnection(notificationManager);
+    DesktopConnection.instance = newInstance;
+
+    return newInstance;
+  }
+
   public static getInstance(): DesktopConnection {
     return DesktopConnection.instance;
   }
@@ -93,7 +106,7 @@ export default class DesktopConnection {
   }
 
   private static async init(notificationManager: NotificationManager) {
-    DesktopConnection.instance = new DesktopConnection(notificationManager);
+    DesktopConnection.newInstance(notificationManager);
 
     try {
       await DesktopConnection.instance.init();
@@ -160,19 +173,17 @@ export default class DesktopConnection {
     remotePort: RemotePort,
     connectionType: ConnectionType,
   ) {
-    const portStream = new PortStream(remotePort as any);
-    portStream.pause();
-    portStream.on('data', (data) => this.onUIMessage(data, portStream as any));
+    const uiStream = new PortStream(remotePort as any);
+    uiStream.pause();
+    uiStream.on('data', (data) => this.onUIMessage(data, uiStream as any));
 
-    const bufferedReadStream = new PassThrough({ objectMode: true });
-    bufferedReadStream.pause();
+    // Wrapping the original UI stream allows us to intercept messages required for error handling,
+    // while still pausing messages from the UI until we are connected to the desktop.
+    const uiInputStream = new PassThrough({ objectMode: true });
+    uiInputStream.pause();
 
-    const bufferedWriteStream = new PassThrough({ objectMode: true });
-
-    portStream.pipe(bufferedReadStream);
-    bufferedWriteStream.pipe(portStream as any);
-
-    portStream.resume();
+    uiStream.pipe(uiInputStream);
+    uiStream.resume();
 
     if (!this.webSocketStream) {
       try {
@@ -186,19 +197,16 @@ export default class DesktopConnection {
     const clientId = this.getNextClientId();
     const clientStream = this.multiplex.createStream(clientId);
 
-    bufferedReadStream
-      .pipe(clientStream)
-      .pipe(bufferedWriteStream as unknown as Duplex);
+    uiInputStream.pipe(clientStream).pipe(uiStream as any);
 
-    endOfStream(portStream, () => {
-      bufferedReadStream.destroy();
-      bufferedWriteStream.destroy();
+    endOfStream(uiStream, () => {
+      uiInputStream.destroy();
       this.onPortStreamEnd(clientId, clientStream);
     });
 
     this.sendHandshake(remotePort, clientId, connectionType);
 
-    bufferedReadStream.resume();
+    uiInputStream.resume();
   }
 
   private async onDisable(state: State) {

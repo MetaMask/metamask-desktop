@@ -62,6 +62,17 @@ export default class Desktop {
     await Desktop.instance.init();
   }
 
+  public static newInstance(backgroundInitialise: () => Promise<void>) {
+    if (Desktop.hasInstance()) {
+      return Desktop.getInstance();
+    }
+
+    const newInstance = new Desktop(backgroundInitialise);
+    Desktop.instance = newInstance;
+
+    return newInstance;
+  }
+
   public static getInstance(): Desktop {
     return Desktop.instance;
   }
