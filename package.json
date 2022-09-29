@@ -389,6 +389,7 @@
     "nock": "^9.0.14",
     "node-fetch": "^2.6.1",
     "nyc": "^15.0.0",
+    "otpauth": "^8.0.3",
     "patch-package": "^6.4.7",
     "polyfill-crypto.getrandomvalues": "^1.0.0",
     "prettier": "^2.7.1",
