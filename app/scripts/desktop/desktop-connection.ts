@@ -9,6 +9,7 @@ import {
   CLIENT_ID_NEW_CONNECTION,
   CLIENT_ID_STATE,
   CLIENT_ID_DISABLE,
+  CLIENT_ID_PAIRING,
 } from '../../../shared/constants/desktop';
 import cfg from './config';
 import { BrowserWebSocket, WebSocketStream } from './web-socket-stream';
@@ -23,6 +24,7 @@ import {
 import { ClientId } from './types/desktop';
 import { registerResponseStream } from './browser/browser-proxy';
 import { timeoutPromise, uuid } from './utils/utils';
+import { validate } from '../../../shared/modules/totp';
 
 const TIMEOUT_CONNECT = 5000;
 
@@ -134,6 +136,9 @@ export default class DesktopConnection {
     const disableStream = this.multiplex.createStream(CLIENT_ID_DISABLE);
     disableStream.on('data', (data: State) => this.onDisable(data));
 
+    const pairingStream = this.multiplex.createStream(CLIENT_ID_PAIRING);
+    pairingStream.on('otp', (otp: any) => this.onPairing(otp));
+
     log.debug('Connected to desktop');
   }
 
@@ -206,6 +211,29 @@ export default class DesktopConnection {
     log.debug('Restarting extension');
     browser.runtime.reload();
   }
+
+
+  private async onPairing(otp: string) {
+    log.debug(`Received desktop pairing message`);
+    const isValid = await validate(otp);
+
+    if (isValid === 0) {
+      const rawState = await browser.storage.local.get();
+      rawState.data.PreferencesController.desktopEnabled = true;
+      await browser.storage.local.set(rawState); 
+
+      await this.transferState()
+      log.debug('Synchronised state with desktop');
+  
+      log.debug('Restarting extension');
+      browser.runtime.reload();
+      console.debug('OTP is valid');
+    } else {
+      console.debug('OTP not valid');
+      //TODO: send back to desktop invalid OTP
+    }
+  }
+
 
   private async connect() {
     this.webSocket = await this.createWebSocket();

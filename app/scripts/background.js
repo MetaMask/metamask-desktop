@@ -45,7 +45,7 @@ import NotificationManager, {
   NOTIFICATION_MANAGER_EVENTS,
 } from './lib/notification-manager';
 import MetamaskController, {
-  METAMASK_CONTROLLER_EVENTS,
+  METAMASK_CONTROLLER_EVENTS,  
 } from './metamask-controller';
 import rawFirstTimeState from './first-time-state';
 import getFirstPreferredLangCode from './lib/get-first-preferred-lang-code';
@@ -211,6 +211,16 @@ async function initialize(remotePort) {
   log.info('MetaMask initialization complete.');
 }
 
+async function onDesktopPairing(isEnabled) {
+  log.debug('Detected desktop pairing', { isEnabled });
+  if (cfg().desktop.isExtension && !desktopConnection && isEnabled) {
+    desktopConnection = new DesktopConnection(notificationManager);
+    await desktopConnection.init();  
+  } else {
+    log.debug('Stopped desktop pairing', { isEnabled });
+  }
+}
+
 /**
  * An error thrown if the phishing warning page takes too long to load.
  */
@@ -373,6 +383,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     getOpenMetamaskTabsIds: () => {
       return openMetamaskTabsIDs;
     },
+    onDesktopPairing,
   });
 
   setupEnsIpfsResolver({
