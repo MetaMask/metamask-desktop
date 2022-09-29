@@ -69,7 +69,7 @@ export class LedgerBridgeKeyring extends EventEmitter {
       hdPath: this.hdPath,
       accounts: this.accounts,
       accountDetails: this.accountDetails,
-      implementFullBIP44: false,
+      implementFullBIP44: false, // Not sure why this is done
     });
   }
 
@@ -407,7 +407,13 @@ export class LedgerBridgeKeyring extends EventEmitter {
     return hdPath;
   }
 
-  private async __getPage(increment: number) {
+  private async __getPage(increment: number): Promise<
+    {
+      address: string;
+      balance: null;
+      index: number;
+    }[]
+  > {
     this.page += increment;
 
     if (this.page <= 0) {
