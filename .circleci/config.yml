@@ -658,6 +658,12 @@ jobs:
       - attach_workspace:
           at: .
       - run:
+          name: Install dependencies
+          command: |
+            sudo apt-get update
+            sudo apt-get install libsecret-1-0
+
+      - run:
           name: Move test build to dist
           command: mv ./dist-test ./dist
       - run:
