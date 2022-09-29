@@ -11,8 +11,8 @@ import {
   CLIENT_ID_NEW_CONNECTION,
   CLIENT_ID_STATE,
   CLIENT_ID_DISABLE,
+  CLIENT_ID_PAIRING,
 } from '../../../shared/constants/desktop';
-import { validate } from '../../../shared/modules/totp';
 import cfg from './config';
 import { updateCheck } from './update-check';
 import { WebSocketStream } from './web-socket-stream';
@@ -56,6 +56,8 @@ export default class Desktop {
 
   private stateStream?: Duplex;
 
+  private pairingStream?: Duplex;
+
   private statusWindow?: BrowserWindow;
 
   private hasBeenInitializedWithExtensionState?: boolean;
@@ -96,14 +98,18 @@ export default class Desktop {
   public async init() {
     await app.whenReady();
 
-    ipcMain.handle('otp', (event, data) => this.onOtpSubmit(data));
+    const server = await this.createWebSocketServer();
+    server.on('connection', (webSocket) => this.onConnection(webSocket));
+
+    this.pairingStream = this.multiplex.createStream(CLIENT_ID_PAIRING);
+
+    ipcMain.handle('otp', (event, data) => this.onOTPSubmit(data));
 
     this.statusWindow = await this.createStatusWindow();
 
     const state = await browser.storage.local.get();
-    // TODO: Change the name to isDesktopPaired
     // this.isPaired = state.data.PreferencesController.desktopEnabled;
-    this.isPaired = false;
+    this.isPaired = false; //TODO: add a flag to skip sync
 
     if (!this.isPaired) {
       await this.initConnections();
@@ -183,10 +189,10 @@ export default class Desktop {
     });
 
     await statusWindow.loadFile(
-      path.resolve(__dirname, '../../desktop-onboarding.html'),
+      path.resolve(__dirname, '../../desktop-sync.html'),
     );
 
-    //statusWindow.webContents.openDevTools();
+    // statusWindow.webContents.openDevTools();
 
     log.debug('Created status window');
 
@@ -333,29 +339,22 @@ export default class Desktop {
     const statusMessage: StatusMessage = {
       isWebSocketConnected: Boolean(this.webSocket),
       connections: this.connections,
-      isDesktopSynced: Boolean(this.enableDesktop),
+      isDesktopSynced: Boolean(this.isPaired),
     };
 
     this.statusWindow.webContents.send('status', statusMessage);
   }
 
-  private async onOtpSubmit(otp: string) {
+  private async onOTPSubmit(otp: string) {
     log.debug('Received OTP', otp);
-    const isValid = await validate(otp);
-
-    if (isValid === 0) {
-      this.initConnections();
-      this.enableDesktop();
-      console.debug('valid OTP');
-    } else {
-      console.debug('OTP not valid');
+    if (!this.pairingStream) {
+      log.error('Pairing stream not initialised');
+      return;
     }
+    this.pairingStream.write(otp);
   }
 
   private async initConnections() {
-    const server = await this.createWebSocketServer();
-    server.on('connection', (webSocket) => this.onConnection(webSocket));
-
     const browserControllerStream = this.multiplex.createStream(
       CLIENT_ID_BROWSER_CONTROLLER,
     );
@@ -379,19 +378,7 @@ export default class Desktop {
     this.stateStream.on('data', (data: any) => this.onExtensionState(data));
 
     this.disableStream = this.multiplex.createStream(CLIENT_ID_DISABLE);
+
   }
 
-  public async enableDesktop() {
-    log.debug('Enabling desktop usage');
-
-    if (!this.disableStream) {
-      log.error('Disable stream not initialised');
-      return;
-    }
-
-    const state = await browser.storage.local.get();
-    state.data.PreferencesController.desktopEnabled = true;
-
-    this.disableStream.write(state);
-  }
 }

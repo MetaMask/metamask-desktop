@@ -91,19 +91,18 @@ const handleOtpChange = () => {
   submitButton.addEventListener('click', () => {
     const otpInput = (document.getElementById('otp-value') as HTMLInputElement)
       .value;
-    onOtpSubmit(otpInput);
+    onOTPSubmit(otpInput);
   });
 };
 
-const onOtpSubmit = (value: string) => {
+const onOTPSubmit = (value: string) => {
   ipcRenderer.invoke('otp', value);
 };
 
 const updateDesktopSynced = () => {
   const mainContentDiv = document.getElementById('main-content')!;
 
-
-  mainContentDiv.innerHTML = `    <h2>All set, fox</h2>
+  mainContentDiv.innerHTML = `<h2>All set, fox</h2>
     <span>Some explainer about using the extension as usual but keep this \n app open and check the alerts.</span>
     <div><button id="connections-button" >Connections Page</button></div>`;
 
