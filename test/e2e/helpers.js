@@ -54,7 +54,7 @@ async function withFixtures(options, testSuite) {
   // cp.spawn('kill -9 `lsof -t -i:7071`', { shell: true });
 
   console.info('Open MM Desktop App');
-  const desktop = cp.spawn('xvfb-run yarn start:desktop', { shell: true });
+  const desktop = cp.spawn('xvfb-run -a yarn start:desktop', { shell: true });
 
   const https = await mockttp.generateCACertificate();
   const mockServer = mockttp.getLocal({ https, cors: true });

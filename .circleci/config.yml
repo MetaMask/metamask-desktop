@@ -662,21 +662,28 @@ jobs:
           command: |
             sudo apt-get update
             sudo apt-get install libsecret-1-0
-
       - run:
-          name: Move test build to dist
-          command: mv ./dist-test ./dist
-      - run:
-          name: Move test zips to builds
-          command: mv ./builds-test ./builds
-      - run:
-          name: test:e2e:chrome
+          name: build desktop (move prev job)
           command: |
-            if .circleci/scripts/test-run-e2e.sh
-            then
-              yarn test:e2e:chrome --retries 2
-            fi
-          no_output_timeout: 20m
+            yarn build:desktop
+      - run:
+          name: start desktop
+          command: |
+            xvfb-run yarn start:desktop            
+      # - run:
+      #     name: Move test build to dist
+      #     command: mv ./dist-test ./dist
+      # - run:
+      #     name: Move test zips to builds
+      #     command: mv ./builds-test ./builds
+      # - run:
+      #     name: test:e2e:chrome
+      #     command: |
+      #       if .circleci/scripts/test-run-e2e.sh
+      #       then
+      #         yarn test:e2e:chrome --retries 2
+      #       fi
+      #     no_output_timeout: 20m
       - store_artifacts:
           path: test-artifacts
           destination: test-artifacts          
