@@ -3013,7 +3013,7 @@
     bignumber.js "^9.0.1"
     rlp "^2.2.6"
 
-"@ledgerhq/hw-app-eth@^6.29.7":
+"@ledgerhq/hw-app-eth@^6.29.8":
   version "6.29.8"
   resolved "https://registry.yarnpkg.com/@ledgerhq/hw-app-eth/-/hw-app-eth-6.29.8.tgz#70124d7c73c5853c2195b4121c70578135fdf4ba"
   integrity sha512-PSoZOxIURATks1OcCr31KGihIOxhVa4FKrtr0562TYgvmL/0Fz4hQhvVRtkWZvzgShAKUQni5lOC6WLfGG5ASQ==
@@ -3047,7 +3047,7 @@
     "@ledgerhq/logs" "^5.50.0"
     node-hid "2.1.1"
 
-"@ledgerhq/hw-transport-node-hid-noevents@^6.27.4":
+"@ledgerhq/hw-transport-node-hid-noevents@^6.27.5":
   version "6.27.5"
   resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport-node-hid-noevents/-/hw-transport-node-hid-noevents-6.27.5.tgz#05461cdf46316bb42ecf18a148285f334148fd21"
   integrity sha512-4CYA/SKOmjtGziRVoLyeEchgDr9LMa7+VOSWqEZwH1D3j8D0Vi6RYWKZsXpjyrVo3Os+cibAO5diAhJt8TsUdQ==
