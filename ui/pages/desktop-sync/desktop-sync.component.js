@@ -4,19 +4,16 @@ import PropTypes from 'prop-types';
 import { generate } from '../../../shared/modules/totp';
 
 import Button from '../../components/ui/button';
-import { MINUTE, SECOND } from '../../../shared/constants/time';
+import { SECOND } from '../../../shared/constants/time';
 import Typography from '../../components/ui/typography';
 import {
   TEXT_ALIGN,
   TYPOGRAPHY,
-  JUSTIFY_CONTENT,
   FONT_WEIGHT,
-  ALIGN_ITEMS,
 } from '../../helpers/constants/design-system';
 
 const PASSWORD_PROMPT_SCREEN = 'PASSWORD_PROMPT_SCREEN';
-const KEYS_GENERATION_TIME = SECOND * 30;
-const IDLE_TIME = MINUTE * 2;
+const OTP_GENERATION_TIME = SECOND * 30;
 
 export default class DesktopSyncPage extends Component {
   static contextTypes = {
@@ -31,8 +28,11 @@ export default class DesktopSyncPage extends Component {
     mostRecentOverviewPage: PropTypes.string.isRequired,
     requestRevealSeedWords: PropTypes.func.isRequired,
     exportAccounts: PropTypes.func.isRequired,
-    keyrings: PropTypes.array,
     hideWarning: PropTypes.func.isRequired,
+    // setOtp: PropTypes.func.isRequired,
+    startPairing: PropTypes.func.isRequired,
+    isPairing: PropTypes.bool.isRequired,
+    // otp: PropTypes.number,
   };
 
   state = {
@@ -45,15 +45,13 @@ export default class DesktopSyncPage extends Component {
     completed: false,
     channelName: undefined,
     cipherKey: undefined,
+    otp: this.generateOTPCode()
   };
 
-  syncing = false;
+  syncing = true;
 
   componentDidMount() {
-    const desktopOtpBox = document.getElementById('desktop-otp-box');
-    if (desktopOtpBox) {
-      desktopOtpBox.focus();
-    }
+    this.interval = setInterval(() => this.setState({ otp: this.generateOTPCode() }), OTP_GENERATION_TIME);
   }
 
  
@@ -65,10 +63,10 @@ export default class DesktopSyncPage extends Component {
 
   
   componentWillUnmount() {
-    if (this.state.error) {
-      this.props.hideWarning();
+    if (this.props.isPairing) {
+      this.props.startPairing(false);
     }
-    // this.clearTimeouts();
+    clearInterval(this.interval);
   }
 
   renderWarning(text) {
@@ -81,15 +79,16 @@ export default class DesktopSyncPage extends Component {
     );
   }
 
-  generateOtpCode() {
-    const otpCode = generate();
-    return otpCode;
+  componentDidUpdate(){
+
+  }
+
+  generateOTPCode() {
+      return generate();
   }
 
   renderContent() {
-    const { syncing, completed, screen } = this.state;
     const { t } = this.context;
-
     return (
       <div>
         <Typography
@@ -97,29 +96,31 @@ export default class DesktopSyncPage extends Component {
           align={TEXT_ALIGN.CENTER}
           fontWeight={FONT_WEIGHT.BOLD}
         >
-          {this.generateOtpCode()}
+          {this.state.otp}
         </Typography>
+        {/* <div className="view-quote__countdown-timer-container">
+          <CountdownTimer
+            timeStarted={KEYS_GENERATION_TIME}
+            labelKey="New quotes in $1"
+          />
+        </div> */}
       </div>
-      // <div className="view-quote__countdown-timer-container">
-      //   <CountdownTimer
-      //     timeStarted={quotesLastFetched}
-      //     warningTime="0:30"
-      //     labelKey="desktopNewQuoteIn"
-      //   />
-      // </div>
     );
   }
 
   renderFooter() {
     const { t } = this.context;
-    const { password } = this.state;
 
     return (
       <div
         className="new-account-import-form__buttons"
         style={{ padding: '30px 15px 30px 15px', marginTop: 0 }}
       >
-        <Button type="primary" rounded onClick={() => this.goBack()}>
+        <Button type="primary" rounded  value={this.props.isPairing} onClick={(value) => {
+          this.goBack();
+          this.props.startPairing(!value);
+        }}
+        >
           {t('done')}
         </Button>
       </div>
@@ -127,9 +128,6 @@ export default class DesktopSyncPage extends Component {
   }
 
   render() {
-    const { t } = this.context;
-    const { screen } = this.state;
-
     return (
       <div className="page-container">
         <div className="page-container__header">

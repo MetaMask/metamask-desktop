@@ -5,9 +5,15 @@ import {
   fetchInfoToSync,
   exportAccounts,
   hideWarning,
+  setOtp,
+  startPairing,
+
 } from '../../store/actions';
 import { getMostRecentOverviewPage } from '../../ducks/history/history';
-import { getMetaMaskKeyrings } from '../../selectors';
+import {
+  getIsPairing,
+  // getOtp,
+} from '../../selectors/selectors';
 import DesktopSyncPage from './desktop-sync.component';
 
 const mapDispatchToProps = (dispatch) => {
@@ -19,6 +25,8 @@ const mapDispatchToProps = (dispatch) => {
     exportAccounts: (password, addresses) =>
       dispatch(exportAccounts(password, addresses)),
     hideWarning: () => dispatch(hideWarning()),
+    setOtp: () => dispatch(setOtp()),
+    startPairing: (val) => dispatch(startPairing(val)),
   };
 };
 
@@ -30,7 +38,8 @@ const mapStateToProps = (state) => {
   return {
     mostRecentOverviewPage: getMostRecentOverviewPage(state),
     selectedAddress,
-    keyrings: getMetaMaskKeyrings(state),
+    // otp: getOtp(state),
+    isPairing: getIsPairing(state),
   };
 };
 

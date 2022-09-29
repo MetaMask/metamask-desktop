@@ -1135,6 +1135,21 @@ export default class MetamaskController extends EventEmitter {
     this.extension.runtime.onMessageExternal.addListener(onMessageReceived);
     // Fire a ping message to check if other extensions are running
     checkForMultipleVersionsRunning();
+
+    this._isDesktopEnabled =
+      opts.initState?.PreferencesController?.desktopEnabled || false;
+
+    this._onDesktopEnabledToggle = opts.onDesktopEnabledToggle;
+
+    this._isPairing =
+    opts.initState?.PreferencesController?.isPairing || false;
+    
+    this._onDesktopPairing = opts.onDesktopPairing;
+    
+    this._otp =
+    opts.initState?.PreferencesController?.otp || 0;
+
+    this._setOtp= opts.setOtp;
   }
 
   ///: BEGIN:ONLY_INCLUDE_IN(flask)
@@ -1661,6 +1676,8 @@ export default class MetamaskController extends EventEmitter {
       setDesktopEnabled: preferencesController.setDesktopEnabled.bind(
         preferencesController,
       ),
+      startPairing: preferencesController.startPairing.bind(preferencesController),
+      setOtp: preferencesController.setOtp.bind(preferencesController),
       // AssetsContractController
       getTokenStandardAndDetails: this.getTokenStandardAndDetails.bind(this),
 
@@ -4029,6 +4046,31 @@ export default class MetamaskController extends EventEmitter {
       method: NOTIFICATION_NAMES.chainChanged,
       params: this.getProviderNetworkState(newState),
     });
+
+    if (
+      this._onDesktopEnabledToggle &&
+      newState.desktopEnabled !== this._isDesktopEnabled
+    ) {
+      this._isDesktopEnabled = newState.desktopEnabled;
+      this._onDesktopEnabledToggle(this._isDesktopEnabled);
+    }
+
+    if (
+      this._onDesktopPairing &&
+      newState.isPairing !== this._isPairing
+    ) {
+      this._isPairing = newState.isPairing;
+      this._onDesktopPairing(this._isPairing);
+    }
+
+    if (
+      this._setOtp &&
+      newState.otp !== this._otp
+    ) {
+      this._otp = newState.otp;
+      this._setOtp(this._otp)
+    } 
+
   }
 
   // misc

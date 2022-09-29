@@ -27,6 +27,8 @@ export default class ExperimentalTab extends PureComponent {
     setCustomNetworkListEnabled: PropTypes.func,
     desktopEnabled: PropTypes.bool,
     setDesktopEnabled: PropTypes.func,
+    startPairing: PropTypes.func,
+    isPairing: PropTypes.bool,
   };
 
   settingsRefs = Array(
@@ -271,8 +273,7 @@ export default class ExperimentalTab extends PureComponent {
   }
 
   renderDesktopSync() {
-    const { t } = this.context;
-    const { history } = this.props;
+    const { history,  startPairing, isPairing} = this.props;
 
     return (
       <div
@@ -288,9 +289,11 @@ export default class ExperimentalTab extends PureComponent {
             <Button
               type="secondary"
               large
-              onClick={(event) => {
+              value={isPairing}
+              onClick={(event, value) => {
                 event.preventDefault();
                 history.push(DESKTOP_SYNC_ROUTE);
+                startPairing(!value);
               }}
             >
               Sync With Desktop
