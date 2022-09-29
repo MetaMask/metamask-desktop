@@ -2994,7 +2994,17 @@
   dependencies:
     invariant "2"
 
-"@ledgerhq/devices@^5.26.0", "@ledgerhq/devices@^5.51.1", "@ledgerhq/devices@^7.0.1", "@ledgerhq/devices@^7.0.2":
+"@ledgerhq/devices@^5.26.0", "@ledgerhq/devices@^5.51.1":
+  version "5.51.1"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/devices/-/devices-5.51.1.tgz#d741a4a5d8f17c2f9d282fd27147e6fe1999edb7"
+  integrity sha512-4w+P0VkbjzEXC7kv8T1GJ/9AVaP9I6uasMZ/JcdwZBS3qwvKo5A5z9uGhP5c7TvItzcmPb44b5Mw2kT+WjUuAA==
+  dependencies:
+    "@ledgerhq/errors" "^5.50.0"
+    "@ledgerhq/logs" "^5.50.0"
+    rxjs "6"
+    semver "^7.3.5"
+
+"@ledgerhq/devices@^7.0.2":
   version "7.0.2"
   resolved "https://registry.yarnpkg.com/@ledgerhq/devices/-/devices-7.0.2.tgz#bd98dd3ee6748f3414acc22955d7efb6f88e7f46"
   integrity sha512-JfDAt0Ige21BoA4KE/vk2trB/8RtsdJTU1qGblCS09ludxPSUcZIN1XgWMr4LiNDpCOkOqriWE7DudSRxv5nXA==
