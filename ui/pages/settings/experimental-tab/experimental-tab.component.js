@@ -273,7 +273,7 @@ export default class ExperimentalTab extends PureComponent {
   }
 
   renderDesktopSync() {
-    const { history,  startPairing, isPairing} = this.props;
+    const { history, startPairing, isPairing } = this.props;
 
     return (
       <div

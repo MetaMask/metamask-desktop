@@ -213,27 +213,27 @@ export default class PreferencesController {
     });
   }
 
-    /**
+  /**
    * Setter for the `isPairing` property
    *
    * @param isPairing
    */
-     startPairing(isPairing) {
-      this.store.updateState({
-        isPairing,
-      });
-    }
+  startPairing(isPairing) {
+    this.store.updateState({
+      isPairing,
+    });
+  }
 
   /**
    * Setter for the `otp` property
    *
    * @param otp
    */
-         setOtp(otp) {
-          this.store.updateState({
-            otp,
-          });
-        }
+  setOtp(otp) {
+    this.store.updateState({
+      otp,
+    });
+  }
 
   /**
    * Add new methodData to state, to avoid requesting this information again through Infura

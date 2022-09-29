@@ -7,9 +7,7 @@ export default {
 };
 
 export const DefaultStory = () => {
-  return (
-    <DesktopSyncPage />
-  );
+  return <DesktopSyncPage />;
 };
 
 DefaultStory.storyName = 'Default';

@@ -45,23 +45,23 @@ export default class DesktopSyncPage extends Component {
     completed: false,
     channelName: undefined,
     cipherKey: undefined,
-    otp: this.generateOTPCode()
+    otp: this.generateOTPCode(),
   };
 
   syncing = true;
 
   componentDidMount() {
-    this.interval = setInterval(() => this.setState({ otp: this.generateOTPCode() }), OTP_GENERATION_TIME);
+    this.interval = setInterval(
+      () => this.setState({ otp: this.generateOTPCode() }),
+      OTP_GENERATION_TIME,
+    );
   }
-
- 
 
   goBack() {
     const { history, mostRecentOverviewPage } = this.props;
     history.push(mostRecentOverviewPage);
   }
 
-  
   componentWillUnmount() {
     if (this.props.isPairing) {
       this.props.startPairing(false);
@@ -79,12 +79,10 @@ export default class DesktopSyncPage extends Component {
     );
   }
 
-  componentDidUpdate(){
-
-  }
+  componentDidUpdate() {}
 
   generateOTPCode() {
-      return generate();
+    return generate();
   }
 
   renderContent() {
@@ -116,10 +114,14 @@ export default class DesktopSyncPage extends Component {
         className="new-account-import-form__buttons"
         style={{ padding: '30px 15px 30px 15px', marginTop: 0 }}
       >
-        <Button type="primary" rounded  value={this.props.isPairing} onClick={(value) => {
-          this.goBack();
-          this.props.startPairing(!value);
-        }}
+        <Button
+          type="primary"
+          rounded
+          value={this.props.isPairing}
+          onClick={(value) => {
+            this.goBack();
+            this.props.startPairing(!value);
+          }}
         >
           {t('done')}
         </Button>

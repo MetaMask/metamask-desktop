@@ -1,17 +1,17 @@
-import createId from './random-id';
 import * as OTPAuth from 'otpauth';
+import createId from './random-id';
 
 let totp;
 
 const newTOTP = () => {
-  const secretKey = createId()
+  const secretKey = createId();
   return new OTPAuth.TOTP({
     issuer: 'MM',
     label: 'MetaMask',
     algorithm: 'SHA1',
     digits: 6,
     period: 30,
-    secret: secretKey
+    secret: secretKey,
   });
 };
 

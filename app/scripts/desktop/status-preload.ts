@@ -80,7 +80,6 @@ const loadOtpInput = () => {
   }
 
   startButton.addEventListener('click', () => {
-
     otpInput.className = 'show';
     startDiv.className = 'hide';
   });
@@ -105,5 +104,4 @@ const updateDesktopSynced = () => {
   mainContentDiv.innerHTML = `<h2>All set, fox</h2>
     <span>Some explainer about using the extension as usual but keep this \n app open and check the alerts.</span>
     <div><button id="connections-button" >Connections Page</button></div>`;
-
 };

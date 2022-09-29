@@ -11,6 +11,7 @@ import {
   CLIENT_ID_DISABLE,
   CLIENT_ID_PAIRING,
 } from '../../../shared/constants/desktop';
+import { validate } from '../../../shared/modules/totp';
 import cfg from './config';
 import { BrowserWebSocket, WebSocketStream } from './web-socket-stream';
 import EncryptedWebSocketStream from './encrypted-web-socket-stream';
@@ -212,7 +213,6 @@ export default class DesktopConnection {
     browser.runtime.reload();
   }
 
-
   private async onPairing(otp: string) {
     log.debug(`Received desktop pairing message`);
     const isValid = await validate(otp);
@@ -220,20 +220,19 @@ export default class DesktopConnection {
     if (isValid === 0) {
       const rawState = await browser.storage.local.get();
       rawState.data.PreferencesController.desktopEnabled = true;
-      await browser.storage.local.set(rawState); 
+      await browser.storage.local.set(rawState);
 
-      await this.transferState()
+      await this.transferState();
       log.debug('Synchronised state with desktop');
-  
+
       log.debug('Restarting extension');
       browser.runtime.reload();
       console.debug('OTP is valid');
     } else {
       console.debug('OTP not valid');
-      //TODO: send back to desktop invalid OTP
+      // TODO: send back to desktop invalid OTP
     }
   }
-
 
   private async connect() {
     this.webSocket = await this.createWebSocket();

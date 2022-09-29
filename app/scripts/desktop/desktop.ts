@@ -109,7 +109,7 @@ export default class Desktop {
 
     const state = await browser.storage.local.get();
     // this.isPaired = state.data.PreferencesController.desktopEnabled;
-    this.isPaired = false; //TODO: add a flag to skip sync
+    this.isPaired = false; // TODO: add a flag to skip sync
 
     if (!this.isPaired) {
       await this.initConnections();
@@ -378,7 +378,5 @@ export default class Desktop {
     this.stateStream.on('data', (data: any) => this.onExtensionState(data));
 
     this.disableStream = this.multiplex.createStream(CLIENT_ID_DISABLE);
-
   }
-
 }

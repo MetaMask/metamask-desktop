@@ -1179,12 +1179,12 @@ export function getIsDesktopEnabled(state) {
 }
 
 /**
- * To get the `isPairing` 
+ * To get the `isPairing`
  *
  * @param {*} state
  * @returns Boolean
  */
- export function getIsPairing(state) {
+export function getIsPairing(state) {
   return state.metamask.isPairing;
 }
 
@@ -1194,7 +1194,7 @@ export function getIsDesktopEnabled(state) {
  * @param {*} state
  * @returns String
  */
- export function getOtp(state) {
+export function getOtp(state) {
   return state.metamask.otp;
 }
 

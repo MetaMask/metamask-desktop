@@ -7,7 +7,6 @@ import {
   hideWarning,
   setOtp,
   startPairing,
-
 } from '../../store/actions';
 import { getMostRecentOverviewPage } from '../../ducks/history/history';
 import {

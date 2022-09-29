@@ -45,7 +45,7 @@ import NotificationManager, {
   NOTIFICATION_MANAGER_EVENTS,
 } from './lib/notification-manager';
 import MetamaskController, {
-  METAMASK_CONTROLLER_EVENTS,  
+  METAMASK_CONTROLLER_EVENTS,
 } from './metamask-controller';
 import rawFirstTimeState from './first-time-state';
 import getFirstPreferredLangCode from './lib/get-first-preferred-lang-code';
@@ -215,7 +215,7 @@ async function onDesktopPairing(isEnabled) {
   log.debug('Detected desktop pairing', { isEnabled });
   if (cfg().desktop.isExtension && !desktopConnection && isEnabled) {
     desktopConnection = new DesktopConnection(notificationManager);
-    await desktopConnection.init();  
+    await desktopConnection.init();
   } else {
     log.debug('Stopped desktop pairing', { isEnabled });
   }
