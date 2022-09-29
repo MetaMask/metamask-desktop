@@ -1,6 +1,7 @@
 import { randomBytes } from 'crypto';
 import Store from 'electron-store';
 import keytar from 'keytar';
+import cfg from './config';
 
 const KEY_LENGTH = 32;
 const KEYTAR_SETTINGS_KEY_NAME = 'settingsKey';
@@ -38,6 +39,11 @@ class ObfuscatedStore {
 
   public async init(): Promise<Store<Record<string, unknown>>> {
     if (this.appStore) {
+      return this.appStore;
+    }
+    console.log('IS TEST', cfg().desktop.isTest);
+    if (cfg().desktop.isTest) {
+      this.appStore = new Store(this.initialOptions);
       return this.appStore;
     }
 
