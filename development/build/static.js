@@ -148,8 +148,8 @@ function getCopyTargets(shouldIncludeLockdown) {
       dest: `desktop.html`,
     },
     {
-      src: `./app/desktop-onboarding.html`,
-      dest: `desktop-onboarding.html`,
+      src: `./app/desktop-sync.html`,
+      dest: `desktop-sync.html`,
     },
     {
       src: `./node_modules/globalthis/dist/browser.js`,
