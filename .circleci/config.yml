@@ -451,6 +451,11 @@ jobs:
       - attach_workspace:
           at: .
       - run:
+          name: Install dependencies
+          command: |
+            sudo apt-get update
+            sudo apt-get install libsecret-1-0
+      - run:
           name: Build extension for testing
           command: yarn build:desktop:extension:test
       - run:
@@ -466,7 +471,8 @@ jobs:
           root: .
           paths:
             - dist-test
-            - builds-test            
+            - builds-test
+            - dist_desktop
 
   prep-build-storybook:
     executor: node-browsers-medium-plus
@@ -656,34 +662,21 @@ jobs:
           name: Re-Install Chrome
           command: ./.circleci/scripts/chrome-install.sh
       - attach_workspace:
-          at: .
+          at: .       
       - run:
-          name: Install dependencies
-          command: |
-            sudo apt-get update
-            sudo apt-get install libsecret-1-0
+          name: Move test build to dist
+          command: mv ./dist-test ./dist
       - run:
-          name: build desktop (move prev job)
-          command: |
-            yarn build:desktop
+          name: Move test zips to builds
+          command: mv ./builds-test ./builds
       - run:
-          name: start desktop
+          name: test:e2e:chrome
           command: |
-            xvfb-run yarn start:desktop            
-      # - run:
-      #     name: Move test build to dist
-      #     command: mv ./dist-test ./dist
-      # - run:
-      #     name: Move test zips to builds
-      #     command: mv ./builds-test ./builds
-      # - run:
-      #     name: test:e2e:chrome
-      #     command: |
-      #       if .circleci/scripts/test-run-e2e.sh
-      #       then
-      #         yarn test:e2e:chrome --retries 2
-      #       fi
-      #     no_output_timeout: 20m
+            if .circleci/scripts/test-run-e2e.sh
+            then
+              yarn test:e2e:chrome --retries 2
+            fi
+          no_output_timeout: 20m
       - store_artifacts:
           path: test-artifacts
           destination: test-artifacts          
