@@ -455,7 +455,7 @@ jobs:
           command: yarn build:desktop:extension:test
       - run:
           name: Build desktop app for testing
-          command: yarn build:desktop
+          command: yarn build:desktop:test
       - run:
           name: Move test build to 'dist-test' to avoid conflict with production build
           command: mv ./dist ./dist-test
