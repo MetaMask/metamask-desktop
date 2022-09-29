@@ -134,8 +134,8 @@
     "@fortawesome/fontawesome-free": "^5.13.0",
     "@keystonehq/bc-ur-registry-eth": "^0.12.1",
     "@keystonehq/metamask-airgapped-keyring": "^0.6.1",
-    "@ledgerhq/hw-app-eth": "^6.29.7",
-    "@ledgerhq/hw-transport-node-hid-noevents": "^6.27.4",
+    "@ledgerhq/hw-app-eth": "^6.29.8",
+    "@ledgerhq/hw-transport-node-hid-noevents": "^6.27.5",
     "@material-ui/core": "^4.11.0",
     "@metamask/contract-metadata": "^1.31.0",
     "@metamask/controllers": "^30.3.0",
@@ -517,12 +517,8 @@
       "eciesjs>secp256k1": false,
       "ws>bufferutil": false,
       "ws>utf-8-validate": false,
-      "@keystonehq/metamask-airgapped-keyring>@keystonehq/base-eth-keyring>hdkey>secp256k1": true,
-      "@keystonehq/metamask-airgapped-keyring>@keystonehq/bc-ur-registry-eth>hdkey>secp256k1": true,
-      "@metamask/controllers>@keystonehq/metamask-airgapped-keyring>@keystonehq/base-eth-keyring>hdkey>secp256k1": true,
-      "hdkey>secp256k1": true,
       "@ledgerhq/hw-transport-node-hid-noevents>node-hid": true,
-      "@ledgerhq/hw-transport-node-hid-singleton>usb": true
+      "hdkey>secp256k1": false
     }
   }
 }
