@@ -45,7 +45,7 @@ export const ENCRYPTED_HEX_MOCK = Buffer.from(ENCRYPTED_BUFFER_MOCK).toString(
 
 export const IV_HEX_MOCK = Buffer.from(IV_BUFFER_MOCK).toString('hex');
 
-export const HANDSHAKE_MOCK = {
+export const NEW_CONNECTION_MESSAGE_MOCK = {
   clientId: CLIENT_ID_MOCK,
   connectionType: ConnectionType.INTERNAL,
   remotePort: { name: REMOTE_PORT_NAME_MOCK, sender: REMOTE_PORT_SENDER_MOCK },

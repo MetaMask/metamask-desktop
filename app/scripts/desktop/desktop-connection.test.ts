@@ -3,8 +3,8 @@ import ObjectMultiplex from 'obj-multiplex';
 import PortStream from 'extension-port-stream';
 import {
   CLIENT_ID_BROWSER_CONTROLLER,
-  CLIENT_ID_CONNECTION_CONTROLLER,
-  CLIENT_ID_HANDSHAKES,
+  CLIENT_ID_END_CONNECTION,
+  CLIENT_ID_NEW_CONNECTION,
   CLIENT_ID_STATE,
   CLIENT_ID_DISABLE,
 } from '../../../shared/constants/desktop';
@@ -257,10 +257,10 @@ describe('Desktop Connection', () => {
         CLIENT_ID_BROWSER_CONTROLLER,
       );
       expect(multiplexMock.createStream).toHaveBeenCalledWith(
-        CLIENT_ID_CONNECTION_CONTROLLER,
+        CLIENT_ID_END_CONNECTION,
       );
       expect(multiplexMock.createStream).toHaveBeenCalledWith(
-        CLIENT_ID_HANDSHAKES,
+        CLIENT_ID_NEW_CONNECTION,
       );
       expect(multiplexMock.createStream).toHaveBeenCalledWith(CLIENT_ID_STATE);
       expect(multiplexMock.createStream).toHaveBeenCalledWith(
@@ -306,14 +306,15 @@ describe('Desktop Connection', () => {
       expect(clientStreamMock.pipe).toHaveBeenCalledWith(portStreamMock);
     });
 
-    it('sends handshake to web socket stream', async () => {
+    it('sends new connection message to web socket stream', async () => {
       await initDesktopConnection();
       desktopConnection.createStream(remotePortMock, connectionType);
 
-      const handshakeStreamMock = multiplexStreamMocks[CLIENT_ID_HANDSHAKES];
+      const newConnectionStreamMock =
+        multiplexStreamMocks[CLIENT_ID_NEW_CONNECTION];
 
-      expect(handshakeStreamMock.write).toHaveBeenCalledTimes(1);
-      expect(handshakeStreamMock.write).toHaveBeenCalledWith({
+      expect(newConnectionStreamMock.write).toHaveBeenCalledTimes(1);
+      expect(newConnectionStreamMock.write).toHaveBeenCalledWith({
         clientId: 1,
         connectionType,
         remotePort: {
@@ -387,7 +388,7 @@ describe('Desktop Connection', () => {
   });
 
   describe('on port stream disconnect', () => {
-    it('sends connection close message', async () => {
+    it('sends end connection message', async () => {
       await initDesktopConnection();
       await desktopConnection.createStream(
         remotePortMock,
@@ -396,10 +397,10 @@ describe('Desktop Connection', () => {
 
       await simulateNodeEvent(portStreamMock, 'finish');
 
-      const connectionControllerStreamMock =
-        multiplexStreamMocks[CLIENT_ID_CONNECTION_CONTROLLER];
+      const endConnectionStreamMock =
+        multiplexStreamMocks[CLIENT_ID_END_CONNECTION];
 
-      expect(connectionControllerStreamMock.write).toHaveBeenLastCalledWith({
+      expect(endConnectionStreamMock.write).toHaveBeenLastCalledWith({
         clientId: 1,
       });
     });

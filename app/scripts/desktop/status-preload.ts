@@ -1,7 +1,7 @@
 import { ipcRenderer } from 'electron';
-import { HandshakeMessage, StatusMessage } from './types/message';
+import { NewConnectionMessage, StatusMessage } from './types/message';
 
-const generateConnectionsTable = (connections: HandshakeMessage[]) => {
+const generateConnectionsTable = (connections: NewConnectionMessage[]) => {
   return connections
     .map(
       (connection) => `\

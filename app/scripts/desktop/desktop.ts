@@ -7,8 +7,8 @@ import ObjectMultiplex from 'obj-multiplex';
 import log from 'loglevel';
 import {
   CLIENT_ID_BROWSER_CONTROLLER,
-  CLIENT_ID_CONNECTION_CONTROLLER,
-  CLIENT_ID_HANDSHAKES,
+  CLIENT_ID_END_CONNECTION,
+  CLIENT_ID_NEW_CONNECTION,
   CLIENT_ID_STATE,
   CLIENT_ID_DISABLE,
 } from '../../../shared/constants/desktop';
@@ -24,8 +24,8 @@ import {
 } from './types/background';
 import {
   BrowserControllerAction,
-  ConnectionControllerMessage,
-  HandshakeMessage,
+  EndConnectionMessage,
+  NewConnectionMessage,
   StatusMessage,
 } from './types/message';
 import { ClientId } from './types/desktop';
@@ -35,7 +35,7 @@ export default class Desktop {
 
   private backgroundInitialise: () => Promise<void>;
 
-  private connections: HandshakeMessage[];
+  private connections: NewConnectionMessage[];
 
   private multiplex: ObjectMultiplex;
 
@@ -100,16 +100,18 @@ export default class Desktop {
       CLIENT_ID_BROWSER_CONTROLLER,
     );
 
-    const connectionControllerStream = this.multiplex.createStream(
-      CLIENT_ID_CONNECTION_CONTROLLER,
+    const endConnectionStream = this.multiplex.createStream(
+      CLIENT_ID_END_CONNECTION,
     );
-    connectionControllerStream.on('data', (data: ConnectionControllerMessage) =>
-      this.onConnectionControllerMessage(data),
+    endConnectionStream.on('data', (data: EndConnectionMessage) =>
+      this.onEndConnectionMessage(data),
     );
 
-    const handshakeStream = this.multiplex.createStream(CLIENT_ID_HANDSHAKES);
-    handshakeStream.on('data', (data: HandshakeMessage) =>
-      this.onHandshake(data),
+    const newConnectionStream = this.multiplex.createStream(
+      CLIENT_ID_NEW_CONNECTION,
+    );
+    newConnectionStream.on('data', (data: NewConnectionMessage) =>
+      this.onNewConnectionMessage(data),
     );
 
     this.stateStream = this.multiplex.createStream(CLIENT_ID_STATE);
@@ -221,8 +223,8 @@ export default class Desktop {
     this.updateStatusWindow();
   }
 
-  private onHandshake(data: HandshakeMessage) {
-    log.debug('Received handshake', {
+  private onNewConnectionMessage(data: NewConnectionMessage) {
+    log.debug('Received new connection message', {
       clientId: data.clientId,
       name: data.remotePort.name,
       url: data.remotePort.sender.url,
@@ -291,8 +293,8 @@ export default class Desktop {
     this.updateStatusWindow();
   }
 
-  private onConnectionControllerMessage(data: ConnectionControllerMessage) {
-    log.debug('Received connection controller message', data);
+  private onEndConnectionMessage(data: EndConnectionMessage) {
+    log.debug('Received end connection message', data);
     this.clientStreams[data.clientId as number]?.end();
   }
 

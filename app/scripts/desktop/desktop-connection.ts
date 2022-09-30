@@ -6,8 +6,8 @@ import log from 'loglevel';
 import NotificationManager from '../lib/notification-manager';
 import {
   CLIENT_ID_BROWSER_CONTROLLER,
-  CLIENT_ID_CONNECTION_CONTROLLER,
-  CLIENT_ID_HANDSHAKES,
+  CLIENT_ID_END_CONNECTION,
+  CLIENT_ID_NEW_CONNECTION,
   CLIENT_ID_STATE,
   CLIENT_ID_DISABLE,
 } from '../../../shared/constants/desktop';
@@ -42,9 +42,9 @@ export default class DesktopConnection {
 
   private webSocketStream?: WebSocketStream | EncryptedWebSocketStream;
 
-  private connectionControllerStream?: Duplex;
+  private endConnectionStream?: Duplex;
 
-  private handshakeStream?: Duplex;
+  private newConnectionStream?: Duplex;
 
   private stateStream?: Duplex;
 
@@ -132,11 +132,13 @@ export default class DesktopConnection {
       this.onBrowserControlMessage(data),
     );
 
-    this.connectionControllerStream = this.multiplex.createStream(
-      CLIENT_ID_CONNECTION_CONTROLLER,
+    this.endConnectionStream = this.multiplex.createStream(
+      CLIENT_ID_END_CONNECTION,
     );
 
-    this.handshakeStream = this.multiplex.createStream(CLIENT_ID_HANDSHAKES);
+    this.newConnectionStream = this.multiplex.createStream(
+      CLIENT_ID_NEW_CONNECTION,
+    );
 
     this.stateStream = this.multiplex.createStream(CLIENT_ID_STATE);
     this.stateStream.on('data', (rawState: State) =>
@@ -204,7 +206,7 @@ export default class DesktopConnection {
       this.onPortStreamEnd(clientId, clientStream);
     });
 
-    this.sendHandshake(remotePort, clientId, connectionType);
+    this.sendNewConnectionMessage(remotePort, clientId, connectionType);
 
     uiInputStream.resume();
   }
@@ -247,12 +249,12 @@ export default class DesktopConnection {
 
     clientStream.end();
 
-    if (!this.connectionControllerStream) {
-      log.error('Connection controller stream not initialised');
+    if (!this.endConnectionStream) {
+      log.error('End connection stream not initialised');
       return;
     }
 
-    this.connectionControllerStream.write({ clientId });
+    this.endConnectionStream.write({ clientId });
   }
 
   private async onDesktopState(rawState: State) {
@@ -276,17 +278,17 @@ export default class DesktopConnection {
     }
   }
 
-  private sendHandshake(
+  private sendNewConnectionMessage(
     remotePort: RemotePortData,
     clientId: ClientId,
     connectionType: ConnectionType,
   ) {
-    if (!this.handshakeStream) {
-      log.error('Handshake stream not initialised');
+    if (!this.newConnectionStream) {
+      log.error('New Connection stream not initialised');
       return;
     }
 
-    const handshake = {
+    const newConnectionMessage = {
       clientId,
       connectionType,
       remotePort: {
@@ -295,9 +297,9 @@ export default class DesktopConnection {
       },
     };
 
-    log.debug('Sending handshake', handshake);
+    log.debug('Sending new connection message', newConnectionMessage);
 
-    this.handshakeStream.write(handshake);
+    this.newConnectionStream.write(newConnectionMessage);
   }
 
   private onBrowserControlMessage(data: BrowserControllerMessage) {

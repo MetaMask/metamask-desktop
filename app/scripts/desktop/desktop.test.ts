@@ -4,9 +4,9 @@ import { app, BrowserWindow } from 'electron';
 import { Server as WebSocketServer } from 'ws';
 import {
   CLIENT_ID_BROWSER_CONTROLLER,
-  CLIENT_ID_CONNECTION_CONTROLLER,
+  CLIENT_ID_END_CONNECTION,
   CLIENT_ID_DISABLE,
-  CLIENT_ID_HANDSHAKES,
+  CLIENT_ID_NEW_CONNECTION,
   CLIENT_ID_STATE,
 } from '../../../shared/constants/desktop';
 import Desktop from './desktop';
@@ -17,7 +17,7 @@ import { updateCheck } from './update-check';
 import {
   CLIENT_ID_MOCK,
   CLIENT_ID_2_MOCK,
-  HANDSHAKE_MOCK,
+  NEW_CONNECTION_MESSAGE_MOCK,
   PORT_MOCK,
   DATA_MOCK,
   createStreamMock,
@@ -236,7 +236,7 @@ describe('Desktop', () => {
         CLIENT_ID_BROWSER_CONTROLLER,
       );
       expect(multiplexMock.createStream).toHaveBeenCalledWith(
-        CLIENT_ID_CONNECTION_CONTROLLER,
+        CLIENT_ID_END_CONNECTION,
       );
       expect(multiplexMock.createStream).toHaveBeenCalledWith(CLIENT_ID_STATE);
       expect(multiplexMock.createStream).toHaveBeenCalledWith(
@@ -372,10 +372,14 @@ describe('Desktop', () => {
 
       await simulateNodeEvent(webSocketServerMock, 'connection', webSocketMock);
 
-      const handshakeStreamMock = multiplexStreamMocks[CLIENT_ID_HANDSHAKES];
-      await simulateStreamMessage(handshakeStreamMock, HANDSHAKE_MOCK);
-      await simulateStreamMessage(handshakeStreamMock, {
-        ...HANDSHAKE_MOCK,
+      const newConnectionStreamMock =
+        multiplexStreamMocks[CLIENT_ID_NEW_CONNECTION];
+      await simulateStreamMessage(
+        newConnectionStreamMock,
+        NEW_CONNECTION_MESSAGE_MOCK,
+      );
+      await simulateStreamMessage(newConnectionStreamMock, {
+        ...NEW_CONNECTION_MESSAGE_MOCK,
         clientId: CLIENT_ID_2_MOCK,
       });
 
@@ -388,7 +392,7 @@ describe('Desktop', () => {
     });
   });
 
-  describe('on handshake', () => {
+  describe('on new connection message', () => {
     it.each([
       {
         name: 'internal',
@@ -410,10 +414,11 @@ describe('Desktop', () => {
           metaMaskController,
         );
 
-        const handshakeStreamMock = multiplexStreamMocks[CLIENT_ID_HANDSHAKES];
+        const newConnectionStreamMock =
+          multiplexStreamMocks[CLIENT_ID_NEW_CONNECTION];
 
-        await simulateStreamMessage(handshakeStreamMock, {
-          ...HANDSHAKE_MOCK,
+        await simulateStreamMessage(newConnectionStreamMock, {
+          ...NEW_CONNECTION_MESSAGE_MOCK,
           connectionType,
         });
 
@@ -425,7 +430,7 @@ describe('Desktop', () => {
 
         expect(callback()).toHaveBeenCalledTimes(1);
         expect(callback()).toHaveBeenCalledWith({
-          ...HANDSHAKE_MOCK.remotePort,
+          ...NEW_CONNECTION_MESSAGE_MOCK.remotePort,
           stream: newClientStream,
           onMessage: {
             addListener: expect.any(Function),
@@ -435,7 +440,7 @@ describe('Desktop', () => {
     );
   });
 
-  describe('on connection controller message', () => {
+  describe('on end connection message', () => {
     it('ends multiplex client stream', async () => {
       await desktop.init();
       desktop.registerCallbacks(
@@ -444,13 +449,17 @@ describe('Desktop', () => {
         metaMaskController,
       );
 
-      const handshakeStreamMock = multiplexStreamMocks[CLIENT_ID_HANDSHAKES];
-      await simulateStreamMessage(handshakeStreamMock, HANDSHAKE_MOCK);
+      const newConnectionStreamMock =
+        multiplexStreamMocks[CLIENT_ID_NEW_CONNECTION];
+      await simulateStreamMessage(
+        newConnectionStreamMock,
+        NEW_CONNECTION_MESSAGE_MOCK,
+      );
 
-      const connectionControllerStreamMock =
-        multiplexStreamMocks[CLIENT_ID_CONNECTION_CONTROLLER];
+      const endConnectionStreamMock =
+        multiplexStreamMocks[CLIENT_ID_END_CONNECTION];
 
-      await simulateStreamMessage(connectionControllerStreamMock, {
+      await simulateStreamMessage(endConnectionStreamMock, {
         clientId: CLIENT_ID_MOCK,
       });
 
