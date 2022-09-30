@@ -32,7 +32,10 @@ echo "Phishing Warning Page URL: $PHISHING_WARNING_PAGE_URL"
 
 # Add variables from .metamaskrc
 # shellcheck disable=SC2046
-# export $(< .metamaskrc grep -v ";" | xargs)
+if [ -f ".metamaskrc" ]; then
+    echo "Loading .metamaskrc on environment"
+    export $(< .metamaskrc grep -v ";" | xargs)
+fi
 
 echo "Transpiling JavaScript"
 babel . \
