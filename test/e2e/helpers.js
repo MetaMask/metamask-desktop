@@ -13,7 +13,7 @@ const PhishingWarningPageServer = require('./phishing-warning-page-server');
 const { buildWebDriver } = require('./webdriver');
 const { ensureXServerIsRunning } = require('./x-server');
 const GanacheSeeder = require('./seeder/ganache-seeder');
-require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` });
+require('dotenv').config();
 
 const tinyDelayMs = 200;
 const regularDelayMs = tinyDelayMs * 2;
@@ -47,15 +47,27 @@ async function withFixtures(options, testSuite) {
   const fixtureServer = new FixtureServer();
   const ganacheServer = new Ganache();
 
-  // Open MM desktop
-  // console.info(
-  //   'Close MM Desktop App if for any chance did not get closed before',
-  // );
-  // cp.spawn('kill -9 `lsof -t -i:7071`', { shell: true });
+  console.info(
+    'Close MM Desktop App if for any chance did not get closed before',
+  );
+  cp.spawn('kill -9 `lsof -t -i:7071`', { shell: true });
 
-  console.info('Open MM Desktop App');
-  const desktop = cp.spawn('xvfb-run -a yarn start:desktop', { shell: true });
-
+  let desktop;
+  if (process.env.RUN_WITH_DESKTOP === 'true') {
+    if (process.env.CI === 'true') {
+      console.info('Open MM Desktop App on CI');
+      desktop = cp.spawn('xvfb-run -a yarn start:desktop', { shell: true });
+    } else {
+      console.info('Open MM Desktop App');
+      desktop = cp.spawn('yarn start:desktop', { shell: true });
+    }
+    desktop.stdout.on('data', (data) => {
+      console.log(`stdout: ${data}`);
+    });
+    desktop.stderr.on('data', (data) => {
+      console.error(`stderr: ${data}`);
+    });
+  }
   const https = await mockttp.generateCACertificate();
   const mockServer = mockttp.getLocal({ https, cors: true });
   let secondaryGanacheServer;
@@ -90,13 +102,24 @@ async function withFixtures(options, testSuite) {
 
     // Load state in electron app => copy state.json to config.json in electron
     // eslint-disable-next-line no-implicit-globals
-    const statePath = path.resolve(
-      __dirname,
-      path.join(__dirname, 'fixtures', fixtures),
-      'state.json',
-    );
-    console.info(`NODE_ENV: .env.${process.env.NODE_ENV}`);
-    fs.copyFile(statePath, process.env.UBUNTU_ELECTRON_CONFIG_FILE_PATH);
+    if (process.env.RUN_WITH_DESKTOP === 'true') {
+      const statePath = path.resolve(
+        __dirname,
+        path.join(__dirname, 'fixtures', fixtures),
+        'state.json',
+      );
+      if (process.env.CI === 'true') {
+        console.info(
+          `UBUNTU_ELECTRON_CONFIG_FILE_PATH: ${process.env.UBUNTU_ELECTRON_CONFIG_FILE_PATH}`,
+        );
+        fs.copyFile(statePath, process.env.UBUNTU_ELECTRON_CONFIG_FILE_PATH);
+      } else {
+        console.info(
+          `LOCAL_ELECTRON_CONFIG_FILE_PATH: ${process.env.LOCAL_ELECTRON_CONFIG_FILE_PATH}`,
+        );
+        fs.copyFile(statePath, process.env.LOCAL_ELECTRON_CONFIG_FILE_PATH);
+      }
+    }
 
     await phishingPageServer.start();
     if (dapp) {
@@ -170,18 +193,20 @@ async function withFixtures(options, testSuite) {
   } finally {
     if (!failed || process.env.E2E_LEAVE_RUNNING !== 'true') {
       // Close MM desktop app
-      console.info('closing Desktop App');
-      // eslint-disable-next-line node/handle-callback-err
-      psTree(desktop.pid, function (_err, children) {
-        cp.spawn(
-          'kill',
-          ['-9'].concat(
-            children.map(function (p) {
-              return p.PID;
-            }),
-          ),
-        );
-      });
+      if (process.env.RUN_WITH_DESKTOP === 'true') {
+        console.info('closing Desktop App');
+        // eslint-disable-next-line node/handle-callback-err
+        psTree(desktop.pid, function (_err, children) {
+          cp.spawn(
+            'kill',
+            ['-9'].concat(
+              children.map(function (p) {
+                return p.PID;
+              }),
+            ),
+          );
+        });
+      }
 
       await fixtureServer.stop();
       await ganacheServer.quit();
