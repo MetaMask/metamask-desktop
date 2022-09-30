@@ -23,7 +23,10 @@ set -a
 
 # Set desktop specific variables
 DESKTOP=APP
-echo "$DESKTOP"
+echo "Desktop Mode: $DESKTOP"
+
+PHISHING_WARNING_PAGE_URL=https://metamask.github.io/phishing-warning/v1.1.0/
+echo "Phishing Warning Page URL: $PHISHING_WARNING_PAGE_URL"
 
 # Add variables from .metamaskrc
 # shellcheck disable=SC2046

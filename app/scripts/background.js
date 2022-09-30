@@ -205,6 +205,10 @@ async function initialize(remotePort) {
   await initDesktopConnection(initState);
   await setupController(initState, initLangCode, remotePort);
 
+  if (!cfg().desktop.isApp) {
+    await loadPhishingWarningPage();
+  }
+
   log.info('MetaMask initialization complete.');
 }
 
@@ -601,7 +605,10 @@ function setupController(initState, initLangCode, remoteSourcePort) {
       senderUrl.origin === phishingPageUrl.origin &&
       senderUrl.pathname === phishingPageUrl.pathname
     ) {
-      const portStream = new PortStream(remotePort);
+      const portStream = cfg().desktop.isApp
+        ? remotePort.stream
+        : new PortStream(remotePort);
+
       controller.setupPhishingCommunication({
         connectionStream: portStream,
       });
