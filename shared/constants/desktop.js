@@ -3,6 +3,7 @@ export const CLIENT_ID_END_CONNECTION = 'endConnection';
 export const CLIENT_ID_NEW_CONNECTION = 'newConnection';
 export const CLIENT_ID_STATE = 'state';
 export const CLIENT_ID_DISABLE = 'disable';
+export const CLIENT_ID_STATE_READY = 'stateReady';
 export const CONNECTION_TYPE_INTERNAL = 'INTERNAL';
 export const CONNECTION_TYPE_EXTERNAL = 'EXTERNAL';
 export const MESSAGE_HANDSHAKE_START = 'HSK';

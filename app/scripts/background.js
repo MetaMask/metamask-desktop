@@ -211,12 +211,35 @@ async function initialize(remotePort) {
   log.info('MetaMask initialization complete.');
 }
 
+<<<<<<< HEAD
+=======
+async function initDesktopConnection(state) {
+  if (
+    !cfg().desktop.isExtension ||
+    (state && state.PreferencesController.desktopEnabled !== true)
+  ) {
+    return;
+  }
+
+  desktopConnection = new DesktopConnection(notificationManager);
+  await desktopConnection.init();
+}
+
+async function onDesktopEnabledToggle(isEnabled) {
+  log.debug('Detected desktop enabled toggle', { isEnabled });
+if (cfg().desktop.isApp && !isEnabled) {
+    await desktopApp.disable();
+  }
+}
+
+>>>>>>> 82e944257 (fix: race condition to save state)
 async function onDesktopPairing(isEnabled) {
   log.debug('Detected desktop pairing', { isEnabled });
   if (cfg().desktop.isExtension && !desktopConnection && isEnabled) {
     desktopConnection = new DesktopConnection(notificationManager);
     await desktopConnection.init();
-  } else {
+    // await initDesktopConnection();
+  } else if (cfg().desktop.isApp && !isEnabled){
     log.debug('Stopped desktop pairing', { isEnabled });
   }
 }

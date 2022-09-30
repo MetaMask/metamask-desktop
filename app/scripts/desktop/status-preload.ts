@@ -52,6 +52,14 @@ const updateWebSocketStatus = (data: StatusMessage) => {
   webSocketStatus.className = data.isWebSocketConnected ? 'on' : 'off';
 };
 
+const updateDesktopSynced = () => {
+  const mainContentDiv = document.getElementById('main-content')!;
+
+  mainContentDiv.innerHTML = `<h2>All set, fox</h2>
+    <span>Some explainer about using the extension as usual but keep this \n app open and check the alerts.</span>
+    <div><button id="connections-button" >Connections Page</button></div>`;
+};
+
 const onStatusMessage = (data: StatusMessage) => {
   updateWebSocketStatus(data);
   updateConnections(data);
@@ -60,15 +68,20 @@ const onStatusMessage = (data: StatusMessage) => {
   }
 };
 
-const onLoad = () => {
-  ipcRenderer.on('status', (_, data: StatusMessage) => onStatusMessage(data));
-  loadOtpInput();
-  handleOTPChange();
+const onOTPSubmit = (value: string) => {
+  ipcRenderer.invoke('otp', value);
 };
 
-window.addEventListener('DOMContentLoaded', () => onLoad());
+const handleOTPChange = () => {
+  const submitButton = document.getElementById('submit-button')!;
+  submitButton.addEventListener('click', () => {
+    const otpInput = (document.getElementById('otp-value') as HTMLInputElement)
+      .value;
+    onOTPSubmit(otpInput);
+  });
+};
 
-const loadOtpInput = () => {
+const loadOTPInput = () => {
   const startButton = document.getElementById('start-button');
   const startDiv = document.getElementById('start-div');
 
@@ -85,23 +98,10 @@ const loadOtpInput = () => {
   });
 };
 
-const handleOTPChange = () => {
-  const submitButton = document.getElementById('submit-button')!;
-  submitButton.addEventListener('click', () => {
-    const otpInput = (document.getElementById('otp-value') as HTMLInputElement)
-      .value;
-    onOTPSubmit(otpInput);
-  });
+const onLoad = () => {
+  ipcRenderer.on('status', (_, data: StatusMessage) => onStatusMessage(data));
+  loadOTPInput();
+  handleOTPChange();
 };
 
-const onOTPSubmit = (value: string) => {
-  ipcRenderer.invoke('otp', value);
-};
-
-const updateDesktopSynced = () => {
-  const mainContentDiv = document.getElementById('main-content')!;
-
-  mainContentDiv.innerHTML = `<h2>All set, fox</h2>
-    <span>Some explainer about using the extension as usual but keep this \n app open and check the alerts.</span>
-    <div><button id="connections-button" >Connections Page</button></div>`;
-};
+window.addEventListener('DOMContentLoaded', () => onLoad());

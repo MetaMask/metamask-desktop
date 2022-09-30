@@ -10,6 +10,7 @@ import {
   CLIENT_ID_STATE,
   CLIENT_ID_DISABLE,
   CLIENT_ID_PAIRING,
+  CONNECTION_TYPE_INTERNAL,
 } from '../../../shared/constants/desktop';
 import { validate } from '../../../shared/modules/totp';
 import cfg from './config';
@@ -134,29 +135,36 @@ export default class DesktopConnection {
       this.onDesktopState(rawState),
     );
 
+    const stateReadyStream = this.multiplex.createStream(CONNECTION_TYPE_INTERNAL);
+    stateReadyStream.on('data', (data: Boolean) => this.onRestart(data));
+
+
     const disableStream = this.multiplex.createStream(CLIENT_ID_DISABLE);
     disableStream.on('data', (data: State) => this.onDisable(data));
 
     const pairingStream = this.multiplex.createStream(CLIENT_ID_PAIRING);
-    pairingStream.on('otp', (otp: any) => this.onPairing(otp));
+    pairingStream.on('data', (otp: any) => this.onPairing(otp));
 
     log.debug('Connected to desktop');
   }
 
-  public async transferState() {
+  public async transferState(state: State) {
     if (!this.stateStream) {
       log.error('State stream not initialised');
       return;
     }
-
-    const state = await browser.storage.local.get();
-    state.data.PreferencesController.desktopEnabled = true;
-
     this.stateStream.write(state);
 
     log.debug('Sent extension state to desktop');
   }
 
+  private async onRestart(isStateReady: Boolean) {
+    if(isStateReady){
+      log.debug('Restarting extension');
+      browser.runtime.reload()
+    }
+
+  }
   /**
    * Creates a connection with the MetaMask Desktop via a multiplexed stream.
    *
@@ -213,20 +221,24 @@ export default class DesktopConnection {
     browser.runtime.reload();
   }
 
+  private async updateState(): Promise<State>{
+      const rawState = await browser.storage.local.get();
+      rawState.data.PreferencesController.desktopEnabled = true;
+      rawState.data.PreferencesController.isPairing = false;
+      await browser.storage.local.set(rawState);
+      return rawState
+  }
   private async onPairing(otp: string) {
     log.debug(`Received desktop pairing message`);
     const isValid = await validate(otp);
 
     if (isValid === 0) {
-      const rawState = await browser.storage.local.get();
-      rawState.data.PreferencesController.desktopEnabled = true;
-      await browser.storage.local.set(rawState);
 
-      await this.transferState();
+      const updatedState = await this.updateState()
+
+      await this.transferState(updatedState);
       log.debug('Synchronised state with desktop');
 
-      log.debug('Restarting extension');
-      browser.runtime.reload();
       console.debug('OTP is valid');
     } else {
       console.debug('OTP not valid');

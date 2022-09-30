@@ -12,6 +12,7 @@ import {
   CLIENT_ID_STATE,
   CLIENT_ID_DISABLE,
   CLIENT_ID_PAIRING,
+  CONNECTION_TYPE_INTERNAL,
 } from '../../../shared/constants/desktop';
 import cfg from './config';
 import { updateCheck } from './update-check';
@@ -57,6 +58,8 @@ export default class Desktop {
   private stateStream?: Duplex;
 
   private pairingStream?: Duplex;
+
+  private stateReadyStream?: Duplex
 
   private statusWindow?: BrowserWindow;
 
@@ -104,19 +107,17 @@ export default class Desktop {
     this.pairingStream = this.multiplex.createStream(CLIENT_ID_PAIRING);
 
     ipcMain.handle('otp', (event, data) => this.onOTPSubmit(data));
+ 
 
     this.statusWindow = await this.createStatusWindow();
 
+    this.stateReadyStream = this.multiplex.createStream(CONNECTION_TYPE_INTERNAL)
+
+    await this.initConnections();
     const state = await browser.storage.local.get();
-    // this.isPaired = state.data.PreferencesController.desktopEnabled;
-    this.isPaired = false; // TODO: add a flag to skip sync
-
-    if (!this.isPaired) {
-      await this.initConnections();
-    } else {
-      this.updateStatusWindow();
-    }
-
+    this.isPaired = state.data.PreferencesController.desktopEnabled;
+    this.updateStatusWindow();
+    
     log.debug('Initialised desktop');
 
     updateCheck();
@@ -191,8 +192,6 @@ export default class Desktop {
     await statusWindow.loadFile(
       path.resolve(__dirname, '../../desktop-sync.html'),
     );
-
-    // statusWindow.webContents.openDevTools();
 
     log.debug('Created status window');
 
@@ -290,6 +289,13 @@ export default class Desktop {
 
     log.debug('Re-initialising background script');
     await this.backgroundInitialise();
+
+    log.debug('Sending message to extension');
+    this.stateReadyStream?.write(true)
+
+    this.statusWindow?.webContents.reloadIgnoringCache()
+    this.updateStatusWindow();
+
   }
 
   private onClientStreamEnd(clientId: ClientId) {
@@ -339,14 +345,14 @@ export default class Desktop {
     const statusMessage: StatusMessage = {
       isWebSocketConnected: Boolean(this.webSocket),
       connections: this.connections,
-      isDesktopSynced: Boolean(this.isPaired),
+      isDesktopSynced: this.isPaired,
     };
 
     this.statusWindow.webContents.send('status', statusMessage);
   }
 
   private async onOTPSubmit(otp: string) {
-    log.debug('Received OTP', otp);
+    log.debug('Submitted OTP', otp);
     if (!this.pairingStream) {
       log.error('Pairing stream not initialised');
       return;
