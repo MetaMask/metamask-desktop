@@ -63,7 +63,7 @@ const onStatusMessage = (data: StatusMessage) => {
 const onLoad = () => {
   ipcRenderer.on('status', (_, data: StatusMessage) => onStatusMessage(data));
   loadOtpInput();
-  handleOtpChange();
+  handleOTPChange();
 };
 
 window.addEventListener('DOMContentLoaded', () => onLoad());
@@ -85,7 +85,7 @@ const loadOtpInput = () => {
   });
 };
 
-const handleOtpChange = () => {
+const handleOTPChange = () => {
   const submitButton = document.getElementById('submit-button')!;
   submitButton.addEventListener('click', () => {
     const otpInput = (document.getElementById('otp-value') as HTMLInputElement)
