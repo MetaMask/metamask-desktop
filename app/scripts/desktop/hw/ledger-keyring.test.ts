@@ -1,5 +1,6 @@
 /* eslint-disable jest/no-focused-tests */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import Eth from '@ledgerhq/hw-app-eth';
 import HDKey from 'hdkey';
 import { LedgerBridgeKeyring, LedgerKeyringProperties } from './ledger-keyring';
 
@@ -39,36 +40,7 @@ jest.mock(
   },
 );
 
-jest.mock(
-  '@ledgerhq/hw-app-eth',
-  () => {
-    return jest.fn(() => {
-      return {
-        getAddress: jest.fn(() => {
-          return Promise.resolve(mockAddresses[0]);
-        }),
-        signPersonalMessage: jest.fn(() => ({
-          r: '1234',
-          s: '5678',
-          v: 28,
-        })),
-        signEIP712HashedMessage: jest.fn(() => ({
-          r: '4321',
-          s: '8765',
-          v: 28,
-        })),
-        signTransaction: jest.fn(() => ({
-          r: '11111111111',
-          s: '00000000000',
-          v: '28',
-        })),
-      };
-    });
-  },
-  {
-    virtual: true,
-  },
-);
+jest.mock('@ledgerhq/hw-app-eth', () => jest.fn(), { virtual: true });
 
 jest.mock(
   'hdkey',
@@ -171,8 +143,40 @@ jest.mock(
 describe('Ledger Keyring', () => {
   let ledgerKeyring: LedgerBridgeKeyring;
 
+  let ledgerAppConstructorMock: any;
+  let ledgerAppMock: jest.Mocked<Partial<Eth>>;
+
   beforeEach(() => {
     ledgerKeyring = new LedgerBridgeKeyring();
+    ledgerAppConstructorMock = Eth;
+
+    ledgerAppMock = {
+      getAddress: jest
+        .fn()
+        .mockImplementation(() => Promise.resolve(mockAddresses[0])),
+      signPersonalMessage: jest.fn().mockImplementation(() =>
+        Promise.resolve({
+          r: '1234',
+          s: '5678',
+          v: 28,
+        }),
+      ),
+      signEIP712HashedMessage: jest.fn().mockImplementation(() =>
+        Promise.resolve({
+          r: '4321',
+          s: '8765',
+          v: 28,
+        }),
+      ),
+      signTransaction: jest.fn().mockImplementation(() =>
+        Promise.resolve({
+          r: '11111111111',
+          s: '00000000000',
+          v: '28',
+        }),
+      ),
+    };
+    ledgerAppConstructorMock.mockReturnValue(ledgerAppMock);
   });
 
   describe('serialization', () => {
@@ -250,6 +254,13 @@ describe('Ledger Keyring', () => {
           balance: null,
           index: i,
         })),
+      );
+
+      expect(ledgerAppMock.getAddress).toHaveBeenCalledTimes(1);
+      expect(ledgerAppMock.getAddress).toHaveBeenLastCalledWith(
+        "m/44'/60'/0'",
+        false,
+        true,
       );
     });
 
