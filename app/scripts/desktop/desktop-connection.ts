@@ -10,7 +10,6 @@ import {
   CLIENT_ID_STATE,
   CLIENT_ID_DISABLE,
   CLIENT_ID_PAIRING,
-  CONNECTION_TYPE_INTERNAL,
 } from '../../../shared/constants/desktop';
 import { validate } from '../../../shared/modules/totp';
 import cfg from './config';
@@ -30,7 +29,7 @@ import { validate } from '../../../shared/modules/totp';
 import {
   BrowserControllerAction,
   BrowserControllerMessage,
-  PairingMessage
+  PairingMessage,
 } from './types/message';
 
 const TIMEOUT_CONNECT = 5000;
@@ -52,7 +51,7 @@ export default class DesktopConnection {
 
   private stateStream?: Duplex;
 
-  private pairingStream?: Duplex
+  private pairingStream?: Duplex;
 
   public static async initIfEnabled(state: any) {
     if (state && state.PreferencesController.desktopEnabled !== true) {
@@ -145,12 +144,13 @@ export default class DesktopConnection {
     const stateReadyStream = this.multiplex.createStream(CONNECTION_TYPE_INTERNAL);
     stateReadyStream.on('data', (data: Boolean) => this.onRestart(data));
 
-
     const disableStream = this.multiplex.createStream(CLIENT_ID_DISABLE);
     disableStream.on('data', (data: State) => this.onDisable(data));
 
     this.pairingStream = this.multiplex.createStream(CLIENT_ID_PAIRING);
-    this.pairingStream.on('data', (data: PairingMessage) => data?.isPaired ? this.onRestart() : this.onPairing(data));
+    this.pairingStream.on('data', (data: PairingMessage) =>
+      data?.isPaired ? this.onRestart() : this.onPairing(data),
+    );
 
     log.debug('Connected to desktop');
   }
@@ -167,11 +167,11 @@ export default class DesktopConnection {
 
   private async onRestart() {
     // if(isPaired){
-      log.debug('Restarting extension');
-      browser.runtime.reload()
+    log.debug('Restarting extension');
+    browser.runtime.reload();
     // }
-
   }
+
   /**
    * Creates a connection with the MetaMask Desktop via a multiplexed stream.
    *
@@ -228,30 +228,27 @@ export default class DesktopConnection {
     browser.runtime.reload();
   }
 
-  private async updateState(): Promise<State>{
-      const rawState = await browser.storage.local.get();
-      rawState.data.PreferencesController.desktopEnabled = true;
-      rawState.data.PreferencesController.isPairing = false;
-      await browser.storage.local.set(rawState);
-      return rawState
+  private async updateState(): Promise<State> {
+    const rawState = await browser.storage.local.get();
+    rawState.data.PreferencesController.desktopEnabled = true;
+    rawState.data.PreferencesController.isPairing = false;
+    await browser.storage.local.set(rawState);
+    return rawState;
   }
+
   private async onPairing(pairingMessage: PairingMessage) {
     log.debug(`Received desktop pairing message`);
-    const isValid = await validate(pairingMessage?.otp);
-
-    if (isValid === 0) {
-
-      const updatedState = await this.updateState()
+    if (validate(pairingMessage?.otp)) {
+      const updatedState = await this.updateState();
 
       await this.transferState(updatedState);
       log.debug('Synchronised state with desktop');
 
-      this.pairingStream?.write({...pairingMessage, isPaired: true })
-      console.debug('OTP is valid');
+      log.debug('OTP is valid, sending acknowledged to desktop');
+      this.pairingStream?.write({ ...pairingMessage, isPaired: true });
     } else {
-      console.debug('OTP is not valid, sending acknowledged to desktop');
-      this.pairingStream?.write({...pairingMessage, isPaired: false })
-
+      log.debug('OTP is not valid, sending acknowledged to desktop');
+      this.pairingStream?.write({ ...pairingMessage, isPaired: false });
     }
   }
 

@@ -24,6 +24,6 @@ export interface StatusMessage {
 }
 
 export type PairingMessage = {
-  otp: string
-  isPaired: Boolean
-}
+  otp: string;
+  isPaired: boolean;
+};

@@ -26,8 +26,11 @@ export const validate = (token) => {
   if (!totp) {
     totp = newTOTP();
   }
-  return totp.validate({
+
+  const result = totp.validate({
     token,
     window: 1,
   });
+
+  return result === 0;
 };

@@ -12,7 +12,6 @@ import {
   FONT_WEIGHT,
 } from '../../helpers/constants/design-system';
 
-const PASSWORD_PROMPT_SCREEN = 'PASSWORD_PROMPT_SCREEN';
 const OTP_GENERATION_TIME = SECOND * 30;
 
 export default class DesktopSyncPage extends Component {
@@ -22,33 +21,16 @@ export default class DesktopSyncPage extends Component {
 
   static propTypes = {
     history: PropTypes.object.isRequired,
-    selectedAddress: PropTypes.string.isRequired,
-    displayWarning: PropTypes.func.isRequired,
-    fetchInfoToSync: PropTypes.func.isRequired,
-    mostRecentOverviewPage: PropTypes.string.isRequired,
-    requestRevealSeedWords: PropTypes.func.isRequired,
-    exportAccounts: PropTypes.func.isRequired,
-    hideWarning: PropTypes.func.isRequired,
     // setOtp: PropTypes.func.isRequired,
     startPairing: PropTypes.func.isRequired,
     isPairing: PropTypes.bool.isRequired,
+    mostRecentOverviewPage: PropTypes.string.isRequired,
     // otp: PropTypes.number,
   };
 
   state = {
-    screen: PASSWORD_PROMPT_SCREEN,
-    password: '',
-    seedWords: null,
-    importedAccounts: [],
-    error: null,
-    syncing: false,
-    completed: false,
-    channelName: undefined,
-    cipherKey: undefined,
     otp: this.generateOTPCode(),
   };
-
-  syncing = true;
 
   componentDidMount() {
     this.interval = setInterval(
@@ -79,14 +61,11 @@ export default class DesktopSyncPage extends Component {
     );
   }
 
-  componentDidUpdate() {}
-
   generateOTPCode() {
     return generate();
   }
 
   renderContent() {
-    const { t } = this.context;
     return (
       <div>
         <Typography
@@ -108,7 +87,6 @@ export default class DesktopSyncPage extends Component {
 
   renderFooter() {
     const { t } = this.context;
-
     return (
       <div
         className="new-account-import-form__buttons"

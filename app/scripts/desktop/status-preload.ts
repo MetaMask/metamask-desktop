@@ -53,7 +53,12 @@ const updateWebSocketStatus = (data: StatusMessage) => {
 };
 
 const updateDesktopSynced = () => {
-  const mainContentDiv = document.getElementById('main-content')!;
+  const mainContentDiv = document.getElementById('main-content');
+
+  if (!mainContentDiv) {
+    console.error('Cannot find main content element');
+    return;
+  }
 
   mainContentDiv.innerHTML = `<h2>All set, fox</h2>
     <span>Some explainer about using the extension as usual but keep this \n app open and check the alerts.</span>
@@ -73,7 +78,13 @@ const onOTPSubmit = (value: string) => {
 };
 
 const handleOTPChange = () => {
-  const submitButton = document.getElementById('submit-button')!;
+  const submitButton = document.getElementById('submit-button');
+
+  if (!submitButton) {
+    console.error('Cannot find submit button element');
+    return;
+  }
+
   submitButton.addEventListener('click', () => {
     const otpInput = (document.getElementById('otp-value') as HTMLInputElement)
       .value;
@@ -82,12 +93,16 @@ const handleOTPChange = () => {
 };
 
 const onHandleInvalidOTP = (isValid: boolean) => {
-  const invalidOTP = document.getElementById('invalid-otp')!;
-  if(isValid){
-    invalidOTP.className = 'show' 
-  }  
-};
+  const invalidOTP = document.getElementById('invalid-otp');
+  if (!invalidOTP) {
+    console.error('Cannot find invalid otp element');
+    return;
+  }
 
+  if (isValid) {
+    invalidOTP.className = 'show';
+  }
+};
 
 const loadOTPInput = () => {
   const startButton = document.getElementById('start-button');

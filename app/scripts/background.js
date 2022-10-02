@@ -226,8 +226,16 @@ async function initDesktopConnection(state) {
 }
 
 async function onDesktopEnabledToggle(isEnabled) {
-  log.debug('Detected desktop enabled toggle', { isEnabled });
-if (cfg().desktop.isApp && !isEnabled) {
+  log.debug(
+    `Detected desktop enabled toggle ${cfg().desktop.skipPairing} ${
+      process.env.SKIP_PAIRING
+    }`,
+    { isEnabled },
+  );
+  if (cfg().desktop.isExtension && !desktopConnection && isEnabled) {
+    await initDesktopConnection();
+    await desktopConnection.transferState();
+  } else if (cfg().desktop.isApp && !isEnabled) {
     await desktopApp.disable();
   }
 }
@@ -236,10 +244,8 @@ if (cfg().desktop.isApp && !isEnabled) {
 async function onDesktopPairing(isEnabled) {
   log.debug('Detected desktop pairing', { isEnabled });
   if (cfg().desktop.isExtension && !desktopConnection && isEnabled) {
-    desktopConnection = new DesktopConnection(notificationManager);
-    await desktopConnection.init();
-    // await initDesktopConnection();
-  } else if (cfg().desktop.isApp && !isEnabled){
+    await initDesktopConnection();
+  } else if (cfg().desktop.isApp && !isEnabled) {
     log.debug('Stopped desktop pairing', { isEnabled });
   }
 }

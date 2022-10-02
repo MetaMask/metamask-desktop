@@ -103,9 +103,11 @@ export default class Desktop {
     server.on('connection', (webSocket) => this.onConnection(webSocket));
 
     this.pairingStream = this.multiplex.createStream(CLIENT_ID_PAIRING);
-    this.pairingStream.on('data', (data: PairingMessage) => this.onPairing(data));
+    this.pairingStream.on('data', (data: PairingMessage) =>
+      this.onPairing(data),
+    );
 
-    ipcMain.handle('otp', (event, data) => this.onOTPSubmit(data));
+    ipcMain.handle('otp', (_event, data) => this.onOTPSubmit(data));
 
     this.statusWindow = await this.createStatusWindow();
 
@@ -113,7 +115,7 @@ export default class Desktop {
     const state = await browser.storage.local.get();
     this.isPaired = state.data.PreferencesController.desktopEnabled;
     this.updateStatusWindow();
-    
+
     log.debug('Initialised desktop');
 
     updateCheck();
@@ -141,9 +143,9 @@ export default class Desktop {
     );
   }
 
-  private onPairing(pairingMessage: PairingMessage){
-    if(!pairingMessage?.isPaired){
-      this.statusWindow?.webContents.send('invalid-otp', false)
+  private onPairing(pairingMessage: PairingMessage) {
+    if (!pairingMessage?.isPaired) {
+      this.statusWindow?.webContents.send('invalid-otp', false);
     }
   }
 
@@ -202,9 +204,15 @@ export default class Desktop {
       // icon: path.resolve(__dirname, '../../build-types/desktop/images/icon-512.png')
     });
 
-    await statusWindow.loadFile(
-      path.resolve(__dirname, '../../desktop-sync.html'),
-    );
+    if (cfg().desktop.skipPairing) {
+      await statusWindow.loadFile(
+        path.resolve(__dirname, '../../desktop.html'),
+      );
+    } else {
+      await statusWindow.loadFile(
+        path.resolve(__dirname, '../../desktop-sync.html'),
+      );
+    }
 
     log.debug('Created status window');
 
@@ -304,10 +312,9 @@ export default class Desktop {
     await this.backgroundInitialise();
 
     log.debug('Sending to extension pairing is complete');
-    this.isPaired = true
-    this.pairingStream?.write({isPaired: this.isPaired })
+    this.isPaired = true;
+    this.pairingStream?.write({ isPaired: this.isPaired });
     this.updateStatusWindow();
-
   }
 
   private onClientStreamEnd(clientId: ClientId) {
@@ -369,7 +376,7 @@ export default class Desktop {
       log.error('Pairing stream not initialised');
       return;
     }
-    this.pairingStream.write({otp, isPaired: false});
+    this.pairingStream.write({ otp, isPaired: false });
   }
 
   private async initConnections() {
