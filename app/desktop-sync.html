@@ -1,61 +1,68 @@
 <!doctype html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1 user-scalable=no">
-    <title>MetaMask Desktop</title>
-    <style>
-      body {
-        font-family: system-ui;
-        padding-left: 10px;
-      }
 
-      table {
-        border-collapse: collapse;
-      }
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1 user-scalable=no">
+  <title>MetaMask Desktop</title>
+  <style>
+    body {
+      font-family: system-ui;
+      padding-left: 10px;
+    }
 
-      th, td {
-        padding: 10px;
-        border: 1px solid lightgrey;
-      }
+    table {
+      border-collapse: collapse;
+    }
 
-      span {
-        padding: 8px;
-      }
+    th,
+    td {
+      padding: 10px;
+      border: 1px solid lightgrey;
+    }
 
-      .center {
-        margin: auto;
-        width: 60%;
-        text-align: center;
-        }
+    span {
+      padding: 8px;
+    }
 
-        .show {
-        display: block;
-        }
+    .center {
+      margin: auto;
+      width: 60%;
+      text-align: center;
+    }
 
+    .show {
+      display: block;
+    }
 
-        .hide {
-        display: none;
-        }
-    </style>
+    .hide {
+      display: none;
+    }
 
-  </head>
-  <body>
-    <div id="main-content" class="center">
+    #invalid-otp {
+      font-family: Arial, Helvetica, sans-serif;
+			font-size: 13px;
+      color: #D8000C;
+    }
+  </style>
+
+</head>
+
+<body>
+  <div id="main-content" class="center">
     <h2>Welcome to MetaMask</h2>
     <span>The decentralized web awaits</span>
     <div id="start-div">
-      <button id="start-button" >Start</button>
+      <button id="start-button">Start</button>
     </div>
 
     <div id="input-otp" hidden>
       <span>Open your MetaMask Extension and type the six-digit code</span>
       <input id="otp-value" type="text">
-      <button id="submit-button" >Submit</button>
-      <p>
-        <span id="invalid-otp" class="hide">OTP is invalid</span>
-      </p>
+      <button id="submit-button">Submit</button>
+      <span id="invalid-otp" class="hide">OTP is invalid</span>
     </div>
   </div>
-  </body>
+</body>
+
 </html>

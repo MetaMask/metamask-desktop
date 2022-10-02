@@ -99,7 +99,8 @@ const onHandleInvalidOTP = (isValid: boolean) => {
     return;
   }
 
-  if (isValid) {
+  if (!isValid) {
+    invalidOTP.classList.remove('hide');
     invalidOTP.className = 'show';
   }
 };
@@ -123,7 +124,7 @@ const loadOTPInput = () => {
 
 const onLoad = () => {
   ipcRenderer.on('status', (_, data: StatusMessage) => onStatusMessage(data));
-  ipcRenderer.on('otp-invalid', (_, data: boolean) => onHandleInvalidOTP(data));
+  ipcRenderer.on('invalid-otp', (_, data: boolean) => onHandleInvalidOTP(data));
   loadOTPInput();
   handleOTPChange();
 };

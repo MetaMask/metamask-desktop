@@ -102,16 +102,12 @@ export default class Desktop {
     const server = await this.createWebSocketServer();
     server.on('connection', (webSocket) => this.onConnection(webSocket));
 
-    this.pairingStream = this.multiplex.createStream(CLIENT_ID_PAIRING);
-    this.pairingStream.on('data', (data: PairingMessage) =>
-      this.onPairing(data),
-    );
+    await this.initStreams();
 
     ipcMain.handle('otp', (_event, data) => this.onOTPSubmit(data));
 
     this.statusWindow = await this.createStatusWindow();
 
-    await this.initConnections();
     const state = await browser.storage.local.get();
     this.isPaired = state.data.PreferencesController.desktopEnabled;
     this.updateStatusWindow();
@@ -379,7 +375,12 @@ export default class Desktop {
     this.pairingStream.write({ otp, isPaired: false });
   }
 
-  private async initConnections() {
+  private async initStreams() {
+    this.pairingStream = this.multiplex.createStream(CLIENT_ID_PAIRING);
+    this.pairingStream.on('data', (data: PairingMessage) =>
+      this.onPairing(data),
+    );
+
     const browserControllerStream = this.multiplex.createStream(
       CLIENT_ID_BROWSER_CONTROLLER,
     );

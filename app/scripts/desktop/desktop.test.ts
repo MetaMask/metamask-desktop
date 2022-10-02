@@ -49,7 +49,11 @@ jest.mock(
 
 jest.mock(
   'electron',
-  () => ({ app: { whenReady: jest.fn() }, BrowserWindow: jest.fn() }),
+  () => ({
+    app: { whenReady: jest.fn() },
+    BrowserWindow: jest.fn(),
+    ipcMain: { handle: jest.fn() },
+  }),
   {
     virtual: true,
   },
@@ -121,6 +125,11 @@ describe('Desktop', () => {
     updateCheckMock = updateCheck;
     browserMock = browser;
     metaMaskController = createEventEmitterMock();
+
+    browserMock.storage.local.get.mockResolvedValue({
+      ...DATA_MOCK,
+      data: { PreferencesController: { desktopEnabled: true } },
+    });
 
     multiplexMock.createStream.mockImplementation((name) => {
       const newStream = createStreamMock();
@@ -231,7 +240,7 @@ describe('Desktop', () => {
     it('creates multiplex streams', async () => {
       await desktop.init();
 
-      expect(multiplexMock.createStream).toHaveBeenCalledTimes(5);
+      expect(multiplexMock.createStream).toHaveBeenCalledTimes(6);
       expect(multiplexMock.createStream).toHaveBeenCalledWith(
         CLIENT_ID_BROWSER_CONTROLLER,
       );

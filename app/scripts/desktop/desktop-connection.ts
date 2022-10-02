@@ -141,9 +141,6 @@ export default class DesktopConnection {
       this.onDesktopState(rawState),
     );
 
-    const stateReadyStream = this.multiplex.createStream(CONNECTION_TYPE_INTERNAL);
-    stateReadyStream.on('data', (data: Boolean) => this.onRestart(data));
-
     const disableStream = this.multiplex.createStream(CLIENT_ID_DISABLE);
     disableStream.on('data', (data: State) => this.onDisable(data));
 

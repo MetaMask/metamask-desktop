@@ -242,7 +242,7 @@ describe('Desktop Connection', () => {
     it('creates multiplex streams', async () => {
       await initDesktopConnection();
 
-      expect(multiplexMock.createStream).toHaveBeenCalledTimes(5);
+      expect(multiplexMock.createStream).toHaveBeenCalledTimes(6);
       expect(multiplexMock.createStream).toHaveBeenCalledWith(
         CLIENT_ID_BROWSER_CONTROLLER,
       );
@@ -293,7 +293,7 @@ describe('Desktop Connection', () => {
       expect(portStreamConstructorMock).toHaveBeenCalledTimes(1);
       expect(portStreamConstructorMock).toHaveBeenCalledWith(remotePortMock);
 
-      expect(multiplexMock.createStream).toHaveBeenCalledTimes(6);
+      expect(multiplexMock.createStream).toHaveBeenCalledTimes(7);
       expect(multiplexMock.createStream).toHaveBeenLastCalledWith(UUID_MOCK);
 
       const clientStreamMock = multiplexStreamMocks[UUID_MOCK];
@@ -366,10 +366,10 @@ describe('Desktop Connection', () => {
 
   describe('transferState', () => {
     it('writes state to state stream', async () => {
-      browserMock.storage.local.get.mockResolvedValue({
+      const stateMocked = {
         ...DATA_MOCK,
-        data: { PreferencesController: { desktopEnabled: false } },
-      });
+        data: { PreferencesController: { desktopEnabled: true } },
+      };
 
       await initDesktopConnection();
       await desktopConnection.createStream(
@@ -377,7 +377,7 @@ describe('Desktop Connection', () => {
         ConnectionType.INTERNAL,
       );
 
-      await desktopConnection.transferState();
+      await desktopConnection.transferState(stateMocked);
 
       const stateStreamMock = multiplexStreamMocks[CLIENT_ID_STATE];
 
