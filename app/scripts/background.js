@@ -226,15 +226,16 @@ async function initDesktopConnection(state) {
 }
 
 async function onDesktopEnabledToggle(isEnabled) {
-  log.debug(
-    `Detected desktop enabled toggle ${cfg().desktop.skipPairing} ${
-      process.env.SKIP_PAIRING
-    }`,
-    { isEnabled },
-  );
-  if (cfg().desktop.isExtension && !desktopConnection && isEnabled) {
+  log.debug('Detected desktop enabled toggle', { isEnabled });
+  if (
+    cfg().desktop.isExtension &&
+    !desktopConnection &&
+    isEnabled &&
+    cfg().desktop.skipPairing
+  ) {
+    const rawState = await browser.storage.local.get();
     await initDesktopConnection();
-    await desktopConnection.transferState();
+    await desktopConnection.transferState(rawState);
   } else if (cfg().desktop.isApp && !isEnabled) {
     await desktopApp.disable();
   }

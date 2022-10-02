@@ -313,7 +313,9 @@ export default class ExperimentalTab extends PureComponent {
         {this.renderCollectibleDetectionToggle()}
         {this.renderEIP1559V2EnabledToggle()}
         {this.renderCustomNetworkListToggle()}
-        {desktopEnabled ? this.renderDesktopToggle() : null}
+        {desktopEnabled || process.env.SKIP_PAIRING
+          ? this.renderDesktopToggle()
+          : null}
         {this.renderDesktopSyncButton()}
       </div>
     );
