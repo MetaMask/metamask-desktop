@@ -12,7 +12,6 @@ import {
   CLIENT_ID_STATE,
   CLIENT_ID_DISABLE,
   CLIENT_ID_PAIRING,
-  CONNECTION_TYPE_INTERNAL,
 } from '../../../shared/constants/desktop';
 import cfg from './config';
 import { updateCheck } from './update-check';
@@ -27,6 +26,7 @@ import {
 import {
   EndConnectionMessage,
   NewConnectionMessage,
+  PairingMessage,
   StatusMessage,
 } from './types/message';
 import { ClientId } from './types/desktop';
@@ -58,8 +58,6 @@ export default class Desktop {
   private stateStream?: Duplex;
 
   private pairingStream?: Duplex;
-
-  private stateReadyStream?: Duplex
 
   private statusWindow?: BrowserWindow;
 
@@ -105,13 +103,11 @@ export default class Desktop {
     server.on('connection', (webSocket) => this.onConnection(webSocket));
 
     this.pairingStream = this.multiplex.createStream(CLIENT_ID_PAIRING);
+    this.pairingStream.on('data', (data: PairingMessage) => this.onPairing(data));
 
     ipcMain.handle('otp', (event, data) => this.onOTPSubmit(data));
- 
 
     this.statusWindow = await this.createStatusWindow();
-
-    this.stateReadyStream = this.multiplex.createStream(CONNECTION_TYPE_INTERNAL)
 
     await this.initConnections();
     const state = await browser.storage.local.get();
@@ -132,6 +128,23 @@ export default class Desktop {
     this.connectExternal = connectExternal;
 
     metaMaskController.on('update', (state) => this.onStateUpdate(state));
+  }
+
+  public showPopup() {
+    if (!this.browserControllerStream) {
+      log.debug('Browser controller stream not initialised');
+      return;
+    }
+
+    this.browserControllerStream.write(
+      BrowserControllerAction.BROWSER_ACTION_SHOW_POPUP,
+    );
+  }
+
+  private onPairing(pairingMessage: PairingMessage){
+    if(!pairingMessage?.isPaired){
+      this.statusWindow?.webContents.send('invalid-otp', false)
+    }
   }
 
   public transferState(rawState: State) {
@@ -290,10 +303,9 @@ export default class Desktop {
     log.debug('Re-initialising background script');
     await this.backgroundInitialise();
 
-    log.debug('Sending message to extension');
-    this.stateReadyStream?.write(true)
-
-    this.statusWindow?.webContents.reloadIgnoringCache()
+    log.debug('Sending to extension pairing is complete');
+    this.isPaired = true
+    this.pairingStream?.write({isPaired: this.isPaired })
     this.updateStatusWindow();
 
   }
@@ -357,7 +369,7 @@ export default class Desktop {
       log.error('Pairing stream not initialised');
       return;
     }
-    this.pairingStream.write(otp);
+    this.pairingStream.write({otp, isPaired: false});
   }
 
   private async initConnections() {

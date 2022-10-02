@@ -27,6 +27,11 @@ import { ClientId } from './types/desktop';
 import { registerResponseStream } from './browser/browser-proxy';
 import { timeoutPromise, uuid } from './utils/utils';
 import { validate } from '../../../shared/modules/totp';
+import {
+  BrowserControllerAction,
+  BrowserControllerMessage,
+  PairingMessage
+} from './types/message';
 
 const TIMEOUT_CONNECT = 5000;
 
@@ -46,6 +51,8 @@ export default class DesktopConnection {
   private newConnectionStream?: Duplex;
 
   private stateStream?: Duplex;
+
+  private pairingStream?: Duplex
 
   public static async initIfEnabled(state: any) {
     if (state && state.PreferencesController.desktopEnabled !== true) {
@@ -142,8 +149,8 @@ export default class DesktopConnection {
     const disableStream = this.multiplex.createStream(CLIENT_ID_DISABLE);
     disableStream.on('data', (data: State) => this.onDisable(data));
 
-    const pairingStream = this.multiplex.createStream(CLIENT_ID_PAIRING);
-    pairingStream.on('data', (otp: any) => this.onPairing(otp));
+    this.pairingStream = this.multiplex.createStream(CLIENT_ID_PAIRING);
+    this.pairingStream.on('data', (data: PairingMessage) => data?.isPaired ? this.onRestart() : this.onPairing(data));
 
     log.debug('Connected to desktop');
   }
@@ -158,11 +165,11 @@ export default class DesktopConnection {
     log.debug('Sent extension state to desktop');
   }
 
-  private async onRestart(isStateReady: Boolean) {
-    if(isStateReady){
+  private async onRestart() {
+    // if(isPaired){
       log.debug('Restarting extension');
       browser.runtime.reload()
-    }
+    // }
 
   }
   /**
@@ -228,9 +235,9 @@ export default class DesktopConnection {
       await browser.storage.local.set(rawState);
       return rawState
   }
-  private async onPairing(otp: string) {
+  private async onPairing(pairingMessage: PairingMessage) {
     log.debug(`Received desktop pairing message`);
-    const isValid = await validate(otp);
+    const isValid = await validate(pairingMessage?.otp);
 
     if (isValid === 0) {
 
@@ -239,10 +246,12 @@ export default class DesktopConnection {
       await this.transferState(updatedState);
       log.debug('Synchronised state with desktop');
 
+      this.pairingStream?.write({...pairingMessage, isPaired: true })
       console.debug('OTP is valid');
     } else {
-      console.debug('OTP not valid');
-      // TODO: send back to desktop invalid OTP
+      console.debug('OTP is not valid, sending acknowledged to desktop');
+      this.pairingStream?.write({...pairingMessage, isPaired: false })
+
     }
   }
 

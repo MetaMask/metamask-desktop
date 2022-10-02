@@ -57,7 +57,7 @@ const updateDesktopSynced = () => {
 
   mainContentDiv.innerHTML = `<h2>All set, fox</h2>
     <span>Some explainer about using the extension as usual but keep this \n app open and check the alerts.</span>
-    <div><button id="connections-button" >Connections Page</button></div>`;
+    <div><button id="connections-button" >Continue with Extension</button></div>`;
 };
 
 const onStatusMessage = (data: StatusMessage) => {
@@ -81,6 +81,14 @@ const handleOTPChange = () => {
   });
 };
 
+const onHandleInvalidOTP = (isValid: boolean) => {
+  const invalidOTP = document.getElementById('invalid-otp')!;
+  if(isValid){
+    invalidOTP.className = 'show' 
+  }  
+};
+
+
 const loadOTPInput = () => {
   const startButton = document.getElementById('start-button');
   const startDiv = document.getElementById('start-div');
@@ -100,6 +108,7 @@ const loadOTPInput = () => {
 
 const onLoad = () => {
   ipcRenderer.on('status', (_, data: StatusMessage) => onStatusMessage(data));
+  ipcRenderer.on('otp-invalid', (_, data: boolean) => onHandleInvalidOTP(data));
   loadOTPInput();
   handleOTPChange();
 };

@@ -22,3 +22,8 @@ export interface StatusMessage {
   connections: NewConnectionMessage[];
   isDesktopSynced?: boolean;
 }
+
+export type PairingMessage = {
+  otp: string
+  isPaired: Boolean
+}
