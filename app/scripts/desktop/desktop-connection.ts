@@ -122,6 +122,11 @@ export default class DesktopConnection {
   }
 
   public async init() {
+    if (this.endConnectionStream) {
+      log.error('Attempted to initialise desktop connection twice');
+      return;
+    }
+
     await this.connect();
 
     const browserControllerStream = this.multiplex.createStream(
