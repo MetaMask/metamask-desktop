@@ -32,7 +32,7 @@ import {
   CONNECTION_TYPE_EXTERNAL,
   CONNECTION_TYPE_INTERNAL,
 } from '../../shared/constants/desktop';
-import { browser } from './desktop/extension-polyfill';
+import { browser } from './desktop/browser/browser-polyfill';
 import migrations from './migrations';
 import Migrator from './lib/migrator';
 import ExtensionPlatform from './platforms/extension';

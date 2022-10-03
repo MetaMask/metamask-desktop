@@ -18,7 +18,7 @@ import {
 import { isManifestV3 } from '../../shared/modules/mv3.utils';
 import { SUPPORT_LINK } from '../../shared/lib/ui-utils';
 import { getErrorHtml } from '../../shared/lib/error-utils';
-import { browser } from './desktop/extension-polyfill';
+import { browser } from './desktop/browser/browser-polyfill';
 import ExtensionPlatform from './platforms/extension';
 import { setupMultiplex } from './lib/stream-utils';
 import { getEnvironmentType } from './lib/util';

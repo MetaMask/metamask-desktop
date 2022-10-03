@@ -14,7 +14,7 @@ import {
 import cfg from './config';
 import { BrowserWebSocket, WebSocketStream } from './web-socket-stream';
 import EncryptedWebSocketStream from './encrypted-web-socket-stream';
-import { browser } from './extension-polyfill';
+import { browser } from './browser/browser-polyfill';
 import {
   ConnectionType,
   RemotePort,

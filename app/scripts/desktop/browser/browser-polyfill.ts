@@ -1,12 +1,12 @@
-import cfg from './config';
-import { Browser } from './types/browser';
+import cfg from '../config';
+import { Browser } from '../types/browser';
 
 // eslint-disable-next-line import/no-mutable-exports
 let browser: Browser;
 
 if (cfg().desktop.isApp) {
   // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
-  browser = require('./browser/node-browser').browser;
+  browser = require('./node-browser').browser;
 } else {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   browser = require('webextension-polyfill');

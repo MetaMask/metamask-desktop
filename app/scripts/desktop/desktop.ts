@@ -16,7 +16,7 @@ import cfg from './config';
 import { updateCheck } from './update-check';
 import { WebSocketStream } from './web-socket-stream';
 import EncryptedWebSocketStream from './encrypted-web-socket-stream';
-import { browser } from './extension-polyfill';
+import { browser } from './browser/browser-polyfill';
 import {
   ConnectionType,
   ConnectRemoteFactory,
