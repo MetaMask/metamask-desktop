@@ -23,6 +23,7 @@ import AddCollectiblePage from '../add-collectible';
 import ConfirmImportTokenPage from '../confirm-import-token';
 import ConfirmAddSuggestedTokenPage from '../confirm-add-suggested-token';
 import CreateAccountPage from '../create-account';
+import DesktopErrorPage from '../desktop-error';
 import Loading from '../../components/ui/loading-screen';
 import LoadingNetwork from '../../components/app/loading-network-screen';
 import NetworkDropdown from '../../components/app/dropdowns/network-dropdown';
@@ -64,6 +65,7 @@ import {
   ADD_COLLECTIBLE_ROUTE,
   TOKEN_DETAILS,
   DESKTOP_PAIRING_ROUTE,
+  DESKTOP_ERROR_ROUTE,
   ///: BEGIN:ONLY_INCLUDE_IN(flask)
   NOTIFICATIONS_ROUTE,
   ///: END:ONLY_INCLUDE_IN
@@ -175,6 +177,11 @@ export default class Routes extends Component {
         )}
         <Route path={LOCK_ROUTE} component={Lock} exact />
         <Route path={INITIALIZE_ROUTE} component={FirstTimeFlow} />
+        <Route
+          path={`${DESKTOP_ERROR_ROUTE}/:errorId`}
+          component={DesktopErrorPage}
+          exact
+        />
         <Initialized path={UNLOCK_ROUTE} component={UnlockPage} exact />
         <Initialized
           path={RESTORE_VAULT_ROUTE}

@@ -9,3 +9,9 @@ export const CONNECTION_TYPE_INTERNAL = 'INTERNAL';
 export const CONNECTION_TYPE_EXTERNAL = 'EXTERNAL';
 export const MESSAGE_HANDSHAKE_START = 'HSK';
 export const MESSAGE_HANDSHAKE_FINISH = 'DNE';
+
+export const EXTENSION_ERROR_PAGE_IDS = {
+  NOT_FOUND: 'not-found',
+  CONNECTION_LOST: 'connection-lost',
+  DESKTOP_OUTDATED: 'desktop-outdated',
+};
