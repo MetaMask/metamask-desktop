@@ -6,7 +6,7 @@ let browser: Browser;
 
 if (cfg().desktop.isApp) {
   // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
-  browser = require('./node-browser').default;
+  browser = require('./browser/node-browser').browser;
 } else {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   browser = require('webextension-polyfill');

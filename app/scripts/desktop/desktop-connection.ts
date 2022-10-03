@@ -22,10 +22,7 @@ import {
   State,
 } from './types/background';
 import { ClientId } from './types/desktop';
-import {
-  BrowserControllerAction,
-  BrowserControllerMessage,
-} from './types/message';
+import { registerResponseStream } from './browser/browser-proxy';
 
 const TIMEOUT_CONNECT = 5000;
 
@@ -133,9 +130,7 @@ export default class DesktopConnection {
       CLIENT_ID_BROWSER_CONTROLLER,
     );
 
-    browserControllerStream.on('data', (data: BrowserControllerMessage) =>
-      this.onBrowserControlMessage(data),
-    );
+    registerResponseStream(browserControllerStream);
 
     this.endConnectionStream = this.multiplex.createStream(
       CLIENT_ID_END_CONNECTION,
@@ -305,16 +300,6 @@ export default class DesktopConnection {
     log.debug('Sending new connection message', newConnectionMessage);
 
     this.newConnectionStream.write(newConnectionMessage);
-  }
-
-  private onBrowserControlMessage(data: BrowserControllerMessage) {
-    switch (data) {
-      case BrowserControllerAction.BROWSER_ACTION_SHOW_POPUP:
-        this.notificationManager.showPopup();
-        return;
-      default:
-        log.debug('Unrecognised browser control message', data);
-    }
   }
 
   private async disable() {

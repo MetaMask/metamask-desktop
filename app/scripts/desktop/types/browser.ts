@@ -9,3 +9,14 @@ export interface Browser {
     reload: () => undefined;
   };
 }
+
+export interface BrowserProxyRequest {
+  id: number;
+  key: string[];
+  args: any[];
+}
+
+export interface BrowserProxyResponse {
+  id: number;
+  result: any;
+}
