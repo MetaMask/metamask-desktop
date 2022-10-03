@@ -3,7 +3,7 @@ import { useParams, useHistory } from 'react-router-dom';
 
 import { useI18nContext } from '../../hooks/useI18nContext';
 import IconTimes from '../../components/ui/icon/icon-times';
-import { EXTENSION_ERROR_PAGE_IDS } from '../../../shared/constants/desktop';
+import { EXTENSION_ERROR_PAGE_TYPES } from '../../../shared/constants/desktop';
 import {
   TYPOGRAPHY,
   DISPLAY,
@@ -18,7 +18,7 @@ import Box from '../../components/ui/box';
 
 export default function DesktopError() {
   const t = useI18nContext();
-  const { errorId } = useParams();
+  const { errorType } = useParams();
   const history = useHistory();
 
   const downloadMetamaskDesktop = () => {
@@ -37,10 +37,10 @@ export default function DesktopError() {
     history.push(DEFAULT_ROUTE);
   };
 
-  const renderError = ({ id }) => {
+  const renderError = ({ type }) => {
     let content;
-    switch (id) {
-      case EXTENSION_ERROR_PAGE_IDS.NOT_FOUND:
+    switch (type) {
+      case EXTENSION_ERROR_PAGE_TYPES.NOT_FOUND:
         content = (
           <>
             <Typography
@@ -70,7 +70,7 @@ export default function DesktopError() {
         );
         break;
 
-      case EXTENSION_ERROR_PAGE_IDS.CONNECTION_LOST:
+      case EXTENSION_ERROR_PAGE_TYPES.CONNECTION_LOST:
         content = (
           <>
             <Typography
@@ -97,7 +97,7 @@ export default function DesktopError() {
         );
         break;
 
-      case EXTENSION_ERROR_PAGE_IDS.DESKTOP_OUTDATED:
+      case EXTENSION_ERROR_PAGE_TYPES.DESKTOP_OUTDATED:
         content = (
           <>
             <Typography
@@ -165,6 +165,6 @@ export default function DesktopError() {
   };
 
   return (
-    <section className="error-page">{renderError({ id: errorId })}</section>
+    <section className="error-page">{renderError({ type: errorType })}</section>
   );
 }

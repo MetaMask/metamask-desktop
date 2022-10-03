@@ -178,7 +178,7 @@ export default class Routes extends Component {
         <Route path={LOCK_ROUTE} component={Lock} exact />
         <Route path={INITIALIZE_ROUTE} component={FirstTimeFlow} />
         <Route
-          path={`${DESKTOP_ERROR_ROUTE}/:errorId`}
+          path={`${DESKTOP_ERROR_ROUTE}/:errorType`}
           component={DesktopErrorPage}
           exact
         />
