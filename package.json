@@ -333,7 +333,7 @@
     "depcheck": "^1.4.3",
     "dependency-tree": "^8.1.2",
     "duplexify": "^4.1.1",
-    "electron": "^19.0.2",
+    "electron": "22.0.0-alpha.1",
     "electron-builder": "^23.3.3",
     "electron-rebuild": "^3.2.9",
     "enzyme": "^3.10.0",

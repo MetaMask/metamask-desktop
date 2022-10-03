@@ -1309,7 +1309,7 @@
   resolved "https://registry.yarnpkg.com/@download/blockies/-/blockies-1.0.3.tgz#9aea770f9de72f3f947f1b3a53ee1e92f8dc4a68"
   integrity sha512-iGDh2M6pFuXg9kyW+U//963LKylSLFpLG5hZvUppCjhkiDwsYquQPyamxCQlLASYySS3gGKAki2eWG9qIHKCew==
 
-"@electron/get@^1.0.1", "@electron/get@^1.14.1":
+"@electron/get@^1.0.1":
   version "1.14.1"
   resolved "https://registry.yarnpkg.com/@electron/get/-/get-1.14.1.tgz#16ba75f02dffb74c23965e72d617adc721d27f40"
   integrity sha512-BrZYyL/6m0ZXz/lDxy/nlVhQz+WF+iPS6qXolEU8atw7h6v1aYkjwJZ63m+bJMBTxDE66X+r2tPS4a/8C82sZw==
@@ -1318,6 +1318,22 @@
     env-paths "^2.2.0"
     fs-extra "^8.1.0"
     got "^9.6.0"
+    progress "^2.0.3"
+    semver "^6.2.0"
+    sumchecker "^3.0.1"
+  optionalDependencies:
+    global-agent "^3.0.0"
+    global-tunnel-ng "^2.7.1"
+
+"@electron/get@^2.0.0":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@electron/get/-/get-2.0.1.tgz#d960dd4bdbeb44613af7c196231e376ef4c48a6f"
+  integrity sha512-8nmTGC/3/6IaEfeTcQwtJdjLA/L3sb0XQJUv9x3ZfM0pfmKvkSdelbT4pgF3dpCQOvSmJ97kYAvFltikVjfepA==
+  dependencies:
+    debug "^4.1.1"
+    env-paths "^2.2.0"
+    fs-extra "^8.1.0"
+    got "^11.8.5"
     progress "^2.0.3"
     semver "^6.2.0"
     sumchecker "^3.0.1"
@@ -11731,6 +11747,15 @@ electron-updater@^5.2.1:
     semver "^7.3.5"
     typed-emitter "^2.1.0"
 
+electron@22.0.0-alpha.1:
+  version "22.0.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-22.0.0-alpha.1.tgz#b6cc0b725ebb09486cd22afaac29ee76d139b518"
+  integrity sha512-UvtzFnILEFwQAmtvZLUtGJnYwqnIjpq2NA8P2yWXzBl729MBOdlntXPUhTzT5hASkwqOS52z4VJ6t/OGNICgvg==
+  dependencies:
+    "@electron/get" "^2.0.0"
+    "@types/node" "^16.11.26"
+    extract-zip "^2.0.1"
+
 electron@^11.1.0:
   version "11.5.0"
   resolved "https://registry.yarnpkg.com/electron/-/electron-11.5.0.tgz#f1650543b9d8f2047d3807755bdb120153ed210f"
@@ -11738,15 +11763,6 @@ electron@^11.1.0:
   dependencies:
     "@electron/get" "^1.0.1"
     "@types/node" "^12.0.12"
-    extract-zip "^1.0.3"
-
-electron@^19.0.2:
-  version "19.0.16"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-19.0.16.tgz#9773478e2607e458e3a353beccdfaa5aee65a9c6"
-  integrity sha512-iL6Bnh+kmlZHam1s77dZZ31J0vbtkkUoR3Y/GXBfqbTinXupBtYmx0+SnvjGnpVzRYoZoSbJs6Qfrfn13BQoMw==
-  dependencies:
-    "@electron/get" "^1.14.1"
-    "@types/node" "^16.11.26"
     extract-zip "^1.0.3"
 
 element-resize-detector@^1.2.2:
@@ -14995,7 +15011,7 @@ got@5.6.0:
     unzip-response "^1.0.0"
     url-parse-lax "^1.0.0"
 
-got@^11.7.0:
+got@^11.7.0, got@^11.8.5:
   version "11.8.5"
   resolved "https://registry.yarnpkg.com/got/-/got-11.8.5.tgz#ce77d045136de56e8f024bebb82ea349bc730046"
   integrity sha512-o0Je4NvQObAuZPHLFoRSkdG2lTgtcynqymzg2Vupdx6PorhaT5MCbIyXG6d4D94kk8ZG57QeosgdiqfJWhEhlQ==
