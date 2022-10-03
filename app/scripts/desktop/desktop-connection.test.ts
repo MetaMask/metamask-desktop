@@ -33,10 +33,9 @@ import {
 import EncryptedWebSocketStream from './encrypted-web-socket-stream';
 import { WebSocketStream, BrowserWebSocket } from './web-socket-stream';
 import cfg from './config';
-import { browser } from './extension-polyfill';
+import { browser } from './browser/browser-polyfill';
 import { ConnectionType, RemotePort } from './types/background';
 import { ClientId } from './types/desktop';
-import { BrowserControllerAction } from './types/message';
 
 jest.mock('./encrypted-web-socket-stream', () => jest.fn(), { virtual: true });
 jest.mock('obj-multiplex', () => jest.fn(), { virtual: true });
@@ -51,7 +50,7 @@ jest.mock('./web-socket-stream', () => ({ WebSocketStream: jest.fn() }), {
 });
 
 jest.mock(
-  './extension-polyfill',
+  './browser/browser-polyfill',
   () => ({
     browser: {
       storage: { local: { get: jest.fn(), set: jest.fn() } },
@@ -413,41 +412,6 @@ describe('Desktop Connection', () => {
       expect(endConnectionStreamMock.write).toHaveBeenLastCalledWith({
         clientId: 1,
       });
-    });
-  });
-
-  describe('on browser controller message', () => {
-    it('shows popup', async () => {
-      await initDesktopConnection();
-      await desktopConnection.createStream(
-        remotePortMock,
-        ConnectionType.INTERNAL,
-      );
-
-      const browserControllerStreamMock =
-        multiplexStreamMocks[CLIENT_ID_BROWSER_CONTROLLER];
-
-      await simulateStreamMessage(
-        browserControllerStreamMock,
-        BrowserControllerAction.BROWSER_ACTION_SHOW_POPUP,
-      );
-
-      expect(notificationManagerMock.showPopup).toHaveBeenCalledTimes(1);
-    });
-
-    it('does nothing if action not recognised', async () => {
-      await initDesktopConnection();
-      await desktopConnection.createStream(
-        remotePortMock,
-        ConnectionType.INTERNAL,
-      );
-
-      const browserControllerStreamMock =
-        multiplexStreamMocks[CLIENT_ID_BROWSER_CONTROLLER];
-
-      await simulateStreamMessage(browserControllerStreamMock, 'invalidAction');
-
-      expect(notificationManagerMock.showPopup).toHaveBeenCalledTimes(0);
     });
   });
 

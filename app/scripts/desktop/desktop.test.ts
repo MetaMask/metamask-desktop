@@ -29,9 +29,8 @@ import {
   DATA_2_MOCK,
 } from './test/mocks';
 import { simulateStreamMessage, simulateNodeEvent } from './test/utils';
-import { browser } from './extension-polyfill';
+import { browser } from './browser/browser-polyfill';
 import { ClientId } from './types/desktop';
-import { BrowserControllerAction } from './types/message';
 import { ConnectionType } from './types/background';
 
 jest.mock('./encrypted-web-socket-stream', () => jest.fn(), { virtual: true });
@@ -65,7 +64,7 @@ jest.mock(
 );
 
 jest.mock(
-  './extension-polyfill',
+  './browser/browser-polyfill',
   () => ({
     browser: { storage: { local: { get: jest.fn(), set: jest.fn() } } },
   }),
@@ -248,22 +247,6 @@ describe('Desktop', () => {
     it('checks for updates', async () => {
       await desktop.init();
       expect(updateCheckMock).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  describe('showPopup', () => {
-    it('writes to browser controller stream', async () => {
-      await desktop.init();
-
-      desktop.showPopup();
-
-      const browserControllerStreamMock =
-        multiplexStreamMocks[CLIENT_ID_BROWSER_CONTROLLER];
-
-      expect(browserControllerStreamMock.write).toHaveBeenCalledTimes(1);
-      expect(browserControllerStreamMock.write).toHaveBeenCalledWith(
-        BrowserControllerAction.BROWSER_ACTION_SHOW_POPUP,
-      );
     });
   });
 
