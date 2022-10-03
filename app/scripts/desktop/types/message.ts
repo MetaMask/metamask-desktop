@@ -1,13 +1,13 @@
 import { ConnectionType, RemotePortData } from './background';
 import { ClientId } from './desktop';
 
-export interface HandshakeMessage {
+export interface NewConnectionMessage {
   clientId: ClientId;
   remotePort: RemotePortData;
   connectionType: ConnectionType;
 }
 
-export interface ConnectionControllerMessage {
+export interface EndConnectionMessage {
   clientId: ClientId;
 }
 
@@ -19,5 +19,5 @@ export type BrowserControllerMessage = BrowserControllerAction;
 
 export interface StatusMessage {
   isWebSocketConnected: boolean;
-  connections: HandshakeMessage[];
+  connections: NewConnectionMessage[];
 }

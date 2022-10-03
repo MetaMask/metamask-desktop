@@ -53,15 +53,26 @@ export const updateBackgroundConnection = (backgroundConnection) => {
 
 export default function launchMetamaskUi(opts, cb) {
   const { backgroundConnection } = opts;
+  let desktopEnabled = false;
+
+  backgroundConnection.getDesktopEnabled(function (err, result) {
+    if (err) {
+      return;
+    }
+
+    desktopEnabled = result;
+  });
+
   // check if we are unlocked first
   backgroundConnection.getState(function (err, metamaskState) {
     if (err) {
-      cb(err, metamaskState);
+      cb(err, { ...metamaskState, desktopEnabled }, backgroundConnection);
       return;
     }
+
     startApp(metamaskState, backgroundConnection, opts).then((store) => {
       setupDebuggingHelpers(store);
-      cb(null, store);
+      cb(null, store, backgroundConnection);
     });
   });
 }

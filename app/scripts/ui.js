@@ -104,10 +104,10 @@ async function start() {
   }
 
   function initializeUiWithTab(tab) {
-    initializeUi(tab, connectionStream, (err, store) => {
+    initializeUi(tab, connectionStream, (err, store, backgroundConnection) => {
       if (err) {
         // if there's an error, store will be = metamaskState
-        displayCriticalError(err, store);
+        displayCriticalError(err, store, backgroundConnection);
         return;
       }
       isUIInitialised = true;
@@ -125,7 +125,7 @@ async function start() {
   function updateUiStreams() {
     connectToAccountManager(connectionStream, (err, backgroundConnection) => {
       if (err) {
-        displayCriticalError(err);
+        displayCriticalError(err, undefined, backgroundConnection);
         return;
       }
 
@@ -161,7 +161,7 @@ async function queryCurrentActiveTab(windowType) {
 function initializeUi(activeTab, connectionStream, cb) {
   connectToAccountManager(connectionStream, (err, backgroundConnection) => {
     if (err) {
-      cb(err, null);
+      cb(err, null, backgroundConnection);
       return;
     }
 
@@ -176,15 +176,23 @@ function initializeUi(activeTab, connectionStream, cb) {
   });
 }
 
-async function displayCriticalError(err, metamaskState) {
+async function displayCriticalError(err, metamaskState, backgroundConnection) {
   const html = await getErrorHtml(SUPPORT_LINK, metamaskState);
 
   container.innerHTML = html;
 
   const button = document.getElementById('critical-error-button');
 
+  const disableDesktopButton = document.getElementById(
+    'critical-error-desktop-button',
+  );
+
   button.addEventListener('click', (_) => {
     browser.runtime.reload();
+  });
+
+  disableDesktopButton?.addEventListener('click', (_) => {
+    backgroundConnection.disableDesktop();
   });
 
   log.error(err.stack);

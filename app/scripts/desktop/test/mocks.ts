@@ -1,4 +1,4 @@
-import { Duplex } from 'stream';
+import { Duplex, EventEmitter } from 'stream';
 import ObjectMultiplex from 'obj-multiplex';
 import { WebSocketServer } from 'ws';
 import NotificationManager from '../../lib/notification-manager';
@@ -34,6 +34,7 @@ export const KEY_MOCK = {} as CryptoKey;
 export const EXPORTED_KEY_MOCK = Buffer.from([1, 2, 3]);
 export const ENCRYPTED_BUFFER_MOCK = Buffer.from([4, 5, 6]);
 export const IV_BUFFER_MOCK = Buffer.from([7, 8, 9]);
+export const JSON_RPC_ID_MOCK = 123456;
 
 export const EXPORTED_KEY_HEX_MOCK =
   Buffer.from(EXPORTED_KEY_MOCK).toString('hex');
@@ -44,7 +45,7 @@ export const ENCRYPTED_HEX_MOCK = Buffer.from(ENCRYPTED_BUFFER_MOCK).toString(
 
 export const IV_HEX_MOCK = Buffer.from(IV_BUFFER_MOCK).toString('hex');
 
-export const HANDSHAKE_MOCK = {
+export const NEW_CONNECTION_MESSAGE_MOCK = {
   clientId: CLIENT_ID_MOCK,
   connectionType: ConnectionType.INTERNAL,
   remotePort: { name: REMOTE_PORT_NAME_MOCK, sender: REMOTE_PORT_SENDER_MOCK },
@@ -77,6 +78,9 @@ export const createStreamMock = (): jest.Mocked<Duplex> =>
     end: jest.fn(),
     pause: jest.fn(),
     resume: jest.fn(),
+    once: jest.fn(),
+    emit: jest.fn(),
+    destroy: jest.fn(),
   } as unknown as jest.Mocked<Duplex>);
 
 export const createWebSocketStreamMock = (): jest.Mocked<WebSocketStream> =>
@@ -109,3 +113,8 @@ export const createMultiplexMock = (): jest.Mocked<ObjectMultiplex & Duplex> =>
     ...createStreamMock(),
     createStream: jest.fn(),
   } as unknown as jest.Mocked<ObjectMultiplex>);
+
+export const createEventEmitterMock = (): jest.Mocked<EventEmitter> =>
+  ({
+    on: jest.fn(),
+  } as any);

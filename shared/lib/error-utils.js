@@ -49,6 +49,11 @@ export async function getErrorHtml(supportLink, metamaskState) {
   switchDirection(textDirection);
   const { currentLocaleMessages, enLocaleMessages } = response;
   const t = getLocaleContext(currentLocaleMessages, enLocaleMessages);
+  const desktopEnabled = metamaskState?.desktopEnabled === true;
+
+  const disableDesktopButton = desktopEnabled
+    ? `<button id='critical-error-desktop-button' class="critical-error__alert__button__disable-desktop">Disable Desktop App</button>`
+    : '';
 
   return `
     <div class="critical-error">
@@ -59,6 +64,7 @@ export async function getErrorHtml(supportLink, metamaskState) {
         <button id='critical-error-button' class="critical-error__alert__button">
           ${t('restartMetamask')}
         </button>
+        ${disableDesktopButton}
       </div>
       <p class="critical-error__paragraph">
         ${t('stillGettingMessage')}

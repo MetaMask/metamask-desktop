@@ -1,5 +1,5 @@
 import path from 'path';
-import { Duplex } from 'stream';
+import { Duplex, EventEmitter } from 'stream';
 import { app, BrowserWindow } from 'electron';
 import { Server as WebSocketServer, WebSocket } from 'ws';
 import endOfStream from 'end-of-stream';
@@ -7,8 +7,8 @@ import ObjectMultiplex from 'obj-multiplex';
 import log from 'loglevel';
 import {
   CLIENT_ID_BROWSER_CONTROLLER,
-  CLIENT_ID_CONNECTION_CONTROLLER,
-  CLIENT_ID_HANDSHAKES,
+  CLIENT_ID_END_CONNECTION,
+  CLIENT_ID_NEW_CONNECTION,
   CLIENT_ID_STATE,
   CLIENT_ID_DISABLE,
 } from '../../../shared/constants/desktop';
@@ -17,19 +17,25 @@ import { updateCheck } from './update-check';
 import { WebSocketStream } from './web-socket-stream';
 import EncryptedWebSocketStream from './encrypted-web-socket-stream';
 import { browser } from './extension-polyfill';
-import { ConnectionType, ConnectRemoteFactory } from './types/background';
+import {
+  ConnectionType,
+  ConnectRemoteFactory,
+  State,
+} from './types/background';
 import {
   BrowserControllerAction,
-  ConnectionControllerMessage,
-  HandshakeMessage,
+  EndConnectionMessage,
+  NewConnectionMessage,
   StatusMessage,
 } from './types/message';
 import { ClientId } from './types/desktop';
 
 export default class Desktop {
+  private static instance: Desktop;
+
   private backgroundInitialise: () => Promise<void>;
 
-  private connections: HandshakeMessage[];
+  private connections: NewConnectionMessage[];
 
   private multiplex: ObjectMultiplex;
 
@@ -47,9 +53,35 @@ export default class Desktop {
 
   private disableStream?: Duplex;
 
+  private stateStream?: Duplex;
+
   private statusWindow?: BrowserWindow;
 
-  constructor(backgroundInitialise: () => Promise<void>) {
+  public static async init(backgroundInitialise: () => Promise<void>) {
+    Desktop.instance = new Desktop(backgroundInitialise);
+    await Desktop.instance.init();
+  }
+
+  public static newInstance(backgroundInitialise: () => Promise<void>) {
+    if (Desktop.hasInstance()) {
+      return Desktop.getInstance();
+    }
+
+    const newInstance = new Desktop(backgroundInitialise);
+    Desktop.instance = newInstance;
+
+    return newInstance;
+  }
+
+  public static getInstance(): Desktop {
+    return Desktop.instance;
+  }
+
+  public static hasInstance(): boolean {
+    return Boolean(Desktop.instance);
+  }
+
+  private constructor(backgroundInitialise: () => Promise<void>) {
     this.backgroundInitialise = backgroundInitialise;
     this.connections = [];
     this.multiplex = new ObjectMultiplex();
@@ -68,20 +100,22 @@ export default class Desktop {
       CLIENT_ID_BROWSER_CONTROLLER,
     );
 
-    const connectionControllerStream = this.multiplex.createStream(
-      CLIENT_ID_CONNECTION_CONTROLLER,
+    const endConnectionStream = this.multiplex.createStream(
+      CLIENT_ID_END_CONNECTION,
     );
-    connectionControllerStream.on('data', (data: ConnectionControllerMessage) =>
-      this.onConnectionControllerMessage(data),
-    );
-
-    const handshakeStream = this.multiplex.createStream(CLIENT_ID_HANDSHAKES);
-    handshakeStream.on('data', (data: HandshakeMessage) =>
-      this.onHandshake(data),
+    endConnectionStream.on('data', (data: EndConnectionMessage) =>
+      this.onEndConnectionMessage(data),
     );
 
-    const stateStream = this.multiplex.createStream(CLIENT_ID_STATE);
-    stateStream.on('data', (data: any) => this.onExtensionState(data));
+    const newConnectionStream = this.multiplex.createStream(
+      CLIENT_ID_NEW_CONNECTION,
+    );
+    newConnectionStream.on('data', (data: NewConnectionMessage) =>
+      this.onNewConnectionMessage(data),
+    );
+
+    this.stateStream = this.multiplex.createStream(CLIENT_ID_STATE);
+    this.stateStream.on('data', (data: any) => this.onExtensionState(data));
 
     this.disableStream = this.multiplex.createStream(CLIENT_ID_DISABLE);
 
@@ -90,26 +124,15 @@ export default class Desktop {
     updateCheck();
   }
 
-  public async disable() {
-    log.debug('Disabling desktop usage');
-
-    if (!this.disableStream) {
-      log.error('Disable stream not initialised');
-      return;
-    }
-
-    const state = await browser.storage.local.get();
-    state.data.PreferencesController.desktopEnabled = false;
-
-    this.disableStream.write(state);
-  }
-
-  public setConnectCallbacks(
+  public registerCallbacks(
     connectRemote: ConnectRemoteFactory,
     connectExternal: ConnectRemoteFactory,
+    metaMaskController: EventEmitter,
   ) {
     this.connectRemote = connectRemote;
     this.connectExternal = connectExternal;
+
+    metaMaskController.on('update', (state) => this.onStateUpdate(state));
   }
 
   public showPopup() {
@@ -121,6 +144,30 @@ export default class Desktop {
     this.browserControllerStream.write(
       BrowserControllerAction.BROWSER_ACTION_SHOW_POPUP,
     );
+  }
+
+  public transferState(rawState: State) {
+    if (!this.webSocketStream) {
+      return;
+    }
+
+    this.stateStream?.write(rawState);
+
+    log.debug('Sent state to extension');
+  }
+
+  private async disable() {
+    log.debug('Desktop disabled');
+
+    if (!this.disableStream) {
+      log.error('Disable stream not initialised');
+      return;
+    }
+
+    const state = await browser.storage.local.get();
+    state.data.PreferencesController.desktopEnabled = false;
+
+    this.disableStream.write(state);
   }
 
   private async createStatusWindow() {
@@ -176,8 +223,8 @@ export default class Desktop {
     this.updateStatusWindow();
   }
 
-  private onHandshake(data: HandshakeMessage) {
-    log.debug('Received handshake', {
+  private onNewConnectionMessage(data: NewConnectionMessage) {
+    log.debug('Received new connection message', {
       clientId: data.clientId,
       name: data.remotePort.name,
       url: data.remotePort.sender.url,
@@ -246,9 +293,15 @@ export default class Desktop {
     this.updateStatusWindow();
   }
 
-  private onConnectionControllerMessage(data: ConnectionControllerMessage) {
-    log.debug('Received connection controller message', data);
+  private onEndConnectionMessage(data: EndConnectionMessage) {
+    log.debug('Received end connection message', data);
     this.clientStreams[data.clientId as number]?.end();
+  }
+
+  private async onStateUpdate(state: any) {
+    if (state.desktopEnabled === false) {
+      await this.disable();
+    }
   }
 
   private async createWebSocketServer(): Promise<WebSocketServer> {

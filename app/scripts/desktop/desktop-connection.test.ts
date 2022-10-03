@@ -1,10 +1,10 @@
-import { Duplex } from 'stream';
+import { Duplex, PassThrough } from 'stream';
 import ObjectMultiplex from 'obj-multiplex';
 import PortStream from 'extension-port-stream';
 import {
   CLIENT_ID_BROWSER_CONTROLLER,
-  CLIENT_ID_CONNECTION_CONTROLLER,
-  CLIENT_ID_HANDSHAKES,
+  CLIENT_ID_END_CONNECTION,
+  CLIENT_ID_NEW_CONNECTION,
   CLIENT_ID_STATE,
   CLIENT_ID_DISABLE,
 } from '../../../shared/constants/desktop';
@@ -20,6 +20,9 @@ import {
   createMultiplexMock,
   createWebSocketBrowserMock,
   createWebSocketStreamMock,
+  createEventEmitterMock,
+  JSON_RPC_ID_MOCK,
+  STREAM_MOCK,
 } from './test/mocks';
 import {
   simulateStreamMessage,
@@ -39,6 +42,10 @@ jest.mock('./encrypted-web-socket-stream', () => jest.fn(), { virtual: true });
 jest.mock('obj-multiplex', () => jest.fn(), { virtual: true });
 jest.mock('extension-port-stream', () => jest.fn(), { virtual: true });
 
+jest.mock('stream', () => ({ Duplex: jest.fn(), PassThrough: jest.fn() }), {
+  virtual: true,
+});
+
 jest.mock('./web-socket-stream', () => ({ WebSocketStream: jest.fn() }), {
   virtual: true,
 });
@@ -56,6 +63,12 @@ jest.mock(
   },
 );
 
+const removeInstance = () => {
+  // eslint-disable-next-line
+  // @ts-ignore
+  DesktopConnection.instance = undefined;
+};
+
 describe('Desktop Connection', () => {
   let webSocketMock: jest.Mocked<BrowserWebSocket>;
   let webSocketStreamMock: jest.Mocked<WebSocketStream>;
@@ -68,6 +81,8 @@ describe('Desktop Connection', () => {
   let encryptedWebSocketStreamConstructorMock: jest.Mocked<any>;
   let portStreamConstructorMock: jest.Mocked<any>;
   let browserMock: jest.Mocked<any>;
+  let passThroughConstructorMock: jest.Mocked<any>;
+  let passThroughMock: jest.Mocked<Duplex>;
 
   const multiplexStreamMocks: { [clientId: ClientId]: jest.Mocked<Duplex> } =
     {};
@@ -96,13 +111,17 @@ describe('Desktop Connection', () => {
     encryptedWebSocketStreamConstructorMock = EncryptedWebSocketStream;
     portStreamConstructorMock = PortStream;
     browserMock = browser;
+    passThroughConstructorMock = PassThrough;
+    passThroughMock = createStreamMock();
 
     webSocketStreamMock.pipe.mockReturnValue(multiplexMock);
     portStreamMock.pipe.mockImplementation((dest) => dest);
+    passThroughMock.pipe.mockImplementation((dest) => dest);
     objectMultiplexConstructorMock.mockReturnValue(multiplexMock);
     webSocketStreamConstructorMock.mockReturnValue(webSocketStreamMock);
     portStreamConstructorMock.mockReturnValue(portStreamMock);
     jest.spyOn(global, 'WebSocket').mockImplementation(() => webSocketMock);
+    passThroughConstructorMock.mockReturnValue(passThroughMock);
 
     encryptedWebSocketStreamConstructorMock.mockReturnValue(
       webSocketStreamMock,
@@ -114,9 +133,97 @@ describe('Desktop Connection', () => {
       return newStream as any;
     });
 
-    desktopConnection = new DesktopConnection(notificationManagerMock);
+    removeInstance();
+
+    desktopConnection = DesktopConnection.newInstance(notificationManagerMock);
 
     cfg().desktop.webSocket.disableEncryption = false;
+  });
+
+  describe('initIfEnabled', () => {
+    beforeEach(() => {
+      removeInstance();
+    });
+
+    it.each([
+      ['no state', undefined],
+      [
+        'desktop enabled in state',
+        { PreferencesController: { desktopEnabled: true } },
+      ],
+    ])('creates and initialises if %s', async (_, state) => {
+      const initPromise = DesktopConnection.initIfEnabled(
+        notificationManagerMock,
+        state,
+      );
+
+      await flushPromises();
+      await simulateBrowserEvent(webSocketMock, 'open');
+      await initPromise;
+
+      expect(DesktopConnection.getInstance()).toBeDefined();
+    });
+
+    it('does nothing if desktop disabled in state', async () => {
+      const initPromise = DesktopConnection.initIfEnabled(
+        notificationManagerMock,
+        {
+          PreferencesController: { desktopEnabled: false },
+        },
+      );
+
+      await flushPromises();
+      await simulateBrowserEvent(webSocketMock, 'open');
+      await initPromise;
+
+      expect(DesktopConnection.getInstance()).toBeUndefined();
+    });
+  });
+
+  describe('newInstance', () => {
+    beforeEach(() => {
+      removeInstance();
+    });
+
+    it('creates a new instance if none exists', () => {
+      expect(DesktopConnection.getInstance()).toBeUndefined();
+
+      const instance = DesktopConnection.newInstance(notificationManagerMock);
+
+      expect(DesktopConnection.getInstance()).toBeDefined();
+      expect(DesktopConnection.getInstance()).toBe(instance);
+    });
+
+    it('returns old instance if one already exists', () => {
+      expect(DesktopConnection.getInstance()).toBeUndefined();
+
+      const firstInstance = DesktopConnection.newInstance(
+        notificationManagerMock,
+      );
+
+      const secondInstance = DesktopConnection.newInstance(
+        notificationManagerMock,
+      );
+
+      expect(DesktopConnection.getInstance()).toBeDefined();
+      expect(DesktopConnection.getInstance()).toBe(firstInstance);
+      expect(secondInstance).toBe(firstInstance);
+    });
+  });
+
+  describe('hasInstance', () => {
+    beforeEach(() => {
+      removeInstance();
+    });
+
+    it('returns false if no instance created', () => {
+      expect(DesktopConnection.hasInstance()).toBe(false);
+    });
+
+    it('returns true if instance created', () => {
+      DesktopConnection.newInstance(notificationManagerMock);
+      expect(DesktopConnection.hasInstance()).toBe(true);
+    });
   });
 
   describe('init', () => {
@@ -150,15 +257,36 @@ describe('Desktop Connection', () => {
         CLIENT_ID_BROWSER_CONTROLLER,
       );
       expect(multiplexMock.createStream).toHaveBeenCalledWith(
-        CLIENT_ID_CONNECTION_CONTROLLER,
+        CLIENT_ID_END_CONNECTION,
       );
       expect(multiplexMock.createStream).toHaveBeenCalledWith(
-        CLIENT_ID_HANDSHAKES,
+        CLIENT_ID_NEW_CONNECTION,
       );
       expect(multiplexMock.createStream).toHaveBeenCalledWith(CLIENT_ID_STATE);
       expect(multiplexMock.createStream).toHaveBeenCalledWith(
         CLIENT_ID_DISABLE,
       );
+    });
+
+    it('throws if timeout waiting for web socket open', async () => {
+      jest.spyOn(global, 'setTimeout').mockImplementation((callback) => {
+        callback();
+        return 0 as any;
+      });
+
+      await expect(() => desktopConnection.init()).rejects.toThrow(
+        'Timeout connecting to web socket server',
+      );
+    });
+
+    it('does nothing if already initialised', async () => {
+      await initDesktopConnection();
+
+      expect(multiplexMock.createStream).toHaveBeenCalledTimes(5);
+
+      await desktopConnection.init();
+
+      expect(multiplexMock.createStream).toHaveBeenCalledTimes(5);
     });
   });
 
@@ -179,20 +307,24 @@ describe('Desktop Connection', () => {
       const clientStreamMock = multiplexStreamMocks[1];
 
       expect(portStreamMock.pipe).toHaveBeenCalledTimes(1);
-      expect(portStreamMock.pipe).toHaveBeenCalledWith(clientStreamMock);
+      expect(portStreamMock.pipe).toHaveBeenCalledWith(passThroughMock);
+
+      expect(passThroughMock.pipe).toHaveBeenCalledTimes(1);
+      expect(passThroughMock.pipe).toHaveBeenCalledWith(clientStreamMock);
 
       expect(clientStreamMock.pipe).toHaveBeenCalledTimes(1);
       expect(clientStreamMock.pipe).toHaveBeenCalledWith(portStreamMock);
     });
 
-    it('sends handshake to web socket stream', async () => {
+    it('sends new connection message to web socket stream', async () => {
       await initDesktopConnection();
       desktopConnection.createStream(remotePortMock, connectionType);
 
-      const handshakeStreamMock = multiplexStreamMocks[CLIENT_ID_HANDSHAKES];
+      const newConnectionStreamMock =
+        multiplexStreamMocks[CLIENT_ID_NEW_CONNECTION];
 
-      expect(handshakeStreamMock.write).toHaveBeenCalledTimes(1);
-      expect(handshakeStreamMock.write).toHaveBeenCalledWith({
+      expect(newConnectionStreamMock.write).toHaveBeenCalledTimes(1);
+      expect(newConnectionStreamMock.write).toHaveBeenCalledWith({
         clientId: 1,
         connectionType,
         remotePort: {
@@ -266,7 +398,7 @@ describe('Desktop Connection', () => {
   });
 
   describe('on port stream disconnect', () => {
-    it('sends connection close message', async () => {
+    it('sends end connection message', async () => {
       await initDesktopConnection();
       await desktopConnection.createStream(
         remotePortMock,
@@ -275,10 +407,10 @@ describe('Desktop Connection', () => {
 
       await simulateNodeEvent(portStreamMock, 'finish');
 
-      const connectionControllerStreamMock =
-        multiplexStreamMocks[CLIENT_ID_CONNECTION_CONTROLLER];
+      const endConnectionStreamMock =
+        multiplexStreamMocks[CLIENT_ID_END_CONNECTION];
 
-      expect(connectionControllerStreamMock.write).toHaveBeenLastCalledWith({
+      expect(endConnectionStreamMock.write).toHaveBeenLastCalledWith({
         clientId: 1,
       });
     });
@@ -338,6 +470,111 @@ describe('Desktop Connection', () => {
 
     it('restarts extension', async () => {
       expect(browser.runtime.reload).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('on state update', () => {
+    const simulateStateUpdate = async (updatedState: any) => {
+      const metamaskControllerMock = createEventEmitterMock();
+
+      browserMock.storage.local.get.mockResolvedValue({
+        ...DATA_MOCK,
+        data: { PreferencesController: { desktopEnabled: false } },
+      });
+
+      DesktopConnection.registerCallbacks(
+        metamaskControllerMock,
+        notificationManagerMock,
+      );
+
+      await simulateNodeEvent(metamaskControllerMock, 'update', updatedState);
+      await simulateBrowserEvent(webSocketMock, 'open');
+    };
+
+    it('initialises if no instance and desktop enabled set to true', async () => {
+      removeInstance();
+      await simulateStateUpdate({ desktopEnabled: true });
+
+      expect(DesktopConnection.getInstance()).toBeDefined();
+      expect(EncryptedWebSocketStream).toHaveBeenCalledTimes(1);
+    });
+
+    it('does nothing if instance exists and desktop enabled set to true', async () => {
+      await simulateStateUpdate({ desktopEnabled: true });
+
+      expect(DesktopConnection.getInstance()).toBeDefined();
+      expect(EncryptedWebSocketStream).toHaveBeenCalledTimes(0);
+    });
+
+    it('does nothing if no instance exists and desktop enabled set to false', async () => {
+      removeInstance();
+      await simulateStateUpdate({ desktopEnabled: false });
+
+      expect(DesktopConnection.getInstance()).toBeUndefined();
+      expect(EncryptedWebSocketStream).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  describe('on state message', () => {
+    beforeEach(async () => {
+      await initDesktopConnection();
+      await desktopConnection.createStream(
+        remotePortMock,
+        ConnectionType.INTERNAL,
+      );
+
+      const stateStreaMock = multiplexStreamMocks[CLIENT_ID_STATE];
+      await simulateStreamMessage(stateStreaMock, DATA_MOCK);
+    });
+
+    it('updates state', async () => {
+      expect(browser.storage.local.set).toHaveBeenCalledTimes(1);
+      expect(browser.storage.local.set).toHaveBeenCalledWith(DATA_MOCK);
+    });
+  });
+
+  describe('on port stream message', () => {
+    const generateRawState = (desktopEnabled: boolean) => ({
+      data: {
+        ...DATA_MOCK,
+        PreferencesController: { desktopEnabled },
+      },
+    });
+
+    const simulatePortStreaMessage = async (message: any) => {
+      browserMock.storage.local.get.mockResolvedValue(generateRawState(true));
+
+      await initDesktopConnection();
+      await desktopConnection.createStream(
+        remotePortMock,
+        ConnectionType.INTERNAL,
+      );
+
+      await simulateStreamMessage(portStreamMock, message);
+    };
+
+    it('updates state and restarts if method is disableDesktop', async () => {
+      await simulatePortStreaMessage({ data: { method: 'disableDesktop' } });
+
+      expect(browser.storage.local.set).toHaveBeenCalledTimes(1);
+      expect(browser.storage.local.set).toHaveBeenCalledWith(
+        generateRawState(false),
+      );
+
+      expect(browser.runtime.reload).toHaveBeenCalledTimes(1);
+    });
+
+    it('sends response if method is getDesktopEnabled', async () => {
+      await simulatePortStreaMessage({
+        name: STREAM_MOCK,
+        data: { id: JSON_RPC_ID_MOCK, method: 'getDesktopEnabled' },
+      });
+
+      expect(portStreamMock.write).toHaveBeenCalledTimes(1);
+      expect(portStreamMock.write).toHaveBeenCalledWith({
+        name: STREAM_MOCK,
+        data: { jsonrpc: '2.0', id: JSON_RPC_ID_MOCK, result: true },
+      });
     });
   });
 });
