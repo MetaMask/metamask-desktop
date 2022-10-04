@@ -377,18 +377,13 @@ describe('Desktop Connection', () => {
 
   describe('transferState', () => {
     it('writes state to state stream', async () => {
-      const stateMocked = {
-        ...DATA_MOCK,
-        data: { PreferencesController: { desktopEnabled: true } },
-      };
-
       await initDesktopConnection();
       await desktopConnection.createStream(
         remotePortMock,
         ConnectionType.INTERNAL,
       );
 
-      await desktopConnection.transferState(stateMocked);
+      await desktopConnection.transferState();
 
       const stateStreamMock = multiplexStreamMocks[CLIENT_ID_STATE];
 
@@ -477,7 +472,7 @@ describe('Desktop Connection', () => {
     });
   });
 
-  describe('onRestart', () => {
+  describe('restart', () => {
     beforeEach(async () => {
       await initDesktopConnection();
       await desktopConnection.createStream(

@@ -20,7 +20,7 @@ export type BrowserControllerMessage = BrowserControllerAction;
 export interface StatusMessage {
   isWebSocketConnected: boolean;
   connections: NewConnectionMessage[];
-  isDesktopSynced?: boolean;
+  isPaired?: boolean;
 }
 
 export type PairingMessage = {

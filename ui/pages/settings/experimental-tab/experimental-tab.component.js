@@ -7,7 +7,7 @@ import {
 } from '../../../helpers/utils/settings-search';
 import { EVENT } from '../../../../shared/constants/metametrics';
 import Button from '../../../components/ui/button';
-import { DESKTOP_SYNC_ROUTE } from '../../../helpers/constants/routes';
+import { DESKTOP_PAIRING_ROUTE } from '../../../helpers/constants/routes';
 
 export default class ExperimentalTab extends PureComponent {
   static contextTypes = {
@@ -26,7 +26,7 @@ export default class ExperimentalTab extends PureComponent {
     setCustomNetworkListEnabled: PropTypes.func,
     desktopEnabled: PropTypes.bool,
     setDesktopEnabled: PropTypes.func,
-    startPairing: PropTypes.func,
+    setIsPairing: PropTypes.func,
     isPairing: PropTypes.bool,
     history: PropTypes.object,
   };
@@ -272,8 +272,8 @@ export default class ExperimentalTab extends PureComponent {
     );
   }
 
-  renderDesktopSyncButton() {
-    const { history, startPairing, isPairing } = this.props;
+  renderDesktopPairingButton() {
+    const { history, setIsPairing, isPairing } = this.props;
 
     return (
       <div
@@ -292,8 +292,8 @@ export default class ExperimentalTab extends PureComponent {
               value={isPairing}
               onClick={(event, value) => {
                 event.preventDefault();
-                history.push(DESKTOP_SYNC_ROUTE);
-                startPairing(!value);
+                history.push(DESKTOP_PAIRING_ROUTE);
+                setIsPairing(!value);
               }}
             >
               Sync With Desktop
@@ -312,10 +312,9 @@ export default class ExperimentalTab extends PureComponent {
         {this.renderCollectibleDetectionToggle()}
         {this.renderEIP1559V2EnabledToggle()}
         {this.renderCustomNetworkListToggle()}
-        {desktopEnabled || process.env.SKIP_PAIRING
+        {desktopEnabled || process.env.SKIP_OTP_PAIRING_FLOW
           ? this.renderDesktopToggle()
-          : null}
-        {this.renderDesktopSyncButton()}
+          : this.renderDesktopPairingButton()}
       </div>
     );
   }

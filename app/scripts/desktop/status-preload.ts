@@ -68,7 +68,7 @@ const updateDesktopSynced = () => {
 const onStatusMessage = (data: StatusMessage) => {
   updateWebSocketStatus(data);
   updateConnections(data);
-  if (data.isDesktopSynced) {
+  if (data.isPaired) {
     updateDesktopSynced();
   }
 };

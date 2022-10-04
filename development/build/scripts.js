@@ -1024,7 +1024,7 @@ async function getEnvironmentVariables({ buildTarget, buildType, version }) {
     DESKTOP: config.DESKTOP,
     DISABLE_WEB_SOCKET_ENCRYPTION: config.DISABLE_WEB_SOCKET_ENCRYPTION === '1',
     ICON_NAMES: iconNames,
-    SKIP_PAIRING: config.SKIP_PAIRING === '1',
+    SKIP_OTP_PAIRING_FLOW: config.SKIP_OTP_PAIRING_FLOW === '1',
     IN_TEST: testing,
     INFURA_PROJECT_ID: getInfuraProjectId({
       buildType,

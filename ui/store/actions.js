@@ -3913,20 +3913,20 @@ export function setDesktopEnabled(desktopEnabled) {
   };
 }
 
-export function startPairing(isPairing) {
+export function setIsPairing(isPairing) {
   return async () => {
     try {
-      await submitRequestToBackground('startPairing', [isPairing]);
+      await submitRequestToBackground('setIsPairing', [isPairing]);
     } catch (error) {
       log.error(error);
     }
   };
 }
 
-export function setOtp(otp) {
+export function setOtpPairing(otp) {
   return async () => {
     try {
-      await submitRequestToBackground('setOtp', [otp]);
+      await submitRequestToBackground('setOtpPairing', [otp]);
     } catch (error) {
       log.error(error);
     }

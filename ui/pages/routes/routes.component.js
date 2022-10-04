@@ -17,7 +17,7 @@ import PermissionsConnect from '../permissions-connect';
 import RestoreVaultPage from '../keychains/restore-vault';
 import RevealSeedConfirmation from '../keychains/reveal-seed';
 import MobileSyncPage from '../mobile-sync';
-import DesktopSyncPage from '../desktop-sync';
+import DesktopPairingPage from '../desktop-pairing';
 import ImportTokenPage from '../import-token';
 import AddCollectiblePage from '../add-collectible';
 import ConfirmImportTokenPage from '../confirm-import-token';
@@ -63,7 +63,7 @@ import {
   ONBOARDING_ROUTE,
   ADD_COLLECTIBLE_ROUTE,
   TOKEN_DETAILS,
-  DESKTOP_SYNC_ROUTE,
+  DESKTOP_PAIRING_ROUTE,
   ///: BEGIN:ONLY_INCLUDE_IN(flask)
   NOTIFICATIONS_ROUTE,
   ///: END:ONLY_INCLUDE_IN
@@ -192,8 +192,8 @@ export default class Routes extends Component {
           exact
         />
         <Authenticated
-          path={DESKTOP_SYNC_ROUTE}
-          component={DesktopSyncPage}
+          path={DESKTOP_PAIRING_ROUTE}
+          component={DesktopPairingPage}
           exact
         />
         <Authenticated path={SETTINGS_ROUTE} component={Settings} />

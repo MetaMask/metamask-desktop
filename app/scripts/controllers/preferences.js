@@ -72,7 +72,7 @@ export default class PreferencesController {
       customNetworkListEnabled: false,
       desktopEnabled: false,
       isPairing: false,
-      otp: 0,
+      desktopPairingOtp: 0,
       ...opts.initState,
     };
 
@@ -218,20 +218,20 @@ export default class PreferencesController {
    *
    * @param isPairing
    */
-  startPairing(isPairing) {
+  setIsPairing(isPairing) {
     this.store.updateState({
       isPairing,
     });
   }
 
   /**
-   * Setter for the `otp` property
+   * Setter for the `desktopPairingOtp` property
    *
-   * @param otp
+   * @param desktopPairingOtp
    */
-  setOtp(otp) {
+  setOtpPairing(desktopPairingOtp) {
     this.store.updateState({
-      otp,
+      desktopPairingOtp,
     });
   }
 

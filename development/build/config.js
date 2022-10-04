@@ -74,7 +74,7 @@ async function getConfig() {
     METAMASK_DEBUG: process.env.METAMASK_DEBUG,
     DESKTOP: process.env.DESKTOP,
     DISABLE_WEB_SOCKET_ENCRYPTION: process.env.DISABLE_WEB_SOCKET_ENCRYPTION,
-    SKIP_PAIRING: process.env.SKIP_PAIRING,
+    SKIP_OTP_PAIRING_FLOW: process.env.SKIP_OTP_PAIRING_FLOW,
     ...ini.parse(configContents),
     ...environmentVariables,
   };

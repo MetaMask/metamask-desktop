@@ -1,13 +1,13 @@
 import React from 'react';
-import DesktopSyncPage from './desktop-sync.component';
+import DesktopPairingPage from './desktop-pairing.component';
 
 export default {
-  title: 'Pages/DesktopSyncPage',
+  title: 'Pages/DesktopPairingPage',
   id: __filename,
 };
 
 export const DefaultStory = () => {
-  return <DesktopSyncPage />;
+  return <DesktopPairingPage />;
 };
 
 DefaultStory.storyName = 'Default';

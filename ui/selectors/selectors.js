@@ -1189,13 +1189,13 @@ export function getIsPairing(state) {
 }
 
 /**
- * To get the `otp` value
+ * To get the `desktopPairingOtp` value
  *
  * @param {*} state
  * @returns String
  */
-export function getOtp(state) {
-  return state.metamask.otp;
+export function getDesktopPairingOtp(state) {
+  return state.metamask.desktopPairingOtp;
 }
 
 export function getIsCustomNetwork(state) {

@@ -14,18 +14,16 @@ import {
 
 const OTP_GENERATION_TIME = SECOND * 30;
 
-export default class DesktopSyncPage extends Component {
+export default class DesktopPairingPage extends Component {
   static contextTypes = {
     t: PropTypes.func,
   };
 
   static propTypes = {
     history: PropTypes.object.isRequired,
-    // setOtp: PropTypes.func.isRequired,
-    startPairing: PropTypes.func.isRequired,
+    setIsPairing: PropTypes.func.isRequired,
     isPairing: PropTypes.bool.isRequired,
     mostRecentOverviewPage: PropTypes.string.isRequired,
-    // otp: PropTypes.number,
   };
 
   state = {
@@ -46,7 +44,7 @@ export default class DesktopSyncPage extends Component {
 
   componentWillUnmount() {
     if (this.props.isPairing) {
-      this.props.startPairing(false);
+      this.props.setIsPairing(false);
     }
     clearInterval(this.interval);
   }
@@ -98,7 +96,7 @@ export default class DesktopSyncPage extends Component {
           value={this.props.isPairing}
           onClick={(value) => {
             this.goBack();
-            this.props.startPairing(!value);
+            this.props.setIsPairing(!value);
           }}
         >
           {t('done')}

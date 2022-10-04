@@ -139,7 +139,7 @@ export default class Desktop {
     );
   }
 
-  private onPairing(pairingMessage: PairingMessage) {
+  private onExtensionOtpPairing(pairingMessage: PairingMessage) {
     if (!pairingMessage?.isPaired) {
       this.statusWindow?.webContents.send('invalid-otp', false);
     }
@@ -200,13 +200,13 @@ export default class Desktop {
       // icon: path.resolve(__dirname, '../../build-types/desktop/images/icon-512.png')
     });
 
-    if (cfg().desktop.skipPairing) {
+    if (cfg().desktop.skipOtpPairingFlow) {
       await statusWindow.loadFile(
         path.resolve(__dirname, '../../desktop.html'),
       );
     } else {
       await statusWindow.loadFile(
-        path.resolve(__dirname, '../../desktop-sync.html'),
+        path.resolve(__dirname, '../../desktop-pairing.html'),
       );
     }
 
@@ -360,7 +360,7 @@ export default class Desktop {
     const statusMessage: StatusMessage = {
       isWebSocketConnected: Boolean(this.webSocket),
       connections: this.connections,
-      isDesktopSynced: this.isPaired,
+      isPaired: this.isPaired,
     };
 
     this.statusWindow.webContents.send('status', statusMessage);
@@ -378,7 +378,7 @@ export default class Desktop {
   private async initStreams() {
     this.pairingStream = this.multiplex.createStream(CLIENT_ID_PAIRING);
     this.pairingStream.on('data', (data: PairingMessage) =>
-      this.onPairing(data),
+      this.onExtensionOtpPairing(data),
     );
 
     const browserControllerStream = this.multiplex.createStream(

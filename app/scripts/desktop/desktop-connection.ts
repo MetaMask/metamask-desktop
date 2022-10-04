@@ -95,7 +95,7 @@ export default class DesktopConnection {
       log.debug('Desktop enabled');
 
       await DesktopConnection.init();
-      await DesktopConnection.getInstance().transferState(state);
+      await DesktopConnection.getInstance().transferState();
     }
   }
 
@@ -146,17 +146,21 @@ export default class DesktopConnection {
 
     this.pairingStream = this.multiplex.createStream(CLIENT_ID_PAIRING);
     this.pairingStream.on('data', (data: PairingMessage) =>
-      data?.isPaired ? this.onRestart() : this.onPairing(data),
+      data?.isPaired ? this.restart() : this.onPairing(data),
     );
 
     log.debug('Connected to desktop');
   }
 
-  public async transferState(state: State) {
+  public async transferState() {
     if (!this.stateStream) {
       log.error('State stream not initialised');
       return;
     }
+
+    const state = await browser.storage.local.get();
+    state.data.PreferencesController.desktopEnabled = true;
+
     this.stateStream.write(state);
 
     log.debug('Sent extension state to desktop');
@@ -208,7 +212,7 @@ export default class DesktopConnection {
     uiInputStream.resume();
   }
 
-  private async onRestart() {
+  private async restart() {
     log.debug('Restarting extension');
     browser.runtime.reload();
   }
@@ -220,24 +224,15 @@ export default class DesktopConnection {
     log.debug('Synchronised state with desktop');
 
     log.debug('Restarting extension');
-    this.onRestart();
-  }
-
-  private async updateState(): Promise<State> {
-    const rawState = await browser.storage.local.get();
-    rawState.data.PreferencesController.desktopEnabled = true;
-    rawState.data.PreferencesController.isPairing = false;
-    await browser.storage.local.set(rawState);
-    log.debug('State updated');
-    return rawState;
+    this.restart();
   }
 
   private async onPairing(pairingMessage: PairingMessage) {
     log.debug(`Received desktop pairing message`);
     if (validate(pairingMessage?.otp)) {
-      const updatedState = await this.updateState();
+      await this.updateStateAfterPairing();
 
-      await this.transferState(updatedState);
+      await this.transferState();
       log.debug('Synchronised state with desktop');
 
       log.debug('OTP is valid, sending acknowledged to desktop');
@@ -246,6 +241,14 @@ export default class DesktopConnection {
       log.debug('OTP is not valid, sending acknowledged to desktop');
       this.pairingStream?.write({ ...pairingMessage, isPaired: false });
     }
+  }
+
+  private async updateStateAfterPairing() {
+    const state = await browser.storage.local.get();
+    state.data.PreferencesController.desktopEnabled = true;
+    state.data.PreferencesController.isPairing = false;
+    await browser.storage.local.set(state);
+    log.debug('State updated after pairing');
   }
 
   private async connect() {
