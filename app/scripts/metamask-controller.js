@@ -16,7 +16,6 @@ import {
 } from 'eth-rpc-errors';
 import { Mutex } from 'await-semaphore';
 import log from 'loglevel';
-import TrezorKeyring from 'eth-trezor-keyring';
 import LatticeKeyring from 'eth-lattice-keyring';
 import { MetaMaskKeyring as QRHardwareKeyring } from '@keystonehq/metamask-airgapped-keyring';
 import EthQuery from 'eth-query';
@@ -156,25 +155,26 @@ import {
 } from './controllers/permissions';
 import createRPCMethodTrackingMiddleware from './lib/createRPCMethodTrackingMiddleware';
 
-// eslint-disable-next-line import/order
+/* eslint-disable import/order */
+let LedgerBridgeKeyring = require('@metamask/eth-ledger-bridge-keyring');
 let TrezorKeyring = require('eth-trezor-keyring');
+/* eslint-enable import/order */
 
 ///: BEGIN:ONLY_INCLUDE_IN(flask)
 /* eslint-disable import/first */
 import cfg from './desktop/config';
 import { checkSnapsBlockList } from './flask/snaps-utilities';
 import { SNAP_BLOCKLIST } from './flask/snaps-blocklist';
+import { LedgerBridgeKeyring as ElectronLedgerBridgeKeyring } from './desktop/hw/ledger-keyring';
 
 if (cfg().desktop.isApp) {
-  // eslint-disable-next-line node/global-require
+  /* eslint-disable node/global-require */
   TrezorKeyring = require('./desktop/hw/trezor/trezor-keyring');
+  LedgerBridgeKeyring = ElectronLedgerBridgeKeyring;
+  /* eslint-enable node/global-require */
 }
 /* eslint-enable import/first */
 ///: END:ONLY_INCLUDE_IN
-
-const LedgerBridgeKeyring = cfg().desktop.isApp
-  ? require('./desktop/hw/ledger-keyring').LedgerBridgeKeyring
-  : require('@metamask/eth-ledger-bridge-keyring');
 
 export const METAMASK_CONTROLLER_EVENTS = {
   // Fired after state changes that impact the extension badge (unapproved msg count)
