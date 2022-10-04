@@ -155,15 +155,20 @@ import {
   ///: END:ONLY_INCLUDE_IN
 } from './controllers/permissions';
 import createRPCMethodTrackingMiddleware from './lib/createRPCMethodTrackingMiddleware';
+
+// eslint-disable-next-line import/order
+let LedgerBridgeKeyring = require('@metamask/eth-ledger-bridge-keyring');
+
 ///: BEGIN:ONLY_INCLUDE_IN(flask)
+/* eslint-disable import/first */
 import cfg from './desktop/config';
 import { checkSnapsBlockList } from './flask/snaps-utilities';
 import { SNAP_BLOCKLIST } from './flask/snaps-blocklist';
-///: END:ONLY_INCLUDE_IN
+import { LedgerBridgeKeyring as ElectronLedgerBridgeKeyring } from './desktop/hw/ledger-keyring';
+/* eslint-enable import/first */
 
-const LedgerBridgeKeyring = cfg().desktop.isApp
-  ? require('./desktop/hw/ledger-keyring').LedgerBridgeKeyring
-  : require('@metamask/eth-ledger-bridge-keyring');
+LedgerBridgeKeyring = ElectronLedgerBridgeKeyring;
+///: END:ONLY_INCLUDE_IN
 
 export const METAMASK_CONTROLLER_EVENTS = {
   // Fired after state changes that impact the extension badge (unapproved msg count)
