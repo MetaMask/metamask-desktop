@@ -288,7 +288,7 @@ export default class ExperimentalTab extends PureComponent {
         <div className="settings-page__content-item">
           <div className="settings-page__content-item-col">
             <Button
-              type="primary"
+              type="secondary"
               large
               value={isPairing}
               onClick={(event, value) => {

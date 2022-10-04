@@ -41,6 +41,7 @@ export const IV_BUFFER_MOCK = Buffer.from([7, 8, 9]);
 export const JSON_RPC_ID_MOCK = 123456;
 export const ARGS_MOCK = ['test123', 123, true];
 export const UUID_MOCK = '6328e6ae-f867-4876-af6f-22a44efbe251';
+export const OTP_MOCK = '123456';
 
 export const EXPORTED_KEY_HEX_MOCK =
   Buffer.from(EXPORTED_KEY_MOCK).toString('hex');

@@ -162,13 +162,6 @@ export default class DesktopConnection {
     log.debug('Sent extension state to desktop');
   }
 
-  private async onRestart() {
-    // if(isPaired){
-    log.debug('Restarting extension');
-    browser.runtime.reload();
-    // }
-  }
-
   /**
    * Creates a connection with the MetaMask Desktop via a multiplexed stream.
    *
@@ -215,6 +208,11 @@ export default class DesktopConnection {
     uiInputStream.resume();
   }
 
+  private async onRestart() {
+    log.debug('Restarting extension');
+    browser.runtime.reload();
+  }
+
   private async onDisable(state: State) {
     log.debug('Received desktop disable message');
 
@@ -222,7 +220,7 @@ export default class DesktopConnection {
     log.debug('Synchronised state with desktop');
 
     log.debug('Restarting extension');
-    browser.runtime.reload();
+    this.onRestart();
   }
 
   private async updateState(): Promise<State> {
@@ -230,6 +228,7 @@ export default class DesktopConnection {
     rawState.data.PreferencesController.desktopEnabled = true;
     rawState.data.PreferencesController.isPairing = false;
     await browser.storage.local.set(rawState);
+    log.debug('State updated');
     return rawState;
   }
 
