@@ -1,6 +1,6 @@
 import { Duplex } from 'stream';
 import log from 'loglevel';
-import { NestedProxy } from '../nested-proxy';
+import { NestedProxy } from '../utils/nested-proxy';
 import ObfuscatedStore from '../storage';
 import {
   Browser,

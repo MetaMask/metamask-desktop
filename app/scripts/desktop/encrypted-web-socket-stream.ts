@@ -4,7 +4,7 @@ import {
   MESSAGE_HANDSHAKE_FINISH,
   MESSAGE_HANDSHAKE_START,
 } from '../../../shared/constants/desktop';
-import { flattenMessage } from './utils';
+import { flattenMessage } from './utils/utils';
 import * as asymmetricEncryption from './asymmetric-encryption';
 import * as symmetricEncryption from './symmetric-encryption';
 import {
