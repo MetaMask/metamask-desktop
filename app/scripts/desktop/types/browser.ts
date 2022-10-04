@@ -6,6 +6,7 @@ export interface Browser {
     };
   };
   runtime: {
+    id: string;
     reload: () => undefined;
   };
 }

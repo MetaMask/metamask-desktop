@@ -23,6 +23,7 @@ import {
 } from './types/background';
 import { ClientId } from './types/desktop';
 import { registerResponseStream } from './browser/browser-proxy';
+import { timeoutPromise } from './utils/utils';
 
 const TIMEOUT_CONNECT = 5000;
 
@@ -314,19 +315,19 @@ export default class DesktopConnection {
   }
 
   private async createWebSocket(): Promise<WebSocket> {
-    return new Promise((resolve, reject) => {
+    const waitForWebSocketOpen = new Promise<BrowserWebSocket>((resolve) => {
       const webSocket = new WebSocket(`${cfg().desktop.webSocket.url}`);
 
       webSocket.addEventListener('open', () => {
         resolve(webSocket);
       });
-
-      setTimeout(() => {
-        const message = 'Timeout connecting to web socket server';
-        log.error(message);
-        reject(new Error(message));
-      }, TIMEOUT_CONNECT);
     });
+
+    return timeoutPromise(
+      waitForWebSocketOpen,
+      TIMEOUT_CONNECT,
+      'Timeout connecting to web socket server',
+    );
   }
 
   private getNextClientId(): ClientId {

@@ -268,12 +268,14 @@ describe('Desktop Connection', () => {
     });
 
     it('throws if timeout waiting for web socket open', async () => {
-      jest.spyOn(global, 'setTimeout').mockImplementation((callback) => {
-        callback();
-        return 0 as any;
-      });
+      jest.useFakeTimers();
 
-      await expect(() => desktopConnection.init()).rejects.toThrow(
+      const promise = desktopConnection.init();
+
+      jest.runAllTimers();
+      jest.useRealTimers();
+
+      await expect(promise).rejects.toThrow(
         'Timeout connecting to web socket server',
       );
     });

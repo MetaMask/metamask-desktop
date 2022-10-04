@@ -1,4 +1,5 @@
 import {
+  ARGS_MOCK,
   PROPERTY_2_MOCK,
   PROPERTY_MOCK,
   VALUE_2_MOCK,
@@ -10,7 +11,6 @@ describe('Nested Proxy', () => {
   const getOverrideMock = jest.fn();
   const functionOverrideMock = jest.fn();
   const functionMock = () => VALUE_MOCK;
-  const argsMock = ['test', 123];
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -151,12 +151,12 @@ describe('Nested Proxy', () => {
 
         functionOverrideMock.mockReturnValueOnce(VALUE_2_MOCK);
 
-        expect(proxy[PROPERTY_MOCK](...argsMock)).toStrictEqual(VALUE_2_MOCK);
+        expect(proxy[PROPERTY_MOCK](...ARGS_MOCK)).toStrictEqual(VALUE_2_MOCK);
 
         expect(functionOverrideMock).toHaveBeenCalledTimes(1);
         expect(functionOverrideMock).toHaveBeenCalledWith(
           [PROPERTY_MOCK],
-          argsMock,
+          ARGS_MOCK,
           expectedOriginalFunction,
         );
       },
@@ -177,13 +177,13 @@ describe('Nested Proxy', () => {
         functionOverrideMock.mockReturnValueOnce(VALUE_2_MOCK);
 
         expect(
-          proxy[PROPERTY_MOCK][PROPERTY_2_MOCK](...argsMock),
+          proxy[PROPERTY_MOCK][PROPERTY_2_MOCK](...ARGS_MOCK),
         ).toStrictEqual(VALUE_2_MOCK);
 
         expect(functionOverrideMock).toHaveBeenCalledTimes(1);
         expect(functionOverrideMock).toHaveBeenLastCalledWith(
           [PROPERTY_MOCK, PROPERTY_2_MOCK],
-          argsMock,
+          ARGS_MOCK,
           expectedOriginalFunction,
         );
       },
@@ -208,13 +208,13 @@ describe('Nested Proxy', () => {
         functionOverrideMock.mockReturnValueOnce(VALUE_2_MOCK);
 
         expect(
-          proxy[PROPERTY_MOCK][PROPERTY_2_MOCK][PROPERTY_MOCK](...argsMock),
+          proxy[PROPERTY_MOCK][PROPERTY_2_MOCK][PROPERTY_MOCK](...ARGS_MOCK),
         ).toStrictEqual(VALUE_2_MOCK);
 
         expect(functionOverrideMock).toHaveBeenCalledTimes(1);
         expect(functionOverrideMock).toHaveBeenLastCalledWith(
           [PROPERTY_MOCK, PROPERTY_2_MOCK, PROPERTY_MOCK],
-          argsMock,
+          ARGS_MOCK,
           expectedOriginalFunction,
         );
       },
@@ -226,13 +226,13 @@ describe('Nested Proxy', () => {
       functionOverrideMock.mockReturnValueOnce(VALUE_2_MOCK);
 
       expect(
-        proxy[PROPERTY_MOCK][PROPERTY_2_MOCK][PROPERTY_MOCK](...argsMock),
+        proxy[PROPERTY_MOCK][PROPERTY_2_MOCK][PROPERTY_MOCK](...ARGS_MOCK),
       ).toStrictEqual(VALUE_2_MOCK);
 
       expect(functionOverrideMock).toHaveBeenCalledTimes(1);
       expect(functionOverrideMock).toHaveBeenLastCalledWith(
         [PROPERTY_MOCK, PROPERTY_2_MOCK, PROPERTY_MOCK],
-        argsMock,
+        ARGS_MOCK,
         undefined,
       );
     });

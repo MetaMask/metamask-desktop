@@ -7,8 +7,10 @@ import {
   BrowserProxyRequest,
   BrowserProxyResponse,
 } from '../types/browser';
+import { timeoutPromise } from '../utils/utils';
 
 const PROXY_WHITELIST = ['tabs', 'browserAction', 'windows'];
+const TIMEOUT_REQUEST = 5000;
 
 const requestPromises: { [id: number]: (result: any) => void } = {};
 let requestIdCounter = 0;
@@ -69,14 +71,30 @@ const onFunctionRequest = (
 
   log.debug('Sent browser request', { requestId, key, args });
 
-  return new Promise((resolve) => {
-    requestPromises[requestId] = resolve;
+  return timeoutPromise(
+    new Promise((resolve) => {
+      requestPromises[requestId] = resolve;
+    }),
+    TIMEOUT_REQUEST,
+    `Timeout waiting for browser response - ${key.join('.')}`,
+  ).catch((error) => {
+    log.debug(error.message);
+    delete requestPromises[requestId];
   });
 };
 
 const onFunctionResponse = (data: BrowserProxyResponse) => {
   log.debug('Received browser response', data);
-  requestPromises[data.id]?.(data.result);
+
+  const requestPromise = requestPromises[data.id];
+
+  if (!requestPromise) {
+    log.debug('Unrecognised ID in browser response');
+    return;
+  }
+
+  requestPromise(data.result);
+  delete requestPromises[data.id];
 };
 
 export const browser: Browser = new Proxy(

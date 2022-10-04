@@ -39,6 +39,7 @@ export const EXPORTED_KEY_MOCK = Buffer.from([1, 2, 3]);
 export const ENCRYPTED_BUFFER_MOCK = Buffer.from([4, 5, 6]);
 export const IV_BUFFER_MOCK = Buffer.from([7, 8, 9]);
 export const JSON_RPC_ID_MOCK = 123456;
+export const ARGS_MOCK = ['test123', 123, true];
 
 export const EXPORTED_KEY_HEX_MOCK =
   Buffer.from(EXPORTED_KEY_MOCK).toString('hex');
