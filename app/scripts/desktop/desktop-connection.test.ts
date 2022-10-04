@@ -285,11 +285,11 @@ describe('Desktop Connection', () => {
     it('does nothing if already initialised', async () => {
       await initDesktopConnection();
 
-      expect(multiplexMock.createStream).toHaveBeenCalledTimes(5);
+      expect(multiplexMock.createStream).toHaveBeenCalledTimes(6);
 
       await desktopConnection.init();
 
-      expect(multiplexMock.createStream).toHaveBeenCalledTimes(5);
+      expect(multiplexMock.createStream).toHaveBeenCalledTimes(6);
     });
   });
 

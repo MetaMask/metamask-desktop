@@ -8,7 +8,6 @@ import {
 import { EVENT } from '../../../../shared/constants/metametrics';
 import Button from '../../../components/ui/button';
 import { DESKTOP_SYNC_ROUTE } from '../../../helpers/constants/routes';
-import { THEME_TYPE } from './experimental-tab.constant';
 
 export default class ExperimentalTab extends PureComponent {
   static contextTypes = {

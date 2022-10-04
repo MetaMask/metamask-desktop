@@ -95,7 +95,7 @@ export default class DesktopConnection {
       log.debug('Desktop enabled');
 
       await DesktopConnection.init();
-      await DesktopConnection.getInstance().transferState();
+      await DesktopConnection.getInstance().transferState(state);
     }
   }
 
