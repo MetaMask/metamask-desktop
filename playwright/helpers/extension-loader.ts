@@ -1,7 +1,7 @@
 import * as path from 'path';
 import { test as base, chromium, firefox, webkit } from '@playwright/test';
 
-const extensionPath = path.join(__dirname, '../chrome');
+const extensionPath = path.join(__dirname, '../../dist/chrome');
 
 export const test = base.extend({
   context: async ({ browserName }, use) => {
