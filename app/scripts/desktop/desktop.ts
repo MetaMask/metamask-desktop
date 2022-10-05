@@ -57,6 +57,8 @@ export default class Desktop {
 
   private statusWindow?: BrowserWindow;
 
+  private hasBeenInitializedWithExtensionState?: boolean;
+
   public static async init(backgroundInitialise: () => Promise<void>) {
     Desktop.instance = new Desktop(backgroundInitialise);
     await Desktop.instance.init();
@@ -147,7 +149,10 @@ export default class Desktop {
   }
 
   public transferState(rawState: State) {
-    if (!this.webSocketStream) {
+    if (!this.canTransferState()) {
+      log.debug(
+        'Cannot transfer state to extension as waiting for initial state from extension',
+      );
       return;
     }
 
@@ -164,10 +169,27 @@ export default class Desktop {
       return;
     }
 
+    if (!this.canTransferState()) {
+      log.debug(
+        'Cannot transfer state to extension as waiting for initial state from extension',
+      );
+      return;
+    }
+
+    this.hasBeenInitializedWithExtensionState = false;
+
     const state = await browser.storage.local.get();
     state.data.PreferencesController.desktopEnabled = false;
 
     this.disableStream.write(state);
+
+    log.debug(
+      'Sent state to extension and reset extension state initialization flag',
+    );
+  }
+
+  private canTransferState() {
+    return this.webSocketStream && this.hasBeenInitializedWithExtensionState;
   }
 
   private async createStatusWindow() {
@@ -272,7 +294,10 @@ export default class Desktop {
     log.debug('Received extension state');
 
     await browser.storage.local.set(data);
-    log.debug('Synchronised state with extension');
+
+    this.hasBeenInitializedWithExtensionState = true;
+
+    log.debug('Synchronised with extension state');
 
     log.debug('Re-initialising background script');
     await this.backgroundInitialise();

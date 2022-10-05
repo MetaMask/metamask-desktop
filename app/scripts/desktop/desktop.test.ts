@@ -26,6 +26,7 @@ import {
   createWebSocketServerMock,
   createWebSocketStreamMock,
   createEventEmitterMock,
+  DATA_2_MOCK,
 } from './test/mocks';
 import { simulateStreamMessage, simulateNodeEvent } from './test/utils';
 import { browser } from './extension-polyfill';
@@ -267,7 +268,10 @@ describe('Desktop', () => {
   });
 
   describe('on state update', () => {
-    const simulateStateUpdate = async (state: any) => {
+    const simulateStateUpdate = async (
+      state: any,
+      afterInitialStateTransfer: boolean,
+    ) => {
       browserMock.storage.local.get.mockResolvedValue({
         ...DATA_MOCK,
         data: { PreferencesController: { desktopEnabled: true } },
@@ -280,11 +284,22 @@ describe('Desktop', () => {
       );
 
       await desktop.init();
+
+      if (afterInitialStateTransfer) {
+        await simulateNodeEvent(
+          webSocketServerMock,
+          'connection',
+          webSocketMock,
+        );
+        const stateStreamMock = multiplexStreamMocks[CLIENT_ID_STATE];
+        await simulateStreamMessage(stateStreamMock, DATA_MOCK);
+      }
+
       await simulateNodeEvent(metaMaskController, 'update', state);
     };
 
     it('writes state to disable stream if desktop disabled', async () => {
-      await simulateStateUpdate({ desktopEnabled: false });
+      await simulateStateUpdate({ desktopEnabled: false }, true);
 
       const disableStreamMock = multiplexStreamMocks[CLIENT_ID_DISABLE];
 
@@ -296,7 +311,15 @@ describe('Desktop', () => {
     });
 
     it('does nothing if desktop enabled', async () => {
-      await simulateStateUpdate({ desktopEnabled: true });
+      await simulateStateUpdate({ desktopEnabled: true }, true);
+
+      const disableStreamMock = multiplexStreamMocks[CLIENT_ID_DISABLE];
+
+      expect(disableStreamMock.write).toHaveBeenCalledTimes(0);
+    });
+
+    it('does nothing if desktop state has not yet been initiated with the extension state', async () => {
+      await simulateStateUpdate({ desktopEnabled: false }, false);
 
       const disableStreamMock = multiplexStreamMocks[CLIENT_ID_DISABLE];
 
@@ -305,16 +328,34 @@ describe('Desktop', () => {
   });
 
   describe('transferState', () => {
-    it('writes state to state stream', async () => {
+    let stateStreamMock;
+
+    beforeEach(async () => {
       await desktop.init();
       await simulateNodeEvent(webSocketServerMock, 'connection', webSocketMock);
 
-      desktop.transferState(DATA_MOCK);
+      stateStreamMock = multiplexStreamMocks[CLIENT_ID_STATE];
+    });
 
-      const stateStreamMock = multiplexStreamMocks[CLIENT_ID_STATE];
+    describe('after desktop state being initialized by extension', () => {
+      beforeEach(async () => {
+        await simulateStreamMessage(stateStreamMock, DATA_2_MOCK);
+      });
 
-      expect(stateStreamMock.write).toHaveBeenCalledTimes(1);
-      expect(stateStreamMock.write).toHaveBeenCalledWith(DATA_MOCK);
+      it('writes state to state stream', async () => {
+        desktop.transferState(DATA_MOCK);
+
+        expect(stateStreamMock.write).toHaveBeenCalledTimes(1);
+        expect(stateStreamMock.write).toHaveBeenCalledWith(DATA_MOCK);
+      });
+    });
+
+    describe('before desktop state being initialized by extension', () => {
+      it('does nothing', async () => {
+        desktop.transferState(DATA_MOCK);
+
+        expect(stateStreamMock.write).toHaveBeenCalledTimes(0);
+      });
     });
   });
 
