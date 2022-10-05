@@ -61,3 +61,7 @@ test-results/
 
 # Metamask Desktop packaging configuration
 .apprc
+
+# playwright
+playwright/node_modules/
+/playwright/chrome/
