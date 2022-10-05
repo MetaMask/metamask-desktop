@@ -11,6 +11,7 @@ import {
   TYPOGRAPHY,
   FONT_WEIGHT,
 } from '../../helpers/constants/design-system';
+// import CountdownTimer from '../swaps/countdown-timer/countdown-timer';
 
 const OTP_GENERATION_TIME = SECOND * 30;
 
@@ -24,15 +25,13 @@ export default class DesktopPairingPage extends Component {
     setIsPairing: PropTypes.func.isRequired,
     isPairing: PropTypes.bool.isRequired,
     mostRecentOverviewPage: PropTypes.string.isRequired,
-  };
-
-  state = {
-    otp: this.generateOTPCode(),
+    generateOtp: PropTypes.func,
+    otpState: PropTypes.string,
   };
 
   componentDidMount() {
     this.interval = setInterval(
-      () => this.setState({ otp: this.generateOTPCode() }),
+      () => this.props.generateOtp(),
       OTP_GENERATION_TIME,
     );
   }
@@ -71,11 +70,12 @@ export default class DesktopPairingPage extends Component {
           align={TEXT_ALIGN.CENTER}
           fontWeight={FONT_WEIGHT.BOLD}
         >
-          {this.state.otp}
+          {this.props.otpState}
         </Typography>
         {/* <div className="view-quote__countdown-timer-container">
           <CountdownTimer
-            timeStarted={KEYS_GENERATION_TIME}
+            timerBase={OTP_GENERATION_TIME}
+            // timeStarted={OTP_GENERATION_TIME}
             labelKey="New quotes in $1"
           />
         </div> */}

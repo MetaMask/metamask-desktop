@@ -1137,9 +1137,13 @@ export default class MetamaskController extends EventEmitter {
     checkForMultipleVersionsRunning();
 
     this._desktopPairingOtp =
-      opts.initState?.PreferencesController?.desktopPairingOtp || 0;
+      opts.initState?.PreferencesController?.desktopPairingOtp;
 
     this.setOtpPairing = opts.setOtpPairing;
+
+    this._onDesktopGenerateOtp = opts.onDesktopGenerateOtp;
+
+    this._generateOtp = opts.generateOtp;
   }
 
   ///: BEGIN:ONLY_INCLUDE_IN(flask)
@@ -1676,6 +1680,7 @@ export default class MetamaskController extends EventEmitter {
       setOtpPairing: preferencesController.setOtpPairing.bind(
         preferencesController,
       ),
+      generateOtp: this.generateOtp.bind(this),
       // AssetsContractController
       getTokenStandardAndDetails: this.getTokenStandardAndDetails.bind(this),
 
@@ -2110,6 +2115,12 @@ export default class MetamaskController extends EventEmitter {
         throw error;
       }
     }
+  }
+
+  async generateOtp() {
+    this.emit('generate-otp', (otp) => {
+      this.preferencesController.setOtpPairing(otp);
+    });
   }
 
   async addCustomNetwork(customRpc) {

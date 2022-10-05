@@ -1,13 +1,14 @@
 import { connect } from 'react-redux';
-import { setOtpPairing, setIsPairing } from '../../store/actions';
+import { setOtpPairing, setIsPairing, generateOtp } from '../../store/actions';
 import { getMostRecentOverviewPage } from '../../ducks/history/history';
-import { getIsPairing } from '../../selectors/selectors';
+import { getIsPairing, getDesktopPairingOtp } from '../../selectors/selectors';
 import DesktopPairingPage from './desktop-pairing.component';
 
 const mapDispatchToProps = (dispatch) => {
   return {
     setOtpPairing: () => dispatch(setOtpPairing()),
     setIsPairing: (val) => dispatch(setIsPairing(val)),
+    generateOtp: () => dispatch(generateOtp()),
   };
 };
 
@@ -20,6 +21,7 @@ const mapStateToProps = (state) => {
     mostRecentOverviewPage: getMostRecentOverviewPage(state),
     selectedAddress,
     isPairing: getIsPairing(state),
+    otpState: getDesktopPairingOtp(state),
   };
 };
 

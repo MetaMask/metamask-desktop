@@ -8,6 +8,7 @@ import {
   setCustomNetworkListEnabled,
   setDesktopEnabled,
   setIsPairing,
+  generateOtp,
 } from '../../../store/actions';
 import {
   getUseCollectibleDetection,
@@ -42,6 +43,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(setCustomNetworkListEnabled(val)),
     setDesktopEnabled: (val) => dispatch(setDesktopEnabled(val)),
     setIsPairing: (val) => dispatch(setIsPairing(val)),
+    generateOtp: () => dispatch(generateOtp()),
   };
 };
 

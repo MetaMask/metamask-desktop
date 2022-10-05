@@ -29,6 +29,7 @@ export default class ExperimentalTab extends PureComponent {
     setIsPairing: PropTypes.func,
     isPairing: PropTypes.bool,
     history: PropTypes.object,
+    generateOtp: PropTypes.func,
   };
 
   settingsRefs = Array(
@@ -273,7 +274,7 @@ export default class ExperimentalTab extends PureComponent {
   }
 
   renderDesktopPairingButton() {
-    const { history, setIsPairing, isPairing } = this.props;
+    const { history, setIsPairing, isPairing, generateOtp } = this.props;
 
     return (
       <div
@@ -294,6 +295,7 @@ export default class ExperimentalTab extends PureComponent {
                 event.preventDefault();
                 history.push(DESKTOP_PAIRING_ROUTE);
                 setIsPairing(!value);
+                generateOtp();
               }}
             >
               Sync With Desktop

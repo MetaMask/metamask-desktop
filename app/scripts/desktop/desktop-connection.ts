@@ -11,7 +11,7 @@ import {
   CLIENT_ID_DISABLE,
   CLIENT_ID_PAIRING,
 } from '../../../shared/constants/desktop';
-import { validate } from '../../../shared/modules/totp';
+import { generate, validate } from '../../../shared/modules/totp';
 import cfg from './config';
 import { BrowserWebSocket, WebSocketStream } from './web-socket-stream';
 import EncryptedWebSocketStream from './encrypted-web-socket-stream';
@@ -81,6 +81,11 @@ export default class DesktopConnection {
     metaMaskController.on('update', (state) =>
       DesktopConnection.onStateUpdate(state),
     );
+
+    metaMaskController.on('generate-otp', (callback) => {
+      const otp = generate();
+      return callback(otp);
+    });
 
     log.debug('Registered desktop connection callbacks');
   }

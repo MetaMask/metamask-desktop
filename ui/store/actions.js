@@ -3913,6 +3913,16 @@ export function setDesktopEnabled(desktopEnabled) {
   };
 }
 
+export function generateOtp() {
+  return async () => {
+    try {
+      await submitRequestToBackground('generateOtp', []);
+    } catch (error) {
+      log.error(error);
+    }
+  };
+}
+
 export function setIsPairing(isPairing) {
   return async () => {
     try {
