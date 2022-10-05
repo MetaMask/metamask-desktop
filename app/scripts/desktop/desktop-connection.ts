@@ -22,7 +22,7 @@ import {
 } from './types/background';
 import { ClientId } from './types/desktop';
 import { registerResponseStream } from './browser/browser-proxy';
-import { timeoutPromise } from './utils/utils';
+import { timeoutPromise, uuid } from './utils/utils';
 
 const TIMEOUT_CONNECT = 5000;
 
@@ -182,7 +182,7 @@ export default class DesktopConnection {
       }
     }
 
-    const clientId = this.getNextClientId();
+    const clientId = this.generateClientId();
     const clientStream = this.multiplex.createStream(clientId);
 
     uiInputStream.pipe(clientStream).pipe(uiStream as any);
@@ -315,8 +315,7 @@ export default class DesktopConnection {
     );
   }
 
-  private getNextClientId(): ClientId {
-    /* eslint-disable-next-line no-plusplus */
-    return this.clientIdCounter++;
+  private generateClientId(): ClientId {
+    return uuid();
   }
 }

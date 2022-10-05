@@ -310,7 +310,7 @@ export default class Desktop {
 
   private onEndConnectionMessage(data: EndConnectionMessage) {
     log.debug('Received end connection message', data);
-    this.clientStreams[data.clientId as number]?.end();
+    this.clientStreams[data.clientId]?.end();
   }
 
   private async onStateUpdate(state: any) {

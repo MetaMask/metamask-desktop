@@ -17,6 +17,7 @@ const UNHANDLED_FUNCTIONS = [
   'runtime.onInstalled.addListener',
   'runtime.onMessageExternal.addListener',
   'runtime.sendMessage',
+  'runtime.setUninstallURL',
   'webRequest.onErrorOccurred.addListener',
   'windows.onRemoved.addListener',
 ];

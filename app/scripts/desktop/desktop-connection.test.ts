@@ -1,6 +1,7 @@
 import { Duplex, PassThrough } from 'stream';
 import ObjectMultiplex from 'obj-multiplex';
 import PortStream from 'extension-port-stream';
+import { v4 as uuidv4 } from 'uuid';
 import {
   CLIENT_ID_BROWSER_CONTROLLER,
   CLIENT_ID_END_CONNECTION,
@@ -21,6 +22,7 @@ import {
   createEventEmitterMock,
   JSON_RPC_ID_MOCK,
   STREAM_MOCK,
+  UUID_MOCK,
 } from './test/mocks';
 import {
   simulateStreamMessage,
@@ -38,6 +40,7 @@ import { ClientId } from './types/desktop';
 jest.mock('./encrypted-web-socket-stream', () => jest.fn(), { virtual: true });
 jest.mock('obj-multiplex', () => jest.fn(), { virtual: true });
 jest.mock('extension-port-stream', () => jest.fn(), { virtual: true });
+jest.mock('uuid');
 
 jest.mock('stream', () => ({ Duplex: jest.fn(), PassThrough: jest.fn() }), {
   virtual: true,
@@ -79,6 +82,7 @@ describe('Desktop Connection', () => {
   let browserMock: jest.Mocked<any>;
   let passThroughConstructorMock: jest.Mocked<any>;
   let passThroughMock: jest.Mocked<Duplex>;
+  let uuidMock: jest.MockedFunction<typeof uuidv4>;
 
   const multiplexStreamMocks: { [clientId: ClientId]: jest.Mocked<Duplex> } =
     {};
@@ -108,6 +112,7 @@ describe('Desktop Connection', () => {
     browserMock = browser;
     passThroughConstructorMock = PassThrough;
     passThroughMock = createStreamMock();
+    uuidMock = uuidv4 as any;
 
     webSocketStreamMock.pipe.mockReturnValue(multiplexMock);
     portStreamMock.pipe.mockImplementation((dest) => dest);
@@ -117,6 +122,7 @@ describe('Desktop Connection', () => {
     portStreamConstructorMock.mockReturnValue(portStreamMock);
     jest.spyOn(global, 'WebSocket').mockImplementation(() => webSocketMock);
     passThroughConstructorMock.mockReturnValue(passThroughMock);
+    uuidMock.mockReturnValue(UUID_MOCK);
 
     encryptedWebSocketStreamConstructorMock.mockReturnValue(
       webSocketStreamMock,
@@ -288,9 +294,9 @@ describe('Desktop Connection', () => {
       expect(portStreamConstructorMock).toHaveBeenCalledWith(remotePortMock);
 
       expect(multiplexMock.createStream).toHaveBeenCalledTimes(6);
-      expect(multiplexMock.createStream).toHaveBeenLastCalledWith(1);
+      expect(multiplexMock.createStream).toHaveBeenLastCalledWith(UUID_MOCK);
 
-      const clientStreamMock = multiplexStreamMocks[1];
+      const clientStreamMock = multiplexStreamMocks[UUID_MOCK];
 
       expect(portStreamMock.pipe).toHaveBeenCalledTimes(1);
       expect(portStreamMock.pipe).toHaveBeenCalledWith(passThroughMock);
@@ -311,7 +317,7 @@ describe('Desktop Connection', () => {
 
       expect(newConnectionStreamMock.write).toHaveBeenCalledTimes(1);
       expect(newConnectionStreamMock.write).toHaveBeenCalledWith({
-        clientId: 1,
+        clientId: UUID_MOCK,
         connectionType,
         remotePort: {
           name: REMOTE_PORT_NAME_MOCK,
@@ -397,7 +403,7 @@ describe('Desktop Connection', () => {
         multiplexStreamMocks[CLIENT_ID_END_CONNECTION];
 
       expect(endConnectionStreamMock.write).toHaveBeenLastCalledWith({
-        clientId: 1,
+        clientId: UUID_MOCK,
       });
     });
   });
