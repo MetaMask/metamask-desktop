@@ -211,19 +211,6 @@ async function initialize(remotePort) {
   log.info('MetaMask initialization complete.');
 }
 
-async function onDesktopPairing(isEnabled) {
-  log.debug('Detected desktop pairing', { isEnabled });
-  if (
-    cfg().desktop.isExtension &&
-    !DesktopConnection?.hasInstance() &&
-    isEnabled
-  ) {
-    await DesktopConnection.init(notificationManager);
-  } else if (cfg().desktop.isApp && !isEnabled) {
-    log.debug('Stopped desktop pairing', { isEnabled });
-  }
-}
-
 /**
  * An error thrown if the phishing warning page takes too long to load.
  */
@@ -386,7 +373,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     getOpenMetamaskTabsIds: () => {
       return openMetamaskTabsIDs;
     },
-    onDesktopPairing,
+    // onDesktopPairing,
   });
 
   setupEnsIpfsResolver({

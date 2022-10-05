@@ -25,10 +25,7 @@ import {
 import { ClientId } from './types/desktop';
 import { registerResponseStream } from './browser/browser-proxy';
 import { timeoutPromise, uuid } from './utils/utils';
-import { validate } from '../../../shared/modules/totp';
 import {
-  BrowserControllerAction,
-  BrowserControllerMessage,
   PairingMessage,
 } from './types/message';
 
@@ -89,13 +86,16 @@ export default class DesktopConnection {
   }
 
   private static async onStateUpdate(state: any) {
-    const desktopEnabled = state.desktopEnabled as boolean;
+    const isPairing = state.isPairing as boolean;
 
-    if (!DesktopConnection.hasInstance() && desktopEnabled === true) {
-      log.debug('Desktop enabled');
+    if (!DesktopConnection.hasInstance() && isPairing === true) {
+      log.debug('Desktop is pairing');
 
       await DesktopConnection.init();
-      await DesktopConnection.getInstance().transferState();
+      if (cfg().desktop.skipOtpPairingFlow) {
+        log.debug('Desktop enabled');
+        await DesktopConnection.getInstance().transferState();
+      }
     }
   }
 
@@ -337,6 +337,7 @@ export default class DesktopConnection {
 
     const rawState = await browser.storage.local.get();
     rawState.data.PreferencesController.desktopEnabled = false;
+    rawState.data.PreferencesController.isPairing = false;
     await browser.storage.local.set(rawState);
 
     log.debug('Restarting extension');

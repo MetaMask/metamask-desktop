@@ -1136,10 +1136,6 @@ export default class MetamaskController extends EventEmitter {
     // Fire a ping message to check if other extensions are running
     checkForMultipleVersionsRunning();
 
-    this._isPairing = opts.initState?.PreferencesController?.isPairing || false;
-
-    this._onDesktopPairing = opts.onDesktopPairing;
-
     this._desktopPairingOtp =
       opts.initState?.PreferencesController?.desktopPairingOtp || 0;
 
@@ -1500,6 +1496,10 @@ export default class MetamaskController extends EventEmitter {
 
   getDesktopEnabled() {
     return this.getState()?.desktopEnabled === true;
+  }
+
+  getDesktopPairing() {
+    return this.getState()?.isPairing === true;
   }
 
   /**
@@ -4044,19 +4044,6 @@ export default class MetamaskController extends EventEmitter {
       method: NOTIFICATION_NAMES.chainChanged,
       params: this.getProviderNetworkState(newState),
     });
-
-    if (
-      this._onDesktopEnabledToggle &&
-      newState.desktopEnabled !== this._isDesktopEnabled
-    ) {
-      this._isDesktopEnabled = newState.desktopEnabled;
-      this._onDesktopEnabledToggle(this._isDesktopEnabled);
-    }
-
-    if (this._onDesktopPairing && newState.isPairing !== this._isPairing) {
-      this._isPairing = newState.isPairing;
-      this._onDesktopPairing(this._isPairing);
-    }
 
     if (
       this.setOtpPairing &&

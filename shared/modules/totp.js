@@ -1,21 +1,17 @@
 import * as OTPAuth from 'otpauth';
+import createId from './random-id';
 
 let totp;
 
-const generateRandomSecret = () => {
-  const randomValue = global.crypto.getRandomValues(new Uint8Array(12));
-  const secretKey = Buffer.from(randomValue).toString('hex');
-  return OTPAuth.Secret.fromHex(secretKey);
-};
-
 const init = () => {
+  const secretKey = createId();
   return new OTPAuth.TOTP({
     issuer: 'MM',
     label: 'MetaMask',
     algorithm: 'SHA1',
     digits: 6,
     period: 30,
-    secret: generateRandomSecret(),
+    secret: secretKey,
   });
 };
 

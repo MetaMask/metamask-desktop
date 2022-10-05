@@ -177,6 +177,7 @@ export default class Desktop {
 
     const state = await browser.storage.local.get();
     state.data.PreferencesController.desktopEnabled = false;
+    state.data.PreferencesController.isPairing = false;
 
     this.disableStream.write(state);
 
@@ -334,7 +335,7 @@ export default class Desktop {
   }
 
   private async onStateUpdate(state: any) {
-    if (state.desktopEnabled === false) {
+    if (state.isPairing === false && state.desktopEnabled === false) {
       await this.disable();
     }
   }
