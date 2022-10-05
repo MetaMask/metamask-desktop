@@ -12,12 +12,12 @@ export interface Browser {
 }
 
 export interface BrowserProxyRequest {
-  id: number;
+  id: string;
   key: string[];
   args: any[];
 }
 
 export interface BrowserProxyResponse {
-  id: number;
+  id: string;
   result: any;
 }

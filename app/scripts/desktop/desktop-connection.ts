@@ -3,7 +3,6 @@ import PortStream from 'extension-port-stream';
 import endOfStream from 'end-of-stream';
 import ObjectMultiplex from 'obj-multiplex';
 import log from 'loglevel';
-import NotificationManager from '../lib/notification-manager';
 import {
   CLIENT_ID_BROWSER_CONTROLLER,
   CLIENT_ID_END_CONNECTION,
@@ -30,8 +29,6 @@ const TIMEOUT_CONNECT = 5000;
 export default class DesktopConnection {
   private static instance: DesktopConnection;
 
-  private notificationManager: NotificationManager;
-
   private clientIdCounter: number;
 
   private multiplex: ObjectMultiplex;
@@ -46,25 +43,20 @@ export default class DesktopConnection {
 
   private stateStream?: Duplex;
 
-  public static async initIfEnabled(
-    notificationManager: NotificationManager,
-    state: any,
-  ) {
+  public static async initIfEnabled(state: any) {
     if (state && state.PreferencesController.desktopEnabled !== true) {
       return;
     }
 
-    await DesktopConnection.init(notificationManager);
+    await DesktopConnection.init();
   }
 
-  public static newInstance(
-    notificationManager: NotificationManager,
-  ): DesktopConnection {
+  public static newInstance(): DesktopConnection {
     if (DesktopConnection.hasInstance()) {
       return DesktopConnection.getInstance();
     }
 
-    const newInstance = new DesktopConnection(notificationManager);
+    const newInstance = new DesktopConnection();
     DesktopConnection.instance = newInstance;
 
     return newInstance;
@@ -78,33 +70,27 @@ export default class DesktopConnection {
     return Boolean(DesktopConnection.getInstance());
   }
 
-  public static registerCallbacks(
-    metaMaskController: EventEmitter,
-    notificationManager: NotificationManager,
-  ) {
+  public static registerCallbacks(metaMaskController: EventEmitter) {
     metaMaskController.on('update', (state) =>
-      DesktopConnection.onStateUpdate(state, notificationManager),
+      DesktopConnection.onStateUpdate(state),
     );
 
     log.debug('Registered desktop connection callbacks');
   }
 
-  private static async onStateUpdate(
-    state: any,
-    notificationManager: NotificationManager,
-  ) {
+  private static async onStateUpdate(state: any) {
     const desktopEnabled = state.desktopEnabled as boolean;
 
     if (!DesktopConnection.hasInstance() && desktopEnabled === true) {
       log.debug('Desktop enabled');
 
-      await DesktopConnection.init(notificationManager);
+      await DesktopConnection.init();
       await DesktopConnection.getInstance().transferState();
     }
   }
 
-  private static async init(notificationManager: NotificationManager) {
-    DesktopConnection.newInstance(notificationManager);
+  private static async init() {
+    DesktopConnection.newInstance();
 
     try {
       await DesktopConnection.instance.init();
@@ -113,8 +99,7 @@ export default class DesktopConnection {
     }
   }
 
-  private constructor(notificationManager: NotificationManager) {
-    this.notificationManager = notificationManager;
+  private constructor() {
     this.clientIdCounter = 1;
     this.multiplex = new ObjectMultiplex();
   }

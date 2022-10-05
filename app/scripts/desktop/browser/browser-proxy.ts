@@ -27,7 +27,7 @@ const onBrowserRequest = async (data: BrowserProxyRequest) => {
   const method = getBrowserMethod(data.key);
 
   if (!method) {
-    log.error('Cannot find browser method', data.key);
+    log.error(`Cannot find browser method - ${data.key.join('.')}`);
     return;
   }
 

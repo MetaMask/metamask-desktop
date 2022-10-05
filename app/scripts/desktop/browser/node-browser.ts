@@ -1,19 +1,37 @@
 import { Duplex } from 'stream';
 import log from 'loglevel';
-import { NestedProxy } from '../utils/nested-proxy';
 import ObfuscatedStore from '../storage';
 import {
   Browser,
   BrowserProxyRequest,
   BrowserProxyResponse,
 } from '../types/browser';
-import { timeoutPromise } from '../utils/utils';
+import { timeoutPromise, uuid } from '../utils/utils';
 
-const PROXY_WHITELIST = ['tabs', 'browserAction', 'windows'];
 const TIMEOUT_REQUEST = 5000;
 
-const requestPromises: { [id: number]: (result: any) => void } = {};
-let requestIdCounter = 0;
+const UNHANDLED_FUNCTIONS = [
+  'runtime.getBrowserInfo',
+  'runtime.onConnect.addListener',
+  'runtime.onConnectExternal.addListener',
+  'runtime.onInstalled.addListener',
+  'runtime.onMessageExternal.addListener',
+  'runtime.sendMessage',
+  'webRequest.onErrorOccurred.addListener',
+  'windows.onRemoved.addListener',
+];
+
+const PROXY_FUNCTIONS = [
+  'browserAction.setBadgeBackgroundColor',
+  'browserAction.setBadgeText',
+  'tabs.query',
+  'windows.create',
+  'windows.getAll',
+  'windows.getLastFocused',
+  'windows.update',
+];
+
+const requestPromises: { [id: string]: (result: any) => void } = {};
 let requestStream: Duplex;
 
 const raw = {
@@ -34,53 +52,74 @@ const raw = {
     }),
     getPlatformInfo: () => Promise.resolve({ os: 'mac' }),
   },
-  i18n: {
-    getAcceptLanguages: () => ['en'],
-  },
 };
 
 const warn = (key: string[]) => {
   log.debug(`Browser method not supported - ${key.join('.')}`);
 };
 
-const onFunctionRequest = (
-  key: string[],
-  args: any[],
-  originalFunction?: (...originalArgs: any[]) => any,
-) => {
-  if (originalFunction) {
-    return originalFunction(...args);
-  }
-
-  // eslint-disable-next-line no-plusplus
-  const requestId = requestIdCounter++;
-  const shouldProxy = key.length === 2 && PROXY_WHITELIST.includes(key[0]);
-
-  if (!shouldProxy) {
-    warn(key);
-    return undefined;
-  }
-
+const proxy = (key: string[], args: any[]) => {
   if (!requestStream) {
     log.error('Cannot send browser request as stream not registered', key);
     return undefined;
   }
 
+  const requestId = uuid();
   const request: BrowserProxyRequest = { id: requestId, key, args };
   requestStream.write(request);
 
   log.debug('Sent browser request', { requestId, key, args });
 
+  const waitForResultMessage = new Promise((resolve) => {
+    requestPromises[requestId] = resolve;
+  });
+
   return timeoutPromise(
-    new Promise((resolve) => {
-      requestPromises[requestId] = resolve;
-    }),
+    waitForResultMessage,
     TIMEOUT_REQUEST,
     `Timeout waiting for browser response - ${key.join('.')}`,
   ).catch((error) => {
     log.debug(error.message);
     delete requestPromises[requestId];
   });
+};
+
+const registerFunction = (
+  browser: any,
+  functionPathString: string,
+  newFunction: (functionPath: string[], args: any[]) => any,
+) => {
+  const functionPath = functionPathString.split('.');
+  const parentPath = functionPath.length > 1 ? functionPath.slice(0, -1) : [];
+  const functionName = functionPath.slice(-1)[0];
+  let targetObject = browser;
+  const currentPath = [];
+
+  for (const parentKey of parentPath) {
+    currentPath.push(parentKey);
+
+    let nextObject = targetObject[parentKey];
+
+    if (!nextObject) {
+      nextObject = {};
+      targetObject[parentKey] = nextObject;
+    }
+
+    targetObject = nextObject;
+  }
+
+  targetObject[functionName] = (...args: any[]) =>
+    newFunction(functionPath, args);
+};
+
+const registerFunctions = (
+  browser: any,
+  functionPaths: string[],
+  newFunction: (functionPath: string[], args: any[]) => any,
+) => {
+  for (const functionPathString of functionPaths) {
+    registerFunction(browser, functionPathString, newFunction);
+  }
 };
 
 const onFunctionResponse = (data: BrowserProxyResponse) => {
@@ -97,10 +136,16 @@ const onFunctionResponse = (data: BrowserProxyResponse) => {
   delete requestPromises[data.id];
 };
 
-export const browser: Browser = new Proxy(
-  raw,
-  new NestedProxy({ functionOverride: onFunctionRequest }),
-) as unknown as Browser;
+const init = (manualOverrides: any): Browser => {
+  const browser = { ...manualOverrides };
+
+  registerFunctions(browser, UNHANDLED_FUNCTIONS, warn);
+  registerFunctions(browser, PROXY_FUNCTIONS, proxy);
+
+  return browser;
+};
+
+export const browser: Browser = init(raw);
 
 export const registerRequestStream = (stream: Duplex) => {
   requestStream = stream;

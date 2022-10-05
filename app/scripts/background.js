@@ -199,7 +199,7 @@ async function initialize(remotePort) {
   const initLangCode = await getFirstPreferredLangCode();
 
   if (cfg().desktop.isExtension) {
-    await DesktopConnection.initIfEnabled(notificationManager, initState);
+    await DesktopConnection.initIfEnabled(initState);
   }
 
   await setupController(initState, initLangCode, remotePort);
@@ -789,7 +789,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     controller,
   );
 
-  DesktopConnection?.registerCallbacks(controller, notificationManager);
+  DesktopConnection?.registerCallbacks(controller);
 
   return Promise.resolve();
 }

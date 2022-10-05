@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 export const flattenMessage = (data: any) => {
   let output;
 
@@ -45,3 +47,5 @@ export const timeoutPromise = <T>(
     });
   });
 };
+
+export const uuid = uuidv4;

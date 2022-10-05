@@ -1,41 +1,50 @@
 import log from 'loglevel';
-import { ARGS_MOCK, createStreamMock, VALUE_2_MOCK } from '../test/mocks';
+import { v4 as uuidv4 } from 'uuid';
+import {
+  ARGS_MOCK,
+  createStreamMock,
+  UUID_MOCK,
+  VALUE_2_MOCK,
+} from '../test/mocks';
 import { simulateNodeEvent } from '../test/utils';
 import { browser, registerRequestStream } from './node-browser';
 
 jest.mock('loglevel');
+jest.mock('uuid');
 
 describe('Node Browser', () => {
   const browserMock = browser as any;
   const streamMock = createStreamMock();
+  const uuidMock = uuidv4 as jest.MockedFunction<typeof uuidv4>;
 
   beforeEach(() => {
     jest.resetAllMocks();
+    uuidMock.mockReturnValue(UUID_MOCK);
   });
 
   describe('get', () => {
-    it('returns existing property', () => {
+    it('returns manually defined property', () => {
       expect(browserMock.runtime.id).toStrictEqual('1234');
     });
   });
 
   describe('call', () => {
-    it('returns value from existing function', () => {
+    it('invokes manually defined function', () => {
       expect(browserMock.runtime.getManifest().manifest_version).toStrictEqual(
         2,
       );
     });
 
-    it('logs message if function missing and not in proxy whitelist', () => {
-      browserMock.test1.test2();
+    it('logs message if function unhandled', () => {
+      browserMock.runtime.getBrowserInfo();
 
       expect(log.debug).toHaveBeenCalledTimes(1);
       expect(log.debug).toHaveBeenCalledWith(
-        `Browser method not supported - test1.test2`,
+        `Browser method not supported - runtime.getBrowserInfo`,
       );
     });
 
-    describe('if function missing and in proxy whitelist', () => {
+    describe('if function proxied', () => {
       it('writes request to stream', () => {
         registerRequestStream(streamMock);
 
@@ -43,7 +52,7 @@ describe('Node Browser', () => {
 
         expect(streamMock.write).toHaveBeenCalledTimes(1);
         expect(streamMock.write).toHaveBeenCalledWith({
-          id: 1,
+          id: UUID_MOCK,
           key: ['browserAction', 'setBadgeText'],
           args: ARGS_MOCK,
         });
@@ -55,7 +64,7 @@ describe('Node Browser', () => {
         const promise = browserMock.browserAction.setBadgeText(...ARGS_MOCK);
 
         await simulateNodeEvent(streamMock, 'data', {
-          id: 2,
+          id: UUID_MOCK,
           result: VALUE_2_MOCK,
         });
 

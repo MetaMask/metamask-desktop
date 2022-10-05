@@ -8,7 +8,6 @@ import {
   CLIENT_ID_STATE,
   CLIENT_ID_DISABLE,
 } from '../../../shared/constants/desktop';
-import NotificationManager from '../lib/notification-manager';
 import DesktopConnection from './desktop-connection';
 import {
   REMOTE_PORT_NAME_MOCK,
@@ -16,7 +15,6 @@ import {
   DATA_MOCK,
   createStreamMock,
   createRemotePortMock,
-  createNotificationManagerMock,
   createMultiplexMock,
   createWebSocketBrowserMock,
   createWebSocketStreamMock,
@@ -73,7 +71,6 @@ describe('Desktop Connection', () => {
   let webSocketStreamMock: jest.Mocked<WebSocketStream>;
   let multiplexMock: jest.Mocked<ObjectMultiplex & Duplex>;
   let portStreamMock: jest.Mocked<Duplex>;
-  let notificationManagerMock: jest.Mocked<NotificationManager>;
   let remotePortMock: jest.Mocked<RemotePort>;
   let objectMultiplexConstructorMock: jest.Mocked<any>;
   let webSocketStreamConstructorMock: jest.Mocked<any>;
@@ -103,7 +100,6 @@ describe('Desktop Connection', () => {
     webSocketStreamMock = createWebSocketStreamMock();
     multiplexMock = createMultiplexMock();
     portStreamMock = createStreamMock();
-    notificationManagerMock = createNotificationManagerMock();
     remotePortMock = createRemotePortMock();
     objectMultiplexConstructorMock = ObjectMultiplex;
     webSocketStreamConstructorMock = WebSocketStream;
@@ -134,7 +130,7 @@ describe('Desktop Connection', () => {
 
     removeInstance();
 
-    desktopConnection = DesktopConnection.newInstance(notificationManagerMock);
+    desktopConnection = DesktopConnection.newInstance();
 
     cfg().desktop.webSocket.disableEncryption = false;
   });
@@ -151,10 +147,7 @@ describe('Desktop Connection', () => {
         { PreferencesController: { desktopEnabled: true } },
       ],
     ])('creates and initialises if %s', async (_, state) => {
-      const initPromise = DesktopConnection.initIfEnabled(
-        notificationManagerMock,
-        state,
-      );
+      const initPromise = DesktopConnection.initIfEnabled(state);
 
       await flushPromises();
       await simulateBrowserEvent(webSocketMock, 'open');
@@ -164,12 +157,9 @@ describe('Desktop Connection', () => {
     });
 
     it('does nothing if desktop disabled in state', async () => {
-      const initPromise = DesktopConnection.initIfEnabled(
-        notificationManagerMock,
-        {
-          PreferencesController: { desktopEnabled: false },
-        },
-      );
+      const initPromise = DesktopConnection.initIfEnabled({
+        PreferencesController: { desktopEnabled: false },
+      });
 
       await flushPromises();
       await simulateBrowserEvent(webSocketMock, 'open');
@@ -187,7 +177,7 @@ describe('Desktop Connection', () => {
     it('creates a new instance if none exists', () => {
       expect(DesktopConnection.getInstance()).toBeUndefined();
 
-      const instance = DesktopConnection.newInstance(notificationManagerMock);
+      const instance = DesktopConnection.newInstance();
 
       expect(DesktopConnection.getInstance()).toBeDefined();
       expect(DesktopConnection.getInstance()).toBe(instance);
@@ -196,13 +186,8 @@ describe('Desktop Connection', () => {
     it('returns old instance if one already exists', () => {
       expect(DesktopConnection.getInstance()).toBeUndefined();
 
-      const firstInstance = DesktopConnection.newInstance(
-        notificationManagerMock,
-      );
-
-      const secondInstance = DesktopConnection.newInstance(
-        notificationManagerMock,
-      );
+      const firstInstance = DesktopConnection.newInstance();
+      const secondInstance = DesktopConnection.newInstance();
 
       expect(DesktopConnection.getInstance()).toBeDefined();
       expect(DesktopConnection.getInstance()).toBe(firstInstance);
@@ -220,7 +205,7 @@ describe('Desktop Connection', () => {
     });
 
     it('returns true if instance created', () => {
-      DesktopConnection.newInstance(notificationManagerMock);
+      DesktopConnection.newInstance();
       expect(DesktopConnection.hasInstance()).toBe(true);
     });
   });
@@ -448,10 +433,7 @@ describe('Desktop Connection', () => {
         data: { PreferencesController: { desktopEnabled: false } },
       });
 
-      DesktopConnection.registerCallbacks(
-        metamaskControllerMock,
-        notificationManagerMock,
-      );
+      DesktopConnection.registerCallbacks(metamaskControllerMock);
 
       await simulateNodeEvent(metamaskControllerMock, 'update', updatedState);
       await simulateBrowserEvent(webSocketMock, 'open');
