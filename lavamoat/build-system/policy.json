@@ -1532,7 +1532,7 @@
         "@lavamoat/lavapack>umd": true,
         "browserify>JSONStream": true,
         "browserify>browser-pack>through2": true,
-        "ethereumjs-wallet>safe-buffer": true,
+        "hdkey>safe-buffer": true,
         "watchify>defined": true
       }
     },
@@ -1757,7 +1757,7 @@
     },
     "browserify>string_decoder": {
       "packages": {
-        "ethereumjs-wallet>safe-buffer": true
+        "hdkey>safe-buffer": true
       }
     },
     "browserify>syntax-error": {
@@ -2962,11 +2962,6 @@
     "eslint>strip-ansi": {
       "packages": {
         "eslint>strip-ansi>ansi-regex": true
-      }
-    },
-    "ethereumjs-wallet>safe-buffer": {
-      "builtin": {
-        "buffer": true
       }
     },
     "fancy-log": {
@@ -5327,9 +5322,9 @@
     },
     "gulp>vinyl-fs>remove-bom-stream": {
       "packages": {
-        "ethereumjs-wallet>safe-buffer": true,
         "gulp>vinyl-fs>remove-bom-buffer": true,
-        "gulp>vinyl-fs>remove-bom-stream>through2": true
+        "gulp>vinyl-fs>remove-bom-stream>through2": true,
+        "hdkey>safe-buffer": true
       }
     },
     "gulp>vinyl-fs>remove-bom-stream>through2": {
@@ -5422,6 +5417,11 @@
     "gulp>vinyl-fs>vinyl-sourcemap>now-and-later": {
       "packages": {
         "pump>once": true
+      }
+    },
+    "hdkey>safe-buffer": {
+      "builtin": {
+        "buffer": true
       }
     },
     "ini": {
@@ -7044,7 +7044,7 @@
         "util.inherits": true
       },
       "packages": {
-        "ethereumjs-wallet>safe-buffer": true,
+        "hdkey>safe-buffer": true,
         "readable-stream": true
       }
     },
