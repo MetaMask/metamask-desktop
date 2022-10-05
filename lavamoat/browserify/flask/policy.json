@@ -50,7 +50,7 @@
         "3box>orbit-db>orbit-db-access-controllers": true,
         "3box>orbit-db>orbit-db-io": true,
         "browserify>events": true,
-        "ethereumjs-wallet>safe-buffer": true
+        "hdkey>safe-buffer": true
       }
     },
     "3box>3box-orbitdb-plugins>ipfs-log": {
@@ -359,7 +359,7 @@
     },
     "3box>ipfs>bs58>base-x": {
       "packages": {
-        "ethereumjs-wallet>safe-buffer": true
+        "hdkey>safe-buffer": true
       }
     },
     "3box>ipfs>cids": {
@@ -1037,22 +1037,12 @@
         "3box>ipfs>err-code": true,
         "3box>ipfs>interface-datastore": true,
         "3box>ipfs>libp2p-crypto": true,
-        "3box>ipfs>libp2p-keychain>sanitize-filename": true,
         "3box>ipfs>merge-options": true,
         "3box>ipfs>pull-stream": true,
         "browserify>buffer": true,
+        "electron-builder>app-builder-lib>sanitize-filename": true,
         "gh-pages>async": true,
         "mockttp>node-forge": true
-      }
-    },
-    "3box>ipfs>libp2p-keychain>sanitize-filename": {
-      "packages": {
-        "3box>ipfs>libp2p-keychain>sanitize-filename>truncate-utf8-bytes": true
-      }
-    },
-    "3box>ipfs>libp2p-keychain>sanitize-filename>truncate-utf8-bytes": {
-      "packages": {
-        "3box>ipfs>libp2p-keychain>sanitize-filename>truncate-utf8-bytes>utf8-byte-length": true
       }
     },
     "3box>ipfs>libp2p-record": {
@@ -1144,7 +1134,7 @@
         "3box>ipfs>libp2p-secio>pull-handshake>pull-reader": true,
         "3box>ipfs>pull-pushable": true,
         "3box>ipfs>varint": true,
-        "ethereumjs-wallet>safe-buffer": true
+        "hdkey>safe-buffer": true
       }
     },
     "3box>ipfs>libp2p-webrtc-star": {
@@ -1466,7 +1456,7 @@
         "browserify>stream-http": true,
         "browserify>timers-browserify": true,
         "browserify>url": true,
-        "ethereumjs-wallet>safe-buffer": true
+        "hdkey>safe-buffer": true
       }
     },
     "3box>ipfs>libp2p-websockets>pull-ws>relative-url": {
@@ -1696,7 +1686,7 @@
     },
     "3box>ipfs>multibase>base-x": {
       "packages": {
-        "ethereumjs-wallet>safe-buffer": true
+        "hdkey>safe-buffer": true
       }
     },
     "3box>ipfs>multicodec": {
@@ -1786,7 +1776,7 @@
         "3box>ipfs>varint": true,
         "browserify>buffer": true,
         "browserify>insert-module-globals>is-buffer": true,
-        "ethereumjs-wallet>safe-buffer": true
+        "hdkey>safe-buffer": true
       }
     },
     "3box>ipfs>protons>signed-varint": {
@@ -1948,7 +1938,7 @@
         "3box>orbit-db>orbit-db-io": true,
         "browserify>events": true,
         "browserify>path-browserify": true,
-        "ethereumjs-wallet>safe-buffer": true
+        "hdkey>safe-buffer": true
       }
     },
     "3box>orbit-db>orbit-db-access-controllers>p-map-series": {
@@ -2055,7 +2045,7 @@
         "3box>orbit-db>orbit-db-keystore>levelup": true,
         "3box>orbit-db>orbit-db-keystore>lru": true,
         "eth-trezor-keyring>hdkey>secp256k1": true,
-        "ethereumjs-wallet>safe-buffer": true
+        "hdkey>safe-buffer": true
       }
     },
     "3box>orbit-db>orbit-db-keystore>levelup": {
@@ -2189,6 +2179,29 @@
         "browserify>browser-resolve": true
       }
     },
+    "@babel/cli>@jridgewell/trace-mapping": {
+      "globals": {
+        "define": true
+      },
+      "packages": {
+        "@babel/cli>@jridgewell/trace-mapping>@jridgewell/resolve-uri": true,
+        "@babel/cli>@jridgewell/trace-mapping>@jridgewell/sourcemap-codec": true
+      }
+    },
+    "@babel/cli>@jridgewell/trace-mapping>@jridgewell/resolve-uri": {
+      "globals": {
+        "define": true
+      }
+    },
+    "@babel/cli>@jridgewell/trace-mapping>@jridgewell/sourcemap-codec": {
+      "globals": {
+        "TextDecoder": true,
+        "define": true
+      },
+      "packages": {
+        "browserify>buffer": true
+      }
+    },
     "@babel/code-frame": {
       "globals": {
         "console.warn": true
@@ -2227,8 +2240,8 @@
         "define": true
       },
       "packages": {
-        "@babel/core>@ampproject/remapping>@jridgewell/gen-mapping": true,
-        "terser>@jridgewell/source-map>@jridgewell/trace-mapping": true
+        "@babel/cli>@jridgewell/trace-mapping": true,
+        "@babel/core>@ampproject/remapping>@jridgewell/gen-mapping": true
       }
     },
     "@babel/core>@ampproject/remapping>@jridgewell/gen-mapping": {
@@ -2236,8 +2249,8 @@
         "define": true
       },
       "packages": {
-        "terser>@jridgewell/source-map>@jridgewell/gen-mapping>@jridgewell/set-array": true,
-        "terser>@jridgewell/source-map>@jridgewell/gen-mapping>@jridgewell/sourcemap-codec": true
+        "@babel/cli>@jridgewell/trace-mapping>@jridgewell/sourcemap-codec": true,
+        "terser>@jridgewell/source-map>@jridgewell/gen-mapping>@jridgewell/set-array": true
       }
     },
     "@babel/core>@babel/generator": {
@@ -2495,7 +2508,7 @@
       "packages": {
         "@eth-optimism/contracts>@ethersproject/abstract-provider": true,
         "@eth-optimism/contracts>@ethersproject/abstract-signer": true,
-        "@metamask/rpc-methods>@metamask/controllers>@ethersproject/abi": true,
+        "@ledgerhq/hw-app-eth>@ethersproject/abi": true,
         "ethers>@ethersproject/units>@ethersproject/bignumber": true,
         "ethers>@ethersproject/units>@ethersproject/logger": true,
         "ethers>@ethersproject/wallet>@ethersproject/address": true,
@@ -2543,8 +2556,8 @@
       "packages": {
         "@keystonehq/bc-ur-registry-eth>@ethereumjs/util": true,
         "@keystonehq/bc-ur-registry-eth>@keystonehq/bc-ur-registry": true,
-        "@keystonehq/bc-ur-registry-eth>hdkey": true,
         "browserify>buffer": true,
+        "hdkey": true,
         "uuid": true
       }
     },
@@ -2579,26 +2592,12 @@
         "@keystonehq/bc-ur-registry-eth>@keystonehq/bc-ur-registry>tslib": true,
         "@ngraveio/bc-ur": true,
         "browserify>buffer": true,
-        "ethereumjs-wallet>bs58check": true
+        "hdkey>bs58check": true
       }
     },
     "@keystonehq/bc-ur-registry-eth>@keystonehq/bc-ur-registry>tslib": {
       "globals": {
         "define": true
-      }
-    },
-    "@keystonehq/bc-ur-registry-eth>hdkey": {
-      "packages": {
-        "@keystonehq/bc-ur-registry-eth>hdkey>secp256k1": true,
-        "browserify>assert": true,
-        "browserify>crypto-browserify": true,
-        "ethereumjs-wallet>bs58check": true,
-        "ethereumjs-wallet>safe-buffer": true
-      }
-    },
-    "@keystonehq/bc-ur-registry-eth>hdkey>secp256k1": {
-      "packages": {
-        "3box>ethers>elliptic": true
       }
     },
     "@keystonehq/metamask-airgapped-keyring": {
@@ -2618,9 +2617,9 @@
         "@ethereumjs/tx": true,
         "@keystonehq/bc-ur-registry-eth": true,
         "@keystonehq/bc-ur-registry-eth>@ethereumjs/util": true,
-        "@keystonehq/bc-ur-registry-eth>hdkey": true,
         "@keystonehq/metamask-airgapped-keyring>@keystonehq/base-eth-keyring>rlp": true,
         "browserify>buffer": true,
+        "hdkey": true,
         "uuid": true
       }
     },
@@ -2642,6 +2641,124 @@
         "browserify>util": true,
         "readable-stream": true,
         "watchify>xtend": true
+      }
+    },
+    "@ledgerhq/hw-app-eth": {
+      "globals": {
+        "console.warn": true
+      },
+      "packages": {
+        "@ledgerhq/hw-app-eth>@ethersproject/abi": true,
+        "@ledgerhq/hw-app-eth>@ethersproject/rlp": true,
+        "@ledgerhq/hw-app-eth>@ledgerhq/cryptoassets": true,
+        "@ledgerhq/hw-app-eth>@ledgerhq/errors": true,
+        "@ledgerhq/hw-app-eth>@ledgerhq/logs": true,
+        "@ledgerhq/hw-app-eth>axios": true,
+        "@ledgerhq/hw-app-eth>bignumber.js": true,
+        "browserify>buffer": true
+      }
+    },
+    "@ledgerhq/hw-app-eth>@ethersproject/abi": {
+      "globals": {
+        "console.log": true
+      },
+      "packages": {
+        "ethers>@ethersproject/hdnode>@ethersproject/strings": true,
+        "ethers>@ethersproject/units>@ethersproject/bignumber": true,
+        "ethers>@ethersproject/units>@ethersproject/constants": true,
+        "ethers>@ethersproject/units>@ethersproject/logger": true,
+        "ethers>@ethersproject/wallet>@ethersproject/address": true,
+        "ethers>@ethersproject/wallet>@ethersproject/bytes": true,
+        "ethers>@ethersproject/wallet>@ethersproject/hash": true,
+        "ethers>@ethersproject/wallet>@ethersproject/keccak256": true,
+        "ethers>@ethersproject/wallet>@ethersproject/properties": true
+      }
+    },
+    "@ledgerhq/hw-app-eth>@ethersproject/rlp": {
+      "packages": {
+        "ethers>@ethersproject/units>@ethersproject/logger": true,
+        "ethers>@ethersproject/wallet>@ethersproject/bytes": true
+      }
+    },
+    "@ledgerhq/hw-app-eth>@ledgerhq/errors": {
+      "globals": {
+        "console.warn": true
+      }
+    },
+    "@ledgerhq/hw-app-eth>@ledgerhq/logs": {
+      "globals": {
+        "__ledgerLogsListen": "write",
+        "console.error": true
+      }
+    },
+    "@ledgerhq/hw-app-eth>axios": {
+      "globals": {
+        "XMLHttpRequest": true,
+        "btoa": true,
+        "console.warn": true,
+        "document": true,
+        "location.href": true,
+        "navigator": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "browserify>process": true
+      }
+    },
+    "@ledgerhq/hw-app-eth>bignumber.js": {
+      "globals": {
+        "crypto": true,
+        "define": true
+      }
+    },
+    "@ledgerhq/hw-transport-node-hid-noevents": {
+      "packages": {
+        "@ledgerhq/hw-transport-node-hid-noevents>@ledgerhq/devices": true,
+        "@ledgerhq/hw-transport-node-hid-noevents>@ledgerhq/errors": true,
+        "@ledgerhq/hw-transport-node-hid-noevents>@ledgerhq/hw-transport": true,
+        "@ledgerhq/hw-transport-node-hid-noevents>@ledgerhq/logs": true,
+        "@ledgerhq/hw-transport-node-hid-noevents>node-hid": true,
+        "browserify>buffer": true,
+        "browserify>process": true
+      }
+    },
+    "@ledgerhq/hw-transport-node-hid-noevents>@ledgerhq/devices": {
+      "packages": {
+        "@ledgerhq/hw-transport-node-hid-noevents>@ledgerhq/errors": true,
+        "browserify>buffer": true,
+        "semver": true
+      }
+    },
+    "@ledgerhq/hw-transport-node-hid-noevents>@ledgerhq/errors": {
+      "globals": {
+        "console.warn": true
+      }
+    },
+    "@ledgerhq/hw-transport-node-hid-noevents>@ledgerhq/hw-transport": {
+      "globals": {
+        "clearTimeout": true,
+        "console.warn": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "@ledgerhq/hw-transport-node-hid-noevents>@ledgerhq/errors": true,
+        "browserify>buffer": true,
+        "browserify>events": true
+      }
+    },
+    "@ledgerhq/hw-transport-node-hid-noevents>@ledgerhq/logs": {
+      "globals": {
+        "__ledgerLogsListen": "write",
+        "console.error": true
+      }
+    },
+    "@ledgerhq/hw-transport-node-hid-noevents>node-hid": {
+      "packages": {
+        "browserify>events": true,
+        "browserify>os-browserify": true,
+        "browserify>process": true,
+        "browserify>util": true,
+        "lavamoat>bindings": true
       }
     },
     "@material-ui/core": {
@@ -2994,9 +3111,9 @@
         "ethereumjs-util": true,
         "ethereumjs-util>ethereum-cryptography": true,
         "ethereumjs-wallet>aes-js": true,
-        "ethereumjs-wallet>bs58check": true,
         "ethereumjs-wallet>randombytes": true,
-        "ethers>@ethersproject/json-wallets>scrypt-js": true
+        "ethers>@ethersproject/json-wallets>scrypt-js": true,
+        "hdkey>bs58check": true
       }
     },
     "@metamask/controllers>ethereumjs-wallet>uuid": {
@@ -3171,7 +3288,7 @@
         "ethereumjs-util>create-hash": true,
         "ethereumjs-util>ethereum-cryptography": true,
         "ethereumjs-util>rlp": true,
-        "ethereumjs-wallet>safe-buffer": true
+        "hdkey>safe-buffer": true
       }
     },
     "@metamask/controllers>web3-provider-engine>ethereumjs-util>ethjs-util": {
@@ -3295,7 +3412,7 @@
         "ethereumjs-util>create-hash": true,
         "ethereumjs-util>ethereum-cryptography": true,
         "ethereumjs-util>rlp": true,
-        "ethereumjs-wallet>safe-buffer": true
+        "hdkey>safe-buffer": true
       }
     },
     "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethjs-util": {
@@ -3342,7 +3459,7 @@
         "ethereumjs-util>create-hash": true,
         "ethereumjs-util>ethereum-cryptography": true,
         "ethereumjs-util>rlp": true,
-        "ethereumjs-wallet>safe-buffer": true
+        "hdkey>safe-buffer": true
       }
     },
     "@metamask/eth-ledger-bridge-keyring>eth-sig-util>ethereumjs-util>ethjs-util": {
@@ -3358,7 +3475,7 @@
         "browserify>crypto-browserify": true,
         "eth-trezor-keyring>hdkey>coinstring": true,
         "eth-trezor-keyring>hdkey>secp256k1": true,
-        "ethereumjs-wallet>safe-buffer": true
+        "hdkey>safe-buffer": true
       }
     },
     "@metamask/eth-token-tracker": {
@@ -3529,9 +3646,6 @@
       }
     },
     "@metamask/rpc-methods": {
-      "globals": {
-        "console.warn": true
-      },
       "packages": {
         "@metamask/rpc-methods>@metamask/controllers": true,
         "@metamask/rpc-methods>@metamask/key-tree": true,
@@ -3556,6 +3670,7 @@
         "@eth-optimism/contracts>@ethersproject/contracts": true,
         "@ethereumjs/common": true,
         "@ethereumjs/tx": true,
+        "@ledgerhq/hw-app-eth>@ethersproject/abi": true,
         "@metamask/contract-metadata": true,
         "@metamask/controllers>abort-controller": true,
         "@metamask/controllers>async-mutex": true,
@@ -3566,7 +3681,6 @@
         "@metamask/controllers>web3": true,
         "@metamask/controllers>web3-provider-engine": true,
         "@metamask/metamask-eth-abis": true,
-        "@metamask/rpc-methods>@metamask/controllers>@ethersproject/abi": true,
         "@metamask/rpc-methods>@metamask/controllers>@ethersproject/providers": true,
         "@metamask/rpc-methods>@metamask/controllers>eth-method-registry": true,
         "@metamask/rpc-methods>@metamask/controllers>ethereumjs-wallet": true,
@@ -3588,22 +3702,6 @@
         "punycode": true,
         "single-call-balance-checker-abi": true,
         "uuid": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/controllers>@ethersproject/abi": {
-      "globals": {
-        "console.log": true
-      },
-      "packages": {
-        "ethers>@ethersproject/hdnode>@ethersproject/strings": true,
-        "ethers>@ethersproject/units>@ethersproject/bignumber": true,
-        "ethers>@ethersproject/units>@ethersproject/constants": true,
-        "ethers>@ethersproject/units>@ethersproject/logger": true,
-        "ethers>@ethersproject/wallet>@ethersproject/address": true,
-        "ethers>@ethersproject/wallet>@ethersproject/bytes": true,
-        "ethers>@ethersproject/wallet>@ethersproject/hash": true,
-        "ethers>@ethersproject/wallet>@ethersproject/keccak256": true,
-        "ethers>@ethersproject/wallet>@ethersproject/properties": true
       }
     },
     "@metamask/rpc-methods>@metamask/controllers>@ethersproject/providers": {
@@ -3712,9 +3810,9 @@
         "ethereumjs-util": true,
         "ethereumjs-util>ethereum-cryptography": true,
         "ethereumjs-wallet>aes-js": true,
-        "ethereumjs-wallet>bs58check": true,
         "ethereumjs-wallet>randombytes": true,
-        "ethers>@ethersproject/json-wallets>scrypt-js": true
+        "ethers>@ethersproject/json-wallets>scrypt-js": true,
+        "hdkey>bs58check": true
       }
     },
     "@metamask/rpc-methods>@metamask/controllers>ethereumjs-wallet>uuid": {
@@ -3867,6 +3965,7 @@
         "@eth-optimism/contracts>@ethersproject/contracts": true,
         "@ethereumjs/common": true,
         "@ethereumjs/tx": true,
+        "@ledgerhq/hw-app-eth>@ethersproject/abi": true,
         "@metamask/contract-metadata": true,
         "@metamask/controllers>abort-controller": true,
         "@metamask/controllers>async-mutex": true,
@@ -3877,7 +3976,6 @@
         "@metamask/controllers>web3": true,
         "@metamask/controllers>web3-provider-engine": true,
         "@metamask/metamask-eth-abis": true,
-        "@metamask/rpc-methods>@metamask/controllers>@ethersproject/abi": true,
         "@metamask/rpc-methods>@metamask/controllers>@ethersproject/providers": true,
         "@metamask/snap-controllers>@metamask/controllers>eth-method-registry": true,
         "@metamask/snap-controllers>@metamask/controllers>ethereumjs-wallet": true,
@@ -3976,9 +4074,9 @@
         "ethereumjs-util": true,
         "ethereumjs-util>ethereum-cryptography": true,
         "ethereumjs-wallet>aes-js": true,
-        "ethereumjs-wallet>bs58check": true,
         "ethereumjs-wallet>randombytes": true,
-        "ethers>@ethersproject/json-wallets>scrypt-js": true
+        "ethers>@ethersproject/json-wallets>scrypt-js": true,
+        "hdkey>bs58check": true
       }
     },
     "@metamask/snap-controllers>@metamask/controllers>ethereumjs-wallet>uuid": {
@@ -4723,7 +4821,7 @@
     },
     "addons-linter>sha.js": {
       "packages": {
-        "ethereumjs-wallet>safe-buffer": true,
+        "hdkey>safe-buffer": true,
         "pumpify>inherits": true
       }
     },
@@ -4843,6 +4941,16 @@
         "ethjs-query>babel-runtime>core-js": true
       }
     },
+    "browserify>browserify-zlib": {
+      "packages": {
+        "browserify>assert": true,
+        "browserify>browserify-zlib>pako": true,
+        "browserify>buffer": true,
+        "browserify>process": true,
+        "browserify>stream-browserify": true,
+        "browserify>util": true
+      }
+    },
     "browserify>buffer": {
       "globals": {
         "console": true
@@ -4890,7 +4998,7 @@
     "browserify>crypto-browserify>browserify-cipher>evp_bytestokey": {
       "packages": {
         "ethereumjs-util>create-hash>md5.js": true,
-        "ethereumjs-wallet>safe-buffer": true
+        "hdkey>safe-buffer": true
       }
     },
     "browserify>crypto-browserify>browserify-sign": {
@@ -4919,7 +5027,7 @@
         "ethereumjs-util>create-hash": true,
         "ethereumjs-util>create-hash>cipher-base": true,
         "ethereumjs-util>create-hash>ripemd160": true,
-        "ethereumjs-wallet>safe-buffer": true,
+        "hdkey>safe-buffer": true,
         "pumpify>inherits": true
       }
     },
@@ -4950,7 +5058,7 @@
         "browserify>process": true,
         "ethereumjs-util>create-hash": true,
         "ethereumjs-util>create-hash>ripemd160": true,
-        "ethereumjs-wallet>safe-buffer": true
+        "hdkey>safe-buffer": true
       }
     },
     "browserify>crypto-browserify>public-encrypt": {
@@ -4996,7 +5104,7 @@
       "packages": {
         "browserify>process": true,
         "ethereumjs-wallet>randombytes": true,
-        "ethereumjs-wallet>safe-buffer": true
+        "hdkey>safe-buffer": true
       }
     },
     "browserify>events": {
@@ -5076,7 +5184,7 @@
     },
     "browserify>string_decoder": {
       "packages": {
-        "ethereumjs-wallet>safe-buffer": true
+        "hdkey>safe-buffer": true
       }
     },
     "browserify>timers-browserify": {
@@ -5230,6 +5338,217 @@
         "crypto.getRandomValues": true
       }
     },
+    "eciesjs": {
+      "packages": {
+        "browserify>buffer": true,
+        "browserify>crypto-browserify": true,
+        "eciesjs>futoin-hkdf": true,
+        "eciesjs>secp256k1": true
+      }
+    },
+    "eciesjs>futoin-hkdf": {
+      "packages": {
+        "browserify>buffer": true,
+        "browserify>crypto-browserify": true
+      }
+    },
+    "eciesjs>secp256k1": {
+      "packages": {
+        "3box>ethers>elliptic": true
+      }
+    },
+    "electron": {
+      "packages": {
+        "browserify": true,
+        "browserify>path-browserify": true,
+        "browserify>process": true
+      }
+    },
+    "electron-builder>app-builder-lib>sanitize-filename": {
+      "packages": {
+        "electron-builder>app-builder-lib>sanitize-filename>truncate-utf8-bytes": true
+      }
+    },
+    "electron-builder>app-builder-lib>sanitize-filename>truncate-utf8-bytes": {
+      "packages": {
+        "electron-builder>app-builder-lib>sanitize-filename>truncate-utf8-bytes>utf8-byte-length": true
+      }
+    },
+    "electron-store": {
+      "packages": {
+        "browserify>path-browserify": true,
+        "electron": true,
+        "electron-store>conf": true
+      }
+    },
+    "electron-store>conf": {
+      "packages": {
+        "browserify": true,
+        "browserify>assert": true,
+        "browserify>buffer": true,
+        "browserify>crypto-browserify": true,
+        "browserify>events": true,
+        "browserify>path-browserify": true,
+        "browserify>process": true,
+        "browserify>util": true,
+        "electron-store>conf>ajv": true,
+        "electron-store>conf>ajv-formats": true,
+        "electron-store>conf>atomically": true,
+        "electron-store>conf>debounce-fn": true,
+        "electron-store>conf>dot-prop": true,
+        "electron-store>conf>onetime": true,
+        "electron-store>conf>pkg-up": true,
+        "electron>@electron/get>env-paths": true,
+        "semver": true
+      }
+    },
+    "electron-store>conf>ajv": {
+      "globals": {
+        "console": true
+      },
+      "packages": {
+        "electron-store>conf>ajv>json-schema-traverse": true,
+        "eslint>ajv>uri-js": true,
+        "eslint>fast-deep-equal": true
+      }
+    },
+    "electron-store>conf>ajv-formats": {
+      "packages": {
+        "electron-store>conf>ajv": true
+      }
+    },
+    "electron-store>conf>atomically": {
+      "globals": {
+        "clearInterval": true,
+        "setInterval": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "browserify": true,
+        "browserify>path-browserify": true,
+        "browserify>process": true,
+        "browserify>util": true
+      }
+    },
+    "electron-store>conf>debounce-fn": {
+      "globals": {
+        "clearTimeout": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "electron-store>conf>debounce-fn>mimic-fn": true
+      }
+    },
+    "electron-store>conf>dot-prop": {
+      "packages": {
+        "electron-store>conf>dot-prop>is-obj": true
+      }
+    },
+    "electron-store>conf>onetime": {
+      "packages": {
+        "addons-linter>os-locale>mem>mimic-fn": true
+      }
+    },
+    "electron-store>conf>pkg-up": {
+      "packages": {
+        "electron-store>conf>pkg-up>find-up": true
+      }
+    },
+    "electron-store>conf>pkg-up>find-up": {
+      "packages": {
+        "browserify>path-browserify": true,
+        "electron-store>conf>pkg-up>find-up>locate-path": true
+      }
+    },
+    "electron-store>conf>pkg-up>find-up>locate-path": {
+      "packages": {
+        "browserify>path-browserify": true,
+        "browserify>process": true,
+        "electron-store>conf>pkg-up>find-up>locate-path>p-locate": true,
+        "mocha>find-up>locate-path>path-exists": true
+      }
+    },
+    "electron-store>conf>pkg-up>find-up>locate-path>p-locate": {
+      "packages": {
+        "electron-store>conf>pkg-up>find-up>locate-path>p-locate>p-limit": true
+      }
+    },
+    "electron-store>conf>pkg-up>find-up>locate-path>p-locate>p-limit": {
+      "packages": {
+        "nyc>find-up>locate-path>p-locate>p-limit>p-try": true
+      }
+    },
+    "electron-updater": {
+      "globals": {
+        "Intl.NumberFormat": true,
+        "console": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "@truffle/codec>lodash.escaperegexp": true,
+        "browserify": true,
+        "browserify>browserify-zlib": true,
+        "browserify>buffer": true,
+        "browserify>crypto-browserify": true,
+        "browserify>events": true,
+        "browserify>os-browserify": true,
+        "browserify>path-browserify": true,
+        "browserify>process": true,
+        "browserify>stream-browserify": true,
+        "browserify>stream-http": true,
+        "browserify>timers-browserify": true,
+        "browserify>url": true,
+        "electron": true,
+        "electron-updater>builder-util-runtime": true,
+        "electron-updater>fs-extra": true,
+        "electron-updater>lazy-val": true,
+        "enzyme>lodash.isequal": true,
+        "eslint>js-yaml": true,
+        "semver": true
+      }
+    },
+    "electron-updater>builder-util-runtime": {
+      "packages": {
+        "browserify": true,
+        "browserify>buffer": true,
+        "browserify>crypto-browserify": true,
+        "browserify>events": true,
+        "browserify>process": true,
+        "browserify>stream-browserify": true,
+        "browserify>url": true,
+        "jsdom>sax": true,
+        "madge>debug": true
+      }
+    },
+    "electron-updater>fs-extra": {
+      "globals": {
+        "setTimeout": true
+      },
+      "packages": {
+        "browserify>assert": true,
+        "browserify>path-browserify": true,
+        "browserify>process": true,
+        "browserify>util": true,
+        "electron-updater>fs-extra>jsonfile": true,
+        "electron-updater>fs-extra>universalify": true,
+        "fs-extra>graceful-fs": true
+      }
+    },
+    "electron-updater>fs-extra>jsonfile": {
+      "packages": {
+        "browserify": true,
+        "browserify>insert-module-globals>is-buffer": true,
+        "electron-updater>fs-extra>universalify": true,
+        "fs-extra>graceful-fs": true
+      }
+    },
+    "electron>@electron/get>env-paths": {
+      "packages": {
+        "browserify>os-browserify": true,
+        "browserify>path-browserify": true,
+        "browserify>process": true
+      }
+    },
     "end-of-stream": {
       "packages": {
         "browserify>process": true,
@@ -5262,13 +5581,9 @@
         "string.prototype.matchall>call-bind": true
       }
     },
-    "enzyme>object-inspect": {
+    "eslint>ajv>uri-js": {
       "globals": {
-        "HTMLElement": true,
-        "WeakRef": true
-      },
-      "packages": {
-        "browserify>browser-resolve": true
+        "define": true
       }
     },
     "eslint>optionator>fast-levenshtein": {
@@ -5406,7 +5721,7 @@
         "ethereumjs-util>create-hash": true,
         "ethereumjs-util>ethereum-cryptography": true,
         "ethereumjs-util>rlp": true,
-        "ethereumjs-wallet>safe-buffer": true
+        "hdkey>safe-buffer": true
       }
     },
     "eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethjs-util": {
@@ -5454,9 +5769,9 @@
         "ethereumjs-util": true,
         "ethereumjs-util>ethereum-cryptography": true,
         "ethereumjs-wallet>aes-js": true,
-        "ethereumjs-wallet>bs58check": true,
         "ethereumjs-wallet>randombytes": true,
-        "ethers>@ethersproject/json-wallets>scrypt-js": true
+        "ethers>@ethersproject/json-wallets>scrypt-js": true,
+        "hdkey>bs58check": true
       }
     },
     "eth-keyring-controller>@metamask/eth-hd-keyring>ethereumjs-wallet>uuid": {
@@ -5498,9 +5813,9 @@
         "ethereumjs-util": true,
         "ethereumjs-util>ethereum-cryptography": true,
         "ethereumjs-wallet>aes-js": true,
-        "ethereumjs-wallet>bs58check": true,
         "ethereumjs-wallet>randombytes": true,
-        "ethers>@ethersproject/json-wallets>scrypt-js": true
+        "ethers>@ethersproject/json-wallets>scrypt-js": true,
+        "hdkey>bs58check": true
       }
     },
     "eth-keyring-controller>eth-simple-keyring>ethereumjs-wallet>uuid": {
@@ -5580,7 +5895,7 @@
       "packages": {
         "3box>ethers>elliptic": true,
         "@ethereumjs/common>crc-32": true,
-        "@metamask/rpc-methods>@metamask/controllers>@ethersproject/abi": true,
+        "@ledgerhq/hw-app-eth>@ethersproject/abi": true,
         "bn.js": true,
         "browserify>buffer": true,
         "browserify>process": true,
@@ -5595,9 +5910,9 @@
         "eth-lattice-keyring>gridplus-sdk>secp256k1": true,
         "eth-lattice-keyring>gridplus-sdk>superagent": true,
         "ethereumjs-wallet>aes-js": true,
-        "ethereumjs-wallet>bs58check": true,
         "ethers>@ethersproject/keccak256>js-sha3": true,
         "ethers>@ethersproject/sha2>hash.js": true,
+        "hdkey>bs58check": true,
         "lodash": true
       }
     },
@@ -5753,7 +6068,7 @@
         "ethereumjs-util>create-hash": true,
         "ethereumjs-util>ethereum-cryptography": true,
         "ethereumjs-util>rlp": true,
-        "ethereumjs-wallet>safe-buffer": true
+        "hdkey>safe-buffer": true
       }
     },
     "eth-sig-util>ethereumjs-util>ethjs-util": {
@@ -5811,7 +6126,7 @@
         "browserify>crypto-browserify": true,
         "eth-trezor-keyring>hdkey>coinstring": true,
         "eth-trezor-keyring>hdkey>secp256k1": true,
-        "ethereumjs-wallet>safe-buffer": true
+        "hdkey>safe-buffer": true
       }
     },
     "eth-trezor-keyring>hdkey>coinstring": {
@@ -5829,12 +6144,12 @@
         "eth-trezor-keyring>hdkey>secp256k1>bip66": true,
         "eth-trezor-keyring>hdkey>secp256k1>drbg.js": true,
         "ethereumjs-util>create-hash": true,
-        "ethereumjs-wallet>safe-buffer": true
+        "hdkey>safe-buffer": true
       }
     },
     "eth-trezor-keyring>hdkey>secp256k1>bip66": {
       "packages": {
-        "ethereumjs-wallet>safe-buffer": true
+        "hdkey>safe-buffer": true
       }
     },
     "eth-trezor-keyring>hdkey>secp256k1>drbg.js": {
@@ -5929,21 +6244,21 @@
       "packages": {
         "browserify>stream-browserify": true,
         "browserify>string_decoder": true,
-        "ethereumjs-wallet>safe-buffer": true,
+        "hdkey>safe-buffer": true,
         "pumpify>inherits": true
       }
     },
     "ethereumjs-util>create-hash>md5.js": {
       "packages": {
         "ethereumjs-util>create-hash>md5.js>hash-base": true,
-        "ethereumjs-wallet>safe-buffer": true,
+        "hdkey>safe-buffer": true,
         "pumpify>inherits": true
       }
     },
     "ethereumjs-util>create-hash>md5.js>hash-base": {
       "packages": {
         "ethereumjs-util>create-hash>md5.js>hash-base>readable-stream": true,
-        "ethereumjs-wallet>safe-buffer": true,
+        "hdkey>safe-buffer": true,
         "pumpify>inherits": true
       }
     },
@@ -5972,10 +6287,10 @@
         "browserify>crypto-browserify>create-hmac": true,
         "ethereumjs-util>ethereum-cryptography>keccak": true,
         "ethereumjs-util>ethereum-cryptography>secp256k1": true,
-        "ethereumjs-wallet>bs58check": true,
         "ethereumjs-wallet>randombytes": true,
-        "ethereumjs-wallet>safe-buffer": true,
-        "ethers>@ethersproject/sha2>hash.js": true
+        "ethers>@ethersproject/sha2>hash.js": true,
+        "hdkey>bs58check": true,
+        "hdkey>safe-buffer": true
       }
     },
     "ethereumjs-util>ethereum-cryptography>blakejs": {
@@ -5990,7 +6305,7 @@
         "browserify>crypto-browserify>browserify-cipher>evp_bytestokey": true,
         "ethereumjs-util>create-hash>cipher-base": true,
         "ethereumjs-util>ethereum-cryptography>browserify-aes>buffer-xor": true,
-        "ethereumjs-wallet>safe-buffer": true,
+        "hdkey>safe-buffer": true,
         "pumpify>inherits": true
       }
     },
@@ -6040,24 +6355,17 @@
         "@truffle/codec>utf8": true,
         "browserify>crypto-browserify": true,
         "ethereumjs-wallet>aes-js": true,
-        "ethereumjs-wallet>bs58check": true,
         "ethereumjs-wallet>ethereumjs-util": true,
         "ethereumjs-wallet>randombytes": true,
-        "ethereumjs-wallet>safe-buffer": true,
         "ethereumjs-wallet>scryptsy": true,
-        "ethereumjs-wallet>uuid": true
+        "ethereumjs-wallet>uuid": true,
+        "hdkey>bs58check": true,
+        "hdkey>safe-buffer": true
       }
     },
     "ethereumjs-wallet>aes-js": {
       "globals": {
         "define": true
-      }
-    },
-    "ethereumjs-wallet>bs58check": {
-      "packages": {
-        "3box>ipfs>bs58": true,
-        "ethereumjs-util>create-hash": true,
-        "ethereumjs-wallet>safe-buffer": true
       }
     },
     "ethereumjs-wallet>ethereumjs-util": {
@@ -6086,12 +6394,7 @@
       },
       "packages": {
         "browserify>process": true,
-        "ethereumjs-wallet>safe-buffer": true
-      }
-    },
-    "ethereumjs-wallet>safe-buffer": {
-      "packages": {
-        "browserify>buffer": true
+        "hdkey>safe-buffer": true
       }
     },
     "ethereumjs-wallet>scryptsy": {
@@ -7177,17 +7480,11 @@
     },
     "ethers>@ethersproject/wallet>@ethersproject/address": {
       "packages": {
+        "@ledgerhq/hw-app-eth>@ethersproject/rlp": true,
         "ethers>@ethersproject/units>@ethersproject/bignumber": true,
         "ethers>@ethersproject/units>@ethersproject/logger": true,
-        "ethers>@ethersproject/wallet>@ethersproject/address>@ethersproject/rlp": true,
         "ethers>@ethersproject/wallet>@ethersproject/bytes": true,
         "ethers>@ethersproject/wallet>@ethersproject/keccak256": true
-      }
-    },
-    "ethers>@ethersproject/wallet>@ethersproject/address>@ethersproject/rlp": {
-      "packages": {
-        "ethers>@ethersproject/units>@ethersproject/logger": true,
-        "ethers>@ethersproject/wallet>@ethersproject/bytes": true
       }
     },
     "ethers>@ethersproject/wallet>@ethersproject/bytes": {
@@ -7243,11 +7540,11 @@
     },
     "ethers>@ethersproject/wallet>@ethersproject/transactions": {
       "packages": {
+        "@ledgerhq/hw-app-eth>@ethersproject/rlp": true,
         "ethers>@ethersproject/units>@ethersproject/bignumber": true,
         "ethers>@ethersproject/units>@ethersproject/constants": true,
         "ethers>@ethersproject/units>@ethersproject/logger": true,
         "ethers>@ethersproject/wallet>@ethersproject/address": true,
-        "ethers>@ethersproject/wallet>@ethersproject/address>@ethersproject/rlp": true,
         "ethers>@ethersproject/wallet>@ethersproject/bytes": true,
         "ethers>@ethersproject/wallet>@ethersproject/keccak256": true,
         "ethers>@ethersproject/wallet>@ethersproject/properties": true,
@@ -7485,6 +7782,21 @@
         "fast-json-patch>fast-deep-equal": true
       }
     },
+    "fs-extra>graceful-fs": {
+      "globals": {
+        "clearTimeout": true,
+        "console.error": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "browserify": true,
+        "browserify>assert": true,
+        "browserify>constants-browserify": true,
+        "browserify>process": true,
+        "browserify>stream-browserify": true,
+        "browserify>util": true
+      }
+    },
     "fuse.js": {
       "globals": {
         "console": true,
@@ -7511,6 +7823,39 @@
     "globalthis>define-properties>has-property-descriptors": {
       "packages": {
         "string.prototype.matchall>get-intrinsic": true
+      }
+    },
+    "hdkey": {
+      "packages": {
+        "browserify>assert": true,
+        "browserify>crypto-browserify": true,
+        "hdkey>bs58check": true,
+        "hdkey>safe-buffer": true,
+        "hdkey>secp256k1": true
+      }
+    },
+    "hdkey>bs58check": {
+      "packages": {
+        "3box>ipfs>bs58": true,
+        "ethereumjs-util>create-hash": true,
+        "hdkey>safe-buffer": true
+      }
+    },
+    "hdkey>safe-buffer": {
+      "packages": {
+        "browserify>buffer": true
+      }
+    },
+    "hdkey>secp256k1": {
+      "packages": {
+        "3box>ethers>elliptic": true
+      }
+    },
+    "jsdom>sax": {
+      "packages": {
+        "browserify>buffer": true,
+        "browserify>stream-browserify": true,
+        "browserify>string_decoder": true
       }
     },
     "json-rpc-engine": {
@@ -7562,6 +7907,23 @@
         "@metamask/jazzicon>color>color-convert": true
       }
     },
+    "lavamoat>bindings": {
+      "globals": {
+        "__non_webpack_require__": true,
+        "__webpack_require__": true
+      },
+      "packages": {
+        "browserify": true,
+        "browserify>path-browserify": true,
+        "browserify>process": true,
+        "lavamoat>bindings>file-uri-to-path": true
+      }
+    },
+    "lavamoat>bindings>file-uri-to-path": {
+      "packages": {
+        "browserify>path-browserify": true
+      }
+    },
     "lavamoat>json-stable-stringify": {
       "packages": {
         "lavamoat>json-stable-stringify>jsonify": true
@@ -7608,7 +7970,8 @@
         "define": true,
         "document.cookie": true,
         "localStorage": true,
-        "log": "write"
+        "log": "write",
+        "navigator": true
       }
     },
     "luxon": {
@@ -7632,6 +7995,11 @@
     "madge>rc>deep-extend": {
       "packages": {
         "browserify>buffer": true
+      }
+    },
+    "mocha>find-up>locate-path>path-exists": {
+      "packages": {
+        "browserify": true
       }
     },
     "mockttp>node-forge": {
@@ -7683,11 +8051,6 @@
     "nock>deep-equal>is-date-object": {
       "packages": {
         "koa>is-generator-function>has-tostringtag": true
-      }
-    },
-    "nock>qs": {
-      "packages": {
-        "string.prototype.matchall>side-channel": true
       }
     },
     "nock>qs": {
@@ -8335,35 +8698,12 @@
         "define": true
       },
       "packages": {
-        "terser>@jridgewell/source-map>@jridgewell/gen-mapping>@jridgewell/set-array": true,
-        "terser>@jridgewell/source-map>@jridgewell/gen-mapping>@jridgewell/sourcemap-codec": true,
-        "terser>@jridgewell/source-map>@jridgewell/trace-mapping": true
+        "@babel/cli>@jridgewell/trace-mapping": true,
+        "@babel/cli>@jridgewell/trace-mapping>@jridgewell/sourcemap-codec": true,
+        "terser>@jridgewell/source-map>@jridgewell/gen-mapping>@jridgewell/set-array": true
       }
     },
     "terser>@jridgewell/source-map>@jridgewell/gen-mapping>@jridgewell/set-array": {
-      "globals": {
-        "define": true
-      }
-    },
-    "terser>@jridgewell/source-map>@jridgewell/gen-mapping>@jridgewell/sourcemap-codec": {
-      "globals": {
-        "TextDecoder": true,
-        "define": true
-      },
-      "packages": {
-        "browserify>buffer": true
-      }
-    },
-    "terser>@jridgewell/source-map>@jridgewell/trace-mapping": {
-      "globals": {
-        "define": true
-      },
-      "packages": {
-        "terser>@jridgewell/source-map>@jridgewell/gen-mapping>@jridgewell/sourcemap-codec": true,
-        "terser>@jridgewell/source-map>@jridgewell/trace-mapping>@jridgewell/resolve-uri": true
-      }
-    },
-    "terser>@jridgewell/source-map>@jridgewell/trace-mapping>@jridgewell/resolve-uri": {
       "globals": {
         "define": true
       }
