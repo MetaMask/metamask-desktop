@@ -2644,6 +2644,124 @@
         "watchify>xtend": true
       }
     },
+    "@ledgerhq/hw-app-eth": {
+      "globals": {
+        "console.warn": true
+      },
+      "packages": {
+        "@ledgerhq/hw-app-eth>@ethersproject/abi": true,
+        "@ledgerhq/hw-app-eth>@ethersproject/rlp": true,
+        "@ledgerhq/hw-app-eth>@ledgerhq/cryptoassets": true,
+        "@ledgerhq/hw-app-eth>@ledgerhq/errors": true,
+        "@ledgerhq/hw-app-eth>@ledgerhq/logs": true,
+        "@ledgerhq/hw-app-eth>axios": true,
+        "@ledgerhq/hw-app-eth>bignumber.js": true,
+        "browserify>buffer": true
+      }
+    },
+    "@ledgerhq/hw-app-eth>@ethersproject/abi": {
+      "globals": {
+        "console.log": true
+      },
+      "packages": {
+        "ethers>@ethersproject/hdnode>@ethersproject/strings": true,
+        "ethers>@ethersproject/units>@ethersproject/bignumber": true,
+        "ethers>@ethersproject/units>@ethersproject/constants": true,
+        "ethers>@ethersproject/units>@ethersproject/logger": true,
+        "ethers>@ethersproject/wallet>@ethersproject/address": true,
+        "ethers>@ethersproject/wallet>@ethersproject/bytes": true,
+        "ethers>@ethersproject/wallet>@ethersproject/hash": true,
+        "ethers>@ethersproject/wallet>@ethersproject/keccak256": true,
+        "ethers>@ethersproject/wallet>@ethersproject/properties": true
+      }
+    },
+    "@ledgerhq/hw-app-eth>@ethersproject/rlp": {
+      "packages": {
+        "ethers>@ethersproject/units>@ethersproject/logger": true,
+        "ethers>@ethersproject/wallet>@ethersproject/bytes": true
+      }
+    },
+    "@ledgerhq/hw-app-eth>@ledgerhq/errors": {
+      "globals": {
+        "console.warn": true
+      }
+    },
+    "@ledgerhq/hw-app-eth>@ledgerhq/logs": {
+      "globals": {
+        "__ledgerLogsListen": "write",
+        "console.error": true
+      }
+    },
+    "@ledgerhq/hw-app-eth>axios": {
+      "globals": {
+        "XMLHttpRequest": true,
+        "btoa": true,
+        "console.warn": true,
+        "document": true,
+        "location.href": true,
+        "navigator": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "browserify>process": true
+      }
+    },
+    "@ledgerhq/hw-app-eth>bignumber.js": {
+      "globals": {
+        "crypto": true,
+        "define": true
+      }
+    },
+    "@ledgerhq/hw-transport-node-hid-noevents": {
+      "packages": {
+        "@ledgerhq/hw-transport-node-hid-noevents>@ledgerhq/devices": true,
+        "@ledgerhq/hw-transport-node-hid-noevents>@ledgerhq/errors": true,
+        "@ledgerhq/hw-transport-node-hid-noevents>@ledgerhq/hw-transport": true,
+        "@ledgerhq/hw-transport-node-hid-noevents>@ledgerhq/logs": true,
+        "@ledgerhq/hw-transport-node-hid-noevents>node-hid": true,
+        "browserify>buffer": true,
+        "browserify>process": true
+      }
+    },
+    "@ledgerhq/hw-transport-node-hid-noevents>@ledgerhq/devices": {
+      "packages": {
+        "@ledgerhq/hw-transport-node-hid-noevents>@ledgerhq/errors": true,
+        "browserify>buffer": true,
+        "semver": true
+      }
+    },
+    "@ledgerhq/hw-transport-node-hid-noevents>@ledgerhq/errors": {
+      "globals": {
+        "console.warn": true
+      }
+    },
+    "@ledgerhq/hw-transport-node-hid-noevents>@ledgerhq/hw-transport": {
+      "globals": {
+        "clearTimeout": true,
+        "console.warn": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "@ledgerhq/hw-transport-node-hid-noevents>@ledgerhq/errors": true,
+        "browserify>buffer": true,
+        "browserify>events": true
+      }
+    },
+    "@ledgerhq/hw-transport-node-hid-noevents>@ledgerhq/logs": {
+      "globals": {
+        "__ledgerLogsListen": "write",
+        "console.error": true
+      }
+    },
+    "@ledgerhq/hw-transport-node-hid-noevents>node-hid": {
+      "packages": {
+        "browserify>events": true,
+        "browserify>os-browserify": true,
+        "browserify>process": true,
+        "browserify>util": true,
+        "lavamoat>bindings": true
+      }
+    },
     "@material-ui/core": {
       "globals": {
         "Image": true,
@@ -7511,6 +7629,32 @@
     "globalthis>define-properties>has-property-descriptors": {
       "packages": {
         "string.prototype.matchall>get-intrinsic": true
+      }
+    },
+    "hdkey": {
+      "packages": {
+        "browserify>assert": true,
+        "browserify>crypto-browserify": true,
+        "hdkey>bs58check": true,
+        "hdkey>safe-buffer": true,
+        "hdkey>secp256k1": true
+      }
+    },
+    "hdkey>bs58check": {
+      "packages": {
+        "3box>ipfs>bs58": true,
+        "ethereumjs-util>create-hash": true,
+        "hdkey>safe-buffer": true
+      }
+    },
+    "hdkey>safe-buffer": {
+      "packages": {
+        "browserify>buffer": true
+      }
+    },
+    "hdkey>secp256k1": {
+      "packages": {
+        "3box>ethers>elliptic": true
       }
     },
     "json-rpc-engine": {

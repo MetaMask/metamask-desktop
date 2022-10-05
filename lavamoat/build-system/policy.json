@@ -1524,6 +1524,7 @@
         "browserify>JSONStream": true,
         "browserify>browser-pack>through2": true,
         "ethereumjs-wallet>safe-buffer": true,
+        "hdkey>safe-buffer": true,
         "watchify>defined": true
       }
     },
@@ -6095,7 +6096,8 @@
       "packages": {
         "ethereumjs-wallet>safe-buffer": true,
         "gulp>vinyl-fs>remove-bom-buffer": true,
-        "gulp>vinyl-fs>remove-bom-stream>through2": true
+        "gulp>vinyl-fs>remove-bom-stream>through2": true,
+        "hdkey>safe-buffer": true
       }
     },
     "gulp>vinyl-fs>remove-bom-stream>through2": {
@@ -6188,6 +6190,11 @@
     "gulp>vinyl-fs>vinyl-sourcemap>now-and-later": {
       "packages": {
         "pump>once": true
+      }
+    },
+    "hdkey>safe-buffer": {
+      "builtin": {
+        "buffer": true
       }
     },
     "ini": {
@@ -7846,6 +7853,7 @@
       },
       "packages": {
         "ethereumjs-wallet>safe-buffer": true,
+        "hdkey>safe-buffer": true,
         "readable-stream": true
       }
     },
