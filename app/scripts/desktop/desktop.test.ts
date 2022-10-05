@@ -291,14 +291,16 @@ describe('Desktop', () => {
     };
 
     it('writes state to disable stream if desktop disabled', async () => {
-      await simulateStateUpdate({ desktopEnabled: false }, true);
+      await simulateStateUpdate({ desktopEnabled: false, isPairing: false }, true);
 
       const disableStreamMock = multiplexStreamMocks[CLIENT_ID_DISABLE];
 
       expect(disableStreamMock.write).toHaveBeenCalledTimes(1);
       expect(disableStreamMock.write).toHaveBeenCalledWith({
         ...DATA_MOCK,
-        data: { PreferencesController: { desktopEnabled: false } },
+        data: {
+          PreferencesController: { desktopEnabled: false, isPairing: false },
+        },
       });
     });
 

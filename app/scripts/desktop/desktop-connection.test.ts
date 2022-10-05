@@ -509,7 +509,7 @@ describe('Desktop Connection', () => {
 
     it('initialises if no instance and desktop enabled set to true', async () => {
       removeInstance();
-      await simulateStateUpdate({ desktopEnabled: true });
+      await simulateStateUpdate({ isPairing: true });
 
       expect(DesktopConnection.getInstance()).toBeDefined();
       expect(EncryptedWebSocketStream).toHaveBeenCalledTimes(1);
@@ -550,10 +550,13 @@ describe('Desktop Connection', () => {
   });
 
   describe('on port stream message', () => {
-    const generateRawState = (desktopEnabled: boolean) => ({
+    const generateRawState = (isEnabled: boolean) => ({
       data: {
         ...DATA_MOCK,
-        PreferencesController: { desktopEnabled },
+        PreferencesController: {
+          desktopEnabled: isEnabled,
+          isPairing: isEnabled,
+        },
       },
     });
 

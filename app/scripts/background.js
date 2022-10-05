@@ -373,7 +373,6 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     getOpenMetamaskTabsIds: () => {
       return openMetamaskTabsIDs;
     },
-    // onDesktopPairing,
   });
 
   setupEnsIpfsResolver({
