@@ -1,1 +1,1 @@
-export type ClientId = number | string;
+export type ClientId = string;

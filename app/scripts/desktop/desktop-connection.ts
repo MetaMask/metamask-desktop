@@ -3,7 +3,6 @@ import PortStream from 'extension-port-stream';
 import endOfStream from 'end-of-stream';
 import ObjectMultiplex from 'obj-multiplex';
 import log from 'loglevel';
-import NotificationManager from '../lib/notification-manager';
 import {
   CLIENT_ID_BROWSER_CONTROLLER,
   CLIENT_ID_END_CONNECTION,
@@ -14,7 +13,7 @@ import {
 import cfg from './config';
 import { BrowserWebSocket, WebSocketStream } from './web-socket-stream';
 import EncryptedWebSocketStream from './encrypted-web-socket-stream';
-import { browser } from './extension-polyfill';
+import { browser } from './browser/browser-polyfill';
 import {
   ConnectionType,
   RemotePort,
@@ -22,17 +21,13 @@ import {
   State,
 } from './types/background';
 import { ClientId } from './types/desktop';
-import {
-  BrowserControllerAction,
-  BrowserControllerMessage,
-} from './types/message';
+import { registerResponseStream } from './browser/browser-proxy';
+import { timeoutPromise, uuid } from './utils/utils';
 
 const TIMEOUT_CONNECT = 5000;
 
 export default class DesktopConnection {
   private static instance: DesktopConnection;
-
-  private notificationManager: NotificationManager;
 
   private clientIdCounter: number;
 
@@ -48,25 +43,20 @@ export default class DesktopConnection {
 
   private stateStream?: Duplex;
 
-  public static async initIfEnabled(
-    notificationManager: NotificationManager,
-    state: any,
-  ) {
+  public static async initIfEnabled(state: any) {
     if (state && state.PreferencesController.desktopEnabled !== true) {
       return;
     }
 
-    await DesktopConnection.init(notificationManager);
+    await DesktopConnection.init();
   }
 
-  public static newInstance(
-    notificationManager: NotificationManager,
-  ): DesktopConnection {
+  public static newInstance(): DesktopConnection {
     if (DesktopConnection.hasInstance()) {
       return DesktopConnection.getInstance();
     }
 
-    const newInstance = new DesktopConnection(notificationManager);
+    const newInstance = new DesktopConnection();
     DesktopConnection.instance = newInstance;
 
     return newInstance;
@@ -80,33 +70,27 @@ export default class DesktopConnection {
     return Boolean(DesktopConnection.getInstance());
   }
 
-  public static registerCallbacks(
-    metaMaskController: EventEmitter,
-    notificationManager: NotificationManager,
-  ) {
+  public static registerCallbacks(metaMaskController: EventEmitter) {
     metaMaskController.on('update', (state) =>
-      DesktopConnection.onStateUpdate(state, notificationManager),
+      DesktopConnection.onStateUpdate(state),
     );
 
     log.debug('Registered desktop connection callbacks');
   }
 
-  private static async onStateUpdate(
-    state: any,
-    notificationManager: NotificationManager,
-  ) {
+  private static async onStateUpdate(state: any) {
     const desktopEnabled = state.desktopEnabled as boolean;
 
     if (!DesktopConnection.hasInstance() && desktopEnabled === true) {
       log.debug('Desktop enabled');
 
-      await DesktopConnection.init(notificationManager);
+      await DesktopConnection.init();
       await DesktopConnection.getInstance().transferState();
     }
   }
 
-  private static async init(notificationManager: NotificationManager) {
-    DesktopConnection.newInstance(notificationManager);
+  private static async init() {
+    DesktopConnection.newInstance();
 
     try {
       await DesktopConnection.instance.init();
@@ -115,8 +99,7 @@ export default class DesktopConnection {
     }
   }
 
-  private constructor(notificationManager: NotificationManager) {
-    this.notificationManager = notificationManager;
+  private constructor() {
     this.clientIdCounter = 1;
     this.multiplex = new ObjectMultiplex();
   }
@@ -133,9 +116,7 @@ export default class DesktopConnection {
       CLIENT_ID_BROWSER_CONTROLLER,
     );
 
-    browserControllerStream.on('data', (data: BrowserControllerMessage) =>
-      this.onBrowserControlMessage(data),
-    );
+    registerResponseStream(browserControllerStream);
 
     this.endConnectionStream = this.multiplex.createStream(
       CLIENT_ID_END_CONNECTION,
@@ -201,7 +182,7 @@ export default class DesktopConnection {
       }
     }
 
-    const clientId = this.getNextClientId();
+    const clientId = this.generateClientId();
     const clientStream = this.multiplex.createStream(clientId);
 
     uiInputStream.pipe(clientStream).pipe(uiStream as any);
@@ -307,16 +288,6 @@ export default class DesktopConnection {
     this.newConnectionStream.write(newConnectionMessage);
   }
 
-  private onBrowserControlMessage(data: BrowserControllerMessage) {
-    switch (data) {
-      case BrowserControllerAction.BROWSER_ACTION_SHOW_POPUP:
-        this.notificationManager.showPopup();
-        return;
-      default:
-        log.debug('Unrecognised browser control message', data);
-    }
-  }
-
   private async disable() {
     log.debug('Disabling desktop app');
 
@@ -329,23 +300,22 @@ export default class DesktopConnection {
   }
 
   private async createWebSocket(): Promise<WebSocket> {
-    return new Promise((resolve, reject) => {
+    const waitForWebSocketOpen = new Promise<BrowserWebSocket>((resolve) => {
       const webSocket = new WebSocket(`${cfg().desktop.webSocket.url}`);
 
       webSocket.addEventListener('open', () => {
         resolve(webSocket);
       });
-
-      setTimeout(() => {
-        const message = 'Timeout connecting to web socket server';
-        log.error(message);
-        reject(new Error(message));
-      }, TIMEOUT_CONNECT);
     });
+
+    return timeoutPromise(
+      waitForWebSocketOpen,
+      TIMEOUT_CONNECT,
+      'Timeout connecting to web socket server',
+    );
   }
 
-  private getNextClientId(): ClientId {
-    /* eslint-disable-next-line no-plusplus */
-    return this.clientIdCounter++;
+  private generateClientId(): ClientId {
+    return uuid();
   }
 }

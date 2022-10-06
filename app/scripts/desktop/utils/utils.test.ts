@@ -4,7 +4,7 @@ import {
   RESULT_MOCK,
   STREAM_MOCK,
   TYPE_MOCK,
-} from './test/mocks';
+} from '../test/mocks';
 import { flattenMessage } from './utils';
 
 describe('Desktop Utils', () => {

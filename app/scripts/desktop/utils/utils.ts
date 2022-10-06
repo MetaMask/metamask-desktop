@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 export const flattenMessage = (data: any) => {
   let output;
 
@@ -20,3 +22,32 @@ export const flattenMessage = (data: any) => {
 
   return output;
 };
+
+export const timeoutPromise = <T>(
+  promise: Promise<T>,
+  timeout: number,
+  errorMessage?: string,
+): Promise<T> => {
+  return new Promise<T>((resolve, reject) => {
+    let complete = false;
+
+    const timeoutInstance = setTimeout(() => {
+      complete = true;
+
+      reject(new Error(errorMessage || `Promise timeout after ${timeout}ms`));
+    }, timeout);
+
+    promise
+      .then((value: T) => {
+        if (complete) {
+          return;
+        }
+
+        clearTimeout(timeoutInstance);
+        resolve(value);
+      })
+      .catch(reject);
+  });
+};
+
+export const uuid = uuidv4;

@@ -32,7 +32,7 @@ import {
   CONNECTION_TYPE_EXTERNAL,
   CONNECTION_TYPE_INTERNAL,
 } from '../../shared/constants/desktop';
-import { browser } from './desktop/extension-polyfill';
+import { browser } from './desktop/browser/browser-polyfill';
 import migrations from './migrations';
 import Migrator from './lib/migrator';
 import ExtensionPlatform from './platforms/extension';
@@ -111,10 +111,6 @@ const ONE_SECOND_IN_MILLISECONDS = 1_000;
 // Timeout for initializing phishing warning page.
 const PHISHING_WARNING_PAGE_TIMEOUT = ONE_SECOND_IN_MILLISECONDS;
 
-if (cfg().desktop.isApp) {
-  Desktop.init(initialize);
-}
-
 /**
  * In case of MV3 we attach a "onConnect" event listener as soon as the application is initialised.
  * Reason is that in case of MV3 a delay in doing this was resulting in missing first connect event after service worker is re-activated.
@@ -130,7 +126,11 @@ if (isManifestV3 && cfg().desktop.isExtension) {
   browser.runtime.onConnect.addListener(initApp);
 } else {
   // initialization flow
-  initialize().catch(log.error);
+  const initDesktop = cfg().desktop.isApp
+    ? Desktop.init(initialize)
+    : Promise.resolve();
+
+  initDesktop.then(initialize).catch(log.error);
 }
 
 /**
@@ -199,7 +199,7 @@ async function initialize(remotePort) {
   const initLangCode = await getFirstPreferredLangCode();
 
   if (cfg().desktop.isExtension) {
-    await DesktopConnection.initIfEnabled(notificationManager, initState);
+    await DesktopConnection.initIfEnabled(initState);
   }
 
   await setupController(initState, initLangCode, remotePort);
@@ -789,7 +789,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     controller,
   );
 
-  DesktopConnection?.registerCallbacks(controller, notificationManager);
+  DesktopConnection?.registerCallbacks(controller);
 
   return Promise.resolve();
 }
@@ -802,11 +802,6 @@ function setupController(initState, initLangCode, remoteSourcePort) {
  * Opens the browser popup for user confirmation
  */
 async function triggerUi() {
-  if (Desktop?.hasInstance()) {
-    Desktop.getInstance().showPopup();
-    return;
-  }
-
   const tabs = await platform.getActiveTabs();
   const currentlyActiveMetamaskTab = Boolean(
     tabs.find((tab) => openMetamaskTabsIDs[tab.id]),

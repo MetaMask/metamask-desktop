@@ -1,5 +1,5 @@
 import log from 'loglevel';
-import { browser } from '../../../app/scripts/desktop/extension-polyfill';
+import { browser } from '../../../app/scripts/desktop/browser/browser-polyfill';
 
 export const returnToOnboardingInitiatorTab = async (onboardingInitiator) => {
   let tab;

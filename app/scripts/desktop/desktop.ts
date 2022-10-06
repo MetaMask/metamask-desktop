@@ -1,5 +1,5 @@
-import path from 'path';
 import { Duplex, EventEmitter } from 'stream';
+import path from 'path';
 import { app, BrowserWindow } from 'electron';
 import { Server as WebSocketServer, WebSocket } from 'ws';
 import endOfStream from 'end-of-stream';
@@ -16,19 +16,19 @@ import cfg from './config';
 import { updateCheck } from './update-check';
 import { WebSocketStream } from './web-socket-stream';
 import EncryptedWebSocketStream from './encrypted-web-socket-stream';
-import { browser } from './extension-polyfill';
+import { browser } from './browser/browser-polyfill';
 import {
   ConnectionType,
   ConnectRemoteFactory,
   State,
 } from './types/background';
 import {
-  BrowserControllerAction,
   EndConnectionMessage,
   NewConnectionMessage,
   StatusMessage,
 } from './types/message';
 import { ClientId } from './types/desktop';
+import { registerRequestStream } from './browser/node-browser';
 
 export default class Desktop {
   private static instance: Desktop;
@@ -98,9 +98,10 @@ export default class Desktop {
     const server = await this.createWebSocketServer();
     server.on('connection', (webSocket) => this.onConnection(webSocket));
 
-    this.browserControllerStream = this.multiplex.createStream(
+    const browserControllerStream = this.multiplex.createStream(
       CLIENT_ID_BROWSER_CONTROLLER,
     );
+    registerRequestStream(browserControllerStream);
 
     const endConnectionStream = this.multiplex.createStream(
       CLIENT_ID_END_CONNECTION,
@@ -135,17 +136,6 @@ export default class Desktop {
     this.connectExternal = connectExternal;
 
     metaMaskController.on('update', (state) => this.onStateUpdate(state));
-  }
-
-  public showPopup() {
-    if (!this.browserControllerStream) {
-      log.debug('Browser controller stream not initialised');
-      return;
-    }
-
-    this.browserControllerStream.write(
-      BrowserControllerAction.BROWSER_ACTION_SHOW_POPUP,
-    );
   }
 
   public transferState(rawState: State) {
@@ -320,7 +310,7 @@ export default class Desktop {
 
   private onEndConnectionMessage(data: EndConnectionMessage) {
     log.debug('Received end connection message', data);
-    this.clientStreams[data.clientId as number]?.end();
+    this.clientStreams[data.clientId]?.end();
   }
 
   private async onStateUpdate(state: any) {
