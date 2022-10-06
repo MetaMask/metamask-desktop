@@ -10,7 +10,6 @@ import {
   CLIENT_ID_DISABLE,
   CLIENT_ID_PAIRING,
 } from '../../../shared/constants/desktop';
-import NotificationManager from '../lib/notification-manager';
 import * as totp from '../../../shared/modules/totp';
 import DesktopConnection from './desktop-connection';
 import {

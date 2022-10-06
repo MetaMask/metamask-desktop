@@ -25,9 +25,7 @@ import {
 import { ClientId } from './types/desktop';
 import { registerResponseStream } from './browser/browser-proxy';
 import { timeoutPromise, uuid } from './utils/utils';
-import {
-  PairingMessage,
-} from './types/message';
+import { PairingMessage } from './types/message';
 
 const TIMEOUT_CONNECT = 5000;
 

@@ -52,6 +52,28 @@ const updateWebSocketStatus = (data: StatusMessage) => {
   webSocketStatus.className = data.isWebSocketConnected ? 'on' : 'off';
 };
 
+const onOTPSubmit = (value: string) => {
+  ipcRenderer.invoke('otp', value);
+};
+
+const onShowPopup = () => {
+  ipcRenderer.invoke('popup');
+};
+
+const handleContinueExtensionButton = () => {
+  const extensionButton = document.getElementById('extension-button');
+
+  if (!extensionButton) {
+    console.error('Cannot find submit button element');
+    return;
+  }
+
+  extensionButton.addEventListener('click', () => {
+    ipcRenderer.invoke('minimize');
+    onShowPopup();
+  });
+};
+
 const updateDesktopSynced = () => {
   const mainContentDiv = document.getElementById('main-content');
 
@@ -62,7 +84,9 @@ const updateDesktopSynced = () => {
 
   mainContentDiv.innerHTML = `<h2>All set, fox</h2>
     <span>Some explainer about using the extension as usual but keep this \n app open and check the alerts.</span>
-    <div><button id="connections-button" >Continue with Extension</button></div>`;
+    <div><button id="extension-button" >Continue with Extension</button></div>`;
+
+  handleContinueExtensionButton();
 };
 
 const onStatusMessage = (data: StatusMessage) => {
@@ -71,10 +95,6 @@ const onStatusMessage = (data: StatusMessage) => {
   if (data.isPaired) {
     updateDesktopSynced();
   }
-};
-
-const onOTPSubmit = (value: string) => {
-  ipcRenderer.invoke('otp', value);
 };
 
 const handleOTPChange = () => {

@@ -24,6 +24,7 @@ import {
   State,
 } from './types/background';
 import {
+  BrowserControllerAction,
   EndConnectionMessage,
   NewConnectionMessage,
   PairingMessage,
@@ -105,6 +106,8 @@ export default class Desktop {
     await this.initStreams();
 
     ipcMain.handle('otp', (_event, data) => this.onOTPSubmit(data));
+    ipcMain.handle('popup', (_event) => this.showPopup());
+    ipcMain.handle('minimize', (_event) => this.statusWindow?.minimize());
 
     this.statusWindow = await this.createStatusWindow();
 
