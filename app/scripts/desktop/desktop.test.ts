@@ -291,7 +291,10 @@ describe('Desktop', () => {
     };
 
     it('writes state to disable stream if desktop disabled', async () => {
-      await simulateStateUpdate({ desktopEnabled: false, isPairing: false }, true);
+      await simulateStateUpdate(
+        { desktopEnabled: false, isPairing: false },
+        true,
+      );
 
       const disableStreamMock = multiplexStreamMocks[CLIENT_ID_DISABLE];
 
