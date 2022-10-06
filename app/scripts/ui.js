@@ -17,7 +17,10 @@ import {
 } from '../../shared/constants/app';
 import { isManifestV3 } from '../../shared/modules/mv3.utils';
 import { SUPPORT_LINK } from '../../shared/lib/ui-utils';
-import { getErrorHtml } from '../../shared/lib/error-utils';
+import {
+  getErrorHtml,
+  registerDesktopErrorActions,
+} from '../../shared/lib/error-utils';
 import { browser } from './desktop/browser/browser-polyfill';
 import ExtensionPlatform from './platforms/extension';
 import { setupMultiplex } from './lib/stream-utils';
@@ -177,22 +180,15 @@ function initializeUi(activeTab, connectionStream, cb) {
 }
 
 async function displayCriticalError(err, metamaskState, backgroundConnection) {
-  const html = await getErrorHtml(SUPPORT_LINK, metamaskState);
+  const html = await getErrorHtml(SUPPORT_LINK, metamaskState, err);
 
   container.innerHTML = html;
 
+  registerDesktopErrorActions(backgroundConnection, browser);
+
   const button = document.getElementById('critical-error-button');
-
-  const disableDesktopButton = document.getElementById(
-    'critical-error-desktop-button',
-  );
-
-  button.addEventListener('click', (_) => {
+  button?.addEventListener('click', (_) => {
     browser.runtime.reload();
-  });
-
-  disableDesktopButton?.addEventListener('click', (_) => {
-    backgroundConnection.disableDesktop();
   });
 
   log.error(err.stack);

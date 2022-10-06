@@ -963,6 +963,12 @@
   "description": {
     "message": "Description"
   },
+  "desktopConnectionCriticalErrorDescription": {
+    "message": "This error could be intermittent, so try restarting the extension or disable MetaMask Desktop."
+  },
+  "desktopConnectionCriticalErrorTitle": {
+    "message": "MetaMask had trouble starting"
+  },
   "desktopConnectionLostErrorCTA": {
     "message": "Reconnect MetaMask Desktop"
   },
@@ -971,6 +977,12 @@
   },
   "desktopConnectionLostErrorTitle": {
     "message": "MetaMask Desktop connection was lost"
+  },
+  "desktopDisableErrorCTA": {
+    "message": "Disable MetaMask Desktop"
+  },
+  "desktopErrorRestartMMCTA": {
+    "message": "Restart MetaMask"
   },
   "desktopNotFoundErrorCTA": {
     "message": "Download MetaMask Desktop"

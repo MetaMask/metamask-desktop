@@ -14,4 +14,5 @@ export const EXTENSION_ERROR_PAGE_TYPES = {
   NOT_FOUND: 'not-found',
   CONNECTION_LOST: 'connection-lost',
   DESKTOP_OUTDATED: 'desktop-outdated',
+  CRITICAL_ERROR: 'critical-error',
 };

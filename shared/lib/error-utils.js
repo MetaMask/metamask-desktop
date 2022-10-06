@@ -4,6 +4,8 @@ import {
   fetchLocale,
   loadRelativeTimeFormatLocaleData,
 } from '../../ui/helpers/utils/i18n-helper';
+import { renderDesktopErrorContent } from '../../ui/pages/desktop-error/desktop-error.component';
+import { EXTENSION_ERROR_PAGE_TYPES } from '../constants/desktop';
 import switchDirection from './switch-direction';
 
 const _setupLocale = async (currentLocale) => {
@@ -32,7 +34,7 @@ const getLocaleContext = (currentLocaleMessages, enLocaleMessages) => {
   };
 };
 
-export async function getErrorHtml(supportLink, metamaskState) {
+export async function getErrorHtml(supportLink, metamaskState, err) {
   let response, preferredLocale;
   if (metamaskState?.currentLocale) {
     preferredLocale = metamaskState.currentLocale;
@@ -51,9 +53,19 @@ export async function getErrorHtml(supportLink, metamaskState) {
   const t = getLocaleContext(currentLocaleMessages, enLocaleMessages);
   const desktopEnabled = metamaskState?.desktopEnabled === true;
 
-  const disableDesktopButton = desktopEnabled
-    ? `<button id='critical-error-desktop-button' class="critical-error__alert__button__disable-desktop">Disable Desktop App</button>`
-    : '';
+  if (desktopEnabled) {
+    let errorType = EXTENSION_ERROR_PAGE_TYPES.CRITICAL_ERROR;
+
+    if (err?.message.includes('No response from RPC')) {
+      errorType = EXTENSION_ERROR_PAGE_TYPES.NOT_FOUND;
+    }
+
+    return renderDesktopErrorContent({
+      type: errorType,
+      t,
+      isHtmlError: true,
+    });
+  }
 
   return `
     <div class="critical-error">
@@ -64,7 +76,6 @@ export async function getErrorHtml(supportLink, metamaskState) {
         <button id='critical-error-button' class="critical-error__alert__button">
           ${t('restartMetamask')}
         </button>
-        ${disableDesktopButton}
       </div>
       <p class="critical-error__paragraph">
         ${t('stillGettingMessage')}
@@ -78,4 +89,27 @@ export async function getErrorHtml(supportLink, metamaskState) {
       </p>
     </div>
     `;
+}
+
+export function registerDesktopErrorActions(backgroundConnection, browser) {
+  const disableDesktopButton = document.getElementById(
+    'desktop-error-button-disable-mmd',
+  );
+  const restartMMButton = document.getElementById(
+    'desktop-error-button-restart-mm',
+  );
+  const downloadMMDButton = document.getElementById(
+    'desktop-error-button-download-mmd',
+  );
+
+  disableDesktopButton?.addEventListener('click', (_) => {
+    backgroundConnection.disableDesktop();
+  });
+  restartMMButton?.addEventListener('click', (_) => {
+    browser.runtime.reload();
+  });
+  downloadMMDButton?.addEventListener('click', (_) => {
+    // TODO: Change to MMD link
+    global.platform.openTab({ url: 'https://metamask.io/' });
+  });
 }
