@@ -37,14 +37,16 @@ export const timeoutPromise = <T>(
       reject(new Error(errorMessage || `Promise timeout after ${timeout}ms`));
     }, timeout);
 
-    promise.then((value: T) => {
-      if (complete) {
-        return;
-      }
+    promise
+      .then((value: T) => {
+        if (complete) {
+          return;
+        }
 
-      clearTimeout(timeoutInstance);
-      resolve(value);
-    });
+        clearTimeout(timeoutInstance);
+        resolve(value);
+      })
+      .catch(reject);
   });
 };
 
