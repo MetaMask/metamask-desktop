@@ -16,6 +16,12 @@
   },
   "mac": {
     "icon": "app/build-types/desktop/images/icon.icns",
+    "forceCodeSigning": true,
+    "hardenedRuntime": true,
+    "entitlements": "development/desktop/electron/build/entitlements.mac.plist",
+    "entitlementsInherit": "development/desktop/electron/build/entitlements.mac.plist",
+    "gatekeeperAssess": false,
+    "type": "development",
     "target": [
       {
         "target": "dmg",
