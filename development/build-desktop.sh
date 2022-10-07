@@ -41,4 +41,3 @@ babel . \
     -d ./$OUTPUT_DIR \
     --extensions ".ts,.js" \
     --config-file "./babel-desktop.config.js" \
-    --watch

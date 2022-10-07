@@ -1,0 +1,82 @@
+diff --git a/node_modules/lavamoat/package.json b/node_modules/lavamoat/package.json
+index e0993cd..409ba93 100644
+--- a/node_modules/lavamoat/package.json
++++ b/node_modules/lavamoat/package.json
+@@ -5,7 +5,7 @@
+     "lavamoat-run-command": "src/run-command.js"
+   },
+   "version": "6.4.0",
+-  "main": "index.js",
++  "main": "src/index.js",
+   "license": "MIT",
+   "scripts": {
+     "test": "yarn test:prep && yarn test:run",
+diff --git a/node_modules/lavamoat/src/index.js b/node_modules/lavamoat/src/index.js
+index e304f18..a5c7275 100755
+--- a/node_modules/lavamoat/src/index.js
++++ b/node_modules/lavamoat/src/index.js
+@@ -34,6 +34,7 @@ async function runLava (options) {
+     scuttleGlobalThisExceptions,
+     debugMode,
+     statsMode,
++    isPackagedApp
+   } = options
+   const shouldParseApplication = writeAutoPolicy || writeAutoPolicyDebug || writeAutoPolicyAndRun
+   const shouldRunApplication = (!writeAutoPolicy && !writeAutoPolicyDebug) || writeAutoPolicyAndRun
+@@ -69,6 +70,7 @@ async function runLava (options) {
+       scuttleGlobalThisExceptions,
+       debugMode,
+       statsMode,
++      isPackagedApp
+     })
+ 
+     // run entrypoint
+diff --git a/node_modules/lavamoat/src/kernel.js b/node_modules/lavamoat/src/kernel.js
+index b65004a..70e8914 100644
+--- a/node_modules/lavamoat/src/kernel.js
++++ b/node_modules/lavamoat/src/kernel.js
+@@ -14,10 +14,10 @@ const nativeRequire = require
+ 
+ module.exports = { createKernel }
+ 
+-function createKernel ({ projectRoot, lavamoatPolicy, canonicalNameMap, debugMode, statsMode, scuttleGlobalThis, scuttleGlobalThisExceptions }) {
++function createKernel ({ projectRoot, lavamoatPolicy, canonicalNameMap, debugMode, statsMode, scuttleGlobalThis, scuttleGlobalThisExceptions, isPackagedApp }) {
+   const { resolutions } = lavamoatPolicy
+-  const getRelativeModuleId = createModuleResolver({ projectRoot, resolutions, canonicalNameMap })
+-  const loadModuleData = createModuleLoader({ canonicalNameMap })
++  const getRelativeModuleId = createModuleResolver({ projectRoot, resolutions, canonicalNameMap, isPackagedApp })
++  const loadModuleData = createModuleLoader({ canonicalNameMap, isPackagedApp })
+   const kernelSrc = generateKernel({ debugMode, scuttleGlobalThis, scuttleGlobalThisExceptions })
+   const createKernel = evaluateWithSourceUrl('LavaMoat/node/kernel', kernelSrc)
+   const reportStatsHook = statsMode ? makeInitStatsHook({ onStatsReady }) : noop
+@@ -53,8 +53,16 @@ function prepareModuleInitializerArgs (requireRelativeWithContext, moduleObj, mo
+   return [exports, require, module, __filename, __dirname]
+ }
+ 
+-function createModuleResolver ({ projectRoot, resolutions, canonicalNameMap }) {
++function createModuleResolver ({ projectRoot, resolutions, canonicalNameMap, isPackagedApp }) {
+   return function getRelativeModuleId (parentAbsolutePath, requestedName) {
++    // allow lavamoat to resolve electron module
++    if (requestedName === 'electron') {
++      return 'electron'
++    }
++
++    if (isPackagedApp && requestedName === 'leveldown') {
++      return 'orbit-db-cache/node_modules/leveldown'
++    }
+     // handle resolution overrides
+     let parentDir = path.dirname(parentAbsolutePath)
+     const parentPackageName = getPackageNameForModulePath(canonicalNameMap, parentDir)
+@@ -75,10 +83,10 @@ function createModuleResolver ({ projectRoot, resolutions, canonicalNameMap }) {
+   }
+ }
+ 
+-function createModuleLoader ({ canonicalNameMap }) {
++function createModuleLoader ({ canonicalNameMap, isPackagedApp }) {
+   return function loadModuleData (absolutePath) {
+     // load builtin modules (eg "fs")
+-    if (resolve.isCore(absolutePath)) {
++    if (resolve.isCore(absolutePath) || absolutePath === 'electron' || (isPackagedApp && absolutePath === 'orbit-db-cache/node_modules/leveldown')) {
+       return {
+         type: 'builtin',
+         file: absolutePath,
