@@ -1,0 +1,370 @@
+diff --git a/node_modules/lavamoat/package.json b/node_modules/lavamoat/package.json
+index b0c58c8..16fb52d 100644
+--- a/node_modules/lavamoat/package.json
++++ b/node_modules/lavamoat/package.json
+@@ -1,14 +1,14 @@
+ {
+   "name": "lavamoat",
+   "bin": {
+-    "lavamoat": "src/index.js"
++    "lavamoat": "src/cli.js"
+   },
+   "version": "6.2.0",
+-  "main": "index.js",
++  "main": "src/index.js",
+   "license": "MIT",
+   "scripts": {
+     "test": "yarn test:prep && yarn test:run",
+-    "test:prep": "for d in ./test/projects/*/ ; do (cd \"$d\" && yarn setup && ../../../src/index.js -a index.js); done",
++    "test:prep": "for d in ./test/projects/*/ ; do (cd \"$d\" && yarn setup && ../../../src/cli.js -a index.js); done",
+     "test:run": "ava --timeout=30s test/index.js",
+     "lint": "yarn lint:eslint && yarn lint:deps",
+     "lint:eslint": "eslint \"src/**/*.js\" \"test/**/*.js\"",
+diff --git a/node_modules/lavamoat/src/cli.js b/node_modules/lavamoat/src/cli.js
+new file mode 100644
+index 0000000..3b3e024
+--- /dev/null
++++ b/node_modules/lavamoat/src/cli.js
+@@ -0,0 +1,32 @@
++#!/usr/bin/env node
++/* eslint-disable no-eval */
++
++const yargs = require('yargs')
++const yargsFlags = require('./yargsFlags')
++const { runLava } = require('./index')
++
++const defaults = require('./defaults')
++
++runLava(parseArgs()).catch(err => {
++  // explicity log stack to workaround https://github.com/endojs/endo/issues/944
++  console.error(err.stack || err)
++  process.exit(1)
++})
++
++
++function parseArgs () {
++  const argsParser = yargs
++    .usage('$0 <entryPath>', 'start the application', (yargs) => {
++      // the entry file to run (or parse)
++      yargs.positional('entryPath', {
++        describe: 'the path to the entry file for your application. same as node.js',
++        type: 'string'
++      })
++      yargsFlags(yargs, defaults)
++    })
++    .help()
++
++  const parsedArgs = argsParser.parse()
++
++  return parsedArgs
++}
+diff --git a/node_modules/lavamoat/src/defaults.js b/node_modules/lavamoat/src/defaults.js
+new file mode 100644
+index 0000000..8fb7522
+--- /dev/null
++++ b/node_modules/lavamoat/src/defaults.js
+@@ -0,0 +1,15 @@
++const { getDefaultPaths } = require("lavamoat-core");
++
++const defaultPaths = getDefaultPaths("node");
++
++module.exports = {
++  writeAutoPolicy: false,
++  writeAutoPolicyDebug: false,
++  writeAutoPolicyAndRun: false,
++  policyPath: defaultPaths.primary,
++  policyDebugPath: defaultPaths.debug,
++  policyOverridePath: defaultPaths.override,
++  projectRoot: process.cwd(),
++  debugMode: false,
++  statsMode: false,
++};
+diff --git a/node_modules/lavamoat/src/index.js b/node_modules/lavamoat/src/index.js
+index ba4bc57..f06cc8a 100755
+--- a/node_modules/lavamoat/src/index.js
++++ b/node_modules/lavamoat/src/index.js
+@@ -1,22 +1,25 @@
+-#!/usr/bin/env node
+ /* eslint-disable no-eval */
+
+ const path = require('path')
+ const fs = require('fs')
+-const yargs = require('yargs')
+ const jsonStringify = require('json-stable-stringify')
+-const { loadPolicy, getDefaultPaths } = require('lavamoat-core')
++const { loadPolicy } = require('lavamoat-core')
+ const { loadCanonicalNameMap } = require('@lavamoat/aa')
+ const { parseForPolicy } = require('./parseForPolicy')
+ const { createKernel } = require('./kernel')
+
+-runLava().catch(err => {
+-  // explicity log stack to workaround https://github.com/endojs/endo/issues/944
+-  console.error(err.stack || err)
+-  process.exit(1)
+-})
++const defaults = require('./defaults')
++
++
++async function runLava (options) {
++  options = Object.assign({}, defaults, options)
++
++  options.projectRoot = path.resolve(options.projectRoot)
++  options.entryPath = path.resolve(options.projectRoot, options.entryPath)
++  options.policyPath = path.resolve(options.projectRoot, options.policyPath)
++  options.policyOverridePath = path.resolve(options.projectRoot, options.policyOverridePath)
++  options.policyDebugPath = path.resolve(options.projectRoot, options.policyDebugPath)
+
+-async function runLava () {
+   const {
+     entryPath: entryId,
+     writeAutoPolicy,
+@@ -28,14 +31,15 @@ async function runLava () {
+     projectRoot,
+     debugMode,
+     statsMode,
+-  } = parseArgs()
++    isPackagedApp,
++  } = options
+   const shouldParseApplication = writeAutoPolicy || writeAutoPolicyDebug || writeAutoPolicyAndRun
+   const shouldRunApplication = (!writeAutoPolicy && !writeAutoPolicyDebug) || writeAutoPolicyAndRun
+
+   if (shouldParseApplication) {
+     // parse mode
+     const includeDebugInfo = Boolean(writeAutoPolicyDebug)
+-    const policyOverride= await loadPolicy({ debugMode, policyPath: policyOverridePath })
++    const policyOverride = await loadPolicy({ debugMode, policyPath: policyOverridePath })
+     console.warn(`LavaMoat generating policy from entry "${entryId}"...`)
+     const policy = await parseForPolicy({ projectRoot, entryId, policyOverride, includeDebugInfo })
+     // write policy debug file
+@@ -55,8 +59,7 @@ async function runLava () {
+     // execution mode
+     const lavamoatPolicy = await loadPolicy({ debugMode, policyPath })
+     const canonicalNameMap = await loadCanonicalNameMap({ rootDir: projectRoot, includeDevDeps: true })
+-      // process.exit(420)
+-    const kernel = createKernel({ projectRoot, lavamoatPolicy, canonicalNameMap, debugMode, statsMode })
++    const kernel = createKernel({ projectRoot, lavamoatPolicy, canonicalNameMap, debugMode, statsMode, isPackagedApp })
+     // patch process.argv so it matches the normal pattern
+     // e.g. [runtime path, entrypoint, ...args]
+     // we'll use the LavaMoat path as the runtime
+@@ -67,87 +70,4 @@ async function runLava () {
+   }
+ }
+
+-function parseArgs () {
+-  const defaultPaths = getDefaultPaths('node')
+-  const argsParser = yargs
+-    .usage('$0 <entryPath>', 'start the application', (yargs) => {
+-      // the entry file to run (or parse)
+-      yargs.positional('entryPath', {
+-        describe: 'the path to the entry file for your application. same as node.js',
+-        type: 'string'
+-      })
+-      // the path for the policy file
+-      yargs.option('policy', {
+-        alias: ['p', 'policyPath'],
+-        describe: 'Pass in policy. Accepts a filepath string to the existing policy. When used in conjunction with --autopolicy, specifies where to write the policy. Default: ./lavamoat/node/policy.json',
+-        type: 'string',
+-        default: defaultPaths.primary
+-      })
+-      // the path for the policy override file
+-      yargs.option('policyOverride', {
+-        alias: ['o', 'override', 'policyOverridePath'],
+-        describe: 'Pass in override policy. Accepts a filepath string to the existing override policy. Default: ./lavamoat/node/policy-override.json',
+-        type: 'string',
+-        default: defaultPaths.override
+-      })
+-      // the path for the policy debug file
+-      yargs.option('policyDebug', {
+-        alias: ['pd', 'policydebug', 'policyDebugPath'],
+-        describe: 'Pass in debug policy. Accepts a filepath string to the existing debug policy. Default: ./lavamoat/node/policy-debug.json',
+-        type: 'string',
+-        default: defaultPaths.debug
+-      })
+-      // parsing mode, write policy to policy path
+-      yargs.option('writeAutoPolicy', {
+-        alias: ['a', 'autopolicy'],
+-        describe: 'Generate a "policy.json" and "policy-override.json" in the current working         directory. Overwrites any existing policy files. The override policy is for making manual policy changes and always takes precedence over the automatically generated policy.',
+-        type: 'boolean',
+-        default: false
+-      })
+-      // parsing + run mode, write policy to policy path then execute with new policy
+-      yargs.option('writeAutoPolicyAndRun', {
+-        alias: ['ar', 'autorun'],
+-        describe: 'parse + generate a LavaMoat policy file then execute with the new policy.',
+-        type: 'boolean',
+-        default: false
+-      })
+-      // parsing mode, write policy debug info to specified or default path
+-      yargs.option('writeAutoPolicyDebug', {
+-        alias: ['dp', 'debugpolicy'],
+-        describe: 'when writeAutoPolicy is enabled, write policy debug info to specified or default path',
+-        type: 'boolean',
+-        default: false
+-      })
+-      // parsing mode, write policy debug info to specified or default path
+-      yargs.option('projectRoot', {
+-        describe: 'specify the director from where packages should be resolved',
+-        type: 'string',
+-        default: process.cwd()
+-      })
+-      // debugMode, disable some protections for easier debugging
+-      yargs.option('debugMode', {
+-        alias: ['d', 'debug'],
+-        describe: 'Disable some protections and extra logging for easier debugging.',
+-        type: 'boolean',
+-        default: false
+-      })
+-      // log initialization stats
+-      yargs.option('statsMode', {
+-        alias: ['stats'],
+-        describe: 'enable writing and logging of stats',
+-        type: 'boolean',
+-        default: false
+-      })
+-    })
+-    .help()
+-
+-  const parsedArgs = argsParser.parse()
+-  // resolve paths
+-  parsedArgs.entryPath = path.resolve(parsedArgs.entryPath)
+-  parsedArgs.policyPath = path.resolve(parsedArgs.policyPath)
+-  parsedArgs.policyOverridePath = path.resolve(parsedArgs.policyOverridePath)
+-  parsedArgs.policyDebugPath = path.resolve(parsedArgs.policyDebugPath)
+-  parsedArgs.projectRoot = path.resolve(parsedArgs.projectRoot)
+-
+-  return parsedArgs
+-}
++module.exports = { runLava }
+diff --git a/node_modules/lavamoat/src/kernel.js b/node_modules/lavamoat/src/kernel.js
+index f1cfd0a..b3e3b67 100644
+--- a/node_modules/lavamoat/src/kernel.js
++++ b/node_modules/lavamoat/src/kernel.js
+@@ -14,10 +14,10 @@ const nativeRequire = require
+
+ module.exports = { createKernel }
+
+-function createKernel ({ projectRoot, lavamoatPolicy, canonicalNameMap, debugMode, statsMode }) {
++function createKernel ({ projectRoot, lavamoatPolicy, canonicalNameMap, debugMode, statsMode, isPackagedApp }) {
+   const { resolutions } = lavamoatPolicy
+-  const getRelativeModuleId = createModuleResolver({ projectRoot, resolutions, canonicalNameMap })
+-  const loadModuleData = createModuleLoader({ canonicalNameMap })
++  const getRelativeModuleId = createModuleResolver({ projectRoot, resolutions, canonicalNameMap, isPackagedApp })
++  const loadModuleData = createModuleLoader({ canonicalNameMap, isPackagedApp })
+   const kernelSrc = generateKernel({ debugMode })
+   const createKernel = evaluateWithSourceUrl('LavaMoat/node/kernel', kernelSrc)
+   const reportStatsHook = statsMode ? makeInitStatsHook({ onStatsReady }) : noop
+@@ -53,8 +53,17 @@ function prepareModuleInitializerArgs (requireRelativeWithContext, moduleObj, mo
+   return [exports, require, module, __filename, __dirname]
+ }
+
+-function createModuleResolver ({ projectRoot, resolutions, canonicalNameMap }) {
++function createModuleResolver ({ projectRoot, resolutions, canonicalNameMap, isPackagedApp }) {
+   return function getRelativeModuleId (parentAbsolutePath, requestedName) {
++    // allow lavamoat to resolve electron module
++    if (requestedName === 'electron') {
++      return 'electron'
++    }
++
++    if (isPackagedApp && requestedName === 'leveldown') {
++      return 'orbit-db-cache/node_modules/leveldown'
++    }
++
+     // handle resolution overrides
+     let parentDir = path.dirname(parentAbsolutePath)
+     const parentPackageName = getPackageNameForModulePath(canonicalNameMap, parentDir)
+@@ -75,10 +84,10 @@ function createModuleResolver ({ projectRoot, resolutions, canonicalNameMap }) {
+   }
+ }
+
+-function createModuleLoader ({ canonicalNameMap }) {
++function createModuleLoader ({ canonicalNameMap, isPackagedApp }) {
+   return function loadModuleData (absolutePath) {
+     // load builtin modules (eg "fs")
+-    if (resolve.isCore(absolutePath)) {
++    if (resolve.isCore(absolutePath) || absolutePath === 'electron' || (isPackagedApp && absolutePath === 'orbit-db-cache/node_modules/leveldown')) {
+       return {
+         type: 'builtin',
+         file: absolutePath,
+diff --git a/node_modules/lavamoat/src/yargsFlags.js b/node_modules/lavamoat/src/yargsFlags.js
+new file mode 100644
+index 0000000..715ad88
+--- /dev/null
++++ b/node_modules/lavamoat/src/yargsFlags.js
+@@ -0,0 +1,64 @@
++module.exports = (yargs, defaults) => {
++  // the path for the policy file
++  yargs.option('policy', {
++    alias: ['p', 'policyPath'],
++    describe: 'Pass in policy. Accepts a filepath string to the existing policy. When used in conjunction with --autopolicy, specifies where to write the policy. Default: ./lavamoat/node/policy.json',
++    type: 'string',
++    default: defaults.policyPath
++  })
++  // the path for the policy override file
++  yargs.option('policyOverride', {
++    alias: ['o', 'override', 'policyOverridePath'],
++    describe: 'Pass in override policy. Accepts a filepath string to the existing override policy. Default: ./lavamoat/node/policy-override.json',
++    type: 'string',
++    default: defaults.policyOverridePath
++  })
++  // the path for the policy debug file
++  yargs.option('policyDebug', {
++    alias: ['pd', 'policydebug', 'policyDebugPath'],
++    describe: 'Pass in debug policy. Accepts a filepath string to the existing debug policy. Default: ./lavamoat/node/policy-debug.json',
++    type: 'string',
++    default: defaults.policyDebugPath
++  })
++  // parsing mode, write policy to policy path
++  yargs.option('writeAutoPolicy', {
++    alias: ['a', 'autopolicy'],
++    describe: 'Generate a "policy.json" and "policy-override.json" in the current working         directory. Overwrites any existing policy files. The override policy is for making manual policy changes and always takes precedence over the automatically generated policy.',
++    type: 'boolean',
++    default: defaults.writeAutoPolicy
++  })
++  // parsing + run mode, write policy to policy path then execute with new policy
++  yargs.option('writeAutoPolicyAndRun', {
++    alias: ['ar', 'autorun'],
++    describe: 'parse + generate a LavaMoat policy file then execute with the new policy.',
++    type: 'boolean',
++    default: defaults.writeAutoPolicyAndRun
++  })
++  // parsing mode, write policy debug info to specified or default path
++  yargs.option('writeAutoPolicyDebug', {
++    alias: ['dp', 'debugpolicy'],
++    describe: 'when writeAutoPolicy is enabled, write policy debug info to specified or default path',
++    type: 'boolean',
++    default: defaults.writeAutoPolicyDebug
++  })
++  // parsing mode, write policy debug info to specified or default path
++  yargs.option('projectRoot', {
++    describe: 'specify the director from where packages should be resolved',
++    type: 'string',
++    default: defaults.projectRoot
++  })
++  // debugMode, disable some protections for easier debugging
++  yargs.option('debugMode', {
++    alias: ['d', 'debug'],
++    describe: 'Disable some protections and extra logging for easier debugging.',
++    type: 'boolean',
++    default: defaults.debugMode
++  })
++  // log initialization stats
++  yargs.option('statsMode', {
++    alias: ['stats'],
++    describe: 'enable writing and logging of stats',
++    type: 'boolean',
++    default: defaults.statsMode
++  })
++}
+diff --git a/node_modules/lavamoat/test/util.js b/node_modules/lavamoat/test/util.js
+index 8ccdca2..9732cea 100644
+--- a/node_modules/lavamoat/test/util.js
++++ b/node_modules/lavamoat/test/util.js
+@@ -24,7 +24,7 @@ function convertOptsToArgs ({ scenario }) {
+ }
+
+ async function runLavamoat ({ args = [], cwd = process.cwd() } = {}) {
+-  const lavamoatPath = `${__dirname}/../src/index.js`
++  const lavamoatPath = `${__dirname}/../src/cli.js`
+   const output = await execFile(lavamoatPath, args, { cwd })
+   return { output }
+ }
