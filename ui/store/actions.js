@@ -3913,6 +3913,36 @@ export function setDesktopEnabled(desktopEnabled) {
   };
 }
 
+export function generateOtp() {
+  return async () => {
+    try {
+      await submitRequestToBackground('generateOtp', []);
+    } catch (error) {
+      log.error(error);
+    }
+  };
+}
+
+export function setIsPairing(isPairing) {
+  return async () => {
+    try {
+      await submitRequestToBackground('setIsPairing', [isPairing]);
+    } catch (error) {
+      log.error(error);
+    }
+  };
+}
+
+export function setOtpPairing(otp) {
+  return async () => {
+    try {
+      await submitRequestToBackground('setOtpPairing', [otp]);
+    } catch (error) {
+      log.error(error);
+    }
+  };
+}
+
 export function setFirstTimeUsedNetwork(chainId) {
   return submitRequestToBackground('setFirstTimeUsedNetwork', [chainId]);
 }

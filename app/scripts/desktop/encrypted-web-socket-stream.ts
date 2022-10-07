@@ -32,13 +32,13 @@ export default class EncryptedWebSocketStream extends Duplex {
 
   private targetSymmetricKey?: string;
 
-  private peformingHandshake: boolean;
+  private performingHandshake: boolean;
 
   constructor(webSocket: BrowserWebSocket | NodeWebSocket) {
     super({ objectMode: true });
 
     this.webSocket = webSocket;
-    this.peformingHandshake = true;
+    this.performingHandshake = true;
   }
 
   async init({ startHandshake }: { startHandshake: boolean }) {
@@ -62,7 +62,7 @@ export default class EncryptedWebSocketStream extends Duplex {
   }
 
   private async onMessage(data: any) {
-    if (this.peformingHandshake) {
+    if (this.performingHandshake) {
       log.debug('Ignoring message as pending handshake');
       return;
     }
@@ -82,7 +82,7 @@ export default class EncryptedWebSocketStream extends Duplex {
     this.cork();
     this.pause();
 
-    this.peformingHandshake = true;
+    this.performingHandshake = true;
     this.targetPublicKey = undefined;
     this.targetSymmetricKey = undefined;
 
@@ -139,7 +139,7 @@ export default class EncryptedWebSocketStream extends Duplex {
     this.uncork();
     this.resume();
 
-    this.peformingHandshake = false;
+    this.performingHandshake = false;
   }
 
   private async handshakeStep(

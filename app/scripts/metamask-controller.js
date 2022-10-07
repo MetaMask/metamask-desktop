@@ -1135,6 +1135,15 @@ export default class MetamaskController extends EventEmitter {
     this.extension.runtime.onMessageExternal.addListener(onMessageReceived);
     // Fire a ping message to check if other extensions are running
     checkForMultipleVersionsRunning();
+
+    this._desktopPairingOtp =
+      opts.initState?.PreferencesController?.desktopPairingOtp;
+
+    this.setOtpPairing = opts.setOtpPairing;
+
+    this._onDesktopGenerateOtp = opts.onDesktopGenerateOtp;
+
+    this._generateOtp = opts.generateOtp;
   }
 
   ///: BEGIN:ONLY_INCLUDE_IN(flask)
@@ -1493,6 +1502,10 @@ export default class MetamaskController extends EventEmitter {
     return this.getState()?.desktopEnabled === true;
   }
 
+  getDesktopPairing() {
+    return this.getState()?.isPairing === true;
+  }
+
   /**
    * Returns an Object containing API Callback Functions.
    * These functions are the interface for the UI.
@@ -1661,6 +1674,13 @@ export default class MetamaskController extends EventEmitter {
       setDesktopEnabled: preferencesController.setDesktopEnabled.bind(
         preferencesController,
       ),
+      setIsPairing: preferencesController.setIsPairing.bind(
+        preferencesController,
+      ),
+      setOtpPairing: preferencesController.setOtpPairing.bind(
+        preferencesController,
+      ),
+      generateOtp: this.generateOtp.bind(this),
       // AssetsContractController
       getTokenStandardAndDetails: this.getTokenStandardAndDetails.bind(this),
 
@@ -2095,6 +2115,12 @@ export default class MetamaskController extends EventEmitter {
         throw error;
       }
     }
+  }
+
+  async generateOtp() {
+    this.emit('generate-otp', (otp) => {
+      this.preferencesController.setOtpPairing(otp);
+    });
   }
 
   async addCustomNetwork(customRpc) {
@@ -4029,6 +4055,14 @@ export default class MetamaskController extends EventEmitter {
       method: NOTIFICATION_NAMES.chainChanged,
       params: this.getProviderNetworkState(newState),
     });
+
+    if (
+      this.setOtpPairing &&
+      newState.desktopPairingOtp !== this._desktopPairingOtp
+    ) {
+      this._desktopPairingOtp = newState.desktopPairingOtp;
+      this.setOtpPairing(this._desktopPairingOtp);
+    }
   }
 
   // misc

@@ -22,6 +22,7 @@ const CONTACT_ADD_ROUTE = '/settings/contact-list/add-contact';
 const CONTACT_VIEW_ROUTE = '/settings/contact-list/view-contact';
 const REVEAL_SEED_ROUTE = '/seed';
 const MOBILE_SYNC_ROUTE = '/mobile-sync';
+const DESKTOP_PAIRING_ROUTE = '/desktop-sync';
 const RESTORE_VAULT_ROUTE = '/restore-vault';
 const IMPORT_TOKEN_ROUTE = '/import-token';
 const CONFIRM_IMPORT_TOKEN_ROUTE = '/confirm-import-token';
@@ -125,6 +126,7 @@ const PATH_NAME_MAP = {
   [`${CONTACT_VIEW_ROUTE}/:address`]: 'View Contact Settings Page',
   [REVEAL_SEED_ROUTE]: 'Reveal Secret Recovery Phrase Page',
   [MOBILE_SYNC_ROUTE]: 'Sync With Mobile Page',
+  [DESKTOP_PAIRING_ROUTE]: 'Enable Desktop App',
   [RESTORE_VAULT_ROUTE]: 'Restore Vault Page',
   [IMPORT_TOKEN_ROUTE]: 'Import Token Page',
   [CONFIRM_IMPORT_TOKEN_ROUTE]: 'Confirm Import Token Page',
@@ -198,6 +200,7 @@ export {
   SETTINGS_ROUTE,
   REVEAL_SEED_ROUTE,
   MOBILE_SYNC_ROUTE,
+  DESKTOP_PAIRING_ROUTE,
   RESTORE_VAULT_ROUTE,
   IMPORT_TOKEN_ROUTE,
   CONFIRM_IMPORT_TOKEN_ROUTE,

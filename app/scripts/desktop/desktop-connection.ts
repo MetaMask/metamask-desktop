@@ -9,7 +9,9 @@ import {
   CLIENT_ID_NEW_CONNECTION,
   CLIENT_ID_STATE,
   CLIENT_ID_DISABLE,
+  CLIENT_ID_PAIRING,
 } from '../../../shared/constants/desktop';
+import { generate, validate } from '../../../shared/modules/totp';
 import cfg from './config';
 import { BrowserWebSocket, WebSocketStream } from './web-socket-stream';
 import EncryptedWebSocketStream from './encrypted-web-socket-stream';
@@ -23,6 +25,7 @@ import {
 import { ClientId } from './types/desktop';
 import { registerResponseStream } from './browser/browser-proxy';
 import { timeoutPromise, uuid } from './utils/utils';
+import { PairingMessage } from './types/message';
 
 const TIMEOUT_CONNECT = 5000;
 
@@ -42,6 +45,8 @@ export default class DesktopConnection {
   private newConnectionStream?: Duplex;
 
   private stateStream?: Duplex;
+
+  private pairingStream?: Duplex;
 
   public static async initIfEnabled(state: any) {
     if (state && state.PreferencesController.desktopEnabled !== true) {
@@ -75,17 +80,25 @@ export default class DesktopConnection {
       DesktopConnection.onStateUpdate(state),
     );
 
+    metaMaskController.on('generate-otp', (callback) => {
+      const otp = generate();
+      return callback(otp);
+    });
+
     log.debug('Registered desktop connection callbacks');
   }
 
   private static async onStateUpdate(state: any) {
-    const desktopEnabled = state.desktopEnabled as boolean;
+    const isPairing = state.isPairing as boolean;
 
-    if (!DesktopConnection.hasInstance() && desktopEnabled === true) {
-      log.debug('Desktop enabled');
+    if (!DesktopConnection.hasInstance() && isPairing === true) {
+      log.debug('Desktop is pairing');
 
       await DesktopConnection.init();
-      await DesktopConnection.getInstance().transferState();
+      if (cfg().desktop.skipOtpPairingFlow) {
+        log.debug('Desktop enabled');
+        await DesktopConnection.getInstance().transferState();
+      }
     }
   }
 
@@ -133,6 +146,11 @@ export default class DesktopConnection {
 
     const disableStream = this.multiplex.createStream(CLIENT_ID_DISABLE);
     disableStream.on('data', (data: State) => this.onDisable(data));
+
+    this.pairingStream = this.multiplex.createStream(CLIENT_ID_PAIRING);
+    this.pairingStream.on('data', (data: PairingMessage) =>
+      data?.isPaired ? this.restart() : this.onPairing(data),
+    );
 
     log.debug('Connected to desktop');
   }
@@ -197,6 +215,11 @@ export default class DesktopConnection {
     uiInputStream.resume();
   }
 
+  private async restart() {
+    log.debug('Restarting extension');
+    browser.runtime.reload();
+  }
+
   private async onDisable(state: State) {
     log.debug('Received desktop disable message');
 
@@ -204,7 +227,31 @@ export default class DesktopConnection {
     log.debug('Synchronised state with desktop');
 
     log.debug('Restarting extension');
-    browser.runtime.reload();
+    this.restart();
+  }
+
+  private async onPairing(pairingMessage: PairingMessage) {
+    log.debug(`Received desktop pairing message`);
+    if (validate(pairingMessage?.otp)) {
+      await this.updateStateAfterPairing();
+
+      await this.transferState();
+      log.debug('Synchronised state with desktop');
+
+      log.debug('OTP is valid, sending acknowledged to desktop');
+      this.pairingStream?.write({ ...pairingMessage, isPaired: true });
+    } else {
+      log.debug('OTP is not valid, sending acknowledged to desktop');
+      this.pairingStream?.write({ ...pairingMessage, isPaired: false });
+    }
+  }
+
+  private async updateStateAfterPairing() {
+    const state = await browser.storage.local.get();
+    state.data.PreferencesController.desktopEnabled = true;
+    state.data.PreferencesController.isPairing = false;
+    await browser.storage.local.set(state);
+    log.debug('State updated after pairing');
   }
 
   private async connect() {
@@ -293,6 +340,7 @@ export default class DesktopConnection {
 
     const rawState = await browser.storage.local.get();
     rawState.data.PreferencesController.desktopEnabled = false;
+    rawState.data.PreferencesController.isPairing = false;
     await browser.storage.local.set(rawState);
 
     log.debug('Restarting extension');

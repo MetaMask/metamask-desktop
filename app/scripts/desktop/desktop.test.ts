@@ -49,7 +49,11 @@ jest.mock(
 
 jest.mock(
   'electron',
-  () => ({ app: { whenReady: jest.fn() }, BrowserWindow: jest.fn() }),
+  () => ({
+    app: { whenReady: jest.fn() },
+    BrowserWindow: jest.fn(),
+    ipcMain: { handle: jest.fn() },
+  }),
   {
     virtual: true,
   },
@@ -121,6 +125,11 @@ describe('Desktop', () => {
     updateCheckMock = updateCheck;
     browserMock = browser;
     metaMaskController = createEventEmitterMock();
+
+    browserMock.storage.local.get.mockResolvedValue({
+      ...DATA_MOCK,
+      data: { PreferencesController: { desktopEnabled: true } },
+    });
 
     multiplexMock.createStream.mockImplementation((name) => {
       const newStream = createStreamMock();
@@ -231,7 +240,7 @@ describe('Desktop', () => {
     it('creates multiplex streams', async () => {
       await desktop.init();
 
-      expect(multiplexMock.createStream).toHaveBeenCalledTimes(5);
+      expect(multiplexMock.createStream).toHaveBeenCalledTimes(6);
       expect(multiplexMock.createStream).toHaveBeenCalledWith(
         CLIENT_ID_BROWSER_CONTROLLER,
       );
@@ -282,14 +291,19 @@ describe('Desktop', () => {
     };
 
     it('writes state to disable stream if desktop disabled', async () => {
-      await simulateStateUpdate({ desktopEnabled: false }, true);
+      await simulateStateUpdate(
+        { desktopEnabled: false, isPairing: false },
+        true,
+      );
 
       const disableStreamMock = multiplexStreamMocks[CLIENT_ID_DISABLE];
 
       expect(disableStreamMock.write).toHaveBeenCalledTimes(1);
       expect(disableStreamMock.write).toHaveBeenCalledWith({
         ...DATA_MOCK,
-        data: { PreferencesController: { desktopEnabled: false } },
+        data: {
+          PreferencesController: { desktopEnabled: false, isPairing: false },
+        },
       });
     });
 

@@ -71,6 +71,8 @@ export default class PreferencesController {
       theme: 'light',
       customNetworkListEnabled: false,
       desktopEnabled: false,
+      isPairing: false,
+      desktopPairingOtp: 0,
       ...opts.initState,
     };
 
@@ -208,6 +210,28 @@ export default class PreferencesController {
   setDesktopEnabled(desktopEnabled) {
     this.store.updateState({
       desktopEnabled,
+    });
+  }
+
+  /**
+   * Setter for the `isPairing` property
+   *
+   * @param isPairing
+   */
+  setIsPairing(isPairing) {
+    this.store.updateState({
+      isPairing,
+    });
+  }
+
+  /**
+   * Setter for the `desktopPairingOtp` property
+   *
+   * @param desktopPairingOtp
+   */
+  setOtpPairing(desktopPairingOtp) {
+    this.store.updateState({
+      desktopPairingOtp,
     });
   }
 

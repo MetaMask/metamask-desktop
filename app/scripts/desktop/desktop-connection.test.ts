@@ -8,7 +8,9 @@ import {
   CLIENT_ID_NEW_CONNECTION,
   CLIENT_ID_STATE,
   CLIENT_ID_DISABLE,
+  CLIENT_ID_PAIRING,
 } from '../../../shared/constants/desktop';
+import * as totp from '../../../shared/modules/totp';
 import DesktopConnection from './desktop-connection';
 import {
   REMOTE_PORT_NAME_MOCK,
@@ -23,6 +25,7 @@ import {
   JSON_RPC_ID_MOCK,
   STREAM_MOCK,
   UUID_MOCK,
+  OTP_MOCK,
 } from './test/mocks';
 import {
   simulateStreamMessage,
@@ -83,6 +86,7 @@ describe('Desktop Connection', () => {
   let passThroughConstructorMock: jest.Mocked<any>;
   let passThroughMock: jest.Mocked<Duplex>;
   let uuidMock: jest.MockedFunction<typeof uuidv4>;
+  let pairingStreamMock: jest.Mocked<Duplex>;
 
   const multiplexStreamMocks: { [clientId: ClientId]: jest.Mocked<Duplex> } =
     {};
@@ -114,6 +118,11 @@ describe('Desktop Connection', () => {
     passThroughMock = createStreamMock();
     uuidMock = uuidv4 as any;
 
+    browserMock.storage.local.get.mockResolvedValue({
+      ...DATA_MOCK,
+      data: { PreferencesController: { desktopEnabled: true } },
+    });
+
     webSocketStreamMock.pipe.mockReturnValue(multiplexMock);
     portStreamMock.pipe.mockImplementation((dest) => dest);
     passThroughMock.pipe.mockImplementation((dest) => dest);
@@ -121,6 +130,7 @@ describe('Desktop Connection', () => {
     webSocketStreamConstructorMock.mockReturnValue(webSocketStreamMock);
     portStreamConstructorMock.mockReturnValue(portStreamMock);
     jest.spyOn(global, 'WebSocket').mockImplementation(() => webSocketMock);
+    jest.spyOn(totp, 'validate').mockImplementation(() => true);
     passThroughConstructorMock.mockReturnValue(passThroughMock);
     uuidMock.mockReturnValue(UUID_MOCK);
 
@@ -242,7 +252,7 @@ describe('Desktop Connection', () => {
     it('creates multiplex streams', async () => {
       await initDesktopConnection();
 
-      expect(multiplexMock.createStream).toHaveBeenCalledTimes(5);
+      expect(multiplexMock.createStream).toHaveBeenCalledTimes(6);
       expect(multiplexMock.createStream).toHaveBeenCalledWith(
         CLIENT_ID_BROWSER_CONTROLLER,
       );
@@ -274,11 +284,11 @@ describe('Desktop Connection', () => {
     it('does nothing if already initialised', async () => {
       await initDesktopConnection();
 
-      expect(multiplexMock.createStream).toHaveBeenCalledTimes(5);
+      expect(multiplexMock.createStream).toHaveBeenCalledTimes(6);
 
       await desktopConnection.init();
 
-      expect(multiplexMock.createStream).toHaveBeenCalledTimes(5);
+      expect(multiplexMock.createStream).toHaveBeenCalledTimes(6);
     });
   });
 
@@ -293,7 +303,7 @@ describe('Desktop Connection', () => {
       expect(portStreamConstructorMock).toHaveBeenCalledTimes(1);
       expect(portStreamConstructorMock).toHaveBeenCalledWith(remotePortMock);
 
-      expect(multiplexMock.createStream).toHaveBeenCalledTimes(6);
+      expect(multiplexMock.createStream).toHaveBeenCalledTimes(7);
       expect(multiplexMock.createStream).toHaveBeenLastCalledWith(UUID_MOCK);
 
       const clientStreamMock = multiplexStreamMocks[UUID_MOCK];
@@ -366,11 +376,6 @@ describe('Desktop Connection', () => {
 
   describe('transferState', () => {
     it('writes state to state stream', async () => {
-      browserMock.storage.local.get.mockResolvedValue({
-        ...DATA_MOCK,
-        data: { PreferencesController: { desktopEnabled: false } },
-      });
-
       await initDesktopConnection();
       await desktopConnection.createStream(
         remotePortMock,
@@ -408,7 +413,7 @@ describe('Desktop Connection', () => {
     });
   });
 
-  describe('on disable message', () => {
+  describe('onRestart', () => {
     beforeEach(async () => {
       await initDesktopConnection();
       await desktopConnection.createStream(
@@ -416,13 +421,69 @@ describe('Desktop Connection', () => {
         ConnectionType.INTERNAL,
       );
 
-      const disableStreamMock = multiplexStreamMocks[CLIENT_ID_DISABLE];
-      await simulateStreamMessage(disableStreamMock, DATA_MOCK);
+      pairingStreamMock = multiplexStreamMocks[CLIENT_ID_PAIRING];
+      await simulateStreamMessage(pairingStreamMock, {
+        ...DATA_MOCK,
+        isPaired: true,
+      });
+    });
+
+    it('restarts extension', async () => {
+      expect(browser.runtime.reload).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('onPairing', () => {
+    const DATA_MOCK_STATE_PAIRED = {
+      ...DATA_MOCK,
+      data: {
+        PreferencesController: { desktopEnabled: true, isPairing: false },
+      },
+    };
+    beforeEach(async () => {
+      await initDesktopConnection();
+      await desktopConnection.createStream(
+        remotePortMock,
+        ConnectionType.INTERNAL,
+      );
+
+      pairingStreamMock = multiplexStreamMocks[CLIENT_ID_PAIRING];
+      await simulateStreamMessage(pairingStreamMock, {
+        ...DATA_MOCK,
+        otp: OTP_MOCK,
+      });
     });
 
     it('updates state', async () => {
       expect(browser.storage.local.set).toHaveBeenCalledTimes(1);
-      expect(browser.storage.local.set).toHaveBeenCalledWith(DATA_MOCK);
+      expect(browser.storage.local.set).toHaveBeenCalledWith(
+        DATA_MOCK_STATE_PAIRED,
+      );
+    });
+
+    it('sends a message to desktop', async () => {
+      expect(pairingStreamMock.write).toHaveBeenCalledTimes(1);
+      expect(pairingStreamMock.write).toHaveBeenCalledWith({
+        ...DATA_MOCK,
+        otp: OTP_MOCK,
+        isPaired: true,
+      });
+    });
+  });
+
+  describe('restart', () => {
+    beforeEach(async () => {
+      await initDesktopConnection();
+      await desktopConnection.createStream(
+        remotePortMock,
+        ConnectionType.INTERNAL,
+      );
+
+      pairingStreamMock = multiplexStreamMocks[CLIENT_ID_PAIRING];
+      await simulateStreamMessage(pairingStreamMock, {
+        ...DATA_MOCK,
+        isPaired: true,
+      });
     });
 
     it('restarts extension', async () => {
@@ -447,7 +508,7 @@ describe('Desktop Connection', () => {
 
     it('initialises if no instance and desktop enabled set to true', async () => {
       removeInstance();
-      await simulateStateUpdate({ desktopEnabled: true });
+      await simulateStateUpdate({ isPairing: true });
 
       expect(DesktopConnection.getInstance()).toBeDefined();
       expect(EncryptedWebSocketStream).toHaveBeenCalledTimes(1);
@@ -488,10 +549,13 @@ describe('Desktop Connection', () => {
   });
 
   describe('on port stream message', () => {
-    const generateRawState = (desktopEnabled: boolean) => ({
+    const generateRawState = (isEnabled: boolean) => ({
       data: {
         ...DATA_MOCK,
-        PreferencesController: { desktopEnabled },
+        PreferencesController: {
+          desktopEnabled: isEnabled,
+          isPairing: isEnabled,
+        },
       },
     });
 

@@ -52,13 +52,101 @@ const updateWebSocketStatus = (data: StatusMessage) => {
   webSocketStatus.className = data.isWebSocketConnected ? 'on' : 'off';
 };
 
+const onOTPSubmit = (value: string) => {
+  ipcRenderer.invoke('otp', value);
+};
+
+const onShowPopup = () => {
+  ipcRenderer.invoke('popup');
+};
+
+const handleContinueExtensionButton = () => {
+  const extensionButton = document.getElementById('extension-button');
+
+  if (!extensionButton) {
+    console.error('Cannot find submit button element');
+    return;
+  }
+
+  extensionButton.addEventListener('click', () => {
+    ipcRenderer.invoke('minimize');
+    onShowPopup();
+  });
+};
+
+const updateDesktopSynced = () => {
+  const mainContentDiv = document.getElementById('main-content');
+
+  if (!mainContentDiv) {
+    console.error('Cannot find main content element');
+    return;
+  }
+
+  mainContentDiv.innerHTML = `<h2>All set, fox</h2>
+    <span>Some explainer about using the extension as usual but keep this \n app open and check the alerts.</span>
+    <div><button id="extension-button" >Continue with Extension</button></div>`;
+
+  handleContinueExtensionButton();
+};
+
 const onStatusMessage = (data: StatusMessage) => {
   updateWebSocketStatus(data);
   updateConnections(data);
+  if (data.isPaired) {
+    updateDesktopSynced();
+  }
+};
+
+const handleOTPChange = () => {
+  const submitButton = document.getElementById('submit-button');
+
+  if (!submitButton) {
+    console.error('Cannot find submit button element');
+    return;
+  }
+
+  submitButton.addEventListener('click', () => {
+    const otpInput = (document.getElementById('otp-value') as HTMLInputElement)
+      .value;
+    onOTPSubmit(otpInput);
+  });
+};
+
+const onHandleInvalidOTP = (isValid: boolean) => {
+  const invalidOTP = document.getElementById('invalid-otp');
+  if (!invalidOTP) {
+    console.error('Cannot find invalid otp element');
+    return;
+  }
+
+  if (!isValid) {
+    invalidOTP.classList.remove('hide');
+    invalidOTP.className = 'show';
+  }
+};
+
+const loadOTPInput = () => {
+  const startButton = document.getElementById('start-button');
+  const startDiv = document.getElementById('start-div');
+
+  const otpInput = document.getElementById('input-otp');
+
+  if (!otpInput || !startDiv || !startButton) {
+    console.error('Cannot find element');
+    return;
+  }
+
+  startButton.addEventListener('click', () => {
+    otpInput.className = 'show';
+    startDiv.className = 'hide';
+  });
 };
 
 const onLoad = () => {
   ipcRenderer.on('status', (_, data: StatusMessage) => onStatusMessage(data));
+  ipcRenderer.on('invalid-otp', (_, data: boolean) => onHandleInvalidOTP(data));
+  loadOTPInput();
+  handleOTPChange();
 };
 
 window.addEventListener('DOMContentLoaded', () => onLoad());

@@ -6,6 +6,8 @@ import {
   handleSettingsRefs,
 } from '../../../helpers/utils/settings-search';
 import { EVENT } from '../../../../shared/constants/metametrics';
+import Button from '../../../components/ui/button';
+import { DESKTOP_PAIRING_ROUTE } from '../../../helpers/constants/routes';
 
 export default class ExperimentalTab extends PureComponent {
   static contextTypes = {
@@ -24,6 +26,10 @@ export default class ExperimentalTab extends PureComponent {
     setCustomNetworkListEnabled: PropTypes.func,
     desktopEnabled: PropTypes.bool,
     setDesktopEnabled: PropTypes.func,
+    setIsPairing: PropTypes.func,
+    isPairing: PropTypes.bool,
+    history: PropTypes.object,
+    generateOtp: PropTypes.func,
   };
 
   settingsRefs = Array(
@@ -267,14 +273,50 @@ export default class ExperimentalTab extends PureComponent {
     );
   }
 
+  renderDesktopPairingButton() {
+    const { history, setIsPairing, isPairing, generateOtp } = this.props;
+
+    return (
+      <div
+        ref={this.settingsRefs[6]}
+        className="settings-page__content-row"
+        data-testid="advanced-setting-desktop-sync"
+      >
+        <div className="settings-page__content-item">
+          <span>Sync with Desktop</span>
+        </div>
+        <div className="settings-page__content-item">
+          <div className="settings-page__content-item-col">
+            <Button
+              type="secondary"
+              large
+              value={isPairing}
+              onClick={(event, value) => {
+                event.preventDefault();
+                history.push(DESKTOP_PAIRING_ROUTE);
+                setIsPairing(!value);
+                generateOtp();
+              }}
+            >
+              Sync With Desktop
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   render() {
+    const { desktopEnabled } = this.props;
     return (
       <div className="settings-page__body">
         {this.renderOpenSeaEnabledToggle()}
         {this.renderCollectibleDetectionToggle()}
         {this.renderEIP1559V2EnabledToggle()}
         {this.renderCustomNetworkListToggle()}
-        {this.renderDesktopToggle()}
+        {desktopEnabled || process.env.SKIP_OTP_PAIRING_FLOW
+          ? this.renderDesktopToggle()
+          : this.renderDesktopPairingButton()}
       </div>
     );
   }

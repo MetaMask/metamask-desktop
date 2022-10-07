@@ -30,6 +30,7 @@ const loadConfig = () => {
         disableEncryption: Boolean(process.env.DISABLE_WEB_SOCKET_ENCRYPTION),
       },
       enableUpdates: envStringMatch(process.env.DESKTOP_ENABLE_UPDATES, 'true'),
+      skipOtpPairingFlow: Boolean(process.env.SKIP_OTP_PAIRING_FLOW),
     },
   };
 };

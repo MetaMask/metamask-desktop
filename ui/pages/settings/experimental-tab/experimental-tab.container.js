@@ -7,6 +7,8 @@ import {
   setEIP1559V2Enabled,
   setCustomNetworkListEnabled,
   setDesktopEnabled,
+  setIsPairing,
+  generateOtp,
 } from '../../../store/actions';
 import {
   getUseCollectibleDetection,
@@ -14,6 +16,8 @@ import {
   getEIP1559V2Enabled,
   getIsCustomNetworkListEnabled,
   getIsDesktopEnabled,
+  getIsPairing,
+  getDesktopPairingOtp,
 } from '../../../selectors';
 import ExperimentalTab from './experimental-tab.component';
 
@@ -24,6 +28,8 @@ const mapStateToProps = (state) => {
     eip1559V2Enabled: getEIP1559V2Enabled(state),
     customNetworkListEnabled: getIsCustomNetworkListEnabled(state),
     desktopEnabled: getIsDesktopEnabled(state),
+    isPairing: getIsPairing(state),
+    otp: getDesktopPairingOtp(state),
   };
 };
 
@@ -36,6 +42,8 @@ const mapDispatchToProps = (dispatch) => {
     setCustomNetworkListEnabled: (val) =>
       dispatch(setCustomNetworkListEnabled(val)),
     setDesktopEnabled: (val) => dispatch(setDesktopEnabled(val)),
+    setIsPairing: (val) => dispatch(setIsPairing(val)),
+    generateOtp: () => dispatch(generateOtp()),
   };
 };
 
