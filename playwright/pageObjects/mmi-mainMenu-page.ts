@@ -67,6 +67,15 @@ export class MMIMainMenuPage {
     await this.page.locator('.account-menu__item >> text=Settings').click();
   }
 
+  async selectSettingsOption(option: string) {
+    await this.page.locator(`button >> text=${option}`).click();
+  }
+
+  async importAccount(privateKey: string) {
+    await this.page.locator('#private-key-box').type(privateKey);
+    await this.page.locator('button >> text=Import').click();
+  }
+
   async selectSettingsAdvance() {
     await this.page.locator('button >> text=Advance').click();
   }

@@ -25,6 +25,7 @@ module.exports = function (api) {
       '*.config.js',
       '**/*.test.js',
       'storybook-build',
+      'playwright',
     ],
   };
 };

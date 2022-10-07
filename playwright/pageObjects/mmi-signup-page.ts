@@ -21,6 +21,8 @@ export class MMISignUpPage {
 
   readonly doneBtn: Locator;
 
+  readonly unlockBtn: Locator;
+
   constructor(page: Page, extensionId: string) {
     this.page = page;
     this.extensionId = extensionId;
@@ -34,6 +36,7 @@ export class MMISignUpPage {
     );
     this.importBtn = page.locator('button:has-text("Import")');
     this.doneBtn = page.locator('button:has-text("All Done")');
+    this.unlockBtn = page.locator('button:has-text("Unlock")');
   }
 
   async goto() {
@@ -42,7 +45,7 @@ export class MMISignUpPage {
   }
 
   async start() {
-    await this.importWalletBtn.click();  
+    await this.importWalletBtn.click();
   }
 
   async authentication() {

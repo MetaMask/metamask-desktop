@@ -15,6 +15,10 @@ export class MMIInitialPage {
     await this.page.locator('data-testid=popover-close').click();
   }
 
+  async closeHelpUsImproveBanner() {
+    await this.page.locator('button:has-text("I agree")').click();
+  }
+
   async bringToFront() {
     await this.page.bringToFront();
   }
@@ -26,9 +30,7 @@ export class MMIInitialPage {
   async checkLastTransactionStatus(status: string) {
     // NOTE: Assumes that transaction is the first one on the activity list
     await expect(
-      this.page.locator(
-        '.transaction-list-item >> nth=0 >> .list-item__title',
-      ),
+      this.page.locator('.transaction-list-item >> nth=0 >> .list-item__title'),
     ).toHaveText(status);
   }
 
@@ -59,16 +61,12 @@ export class MMIInitialPage {
     await this.page.locator('text=cancel').click();
   }
 
-  
   async hasFunds() {
-    const funds = await this.page
-      .locator('.currency-display-component__text');
+    const funds = await this.page.locator('.currency-display-component__text');
     expect(funds).not.toEqual('0');
-    
   }
-  
 
-  async sendFunds(account: string, amount: string) {
+  async sendFunds(account: string) {
     await this.page.locator('data-testid=ens-input').type(`${account}`);
     await this.page.locator('text="Next"').click();
     await this.page.locator('text="Confirm"').click();
