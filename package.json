@@ -92,6 +92,7 @@
     "ts-migration:dashboard:deploy": "gh-pages --dist development/ts-migration-dashboard/build --remote ts-migration-dashboard",
     "electron:build:linux": "electron-builder -l",
     "electron:build:mac": "electron-builder -m",
+    "electron:build:mac:ci": "electron-builder --config electron-builder.ci.json -m",
     "electron:build:win": "electron-builder -w",
     "electron:release:linux": "electron-builder -l -p 'onTagOrDraft'"
   },
@@ -335,6 +336,7 @@
     "duplexify": "^4.1.1",
     "electron": "22.0.0-alpha.1",
     "electron-builder": "^23.3.3",
+    "electron-notarize": "^1.2.1",
     "electron-rebuild": "^3.2.9",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.15.1",

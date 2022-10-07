@@ -1,0 +1,51 @@
+{
+  "appId": "consensys.metamask.desktop",
+  "asar": false,
+  "directories": {
+    "output": "builds_desktop"
+  },
+  "files": ["dist_desktop/**/*", "node_modules/**/*", "package.json"],
+  "linux": {
+    "icon": "app/build-types/desktop/images/icon-512.png",
+    "target": "AppImage",
+    "category": "Utility",
+    "artifactName": "metamask-desktop-${version}.${ext}",
+    "publish": {
+      "provider": "github"
+    }
+  },
+  "dmg": {
+    "sign": false
+  },
+  "afterSign": "development/desktop/electron/scripts/notarize.js",
+  "mac": {
+    "icon": "app/build-types/desktop/images/icon.icns",
+    "forceCodeSigning": true,
+    "hardenedRuntime": true,
+    "entitlements": "development/desktop/electron/build/entitlements.mac.plist",
+    "entitlementsInherit": "development/desktop/electron/build/entitlements.mac.plist",
+    "gatekeeperAssess": false,
+    "type": "distribution",
+    "target": [
+      {
+        "target": "dmg",
+        "arch": ["x64", "arm64"]
+      }
+    ]
+  },
+  "npmRebuild": false,
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "deleteAppDataOnUninstall": true,
+    "artifactName": "metamask-desktop-${version}-setup.${ext}"
+  },
+  "portable": {
+    "artifactName": "metamask-desktop-${version}-portable.${ext}"
+  },
+  "productName": "MetaMask Desktop",
+  "win": {
+    "icon": "app/build-types/desktop/images/icon-512.png",
+    "target": ["nsis", "portable"]
+  }
+}
