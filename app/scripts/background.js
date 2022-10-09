@@ -3,6 +3,7 @@
  */
 
 import './desktop/globals';
+import EventEmitter from 'events';
 import endOfStream from 'end-of-stream';
 import pump from 'pump';
 import debounce from 'debounce-stream';
@@ -53,17 +54,22 @@ import setupEnsIpfsResolver from './lib/ens-ipfs/setup';
 import { getPlatform } from './lib/util';
 import cfg from './desktop/config';
 
+// Desktop
+
 let Desktop;
-let DesktopConnection;
+let DesktopManager;
+let backgroundEventEmitter;
 
 if (cfg().desktop.isApp) {
   // eslint-disable-next-line node/global-require
   Desktop = require('./desktop/desktop').default;
+  backgroundEventEmitter = new EventEmitter();
 }
 
 if (cfg().desktop.isExtension) {
   // eslint-disable-next-line node/global-require
-  DesktopConnection = require('./desktop/desktop-connection').default;
+  DesktopManager = require('./desktop/desktop-manager').default;
+  backgroundEventEmitter = new EventEmitter();
 }
 
 /* eslint-enable import/first */
@@ -121,12 +127,27 @@ const initApp = async (remotePort) => {
   log.info('MetaMask initialization complete.');
 };
 
+const onDesktopExtensionState = async (desktop) => {
+  desktop.removeAllListeners();
+  desktop.on('extension-state', () => onDesktopExtensionState(desktop));
+
+  controller.removeAllListeners();
+
+  log.debug('Re-initializing background script');
+  await initialize();
+};
+
+const initDesktopApp = async () => {
+  const desktop = await Desktop.init(backgroundEventEmitter);
+  desktop.on('extension-state', () => onDesktopExtensionState(desktop));
+};
+
 if (isManifestV3 && cfg().desktop.isExtension) {
   browser.runtime.onConnect.addListener(initApp);
 } else {
   // initialization flow
   const initDesktop = cfg().desktop.isApp
-    ? Desktop.init(initialize)
+    ? initDesktopApp()
     : Promise.resolve();
 
   initDesktop.then(initialize).catch(log.error);
@@ -198,7 +219,7 @@ async function initialize(remotePort) {
   const initLangCode = await getFirstPreferredLangCode();
 
   if (cfg().desktop.isExtension) {
-    await DesktopConnection.initIfEnabled(initState);
+    await DesktopManager.init(initState, backgroundEventEmitter);
   }
 
   await setupController(initState, initLangCode, remotePort);
@@ -386,7 +407,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     debounce(1000),
     createStreamSink(async (state) => {
       await localStore.set(state);
-      await Desktop?.getInstance()?.transferState(state);
+      backgroundEventEmitter?.emit('persisted-state-update', state);
     }),
     (error) => {
       log.error('MetaMask - Persistence pipeline failed', error);
@@ -449,8 +470,8 @@ function setupController(initState, initLangCode, remoteSourcePort) {
    * @param {Port} remotePort - The port provided by a new context.
    */
   function connectRemote(remotePort) {
-    if (DesktopConnection?.hasInstance()) {
-      DesktopConnection?.getInstance().createStream(
+    if (DesktopManager?.getConnection()) {
+      DesktopManager?.getConnection().createStream(
         remotePort,
         CONNECTION_TYPE_INTERNAL,
       );
@@ -568,8 +589,8 @@ function setupController(initState, initLangCode, remoteSourcePort) {
 
   // communication with page or other extension
   function connectExternal(remotePort) {
-    if (DesktopConnection?.hasInstance()) {
-      DesktopConnection?.getInstance().createStream(
+    if (DesktopManager?.getConnection()) {
+      DesktopManager?.getConnection().createStream(
         remotePort,
         CONNECTION_TYPE_EXTERNAL,
       );
@@ -735,18 +756,21 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     updateBadge();
   }
 
-  /**
-   * Once registerCallbacks is set, the desktop app can be called by the extension through the websocket.
-   * Consequently, we set those functions only once the MetaMask Controller is fully configured, e. g. at the whole end of the setupController function.
-   * This guarantees the desktop app can only be called by the extension when fully setup.
-   */
-  Desktop?.getInstance()?.registerCallbacks(
-    connectRemote,
-    connectExternal,
-    controller,
-  );
+  controller.on('update', (flatState) => {
+    backgroundEventEmitter?.emit('memory-state-update', flatState);
+  });
 
-  DesktopConnection?.registerCallbacks(controller);
+  controller.on('generate-otp', (data) => {
+    backgroundEventEmitter.emit('generate-otp', data);
+  });
+
+  Desktop?.getInstance()?.on('connect-remote', (connectRequest) => {
+    connectRemote(connectRequest);
+  });
+
+  Desktop?.getInstance()?.on('connect-external', (connectRequest) => {
+    connectExternal(connectRequest);
+  });
 
   return Promise.resolve();
 }

@@ -1,4 +1,4 @@
-import { Duplex } from 'stream';
+import { Duplex, EventEmitter } from 'stream';
 import { BrowserWebSocket, NodeWebSocket } from '../web-socket-stream';
 
 export const flushPromises = (): Promise<void> =>
@@ -63,5 +63,24 @@ export const simulateWebSocketMessage = async (
       'message',
       data,
     );
+  }
+};
+
+export const expectEventToFire = async (
+  target: EventEmitter,
+  event: string,
+  data: any,
+  logic: () => any,
+) => {
+  const listener = jest.fn();
+
+  target.once(event, listener);
+
+  await logic();
+
+  expect(listener).toHaveBeenCalledTimes(1);
+
+  if (data) {
+    expect(listener).toHaveBeenCalledWith(data);
   }
 };

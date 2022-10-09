@@ -165,6 +165,7 @@ let TrezorKeyring = require('eth-trezor-keyring');
 import cfg from './desktop/config';
 import { checkSnapsBlockList } from './flask/snaps-utilities';
 import { SNAP_BLOCKLIST } from './flask/snaps-blocklist';
+import DesktopController from './controllers/desktop';
 /* eslint-enable import/first */
 
 if (cfg().desktop.isApp) {
@@ -1028,6 +1029,10 @@ export default class MetamaskController extends EventEmitter {
       initState.SmartTransactionsController,
     );
 
+    this.desktopController = new DesktopController({
+      initState: initState.DesktopController,
+    });
+
     // ensure accountTracker updates balances after network change
     this.networkController.on(NETWORK_EVENTS.NETWORK_DID_CHANGE, () => {
       this.accountTracker._updateAccounts();
@@ -1074,6 +1079,7 @@ export default class MetamaskController extends EventEmitter {
       SnapController: this.snapController,
       NotificationController: this.notificationController,
       ///: END:ONLY_INCLUDE_IN
+      DesktopController: this.desktopController.store,
     });
 
     this.memStore = new ComposableObservableStore({
@@ -1116,6 +1122,7 @@ export default class MetamaskController extends EventEmitter {
         SnapController: this.snapController,
         NotificationController: this.notificationController,
         ///: END:ONLY_INCLUDE_IN
+        DesktopController: this.desktopController.store,
       },
       controllerMessenger: this.controllerMessenger,
     });
@@ -1557,6 +1564,7 @@ export default class MetamaskController extends EventEmitter {
       txController,
       assetsContractController,
       backupController,
+      desktopController,
     } = this;
 
     return {
@@ -1688,16 +1696,6 @@ export default class MetamaskController extends EventEmitter {
         preferencesController.setCustomNetworkListEnabled.bind(
           preferencesController,
         ),
-      setDesktopEnabled: preferencesController.setDesktopEnabled.bind(
-        preferencesController,
-      ),
-      setIsPairing: preferencesController.setIsPairing.bind(
-        preferencesController,
-      ),
-      setOtpPairing: preferencesController.setOtpPairing.bind(
-        preferencesController,
-      ),
-      generateOtp: this.generateOtp.bind(this),
       // AssetsContractController
       getTokenStandardAndDetails: this.getTokenStandardAndDetails.bind(this),
 
@@ -2055,6 +2053,15 @@ export default class MetamaskController extends EventEmitter {
         assetsContractController.getBalancesInSingleCall.bind(
           assetsContractController,
         ),
+
+      // DesktopController
+      setDesktopEnabled:
+        desktopController.setDesktopEnabled.bind(desktopController),
+      setIsPairing: desktopController.setIsPairing.bind(desktopController),
+      setOtpPairing: desktopController.setOtpPairing.bind(desktopController),
+      generateOtp: this.generateOtp.bind(this),
+      testDesktopConnection:
+        desktopController.testDesktopConnection.bind(desktopController),
     };
   }
 
@@ -2136,7 +2143,7 @@ export default class MetamaskController extends EventEmitter {
 
   async generateOtp() {
     this.emit('generate-otp', (otp) => {
-      this.preferencesController.setOtpPairing(otp);
+      this.desktopController.setOtpPairing(otp);
     });
   }
 

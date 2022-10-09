@@ -5,10 +5,12 @@ export const CLIENT_ID_STATE = 'state';
 export const CLIENT_ID_DISABLE = 'disable';
 export const CLIENT_ID_STATE_READY = 'stateReady';
 export const CLIENT_ID_PAIRING = 'pairing';
+export const CLIENT_ID_VERSION = 'version';
 export const CONNECTION_TYPE_INTERNAL = 'INTERNAL';
 export const CONNECTION_TYPE_EXTERNAL = 'EXTERNAL';
 export const MESSAGE_HANDSHAKE_START = 'HSK';
 export const MESSAGE_HANDSHAKE_FINISH = 'DNE';
+export const MESSAGE_ACKNOWLEDGE = 'ACK';
 
 export const EXTENSION_ERROR_PAGE_TYPES = {
   NOT_FOUND: 'not-found',
