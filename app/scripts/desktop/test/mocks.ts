@@ -8,6 +8,8 @@ import {
   NodeWebSocket,
   WebSocketStream,
 } from '../web-socket-stream';
+import ExtensionConnection from '../extension-connection';
+import DesktopConnection from '../desktop-connection';
 
 export const PUBLIC_KEY_MOCK = 'testPublicKey';
 export const PRIVATE_KEY_MOCK = 'testPrivateKey';
@@ -68,6 +70,9 @@ export const createWebSocketNodeMock = (): jest.Mocked<NodeWebSocket> =>
     readyState: 1,
     on: jest.fn(),
     send: jest.fn(),
+    removeAllListeners: jest.fn(),
+    close: jest.fn(),
+    removeListener: jest.fn(),
   } as unknown as jest.Mocked<NodeWebSocket>);
 
 export const createWebSocketBrowserMock = (): jest.Mocked<BrowserWebSocket> =>
@@ -88,6 +93,8 @@ export const createStreamMock = (): jest.Mocked<Duplex> =>
     once: jest.fn(),
     emit: jest.fn(),
     destroy: jest.fn(),
+    removeAllListeners: jest.fn(),
+    removeListener: jest.fn(),
   } as unknown as jest.Mocked<Duplex>);
 
 export const createWebSocketStreamMock = (): jest.Mocked<WebSocketStream> =>
@@ -124,4 +131,23 @@ export const createMultiplexMock = (): jest.Mocked<ObjectMultiplex & Duplex> =>
 export const createEventEmitterMock = (): jest.Mocked<EventEmitter> =>
   ({
     on: jest.fn(),
+    removeAllListeners: jest.fn(),
+    removeListener: jest.fn(),
+  } as any);
+
+export const createExtensionConnectionMock =
+  (): jest.Mocked<ExtensionConnection> =>
+    ({
+      on: jest.fn(),
+      removeAllListeners: jest.fn(),
+      disconnect: jest.fn(),
+      removeListener: jest.fn(),
+    } as any);
+
+export const createDesktopConnectionMock = (): jest.Mocked<DesktopConnection> =>
+  ({
+    transferState: jest.fn(),
+    on: jest.fn(),
+    disconnect: jest.fn(),
+    getDesktopVersion: jest.fn(),
   } as any);

@@ -9,6 +9,9 @@ import {
   setDesktopEnabled,
   setIsPairing,
   generateOtp,
+  testDesktopConnection,
+  hideLoadingIndication,
+  showLoadingIndication,
 } from '../../../store/actions';
 import {
   getUseCollectibleDetection,
@@ -44,6 +47,9 @@ const mapDispatchToProps = (dispatch) => {
     setDesktopEnabled: (val) => dispatch(setDesktopEnabled(val)),
     setIsPairing: (val) => dispatch(setIsPairing(val)),
     generateOtp: () => dispatch(generateOtp()),
+    testDesktopConnection: () => testDesktopConnection(),
+    showLoader: () => dispatch(showLoadingIndication()),
+    hideLoader: () => dispatch(hideLoadingIndication()),
   };
 };
 

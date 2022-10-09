@@ -1,4 +1,5 @@
-import { Duplex, EventEmitter, PassThrough } from 'stream';
+import { Duplex, PassThrough } from 'stream';
+import EventEmitter from 'events';
 import PortStream from 'extension-port-stream';
 import endOfStream from 'end-of-stream';
 import ObjectMultiplex from 'obj-multiplex';
@@ -9,12 +10,11 @@ import {
   CLIENT_ID_NEW_CONNECTION,
   CLIENT_ID_STATE,
   CLIENT_ID_DISABLE,
+  CLIENT_ID_VERSION,
   CLIENT_ID_PAIRING,
+  MESSAGE_ACKNOWLEDGE,
 } from '../../../shared/constants/desktop';
-import { generate, validate } from '../../../shared/modules/totp';
-import cfg from './config';
-import { BrowserWebSocket, WebSocketStream } from './web-socket-stream';
-import EncryptedWebSocketStream from './encrypted-web-socket-stream';
+import { validate } from '../../../shared/modules/totp';
 import { browser } from './browser/browser-polyfill';
 import {
   ConnectionType,
@@ -24,119 +24,39 @@ import {
 } from './types/background';
 import { ClientId } from './types/desktop';
 import { registerResponseStream } from './browser/browser-proxy';
-import { timeoutPromise, uuid } from './utils/utils';
+import { uuid } from './utils/utils';
+import { waitForMessage } from './utils/stream';
 import { PairingMessage } from './types/message';
 
-const TIMEOUT_CONNECT = 5000;
-
-export default class DesktopConnection {
-  private static instance: DesktopConnection;
-
-  private clientIdCounter: number;
+export default class DesktopConnection extends EventEmitter {
+  private stream: Duplex;
 
   private multiplex: ObjectMultiplex;
 
-  private webSocket?: BrowserWebSocket;
+  private newConnectionStream: Duplex;
 
-  private webSocketStream?: WebSocketStream | EncryptedWebSocketStream;
+  private endConnectionStream: Duplex;
 
-  private endConnectionStream?: Duplex;
+  private stateStream: Duplex;
 
-  private newConnectionStream?: Duplex;
+  private disableStream: Duplex;
 
-  private stateStream?: Duplex;
+  private pairingStream: Duplex;
 
-  private pairingStream?: Duplex;
+  private versionStream: Duplex;
 
-  public static async initIfEnabled(state: any) {
-    if (state && state.PreferencesController.desktopEnabled !== true) {
-      return;
-    }
+  public constructor(stream: Duplex, _: EventEmitter) {
+    super();
 
-    await DesktopConnection.init();
-  }
-
-  public static newInstance(): DesktopConnection {
-    if (DesktopConnection.hasInstance()) {
-      return DesktopConnection.getInstance();
-    }
-
-    const newInstance = new DesktopConnection();
-    DesktopConnection.instance = newInstance;
-
-    return newInstance;
-  }
-
-  public static getInstance(): DesktopConnection {
-    return DesktopConnection.instance;
-  }
-
-  public static hasInstance(): boolean {
-    return Boolean(DesktopConnection.getInstance());
-  }
-
-  public static registerCallbacks(metaMaskController: EventEmitter) {
-    metaMaskController.on('update', (state) =>
-      DesktopConnection.onStateUpdate(state),
-    );
-
-    metaMaskController.on('generate-otp', (callback) => {
-      const otp = generate();
-      return callback(otp);
-    });
-
-    log.debug('Registered desktop connection callbacks');
-  }
-
-  private static async onStateUpdate(state: any) {
-    const isPairing = state.isPairing as boolean;
-
-    if (!DesktopConnection.hasInstance() && isPairing === true) {
-      log.debug('Desktop is pairing');
-
-      await DesktopConnection.init();
-      if (cfg().desktop.skipOtpPairingFlow) {
-        log.debug('Desktop enabled');
-        await DesktopConnection.getInstance().transferState();
-      }
-    }
-  }
-
-  private static async init() {
-    DesktopConnection.newInstance();
-
-    try {
-      await DesktopConnection.instance.init();
-    } catch (error) {
-      log.error('Failed to initialise desktop connection');
-    }
-  }
-
-  private constructor() {
-    this.clientIdCounter = 1;
+    this.stream = stream;
     this.multiplex = new ObjectMultiplex();
-  }
-
-  public async init() {
-    if (this.endConnectionStream) {
-      log.error('Attempted to initialise desktop connection twice');
-      return;
-    }
-
-    await this.connect();
-
-    const browserControllerStream = this.multiplex.createStream(
-      CLIENT_ID_BROWSER_CONTROLLER,
-    );
-
-    registerResponseStream(browserControllerStream);
-
-    this.endConnectionStream = this.multiplex.createStream(
-      CLIENT_ID_END_CONNECTION,
-    );
 
     this.newConnectionStream = this.multiplex.createStream(
       CLIENT_ID_NEW_CONNECTION,
+    );
+
+    this.endConnectionStream = this.multiplex.createStream(
+      CLIENT_ID_END_CONNECTION,
     );
 
     this.stateStream = this.multiplex.createStream(CLIENT_ID_STATE);
@@ -144,29 +64,23 @@ export default class DesktopConnection {
       this.onDesktopState(rawState),
     );
 
-    const disableStream = this.multiplex.createStream(CLIENT_ID_DISABLE);
-    disableStream.on('data', (data: State) => this.onDisable(data));
+    this.disableStream = this.multiplex.createStream(CLIENT_ID_DISABLE);
+    this.disableStream.on('data', (data: State) => this.onDisable(data));
 
     this.pairingStream = this.multiplex.createStream(CLIENT_ID_PAIRING);
     this.pairingStream.on('data', (data: PairingMessage) =>
       data?.isPaired ? this.restart() : this.onPairing(data),
     );
 
-    log.debug('Connected to desktop');
-  }
+    this.versionStream = this.multiplex.createStream(CLIENT_ID_VERSION);
 
-  public async transferState() {
-    if (!this.stateStream) {
-      log.error('State stream not initialised');
-      return;
-    }
+    const browserControllerStream = this.multiplex.createStream(
+      CLIENT_ID_BROWSER_CONTROLLER,
+    );
 
-    const state = await browser.storage.local.get();
-    state.data.PreferencesController.desktopEnabled = true;
+    registerResponseStream(browserControllerStream);
 
-    this.stateStream.write(state);
-
-    log.debug('Sent extension state to desktop');
+    this.stream.pipe(this.multiplex).pipe(this.stream);
   }
 
   /**
@@ -191,15 +105,6 @@ export default class DesktopConnection {
     uiStream.pipe(uiInputStream);
     uiStream.resume();
 
-    if (!this.webSocketStream) {
-      try {
-        await this.connect();
-      } catch (error) {
-        log.error('Failed to create desktop stream as reconnect failed');
-        return;
-      }
-    }
-
     const clientId = this.generateClientId();
     const clientStream = this.multiplex.createStream(clientId);
 
@@ -207,7 +112,7 @@ export default class DesktopConnection {
 
     endOfStream(uiStream, () => {
       uiInputStream.destroy();
-      this.onPortStreamEnd(clientId, clientStream);
+      this.onUIStreamEnd(clientId, clientStream);
     });
 
     this.sendNewConnectionMessage(remotePort, clientId, connectionType);
@@ -215,9 +120,31 @@ export default class DesktopConnection {
     uiInputStream.resume();
   }
 
-  private async restart() {
-    log.debug('Restarting extension');
-    browser.runtime.reload();
+  public async transferState() {
+    const state = await browser.storage.local.get();
+    state.data.DesktopController.desktopEnabled = true;
+    state.data.DesktopController.isPairing = false;
+
+    this.stateStream.write(state);
+
+    await waitForMessage(this.stateStream, (data) =>
+      Promise.resolve(data === MESSAGE_ACKNOWLEDGE),
+    );
+
+    log.debug('Sent extension state to desktop');
+  }
+
+  public async getDesktopVersion(): Promise<number> {
+    this.versionStream.write({});
+
+    const versionMessage = await waitForMessage<any>(this.versionStream);
+    const desktopAppVersion = versionMessage.version as number;
+
+    return desktopAppVersion;
+  }
+
+  public disconnect() {
+    this.emit('disconnect');
   }
 
   private async onDisable(state: State) {
@@ -226,58 +153,13 @@ export default class DesktopConnection {
     await browser.storage.local.set(state);
     log.debug('Synchronised state with desktop');
 
+    this.disableStream?.write({});
+
     log.debug('Restarting extension');
-    this.restart();
+    browser.runtime.reload();
   }
 
-  private async onPairing(pairingMessage: PairingMessage) {
-    log.debug(`Received desktop pairing message`);
-    if (validate(pairingMessage?.otp)) {
-      await this.updateStateAfterPairing();
-
-      await this.transferState();
-      log.debug('Synchronised state with desktop');
-
-      log.debug('OTP is valid, sending acknowledged to desktop');
-      this.pairingStream?.write({ ...pairingMessage, isPaired: true });
-    } else {
-      log.debug('OTP is not valid, sending acknowledged to desktop');
-      this.pairingStream?.write({ ...pairingMessage, isPaired: false });
-    }
-  }
-
-  private async updateStateAfterPairing() {
-    const state = await browser.storage.local.get();
-    state.data.PreferencesController.desktopEnabled = true;
-    state.data.PreferencesController.isPairing = false;
-    await browser.storage.local.set(state);
-    log.debug('State updated after pairing');
-  }
-
-  private async connect() {
-    this.webSocket = await this.createWebSocket();
-    this.webSocket.addEventListener('close', () => this.onDisconnect());
-
-    this.webSocketStream = cfg().desktop.webSocket.disableEncryption
-      ? new WebSocketStream(this.webSocket)
-      : new EncryptedWebSocketStream(this.webSocket);
-
-    await this.webSocketStream.init({ startHandshake: true });
-    this.webSocketStream.pipe(this.multiplex).pipe(this.webSocketStream);
-
-    log.debug('Created web socket connection');
-  }
-
-  private onDisconnect() {
-    log.debug('Web socket disconnected');
-
-    this.webSocketStream?.end();
-    this.webSocketStream = undefined;
-
-    this.webSocket = undefined;
-  }
-
-  private onPortStreamEnd(clientId: ClientId, clientStream: Duplex) {
+  private onUIStreamEnd(clientId: ClientId, clientStream: Duplex) {
     log.debug('Port stream closed', clientId);
 
     clientStream.end();
@@ -291,6 +173,10 @@ export default class DesktopConnection {
   }
 
   private async onDesktopState(rawState: State) {
+    if (rawState === MESSAGE_ACKNOWLEDGE) {
+      return;
+    }
+
     await browser.storage.local.set(rawState);
     log.debug('Synchronised state with desktop');
   }
@@ -309,6 +195,32 @@ export default class DesktopConnection {
         data: { jsonrpc: '2.0', result: true, id },
       });
     }
+  }
+
+  private async onPairing(pairingMessage: PairingMessage) {
+    log.debug('Received desktop pairing message');
+
+    if (validate(pairingMessage?.otp)) {
+      await this.updateStateAfterPairing();
+
+      await this.transferState();
+      log.debug('Synchronised state with desktop');
+
+      this.restart();
+    } else {
+      log.debug('OTP is not valid, sending acknowledged to desktop');
+      this.pairingStream?.write({ ...pairingMessage, isPaired: false });
+    }
+  }
+
+  private async updateStateAfterPairing() {
+    const state = await browser.storage.local.get();
+    state.data.DesktopController.desktopEnabled = true;
+    state.data.DesktopController.isPairing = false;
+
+    await browser.storage.local.set(state);
+
+    log.debug('State updated after pairing');
   }
 
   private sendNewConnectionMessage(
@@ -339,28 +251,17 @@ export default class DesktopConnection {
     log.debug('Disabling desktop app');
 
     const rawState = await browser.storage.local.get();
-    rawState.data.PreferencesController.desktopEnabled = false;
-    rawState.data.PreferencesController.isPairing = false;
+    rawState.data.DesktopController.desktopEnabled = false;
+    rawState.data.DesktopController.isPairing = false;
+
     await browser.storage.local.set(rawState);
 
-    log.debug('Restarting extension');
-    browser.runtime.reload();
+    this.restart();
   }
 
-  private async createWebSocket(): Promise<WebSocket> {
-    const waitForWebSocketOpen = new Promise<BrowserWebSocket>((resolve) => {
-      const webSocket = new WebSocket(`${cfg().desktop.webSocket.url}`);
-
-      webSocket.addEventListener('open', () => {
-        resolve(webSocket);
-      });
-    });
-
-    return timeoutPromise(
-      waitForWebSocketOpen,
-      TIMEOUT_CONNECT,
-      'Timeout connecting to web socket server',
-    );
+  private async restart() {
+    log.debug('Restarting extension');
+    browser.runtime.reload();
   }
 
   private generateClientId(): ClientId {
