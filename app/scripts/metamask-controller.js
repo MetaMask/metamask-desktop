@@ -16,7 +16,7 @@ import {
 } from 'eth-rpc-errors';
 import { Mutex } from 'await-semaphore';
 import log from 'loglevel';
-import TrezorKeyring from 'eth-trezor-keyring';
+// import TrezorKeyring from 'eth-trezor-keyring';
 import LedgerBridgeKeyring from '@metamask/eth-ledger-bridge-keyring';
 import LatticeKeyring from 'eth-lattice-keyring';
 import { MetaMaskKeyring as QRHardwareKeyring } from '@keystonehq/metamask-airgapped-keyring';
@@ -161,6 +161,10 @@ import cfg from './desktop/config';
 import { checkSnapsBlockList } from './flask/snaps-utilities';
 import { SNAP_BLOCKLIST } from './flask/snaps-blocklist';
 ///: END:ONLY_INCLUDE_IN
+
+const TrezorKeyring = cfg().desktop.isApp
+  ? require('./desktop/hw/trezor-keyring')
+  : require('eth-trezor-keyring');
 
 export const METAMASK_CONTROLLER_EVENTS = {
   // Fired after state changes that impact the extension badge (unapproved msg count)

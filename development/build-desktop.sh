@@ -15,6 +15,7 @@ mkdir $OUTPUT_DIR/app
 echo "Copying HTML"
 cp -r app/desktop-pairing.html $OUTPUT_DIR/app/desktop-pairing.html
 cp -r app/desktop.html $OUTPUT_DIR/app/desktop.html
+cp -r app/trezor.html $OUTPUT_DIR/app/trezor.html
 
 echo "Copying locales"
 cp -r app/_locales $OUTPUT_DIR/app
