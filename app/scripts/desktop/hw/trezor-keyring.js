@@ -1,79 +1,68 @@
 /* eslint-disable import/unambiguous */
 const { ipcMain } = require('electron');
 const TrezorKeyring = require('eth-trezor-keyring');
+const Desktop = require('../desktop').default;
+
+function promisifyEvent(identifier, payload) {
+  return new Promise((resolve, reject) => {
+    if (!Desktop.hasInstance()) {
+      reject(new Error('No Desktop instance'));
+    }
+
+    const channel = `trezor-connect-${identifier}`;
+
+    const desktop = Desktop.getInstance();
+
+    try {
+      desktop.submitMessageToTrezorWindow(channel, payload);
+    } catch (error) {
+      reject(error);
+    }
+
+    ipcMain.on(`${channel}-result`, (_, result) => {
+      resolve(result);
+    });
+  });
+}
 
 class TrezorKeyringElectron extends TrezorKeyring {
   constructor(opts = {}) {
     const TrezorConnect = {
       on(event, callback) {
         if (event === 'DEVICE_EVENT') {
-          ipcMain.on('trezor-connect-on-device-event', (_, data) => {
-            callback(data);
+          ipcMain.on('trezor-connect-on-device-event', (_, message) => {
+            callback(message);
           });
         }
       },
 
-      init(data) {
-        return new Promise((resolve) => {
-          ipcMain.emit('trezor-init', data);
-
-          ipcMain.on('trezor-connect-init-result', (_, response) => {
-            resolve(response);
-          });
-        });
+      init(payload) {
+        return promisifyEvent('init', payload);
       },
 
       dispose() {
-        ipcMain.emit('trezor-dispose');
+        if (!Desktop.hasInstance()) {
+          throw new Error('No Desktop instance');
+        }
+
+        const { trezorWindow } = Desktop.getInstance();
+        trezorWindow.webContents.send('trezor-connect-dispose');
       },
 
-      getPublicKey(data) {
-        return new Promise((resolve) => {
-          ipcMain.emit('trezor-getPublicKey', data);
-
-          ipcMain.on('trezor-connect-getPublicKey-result', (_, response) => {
-            resolve(response);
-          });
-        });
+      getPublicKey(payload) {
+        return promisifyEvent('getPublicKey', payload);
       },
 
-      ethereumSignTransaction(data) {
-        return new Promise((resolve) => {
-          ipcMain.emit('trezor-ethereumSignTransaction', data);
-
-          ipcMain.on(
-            'trezor-connect-ethereumSignTransaction-result',
-            (_, response) => {
-              resolve(response);
-            },
-          );
-        });
+      ethereumSignTransaction(payload) {
+        return promisifyEvent('ethereumSignTransaction', payload);
       },
 
-      ethereumSignMessage(data) {
-        return new Promise((resolve) => {
-          ipcMain.emit('trezor-ethereumSignMessage', data);
-
-          ipcMain.on(
-            'trezor-connect-ethereumSignMessage-result',
-            (_, response) => {
-              resolve(response);
-            },
-          );
-        });
+      ethereumSignMessage(payload) {
+        return promisifyEvent('ethereumSignTransaction', payload);
       },
 
-      ethereumSignTypedData(data) {
-        return new Promise((resolve) => {
-          ipcMain.emit('trezor-ethereumSignTypedData', data);
-
-          ipcMain.on(
-            'trezor-connect-ethereumSignTypedData-result',
-            (_, response) => {
-              resolve(response);
-            },
-          );
-        });
+      ethereumSignTypedData(payload) {
+        return promisifyEvent('ethereumSignTypedData', payload);
       },
     };
 

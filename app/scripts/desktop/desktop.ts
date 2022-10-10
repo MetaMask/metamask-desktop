@@ -62,6 +62,8 @@ export default class Desktop {
 
   private statusWindow?: BrowserWindow;
 
+  private trezorWindow?: BrowserWindow;
+
   private hasBeenInitializedWithExtensionState?: boolean;
 
   private isPaired?: boolean;
@@ -110,7 +112,7 @@ export default class Desktop {
     ipcMain.handle('minimize', (_event) => this.statusWindow?.minimize());
 
     this.statusWindow = await this.createStatusWindow();
-    await this.createTrezorWindow();
+    this.trezorWindow = await this.createTrezorWindow();
 
     const state = await browser.storage.local.get();
     this.isPaired = state.data.PreferencesController.desktopEnabled;
@@ -160,6 +162,14 @@ export default class Desktop {
     this.stateStream?.write(rawState);
 
     log.debug('Sent state to extension');
+  }
+
+  public submitMessageToTrezorWindow(channel: string, ...args: any[]) {
+    if (!this.trezorWindow) {
+      throw new Error('No Trezor Window');
+    }
+
+    this.trezorWindow.webContents.send(channel, ...args);
   }
 
   private async disable() {
@@ -235,40 +245,9 @@ export default class Desktop {
       action: details.url.indexOf('connect.trezor.io') > 0 ? 'allow' : 'deny',
     }));
 
-    ipcMain.on('trezor-init', (payload) => {
-      trezorWindow.webContents.send('trezor-connect-init', payload);
-    });
-
-    ipcMain.on('trezor-dispose', (payload) => {
-      trezorWindow.webContents.send('trezor-connect-dispose', payload);
-    });
-
-    ipcMain.on('trezor-getPublicKey', (payload) => {
-      trezorWindow.webContents.send('trezor-connect-getPublicKey', payload);
-    });
-
-    ipcMain.on('trezor-ethereumSignTransaction', (payload) => {
-      trezorWindow.webContents.send(
-        'trezor-connect-ethereumSignTransaction',
-        payload,
-      );
-    });
-
-    ipcMain.on('trezor-ethereumSignMessage', (payload) => {
-      trezorWindow.webContents.send(
-        'trezor-connect-ethereumSignMessage',
-        payload,
-      );
-    });
-
-    ipcMain.on('trezor-ethereumSignTypedData', (payload) => {
-      trezorWindow.webContents.send(
-        'trezor-connect-ethereumSignTypedData',
-        payload,
-      );
-    });
-
     log.debug('Created trezor window');
+
+    return trezorWindow;
   }
 
   private async onConnection(webSocket: WebSocket) {
