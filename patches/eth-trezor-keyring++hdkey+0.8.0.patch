@@ -1,0 +1,13 @@
+diff --git a/node_modules/eth-trezor-keyring/node_modules/hdkey/lib/hdkey.js b/node_modules/eth-trezor-keyring/node_modules/hdkey/lib/hdkey.js
+index 3c28932..0e84211 100644
+--- a/node_modules/eth-trezor-keyring/node_modules/hdkey/lib/hdkey.js
++++ b/node_modules/eth-trezor-keyring/node_modules/hdkey/lib/hdkey.js
+@@ -229,7 +229,7 @@ function serialize (hdkey, version, key) {
+ 
+ function hash160 (buf) {
+   var sha = crypto.createHash('sha256').update(buf).digest()
+-  return crypto.createHash('rmd160').update(sha).digest()
++  return crypto.createHash('ripemd160').update(sha).digest()
+ }
+ 
+ HDKey.HARDENED_OFFSET = HARDENED_OFFSET

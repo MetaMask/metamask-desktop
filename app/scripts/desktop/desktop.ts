@@ -226,6 +226,7 @@ export default class Desktop {
     const trezorWindow = new BrowserWindow({
       width: 1024,
       height: 775,
+      show: false,
       webPreferences: {
         contextIsolation: false,
         preload: path.resolve(__dirname, './hw/trezor-preload.js'),
@@ -233,10 +234,6 @@ export default class Desktop {
     });
 
     await trezorWindow.loadFile(path.resolve(__dirname, '../../trezor.html'));
-
-    log.debug('Created trezor window');
-
-    // trezorWindow.maximize();
 
     trezorWindow.webContents.setWindowOpenHandler((details) => {
       if (details.url.indexOf('connect.trezor.io') > 0) {
@@ -250,15 +247,19 @@ export default class Desktop {
       };
     });
 
-    ipcMain.on('trezor-getPublicKey', (payload) => {
-      console.log('trezor-getPublicKey', payload);
+    ipcMain.on('trezor-init', (payload) => {
+      trezorWindow.webContents.send('trezor-connect-init', payload);
+    });
 
+    ipcMain.on('trezor-dispose', (payload) => {
+      trezorWindow.webContents.send('trezor-connect-dispose', payload);
+    });
+
+    ipcMain.on('trezor-getPublicKey', (payload) => {
       trezorWindow.webContents.send('trezor-connect-getPublicKey', payload);
     });
 
     ipcMain.on('trezor-ethereumSignTransaction', (payload) => {
-      console.log('trezor-ethereumSignTransaction', payload);
-
       trezorWindow.webContents.send(
         'trezor-connect-ethereumSignTransaction',
         payload,
@@ -266,8 +267,6 @@ export default class Desktop {
     });
 
     ipcMain.on('trezor-ethereumSignMessage', (payload) => {
-      console.log('trezor-ethereumSignMessage', payload);
-
       trezorWindow.webContents.send(
         'trezor-connect-ethereumSignMessage',
         payload,
@@ -275,13 +274,13 @@ export default class Desktop {
     });
 
     ipcMain.on('trezor-ethereumSignTypedData', (payload) => {
-      console.log('trezor-ethereumSignTypedData', payload);
-
       trezorWindow.webContents.send(
         'trezor-connect-ethereumSignTypedData',
         payload,
       );
     });
+
+    log.debug('Created trezor window');
 
     return trezorWindow;
   }

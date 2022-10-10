@@ -1,0 +1,72 @@
+diff --git a/node_modules/eth-trezor-keyring/index.js b/node_modules/eth-trezor-keyring/index.js
+index 9b76a29..02e6e67 100644
+--- a/node_modules/eth-trezor-keyring/index.js
++++ b/node_modules/eth-trezor-keyring/index.js
+@@ -1,7 +1,8 @@
+ const { EventEmitter } = require('events');
+ const ethUtil = require('ethereumjs-util');
+ const HDKey = require('hdkey');
+-const TrezorConnect = require('trezor-connect').default;
++const TrezorConnectSDK = require('trezor-connect').default;
++// const TrezorConnect = require('trezor-connect').default;
+ const { TransactionFactory } = require('@ethereumjs/tx');
+ const transformTypedData = require('trezor-connect/lib/plugins/ethereum/typedData');
+ 
+@@ -48,6 +49,36 @@ function isOldStyleEthereumjsTx(tx) {
+   return typeof tx.getChainId === 'function';
+ }
+ 
++let TrezorConnect = {
++  on(event, callback) {
++    TrezorConnectSDK.on(event, callback);
++  },
++
++  init(payload) {
++    return TrezorConnectSDK.init(payload);
++  },
++
++  dispose() {
++    TrezorConnectSDK.dispose();
++  },
++
++  getPublicKey(payload) {
++    return TrezorConnectSDK.getPublicKey(payload);
++  },
++
++  ethereumSignTransaction(payload) {
++    return TrezorConnectSDK.ethereumSignTransaction(payload);
++  },
++
++  ethereumSignMessage(payload) {
++    return TrezorConnectSDK.ethereumSignMessage(payload);
++  },
++
++  ethereumSignTypedData(payload) {
++    return TrezorConnectSDK.ethereumSignTypedData(payload);
++  }
++}
++
+ class TrezorKeyring extends EventEmitter {
+   constructor(opts = {}) {
+     super();
+@@ -60,12 +91,19 @@ class TrezorKeyring extends EventEmitter {
+     this.paths = {};
+     this.deserialize(opts);
+ 
++    if (opts.trezorConnectOverride) {
++      TrezorConnect = opts.trezorConnectOverride;
++    }
++
+     TrezorConnect.on('DEVICE_EVENT', (event) => {
+       if (event && event.payload && event.payload.features) {
+         this.model = event.payload.features.model;
+       }
+     });
+-    TrezorConnect.init({ manifest: TREZOR_CONNECT_MANIFEST });
++    TrezorConnect.init({
++      manifest: TREZOR_CONNECT_MANIFEST,
++      ...opts.trezorConnectInitOverride,
++    });
+   }
+ 
+   /**
