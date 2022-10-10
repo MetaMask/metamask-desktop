@@ -56,6 +56,9 @@ notes.txt
 # TypeScript
 tsout/
 
+# Tests
+.env
+
 # Test results
 test-results/
 

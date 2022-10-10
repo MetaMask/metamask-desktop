@@ -61,6 +61,12 @@ You can run the linter by itself with `yarn lint`, and you can automatically fix
 
 ### Running E2E Tests
 
+Config:
+We need these env vars setup:
+```
+LOCAL_ELECTRON_CONFIG_FILE_PATH=/Users/***/Library/Application Support/Electron/config.json #<mac>
+RUN_WITH_DESKTOP=true
+```
 Our e2e test suite can be run on either Firefox or Chrome. In either case, start by creating a test build by running `yarn build:test`.
 
 - Firefox e2e tests can be run with `yarn test:e2e:firefox`.
