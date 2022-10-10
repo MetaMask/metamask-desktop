@@ -1,15 +1,16 @@
 /* eslint-disable import/unambiguous */
 const { ipcMain } = require('electron');
+const TrezorKeyring = require('eth-trezor-keyring');
 
-const TrezorKeyringReal = require('eth-trezor-keyring');
-
-class TrezorKeyring extends TrezorKeyringReal {
+class TrezorKeyringElectron extends TrezorKeyring {
   constructor(opts = {}) {
     const TrezorConnect = {
       on(event, callback) {
-        ipcMain.on('trezor-connect-on-device-event', (_, data) => {
-          callback(data);
-        });
+        if (event === 'DEVICE_EVENT') {
+          ipcMain.on('trezor-connect-on-device-event', (_, data) => {
+            callback(data);
+          });
+        }
       },
 
       init(data) {
@@ -85,14 +86,10 @@ class TrezorKeyring extends TrezorKeyringReal {
         lazyLoad: true, // set to "false" (default) if you want to start communication with bridge on application start (and detect connected device right away)
         // set it to "true", then trezor-connect will not be initialized until you call some TrezorConnect.method()
         // this is useful when you don't know if you are dealing with Trezor user
-        manifest: {
-          email: 'email@developer.com',
-          appUrl: 'electron-app-boilerplate',
-        },
       },
     });
   }
 }
 
-TrezorKeyring.type = TrezorKeyringReal.type;
-module.exports = TrezorKeyring;
+TrezorKeyringElectron.type = TrezorKeyring.type;
+module.exports = TrezorKeyringElectron;

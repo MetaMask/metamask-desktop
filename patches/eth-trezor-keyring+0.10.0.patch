@@ -1,18 +1,17 @@
 diff --git a/node_modules/eth-trezor-keyring/index.js b/node_modules/eth-trezor-keyring/index.js
-index 9b76a29..02e6e67 100644
+index 9b76a29..145728f 100644
 --- a/node_modules/eth-trezor-keyring/index.js
 +++ b/node_modules/eth-trezor-keyring/index.js
-@@ -1,7 +1,8 @@
+@@ -1,7 +1,7 @@
  const { EventEmitter } = require('events');
  const ethUtil = require('ethereumjs-util');
  const HDKey = require('hdkey');
 -const TrezorConnect = require('trezor-connect').default;
 +const TrezorConnectSDK = require('trezor-connect').default;
-+// const TrezorConnect = require('trezor-connect').default;
  const { TransactionFactory } = require('@ethereumjs/tx');
  const transformTypedData = require('trezor-connect/lib/plugins/ethereum/typedData');
  
-@@ -48,6 +49,36 @@ function isOldStyleEthereumjsTx(tx) {
+@@ -48,6 +48,36 @@ function isOldStyleEthereumjsTx(tx) {
    return typeof tx.getChainId === 'function';
  }
  
@@ -49,7 +48,7 @@ index 9b76a29..02e6e67 100644
  class TrezorKeyring extends EventEmitter {
    constructor(opts = {}) {
      super();
-@@ -60,12 +91,19 @@ class TrezorKeyring extends EventEmitter {
+@@ -60,12 +90,19 @@ class TrezorKeyring extends EventEmitter {
      this.paths = {};
      this.deserialize(opts);
  

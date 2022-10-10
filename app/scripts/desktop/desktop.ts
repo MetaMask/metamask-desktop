@@ -62,8 +62,6 @@ export default class Desktop {
 
   private statusWindow?: BrowserWindow;
 
-  private trezorWindow?: BrowserWindow;
-
   private hasBeenInitializedWithExtensionState?: boolean;
 
   private isPaired?: boolean;
@@ -112,7 +110,7 @@ export default class Desktop {
     ipcMain.handle('minimize', (_event) => this.statusWindow?.minimize());
 
     this.statusWindow = await this.createStatusWindow();
-    this.trezorWindow = await this.createTrezorWindow();
+    await this.createTrezorWindow();
 
     const state = await browser.storage.local.get();
     this.isPaired = state.data.PreferencesController.desktopEnabled;
@@ -224,8 +222,6 @@ export default class Desktop {
 
   private async createTrezorWindow() {
     const trezorWindow = new BrowserWindow({
-      width: 1024,
-      height: 775,
       show: false,
       webPreferences: {
         contextIsolation: false,
@@ -235,17 +231,9 @@ export default class Desktop {
 
     await trezorWindow.loadFile(path.resolve(__dirname, '../../trezor.html'));
 
-    trezorWindow.webContents.setWindowOpenHandler((details) => {
-      if (details.url.indexOf('connect.trezor.io') > 0) {
-        return {
-          action: 'allow',
-        };
-      }
-
-      return {
-        action: 'deny',
-      };
-    });
+    trezorWindow.webContents.setWindowOpenHandler((details) => ({
+      action: details.url.indexOf('connect.trezor.io') > 0 ? 'allow' : 'deny',
+    }));
 
     ipcMain.on('trezor-init', (payload) => {
       trezorWindow.webContents.send('trezor-connect-init', payload);
@@ -281,8 +269,6 @@ export default class Desktop {
     });
 
     log.debug('Created trezor window');
-
-    return trezorWindow;
   }
 
   private async onConnection(webSocket: WebSocket) {
