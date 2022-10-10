@@ -235,7 +235,8 @@ export default class Desktop {
       show: false,
       webPreferences: {
         contextIsolation: false,
-        preload: path.resolve(__dirname, './hw/trezor-preload.js'),
+        sandbox: false,
+        preload: path.resolve(__dirname, './trezor/trezor-preload.js'),
       },
     });
 

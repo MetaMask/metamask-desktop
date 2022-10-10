@@ -1,7 +1,10 @@
 /* eslint-disable import/unambiguous */
 const { ipcMain } = require('electron');
 const TrezorKeyring = require('eth-trezor-keyring');
+// eslint-disable-next-line import/no-extraneous-dependencies, node/no-extraneous-require
+const { DEVICE_EVENT } = require('trezor-connect');
 const Desktop = require('../desktop').default;
+const { buildChannelName } = require('./build-channel-name');
 
 function promisifyEvent(identifier, payload) {
   return new Promise((resolve, reject) => {
@@ -9,17 +12,18 @@ function promisifyEvent(identifier, payload) {
       reject(new Error('No Desktop instance'));
     }
 
-    const channel = `trezor-connect-${identifier}`;
-
     const desktop = Desktop.getInstance();
 
     try {
-      desktop.submitMessageToTrezorWindow(channel, payload);
+      desktop.submitMessageToTrezorWindow(
+        buildChannelName(identifier),
+        payload,
+      );
     } catch (error) {
       reject(error);
     }
 
-    ipcMain.on(`${channel}-result`, (_, result) => {
+    ipcMain.on(buildChannelName(identifier, true), (_, result) => {
       resolve(result);
     });
   });
@@ -29,10 +33,13 @@ class TrezorKeyringElectron extends TrezorKeyring {
   constructor(opts = {}) {
     const TrezorConnect = {
       on(event, callback) {
-        if (event === 'DEVICE_EVENT') {
-          ipcMain.on('trezor-connect-on-device-event', (_, message) => {
-            callback(message);
-          });
+        if (event === DEVICE_EVENT) {
+          ipcMain.on(
+            buildChannelName('on-device-event', true),
+            (_, message) => {
+              callback(message);
+            },
+          );
         }
       },
 
@@ -46,7 +53,7 @@ class TrezorKeyringElectron extends TrezorKeyring {
         }
 
         const { trezorWindow } = Desktop.getInstance();
-        trezorWindow.webContents.send('trezor-connect-dispose');
+        trezorWindow.webContents.send(buildChannelName('dispose'));
       },
 
       getPublicKey(payload) {
@@ -58,7 +65,7 @@ class TrezorKeyringElectron extends TrezorKeyring {
       },
 
       ethereumSignMessage(payload) {
-        return promisifyEvent('ethereumSignTransaction', payload);
+        return promisifyEvent('ethereumSignMessage', payload);
       },
 
       ethereumSignTypedData(payload) {

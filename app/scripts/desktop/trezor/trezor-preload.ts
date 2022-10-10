@@ -1,6 +1,7 @@
 import { ipcRenderer } from 'electron';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import TrezorConnectType from 'trezor-connect';
+import TrezorConnectType, { DEVICE_EVENT } from 'trezor-connect';
+import { buildChannelName } from './build-channel-name';
 
 // TrezorConnect is injected as inline script in html
 // therefore it doesn't need to included into node_modules
@@ -8,44 +9,47 @@ import TrezorConnectType from 'trezor-connect';
 let TrezorConnect: typeof TrezorConnectType;
 
 const onLoad = () => {
-  ipcRenderer.on('trezor-connect-init', (_, payload) => {
-    TrezorConnect.on('DEVICE_EVENT', (deviceEvent) => {
-      ipcRenderer.send('trezor-connect-on-device-event', deviceEvent);
+  ipcRenderer.on(buildChannelName('init'), (_, payload) => {
+    TrezorConnect.on(DEVICE_EVENT, (deviceEvent) => {
+      ipcRenderer.send(buildChannelName('on-device-event', true), deviceEvent);
     });
 
     TrezorConnect.init(payload).then((response) => {
-      ipcRenderer.send('trezor-connect-init-result', response);
+      ipcRenderer.send(buildChannelName('init', true), response);
     });
   });
 
-  ipcRenderer.on('trezor-connect-dispose', () => {
+  ipcRenderer.on(buildChannelName('dispose'), () => {
     TrezorConnect.dispose();
   });
 
-  ipcRenderer.on('trezor-connect-getPublicKey', (_, payload) => {
+  ipcRenderer.on(buildChannelName('getPublicKey'), (_, payload) => {
     TrezorConnect.getPublicKey(payload).then((response) => {
-      ipcRenderer.send('trezor-connect-getPublicKey-result', response);
+      ipcRenderer.send(buildChannelName('getPublicKey', true), response);
     });
   });
 
-  ipcRenderer.on('trezor-connect-ethereumSignTransaction', (_, payload) => {
+  ipcRenderer.on(buildChannelName('ethereumSignTransaction'), (_, payload) => {
     TrezorConnect.ethereumSignTransaction(payload).then((response) => {
       ipcRenderer.send(
-        'trezor-connect-ethereumSignTransaction-result',
+        buildChannelName('ethereumSignTransaction', true),
         response,
       );
     });
   });
 
-  ipcRenderer.on('trezor-connect-ethereumSignMessage', (_, payload) => {
+  ipcRenderer.on(buildChannelName('ethereumSignMessage'), (_, payload) => {
     TrezorConnect.ethereumSignMessage(payload).then((response) => {
-      ipcRenderer.send('trezor-connect-ethereumSignMessage-result', response);
+      ipcRenderer.send(buildChannelName('ethereumSignMessage', true), response);
     });
   });
 
-  ipcRenderer.on('trezor-connect-ethereumSignTypedData', (_, payload) => {
+  ipcRenderer.on(buildChannelName('ethereumSignTypedData'), (_, payload) => {
     TrezorConnect.ethereumSignTypedData(payload).then((response) => {
-      ipcRenderer.send('trezor-connect-ethereumSignTypedData-result', response);
+      ipcRenderer.send(
+        buildChannelName('ethereumSignTypedData', true),
+        response,
+      );
     });
   });
 };
