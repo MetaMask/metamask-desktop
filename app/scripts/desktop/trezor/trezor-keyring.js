@@ -1,8 +1,6 @@
 /* eslint-disable import/unambiguous */
 const { ipcMain } = require('electron');
 const TrezorKeyring = require('eth-trezor-keyring');
-// eslint-disable-next-line import/no-extraneous-dependencies, node/no-extraneous-require
-const { DEVICE_EVENT } = require('trezor-connect');
 const Desktop = require('../desktop').default;
 const { buildChannelName } = require('./build-channel-name');
 
@@ -33,7 +31,7 @@ class TrezorKeyringElectron extends TrezorKeyring {
   constructor(opts = {}) {
     const TrezorConnect = {
       on(event, callback) {
-        if (event === DEVICE_EVENT) {
+        if (event === 'DEVICE_EVENT') {
           ipcMain.on(
             buildChannelName('on-device-event', true),
             (_, message) => {

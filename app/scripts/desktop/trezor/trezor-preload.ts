@@ -1,6 +1,5 @@
 import { ipcRenderer } from 'electron';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import TrezorConnectType, { DEVICE_EVENT } from 'trezor-connect';
+import type TrezorConnectType from 'trezor-connect';
 import { buildChannelName } from './build-channel-name';
 
 // TrezorConnect is injected as inline script in html
@@ -10,7 +9,7 @@ let TrezorConnect: typeof TrezorConnectType;
 
 const onLoad = () => {
   ipcRenderer.on(buildChannelName('init'), (_, payload) => {
-    TrezorConnect.on(DEVICE_EVENT, (deviceEvent) => {
+    TrezorConnect.on('DEVICE_EVENT', (deviceEvent) => {
       ipcRenderer.send(buildChannelName('on-device-event', true), deviceEvent);
     });
 
