@@ -19,6 +19,8 @@ export class MMIMainMenuPage {
 
   readonly closeSettingsBtn: Locator;
 
+  lockBtn: Locator;
+
   constructor(page: Page) {
     this.page = page;
     this.mainMenuBtn = page.locator('.account-menu__icon');
@@ -33,6 +35,7 @@ export class MMIMainMenuPage {
     this.closeSettingsBtn = page.locator(
       '.settings-page__header__title-container__close-button',
     );
+    this.lockBtn = page.locator('button:has-text("Lock")');
   }
 
   async open() {
@@ -113,7 +116,7 @@ export class MMIMainMenuPage {
         '.settings-page__content-row >> :scope:has-text("Enable desktop app") >> .toggle-button--off',
       )
       .click();
-  }  
+  }
 
   async enableOption(option: string) {
     await this.page.locator('text=Experimental').click();
@@ -132,4 +135,8 @@ export class MMIMainMenuPage {
     await this.page.reload();
   }
 
+  async lock() {
+    await this.open();
+    await this.lockBtn.click();
+  }
 }

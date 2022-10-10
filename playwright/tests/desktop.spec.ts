@@ -31,11 +31,11 @@ const enableDesktopAppFlow = async (page: Page) => {
   await mainMenuPage.showIncomingTransactionsOff();
   await mainMenuPage.enableOption('Enable desktop app');
   await mainMenuPage.closeSettings();
-  await mainMenuPage.reload();
+  await mainMenuPage.lock();
 };
 
-test.describe('MMI send', () => {
-  test('Goerli: Send a transaction from one account to another and confirm it from custody', async ({
+test.describe('Desktop send', () => {
+  test('Goerli: Send a transaction from one account to another', async ({
     page,
     context,
   }) => {
@@ -63,7 +63,7 @@ test.describe('MMI send', () => {
     await initialPage.checkLastTransactionStatus('Send');
   });
 
-  test('Localhost: Send a transaction from one account to another and confirm it from custody', async ({
+  test('Localhost: Send a transaction from one account to another', async ({
     page,
     context,
   }) => {

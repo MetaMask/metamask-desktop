@@ -28,6 +28,12 @@ const createDownloadFolder = async (downloadsFolder) => {
 
 const convertToHexValue = (val) => `0x${new BigNumber(val, 10).toString(16)}`;
 
+function delay(milliseconds) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, milliseconds);
+  });
+}
+
 async function withFixtures(options, testSuite) {
   const {
     dapp,
@@ -68,6 +74,9 @@ async function withFixtures(options, testSuite) {
       console.error(`stderr: ${data}`);
     });
   }
+  // Wait 5 secs to let desktop initialise
+  await delay(5000);
+
   const https = await mockttp.generateCACertificate();
   const mockServer = mockttp.getLocal({ https, cors: true });
   let secondaryGanacheServer;
@@ -102,24 +111,24 @@ async function withFixtures(options, testSuite) {
 
     // Load state in electron app => copy state.json to config.json in electron
     // eslint-disable-next-line no-implicit-globals
-    if (process.env.RUN_WITH_DESKTOP === 'true') {
-      const statePath = path.resolve(
-        __dirname,
-        path.join(__dirname, 'fixtures', fixtures),
-        'state.json',
-      );
-      if (process.env.CI === 'true') {
-        console.info(
-          `UBUNTU_ELECTRON_CONFIG_FILE_PATH: ${process.env.UBUNTU_ELECTRON_CONFIG_FILE_PATH}`,
-        );
-        fs.copyFile(statePath, process.env.UBUNTU_ELECTRON_CONFIG_FILE_PATH);
-      } else {
-        console.info(
-          `LOCAL_ELECTRON_CONFIG_FILE_PATH: ${process.env.LOCAL_ELECTRON_CONFIG_FILE_PATH}`,
-        );
-        fs.copyFile(statePath, process.env.LOCAL_ELECTRON_CONFIG_FILE_PATH);
-      }
-    }
+    // if (process.env.RUN_WITH_DESKTOP === 'true') {
+    //   const statePath = path.resolve(
+    //     __dirname,
+    //     path.join(__dirname, 'fixtures', fixtures),
+    //     'state.json',
+    //   );
+    //   if (process.env.CI === 'true') {
+    //     console.info(
+    //       `UBUNTU_ELECTRON_CONFIG_FILE_PATH: ${process.env.UBUNTU_ELECTRON_CONFIG_FILE_PATH}`,
+    //     );
+    //     fs.copyFile(statePath, process.env.UBUNTU_ELECTRON_CONFIG_FILE_PATH);
+    //   } else {
+    //     console.info(
+    //       `LOCAL_ELECTRON_CONFIG_FILE_PATH: ${process.env.LOCAL_ELECTRON_CONFIG_FILE_PATH}`,
+    //     );
+    //     fs.copyFile(statePath, process.env.LOCAL_ELECTRON_CONFIG_FILE_PATH);
+    //   }
+    // }
 
     await phishingPageServer.start();
     if (dapp) {

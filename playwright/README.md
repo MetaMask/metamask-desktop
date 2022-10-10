@@ -6,12 +6,13 @@ This test is added to help debug the desktop / extension integration in its earl
 
 1. Install dependencies
 ```code
-yarn
+npm install
+npx playwright install
 ```
 2. Start desktop manually if is not started yet
 
 3. Run test
 ```code
-yarn playwright test
+npx playwright test
 ```
 
