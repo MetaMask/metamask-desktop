@@ -20,7 +20,6 @@ describe('Show account details', function () {
       },
       async ({ driver }) => {
         await driver.navigate();
-        await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);
 
