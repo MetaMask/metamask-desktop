@@ -239,7 +239,7 @@ export default class ExperimentalTab extends PureComponent {
 
   renderDesktopToggle() {
     const { t } = this.context;
-    const { desktopEnabled, setDesktopEnabled } = this.props;
+    const { desktopEnabled, setDesktopEnabled, setIsPairing } = this.props;
 
     return (
       <div ref={this.settingsRefs[5]} className="settings-page__content-row">
@@ -262,6 +262,7 @@ export default class ExperimentalTab extends PureComponent {
                     legacy_event: true,
                   },
                 });
+                setIsPairing(!value);
                 setDesktopEnabled(!value);
               }}
               offLabel={t('off')}

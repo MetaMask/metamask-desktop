@@ -32,3 +32,11 @@ Run unit tests and the linter with `yarn test`. To run just unit tests, run `yar
 
 You can run the linter by itself with `yarn lint`, and you can automatically fix some lint problems with `yarn lint:fix`. You can also run these two commands just on your local changes to save time with `yarn lint:changed` and `yarn lint:changed:fix` respectively.
 
+
+### Environment Variables
+
+#### Development
+
+| Name | Description |
+| ---  | --- |
+| SKIP_OTP_PAIRING_FLOW | Whether set to `1` skips the OTP pairing flow. |
