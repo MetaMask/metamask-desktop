@@ -58,6 +58,33 @@ async function withFixtures(options, testSuite) {
   );
   cp.spawn('kill -9 `lsof -t -i:7071`', { shell: true });
 
+  await fixtureServer.start();
+
+  // Load state in electron app => copy state.json to config.json in electron
+  // eslint-disable-next-line no-implicit-globals
+  if (process.env.RUN_WITH_DESKTOP === 'true') {
+    if (process.env.CI === 'true') {
+      console.info(
+        `UBUNTU_ELECTRON_CONFIG_FILE_PATH: ${process.env.UBUNTU_ELECTRON_CONFIG_FILE_PATH}`,
+      );
+      // await fs.unlink(process.env.UBUNTU_ELECTRON_CONFIG_FILE_PATH);
+      await fixtureServer.loadStateDesktop(
+        path.join(__dirname, 'fixtures', fixtures),
+        process.env.UBUNTU_ELECTRON_CONFIG_FILE_PATH,
+      );
+    } else {
+      console.info(
+        `LOCAL_ELECTRON_CONFIG_FILE_PATH: ${process.env.LOCAL_ELECTRON_CONFIG_FILE_PATH}`,
+      );
+      // await fs.unlink(process.env.LOCAL_ELECTRON_CONFIG_FILE_PATH);
+      await fixtureServer.loadStateDesktop(
+        path.join(__dirname, 'fixtures', fixtures),
+        process.env.LOCAL_ELECTRON_CONFIG_FILE_PATH,
+      );
+      // await fs.copyFile(statePath, process.env.LOCAL_ELECTRON_CONFIG_FILE_PATH);
+    }
+  }
+
   let desktop;
   if (process.env.RUN_WITH_DESKTOP === 'true') {
     if (process.env.CI === 'true') {
@@ -106,29 +133,8 @@ async function withFixtures(options, testSuite) {
         vmErrorsOnRPCResponse: false,
       });
     }
-    await fixtureServer.start();
-    await fixtureServer.loadState(path.join(__dirname, 'fixtures', fixtures));
 
-    // Load state in electron app => copy state.json to config.json in electron
-    // eslint-disable-next-line no-implicit-globals
-    // if (process.env.RUN_WITH_DESKTOP === 'true') {
-    //   const statePath = path.resolve(
-    //     __dirname,
-    //     path.join(__dirname, 'fixtures', fixtures),
-    //     'state.json',
-    //   );
-    //   if (process.env.CI === 'true') {
-    //     console.info(
-    //       `UBUNTU_ELECTRON_CONFIG_FILE_PATH: ${process.env.UBUNTU_ELECTRON_CONFIG_FILE_PATH}`,
-    //     );
-    //     fs.copyFile(statePath, process.env.UBUNTU_ELECTRON_CONFIG_FILE_PATH);
-    //   } else {
-    //     console.info(
-    //       `LOCAL_ELECTRON_CONFIG_FILE_PATH: ${process.env.LOCAL_ELECTRON_CONFIG_FILE_PATH}`,
-    //     );
-    //     fs.copyFile(statePath, process.env.LOCAL_ELECTRON_CONFIG_FILE_PATH);
-    //   }
-    // }
+    await fixtureServer.loadState(path.join(__dirname, 'fixtures', fixtures));
 
     await phishingPageServer.start();
     if (dapp) {

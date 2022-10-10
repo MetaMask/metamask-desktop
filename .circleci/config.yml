@@ -451,6 +451,10 @@ jobs:
       - attach_workspace:
           at: .
       - run:
+          name: Setup env vars for desktop build
+          command: |
+            INFURA_PROJECT_ID=$INFURA_PROJECT_ID          
+      - run:
           name: Build extension for testing
           command: yarn build:desktop:extension:test
       - run:

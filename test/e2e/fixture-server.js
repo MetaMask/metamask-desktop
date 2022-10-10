@@ -94,6 +94,28 @@ class FixtureServer {
     });
   }
 
+  async loadStateDesktop(fixturePath, desktopConfigPath) {
+    const statePath = path.resolve(__dirname, fixturePath, 'state.json');
+    let state;
+    if (this._initialStateCache.has(statePath)) {
+      await fs.writeFile(
+        desktopConfigPath,
+        JSON.stringify(this._initialStateCache.get(statePath), null, 2),
+      );
+    } else {
+      const data = await fs.readFile(statePath);
+      const rawState = JSON.parse(data.toString('utf-8'));
+      if (process.env.RUN_WITH_DESKTOP === 'true') {
+        rawState.data.PreferencesController.desktopEnabled = true;
+      }
+      state = performStateSubstitutions(rawState);
+      this._initialStateCache.set(statePath, state);
+      fs.writeFile(desktopConfigPath, JSON.stringify(state, null, 2));
+    }
+
+    this._stateMap.set(CURRENT_STATE_KEY, state);
+  }
+
   async loadState(directory) {
     const statePath = path.resolve(__dirname, directory, 'state.json');
 
