@@ -233,6 +233,7 @@ export default class Desktop {
   private async createTrezorWindow() {
     const trezorWindow = new BrowserWindow({
       show: false,
+      parent: this.statusWindow,
       webPreferences: {
         preload: path.resolve(__dirname, './trezor/trezor-preload.js'),
       },
