@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 window.trezorApi.initSetup((payload) => {
   window.TrezorConnect.on('DEVICE_EVENT', (deviceEvent) => {
     window.trezorApi.onDeviceEventResponse(deviceEvent);
