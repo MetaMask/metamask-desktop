@@ -74,6 +74,7 @@ describe('Desktop', () => {
   const backgroundMock = createEventEmitterMock();
   const extensionConnectionMock = createExtensionConnectionMock();
   const browserMock = browser as any;
+  const pairingMock = createEventEmitterMock();
 
   const webSocketStreamConstructorMock = WebSocketStream as jest.MockedClass<
     typeof WebSocketStream
@@ -98,6 +99,7 @@ describe('Desktop', () => {
 
     webSocketStreamConstructorMock.mockReturnValue(webSocketStreamMock);
     extensionConnectionConstructorMock.mockReturnValue(extensionConnectionMock);
+    extensionConnectionMock.getPairing.mockReturnValue(pairingMock as any);
     appMock.whenReady.mockResolvedValue();
 
     encryptedWebSocketStreamConstructorMock.mockReturnValue(

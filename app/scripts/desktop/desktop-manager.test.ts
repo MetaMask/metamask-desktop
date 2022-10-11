@@ -99,7 +99,6 @@ describe('Desktop Manager', () => {
           expect(desktopConnectionConstructorMock).toHaveBeenCalledTimes(1);
           expect(desktopConnectionConstructorMock).toHaveBeenCalledWith(
             webSocketStreamMock,
-            backgroundMock,
           );
         });
 
@@ -162,7 +161,6 @@ describe('Desktop Manager', () => {
           expect(desktopConnectionConstructorMock).toHaveBeenCalledTimes(1);
           expect(desktopConnectionConstructorMock).toHaveBeenCalledWith(
             webSocketStreamMock,
-            backgroundMock,
           );
         });
 

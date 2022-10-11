@@ -7,10 +7,8 @@ import {
   CLIENT_ID_NEW_CONNECTION,
   CLIENT_ID_STATE,
   CLIENT_ID_DISABLE,
-  CLIENT_ID_PAIRING,
   MESSAGE_ACKNOWLEDGE,
 } from '../../../shared/constants/desktop';
-import * as totp from '../../../shared/modules/totp';
 import DesktopConnection from './desktop-connection';
 import {
   REMOTE_PORT_NAME_MOCK,
@@ -22,7 +20,6 @@ import {
   JSON_RPC_ID_MOCK,
   STREAM_MOCK,
   UUID_MOCK,
-  OTP_MOCK,
 } from './test/mocks';
 import {
   simulateStreamMessage,
@@ -63,7 +60,6 @@ describe('Desktop Connection', () => {
   const browserMock = browser as any;
   const passThroughMock = createStreamMock();
   const uuidMock = uuidv4 as jest.MockedFunction<typeof uuidv4>;
-  const totpMock = totp as jest.Mocked<typeof totp>;
 
   const objectMultiplexConstructorMock = ObjectMultiplex as jest.MockedClass<
     typeof ObjectMultiplex
@@ -110,7 +106,7 @@ describe('Desktop Connection', () => {
       return newStream as any;
     });
 
-    desktopConnection = new DesktopConnection(streamMock, undefined);
+    desktopConnection = new DesktopConnection(streamMock);
   });
 
   describe.each([
@@ -176,7 +172,7 @@ describe('Desktop Connection', () => {
       expect(stateStreamMock.write).toHaveBeenCalledTimes(1);
       expect(stateStreamMock.write).toHaveBeenCalledWith({
         ...DATA_MOCK,
-        data: { DesktopController: { desktopEnabled: true, isPairing: false } },
+        data: { DesktopController: { desktopEnabled: true } },
       });
     });
   });
@@ -279,76 +275,6 @@ describe('Desktop Connection', () => {
       expect(portStreamMock.write).toHaveBeenCalledWith({
         name: STREAM_MOCK,
         data: { jsonrpc: '2.0', id: JSON_RPC_ID_MOCK, result: true },
-      });
-    });
-  });
-
-  describe('on pairing message', () => {
-    const DATA_MOCK_STATE_PAIRED = {
-      ...DATA_MOCK,
-      data: {
-        DesktopController: { desktopEnabled: true, isPairing: false },
-      },
-    };
-
-    let pairingStreamMock;
-
-    const simulatePairingMessage = async () => {
-      const promise = simulateStreamMessage(pairingStreamMock, {
-        otp: OTP_MOCK,
-      });
-
-      await simulateTranferStateReceipt(promise);
-    };
-
-    beforeEach(async () => {
-      await desktopConnection.createStream(
-        remotePortMock,
-        ConnectionType.INTERNAL,
-      );
-
-      pairingStreamMock = multiplexStreamMocks[CLIENT_ID_PAIRING];
-    });
-
-    describe('if OTP is valid', () => {
-      beforeEach(async () => {
-        totpMock.validate.mockReturnValue(true);
-
-        browserMock.storage.local.get.mockResolvedValue({
-          ...DATA_MOCK,
-          data: {
-            DesktopController: { desktopEnabled: true },
-          },
-        });
-
-        await simulatePairingMessage();
-      });
-
-      it('updates state', async () => {
-        expect(browser.storage.local.set).toHaveBeenCalledTimes(1);
-        expect(browser.storage.local.set).toHaveBeenCalledWith(
-          DATA_MOCK_STATE_PAIRED,
-        );
-      });
-
-      it('restarts extension', async () => {
-        expect(browser.runtime.reload).toHaveBeenCalledTimes(1);
-      });
-    });
-
-    describe('if OTP is invalid', () => {
-      beforeEach(async () => {
-        totpMock.validate.mockReturnValue(false);
-
-        await simulatePairingMessage();
-      });
-
-      it('writes message to pairing stream', async () => {
-        expect(pairingStreamMock.write).toHaveBeenCalledTimes(1);
-        expect(pairingStreamMock.write).toHaveBeenCalledWith({
-          isPaired: false,
-          otp: OTP_MOCK,
-        });
       });
     });
   });

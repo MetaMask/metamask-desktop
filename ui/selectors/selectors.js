@@ -1195,16 +1195,6 @@ export function getIsPairing(state) {
   return state.metamask.isPairing;
 }
 
-/**
- * To get the `desktopPairingOtp` value
- *
- * @param {*} state
- * @returns String
- */
-export function getDesktopPairingOtp(state) {
-  return state.metamask.desktopPairingOtp;
-}
-
 export function getIsCustomNetwork(state) {
   const chainId = getCurrentChainId(state);
 

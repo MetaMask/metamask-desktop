@@ -760,10 +760,6 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     backgroundEventEmitter?.emit('memory-state-update', flatState);
   });
 
-  controller.on('generate-otp', (data) => {
-    backgroundEventEmitter.emit('generate-otp', data);
-  });
-
   Desktop?.getInstance()?.on('connect-remote', (connectRequest) => {
     connectRemote(connectRequest);
   });

@@ -1,6 +1,7 @@
 import { ObservableStore } from '@metamask/obs-store';
 import log from 'loglevel';
 import cfg from '../desktop/config';
+import { ExtensionPairing } from '../desktop/pairing';
 
 let DesktopManager;
 
@@ -16,7 +17,6 @@ export default class DesktopController {
     this.store = new ObservableStore({
       desktopEnabled: false,
       isPairing: false,
-      desktopPairingOtp: 0,
       ...initState,
     });
   }
@@ -33,10 +33,8 @@ export default class DesktopController {
     });
   }
 
-  setOtpPairing(desktopPairingOtp) {
-    this.store.updateState({
-      desktopPairingOtp,
-    });
+  generateOtp() {
+    return ExtensionPairing.generateOTP();
   }
 
   async testDesktopConnection() {

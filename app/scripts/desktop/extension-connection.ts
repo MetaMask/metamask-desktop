@@ -12,17 +12,14 @@ import {
   CLIENT_ID_PAIRING,
   MESSAGE_ACKNOWLEDGE,
 } from '../../../shared/constants/desktop';
-import { browser } from './browser/browser-polyfill';
 import { ConnectionType } from './types/background';
-import {
-  EndConnectionMessage,
-  NewConnectionMessage,
-  PairingMessage,
-} from './types/message';
+import { EndConnectionMessage, NewConnectionMessage } from './types/message';
 import { ClientId } from './types/desktop';
 import { registerRequestStream } from './browser/node-browser';
 import { waitForMessage } from './utils/stream';
 import { RecordingEventEmitter } from './utils/events';
+import { DesktopPairing } from './pairing';
+import * as RawState from './utils/raw-state';
 
 export default class ExtensionConnection extends EventEmitter {
   private stream: Duplex;
@@ -45,11 +42,11 @@ export default class ExtensionConnection extends EventEmitter {
 
   private disableStream: Duplex;
 
-  private pairingStream: Duplex;
-
   private versionStream: Duplex;
 
   private hasBeenInitializedWithExtensionState?: boolean;
+
+  private pairing: DesktopPairing;
 
   public constructor(stream: Duplex, background: EventEmitter) {
     super();
@@ -67,8 +64,6 @@ export default class ExtensionConnection extends EventEmitter {
     this.background.on('memory-state-update', (flatState: any) =>
       this.onFlatMemStateUpdate(flatState),
     );
-
-    this.background.on('otp', (data: any) => this.onOTPSubmit(data));
 
     this.newConnectionStream = this.multiplex.createStream(
       CLIENT_ID_NEW_CONNECTION,
@@ -94,15 +89,17 @@ export default class ExtensionConnection extends EventEmitter {
 
     this.disableStream = this.multiplex.createStream(CLIENT_ID_DISABLE);
 
-    this.pairingStream = this.multiplex.createStream(CLIENT_ID_PAIRING);
-    this.pairingStream.on('data', (data: PairingMessage) =>
-      this.onExtensionOtpPairing(data),
-    );
+    const pairingStream = this.multiplex.createStream(CLIENT_ID_PAIRING);
+    this.pairing = new DesktopPairing(pairingStream).init();
 
     this.versionStream = this.multiplex.createStream(CLIENT_ID_VERSION);
     this.versionStream.on('data', () => this.onVersionRequest());
 
     this.stream.pipe(this.multiplex).pipe(this.stream);
+  }
+
+  public getPairing(): DesktopPairing {
+    return this.pairing;
   }
 
   public disconnect() {
@@ -174,7 +171,7 @@ export default class ExtensionConnection extends EventEmitter {
   private async onExtensionState(data: any) {
     log.debug('Received extension state');
 
-    await browser.storage.local.set(data);
+    await RawState.set(data);
 
     this.stateStream.write(MESSAGE_ACKNOWLEDGE);
 
@@ -196,21 +193,6 @@ export default class ExtensionConnection extends EventEmitter {
     this.transferState(rawState);
   }
 
-  private onExtensionOtpPairing(pairingMessage: PairingMessage) {
-    if (!pairingMessage?.isPaired) {
-      this.emit('invalid-otp', false);
-    }
-  }
-
-  private async onOTPSubmit(otp: string) {
-    log.debug('Submitted OTP', otp);
-    if (!this.pairingStream) {
-      log.error('Pairing stream not initialised');
-      return;
-    }
-    this.pairingStream.write({ otp, isPaired: false });
-  }
-
   private onVersionRequest() {
     log.debug('Received version request');
     this.versionStream.write({ version: 1 });
@@ -220,11 +202,14 @@ export default class ExtensionConnection extends EventEmitter {
     log.debug('Desktop disabled');
 
     if (this.canTransferState()) {
-      const rawState = await browser.storage.local.get();
-      rawState.data.DesktopController.desktopEnabled = false;
-      rawState.data.DesktopController.isPairing = false;
+      const stateToTransfer = await RawState.getAndUpdateDesktopState({
+        desktopEnabled: false,
+        isPairing: false,
+      });
 
-      this.disableStream.write(rawState);
+      await RawState.clear();
+
+      this.disableStream.write(stateToTransfer);
 
       await waitForMessage(this.disableStream);
 

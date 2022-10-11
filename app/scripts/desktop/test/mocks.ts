@@ -142,6 +142,7 @@ export const createExtensionConnectionMock =
       removeAllListeners: jest.fn(),
       disconnect: jest.fn(),
       removeListener: jest.fn(),
+      getPairing: jest.fn(),
     } as any);
 
 export const createDesktopConnectionMock = (): jest.Mocked<DesktopConnection> =>
