@@ -7,9 +7,9 @@ import {
   BrowserWebSocket,
   NodeWebSocket,
   WebSocketStream,
-} from '../web-socket-stream';
-import ExtensionConnection from '../extension-connection';
-import DesktopConnection from '../desktop-connection';
+} from '../shared/web-socket-stream';
+import ExtensionConnection from '../app/extension-connection';
+import DesktopConnection from '../extension/desktop-connection';
 
 export const PUBLIC_KEY_MOCK = 'testPublicKey';
 export const PRIVATE_KEY_MOCK = 'testPrivateKey';

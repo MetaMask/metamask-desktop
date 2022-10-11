@@ -1,4 +1,4 @@
-import cfg from '../config';
+import cfg from '../utils/config';
 import { Browser } from '../types/browser';
 
 // eslint-disable-next-line import/no-mutable-exports

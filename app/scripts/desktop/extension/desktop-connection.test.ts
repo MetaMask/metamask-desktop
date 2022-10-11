@@ -8,8 +8,7 @@ import {
   CLIENT_ID_STATE,
   CLIENT_ID_DISABLE,
   MESSAGE_ACKNOWLEDGE,
-} from '../../../shared/constants/desktop';
-import DesktopConnection from './desktop-connection';
+} from '../../../../shared/constants/desktop';
 import {
   REMOTE_PORT_NAME_MOCK,
   REMOTE_PORT_SENDER_MOCK,
@@ -20,27 +19,28 @@ import {
   JSON_RPC_ID_MOCK,
   STREAM_MOCK,
   UUID_MOCK,
-} from './test/mocks';
+} from '../test/mocks';
 import {
   simulateStreamMessage,
   simulateNodeEvent,
   flushPromises,
-} from './test/utils';
-import { browser } from './browser/browser-polyfill';
-import { ConnectionType } from './types/background';
-import { ClientId } from './types/desktop';
+} from '../test/utils';
+import { browser } from '../browser/browser-polyfill';
+import { ConnectionType } from '../types/background';
+import { ClientId } from '../types/desktop';
+import DesktopConnection from './desktop-connection';
 
 jest.mock('obj-multiplex', () => jest.fn(), { virtual: true });
 jest.mock('extension-port-stream');
 jest.mock('uuid');
-jest.mock('../../../shared/modules/totp');
+jest.mock('../../../../shared/modules/totp');
 
 jest.mock('stream', () => ({ Duplex: jest.fn(), PassThrough: jest.fn() }), {
   virtual: true,
 });
 
 jest.mock(
-  './browser/browser-polyfill',
+  '../browser/browser-polyfill',
   () => ({
     browser: {
       storage: { local: { get: jest.fn(), set: jest.fn() } },

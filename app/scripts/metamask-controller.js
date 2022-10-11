@@ -157,7 +157,7 @@ import {
 } from './controllers/permissions';
 import createRPCMethodTrackingMiddleware from './lib/createRPCMethodTrackingMiddleware';
 ///: BEGIN:ONLY_INCLUDE_IN(flask)
-import cfg from './desktop/config';
+import cfg from './desktop/utils/config';
 import { checkSnapsBlockList } from './flask/snaps-utilities';
 import { SNAP_BLOCKLIST } from './flask/snaps-blocklist';
 import DesktopController from './controllers/desktop';

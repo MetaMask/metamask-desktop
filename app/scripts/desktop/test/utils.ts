@@ -1,5 +1,5 @@
 import { Duplex, EventEmitter } from 'stream';
-import { BrowserWebSocket, NodeWebSocket } from '../web-socket-stream';
+import { BrowserWebSocket, NodeWebSocket } from '../shared/web-socket-stream';
 
 export const flushPromises = (): Promise<void> =>
   new Promise((resolve) => setImmediate(resolve));

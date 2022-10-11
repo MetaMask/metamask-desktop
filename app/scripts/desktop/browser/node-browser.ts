@@ -1,6 +1,6 @@
 import { Duplex } from 'stream';
 import log from 'loglevel';
-import ObfuscatedStore from '../storage';
+import ObfuscatedStore from '../app/storage';
 import {
   Browser,
   BrowserProxyRequest,

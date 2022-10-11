@@ -1,8 +1,8 @@
 import { randomBytes } from 'crypto';
 import Store from 'electron-store';
 import keytar from 'keytar';
+import { DATA_2_MOCK, PASSWORD_MOCK, STORE_MOCK } from '../test/mocks';
 import ObfuscatedStore from './storage';
-import { DATA_2_MOCK, PASSWORD_MOCK, STORE_MOCK } from './test/mocks';
 
 jest.mock('electron-store', () => jest.fn(), { virtual: true });
 jest.mock('crypto', () => ({ randomBytes: jest.fn() }), { virtual: true });

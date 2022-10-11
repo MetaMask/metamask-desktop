@@ -1,13 +1,13 @@
-import * as totp from '../../../shared/modules/totp';
-import { DATA_MOCK, createStreamMock, OTP_MOCK } from './test/mocks';
-import { expectEventToFire, simulateStreamMessage } from './test/utils';
-import { browser } from './browser/browser-polyfill';
+import * as totp from '../../../../shared/modules/totp';
+import { DATA_MOCK, createStreamMock, OTP_MOCK } from '../test/mocks';
+import { expectEventToFire, simulateStreamMessage } from '../test/utils';
+import { browser } from '../browser/browser-polyfill';
 import { DesktopPairing, ExtensionPairing } from './pairing';
 
-jest.mock('../../../shared/modules/totp');
+jest.mock('../../../../shared/modules/totp');
 
 jest.mock(
-  './browser/browser-polyfill',
+  '../browser/browser-polyfill',
   () => ({
     browser: {
       storage: { local: { get: jest.fn(), set: jest.fn() } },

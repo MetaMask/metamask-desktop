@@ -1,4 +1,4 @@
-import cfg from '../../app/scripts/desktop/config';
+import cfg from '../../app/scripts/desktop/utils/config';
 import { browser } from '../../app/scripts/desktop/browser/browser-polyfill';
 
 export const isManifestV3 =

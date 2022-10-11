@@ -1,5 +1,5 @@
 import { ipcRenderer } from 'electron';
-import { NewConnectionMessage, StatusMessage } from './types/message';
+import { NewConnectionMessage, StatusMessage } from '../types/message';
 
 const generateConnectionsTable = (connections: NewConnectionMessage[]) => {
   return connections
