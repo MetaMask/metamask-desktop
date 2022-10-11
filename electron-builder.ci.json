@@ -1,8 +1,12 @@
 {
+  "afterSign": "development/desktop/electron/scripts/notarize.js",
   "appId": "consensys.metamask.desktop",
   "asar": false,
   "directories": {
     "output": "builds_desktop"
+  },
+  "dmg": {
+    "sign": false
   },
   "files": ["dist_desktop/**/*", "node_modules/**/*", "package.json"],
   "linux": {
@@ -14,10 +18,6 @@
       "provider": "github"
     }
   },
-  "dmg": {
-    "sign": false
-  },
-  "afterSign": "development/desktop/electron/scripts/notarize.js",
   "mac": {
     "icon": "app/build-types/desktop/images/icon.icns",
     "forceCodeSigning": true,
