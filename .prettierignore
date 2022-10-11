@@ -1,7 +1,9 @@
 node_modules/**
 lavamoat/**/policy.json
 dist/**
+dist_desktop/**
 builds/**
+builds_desktop/**
 test-*/**
 coverage/
 jest-coverage/
