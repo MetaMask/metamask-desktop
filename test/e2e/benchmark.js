@@ -21,7 +21,8 @@ async function measurePage(pageName) {
   let metrics;
   await withFixtures({ fixtures: 'imported-account' }, async ({ driver }) => {
     await driver.delay(tinyDelayMs);
-    await driver.navigate();await driver.navigate();
+    await driver.navigate();
+    await driver.navigate();
     await driver.fill('#password', 'correct horse battery staple');
     await driver.press('#password', driver.Key.ENTER);
     await driver.findElement('.selected-account__name');

@@ -21,7 +21,8 @@ describe('Test Snap manageState', function () {
         title: this.test.title,
       },
       async ({ driver }) => {
-        await driver.navigate();await driver.navigate();
+        await driver.navigate();
+        await driver.navigate();
 
         // enter pw into extension
         await driver.fill('#password', 'correct horse battery staple');

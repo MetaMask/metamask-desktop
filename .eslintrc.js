@@ -18,6 +18,8 @@ module.exports = {
     'dist_desktop/**/*',
     'node_modules/**/*',
     'jest-coverage/**/*',
+    'playwright/chrome/',
+    'playwright/playwright-report/',
   ],
   overrides: [
     /**

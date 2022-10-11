@@ -21,7 +21,8 @@
     ".storybook/**/*",
     "builds/**/*",
     "dist/**/*",
-    "node_modules/**"
+    "node_modules/**",
+    "playwright/chrome"
   ],
   "extends": "@tsconfig/node16/tsconfig.json",
   "paths": {

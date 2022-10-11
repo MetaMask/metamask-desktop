@@ -170,18 +170,19 @@ async function withFixtures(options, testSuite) {
     });
 
     // MMD
-    if (process.env.SELENIUM_BROWSER === 'no-run-for-now') {
-    // if (process.env.SELENIUM_BROWSER === 'chrome') {
-      const errors = await driver.checkBrowserForConsoleErrors(driver);
-      if (errors.length) {
-        const errorReports = errors.map((err) => err.message);
-        const errorMessage = `Errors found in browser console:\n${errorReports.join(
-          '\n',
-        )}`;
-        if (failOnConsoleError) {
-          throw new Error(errorMessage);
-        } else {
-          console.error(new Error(errorMessage));
+    if (process.env.RUN_WITH_DESKTOP !== 'true') {
+      if (process.env.SELENIUM_BROWSER === 'chrome') {
+        const errors = await driver.checkBrowserForConsoleErrors(driver);
+        if (errors.length) {
+          const errorReports = errors.map((err) => err.message);
+          const errorMessage = `Errors found in browser console:\n${errorReports.join(
+            '\n',
+          )}`;
+          if (failOnConsoleError) {
+            throw new Error(errorMessage);
+          } else {
+            console.error(new Error(errorMessage));
+          }
         }
       }
     }

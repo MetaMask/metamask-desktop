@@ -34,7 +34,8 @@ describe('Segment metrics', function () {
       },
       async ({ driver, mockServer }) => {
         const mockedEndpoints = await mockSegment(mockServer);
-        await driver.navigate();await driver.navigate();
+        await driver.navigate();
+        await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);
         await driver.wait(async () => {

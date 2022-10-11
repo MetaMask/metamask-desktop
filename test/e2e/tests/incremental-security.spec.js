@@ -28,7 +28,8 @@ describe('Incremental Security', function () {
         dappPath: 'send-eth-with-private-key-test',
       },
       async ({ driver }) => {
-        await driver.navigate();await driver.navigate();
+        await driver.navigate();
+        await driver.navigate();
         await driver.delay(tinyDelayMs);
 
         // clicks the continue button on the welcome screen
