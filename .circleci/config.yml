@@ -17,74 +17,15 @@ executors:
 workflows:
   test_and_release:
     jobs:
-      # - create_release_pull_request:
-      #     requires:
-      #       - prep-deps
-      #     filters:
-      #       branches:
-      #         only:
-      #           - /^Version-v(\d+)[.](\d+)[.](\d+)/
-      - prep-deps
-      # - test-deps-audit:
-      #     requires:
-      #       - prep-deps
-      # - test-deps-depcheck:
-      #     requires:
-      #       - prep-deps
-      # - test-yarn-dedupe:
-      #     requires:
-      #       - prep-deps
-      # - validate-lavamoat-config:
-      #     filters:
-      #       branches:
-      #         only:
-      #           - /^Version-v(\d+)[.](\d+)[.](\d+)|master/
-      #     requires:
-      #       - prep-deps
-      # - prep-build:
-      #     requires:
-      #       - prep-deps
-      # - prep-build-beta:
-      #     requires:
-      #       - prep-deps
-      # - prep-build-flask:
-      #     requires:
-      #       - prep-deps
-      # - prep-build-test:
-      #     requires:
-      #       - prep-deps
-      - prep-build-test-nolavamoat:
+      - create_release_pull_request:
           requires:
             - prep-deps
-      # - prep-build-test-mv3:
-      #     requires:
-      #       - prep-deps
-      # - prep-build-test-flask:
-      #     requires:
-      #       - prep-deps
-      # - test-storybook:
-      #     requires:
-      #       - prep-deps
-      # - prep-build-storybook:
-      #     requires:
-      #       - test-storybook
-      # - prep-build-ts-migration-dashboard:
-      #     requires:
-      #       - prep-deps
-      # - test-lint:
-      #     requires:
-      #       - prep-deps
-      # - test-lint-shellcheck
-      # - test-lint-lockfile:
-      #     requires:
-      #       - prep-deps
-      # - test-lint-changelog:
-      #     requires:
-      #       - prep-deps
-      # - test-e2e-chrome:
-      #     requires:
-      #       - prep-build-test
-      - test-e2e-desktop-chrome:
+          filters:
+            branches:
+              only:
+                - /^Version-v(\d+)[.](\d+)[.](\d+)/
+      - prep-deps
+      - test-deps-audit:
           requires:
             - prep-deps
       - test-yarn-dedupe:
@@ -109,6 +50,9 @@ workflows:
       - prep-build-test:
           requires:
             - prep-deps
+    #   - prep-build-test-nolavamoat:
+    #       requires:
+    #         - prep-deps
       - prep-build-test-mv3:
           requires:
             - prep-deps
@@ -137,6 +81,9 @@ workflows:
       - test-e2e-chrome:
           requires:
             - prep-build-test
+    #   - test-e2e-desktop-chrome:
+    #       requires:
+    #         - prep-build-test-nolavamoat        
       - test-e2e-firefox:
           requires:
             - prep-build-test
