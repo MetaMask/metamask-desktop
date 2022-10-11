@@ -1037,22 +1037,12 @@
         "3box>ipfs>err-code": true,
         "3box>ipfs>interface-datastore": true,
         "3box>ipfs>libp2p-crypto": true,
-        "3box>ipfs>libp2p-keychain>sanitize-filename": true,
         "3box>ipfs>merge-options": true,
         "3box>ipfs>pull-stream": true,
         "browserify>buffer": true,
+        "electron-builder>app-builder-lib>sanitize-filename": true,
         "gh-pages>async": true,
         "mockttp>node-forge": true
-      }
-    },
-    "3box>ipfs>libp2p-keychain>sanitize-filename": {
-      "packages": {
-        "3box>ipfs>libp2p-keychain>sanitize-filename>truncate-utf8-bytes": true
-      }
-    },
-    "3box>ipfs>libp2p-keychain>sanitize-filename>truncate-utf8-bytes": {
-      "packages": {
-        "3box>ipfs>libp2p-keychain>sanitize-filename>truncate-utf8-bytes>utf8-byte-length": true
       }
     },
     "3box>ipfs>libp2p-record": {
@@ -2189,6 +2179,29 @@
         "browserify>browser-resolve": true
       }
     },
+    "@babel/cli>@jridgewell/trace-mapping": {
+      "globals": {
+        "define": true
+      },
+      "packages": {
+        "@babel/cli>@jridgewell/trace-mapping>@jridgewell/resolve-uri": true,
+        "@babel/cli>@jridgewell/trace-mapping>@jridgewell/sourcemap-codec": true
+      }
+    },
+    "@babel/cli>@jridgewell/trace-mapping>@jridgewell/resolve-uri": {
+      "globals": {
+        "define": true
+      }
+    },
+    "@babel/cli>@jridgewell/trace-mapping>@jridgewell/sourcemap-codec": {
+      "globals": {
+        "TextDecoder": true,
+        "define": true
+      },
+      "packages": {
+        "browserify>buffer": true
+      }
+    },
     "@babel/code-frame": {
       "globals": {
         "console.warn": true
@@ -2227,8 +2240,8 @@
         "define": true
       },
       "packages": {
-        "@babel/core>@ampproject/remapping>@jridgewell/gen-mapping": true,
-        "terser>@jridgewell/source-map>@jridgewell/trace-mapping": true
+        "@babel/cli>@jridgewell/trace-mapping": true,
+        "@babel/core>@ampproject/remapping>@jridgewell/gen-mapping": true
       }
     },
     "@babel/core>@ampproject/remapping>@jridgewell/gen-mapping": {
@@ -2236,8 +2249,8 @@
         "define": true
       },
       "packages": {
-        "terser>@jridgewell/source-map>@jridgewell/gen-mapping>@jridgewell/set-array": true,
-        "terser>@jridgewell/source-map>@jridgewell/gen-mapping>@jridgewell/sourcemap-codec": true
+        "@babel/cli>@jridgewell/trace-mapping>@jridgewell/sourcemap-codec": true,
+        "terser>@jridgewell/source-map>@jridgewell/gen-mapping>@jridgewell/set-array": true
       }
     },
     "@babel/core>@babel/generator": {
@@ -3529,9 +3542,6 @@
       }
     },
     "@metamask/rpc-methods": {
-      "globals": {
-        "console.warn": true
-      },
       "packages": {
         "@metamask/rpc-methods>@metamask/controllers": true,
         "@metamask/rpc-methods>@metamask/key-tree": true,
@@ -4843,6 +4853,16 @@
         "ethjs-query>babel-runtime>core-js": true
       }
     },
+    "browserify>browserify-zlib": {
+      "packages": {
+        "browserify>assert": true,
+        "browserify>browserify-zlib>pako": true,
+        "browserify>buffer": true,
+        "browserify>process": true,
+        "browserify>stream-browserify": true,
+        "browserify>util": true
+      }
+    },
     "browserify>buffer": {
       "globals": {
         "console": true
@@ -5230,6 +5250,217 @@
         "crypto.getRandomValues": true
       }
     },
+    "eciesjs": {
+      "packages": {
+        "browserify>buffer": true,
+        "browserify>crypto-browserify": true,
+        "eciesjs>futoin-hkdf": true,
+        "eciesjs>secp256k1": true
+      }
+    },
+    "eciesjs>futoin-hkdf": {
+      "packages": {
+        "browserify>buffer": true,
+        "browserify>crypto-browserify": true
+      }
+    },
+    "eciesjs>secp256k1": {
+      "packages": {
+        "3box>ethers>elliptic": true
+      }
+    },
+    "electron": {
+      "packages": {
+        "browserify": true,
+        "browserify>path-browserify": true,
+        "browserify>process": true
+      }
+    },
+    "electron-builder>app-builder-lib>sanitize-filename": {
+      "packages": {
+        "electron-builder>app-builder-lib>sanitize-filename>truncate-utf8-bytes": true
+      }
+    },
+    "electron-builder>app-builder-lib>sanitize-filename>truncate-utf8-bytes": {
+      "packages": {
+        "electron-builder>app-builder-lib>sanitize-filename>truncate-utf8-bytes>utf8-byte-length": true
+      }
+    },
+    "electron-store": {
+      "packages": {
+        "browserify>path-browserify": true,
+        "electron": true,
+        "electron-store>conf": true
+      }
+    },
+    "electron-store>conf": {
+      "packages": {
+        "browserify": true,
+        "browserify>assert": true,
+        "browserify>buffer": true,
+        "browserify>crypto-browserify": true,
+        "browserify>events": true,
+        "browserify>path-browserify": true,
+        "browserify>process": true,
+        "browserify>util": true,
+        "electron-store>conf>ajv": true,
+        "electron-store>conf>ajv-formats": true,
+        "electron-store>conf>atomically": true,
+        "electron-store>conf>debounce-fn": true,
+        "electron-store>conf>dot-prop": true,
+        "electron-store>conf>onetime": true,
+        "electron-store>conf>pkg-up": true,
+        "electron>@electron/get>env-paths": true,
+        "semver": true
+      }
+    },
+    "electron-store>conf>ajv": {
+      "globals": {
+        "console": true
+      },
+      "packages": {
+        "electron-store>conf>ajv>json-schema-traverse": true,
+        "eslint>ajv>uri-js": true,
+        "eslint>fast-deep-equal": true
+      }
+    },
+    "electron-store>conf>ajv-formats": {
+      "packages": {
+        "electron-store>conf>ajv": true
+      }
+    },
+    "electron-store>conf>atomically": {
+      "globals": {
+        "clearInterval": true,
+        "setInterval": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "browserify": true,
+        "browserify>path-browserify": true,
+        "browserify>process": true,
+        "browserify>util": true
+      }
+    },
+    "electron-store>conf>debounce-fn": {
+      "globals": {
+        "clearTimeout": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "electron-store>conf>debounce-fn>mimic-fn": true
+      }
+    },
+    "electron-store>conf>dot-prop": {
+      "packages": {
+        "electron-store>conf>dot-prop>is-obj": true
+      }
+    },
+    "electron-store>conf>onetime": {
+      "packages": {
+        "addons-linter>os-locale>mem>mimic-fn": true
+      }
+    },
+    "electron-store>conf>pkg-up": {
+      "packages": {
+        "electron-store>conf>pkg-up>find-up": true
+      }
+    },
+    "electron-store>conf>pkg-up>find-up": {
+      "packages": {
+        "browserify>path-browserify": true,
+        "electron-store>conf>pkg-up>find-up>locate-path": true
+      }
+    },
+    "electron-store>conf>pkg-up>find-up>locate-path": {
+      "packages": {
+        "browserify>path-browserify": true,
+        "browserify>process": true,
+        "electron-store>conf>pkg-up>find-up>locate-path>p-locate": true,
+        "mocha>find-up>locate-path>path-exists": true
+      }
+    },
+    "electron-store>conf>pkg-up>find-up>locate-path>p-locate": {
+      "packages": {
+        "electron-store>conf>pkg-up>find-up>locate-path>p-locate>p-limit": true
+      }
+    },
+    "electron-store>conf>pkg-up>find-up>locate-path>p-locate>p-limit": {
+      "packages": {
+        "nyc>find-up>locate-path>p-locate>p-limit>p-try": true
+      }
+    },
+    "electron-updater": {
+      "globals": {
+        "Intl.NumberFormat": true,
+        "console": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "@truffle/codec>lodash.escaperegexp": true,
+        "browserify": true,
+        "browserify>browserify-zlib": true,
+        "browserify>buffer": true,
+        "browserify>crypto-browserify": true,
+        "browserify>events": true,
+        "browserify>os-browserify": true,
+        "browserify>path-browserify": true,
+        "browserify>process": true,
+        "browserify>stream-browserify": true,
+        "browserify>stream-http": true,
+        "browserify>timers-browserify": true,
+        "browserify>url": true,
+        "electron": true,
+        "electron-updater>builder-util-runtime": true,
+        "electron-updater>fs-extra": true,
+        "electron-updater>lazy-val": true,
+        "enzyme>lodash.isequal": true,
+        "eslint>js-yaml": true,
+        "semver": true
+      }
+    },
+    "electron-updater>builder-util-runtime": {
+      "packages": {
+        "browserify": true,
+        "browserify>buffer": true,
+        "browserify>crypto-browserify": true,
+        "browserify>events": true,
+        "browserify>process": true,
+        "browserify>stream-browserify": true,
+        "browserify>url": true,
+        "jsdom>sax": true,
+        "madge>debug": true
+      }
+    },
+    "electron-updater>fs-extra": {
+      "globals": {
+        "setTimeout": true
+      },
+      "packages": {
+        "browserify>assert": true,
+        "browserify>path-browserify": true,
+        "browserify>process": true,
+        "browserify>util": true,
+        "electron-updater>fs-extra>jsonfile": true,
+        "electron-updater>fs-extra>universalify": true,
+        "fs-extra>graceful-fs": true
+      }
+    },
+    "electron-updater>fs-extra>jsonfile": {
+      "packages": {
+        "browserify": true,
+        "browserify>insert-module-globals>is-buffer": true,
+        "electron-updater>fs-extra>universalify": true,
+        "fs-extra>graceful-fs": true
+      }
+    },
+    "electron>@electron/get>env-paths": {
+      "packages": {
+        "browserify>os-browserify": true,
+        "browserify>path-browserify": true,
+        "browserify>process": true
+      }
+    },
     "end-of-stream": {
       "packages": {
         "browserify>process": true,
@@ -5262,13 +5493,9 @@
         "string.prototype.matchall>call-bind": true
       }
     },
-    "enzyme>object-inspect": {
+    "eslint>ajv>uri-js": {
       "globals": {
-        "HTMLElement": true,
-        "WeakRef": true
-      },
-      "packages": {
-        "browserify>browser-resolve": true
+        "define": true
       }
     },
     "eslint>optionator>fast-levenshtein": {
@@ -7485,6 +7712,21 @@
         "fast-json-patch>fast-deep-equal": true
       }
     },
+    "fs-extra>graceful-fs": {
+      "globals": {
+        "clearTimeout": true,
+        "console.error": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "browserify": true,
+        "browserify>assert": true,
+        "browserify>constants-browserify": true,
+        "browserify>process": true,
+        "browserify>stream-browserify": true,
+        "browserify>util": true
+      }
+    },
     "fuse.js": {
       "globals": {
         "console": true,
@@ -7511,6 +7753,13 @@
     "globalthis>define-properties>has-property-descriptors": {
       "packages": {
         "string.prototype.matchall>get-intrinsic": true
+      }
+    },
+    "jsdom>sax": {
+      "packages": {
+        "browserify>buffer": true,
+        "browserify>stream-browserify": true,
+        "browserify>string_decoder": true
       }
     },
     "json-rpc-engine": {
@@ -7608,7 +7857,8 @@
         "define": true,
         "document.cookie": true,
         "localStorage": true,
-        "log": "write"
+        "log": "write",
+        "navigator": true
       }
     },
     "luxon": {
@@ -7632,6 +7882,11 @@
     "madge>rc>deep-extend": {
       "packages": {
         "browserify>buffer": true
+      }
+    },
+    "mocha>find-up>locate-path>path-exists": {
+      "packages": {
+        "browserify": true
       }
     },
     "mockttp>node-forge": {
@@ -7690,11 +7945,6 @@
         "string.prototype.matchall>side-channel": true
       }
     },
-    "nock>qs": {
-      "packages": {
-        "string.prototype.matchall>side-channel": true
-      }
-    },
     "node-fetch": {
       "globals": {
         "Headers": true,
@@ -7730,6 +7980,12 @@
         "end-of-stream": true,
         "pump>once": true,
         "readable-stream": true
+      }
+    },
+    "otpauth": {
+      "globals": {
+        "__GLOBALTHIS__": true,
+        "define": true
       }
     },
     "promise-to-callback": {
@@ -8335,35 +8591,12 @@
         "define": true
       },
       "packages": {
-        "terser>@jridgewell/source-map>@jridgewell/gen-mapping>@jridgewell/set-array": true,
-        "terser>@jridgewell/source-map>@jridgewell/gen-mapping>@jridgewell/sourcemap-codec": true,
-        "terser>@jridgewell/source-map>@jridgewell/trace-mapping": true
+        "@babel/cli>@jridgewell/trace-mapping": true,
+        "@babel/cli>@jridgewell/trace-mapping>@jridgewell/sourcemap-codec": true,
+        "terser>@jridgewell/source-map>@jridgewell/gen-mapping>@jridgewell/set-array": true
       }
     },
     "terser>@jridgewell/source-map>@jridgewell/gen-mapping>@jridgewell/set-array": {
-      "globals": {
-        "define": true
-      }
-    },
-    "terser>@jridgewell/source-map>@jridgewell/gen-mapping>@jridgewell/sourcemap-codec": {
-      "globals": {
-        "TextDecoder": true,
-        "define": true
-      },
-      "packages": {
-        "browserify>buffer": true
-      }
-    },
-    "terser>@jridgewell/source-map>@jridgewell/trace-mapping": {
-      "globals": {
-        "define": true
-      },
-      "packages": {
-        "terser>@jridgewell/source-map>@jridgewell/gen-mapping>@jridgewell/sourcemap-codec": true,
-        "terser>@jridgewell/source-map>@jridgewell/trace-mapping>@jridgewell/resolve-uri": true
-      }
-    },
-    "terser>@jridgewell/source-map>@jridgewell/trace-mapping>@jridgewell/resolve-uri": {
       "globals": {
         "define": true
       }
