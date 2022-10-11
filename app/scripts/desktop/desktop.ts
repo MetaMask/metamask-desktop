@@ -241,7 +241,9 @@ export default class Desktop {
     await trezorWindow.loadFile(path.resolve(__dirname, '../../trezor.html'));
 
     trezorWindow.webContents.setWindowOpenHandler((details) => ({
-      action: details.url.indexOf('connect.trezor.io') > 0 ? 'allow' : 'deny',
+      action: details.url.startsWith('https://connect.trezor.io/')
+        ? 'allow'
+        : 'deny',
     }));
 
     log.debug('Created trezor window');
