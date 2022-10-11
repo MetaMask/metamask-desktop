@@ -1,67 +1,72 @@
-import { ipcRenderer } from 'electron';
-import { buildChannelName } from './build-channel-name';
+import { contextBridge, ipcRenderer } from 'electron';
 
-// TrezorConnect is injected as inline script in html
-// therefore it doesn't need to included into node_modules
-// get reference straight from window object
-let TrezorConnect: any;
+const channelPrefix = 'trezor-connect';
+const responseSufix = 'response';
 
-const onLoad = () => {
-  ipcRenderer.on(buildChannelName('init'), (_, payload) => {
-    TrezorConnect.on('DEVICE_EVENT', (deviceEvent: any) => {
-      ipcRenderer.send(buildChannelName('on-device-event', true), deviceEvent);
-    });
-
-    TrezorConnect.init(payload).then((response: any) => {
-      ipcRenderer.send(buildChannelName('init', true), response);
-    });
-  });
-
-  ipcRenderer.on(buildChannelName('dispose'), () => {
-    TrezorConnect.dispose();
-  });
-
-  ipcRenderer.on(buildChannelName('getPublicKey'), (_, payload) => {
-    TrezorConnect.getPublicKey(payload).then((response: any) => {
-      ipcRenderer.send(buildChannelName('getPublicKey', true), response);
-    });
-  });
-
-  ipcRenderer.on(buildChannelName('ethereumSignTransaction'), (_, payload) => {
-    TrezorConnect.ethereumSignTransaction(payload).then((response: any) => {
-      ipcRenderer.send(
-        buildChannelName('ethereumSignTransaction', true),
-        response,
-      );
-    });
-  });
-
-  ipcRenderer.on(buildChannelName('ethereumSignMessage'), (_, payload) => {
-    TrezorConnect.ethereumSignMessage(payload).then((response: any) => {
-      ipcRenderer.send(buildChannelName('ethereumSignMessage', true), response);
-    });
-  });
-
-  ipcRenderer.on(buildChannelName('ethereumSignTypedData'), (_, payload) => {
-    TrezorConnect.ethereumSignTypedData(payload).then((response: any) => {
-      ipcRenderer.send(
-        buildChannelName('ethereumSignTypedData', true),
-        response,
-      );
-    });
-  });
+const buildChannelName = (identifier: string, isResponse = false) => {
+  return `${channelPrefix}-${identifier}${
+    isResponse ? `-${responseSufix}` : ''
+  }`;
 };
 
-const waitForTrezorConnect = (callback: () => void) => {
-  const interval = setInterval(() => {
-    if ((window as any).TrezorConnect) {
-      TrezorConnect = (window as any).TrezorConnect;
-      clearInterval(interval);
+contextBridge.exposeInMainWorld('trezorApi', {
+  initSetup: (callback: any) => {
+    ipcRenderer.on(buildChannelName('init'), (_, payload) => {
+      callback(payload);
+    });
+  },
+  initResponse: (response: any) => {
+    ipcRenderer.send(buildChannelName('init', true), response);
+  },
+  onDeviceEventResponse: (deviceEvent: any) => {
+    ipcRenderer.send(buildChannelName('on-device-event', true), deviceEvent);
+  },
+
+  disposeSetup: (callback: any) => {
+    ipcRenderer.on(buildChannelName('dispose'), () => {
       callback();
-    }
-  }, 200);
-};
+    });
+  },
 
-window.addEventListener('DOMContentLoaded', () => {
-  waitForTrezorConnect(onLoad);
+  getPublicKeySetup: (callback: any) => {
+    ipcRenderer.on(buildChannelName('getPublicKey'), (_, payload) => {
+      callback(payload);
+    });
+  },
+  getPublicKeyResponse: (response: any) => {
+    ipcRenderer.send(buildChannelName('getPublicKey', true), response);
+  },
+
+  ethereumSignTransactionSetup: (callback: any) => {
+    ipcRenderer.on(
+      buildChannelName('ethereumSignTransaction'),
+      (_, payload) => {
+        callback(payload);
+      },
+    );
+  },
+  ethereumSignTransactionResponse: (response: any) => {
+    ipcRenderer.send(
+      buildChannelName('ethereumSignTransaction', true),
+      response,
+    );
+  },
+
+  ethereumSignMessageSetup: (callback: any) => {
+    ipcRenderer.on(buildChannelName('ethereumSignMessage'), (_, payload) => {
+      callback(payload);
+    });
+  },
+  ethereumSignMessageResponse: (response: any) => {
+    ipcRenderer.send(buildChannelName('ethereumSignMessage', true), response);
+  },
+
+  ethereumSignTypedDataSetup: (callback: any) => {
+    ipcRenderer.on(buildChannelName('ethereumSignTypedData'), (_, payload) => {
+      callback(payload);
+    });
+  },
+  ethereumSignTypedDataResponse: (response: any) => {
+    ipcRenderer.send(buildChannelName('ethereumSignTypedData', true), response);
+  },
 });

@@ -2,7 +2,15 @@
 const { ipcMain } = require('electron');
 const TrezorKeyring = require('eth-trezor-keyring');
 const Desktop = require('../desktop').default;
-const { buildChannelName } = require('./build-channel-name');
+
+const channelPrefix = 'trezor-connect';
+const responseSufix = 'response';
+
+const buildChannelName = (identifier, isResponse = false) => {
+  return `${channelPrefix}-${identifier}${
+    isResponse ? `-${responseSufix}` : ''
+  }`;
+};
 
 function promisifyEvent(identifier, payload) {
   return new Promise((resolve, reject) => {
@@ -34,8 +42,8 @@ class TrezorKeyringElectron extends TrezorKeyring {
         if (event === 'DEVICE_EVENT') {
           ipcMain.on(
             buildChannelName('on-device-event', true),
-            (_, message) => {
-              callback(message);
+            (_, deviceEvent) => {
+              callback(deviceEvent);
             },
           );
         }

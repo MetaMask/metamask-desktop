@@ -234,8 +234,6 @@ export default class Desktop {
     const trezorWindow = new BrowserWindow({
       show: false,
       webPreferences: {
-        contextIsolation: false,
-        sandbox: false,
         preload: path.resolve(__dirname, './trezor/trezor-preload.js'),
       },
     });
