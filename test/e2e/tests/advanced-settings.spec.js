@@ -22,6 +22,7 @@ describe('Advanced Settings', function () {
       },
       async ({ driver }) => {
         await driver.navigate();
+        await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);
 
@@ -58,6 +59,7 @@ describe('Advanced Settings', function () {
         title: this.test.title,
       },
       async ({ driver }) => {
+        await driver.navigate();
         await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);

@@ -34,6 +34,7 @@ describe('Sentry errors', function () {
       async ({ driver, mockServer }) => {
         const mockedEndpoint = await mockSegment(mockServer);
         await driver.navigate();
+        await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);
         // Trigger error

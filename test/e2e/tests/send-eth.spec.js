@@ -19,7 +19,7 @@ describe('Send ETH from inside MetaMask using default gas', function () {
         title: this.test.title,
       },
       async ({ driver }) => {
-        await driver.navigate();
+        await driver.navigate();await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);
 
@@ -110,7 +110,7 @@ describe('Send ETH non-contract address with data that matches ERC20 transfer da
         title: this.test.title,
       },
       async ({ driver }) => {
-        await driver.navigate();
+        await driver.navigate();await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);
 
@@ -159,7 +159,7 @@ describe('Send ETH from inside MetaMask using advanced gas modal', function () {
         title: this.test.title,
       },
       async ({ driver }) => {
-        await driver.navigate();
+        await driver.navigate();await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);
 
@@ -226,7 +226,7 @@ describe('Send ETH from dapp using advanced gas controls', function () {
         title: this.test.title,
       },
       async ({ driver }) => {
-        await driver.navigate();
+        await driver.navigate();await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);
 

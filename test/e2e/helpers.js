@@ -58,52 +58,6 @@ async function withFixtures(options, testSuite) {
   );
   cp.spawn('kill -9 `lsof -t -i:7071`', { shell: true });
 
-  await fixtureServer.start();
-
-  // Load state in electron app => copy state.json to config.json in electron
-  // eslint-disable-next-line no-implicit-globals
-  if (process.env.RUN_WITH_DESKTOP === 'true') {
-    if (process.env.CI === 'true') {
-      console.info(
-        `UBUNTU_ELECTRON_CONFIG_FILE_PATH: ${process.env.UBUNTU_ELECTRON_CONFIG_FILE_PATH}`,
-      );
-      // await fs.unlink(process.env.UBUNTU_ELECTRON_CONFIG_FILE_PATH);
-      await fixtureServer.loadStateDesktop(
-        path.join(__dirname, 'fixtures', fixtures),
-        process.env.UBUNTU_ELECTRON_CONFIG_FILE_PATH,
-      );
-    } else {
-      console.info(
-        `LOCAL_ELECTRON_CONFIG_FILE_PATH: ${process.env.LOCAL_ELECTRON_CONFIG_FILE_PATH}`,
-      );
-      // await fs.unlink(process.env.LOCAL_ELECTRON_CONFIG_FILE_PATH);
-      await fixtureServer.loadStateDesktop(
-        path.join(__dirname, 'fixtures', fixtures),
-        process.env.LOCAL_ELECTRON_CONFIG_FILE_PATH,
-      );
-      // await fs.copyFile(statePath, process.env.LOCAL_ELECTRON_CONFIG_FILE_PATH);
-    }
-  }
-
-  let desktop;
-  if (process.env.RUN_WITH_DESKTOP === 'true') {
-    if (process.env.CI === 'true') {
-      console.info('Open MM Desktop App on CI');
-      desktop = cp.spawn('xvfb-run -a yarn start:desktop', { shell: true });
-    } else {
-      console.info('Open MM Desktop App');
-      desktop = cp.spawn('yarn start:desktop', { shell: true });
-    }
-    desktop.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`);
-    });
-    desktop.stderr.on('data', (data) => {
-      console.error(`stderr: ${data}`);
-    });
-  }
-  // Wait 5 secs to let desktop initialise
-  await delay(5000);
-
   const https = await mockttp.generateCACertificate();
   const mockServer = mockttp.getLocal({ https, cors: true });
   let secondaryGanacheServer;
@@ -113,6 +67,7 @@ async function withFixtures(options, testSuite) {
 
   let webDriver;
   let failed = false;
+  let desktop;
   try {
     await ganacheServer.start(ganacheOptions);
     let contractRegistry;
@@ -133,6 +88,39 @@ async function withFixtures(options, testSuite) {
         vmErrorsOnRPCResponse: false,
       });
     }
+
+    await fixtureServer.start();
+
+    // Load state in electron app => copy state.json to config.json in electron
+    if (process.env.RUN_WITH_DESKTOP === 'true') {
+      const electronPath =
+        process.env.CI === 'true'
+          ? process.env.UBUNTU_ELECTRON_CONFIG_FILE_PATH
+          : process.env.LOCAL_ELECTRON_CONFIG_FILE_PATH;
+      console.info(`ELECTRON_CONFIG_FILE_PATH: ${electronPath}`);
+      await fixtureServer.loadStateDesktop(
+        path.join(__dirname, 'fixtures', fixtures),
+        electronPath,
+      );
+    }
+
+    if (process.env.RUN_WITH_DESKTOP === 'true') {
+      if (process.env.CI === 'true') {
+        console.info('Open MM Desktop App on CI');
+        desktop = cp.spawn('xvfb-run -a yarn start:desktop', { shell: true });
+      } else {
+        console.info('Open MM Desktop App');
+        desktop = cp.spawn('yarn start:desktop', { shell: true });
+      }
+      desktop.stdout.on('data', (data) => {
+        console.log(`stdout: ${data}`);
+      });
+      desktop.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+      });
+    }
+    // Wait 5 secs to let desktop initialise
+    await delay(5000);
 
     await fixtureServer.loadState(path.join(__dirname, 'fixtures', fixtures));
 
@@ -181,7 +169,9 @@ async function withFixtures(options, testSuite) {
       contractRegistry,
     });
 
-    if (process.env.SELENIUM_BROWSER === 'chrome') {
+    // MMD
+    if (process.env.SELENIUM_BROWSER === 'no-run-for-now') {
+    // if (process.env.SELENIUM_BROWSER === 'chrome') {
       const errors = await driver.checkBrowserForConsoleErrors(driver);
       if (errors.length) {
         const errorReports = errors.map((err) => err.message);
@@ -362,6 +352,35 @@ const completeImportSRPOnboardingFlow = async (
   }
 };
 
+const completeImportSRPOnboardingFlowDesktop = async (
+  driver,
+  seedPhrase,
+  password,
+) => {
+  await driver.clickElement({ text: 'I accept the risk', tag: 'button' });
+  await driver.clickElement({ text: 'Import wallet', tag: 'button' });
+
+  // Import Secret Recovery Phrase
+  await driver.pasteIntoField(
+    '[data-testid="import-srp__srp-word-0"]',
+    seedPhrase,
+  );
+
+  await driver.fill('#password', password);
+  await driver.fill('#confirm-password', password);
+
+  await driver.clickElement('[data-testid="create-new-vault__terms-checkbox"]');
+
+  await driver.clickElement({ text: 'Import', tag: 'button' });
+
+  // clicks through the success screen
+  await driver.findElement({ text: 'Congratulations', tag: 'div' });
+  await driver.clickElement({
+    text: enLocaleMessages.endOfFlowMessage10.message,
+    tag: 'button',
+  });
+};
+
 const completeImportSRPOnboardingFlowWordByWord = async (
   driver,
   seedPhrase,
@@ -413,6 +432,7 @@ module.exports = {
   withFixtures,
   connectDappWithExtensionPopup,
   completeImportSRPOnboardingFlow,
+  completeImportSRPOnboardingFlowDesktop,
   completeImportSRPOnboardingFlowWordByWord,
   createDownloadFolder,
 };

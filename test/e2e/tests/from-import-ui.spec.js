@@ -33,7 +33,7 @@ describe('MetaMask Import UI', function () {
         failOnConsoleError: false,
       },
       async ({ driver }) => {
-        await driver.navigate();
+        await driver.navigate();await driver.navigate();
 
         await completeImportSRPOnboardingFlow(
           driver,
@@ -151,7 +151,7 @@ describe('MetaMask Import UI', function () {
         failOnConsoleError: false,
       },
       async ({ driver }) => {
-        await driver.navigate();
+        await driver.navigate();await driver.navigate();
 
         await completeImportSRPOnboardingFlowWordByWord(
           driver,
@@ -197,7 +197,7 @@ describe('MetaMask Import UI', function () {
         title: this.test.title,
       },
       async ({ driver }) => {
-        await driver.navigate();
+        await driver.navigate();await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);
 
@@ -300,7 +300,7 @@ describe('MetaMask Import UI', function () {
         title: this.test.title,
       },
       async ({ driver }) => {
-        await driver.navigate();
+        await driver.navigate();await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);
 
@@ -373,7 +373,7 @@ describe('MetaMask Import UI', function () {
         title: this.test.title,
       },
       async ({ driver }) => {
-        await driver.navigate();
+        await driver.navigate();await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);
 
@@ -412,7 +412,7 @@ describe('MetaMask Import UI', function () {
         title: this.test.title,
       },
       async ({ driver }) => {
-        await driver.navigate();
+        await driver.navigate();await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);
 

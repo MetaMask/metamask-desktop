@@ -110,7 +110,7 @@ class FixtureServer {
       }
       state = performStateSubstitutions(rawState);
       this._initialStateCache.set(statePath, state);
-      fs.writeFile(desktopConfigPath, JSON.stringify(state, null, 2));
+      await fs.writeFile(desktopConfigPath, JSON.stringify(state, null, 2));
     }
 
     this._stateMap.set(CURRENT_STATE_KEY, state);

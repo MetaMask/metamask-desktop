@@ -26,6 +26,7 @@ describe('Collectibles', function () {
       async ({ driver, _, contractRegistry }) => {
         const contract = contractRegistry.getContractAddress(smartContract);
         await driver.navigate();
+        await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);
 
@@ -77,6 +78,7 @@ describe('Collectibles', function () {
       },
       async ({ driver, _, contractRegistry }) => {
         const contract = contractRegistry.getContractAddress(smartContract);
+        await driver.navigate();
         await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);
@@ -142,6 +144,7 @@ describe('Collectibles', function () {
       },
       async ({ driver, _, contractRegistry }) => {
         const contract = contractRegistry.getContractAddress(smartContract);
+        await driver.navigate();
         await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);

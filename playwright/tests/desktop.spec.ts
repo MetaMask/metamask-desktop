@@ -52,9 +52,6 @@ test.describe('Desktop send', () => {
     await networkPage.open();
     await networkPage.selectNetwork('Goerli Test Network');
 
-    // const mainMenuPage = new MMIMainMenuPage(page);
-    // await mainMenuPage.closeSettings();
-
     await initialPage.hasFunds();
     await initialPage.selectMainAction('Send');
     await initialPage.cancelSend();

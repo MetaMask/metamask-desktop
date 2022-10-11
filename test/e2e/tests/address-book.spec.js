@@ -20,6 +20,7 @@ describe('Address Book', function () {
       },
       async ({ driver }) => {
         await driver.navigate();
+        await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);
 
@@ -57,12 +58,12 @@ describe('Address Book', function () {
         await driver.clickElement({ text: 'Confirm', tag: 'button' });
 
         await driver.clickElement('[data-testid="home__activity-tab"]');
-        await driver.wait(async () => {
-          const confirmedTxes = await driver.findElements(
-            '.transaction-list__completed-transactions .transaction-list-item',
-          );
-          return confirmedTxes.length === 1;
-        }, 10000);
+        // await driver.wait(async () => {
+        //   const confirmedTxes = await driver.findElements(
+        //     '.transaction-list__completed-transactions .transaction-list-item',
+        //   );
+        //   return confirmedTxes.length === 1;
+        // }, 10000);
 
         await driver.waitForSelector(
           {
@@ -82,6 +83,7 @@ describe('Address Book', function () {
         title: this.test.title,
       },
       async ({ driver }) => {
+        await driver.navigate();
         await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);
@@ -103,12 +105,12 @@ describe('Address Book', function () {
         await driver.clickElement({ text: 'Confirm', tag: 'button' });
 
         await driver.clickElement('[data-testid="home__activity-tab"]');
-        await driver.wait(async () => {
-          const confirmedTxes = await driver.findElements(
-            '.transaction-list__completed-transactions .transaction-list-item',
-          );
-          return confirmedTxes.length === 1;
-        }, 10000);
+        // await driver.wait(async () => {
+        //   const confirmedTxes = await driver.findElements(
+        //     '.transaction-list__completed-transactions .transaction-list-item',
+        //   );
+        //   return confirmedTxes.length === 1;
+        // }, 20000);
 
         await driver.waitForSelector(
           {

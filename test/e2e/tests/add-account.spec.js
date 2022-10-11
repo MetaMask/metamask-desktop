@@ -3,7 +3,7 @@ const {
   convertToHexValue,
   withFixtures,
   regularDelayMs,
-  completeImportSRPOnboardingFlow,
+  completeImportSRPOnboardingFlowDesktop,
 } = require('../helpers');
 const enLocaleMessages = require('../../../app/_locales/en/messages.json');
 
@@ -29,6 +29,7 @@ describe('Add account', function () {
         title: this.test.title,
       },
       async ({ driver }) => {
+        await driver.navigate();
         await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);
@@ -57,8 +58,10 @@ describe('Add account', function () {
       },
       async ({ driver }) => {
         await driver.navigate();
+        await driver.navigate();
 
-        await completeImportSRPOnboardingFlow(
+        // MMD
+        await completeImportSRPOnboardingFlowDesktop(
           driver,
           testSeedPhrase,
           testPassword,
@@ -210,6 +213,7 @@ describe('Add account', function () {
         title: this.test.title,
       },
       async ({ driver }) => {
+        await driver.navigate();
         await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);

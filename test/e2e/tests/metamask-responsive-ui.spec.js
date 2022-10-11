@@ -14,7 +14,7 @@ describe('MetaMask Responsive UI', function () {
         failOnConsoleError: false,
       },
       async ({ driver }) => {
-        await driver.navigate();
+        await driver.navigate();await driver.navigate();
 
         async function clickWordAndWait(word) {
           await driver.clickElement(
@@ -160,7 +160,7 @@ describe('MetaMask Responsive UI', function () {
         failOnConsoleError: false,
       },
       async ({ driver }) => {
-        await driver.navigate();
+        await driver.navigate();await driver.navigate();
 
         // Import Secret Recovery Phrase
         const restoreSeedLink = await driver.findClickableElement(
@@ -206,7 +206,7 @@ describe('MetaMask Responsive UI', function () {
         title: this.test.title,
       },
       async ({ driver }) => {
-        await driver.navigate();
+        await driver.navigate();await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);
 

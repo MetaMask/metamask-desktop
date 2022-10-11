@@ -2,6 +2,11 @@
 
 This test is added to help debug the desktop / extension integration in its early stage. It aims to replicate the initial connection of the extension to desktop as it is been done manually until now.
 
+Test with extension generated with:
+```
+yarn build:desktop:extension
+```
+
 ### Steps to run:
 
 1. Install dependencies

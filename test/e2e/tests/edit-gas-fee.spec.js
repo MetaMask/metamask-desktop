@@ -26,6 +26,7 @@ describe('Editing Confirm Transaction', function () {
       },
       async ({ driver }) => {
         await driver.navigate();
+        await driver.navigate();
 
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);
@@ -104,7 +105,7 @@ describe('Editing Confirm Transaction', function () {
       },
       async ({ driver }) => {
         await driver.navigate();
-
+        await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);
 
@@ -188,7 +189,7 @@ describe('Editing Confirm Transaction', function () {
       },
       async ({ driver }) => {
         await driver.navigate();
-
+        await driver.navigate();
         // login to extension
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);
