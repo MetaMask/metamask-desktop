@@ -3409,9 +3409,9 @@
         "fancy-log": true,
         "gulp-livereload>chalk": true,
         "gulp-livereload>debug": true,
-        "gulp-livereload>event-stream": true,
         "gulp-livereload>lodash.assign": true,
-        "gulp-livereload>tiny-lr": true
+        "gulp-livereload>tiny-lr": true,
+        "ps-tree>event-stream": true
       }
     },
     "gulp-livereload>chalk": {
@@ -3460,62 +3460,6 @@
       "packages": {
         "analytics-node>ms": true,
         "gulp-livereload>chalk>supports-color": true
-      }
-    },
-    "gulp-livereload>event-stream": {
-      "builtin": {
-        "buffer.Buffer.isBuffer": true,
-        "stream.Stream": true
-      },
-      "globals": {
-        "Buffer.concat": true,
-        "Buffer.isBuffer": true,
-        "console.error": true,
-        "process.nextTick": true,
-        "setImmediate": true
-      },
-      "packages": {
-        "debounce-stream>duplexer": true,
-        "debounce-stream>through": true,
-        "gulp-livereload>event-stream>from": true,
-        "gulp-livereload>event-stream>map-stream": true,
-        "gulp-livereload>event-stream>pause-stream": true,
-        "gulp-livereload>event-stream>split": true,
-        "gulp-livereload>event-stream>stream-combiner": true
-      }
-    },
-    "gulp-livereload>event-stream>from": {
-      "builtin": {
-        "stream": true
-      },
-      "globals": {
-        "process.nextTick": true
-      }
-    },
-    "gulp-livereload>event-stream>map-stream": {
-      "builtin": {
-        "stream.Stream": true
-      },
-      "globals": {
-        "process.nextTick": true
-      }
-    },
-    "gulp-livereload>event-stream>pause-stream": {
-      "packages": {
-        "debounce-stream>through": true
-      }
-    },
-    "gulp-livereload>event-stream>split": {
-      "builtin": {
-        "string_decoder.StringDecoder": true
-      },
-      "packages": {
-        "debounce-stream>through": true
-      }
-    },
-    "gulp-livereload>event-stream>stream-combiner": {
-      "packages": {
-        "debounce-stream>duplexer": true
       }
     },
     "gulp-livereload>tiny-lr": {
@@ -5968,6 +5912,62 @@
       "globals": {
         "console": true,
         "process.env.NODE_ENV": true
+      }
+    },
+    "ps-tree>event-stream": {
+      "builtin": {
+        "buffer.Buffer.isBuffer": true,
+        "stream.Stream": true
+      },
+      "globals": {
+        "Buffer.concat": true,
+        "Buffer.isBuffer": true,
+        "console.error": true,
+        "process.nextTick": true,
+        "setImmediate": true
+      },
+      "packages": {
+        "debounce-stream>duplexer": true,
+        "debounce-stream>through": true,
+        "ps-tree>event-stream>from": true,
+        "ps-tree>event-stream>map-stream": true,
+        "ps-tree>event-stream>pause-stream": true,
+        "ps-tree>event-stream>split": true,
+        "ps-tree>event-stream>stream-combiner": true
+      }
+    },
+    "ps-tree>event-stream>from": {
+      "builtin": {
+        "stream": true
+      },
+      "globals": {
+        "process.nextTick": true
+      }
+    },
+    "ps-tree>event-stream>map-stream": {
+      "builtin": {
+        "stream.Stream": true
+      },
+      "globals": {
+        "process.nextTick": true
+      }
+    },
+    "ps-tree>event-stream>pause-stream": {
+      "packages": {
+        "debounce-stream>through": true
+      }
+    },
+    "ps-tree>event-stream>split": {
+      "builtin": {
+        "string_decoder.StringDecoder": true
+      },
+      "packages": {
+        "debounce-stream>through": true
+      }
+    },
+    "ps-tree>event-stream>stream-combiner": {
+      "packages": {
+        "debounce-stream>duplexer": true
       }
     },
     "pump": {
