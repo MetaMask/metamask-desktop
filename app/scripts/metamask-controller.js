@@ -1142,15 +1142,6 @@ export default class MetamaskController extends EventEmitter {
     this.extension.runtime.onMessageExternal.addListener(onMessageReceived);
     // Fire a ping message to check if other extensions are running
     checkForMultipleVersionsRunning();
-
-    this._desktopPairingOtp =
-      opts.initState?.PreferencesController?.desktopPairingOtp;
-
-    this.setOtpPairing = opts.setOtpPairing;
-
-    this._onDesktopGenerateOtp = opts.onDesktopGenerateOtp;
-
-    this._generateOtp = opts.generateOtp;
   }
 
   ///: BEGIN:ONLY_INCLUDE_IN(flask)
@@ -2041,8 +2032,7 @@ export default class MetamaskController extends EventEmitter {
       setDesktopEnabled:
         desktopController.setDesktopEnabled.bind(desktopController),
       setIsPairing: desktopController.setIsPairing.bind(desktopController),
-      setOtpPairing: desktopController.setOtpPairing.bind(desktopController),
-      generateOtp: this.generateOtp.bind(this),
+      generateOtp: desktopController.generateOtp.bind(this),
       testDesktopConnection:
         desktopController.testDesktopConnection.bind(desktopController),
     };
@@ -2122,12 +2112,6 @@ export default class MetamaskController extends EventEmitter {
         throw error;
       }
     }
-  }
-
-  async generateOtp() {
-    this.emit('generate-otp', (otp) => {
-      this.desktopController.setOtpPairing(otp);
-    });
   }
 
   async addCustomNetwork(customRpc) {
@@ -4062,14 +4046,6 @@ export default class MetamaskController extends EventEmitter {
       method: NOTIFICATION_NAMES.chainChanged,
       params: this.getProviderNetworkState(newState),
     });
-
-    if (
-      this.setOtpPairing &&
-      newState.desktopPairingOtp !== this._desktopPairingOtp
-    ) {
-      this._desktopPairingOtp = newState.desktopPairingOtp;
-      this.setOtpPairing(this._desktopPairingOtp);
-    }
   }
 
   // misc

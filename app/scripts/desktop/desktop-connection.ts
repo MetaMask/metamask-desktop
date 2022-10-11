@@ -14,7 +14,6 @@ import {
   CLIENT_ID_PAIRING,
   MESSAGE_ACKNOWLEDGE,
 } from '../../../shared/constants/desktop';
-import { validate } from '../../../shared/modules/totp';
 import { browser } from './browser/browser-polyfill';
 import {
   ConnectionType,
@@ -26,7 +25,8 @@ import { ClientId } from './types/desktop';
 import { registerResponseStream } from './browser/browser-proxy';
 import { uuid } from './utils/utils';
 import { waitForMessage } from './utils/stream';
-import { PairingMessage } from './types/message';
+import { ExtensionPairing } from './pairing';
+import * as RawState from './utils/raw-state';
 
 export default class DesktopConnection extends EventEmitter {
   private stream: Duplex;
@@ -41,11 +41,9 @@ export default class DesktopConnection extends EventEmitter {
 
   private disableStream: Duplex;
 
-  private pairingStream: Duplex;
-
   private versionStream: Duplex;
 
-  public constructor(stream: Duplex, _: EventEmitter) {
+  public constructor(stream: Duplex) {
     super();
 
     this.stream = stream;
@@ -67,10 +65,8 @@ export default class DesktopConnection extends EventEmitter {
     this.disableStream = this.multiplex.createStream(CLIENT_ID_DISABLE);
     this.disableStream.on('data', (data: State) => this.onDisable(data));
 
-    this.pairingStream = this.multiplex.createStream(CLIENT_ID_PAIRING);
-    this.pairingStream.on('data', (data: PairingMessage) =>
-      data?.isPaired ? this.restart() : this.onPairing(data),
-    );
+    const pairingStream = this.multiplex.createStream(CLIENT_ID_PAIRING);
+    new ExtensionPairing(pairingStream, () => this.transferState()).init();
 
     this.versionStream = this.multiplex.createStream(CLIENT_ID_VERSION);
 
@@ -121,11 +117,11 @@ export default class DesktopConnection extends EventEmitter {
   }
 
   public async transferState() {
-    const state = await browser.storage.local.get();
-    state.data.DesktopController.desktopEnabled = true;
-    state.data.DesktopController.isPairing = false;
+    const stateToTransfer = await RawState.getAndUpdateDesktopState({
+      desktopEnabled: true,
+    });
 
-    this.stateStream.write(state);
+    this.stateStream.write(stateToTransfer);
 
     await waitForMessage(this.stateStream, (data) =>
       Promise.resolve(data === MESSAGE_ACKNOWLEDGE),
@@ -150,7 +146,7 @@ export default class DesktopConnection extends EventEmitter {
   private async onDisable(state: State) {
     log.debug('Received desktop disable message');
 
-    await browser.storage.local.set(state);
+    await RawState.set(state);
     log.debug('Synchronised state with desktop');
 
     this.disableStream?.write({});
@@ -177,7 +173,8 @@ export default class DesktopConnection extends EventEmitter {
       return;
     }
 
-    await browser.storage.local.set(rawState);
+    await RawState.set(rawState);
+
     log.debug('Synchronised state with desktop');
   }
 
@@ -195,32 +192,6 @@ export default class DesktopConnection extends EventEmitter {
         data: { jsonrpc: '2.0', result: true, id },
       });
     }
-  }
-
-  private async onPairing(pairingMessage: PairingMessage) {
-    log.debug('Received desktop pairing message');
-
-    if (validate(pairingMessage?.otp)) {
-      await this.updateStateAfterPairing();
-
-      await this.transferState();
-      log.debug('Synchronised state with desktop');
-
-      this.restart();
-    } else {
-      log.debug('OTP is not valid, sending acknowledged to desktop');
-      this.pairingStream?.write({ ...pairingMessage, isPaired: false });
-    }
-  }
-
-  private async updateStateAfterPairing() {
-    const state = await browser.storage.local.get();
-    state.data.DesktopController.desktopEnabled = true;
-    state.data.DesktopController.isPairing = false;
-
-    await browser.storage.local.set(state);
-
-    log.debug('State updated after pairing');
   }
 
   private sendNewConnectionMessage(
@@ -250,11 +221,7 @@ export default class DesktopConnection extends EventEmitter {
   private async disable() {
     log.debug('Disabling desktop app');
 
-    const rawState = await browser.storage.local.get();
-    rawState.data.DesktopController.desktopEnabled = false;
-    rawState.data.DesktopController.isPairing = false;
-
-    await browser.storage.local.set(rawState);
+    await RawState.setDesktopState({ desktopEnabled: false, isPairing: false });
 
     this.restart();
   }

@@ -10,7 +10,7 @@ import EncryptedWebSocketStream from './encrypted-web-socket-stream';
 import { NewConnectionMessage, StatusMessage } from './types/message';
 import ExtensionConnection from './extension-connection';
 import { onceAny, bubbleEvents } from './utils/events';
-import { browser } from './browser/browser-polyfill';
+import * as RawState from './utils/raw-state';
 
 export default class Desktop extends EventEmitter {
   private static instance: Desktop;
@@ -67,7 +67,9 @@ export default class Desktop extends EventEmitter {
   public async init() {
     await app.whenReady();
 
-    ipcMain.handle('otp', (_event, data) => this.background.emit('otp', data));
+    ipcMain.handle('otp', (_, data) =>
+      this.extensionConnection?.getPairing().submitOTP(data),
+    );
 
     ipcMain.handle('popup', (_event) => {
       log.debug('Show popup not implemented');
@@ -80,9 +82,7 @@ export default class Desktop extends EventEmitter {
     const server = await this.createWebSocketServer();
     server.on('connection', (webSocket) => this.onConnection(webSocket));
 
-    const state = await browser.storage.local.get();
-    this.status.isPaired =
-      state.data?.DesktopController?.desktopEnabled === true;
+    this.status.isPaired = (await RawState.getDesktopState()).desktopEnabled;
 
     log.debug('Initialised desktop app');
 
@@ -122,6 +122,10 @@ export default class Desktop extends EventEmitter {
 
     extensionConnection.on('paired', () => {
       this.status.isPaired = true;
+    });
+
+    extensionConnection.getPairing().on('invalid-otp', () => {
+      this.statusWindow?.webContents.send('invalid-otp', false);
     });
 
     bubbleEvents(extensionConnection, this, [

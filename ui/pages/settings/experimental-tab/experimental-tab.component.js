@@ -31,7 +31,6 @@ export default class ExperimentalTab extends PureComponent {
     setDesktopEnabled: PropTypes.func,
     setIsPairing: PropTypes.func,
     history: PropTypes.object,
-    generateOtp: PropTypes.func,
     testDesktopConnection: PropTypes.func,
     showLoader: PropTypes.func,
     hideLoader: PropTypes.func,
@@ -247,7 +246,6 @@ export default class ExperimentalTab extends PureComponent {
       desktopEnabled,
       setDesktopEnabled,
       setIsPairing,
-      generateOtp,
       testDesktopConnection,
       history,
       showLoader,
@@ -276,7 +274,6 @@ export default class ExperimentalTab extends PureComponent {
 
     history.push(DESKTOP_PAIRING_ROUTE);
     setIsPairing(true);
-    generateOtp();
   }
 
   renderDesktopPairingButton() {

@@ -8,7 +8,6 @@ import {
   setCustomNetworkListEnabled,
   setDesktopEnabled,
   setIsPairing,
-  generateOtp,
   testDesktopConnection,
   hideLoadingIndication,
   showLoadingIndication,
@@ -20,7 +19,6 @@ import {
   getIsCustomNetworkListEnabled,
   getIsDesktopEnabled,
   getIsPairing,
-  getDesktopPairingOtp,
 } from '../../../selectors';
 import ExperimentalTab from './experimental-tab.component';
 
@@ -32,7 +30,6 @@ const mapStateToProps = (state) => {
     customNetworkListEnabled: getIsCustomNetworkListEnabled(state),
     desktopEnabled: getIsDesktopEnabled(state),
     isPairing: getIsPairing(state),
-    otp: getDesktopPairingOtp(state),
   };
 };
 
@@ -46,7 +43,6 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(setCustomNetworkListEnabled(val)),
     setDesktopEnabled: (val) => dispatch(setDesktopEnabled(val)),
     setIsPairing: (val) => dispatch(setIsPairing(val)),
-    generateOtp: () => dispatch(generateOtp()),
     testDesktopConnection: () => testDesktopConnection(),
     showLoader: () => dispatch(showLoadingIndication()),
     hideLoader: () => dispatch(hideLoadingIndication()),

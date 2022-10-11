@@ -103,10 +103,7 @@ class DesktopManager {
 
     await webSocketStream.init({ startHandshake: true });
 
-    const connection = new DesktopConnection(
-      webSocketStream,
-      this.background as any,
-    );
+    const connection = new DesktopConnection(webSocketStream);
 
     webSocket.addEventListener('close', () =>
       this.onDisconnect(webSocket, webSocketStream, connection),
