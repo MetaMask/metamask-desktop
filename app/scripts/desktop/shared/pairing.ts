@@ -1,10 +1,10 @@
 import { Duplex } from 'stream';
 import EventEmitter from 'events';
 import log from 'loglevel';
-import * as totp from '../../../shared/modules/totp';
-import { PairingMessage } from './types/message';
-import * as rawState from './utils/raw-state';
-import { browser } from './browser/browser-polyfill';
+import * as totp from '../../../../shared/modules/totp';
+import { PairingMessage } from '../types/message';
+import * as rawState from '../utils/raw-state';
+import { browser } from '../browser/browser-polyfill';
 
 export class ExtensionPairing {
   private stream: Duplex;

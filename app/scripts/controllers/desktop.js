@@ -1,13 +1,13 @@
 import { ObservableStore } from '@metamask/obs-store';
 import log from 'loglevel';
-import cfg from '../desktop/config';
-import { ExtensionPairing } from '../desktop/pairing';
+import cfg from '../desktop/utils/config';
+import { ExtensionPairing } from '../desktop/shared/pairing';
 
 let DesktopManager;
 
 if (cfg().desktop.isExtension) {
   // eslint-disable-next-line node/global-require
-  DesktopManager = require('../desktop/desktop-manager').default;
+  DesktopManager = require('../desktop/extension/desktop-manager').default;
 }
 
 export default class DesktopController {

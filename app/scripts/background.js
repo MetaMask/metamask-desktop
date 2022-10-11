@@ -2,7 +2,7 @@
  * @file The entry point for the web extension singleton process.
  */
 
-import './desktop/globals';
+import './desktop/app/globals';
 import EventEmitter from 'events';
 import endOfStream from 'end-of-stream';
 import pump from 'pump';
@@ -52,23 +52,23 @@ import getFirstPreferredLangCode from './lib/get-first-preferred-lang-code';
 import getObjStructure from './lib/getObjStructure';
 import setupEnsIpfsResolver from './lib/ens-ipfs/setup';
 import { getPlatform } from './lib/util';
-import cfg from './desktop/config';
+import cfg from './desktop/utils/config';
 
 // Desktop
 
-let Desktop;
+let DesktopApp;
 let DesktopManager;
 let backgroundEventEmitter;
 
 if (cfg().desktop.isApp) {
   // eslint-disable-next-line node/global-require
-  Desktop = require('./desktop/desktop').default;
+  DesktopApp = require('./desktop/app/desktop-app').default;
   backgroundEventEmitter = new EventEmitter();
 }
 
 if (cfg().desktop.isExtension) {
   // eslint-disable-next-line node/global-require
-  DesktopManager = require('./desktop/desktop-manager').default;
+  DesktopManager = require('./desktop/extension/desktop-manager').default;
   backgroundEventEmitter = new EventEmitter();
 }
 
@@ -138,8 +138,8 @@ const onDesktopExtensionState = async (desktop) => {
 };
 
 const initDesktopApp = async () => {
-  const desktop = await Desktop.init(backgroundEventEmitter);
-  desktop.on('extension-state', () => onDesktopExtensionState(desktop));
+  const desktopApp = await DesktopApp.init(backgroundEventEmitter);
+  desktopApp.on('extension-state', () => onDesktopExtensionState(desktopApp));
 };
 
 if (isManifestV3 && cfg().desktop.isExtension) {
@@ -760,11 +760,11 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     backgroundEventEmitter?.emit('memory-state-update', flatState);
   });
 
-  Desktop?.getInstance()?.on('connect-remote', (connectRequest) => {
+  DesktopApp?.getInstance()?.on('connect-remote', (connectRequest) => {
     connectRemote(connectRequest);
   });
 
-  Desktop?.getInstance()?.on('connect-external', (connectRequest) => {
+  DesktopApp?.getInstance()?.on('connect-external', (connectRequest) => {
     connectExternal(connectRequest);
   });
 

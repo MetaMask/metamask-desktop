@@ -3,17 +3,17 @@ import path from 'path';
 import { app, BrowserWindow, ipcMain } from 'electron';
 import { Server as WebSocketServer, WebSocket } from 'ws';
 import log from 'loglevel';
-import cfg from './config';
-import { updateCheck } from './update-check';
-import { NodeWebSocket, WebSocketStream } from './web-socket-stream';
-import EncryptedWebSocketStream from './encrypted-web-socket-stream';
-import { NewConnectionMessage, StatusMessage } from './types/message';
+import cfg from '../utils/config';
+import { NodeWebSocket, WebSocketStream } from '../shared/web-socket-stream';
+import EncryptedWebSocketStream from '../encryption/encrypted-web-socket-stream';
+import { NewConnectionMessage, StatusMessage } from '../types/message';
+import { onceAny, bubbleEvents } from '../utils/events';
+import * as RawState from '../utils/raw-state';
 import ExtensionConnection from './extension-connection';
-import { onceAny, bubbleEvents } from './utils/events';
-import * as RawState from './utils/raw-state';
+import { updateCheck } from './update-check';
 
-export default class Desktop extends EventEmitter {
-  private static instance: Desktop;
+export default class DesktopApp extends EventEmitter {
+  private static instance: DesktopApp;
 
   private background: EventEmitter;
 
@@ -25,28 +25,30 @@ export default class Desktop extends EventEmitter {
 
   private status: StatusMessage;
 
-  public static async init(backgroundEvents: EventEmitter): Promise<Desktop> {
-    await Desktop.newInstance(backgroundEvents).init();
-    return Desktop.getInstance();
+  public static async init(
+    backgroundEvents: EventEmitter,
+  ): Promise<DesktopApp> {
+    await DesktopApp.newInstance(backgroundEvents).init();
+    return DesktopApp.getInstance();
   }
 
   public static newInstance(backgroundEvents: EventEmitter) {
-    if (Desktop.hasInstance()) {
-      return Desktop.getInstance();
+    if (DesktopApp.hasInstance()) {
+      return DesktopApp.getInstance();
     }
 
-    const newInstance = new Desktop(backgroundEvents);
-    Desktop.instance = newInstance;
+    const newInstance = new DesktopApp(backgroundEvents);
+    DesktopApp.instance = newInstance;
 
     return newInstance;
   }
 
-  public static getInstance(): Desktop {
-    return Desktop.instance;
+  public static getInstance(): DesktopApp {
+    return DesktopApp.instance;
   }
 
   public static hasInstance(): boolean {
-    return Boolean(Desktop.instance);
+    return Boolean(DesktopApp.instance);
   }
 
   private constructor(backgroundEvents: EventEmitter) {
@@ -207,11 +209,11 @@ export default class Desktop extends EventEmitter {
 
     if (cfg().desktop.skipOtpPairingFlow) {
       await statusWindow.loadFile(
-        path.resolve(__dirname, '../../desktop.html'),
+        path.resolve(__dirname, '../../../desktop.html'),
       );
     } else {
       await statusWindow.loadFile(
-        path.resolve(__dirname, '../../desktop-pairing.html'),
+        path.resolve(__dirname, '../../../desktop-pairing.html'),
       );
     }
 

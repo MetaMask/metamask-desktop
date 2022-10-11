@@ -1,9 +1,9 @@
 import { autoUpdater } from 'electron-updater';
 import { dialog, MessageBoxReturnValue } from 'electron';
 import log from 'loglevel';
+import cfg from '../utils/config';
+import { simulateNodeEvent } from '../test/utils';
 import { updateCheck } from './update-check';
-import cfg from './config';
-import { simulateNodeEvent } from './test/utils';
 
 jest.mock(
   'electron-updater',

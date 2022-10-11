@@ -6,7 +6,7 @@ import {
   CLIENT_ID_NEW_CONNECTION,
   CLIENT_ID_STATE,
   CLIENT_ID_VERSION,
-} from '../../../shared/constants/desktop';
+} from '../../../../shared/constants/desktop';
 import {
   CLIENT_ID_MOCK,
   NEW_CONNECTION_MESSAGE_MOCK,
@@ -14,21 +14,21 @@ import {
   createStreamMock,
   createMultiplexMock,
   createEventEmitterMock,
-} from './test/mocks';
+} from '../test/mocks';
 import {
   simulateStreamMessage,
   simulateNodeEvent,
   expectEventToFire,
-} from './test/utils';
-import { browser } from './browser/browser-polyfill';
-import { ClientId } from './types/desktop';
-import { ConnectionType } from './types/background';
+} from '../test/utils';
+import { browser } from '../browser/browser-polyfill';
+import { ClientId } from '../types/desktop';
+import { ConnectionType } from '../types/background';
 import ExtensionConnection from './extension-connection';
 
 jest.mock('obj-multiplex', () => jest.fn(), { virtual: true });
 
 jest.mock(
-  './browser/browser-polyfill',
+  '../browser/browser-polyfill',
   () => ({
     browser: { storage: { local: { get: jest.fn(), set: jest.fn() } } },
   }),

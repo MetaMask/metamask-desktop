@@ -11,15 +11,15 @@ import {
   CLIENT_ID_VERSION,
   CLIENT_ID_PAIRING,
   MESSAGE_ACKNOWLEDGE,
-} from '../../../shared/constants/desktop';
-import { ConnectionType } from './types/background';
-import { EndConnectionMessage, NewConnectionMessage } from './types/message';
-import { ClientId } from './types/desktop';
-import { registerRequestStream } from './browser/node-browser';
-import { waitForMessage } from './utils/stream';
-import { RecordingEventEmitter } from './utils/events';
-import { DesktopPairing } from './pairing';
-import * as RawState from './utils/raw-state';
+} from '../../../../shared/constants/desktop';
+import { ConnectionType } from '../types/background';
+import { EndConnectionMessage, NewConnectionMessage } from '../types/message';
+import { ClientId } from '../types/desktop';
+import { registerRequestStream } from '../browser/node-browser';
+import { waitForMessage } from '../utils/stream';
+import { RecordingEventEmitter } from '../utils/events';
+import { DesktopPairing } from '../shared/pairing';
+import * as RawState from '../utils/raw-state';
 
 export default class ExtensionConnection extends EventEmitter {
   private stream: Duplex;

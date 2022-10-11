@@ -1,10 +1,8 @@
 import { app, BrowserWindow } from 'electron';
 import { Server as WebSocketServer } from 'ws';
-import Desktop from './desktop';
-import EncryptedWebSocketStream from './encrypted-web-socket-stream';
-import { WebSocketStream } from './web-socket-stream';
-import cfg from './config';
-import { updateCheck } from './update-check';
+import EncryptedWebSocketStream from '../encryption/encrypted-web-socket-stream';
+import { WebSocketStream } from '../shared/web-socket-stream';
+import cfg from '../utils/config';
 import {
   PORT_MOCK,
   createWebSocketNodeMock,
@@ -12,14 +10,16 @@ import {
   createWebSocketStreamMock,
   createEventEmitterMock,
   createExtensionConnectionMock,
-} from './test/mocks';
-import { simulateNodeEvent } from './test/utils';
+} from '../test/mocks';
+import { simulateNodeEvent } from '../test/utils';
+import { browser } from '../browser/browser-polyfill';
 import ExtensionConnection from './extension-connection';
-import { browser } from './browser/browser-polyfill';
+import { updateCheck } from './update-check';
+import DesktopApp from './desktop-app';
 
 jest.mock('extension-port-stream');
-jest.mock('./web-socket-stream');
-jest.mock('./encrypted-web-socket-stream');
+jest.mock('../shared/web-socket-stream');
+jest.mock('../encryption/encrypted-web-socket-stream');
 jest.mock('./extension-connection');
 
 jest.mock(
@@ -49,7 +49,7 @@ jest.mock(
 );
 
 jest.mock(
-  './browser/browser-polyfill',
+  '../browser/browser-polyfill',
   () => ({
     browser: { storage: { local: { get: jest.fn(), set: jest.fn() } } },
   }),
@@ -61,7 +61,7 @@ jest.mock(
 const removeInstance = () => {
   // eslint-disable-next-line
   // @ts-ignore
-  Desktop.instance = undefined;
+  DesktopApp.instance = undefined;
 };
 
 describe('Desktop', () => {
@@ -92,7 +92,7 @@ describe('Desktop', () => {
     typeof updateCheck
   >;
 
-  let desktop: Desktop;
+  let desktopApp: DesktopApp;
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -129,7 +129,7 @@ describe('Desktop', () => {
 
     removeInstance();
 
-    desktop = Desktop.newInstance(backgroundMock);
+    desktopApp = DesktopApp.newInstance(backgroundMock);
   });
 
   describe('static init', () => {
@@ -138,9 +138,9 @@ describe('Desktop', () => {
     });
 
     it('creates and initialises', async () => {
-      await Desktop.init(backgroundMock);
+      await DesktopApp.init(backgroundMock);
 
-      expect(Desktop.getInstance()).toBeDefined();
+      expect(DesktopApp.getInstance()).toBeDefined();
       expect(webSocketServerConstructorMock).toHaveBeenCalledTimes(1);
     });
   });
@@ -151,22 +151,22 @@ describe('Desktop', () => {
     });
 
     it('creates a new instance if none exists', () => {
-      expect(Desktop.getInstance()).toBeUndefined();
+      expect(DesktopApp.getInstance()).toBeUndefined();
 
-      const instance = Desktop.newInstance(backgroundMock);
+      const instance = DesktopApp.newInstance(backgroundMock);
 
-      expect(Desktop.getInstance()).toBeDefined();
-      expect(Desktop.getInstance()).toBe(instance);
+      expect(DesktopApp.getInstance()).toBeDefined();
+      expect(DesktopApp.getInstance()).toBe(instance);
     });
 
     it('returns old instance if one already exists', () => {
-      expect(Desktop.getInstance()).toBeUndefined();
+      expect(DesktopApp.getInstance()).toBeUndefined();
 
-      const firstInstance = Desktop.newInstance(backgroundMock);
-      const secondInstance = Desktop.newInstance(backgroundMock);
+      const firstInstance = DesktopApp.newInstance(backgroundMock);
+      const secondInstance = DesktopApp.newInstance(backgroundMock);
 
-      expect(Desktop.getInstance()).toBeDefined();
-      expect(Desktop.getInstance()).toBe(firstInstance);
+      expect(DesktopApp.getInstance()).toBeDefined();
+      expect(DesktopApp.getInstance()).toBe(firstInstance);
       expect(secondInstance).toBe(firstInstance);
     });
   });
@@ -177,12 +177,12 @@ describe('Desktop', () => {
     });
 
     it('returns false if no instance created', () => {
-      expect(Desktop.hasInstance()).toBe(false);
+      expect(DesktopApp.hasInstance()).toBe(false);
     });
 
     it('returns true if instance created', () => {
-      Desktop.newInstance(backgroundMock);
-      expect(Desktop.hasInstance()).toBe(true);
+      DesktopApp.newInstance(backgroundMock);
+      expect(DesktopApp.hasInstance()).toBe(true);
     });
   });
 
@@ -190,7 +190,7 @@ describe('Desktop', () => {
     it('creates web socket server', async () => {
       cfg().desktop.webSocket.port = PORT_MOCK;
 
-      await desktop.init();
+      await desktopApp.init();
 
       expect(webSocketServerConstructorMock).toHaveBeenCalledTimes(1);
       expect(webSocketServerConstructorMock).toHaveBeenCalledWith(
@@ -200,14 +200,14 @@ describe('Desktop', () => {
     });
 
     it('checks for updates', async () => {
-      await desktop.init();
+      await desktopApp.init();
       expect(updateCheckMock).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('on connection', () => {
     it('creates extension connection with encrypted web socket stream', async () => {
-      await desktop.init();
+      await desktopApp.init();
 
       await simulateNodeEvent(webSocketServerMock, 'connection', webSocketMock);
 
@@ -226,7 +226,7 @@ describe('Desktop', () => {
     it('creates extension connection with standard web socket stream if encryption disabled', async () => {
       cfg().desktop.webSocket.disableEncryption = true;
 
-      await desktop.init();
+      await desktopApp.init();
 
       await simulateNodeEvent(webSocketServerMock, 'connection', webSocketMock);
 
@@ -243,14 +243,14 @@ describe('Desktop', () => {
     });
 
     it('checks for updates', async () => {
-      await desktop.init();
+      await desktopApp.init();
       expect(updateCheck).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('on disconnect', () => {
     beforeEach(async () => {
-      await desktop.init();
+      await desktopApp.init();
 
       await simulateNodeEvent(webSocketServerMock, 'connection', webSocketMock);
       await simulateNodeEvent(webSocketMock, 'close');

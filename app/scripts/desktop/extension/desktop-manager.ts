@@ -1,13 +1,13 @@
 import { Duplex } from 'stream';
 import EventEmitter from 'events';
 import log from 'loglevel';
-import { generate } from '../../../shared/modules/totp';
-import cfg from './config';
-import { BrowserWebSocket, WebSocketStream } from './web-socket-stream';
-import EncryptedWebSocketStream from './encrypted-web-socket-stream';
-import { timeoutPromise } from './utils/utils';
+import { generate } from '../../../../shared/modules/totp';
+import cfg from '../utils/config';
+import { BrowserWebSocket, WebSocketStream } from '../shared/web-socket-stream';
+import EncryptedWebSocketStream from '../encryption/encrypted-web-socket-stream';
+import { timeoutPromise } from '../utils/utils';
+import { TestConnectionResult } from '../types/desktop';
 import DesktopConnection from './desktop-connection';
-import { TestConnectionResult } from './types/desktop';
 
 const TIMEOUT_CONNECT = 20000;
 

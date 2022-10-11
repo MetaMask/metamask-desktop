@@ -1,11 +1,11 @@
-import { WebSocketStream } from './web-socket-stream';
-import { flushPromises, simulateWebSocketMessage } from './test/utils';
+import { flushPromises, simulateWebSocketMessage } from '../test/utils';
 import {
   DATA_MOCK,
   STRING_DATA_MOCK,
   createWebSocketBrowserMock,
   createWebSocketNodeMock,
-} from './test/mocks';
+} from '../test/mocks';
+import { WebSocketStream } from './web-socket-stream';
 
 describe('Web Socket Stream', () => {
   describe('on data', () => {

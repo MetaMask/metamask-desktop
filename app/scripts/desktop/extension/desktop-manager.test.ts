@@ -1,19 +1,19 @@
-import DesktopConnection from './desktop-connection';
 import {
   createWebSocketBrowserMock,
   createWebSocketStreamMock,
   createEventEmitterMock,
   createDesktopConnectionMock,
-} from './test/mocks';
-import { simulateBrowserEvent, flushPromises } from './test/utils';
-import EncryptedWebSocketStream from './encrypted-web-socket-stream';
-import { WebSocketStream } from './web-socket-stream';
-import cfg from './config';
-import { TestConnectionResult } from './types/desktop';
+} from '../test/mocks';
+import { simulateBrowserEvent, flushPromises } from '../test/utils';
+import EncryptedWebSocketStream from '../encryption/encrypted-web-socket-stream';
+import { WebSocketStream } from '../shared/web-socket-stream';
+import cfg from '../utils/config';
+import { TestConnectionResult } from '../types/desktop';
+import DesktopConnection from './desktop-connection';
 import desktopManager from './desktop-manager';
 
-jest.mock('./web-socket-stream');
-jest.mock('./encrypted-web-socket-stream');
+jest.mock('../shared/web-socket-stream');
+jest.mock('../encryption/encrypted-web-socket-stream');
 jest.mock('./desktop-connection');
 
 const removeInstance = () => {

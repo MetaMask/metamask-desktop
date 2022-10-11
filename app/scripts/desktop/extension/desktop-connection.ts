@@ -13,20 +13,20 @@ import {
   CLIENT_ID_VERSION,
   CLIENT_ID_PAIRING,
   MESSAGE_ACKNOWLEDGE,
-} from '../../../shared/constants/desktop';
-import { browser } from './browser/browser-polyfill';
+} from '../../../../shared/constants/desktop';
+import { browser } from '../browser/browser-polyfill';
 import {
   ConnectionType,
   RemotePort,
   RemotePortData,
   State,
-} from './types/background';
-import { ClientId } from './types/desktop';
-import { registerResponseStream } from './browser/browser-proxy';
-import { uuid } from './utils/utils';
-import { waitForMessage } from './utils/stream';
-import { ExtensionPairing } from './pairing';
-import * as RawState from './utils/raw-state';
+} from '../types/background';
+import { ClientId } from '../types/desktop';
+import { registerResponseStream } from '../browser/browser-proxy';
+import { uuid } from '../utils/utils';
+import { waitForMessage } from '../utils/stream';
+import { ExtensionPairing } from '../shared/pairing';
+import * as RawState from '../utils/raw-state';
 
 export default class DesktopConnection extends EventEmitter {
   private stream: Duplex;
