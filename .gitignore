@@ -58,3 +58,6 @@ tsout/
 
 # Test results
 test-results/
+
+# Metamask Desktop packaging configuration
+.apprc

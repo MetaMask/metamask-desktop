@@ -1,8 +1,12 @@
 {
+  "afterSign": "development/desktop/electron/scripts/notarize.js",
   "appId": "consensys.metamask.desktop",
   "asar": false,
   "directories": {
     "output": "builds_desktop"
+  },
+  "dmg": {
+    "sign": false
   },
   "files": ["dist_desktop/**/*", "node_modules/**/*", "package.json"],
   "linux": {
@@ -21,7 +25,7 @@
     "entitlements": "development/desktop/electron/build/entitlements.mac.plist",
     "entitlementsInherit": "development/desktop/electron/build/entitlements.mac.plist",
     "gatekeeperAssess": false,
-    "type": "development",
+    "type": "distribution",
     "target": [
       {
         "target": "dmg",

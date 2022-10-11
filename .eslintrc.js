@@ -10,6 +10,7 @@ module.exports = {
   ignorePatterns: [
     'app/vendor/**',
     'builds/**/*',
+    'builds_desktop/**/*',
     'development/chromereload.js',
     'development/charts/**',
     'development/ts-migration-dashboard/build/**',
