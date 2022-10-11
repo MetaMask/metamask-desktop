@@ -41,7 +41,7 @@ if (process.env.IN_TEST) {
   defaultProviderConfigOpts = {
     type: NETWORK_TYPES.GOERLI,
     chainId: CHAIN_IDS.GOERLI,
-    ticker: TEST_NETWORK_TICKER_MAP.goerli,
+    ticker: TEST_NETWORK_TICKER_MAP.GOERLI,
   };
 } else {
   defaultProviderConfigOpts = {
