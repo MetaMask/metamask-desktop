@@ -16,6 +16,7 @@ module.exports = function createStaticAssetTasks({
   browserPlatforms,
   shouldIncludeLockdown = true,
   buildType,
+  includeDesktopUi,
 }) {
   const [copyTargetsProd, copyTargetsDev] = getCopyTargets(
     shouldIncludeLockdown,
@@ -46,7 +47,7 @@ module.exports = function createStaticAssetTasks({
     composeSeries(
       ...copyTargetsProd.map((target) => {
         return async function copyStaticAssets() {
-          await performCopy(target);
+          await performCopy(target, includeDesktopUi);
         };
       }),
     ),
@@ -56,7 +57,7 @@ module.exports = function createStaticAssetTasks({
     composeSeries(
       ...copyTargetsDev.map((target) => {
         return async function copyStaticAssets() {
-          await setupLiveCopy(target);
+          await setupLiveCopy(target, includeDesktopUi);
         };
       }),
     ),
@@ -64,33 +65,42 @@ module.exports = function createStaticAssetTasks({
 
   return { dev, prod };
 
-  async function setupLiveCopy(target) {
+  async function setupLiveCopy(target, includeDesktopUi) {
     const pattern = target.pattern || '/**/*';
     watch(target.src + pattern, (event) => {
       livereload.changed(event.path);
-      performCopy(target);
+      performCopy(target, includeDesktopUi);
     });
-    await performCopy(target);
+    await performCopy(target, includeDesktopUi);
   }
 
-  async function performCopy(target) {
-    await Promise.all(
-      browserPlatforms.map(async (platform) => {
-        if (target.pattern) {
-          await copyGlob(
-            target.src,
-            `${target.src}${target.pattern}`,
-            `./dist/${platform}/${target.dest}`,
-          );
-        } else {
-          await copyGlob(
-            target.src,
-            `${target.src}`,
-            `./dist/${platform}/${target.dest}`,
-          );
-        }
-      }),
+  async function performCopy(target, includeDesktopUi) {
+    const defineCopyPromise = (platform, distFolder) => {
+      const platformFolder = platform ? `${platform}/` : '';
+      if (target.pattern) {
+        return copyGlob(
+          target.src,
+          `${target.src}${target.pattern}`,
+          `./${distFolder}/${platformFolder}${target.dest}`,
+        );
+      }
+      return copyGlob(
+        target.src,
+        `${target.src}`,
+        `./${distFolder}/${platformFolder}${target.dest}`,
+      );
+    };
+
+    const copiesForBrowserPlatforms = browserPlatforms.map((platform) =>
+      defineCopyPromise(platform, 'dist'),
     );
+    const allCopies = copiesForBrowserPlatforms;
+
+    if (includeDesktopUi) {
+      allCopies.push(defineCopyPromise(null, 'dist_desktop_ui'));
+    }
+
+    await Promise.all(allCopies);
   }
 
   async function copyGlob(baseDir, srcGlob, dest) {
