@@ -55,7 +55,8 @@ class DesktopApp extends EventEmitter {
     const server = await this.createWebSocketServer();
     server.on('connection', (webSocket) => this.onConnection(webSocket));
 
-    this.status.isPaired = (await RawState.getDesktopState()).desktopEnabled;
+    this.status.isPaired =
+      (await RawState.getDesktopState()).desktopEnabled === true;
 
     log.debug('Initialised desktop app');
 
@@ -126,7 +127,7 @@ class DesktopApp extends EventEmitter {
     stream: Duplex,
     connection: ExtensionConnection,
   ) {
-    log.debug('Web socket disconnected');
+    log.debug('Extension connection disconnected');
 
     connection.disconnect();
     connection.removeAllListeners();
@@ -142,6 +143,8 @@ class DesktopApp extends EventEmitter {
     }
 
     this.status.isWebSocketConnected = false;
+
+    this.emit('extension-state');
   }
 
   private async createWebSocketServer(): Promise<WebSocketServer> {

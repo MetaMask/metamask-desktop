@@ -15,7 +15,10 @@ import {
 import { ConnectionType } from '../types/background';
 import { EndConnectionMessage, NewConnectionMessage } from '../types/message';
 import { ClientId } from '../types/desktop';
-import { registerRequestStream } from '../browser/node-browser';
+import {
+  registerRequestStream,
+  unregisterRequestStream,
+} from '../browser/node-browser';
 import { waitForMessage } from '../utils/stream';
 import { DesktopPairing } from '../shared/pairing';
 import * as RawState from '../utils/raw-state';
@@ -90,7 +93,11 @@ export default class ExtensionConnection extends EventEmitter {
   }
 
   public disconnect() {
-    this.multiplex.destroy();
+    unregisterRequestStream();
+
+    Object.values(this.clientStreams).forEach((clientStream) =>
+      clientStream.end(),
+    );
   }
 
   public transferState(rawState: any) {
@@ -109,23 +116,27 @@ export default class ExtensionConnection extends EventEmitter {
   public async disable() {
     log.debug('Desktop disabled');
 
-    if (this.canTransferState()) {
-      const stateToTransfer = await RawState.getAndUpdateDesktopState({
-        desktopEnabled: false,
-      });
-
-      await RawState.clear();
-
-      this.disableStream.write(stateToTransfer);
-
-      await waitForMessage(this.disableStream);
-
-      log.debug(
-        'Sent state to extension and reset extension state initialization flag',
-      );
-    }
+    const shouldTransfer = this.canTransferState();
 
     this.hasBeenInitializedWithExtensionState = false;
+
+    const message = shouldTransfer
+      ? await RawState.getAndUpdateDesktopState({
+          desktopEnabled: false,
+        })
+      : undefined;
+
+    this.disableStream.write(message);
+
+    await waitForMessage(this.disableStream, (data) =>
+      Promise.resolve(data === MESSAGE_ACKNOWLEDGE),
+    );
+
+    log.debug('Sent disable request to extension');
+
+    await RawState.clear();
+
+    log.debug('Removed all desktop state');
 
     this.emit('disable');
   }

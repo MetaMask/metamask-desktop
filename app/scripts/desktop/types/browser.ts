@@ -3,6 +3,7 @@ export interface Browser {
     local: {
       get: () => Promise<any>;
       set: (data: any) => Promise<void>;
+      clear: () => Promise<void>;
     };
   };
   runtime: {

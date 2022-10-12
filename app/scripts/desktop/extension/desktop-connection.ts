@@ -130,20 +130,20 @@ export default class DesktopConnection extends EventEmitter {
     return await this.versionCheck.check();
   }
 
-  public disconnect() {
-    this.emit('disconnect');
-  }
-
   private async onDisable(state: State) {
     log.debug('Received desktop disable message');
 
-    await RawState.set(state);
-    log.debug('Synchronised state with desktop');
+    if (state) {
+      await RawState.set(state);
+      log.debug('Synchronised with final desktop state');
+    } else {
+      await RawState.setDesktopState({ desktopEnabled: false });
+      log.debug('Disabled desktop mode');
+    }
 
-    this.disableStream?.write({});
+    this.disableStream?.write(MESSAGE_ACKNOWLEDGE);
 
-    log.debug('Restarting extension');
-    browser.runtime.reload();
+    this.restart();
   }
 
   private onUIStreamEnd(clientId: ClientId, clientStream: Duplex) {
@@ -173,7 +173,7 @@ export default class DesktopConnection extends EventEmitter {
     const method = data.data?.method;
     const id = data.data?.id;
 
-    if (method === 'disableDesktop') {
+    if (method === 'disableDesktopError') {
       await this.disable();
     }
 

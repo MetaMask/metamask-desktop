@@ -17,8 +17,6 @@ class DesktopManager {
   private desktopConnection?: DesktopConnection;
 
   public async init(state: any) {
-    log.debug('Init State', state);
-
     if (state?.DesktopController?.desktopEnabled === true) {
       this.desktopConnection = await this.createConnection();
 
@@ -113,10 +111,6 @@ class DesktopManager {
       this.onDisconnect(webSocket, webSocketStream, connection),
     );
 
-    connection.on('disconnect', () =>
-      this.onDisconnect(webSocket, webSocketStream, connection),
-    );
-
     log.debug('Created web socket connection');
 
     this.desktopConnection = connection;
@@ -129,7 +123,7 @@ class DesktopManager {
     stream: Duplex,
     connection: DesktopConnection,
   ) {
-    log.debug('Web socket disconnected');
+    log.debug('Desktop connection disconnected');
 
     stream.removeAllListeners();
     stream.destroy();

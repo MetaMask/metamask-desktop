@@ -103,7 +103,7 @@ export function registerDesktopErrorActions(backgroundConnection, browser) {
   );
 
   disableDesktopButton?.addEventListener('click', (_) => {
-    backgroundConnection.disableDesktop();
+    backgroundConnection.disableDesktopError();
   });
   restartMMButton?.addEventListener('click', (_) => {
     browser.runtime.reload();
