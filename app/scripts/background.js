@@ -124,17 +124,17 @@ const initApp = async (remotePort) => {
   log.info('MetaMask initialization complete.');
 };
 
-const onDesktopExtensionState = async (desktop) => {
-  desktop.removeAllListeners();
-  desktop.on('extension-state', () => onDesktopExtensionState(desktop));
+const onDesktopExtensionState = async (desktopApp) => {
+  desktopApp.removeAllListeners();
+  desktopApp.on('extension-state', () => onDesktopExtensionState(desktopApp));
 
   log.debug('Re-initializing background script');
   await initialize();
 };
 
 const initDesktopApp = async () => {
-  const desktopApp = await DesktopApp.init();
-  desktopApp.on('extension-state', () => onDesktopExtensionState(desktopApp));
+  await DesktopApp.init();
+  DesktopApp.on('extension-state', () => onDesktopExtensionState(DesktopApp));
 };
 
 if (isManifestV3 && cfg().desktop.isExtension) {
@@ -444,7 +444,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
           dataPersistenceFailing = false;
         }
 
-        await DesktopApp?.getInstance()?.getConnection()?.transferState(state);
+        await DesktopApp?.getConnection()?.transferState(state);
       } catch (err) {
         // log error so we dont break the pipeline
         if (!dataPersistenceFailing) {
@@ -777,11 +777,11 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     updateBadge();
   }
 
-  DesktopApp?.getInstance()?.on('connect-remote', (connectRequest) => {
+  DesktopApp?.on('connect-remote', (connectRequest) => {
     connectRemote(connectRequest);
   });
 
-  DesktopApp?.getInstance()?.on('connect-external', (connectRequest) => {
+  DesktopApp?.on('connect-external', (connectRequest) => {
     connectExternal(connectRequest);
   });
 

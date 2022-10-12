@@ -91,8 +91,6 @@ describe('Desktop', () => {
     typeof updateCheck
   >;
 
-  let desktopApp: DesktopApp;
-
   beforeEach(() => {
     jest.resetAllMocks();
 
@@ -126,69 +124,13 @@ describe('Desktop', () => {
     browserMock.storage.local.get.mockResolvedValue({});
 
     removeInstance();
-
-    desktopApp = DesktopApp.newInstance();
-  });
-
-  describe('static init', () => {
-    beforeEach(() => {
-      removeInstance();
-    });
-
-    it('creates and initialises', async () => {
-      await DesktopApp.init();
-
-      expect(DesktopApp.getInstance()).toBeDefined();
-      expect(webSocketServerConstructorMock).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  describe('newInstance', () => {
-    beforeEach(() => {
-      removeInstance();
-    });
-
-    it('creates a new instance if none exists', () => {
-      expect(DesktopApp.getInstance()).toBeUndefined();
-
-      const instance = DesktopApp.newInstance();
-
-      expect(DesktopApp.getInstance()).toBeDefined();
-      expect(DesktopApp.getInstance()).toBe(instance);
-    });
-
-    it('returns old instance if one already exists', () => {
-      expect(DesktopApp.getInstance()).toBeUndefined();
-
-      const firstInstance = DesktopApp.newInstance();
-      const secondInstance = DesktopApp.newInstance();
-
-      expect(DesktopApp.getInstance()).toBeDefined();
-      expect(DesktopApp.getInstance()).toBe(firstInstance);
-      expect(secondInstance).toBe(firstInstance);
-    });
-  });
-
-  describe('hasInstance', () => {
-    beforeEach(() => {
-      removeInstance();
-    });
-
-    it('returns false if no instance created', () => {
-      expect(DesktopApp.hasInstance()).toBe(false);
-    });
-
-    it('returns true if instance created', () => {
-      DesktopApp.newInstance();
-      expect(DesktopApp.hasInstance()).toBe(true);
-    });
   });
 
   describe('init', () => {
     it('creates web socket server', async () => {
       cfg().desktop.webSocket.port = PORT_MOCK;
 
-      await desktopApp.init();
+      await DesktopApp.init();
 
       expect(webSocketServerConstructorMock).toHaveBeenCalledTimes(1);
       expect(webSocketServerConstructorMock).toHaveBeenCalledWith(
@@ -198,14 +140,14 @@ describe('Desktop', () => {
     });
 
     it('checks for updates', async () => {
-      await desktopApp.init();
+      await DesktopApp.init();
       expect(updateCheckMock).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('on connection', () => {
     it('creates extension connection with encrypted web socket stream', async () => {
-      await desktopApp.init();
+      await DesktopApp.init();
 
       await simulateNodeEvent(webSocketServerMock, 'connection', webSocketMock);
 
@@ -223,7 +165,7 @@ describe('Desktop', () => {
     it('creates extension connection with standard web socket stream if encryption disabled', async () => {
       cfg().desktop.webSocket.disableEncryption = true;
 
-      await desktopApp.init();
+      await DesktopApp.init();
 
       await simulateNodeEvent(webSocketServerMock, 'connection', webSocketMock);
 
@@ -239,14 +181,14 @@ describe('Desktop', () => {
     });
 
     it('checks for updates', async () => {
-      await desktopApp.init();
+      await DesktopApp.init();
       expect(updateCheck).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('on disconnect', () => {
     beforeEach(async () => {
-      await desktopApp.init();
+      await DesktopApp.init();
 
       await simulateNodeEvent(webSocketServerMock, 'connection', webSocketMock);
       await simulateNodeEvent(webSocketMock, 'close');
