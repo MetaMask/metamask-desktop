@@ -1,15 +1,10 @@
-import React from 'react'
-import Button from '../ui/components/ui/button'
+import React from 'react';
+import { render } from 'react-dom';
+import DesktopApp from './App';
 
-const App = () => {
-    return (
-        <React.StrictMode>
-            <h1>Desktop app</h1>
-            <Button type="secondary" onClick={() => {}}>
-                Button in Desktop
-            </Button>
-        </React.StrictMode>
-    )
+function launchDesktopUi() {
+  const rootElement = document.getElementById('root');
+  render(<DesktopApp />, rootElement);
 }
 
-export default App
+export default launchDesktopUi;

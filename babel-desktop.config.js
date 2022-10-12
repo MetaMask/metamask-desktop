@@ -16,7 +16,10 @@ module.exports = function (api) {
     ignore: [
       'dist',
       'dist_desktop',
+      'dist_desktop_ui',
       'builds_desktop',
+      'desktop-ui',
+      'builds',
       'development',
       'node_modules',
       'test',

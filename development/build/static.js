@@ -65,7 +65,7 @@ module.exports = function createStaticAssetTasks({
 
   return { dev, prod };
 
-  async function setupLiveCopy(target, includeDesktopUi) {
+  async function setupLiveCopy(target) {
     const pattern = target.pattern || '/**/*';
     watch(target.src + pattern, (event) => {
       livereload.changed(event.path);
@@ -74,7 +74,7 @@ module.exports = function createStaticAssetTasks({
     await performCopy(target, includeDesktopUi);
   }
 
-  async function performCopy(target, includeDesktopUi) {
+  async function performCopy(target) {
     const defineCopyPromise = (platform, distFolder) => {
       const platformFolder = platform ? `${platform}/` : '';
       if (target.pattern) {
