@@ -2,6 +2,7 @@ import { Duplex, EventEmitter } from 'stream';
 import ObjectMultiplex from 'obj-multiplex';
 import { WebSocketServer } from 'ws';
 import { ObservableStore } from '@metamask/obs-store';
+import ElectronStore from 'electron-store';
 import NotificationManager from '../../lib/notification-manager';
 import { ConnectionType, RemotePort } from '../types/background';
 import {
@@ -34,7 +35,6 @@ export const CLIENT_ID_MOCK = 3;
 export const CLIENT_ID_2_MOCK = 12;
 export const PORT_MOCK = 123;
 export const PASSWORD_MOCK = 'testPassword';
-export const STORE_MOCK = { store: DATA_MOCK };
 export const STREAM_MOCK = 'testStream';
 export const TYPE_MOCK = 'testType';
 export const METHOD_MOCK = 'testMethod';
@@ -175,4 +175,9 @@ export const createObservableStoreMock = (): jest.Mocked<ObservableStore> =>
 export const createExtensionPairingMock = (): jest.Mocked<ExtensionPairing> =>
   ({
     generateOTP: jest.fn(),
+  } as any);
+
+export const createElectronStoreMock = (): jest.Mocked<ElectronStore> =>
+  ({
+    clear: jest.fn(),
   } as any);
