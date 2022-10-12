@@ -27,3 +27,8 @@ export type PairingMessage = {
   otp: string;
   isPaired: boolean;
 };
+
+export type VersionMessage = {
+  version: string;
+  isValid?: boolean;
+};

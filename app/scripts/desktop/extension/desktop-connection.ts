@@ -1,6 +1,5 @@
 import { Duplex, PassThrough } from 'stream';
 import EventEmitter from 'events';
-import PortStream from 'extension-port-stream';
 import endOfStream from 'end-of-stream';
 import ObjectMultiplex from 'obj-multiplex';
 import log from 'loglevel';
@@ -15,18 +14,14 @@ import {
   MESSAGE_ACKNOWLEDGE,
 } from '../../../../shared/constants/desktop';
 import { browser } from '../browser/browser-polyfill';
-import {
-  ConnectionType,
-  RemotePort,
-  RemotePortData,
-  State,
-} from '../types/background';
-import { ClientId } from '../types/desktop';
+import { ConnectionType, RemotePortData, State } from '../types/background';
+import { ClientId, VersionCheckResult } from '../types/desktop';
 import { registerResponseStream } from '../browser/browser-proxy';
 import { uuid } from '../utils/utils';
 import { waitForMessage } from '../utils/stream';
 import { ExtensionPairing } from '../shared/pairing';
 import * as RawState from '../utils/raw-state';
+import { ExtensionVersionCheck } from '../shared/version-check';
 
 export default class DesktopConnection extends EventEmitter {
   private stream: Duplex;
@@ -41,7 +36,7 @@ export default class DesktopConnection extends EventEmitter {
 
   private disableStream: Duplex;
 
-  private versionStream: Duplex;
+  private versionCheck: ExtensionVersionCheck;
 
   public constructor(stream: Duplex) {
     super();
@@ -68,7 +63,8 @@ export default class DesktopConnection extends EventEmitter {
     const pairingStream = this.multiplex.createStream(CLIENT_ID_PAIRING);
     new ExtensionPairing(pairingStream, () => this.transferState()).init();
 
-    this.versionStream = this.multiplex.createStream(CLIENT_ID_VERSION);
+    const versionStream = this.multiplex.createStream(CLIENT_ID_VERSION);
+    this.versionCheck = new ExtensionVersionCheck(versionStream);
 
     const browserControllerStream = this.multiplex.createStream(
       CLIENT_ID_BROWSER_CONTROLLER,
@@ -84,13 +80,13 @@ export default class DesktopConnection extends EventEmitter {
    *
    * @param remotePort - The port provided by a new context.
    * @param connectionType - Whether or not the new context is external (page or other extension).
+   * @param uiStream - A paused stream to communicate with the remote port.
    */
   public async createStream(
-    remotePort: RemotePort,
+    remotePort: any,
     connectionType: ConnectionType,
+    uiStream: Duplex,
   ) {
-    const uiStream = new PortStream(remotePort as any);
-    uiStream.pause();
     uiStream.on('data', (data) => this.onUIMessage(data, uiStream as any));
 
     // Wrapping the original UI stream allows us to intercept messages required for error handling,
@@ -130,13 +126,8 @@ export default class DesktopConnection extends EventEmitter {
     log.debug('Sent extension state to desktop');
   }
 
-  public async getDesktopVersion(): Promise<number> {
-    this.versionStream.write({});
-
-    const versionMessage = await waitForMessage<any>(this.versionStream);
-    const desktopAppVersion = versionMessage.version as number;
-
-    return desktopAppVersion;
+  public async checkVersions(): Promise<VersionCheckResult> {
+    return await this.versionCheck.check();
   }
 
   public disconnect() {
@@ -221,7 +212,7 @@ export default class DesktopConnection extends EventEmitter {
   private async disable() {
     log.debug('Disabling desktop app');
 
-    await RawState.setDesktopState({ desktopEnabled: false, isPairing: false });
+    await RawState.setDesktopState({ desktopEnabled: false });
 
     this.restart();
   }

@@ -1,10 +1,17 @@
 export type ClientId = string;
 
-export interface TestConnectionResult {
-  success: boolean;
-}
-
 export interface DesktopState {
   desktopEnabled?: boolean;
-  isPairing?: boolean;
+}
+
+export interface VersionCheckResult {
+  extensionVersion: string;
+  desktopVersion: string;
+  isExtensionVersionValid: boolean;
+  isDesktopVersionValid: boolean;
+}
+
+export interface TestConnectionResult {
+  isConnected: boolean;
+  versionCheck?: VersionCheckResult;
 }

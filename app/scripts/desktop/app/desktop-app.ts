@@ -15,27 +15,23 @@ import { updateCheck } from './update-check';
 export default class DesktopApp extends EventEmitter {
   private static instance: DesktopApp;
 
-  private background: EventEmitter;
-
   private statusWindow?: BrowserWindow;
 
   private extensionConnection?: ExtensionConnection;
 
   private status: StatusMessage;
 
-  public static async init(
-    backgroundEvents: EventEmitter,
-  ): Promise<DesktopApp> {
-    await DesktopApp.newInstance(backgroundEvents).init();
+  public static async init(): Promise<DesktopApp> {
+    await DesktopApp.newInstance().init();
     return DesktopApp.getInstance();
   }
 
-  public static newInstance(backgroundEvents: EventEmitter) {
+  public static newInstance() {
     if (DesktopApp.hasInstance()) {
       return DesktopApp.getInstance();
     }
 
-    const newInstance = new DesktopApp(backgroundEvents);
+    const newInstance = new DesktopApp();
     DesktopApp.instance = newInstance;
 
     return newInstance;
@@ -49,10 +45,8 @@ export default class DesktopApp extends EventEmitter {
     return Boolean(DesktopApp.instance);
   }
 
-  private constructor(backgroundEvents: EventEmitter) {
+  private constructor() {
     super();
-
-    this.background = backgroundEvents;
 
     this.status = new Proxy(
       { isWebSocketConnected: false, connections: [] },
@@ -91,6 +85,10 @@ export default class DesktopApp extends EventEmitter {
     updateCheck();
   }
 
+  public getConnection(): ExtensionConnection | undefined {
+    return this.extensionConnection;
+  }
+
   private async onConnection(webSocket: WebSocket) {
     log.debug('Received web socket connection');
 
@@ -100,10 +98,7 @@ export default class DesktopApp extends EventEmitter {
 
     await webSocketStream.init({ startHandshake: false });
 
-    const extensionConnection = new ExtensionConnection(
-      webSocketStream,
-      this.background,
-    );
+    const extensionConnection = new ExtensionConnection(webSocketStream);
 
     onceAny(
       [

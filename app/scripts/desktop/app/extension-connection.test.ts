@@ -5,7 +5,6 @@ import {
   CLIENT_ID_DISABLE,
   CLIENT_ID_NEW_CONNECTION,
   CLIENT_ID_STATE,
-  CLIENT_ID_VERSION,
 } from '../../../../shared/constants/desktop';
 import {
   CLIENT_ID_MOCK,
@@ -13,12 +12,11 @@ import {
   DATA_MOCK,
   createStreamMock,
   createMultiplexMock,
-  createEventEmitterMock,
 } from '../test/mocks';
 import {
   simulateStreamMessage,
-  simulateNodeEvent,
   expectEventToFire,
+  flushPromises,
 } from '../test/utils';
 import { browser } from '../browser/browser-polyfill';
 import { ClientId } from '../types/desktop';
@@ -42,7 +40,6 @@ describe('Extension Connection', () => {
   const multiplexMock = createMultiplexMock();
   const objectMultiplexConstructorMock = ObjectMultiplex;
   const browserMock = browser as any;
-  const backgroundMock = createEventEmitterMock();
 
   const multiplexStreamMocks: { [clientId: ClientId]: jest.Mocked<Duplex> } =
     {};
@@ -61,7 +58,7 @@ describe('Extension Connection', () => {
     streamMock.pipe.mockReturnValue(multiplexMock as any);
     objectMultiplexConstructorMock.mockReturnValue(multiplexMock);
 
-    extensionConnection = new ExtensionConnection(streamMock, backgroundMock);
+    extensionConnection = new ExtensionConnection(streamMock);
   });
 
   describe('disconnect', () => {
@@ -161,11 +158,12 @@ describe('Extension Connection', () => {
     });
   });
 
-  describe('on memory state update', () => {
-    const simulateMemoryStateUpdate = async (
-      state: any,
-      { afterExtensionState }: { afterExtensionState: boolean },
-    ) => {
+  describe('disable', () => {
+    const disable = async ({
+      afterExtensionState,
+    }: {
+      afterExtensionState: boolean;
+    }) => {
       browserMock.storage.local.get.mockResolvedValue({
         ...DATA_MOCK,
         data: { DesktopController: { desktopEnabled: true } },
@@ -178,14 +176,14 @@ describe('Extension Connection', () => {
         await simulateStreamMessage(stateStreamMock, DATA_MOCK);
       }
 
-      await simulateNodeEvent(backgroundMock, 'memory-state-update', state);
+      const promise = extensionConnection.disable();
+      await flushPromises();
+      await simulateStreamMessage(multiplexStreamMocks[CLIENT_ID_DISABLE], {});
+      await promise;
     };
 
     it('writes state to disable stream if desktop disabled', async () => {
-      await simulateMemoryStateUpdate(
-        { desktopEnabled: false, isPairing: false },
-        { afterExtensionState: true },
-      );
+      await disable({ afterExtensionState: true });
 
       const disableStreamMock = multiplexStreamMocks[CLIENT_ID_DISABLE];
 
@@ -193,27 +191,13 @@ describe('Extension Connection', () => {
       expect(disableStreamMock.write).toHaveBeenCalledWith({
         ...DATA_MOCK,
         data: {
-          DesktopController: { desktopEnabled: false, isPairing: false },
+          DesktopController: { desktopEnabled: false },
         },
       });
     });
 
-    it('does nothing if desktop enabled', async () => {
-      await simulateMemoryStateUpdate(
-        { desktopEnabled: true },
-        { afterExtensionState: true },
-      );
-
-      const disableStreamMock = multiplexStreamMocks[CLIENT_ID_DISABLE];
-
-      expect(disableStreamMock.write).toHaveBeenCalledTimes(0);
-    });
-
     it('does nothing if desktop state has not yet been initiated with the extension state', async () => {
-      await simulateMemoryStateUpdate(
-        { desktopEnabled: false },
-        { afterExtensionState: false },
-      );
+      await disable({ afterExtensionState: false });
 
       const disableStreamMock = multiplexStreamMocks[CLIENT_ID_DISABLE];
 
@@ -221,14 +205,14 @@ describe('Extension Connection', () => {
     });
   });
 
-  describe('on persisted state update', () => {
+  describe('transferState', () => {
     let stateStreamMock;
 
     beforeEach(async () => {
       stateStreamMock = multiplexStreamMocks[CLIENT_ID_STATE];
     });
 
-    const simulatePersistedStateUpdate = async (
+    const transferState = async (
       state: any,
       { afterExtensionState }: { afterExtensionState: boolean },
     ) => {
@@ -236,11 +220,11 @@ describe('Extension Connection', () => {
         await simulateStreamMessage(stateStreamMock, DATA_MOCK);
       }
 
-      await simulateNodeEvent(backgroundMock, 'persisted-state-update', state);
+      await extensionConnection.transferState(state);
     };
 
     it('writes state to state stream if extension state received', async () => {
-      await simulatePersistedStateUpdate(DATA_MOCK, {
+      await transferState(DATA_MOCK, {
         afterExtensionState: true,
       });
 
@@ -249,22 +233,11 @@ describe('Extension Connection', () => {
     });
 
     it('does nothing if extension state not received', async () => {
-      await simulatePersistedStateUpdate(DATA_MOCK, {
+      await transferState(DATA_MOCK, {
         afterExtensionState: false,
       });
 
       expect(stateStreamMock.write).toHaveBeenCalledTimes(0);
-    });
-  });
-
-  describe('on version request', () => {
-    it('writes version to version stream', async () => {
-      const versionStream = multiplexStreamMocks[CLIENT_ID_VERSION];
-
-      await simulateStreamMessage(versionStream, {});
-
-      expect(versionStream.write).toHaveBeenCalledTimes(1);
-      expect(versionStream.write).toHaveBeenCalledWith({ version: 1 });
     });
   });
 });

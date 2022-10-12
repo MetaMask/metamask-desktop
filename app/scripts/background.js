@@ -3,7 +3,6 @@
  */
 
 import './desktop/app/globals';
-import EventEmitter from 'events';
 import endOfStream from 'end-of-stream';
 import pump from 'pump';
 import debounce from 'debounce-stream';
@@ -59,18 +58,15 @@ import cfg from './desktop/utils/config';
 
 let DesktopApp;
 let DesktopManager;
-let backgroundEventEmitter;
 
 if (cfg().desktop.isApp) {
   // eslint-disable-next-line node/global-require
   DesktopApp = require('./desktop/app/desktop-app').default;
-  backgroundEventEmitter = new EventEmitter();
 }
 
 if (cfg().desktop.isExtension) {
   // eslint-disable-next-line node/global-require
   DesktopManager = require('./desktop/extension/desktop-manager').default;
-  backgroundEventEmitter = new EventEmitter();
 }
 
 /* eslint-enable import/first */
@@ -132,14 +128,12 @@ const onDesktopExtensionState = async (desktop) => {
   desktop.removeAllListeners();
   desktop.on('extension-state', () => onDesktopExtensionState(desktop));
 
-  controller.removeAllListeners();
-
   log.debug('Re-initializing background script');
   await initialize();
 };
 
 const initDesktopApp = async () => {
-  const desktopApp = await DesktopApp.init(backgroundEventEmitter);
+  const desktopApp = await DesktopApp.init();
   desktopApp.on('extension-state', () => onDesktopExtensionState(desktopApp));
 };
 
@@ -220,7 +214,7 @@ async function initialize(remotePort) {
   const initLangCode = await getFirstPreferredLangCode();
 
   if (cfg().desktop.isExtension) {
-    await DesktopManager.init(initState, backgroundEventEmitter);
+    await DesktopManager.init(initState);
   }
 
   await setupController(initState, initLangCode, remotePort);
@@ -450,7 +444,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
           dataPersistenceFailing = false;
         }
 
-        backgroundEventEmitter?.emit('persisted-state-update', state);
+        await DesktopApp?.getInstance()?.getConnection()?.transferState(state);
       } catch (err) {
         // log error so we dont break the pipeline
         if (!dataPersistenceFailing) {
@@ -513,19 +507,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
    * @param {Port} remotePort - The port provided by a new context.
    */
   function connectRemote(remotePort) {
-    if (DesktopManager?.getConnection()) {
-      DesktopManager?.getConnection().createStream(
-        remotePort,
-        CONNECTION_TYPE_INTERNAL,
-      );
-
-      // When in Desktop Mode the responsibility to send CONNECTION_READY is on the desktop app side
-      if (isManifestV3) {
-        // Message below if captured by UI code in app/scripts/ui.js which will trigger UI initialisation
-        // This ensures that UI is initialised only after background is ready
-        // It fixes the issue of blank screen coming when extension is loaded, the issue is very frequent in MV3
-        remotePort.postMessage({ name: 'CONNECTION_READY' });
-      }
+    if (DesktopManager?.createStream(remotePort, CONNECTION_TYPE_INTERNAL)) {
       return;
     }
 
@@ -632,11 +614,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
 
   // communication with page or other extension
   function connectExternal(remotePort) {
-    if (DesktopManager?.getConnection()) {
-      DesktopManager?.getConnection().createStream(
-        remotePort,
-        CONNECTION_TYPE_EXTERNAL,
-      );
+    if (DesktopManager?.createStream(remotePort, CONNECTION_TYPE_EXTERNAL)) {
       return;
     }
 
@@ -798,10 +776,6 @@ function setupController(initState, initLangCode, remoteSourcePort) {
 
     updateBadge();
   }
-
-  controller.on('update', (flatState) => {
-    backgroundEventEmitter?.emit('memory-state-update', flatState);
-  });
 
   DesktopApp?.getInstance()?.on('connect-remote', (connectRequest) => {
     connectRemote(connectRequest);

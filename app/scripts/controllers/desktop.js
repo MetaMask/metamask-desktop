@@ -1,9 +1,14 @@
 import { ObservableStore } from '@metamask/obs-store';
-import log from 'loglevel';
 import cfg from '../desktop/utils/config';
 import { ExtensionPairing } from '../desktop/shared/pairing';
 
+let DesktopApp;
 let DesktopManager;
+
+if (cfg().desktop.isApp) {
+  // eslint-disable-next-line node/global-require
+  DesktopApp = require('../desktop/app/desktop-app').default;
+}
 
 if (cfg().desktop.isExtension) {
   // eslint-disable-next-line node/global-require
@@ -16,7 +21,6 @@ export default class DesktopController {
 
     this.store = new ObservableStore({
       desktopEnabled: false,
-      isPairing: false,
       ...initState,
     });
   }
@@ -27,22 +31,15 @@ export default class DesktopController {
     });
   }
 
-  setIsPairing(isPairing) {
-    this.store.updateState({
-      isPairing,
-    });
-  }
-
   generateOtp() {
     return ExtensionPairing.generateOTP();
   }
 
   async testDesktopConnection() {
-    try {
-      return await DesktopManager?.testConnection();
-    } catch (error) {
-      log.error(error);
-      return { success: false };
-    }
+    return await DesktopManager?.testConnection();
+  }
+
+  async disableDesktop() {
+    return await DesktopApp?.getInstance()?.getConnection()?.disable();
   }
 }

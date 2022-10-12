@@ -1500,10 +1500,6 @@ export default class MetamaskController extends EventEmitter {
     return this.getState()?.desktopEnabled === true;
   }
 
-  getDesktopPairing() {
-    return this.getState()?.isPairing === true;
-  }
-
   /**
    * Returns an Object containing API Callback Functions.
    * These functions are the interface for the UI.
@@ -2031,10 +2027,10 @@ export default class MetamaskController extends EventEmitter {
       // DesktopController
       setDesktopEnabled:
         desktopController.setDesktopEnabled.bind(desktopController),
-      setIsPairing: desktopController.setIsPairing.bind(desktopController),
       generateOtp: desktopController.generateOtp.bind(this),
       testDesktopConnection:
         desktopController.testDesktopConnection.bind(desktopController),
+      disableDesktop: desktopController.disableDesktop.bind(desktopController),
     };
   }
 
