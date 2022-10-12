@@ -123,17 +123,17 @@ const initApp = async (remotePort) => {
   log.info('MetaMask initialization complete.');
 };
 
-const onDesktopExtensionState = async (desktop) => {
-  desktop.removeAllListeners();
-  desktop.on('extension-state', () => onDesktopExtensionState(desktop));
+const onDesktopExtensionState = async (desktopApp) => {
+  desktopApp.removeAllListeners();
+  desktopApp.on('extension-state', () => onDesktopExtensionState(desktopApp));
 
   log.debug('Re-initializing background script');
   await initialize();
 };
 
 const initDesktopApp = async () => {
-  const desktopApp = await DesktopApp.init();
-  desktopApp.on('extension-state', () => onDesktopExtensionState(desktopApp));
+  await DesktopApp.init();
+  DesktopApp.on('extension-state', () => onDesktopExtensionState(DesktopApp));
 };
 
 if (isManifestV3 && cfg().desktop.isExtension) {
@@ -401,7 +401,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     debounce(1000),
     createStreamSink(async (state) => {
       await localStore.set(state);
-      await DesktopApp?.getInstance()?.getConnection()?.transferState(state);
+      await DesktopApp?.getConnection()?.transferState({ data: state });
     }),
     (error) => {
       log.error('MetaMask - Persistence pipeline failed', error);
@@ -496,12 +496,6 @@ function setupController(initState, initLangCode, remoteSourcePort) {
       // communication with popup
       controller.isClientOpen = true;
       controller.setupTrustedCommunication(portStream, remotePort.sender);
-      if (isManifestV3 && cfg().desktop.isExtension) {
-        // Message below if captured by UI code in app/scripts/ui.js which will trigger UI initialisation
-        // This ensures that UI is initialised only after background is ready
-        // It fixes the issue of blank screen coming when extension is loaded, the issue is very frequent in MV3
-        remotePort.postMessage({ name: 'CONNECTION_READY' });
-      }
 
       if (processName === ENVIRONMENT_TYPE_POPUP) {
         popupIsOpen = true;
@@ -734,11 +728,11 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     updateBadge();
   }
 
-  DesktopApp?.getInstance()?.on('connect-remote', (connectRequest) => {
+  DesktopApp?.on('connect-remote', (connectRequest) => {
     connectRemote(connectRequest);
   });
 
-  DesktopApp?.getInstance()?.on('connect-external', (connectRequest) => {
+  DesktopApp?.on('connect-external', (connectRequest) => {
     connectExternal(connectRequest);
   });
 

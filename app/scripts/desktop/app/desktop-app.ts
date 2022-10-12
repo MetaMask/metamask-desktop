@@ -12,9 +12,7 @@ import * as RawState from '../utils/raw-state';
 import ExtensionConnection from './extension-connection';
 import { updateCheck } from './update-check';
 
-export default class DesktopApp extends EventEmitter {
-  private static instance: DesktopApp;
-
+class DesktopApp extends EventEmitter {
   private statusWindow?: BrowserWindow;
 
   private trezorWindow?: BrowserWindow;
@@ -23,31 +21,7 @@ export default class DesktopApp extends EventEmitter {
 
   private status: StatusMessage;
 
-  public static async init(): Promise<DesktopApp> {
-    await DesktopApp.newInstance().init();
-    return DesktopApp.getInstance();
-  }
-
-  public static newInstance() {
-    if (DesktopApp.hasInstance()) {
-      return DesktopApp.getInstance();
-    }
-
-    const newInstance = new DesktopApp();
-    DesktopApp.instance = newInstance;
-
-    return newInstance;
-  }
-
-  public static getInstance(): DesktopApp {
-    return DesktopApp.instance;
-  }
-
-  public static hasInstance(): boolean {
-    return Boolean(DesktopApp.instance);
-  }
-
-  private constructor() {
+  constructor() {
     super();
 
     this.status = new Proxy(
@@ -244,3 +218,5 @@ export default class DesktopApp extends EventEmitter {
     return trezorWindow;
   }
 }
+
+export default new DesktopApp();
