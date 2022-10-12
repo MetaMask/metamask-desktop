@@ -1,13 +1,9 @@
 import { Duplex } from 'stream';
 import log from 'loglevel';
-import ExtensionPlatform from '../../platforms/extension';
 import { VersionCheckResult } from '../types/desktop';
 import { VersionMessage } from '../types/message';
 import { waitForMessage } from '../utils/stream';
-
-const getVersion = (): string => {
-  return new ExtensionPlatform().getVersion() as string;
-};
+import { getVersion } from '../utils/version';
 
 export class DesktopVersionCheck {
   private stream: Duplex;
