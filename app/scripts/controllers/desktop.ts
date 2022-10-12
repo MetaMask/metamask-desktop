@@ -7,13 +7,13 @@ let DesktopApp: any;
 let DesktopManager: any;
 
 if (cfg().desktop.isApp) {
-  // eslint-disable-next-line node/global-require
+  // eslint-disable-next-line node/global-require, @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
   DesktopApp = require('../desktop/app/desktop-app').default;
 }
 
 if (cfg().desktop.isExtension) {
-// eslint-disable-next-line node/global-require
-DesktopManager = require('../desktop/extension/desktop-manager').default;
+  // eslint-disable-next-line node/global-require, @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
+  DesktopManager = require('../desktop/extension/desktop-manager').default;
 }
 
 export default class DesktopController {

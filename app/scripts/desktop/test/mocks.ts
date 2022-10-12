@@ -1,6 +1,7 @@
 import { Duplex, EventEmitter } from 'stream';
 import ObjectMultiplex from 'obj-multiplex';
 import { WebSocketServer } from 'ws';
+import { ObservableStore } from '@metamask/obs-store';
 import NotificationManager from '../../lib/notification-manager';
 import { ConnectionType, RemotePort } from '../types/background';
 import {
@@ -10,7 +11,6 @@ import {
 } from '../shared/web-socket-stream';
 import ExtensionConnection from '../app/extension-connection';
 import DesktopConnection from '../extension/desktop-connection';
-import { ObservableStore } from '@metamask/obs-store';
 import { ExtensionPairing } from '../shared/pairing';
 import { TestConnectionResult } from '../types/desktop';
 

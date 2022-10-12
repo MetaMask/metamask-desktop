@@ -1,14 +1,14 @@
+import { ObservableStore } from '@metamask/obs-store';
 import {
   createExtensionConnectionMock,
   createObservableStoreMock,
   OTP_MOCK,
   TEST_CONNECTION_RESULT_MOCK,
 } from '../desktop/test/mocks';
-import { ObservableStore } from '@metamask/obs-store';
-import DesktopController from './desktop';
 import { ExtensionPairing } from '../desktop/shared/pairing';
 import DesktopManager from '../desktop/extension/desktop-manager';
 import DesktopApp from '../desktop/app/desktop-app';
+import DesktopController from './desktop';
 
 jest.mock('@metamask/obs-store');
 
@@ -41,9 +41,11 @@ describe('Desktop Controller', () => {
   const extensionPairingMock = ExtensionPairing as any;
   const extensionConnectionMock = createExtensionConnectionMock();
 
+  // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
   const desktopAppMock = require('../desktop/app/desktop-app')
     .default as jest.Mocked<typeof DesktopApp>;
 
+  // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
   const desktopManagerMock = require('../desktop/extension/desktop-manager')
     .default as jest.Mocked<typeof DesktopManager>;
 

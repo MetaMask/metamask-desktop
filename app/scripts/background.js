@@ -123,9 +123,9 @@ const initApp = async (remotePort) => {
   log.info('MetaMask initialization complete.');
 };
 
-const onDesktopExtensionState = async (desktopApp) => {
+const onDesktopRestart = async (desktopApp) => {
   desktopApp.removeAllListeners();
-  desktopApp.on('extension-state', () => onDesktopExtensionState(desktopApp));
+  desktopApp.on('restart', () => onDesktopRestart(desktopApp));
 
   log.debug('Re-initializing background script');
   await initialize();
@@ -133,7 +133,7 @@ const onDesktopExtensionState = async (desktopApp) => {
 
 const initDesktopApp = async () => {
   await DesktopApp.init();
-  DesktopApp.on('extension-state', () => onDesktopExtensionState(DesktopApp));
+  DesktopApp.on('restart', () => onDesktopRestart(DesktopApp));
 };
 
 if (isManifestV3 && cfg().desktop.isExtension) {

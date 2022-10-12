@@ -121,9 +121,7 @@ export default class ExtensionConnection extends EventEmitter {
     this.hasBeenInitializedWithExtensionState = false;
 
     const message = shouldTransfer
-      ? await RawState.getAndUpdateDesktopState({
-          desktopEnabled: false,
-        })
+      ? await RawState.getAndUpdateDesktopState({ desktopEnabled: false })
       : undefined;
 
     this.disableStream.write(message);
@@ -213,7 +211,7 @@ export default class ExtensionConnection extends EventEmitter {
 
     log.debug('Synchronised with extension state');
 
-    this.emit('extension-state');
+    this.emit('restart');
     this.emit('paired');
   }
 

@@ -112,7 +112,7 @@ class DesktopApp extends EventEmitter {
     });
 
     bubbleEvents(extensionConnection, this, [
-      'extension-state',
+      'restart',
       'connect-remote',
       'connect-external',
     ]);
@@ -144,7 +144,7 @@ class DesktopApp extends EventEmitter {
 
     this.status.isWebSocketConnected = false;
 
-    this.emit('extension-state');
+    this.emit('restart');
   }
 
   private async createWebSocketServer(): Promise<WebSocketServer> {

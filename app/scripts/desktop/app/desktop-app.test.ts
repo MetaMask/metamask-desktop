@@ -161,6 +161,8 @@ describe('Desktop', () => {
       expect(extensionConnectionConstructorMock).toHaveBeenCalledWith(
         webSocketStreamMock,
       );
+
+      expect(DesktopApp.getConnection()).toBe(extensionConnectionMock);
     });
 
     it('creates extension connection with standard web socket stream if encryption disabled', async () => {
@@ -179,17 +181,20 @@ describe('Desktop', () => {
       expect(extensionConnectionConstructorMock).toHaveBeenCalledWith(
         webSocketStreamMock,
       );
-    });
 
-    it('checks for updates', async () => {
-      await DesktopApp.init();
-      expect(updateCheck).toHaveBeenCalledTimes(1);
+      expect(DesktopApp.getConnection()).toBe(extensionConnectionMock);
     });
   });
 
   describe('on disconnect', () => {
+    let restartEventListener;
+
     beforeEach(async () => {
+      restartEventListener = jest.fn();
+
       await DesktopApp.init();
+
+      DesktopApp.on('restart', restartEventListener);
 
       await simulateNodeEvent(webSocketServerMock, 'connection', webSocketMock);
       await simulateNodeEvent(webSocketMock, 'close');
@@ -213,6 +218,14 @@ describe('Desktop', () => {
 
     it('closes web socket', async () => {
       expect(webSocketMock.close).toHaveBeenCalledTimes(1);
+    });
+
+    it('clears current connection', async () => {
+      expect(DesktopApp.getConnection()).toBeUndefined();
+    });
+
+    it('emits restart event', async () => {
+      expect(restartEventListener).toHaveBeenCalledTimes(1);
     });
   });
 });
