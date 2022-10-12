@@ -254,6 +254,17 @@
       "globals": {
         "process": true
       }
+    },
+    "@babel/cli>@jridgewell/trace-mapping": {
+      "packages": {
+        "@babel/cli>@jridgewell/trace-mapping>@jridgewell/sourcemap-codec": true,
+        "@babel/cli>@jridgewell/trace-mapping>@jridgewell/resolve-uri": true
+      }
+    },
+    "terser>@jridgewell/source-map>@jridgewell/gen-mapping": {
+      "packages": {
+        "@babel/cli>@jridgewell/trace-mapping": true
+      }
     }
   }
 }
