@@ -192,7 +192,7 @@ async function displayCriticalError(err, metamaskState, backgroundConnection) {
   });
 
   disableDesktopButton?.addEventListener('click', (_) => {
-    backgroundConnection.disableDesktop();
+    backgroundConnection.disableDesktopError();
   });
 
   log.error(err.stack);

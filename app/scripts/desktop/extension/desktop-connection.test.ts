@@ -255,7 +255,7 @@ describe('Desktop Connection', () => {
       },
     });
 
-    const simulatePortStreaMessage = async (message: any) => {
+    const simulatePortStreamMessage = async (message: any) => {
       browserMock.storage.local.get.mockResolvedValue(
         generateRawState({ desktopEnabled: true, isPairing: false }),
       );
@@ -269,8 +269,10 @@ describe('Desktop Connection', () => {
       await simulateStreamMessage(portStreamMock, message);
     };
 
-    it('updates state and restarts if method is disableDesktop', async () => {
-      await simulatePortStreaMessage({ data: { method: 'disableDesktop' } });
+    it('updates state and restarts if method is disableDesktopError', async () => {
+      await simulatePortStreamMessage({
+        data: { method: 'disableDesktopError' },
+      });
 
       expect(browser.storage.local.set).toHaveBeenCalledTimes(1);
       expect(browser.storage.local.set).toHaveBeenCalledWith(
@@ -281,7 +283,7 @@ describe('Desktop Connection', () => {
     });
 
     it('sends response if method is getDesktopEnabled', async () => {
-      await simulatePortStreaMessage({
+      await simulatePortStreamMessage({
         name: STREAM_MOCK,
         data: { id: JSON_RPC_ID_MOCK, method: 'getDesktopEnabled' },
       });

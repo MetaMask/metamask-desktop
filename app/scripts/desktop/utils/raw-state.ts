@@ -40,5 +40,5 @@ export const setDesktopState = async (desktopState: DesktopState) => {
 };
 
 export const clear = async () => {
-  await set({});
+  await browser.storage.local.clear();
 };

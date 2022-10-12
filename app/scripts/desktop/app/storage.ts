@@ -70,6 +70,14 @@ class ObfuscatedStore {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.appStore!.store = data;
   }
+
+  public async clear() {
+    if (!this.appStore) {
+      await this.init();
+    }
+
+    this.appStore?.clear();
+  }
 }
 
 export default new ObfuscatedStore();

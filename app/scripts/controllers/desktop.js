@@ -40,6 +40,6 @@ export default class DesktopController {
   }
 
   async disableDesktop() {
-    return await DesktopApp?.getInstance()?.getConnection()?.disable();
+    return await DesktopApp?.getConnection()?.disable();
   }
 }

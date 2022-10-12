@@ -5,6 +5,7 @@ import {
   CLIENT_ID_DISABLE,
   CLIENT_ID_NEW_CONNECTION,
   CLIENT_ID_STATE,
+  MESSAGE_ACKNOWLEDGE,
 } from '../../../../shared/constants/desktop';
 import {
   CLIENT_ID_MOCK,
@@ -28,7 +29,9 @@ jest.mock('obj-multiplex', () => jest.fn(), { virtual: true });
 jest.mock(
   '../browser/browser-polyfill',
   () => ({
-    browser: { storage: { local: { get: jest.fn(), set: jest.fn() } } },
+    browser: {
+      storage: { local: { get: jest.fn(), set: jest.fn(), clear: jest.fn() } },
+    },
   }),
   {
     virtual: true,
@@ -59,13 +62,6 @@ describe('Extension Connection', () => {
     objectMultiplexConstructorMock.mockReturnValue(multiplexMock);
 
     extensionConnection = new ExtensionConnection(streamMock);
-  });
-
-  describe('disconnect', () => {
-    it('destroys multiplex', async () => {
-      extensionConnection.disconnect();
-      expect(multiplexMock.destroy).toHaveBeenCalledTimes(1);
-    });
   });
 
   describe('on new connection message', () => {
@@ -178,7 +174,10 @@ describe('Extension Connection', () => {
 
       const promise = extensionConnection.disable();
       await flushPromises();
-      await simulateStreamMessage(multiplexStreamMocks[CLIENT_ID_DISABLE], {});
+      await simulateStreamMessage(
+        multiplexStreamMocks[CLIENT_ID_DISABLE],
+        MESSAGE_ACKNOWLEDGE,
+      );
       await promise;
     };
 
@@ -194,14 +193,6 @@ describe('Extension Connection', () => {
           DesktopController: { desktopEnabled: false },
         },
       });
-    });
-
-    it('does nothing if desktop state has not yet been initiated with the extension state', async () => {
-      await disable({ afterExtensionState: false });
-
-      const disableStreamMock = multiplexStreamMocks[CLIENT_ID_DISABLE];
-
-      expect(disableStreamMock.write).toHaveBeenCalledTimes(0);
     });
   });
 
