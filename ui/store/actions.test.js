@@ -39,7 +39,7 @@ const baseMockState = defaultState.metamask;
 describe('Actions', () => {
   let background;
 
-  const currentNetworkId = '42';
+  const currentNetworkId = '5';
 
   beforeEach(async () => {
     background = sinon.createStubInstance(MetaMaskController, {

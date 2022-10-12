@@ -17,6 +17,7 @@ module.exports = {
     'dist/**/*',
     'dist_desktop/**/*',
     'node_modules/**/*',
+    'jest-coverage/**/*',
   ],
   overrides: [
     /**

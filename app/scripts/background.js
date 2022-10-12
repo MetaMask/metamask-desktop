@@ -7,9 +7,8 @@ import endOfStream from 'end-of-stream';
 import pump from 'pump';
 import debounce from 'debounce-stream';
 import log from 'loglevel';
-import { storeAsStream, storeTransformStream } from '@metamask/obs-store';
+import { storeAsStream } from '@metamask/obs-store';
 import PortStream from 'extension-port-stream';
-import { captureException } from '@sentry/browser';
 
 import { ethErrors } from 'eth-rpc-errors';
 import {
@@ -204,7 +203,7 @@ async function initialize(remotePort) {
 
   await setupController(initState, initLangCode, remotePort);
 
-  if (!cfg().desktop.isApp) {
+  if (!cfg().desktop.isApp && !isManifestV3) {
     await loadPhishingWarningPage();
   }
 
@@ -323,16 +322,11 @@ async function loadStateFromPersistence() {
   if (!versionedData) {
     throw new Error('MetaMask - migrator returned undefined');
   }
+  // this initializes the meta/version data as a class variable to be used for future writes
+  localStore.setMetadata(versionedData.meta);
 
   // write to disk
-  if (localStore.isSupported) {
-    localStore.set(versionedData);
-  } else {
-    // throw in setTimeout so as to not block boot
-    setTimeout(() => {
-      throw new Error('MetaMask - Localstore not supported');
-    });
-  }
+  localStore.set(versionedData.data);
 
   // return just the data
   return versionedData.data;
@@ -373,6 +367,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     getOpenMetamaskTabsIds: () => {
       return openMetamaskTabsIDs;
     },
+    localStore,
   });
 
   setupEnsIpfsResolver({
@@ -389,8 +384,10 @@ function setupController(initState, initLangCode, remoteSourcePort) {
   pump(
     storeAsStream(controller.store),
     debounce(1000),
-    storeTransformStream(versionifyData),
-    createStreamSink(persistData),
+    createStreamSink(async (state) => {
+      await localStore.set(state);
+      await Desktop?.getInstance()?.transferState(state);
+    }),
     (error) => {
       log.error('MetaMask - Persistence pipeline failed', error);
     },
@@ -399,46 +396,6 @@ function setupController(initState, initLangCode, remoteSourcePort) {
   // TODO If we use sentry with desktop, this needs to be fixed
   if (cfg().desktop.isExtension) {
     setupSentryGetStateGlobal(controller);
-  }
-
-  /**
-   * Assigns the given state to the versioned object (with metadata), and returns that.
-   *
-   * @param {object} state - The state object as emitted by the MetaMaskController.
-   * @returns {VersionedData} The state object wrapped in an object that includes a metadata key.
-   */
-  function versionifyData(state) {
-    versionedData.data = state;
-    return versionedData;
-  }
-
-  let dataPersistenceFailing = false;
-
-  async function persistData(state) {
-    if (!state) {
-      throw new Error('MetaMask - updated state is missing');
-    }
-    if (!state.data) {
-      throw new Error('MetaMask - updated state does not have data');
-    }
-    if (localStore.isSupported) {
-      try {
-        await localStore.set(state);
-
-        if (dataPersistenceFailing) {
-          dataPersistenceFailing = false;
-        }
-
-        Desktop?.getInstance()?.transferState(state);
-      } catch (err) {
-        // log error so we dont break the pipeline
-        if (!dataPersistenceFailing) {
-          dataPersistenceFailing = true;
-          captureException(err);
-        }
-        log.error('error setting state in local store:', err);
-      }
-    }
   }
 
   //
