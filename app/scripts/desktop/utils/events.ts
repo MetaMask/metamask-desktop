@@ -36,25 +36,3 @@ export const onceAny = (
     target[0].on(target[1], handledListener);
   }
 };
-
-export class RecordingEventEmitter {
-  private target: EventEmitter;
-
-  private listeners: { event: string; callback: (...args: any[]) => any }[];
-
-  constructor(target: EventEmitter) {
-    this.target = target;
-    this.listeners = [];
-  }
-
-  public on(event: string, listener: (...args: any[]) => any) {
-    this.target.on(event, listener);
-    this.listeners.push({ event, callback: listener });
-  }
-
-  public remove() {
-    for (const listener of this.listeners) {
-      this.target.removeListener(listener.event, listener.callback);
-    }
-  }
-}

@@ -10,6 +10,9 @@ import {
 } from '../shared/web-socket-stream';
 import ExtensionConnection from '../app/extension-connection';
 import DesktopConnection from '../extension/desktop-connection';
+import { ObservableStore } from '@metamask/obs-store';
+import { ExtensionPairing } from '../shared/pairing';
+import { TestConnectionResult } from '../types/desktop';
 
 export const PUBLIC_KEY_MOCK = 'testPublicKey';
 export const PRIVATE_KEY_MOCK = 'testPrivateKey';
@@ -58,6 +61,16 @@ export const NEW_CONNECTION_MESSAGE_MOCK = {
   clientId: CLIENT_ID_MOCK,
   connectionType: ConnectionType.INTERNAL,
   remotePort: { name: REMOTE_PORT_NAME_MOCK, sender: REMOTE_PORT_SENDER_MOCK },
+};
+
+export const TEST_CONNECTION_RESULT_MOCK: TestConnectionResult = {
+  isConnected: true,
+  versionCheck: {
+    extensionVersion: '123',
+    desktopVersion: '456',
+    isDesktopVersionValid: true,
+    isExtensionVersionValid: false,
+  },
 };
 
 export const createWebSocketServerMock = (): jest.Mocked<WebSocketServer> =>
@@ -143,6 +156,7 @@ export const createExtensionConnectionMock =
       disconnect: jest.fn(),
       removeListener: jest.fn(),
       getPairing: jest.fn(),
+      disable: jest.fn(),
     } as any);
 
 export const createDesktopConnectionMock = (): jest.Mocked<DesktopConnection> =>
@@ -151,4 +165,14 @@ export const createDesktopConnectionMock = (): jest.Mocked<DesktopConnection> =>
     on: jest.fn(),
     disconnect: jest.fn(),
     getDesktopVersion: jest.fn(),
+  } as any);
+
+export const createObservableStoreMock = (): jest.Mocked<ObservableStore> =>
+  ({
+    updateState: jest.fn(),
+  } as any);
+
+export const createExtensionPairingMock = (): jest.Mocked<ExtensionPairing> =>
+  ({
+    generateOTP: jest.fn(),
   } as any);

@@ -1,9 +1,10 @@
 import { ObservableStore } from '@metamask/obs-store';
 import cfg from '../desktop/utils/config';
 import { ExtensionPairing } from '../desktop/shared/pairing';
+import { TestConnectionResult } from '../desktop/types/desktop';
 
-let DesktopApp;
-let DesktopManager;
+let DesktopApp: any;
+let DesktopManager: any;
 
 if (cfg().desktop.isApp) {
   // eslint-disable-next-line node/global-require
@@ -11,35 +12,35 @@ if (cfg().desktop.isApp) {
 }
 
 if (cfg().desktop.isExtension) {
-  // eslint-disable-next-line node/global-require
-  DesktopManager = require('../desktop/extension/desktop-manager').default;
+// eslint-disable-next-line node/global-require
+DesktopManager = require('../desktop/extension/desktop-manager').default;
 }
 
 export default class DesktopController {
-  constructor(opts = {}) {
-    const { initState } = opts;
+  private store: ObservableStore;
 
+  constructor({ initState }: { initState: any }) {
     this.store = new ObservableStore({
       desktopEnabled: false,
       ...initState,
     });
   }
 
-  setDesktopEnabled(desktopEnabled) {
+  public setDesktopEnabled(desktopEnabled: boolean) {
     this.store.updateState({
       desktopEnabled,
     });
   }
 
-  generateOtp() {
+  public generateOtp(): string {
     return ExtensionPairing.generateOTP();
   }
 
-  async testDesktopConnection() {
+  public async testDesktopConnection(): Promise<TestConnectionResult> {
     return await DesktopManager?.testConnection();
   }
 
-  async disableDesktop() {
-    return await DesktopApp?.getConnection()?.disable();
+  public async disableDesktop() {
+    await DesktopApp?.getConnection()?.disable();
   }
 }

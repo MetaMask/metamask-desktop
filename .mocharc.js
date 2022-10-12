@@ -8,6 +8,7 @@ module.exports = {
     './app/scripts/platforms/*.test.js',
     './app/scripts/controllers/network/**/*.test.js',
     './app/scripts/controllers/permissions/**/*.test.js',
+    './app/scripts/controllers/desktop.test.ts',
     './app/scripts/constants/error-utils.test.js',
   ],
   recursive: true,
