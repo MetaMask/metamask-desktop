@@ -38,7 +38,7 @@ export class ExtensionPairing {
       return;
     }
 
-    await rawState.setDesktopState({ desktopEnabled: true, isPairing: false });
+    await rawState.setDesktopState({ desktopEnabled: true });
     await this.transferState();
 
     browser.runtime.reload();

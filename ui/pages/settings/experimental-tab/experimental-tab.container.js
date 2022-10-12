@@ -7,8 +7,8 @@ import {
   setEIP1559V2Enabled,
   setCustomNetworkListEnabled,
   setDesktopEnabled,
-  setIsPairing,
   testDesktopConnection,
+  disableDesktop,
   hideLoadingIndication,
   showLoadingIndication,
 } from '../../../store/actions';
@@ -18,7 +18,6 @@ import {
   getEIP1559V2Enabled,
   getIsCustomNetworkListEnabled,
   getIsDesktopEnabled,
-  getIsPairing,
 } from '../../../selectors';
 import ExperimentalTab from './experimental-tab.component';
 
@@ -29,7 +28,6 @@ const mapStateToProps = (state) => {
     eip1559V2Enabled: getEIP1559V2Enabled(state),
     customNetworkListEnabled: getIsCustomNetworkListEnabled(state),
     desktopEnabled: getIsDesktopEnabled(state),
-    isPairing: getIsPairing(state),
   };
 };
 
@@ -42,10 +40,14 @@ const mapDispatchToProps = (dispatch) => {
     setCustomNetworkListEnabled: (val) =>
       dispatch(setCustomNetworkListEnabled(val)),
     setDesktopEnabled: (val) => dispatch(setDesktopEnabled(val)),
-    setIsPairing: (val) => dispatch(setIsPairing(val)),
     testDesktopConnection: () => testDesktopConnection(),
+    disableDesktop: () => disableDesktop(),
     showLoader: () => dispatch(showLoadingIndication()),
     hideLoader: () => dispatch(hideLoadingIndication()),
+    displayWarning: (message) => {
+      // eslint-disable-next-line no-alert
+      window.alert(message);
+    },
   };
 };
 

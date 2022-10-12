@@ -1,7 +1,6 @@
 import {
   createWebSocketBrowserMock,
   createWebSocketStreamMock,
-  createEventEmitterMock,
   createDesktopConnectionMock,
 } from '../test/mocks';
 import { simulateBrowserEvent, flushPromises } from '../test/utils';
@@ -9,12 +8,29 @@ import EncryptedWebSocketStream from '../encryption/encrypted-web-socket-stream'
 import { WebSocketStream } from '../shared/web-socket-stream';
 import cfg from '../utils/config';
 import { TestConnectionResult } from '../types/desktop';
+import { browser } from '../browser/browser-polyfill';
 import DesktopConnection from './desktop-connection';
 import desktopManager from './desktop-manager';
 
 jest.mock('../shared/web-socket-stream');
 jest.mock('../encryption/encrypted-web-socket-stream');
 jest.mock('./desktop-connection');
+jest.mock('../../../../shared/modules/mv3.utils', () => ({}), {
+  virtual: true,
+});
+
+jest.mock(
+  '../browser/browser-polyfill',
+  () => ({
+    browser: {
+      storage: { local: { get: jest.fn(), set: jest.fn() } },
+      runtime: { reload: jest.fn() },
+    },
+  }),
+  {
+    virtual: true,
+  },
+);
 
 const removeInstance = () => {
   // eslint-disable-next-line
@@ -25,8 +41,8 @@ const removeInstance = () => {
 describe('Desktop Manager', () => {
   const webSocketMock = createWebSocketBrowserMock();
   const webSocketStreamMock = createWebSocketStreamMock();
-  const backgroundMock = createEventEmitterMock();
   const desktopConnectionMock = createDesktopConnectionMock();
+  const browserMock = browser as any;
 
   const webSocketStreamConstructorMock = WebSocketStream as jest.MockedClass<
     typeof WebSocketStream
@@ -43,8 +59,7 @@ describe('Desktop Manager', () => {
   const initDesktopManager = async <T>(
     promise?: Promise<T>,
   ): Promise<T | void> => {
-    const initPromise =
-      promise || desktopManager.init(undefined, backgroundMock);
+    const initPromise = promise || desktopManager.init(undefined);
 
     await flushPromises();
     await simulateBrowserEvent(webSocketMock, 'open');
@@ -71,7 +86,7 @@ describe('Desktop Manager', () => {
 
   describe('init', () => {
     const init = async (state: any) => {
-      const promise = desktopManager.init(state, backgroundMock);
+      const promise = desktopManager.init(state);
       await initDesktopManager(promise);
     };
 
@@ -83,6 +98,11 @@ describe('Desktop Manager', () => {
       (_, streamType, webSocketStreamConstructor, disableEncryption) => {
         beforeEach(async () => {
           cfg().desktop.webSocket.disableEncryption = disableEncryption;
+
+          browserMock.storage.local.get.mockResolvedValue({
+            data: { DesktopController: { desktopEnabled: true } },
+          });
+
           await init({ DesktopController: { desktopEnabled: true } });
         });
 
@@ -107,25 +127,31 @@ describe('Desktop Manager', () => {
         });
 
         it('sets current connection', async () => {
-          expect(desktopManager.getConnection()).toBe(desktopConnectionMock);
+          expect(await desktopManager.getConnection()).toBe(
+            desktopConnectionMock,
+          );
         });
       },
     );
 
     it('does nothing if state has desktop disabled', async () => {
+      browserMock.storage.local.get.mockResolvedValue({
+        data: { DesktopController: { desktopEnabled: false } },
+      });
+
       await init({ DesktopController: { desktopEnabled: false } });
 
       expect(WebSocketStream).toHaveBeenCalledTimes(0);
       expect(EncryptedWebSocketStream).toHaveBeenCalledTimes(0);
       expect(webSocketStreamMock.init).toHaveBeenCalledTimes(0);
       expect(desktopConnectionConstructorMock).toHaveBeenCalledTimes(0);
-      expect(desktopManager.getConnection()).toBeUndefined();
+      expect(await desktopManager.getConnection()).toBeUndefined();
     });
   });
 
   describe('testConnection', () => {
     beforeEach(async () => {
-      await desktopManager.init(undefined, backgroundMock);
+      await desktopManager.init(undefined);
     });
 
     const testConnection = async (): Promise<TestConnectionResult> => {
@@ -167,23 +193,6 @@ describe('Desktop Manager', () => {
         it('does not transfer state', async () => {
           await testConnection();
           expect(desktopConnectionMock.transferState).toHaveBeenCalledTimes(0);
-        });
-
-        it('does not set current connection', async () => {
-          await testConnection();
-          expect(desktopManager.getConnection()).toBeUndefined();
-        });
-
-        it('returns fail if desktop version below minimum', async () => {
-          desktopConnectionMock.getDesktopVersion.mockResolvedValueOnce(-1);
-          const result = await testConnection();
-          expect(result.success).toBe(false);
-        });
-
-        it('returns success if desktop version valid', async () => {
-          desktopConnectionMock.getDesktopVersion.mockResolvedValueOnce(2);
-          const result = await testConnection();
-          expect(result.success).toBe(true);
         });
       },
     );

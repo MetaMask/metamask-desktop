@@ -1,15 +1,21 @@
 import { browser } from '../browser/browser-polyfill';
 import { DesktopState } from '../types/desktop';
 
+let cachedDesktopState: DesktopState;
+
 export const get = async (): Promise<any> => {
-  return await browser.storage.local.get();
+  const state = await browser.storage.local.get();
+  cachedDesktopState = state.data?.DesktopController || {};
+  return state;
 };
 
 export const getDesktopState = async (): Promise<DesktopState> => {
   const state = await get();
-  const currentDesktopState = state.data?.DesktopController || {};
+  return state.data?.DesktopController || {};
+};
 
-  return { desktopEnabled: false, isPairing: false, ...currentDesktopState };
+export const getCachedDesktopState = (): DesktopState => {
+  return cachedDesktopState || {};
 };
 
 export const getAndUpdateDesktopState = async (
@@ -25,6 +31,7 @@ export const getAndUpdateDesktopState = async (
 
 export const set = async (state: any) => {
   await browser.storage.local.set(state);
+  cachedDesktopState = state.data?.DesktopController || {};
 };
 
 export const setDesktopState = async (desktopState: DesktopState) => {

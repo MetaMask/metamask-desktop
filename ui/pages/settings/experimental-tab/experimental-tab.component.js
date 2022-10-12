@@ -7,10 +7,7 @@ import {
 } from '../../../helpers/utils/settings-search';
 import { EVENT } from '../../../../shared/constants/metametrics';
 import Button from '../../../components/ui/button';
-import {
-  DESKTOP_PAIRING_ROUTE,
-  ABOUT_US_ROUTE,
-} from '../../../helpers/constants/routes';
+import { DESKTOP_PAIRING_ROUTE } from '../../../helpers/constants/routes';
 
 export default class ExperimentalTab extends PureComponent {
   static contextTypes = {
@@ -29,11 +26,12 @@ export default class ExperimentalTab extends PureComponent {
     setCustomNetworkListEnabled: PropTypes.func,
     desktopEnabled: PropTypes.bool,
     setDesktopEnabled: PropTypes.func,
-    setIsPairing: PropTypes.func,
     history: PropTypes.object,
     testDesktopConnection: PropTypes.func,
+    disableDesktop: PropTypes.func,
     showLoader: PropTypes.func,
     hideLoader: PropTypes.func,
+    displayWarning: PropTypes.func,
   };
 
   settingsRefs = Array(
@@ -245,14 +243,16 @@ export default class ExperimentalTab extends PureComponent {
     const {
       desktopEnabled,
       setDesktopEnabled,
-      setIsPairing,
       testDesktopConnection,
+      disableDesktop,
       history,
       showLoader,
       hideLoader,
+      displayWarning,
     } = this.props;
 
     if (desktopEnabled) {
+      await disableDesktop();
       setDesktopEnabled(false);
       return;
     }
@@ -261,9 +261,18 @@ export default class ExperimentalTab extends PureComponent {
     const testResult = await testDesktopConnection();
     hideLoader();
 
-    if (!testResult.success) {
-      // Pending error page
-      history.push(ABOUT_US_ROUTE);
+    if (!testResult.isConnected) {
+      displayWarning('Cannot connect to desktop app');
+      return;
+    }
+
+    if (!testResult.versionCheck.isExtensionVersionValid) {
+      displayWarning('Extension is outdated');
+      return;
+    }
+
+    if (!testResult.versionCheck.isDesktopVersionValid) {
+      displayWarning('Desktop app is outdated');
       return;
     }
 
@@ -273,7 +282,6 @@ export default class ExperimentalTab extends PureComponent {
     }
 
     history.push(DESKTOP_PAIRING_ROUTE);
-    setIsPairing(true);
   }
 
   renderDesktopPairingButton() {

@@ -3979,16 +3979,10 @@ export async function generateOtp() {
   return await submitRequestToBackground('generateOtp', []);
 }
 
-export function setIsPairing(isPairing) {
-  return async () => {
-    try {
-      await submitRequestToBackground('setIsPairing', [isPairing]);
-    } catch (error) {
-      log.error(error);
-    }
-  };
-}
-
 export async function testDesktopConnection() {
   return await submitRequestToBackground('testDesktopConnection');
+}
+
+export async function disableDesktop() {
+  return await submitRequestToBackground('disableDesktop');
 }

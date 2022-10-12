@@ -1,43 +1,25 @@
 import { Duplex } from 'stream';
-import EventEmitter from 'events';
 import log from 'loglevel';
-import { generate } from '../../../../shared/modules/totp';
+import PortStream from 'extension-port-stream';
 import cfg from '../utils/config';
 import { BrowserWebSocket, WebSocketStream } from '../shared/web-socket-stream';
 import EncryptedWebSocketStream from '../encryption/encrypted-web-socket-stream';
 import { timeoutPromise } from '../utils/utils';
 import { TestConnectionResult } from '../types/desktop';
+import * as RawState from '../utils/raw-state';
+import { ConnectionType } from '../types/background';
+import { isManifestV3 } from '../../../../shared/modules/mv3.utils';
 import DesktopConnection from './desktop-connection';
 
-const TIMEOUT_CONNECT = 20000;
+const TIMEOUT_CONNECT = 10000;
 
 class DesktopManager {
-  private background?: EventEmitter;
-
   private desktopConnection?: DesktopConnection;
 
-  private connected: boolean;
-
-  constructor() {
-    this.connected = false;
-  }
-
-  public async init(state: any, background: EventEmitter) {
-    this.background = background;
-
-    this.background.on('memory-state-update', (flatState: any) =>
-      this.onMemoryStateUpdate(flatState),
-    );
-
-    background.on('generate-otp', (callback) => {
-      const otp = generate();
-      return callback(otp);
-    });
-
+  public async init(state: any) {
     log.debug('Init State', state);
 
     if (state?.DesktopController?.desktopEnabled === true) {
-      this.connected = true;
       this.desktopConnection = await this.createConnection();
 
       await this.desktopConnection.transferState();
@@ -46,51 +28,73 @@ class DesktopManager {
     log.debug('Initialised desktop manager');
   }
 
-  public getConnection(): DesktopConnection | undefined {
+  public isDesktopEnabled(): boolean {
+    return RawState.getCachedDesktopState().desktopEnabled === true;
+  }
+
+  public async getConnection(): Promise<DesktopConnection | undefined> {
+    const desktopState = await RawState.getDesktopState();
+    const { desktopEnabled } = desktopState;
+
+    if (!desktopEnabled) {
+      log.debug('Desktop not enabled, no connection');
+      return undefined;
+    }
+
+    if (!this.desktopConnection) {
+      await this.createConnection();
+    }
+
     return this.desktopConnection;
   }
 
-  public async testConnection(): Promise<TestConnectionResult> {
-    const connection = await this.createConnection();
-    const isValidVersion = await this.verifyVersion(connection);
-    connection.disconnect();
-
-    return { success: isValidVersion };
-  }
-
-  private async onMemoryStateUpdate(flatState: any) {
-    const isPairing = flatState.isPairing as boolean;
-
-    if (!this.connected && isPairing === true) {
-      log.debug('Desktop is pairing');
-
-      this.connected = true;
-      this.desktopConnection = await this.createConnection();
-
-      if (cfg().desktop.skipOtpPairingFlow) {
-        log.debug('Desktop enabled');
-        await this.desktopConnection.transferState();
-      }
+  public createStream = (
+    remotePort: any,
+    connectionType: ConnectionType,
+  ): boolean => {
+    if (!RawState.getCachedDesktopState().desktopEnabled) {
+      return false;
     }
-  }
 
-  private onDisconnect(
-    webSocket: BrowserWebSocket,
-    stream: Duplex,
-    connection: DesktopConnection,
-  ) {
-    log.debug('Web socket disconnected');
+    const uiStream = new PortStream(remotePort as any) as any as Duplex;
+    uiStream.pause();
 
-    stream.removeAllListeners();
-    stream.destroy();
+    (async () => {
+      const desktopConnection = await this.getConnection();
 
-    webSocket.close();
+      await desktopConnection?.createStream(
+        remotePort,
+        connectionType,
+        uiStream,
+      );
 
-    connection.removeAllListeners();
+      if (isManifestV3 && connectionType === ConnectionType.INTERNAL) {
+        // When in Desktop Mode the responsibility to send CONNECTION_READY is on the desktop app side
+        // Message below if captured by UI code in app/scripts/ui.js which will trigger UI initialisation
+        // This ensures that UI is initialised only after background is ready
+        // It fixes the issue of blank screen coming when extension is loaded, the issue is very frequent in MV3
+        remotePort.postMessage({ name: 'CONNECTION_READY' });
+      }
+    })();
 
-    if (connection === this.desktopConnection) {
-      this.desktopConnection = undefined;
-      this.connected = false;
+    return true;
+  };
+
+  public async testConnection(): Promise<TestConnectionResult> {
+    log.debug('Testing desktop connection');
+
+    try {
+      const connection =
+        this.desktopConnection || (await this.createConnection());
+
+      const versionCheckResult = await connection.checkVersions();
+
+      log.debug('Connection test successful');
+
+      return { isConnected: true, versionCheck: versionCheckResult };
+    } catch {
+      log.debug('Connection test failed');
+      return { isConnected: false };
     }
   }
 
@@ -115,23 +119,28 @@ class DesktopManager {
 
     log.debug('Created web socket connection');
 
+    this.desktopConnection = connection;
+
     return connection;
   }
 
-  private async verifyVersion(connection: DesktopConnection): Promise<boolean> {
-    const desktopVersion = await connection.getDesktopVersion();
-    const minimumDesktopVersion = 0;
+  private onDisconnect(
+    webSocket: BrowserWebSocket,
+    stream: Duplex,
+    connection: DesktopConnection,
+  ) {
+    log.debug('Web socket disconnected');
 
-    if (desktopVersion < minimumDesktopVersion) {
-      log.error('Desktop version check failed', {
-        desktopVersion,
-        minimumDesktopVersion,
-      });
+    stream.removeAllListeners();
+    stream.destroy();
 
-      return false;
+    webSocket.close();
+
+    connection.removeAllListeners();
+
+    if (connection === this.desktopConnection) {
+      this.desktopConnection = undefined;
     }
-
-    return true;
   }
 
   private async createWebSocket(): Promise<WebSocket> {

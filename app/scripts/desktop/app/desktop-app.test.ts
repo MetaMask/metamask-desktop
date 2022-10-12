@@ -71,7 +71,6 @@ describe('Desktop', () => {
   const webSocketStreamMock = createWebSocketStreamMock();
   const webSocketServerMock = createWebSocketServerMock();
   const appMock = app as any;
-  const backgroundMock = createEventEmitterMock();
   const extensionConnectionMock = createExtensionConnectionMock();
   const browserMock = browser as any;
   const pairingMock = createEventEmitterMock();
@@ -129,7 +128,7 @@ describe('Desktop', () => {
 
     removeInstance();
 
-    desktopApp = DesktopApp.newInstance(backgroundMock);
+    desktopApp = DesktopApp.newInstance();
   });
 
   describe('static init', () => {
@@ -138,7 +137,7 @@ describe('Desktop', () => {
     });
 
     it('creates and initialises', async () => {
-      await DesktopApp.init(backgroundMock);
+      await DesktopApp.init();
 
       expect(DesktopApp.getInstance()).toBeDefined();
       expect(webSocketServerConstructorMock).toHaveBeenCalledTimes(1);
@@ -153,7 +152,7 @@ describe('Desktop', () => {
     it('creates a new instance if none exists', () => {
       expect(DesktopApp.getInstance()).toBeUndefined();
 
-      const instance = DesktopApp.newInstance(backgroundMock);
+      const instance = DesktopApp.newInstance();
 
       expect(DesktopApp.getInstance()).toBeDefined();
       expect(DesktopApp.getInstance()).toBe(instance);
@@ -162,8 +161,8 @@ describe('Desktop', () => {
     it('returns old instance if one already exists', () => {
       expect(DesktopApp.getInstance()).toBeUndefined();
 
-      const firstInstance = DesktopApp.newInstance(backgroundMock);
-      const secondInstance = DesktopApp.newInstance(backgroundMock);
+      const firstInstance = DesktopApp.newInstance();
+      const secondInstance = DesktopApp.newInstance();
 
       expect(DesktopApp.getInstance()).toBeDefined();
       expect(DesktopApp.getInstance()).toBe(firstInstance);
@@ -181,7 +180,7 @@ describe('Desktop', () => {
     });
 
     it('returns true if instance created', () => {
-      DesktopApp.newInstance(backgroundMock);
+      DesktopApp.newInstance();
       expect(DesktopApp.hasInstance()).toBe(true);
     });
   });
@@ -219,7 +218,6 @@ describe('Desktop', () => {
       expect(extensionConnectionConstructorMock).toHaveBeenCalledTimes(1);
       expect(extensionConnectionConstructorMock).toHaveBeenCalledWith(
         webSocketStreamMock,
-        backgroundMock,
       );
     });
 
@@ -238,7 +236,6 @@ describe('Desktop', () => {
       expect(extensionConnectionConstructorMock).toHaveBeenCalledTimes(1);
       expect(extensionConnectionConstructorMock).toHaveBeenCalledWith(
         webSocketStreamMock,
-        backgroundMock,
       );
     });
 

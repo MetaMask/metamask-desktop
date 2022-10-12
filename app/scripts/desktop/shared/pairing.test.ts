@@ -48,7 +48,7 @@ describe('Pairing', () => {
       const DATA_MOCK_STATE_PAIRED = {
         ...DATA_MOCK,
         data: {
-          DesktopController: { desktopEnabled: true, isPairing: false },
+          DesktopController: { desktopEnabled: true },
         },
       };
 

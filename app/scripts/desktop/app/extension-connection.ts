@@ -17,14 +17,12 @@ import { EndConnectionMessage, NewConnectionMessage } from '../types/message';
 import { ClientId } from '../types/desktop';
 import { registerRequestStream } from '../browser/node-browser';
 import { waitForMessage } from '../utils/stream';
-import { RecordingEventEmitter } from '../utils/events';
 import { DesktopPairing } from '../shared/pairing';
 import * as RawState from '../utils/raw-state';
+import { DesktopVersionCheck } from '../shared/version-check';
 
 export default class ExtensionConnection extends EventEmitter {
   private stream: Duplex;
-
-  private background: RecordingEventEmitter;
 
   private connections: NewConnectionMessage[];
 
@@ -42,28 +40,17 @@ export default class ExtensionConnection extends EventEmitter {
 
   private disableStream: Duplex;
 
-  private versionStream: Duplex;
-
   private hasBeenInitializedWithExtensionState?: boolean;
 
   private pairing: DesktopPairing;
 
-  public constructor(stream: Duplex, background: EventEmitter) {
+  public constructor(stream: Duplex) {
     super();
 
     this.stream = stream;
-    this.background = new RecordingEventEmitter(background);
     this.connections = [];
     this.clientStreams = {};
     this.multiplex = new ObjectMultiplex();
-
-    this.background.on('persisted-state-update', (rawState: any) =>
-      this.onPersistedStateUpdate(rawState),
-    );
-
-    this.background.on('memory-state-update', (flatState: any) =>
-      this.onFlatMemStateUpdate(flatState),
-    );
 
     this.newConnectionStream = this.multiplex.createStream(
       CLIENT_ID_NEW_CONNECTION,
@@ -92,8 +79,8 @@ export default class ExtensionConnection extends EventEmitter {
     const pairingStream = this.multiplex.createStream(CLIENT_ID_PAIRING);
     this.pairing = new DesktopPairing(pairingStream).init();
 
-    this.versionStream = this.multiplex.createStream(CLIENT_ID_VERSION);
-    this.versionStream.on('data', () => this.onVersionRequest());
+    const versionStream = this.multiplex.createStream(CLIENT_ID_VERSION);
+    new DesktopVersionCheck(versionStream).init();
 
     this.stream.pipe(this.multiplex).pipe(this.stream);
   }
@@ -103,8 +90,44 @@ export default class ExtensionConnection extends EventEmitter {
   }
 
   public disconnect() {
-    this.background.remove();
     this.multiplex.destroy();
+  }
+
+  public transferState(rawState: any) {
+    if (!this.canTransferState()) {
+      log.debug(
+        'Cannot transfer state to extension as waiting for initial state from extension',
+      );
+      return;
+    }
+
+    this.stateStream.write(rawState);
+
+    log.debug('Sent state to extension');
+  }
+
+  public async disable() {
+    log.debug('Desktop disabled');
+
+    if (this.canTransferState()) {
+      const stateToTransfer = await RawState.getAndUpdateDesktopState({
+        desktopEnabled: false,
+      });
+
+      await RawState.clear();
+
+      this.disableStream.write(stateToTransfer);
+
+      await waitForMessage(this.disableStream);
+
+      log.debug(
+        'Sent state to extension and reset extension state initialization flag',
+      );
+    }
+
+    this.hasBeenInitializedWithExtensionState = false;
+
+    this.emit('disable');
   }
 
   private onNewConnectionMessage(data: NewConnectionMessage) {
@@ -181,59 +204,6 @@ export default class ExtensionConnection extends EventEmitter {
 
     this.emit('extension-state');
     this.emit('paired');
-  }
-
-  private async onFlatMemStateUpdate(flatState: any) {
-    if (flatState.isPairing === false && flatState.desktopEnabled === false) {
-      await this.disable();
-    }
-  }
-
-  private onPersistedStateUpdate(rawState: any) {
-    this.transferState(rawState);
-  }
-
-  private onVersionRequest() {
-    log.debug('Received version request');
-    this.versionStream.write({ version: 1 });
-  }
-
-  private async disable() {
-    log.debug('Desktop disabled');
-
-    if (this.canTransferState()) {
-      const stateToTransfer = await RawState.getAndUpdateDesktopState({
-        desktopEnabled: false,
-        isPairing: false,
-      });
-
-      await RawState.clear();
-
-      this.disableStream.write(stateToTransfer);
-
-      await waitForMessage(this.disableStream);
-
-      log.debug(
-        'Sent state to extension and reset extension state initialization flag',
-      );
-    }
-
-    this.hasBeenInitializedWithExtensionState = false;
-
-    this.emit('disable');
-  }
-
-  private transferState(rawState: any) {
-    if (!this.canTransferState()) {
-      log.debug(
-        'Cannot transfer state to extension as waiting for initial state from extension',
-      );
-      return;
-    }
-
-    this.stateStream.write(rawState);
-
-    log.debug('Sent state to extension');
   }
 
   private canTransferState() {

@@ -1185,16 +1185,6 @@ export function getIsDesktopEnabled(state) {
   return state.metamask.desktopEnabled;
 }
 
-/**
- * To get the `isPairing`
- *
- * @param {*} state
- * @returns Boolean
- */
-export function getIsPairing(state) {
-  return state.metamask.isPairing;
-}
-
 export function getIsCustomNetwork(state) {
   const chainId = getCurrentChainId(state);
 

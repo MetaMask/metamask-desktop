@@ -35,6 +35,12 @@ jest.mock('extension-port-stream');
 jest.mock('uuid');
 jest.mock('../../../../shared/modules/totp');
 
+jest.mock(
+  '../shared/version-check',
+  () => ({ ExtensionVersionCheck: jest.fn() }),
+  { virtual: true },
+);
+
 jest.mock('stream', () => ({ Duplex: jest.fn(), PassThrough: jest.fn() }), {
   virtual: true,
 });
@@ -114,11 +120,11 @@ describe('Desktop Connection', () => {
     { connectionType: ConnectionType.EXTERNAL, name: `External` },
   ])('createStream - $name Connection', ({ connectionType }) => {
     it('pipes remote port to new multiplex client stream', async () => {
-      desktopConnection.createStream(remotePortMock, connectionType);
-
-      expect(portStreamConstructorMock).toHaveBeenCalledTimes(1);
-      expect(portStreamConstructorMock).toHaveBeenCalledWith(remotePortMock);
-
+      desktopConnection.createStream(
+        remotePortMock,
+        connectionType,
+        portStreamMock,
+      );
       expect(multiplexMock.createStream).toHaveBeenCalledTimes(8);
       expect(multiplexMock.createStream).toHaveBeenLastCalledWith(UUID_MOCK);
 
@@ -135,7 +141,11 @@ describe('Desktop Connection', () => {
     });
 
     it('sends new connection message', async () => {
-      desktopConnection.createStream(remotePortMock, connectionType);
+      desktopConnection.createStream(
+        remotePortMock,
+        connectionType,
+        portStreamMock,
+      );
 
       const newConnectionStreamMock =
         multiplexStreamMocks[CLIENT_ID_NEW_CONNECTION];
@@ -162,6 +172,7 @@ describe('Desktop Connection', () => {
       await desktopConnection.createStream(
         remotePortMock,
         ConnectionType.INTERNAL,
+        portStreamMock,
       );
 
       const stateStreamMock = multiplexStreamMocks[CLIENT_ID_STATE];
@@ -182,6 +193,7 @@ describe('Desktop Connection', () => {
       await desktopConnection.createStream(
         remotePortMock,
         ConnectionType.INTERNAL,
+        portStreamMock,
       );
 
       await simulateNodeEvent(portStreamMock, 'finish');
@@ -200,6 +212,7 @@ describe('Desktop Connection', () => {
       await desktopConnection.createStream(
         remotePortMock,
         ConnectionType.INTERNAL,
+        portStreamMock,
       );
 
       const disableStreamMock = multiplexStreamMocks[CLIENT_ID_DISABLE];
@@ -221,6 +234,7 @@ describe('Desktop Connection', () => {
       await desktopConnection.createStream(
         remotePortMock,
         ConnectionType.INTERNAL,
+        portStreamMock,
       );
 
       const stateStreaMock = multiplexStreamMocks[CLIENT_ID_STATE];
@@ -249,6 +263,7 @@ describe('Desktop Connection', () => {
       await desktopConnection.createStream(
         remotePortMock,
         ConnectionType.INTERNAL,
+        portStreamMock,
       );
 
       await simulateStreamMessage(portStreamMock, message);

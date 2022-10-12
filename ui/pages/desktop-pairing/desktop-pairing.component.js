@@ -19,8 +19,6 @@ export default class DesktopPairingPage extends Component {
 
   static propTypes = {
     history: PropTypes.object.isRequired,
-    setIsPairing: PropTypes.func.isRequired,
-    isPairing: PropTypes.bool.isRequired,
     mostRecentOverviewPage: PropTypes.string.isRequired,
     showLoadingIndication: PropTypes.func,
     hideLoadingIndication: PropTypes.func,
@@ -44,12 +42,6 @@ export default class DesktopPairingPage extends Component {
   }
 
   componentWillUnmount() {
-    const { isPairing, setIsPairing } = this.props;
-
-    if (isPairing) {
-      setIsPairing(false);
-    }
-
     clearInterval(this.generateInterval);
     clearInterval(this.refreshinterval);
   }
@@ -123,10 +115,8 @@ export default class DesktopPairingPage extends Component {
         <Button
           type="primary"
           rounded
-          value={this.props.isPairing}
-          onClick={(value) => {
+          onClick={() => {
             this.goBack();
-            this.props.setIsPairing(!value);
           }}
         >
           {t('done')}
