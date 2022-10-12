@@ -51,7 +51,14 @@ function createTask(taskName, taskFn) {
 
 function runInChildProcess(
   task,
-  { applyLavaMoat, buildType, isLavaMoat, policyOnly, shouldLintFenceFiles },
+  {
+    applyLavaMoat,
+    buildType,
+    isLavaMoat,
+    policyOnly,
+    shouldLintFenceFiles,
+    includeDesktopUi,
+  },
 ) {
   const taskName = typeof task === 'string' ? task : task.taskName;
   if (!taskName) {
@@ -73,6 +80,7 @@ function runInChildProcess(
         `--lint-fence-files=${shouldLintFenceFiles ? 'true' : 'false'}`,
         `--policyOnly=${policyOnly ? 'true' : 'false'}`,
         '--skip-stats=true',
+        `--include-desktop-ui=${includeDesktopUi ? 'true' : 'false'}`,
       ],
       {
         env: process.env,
