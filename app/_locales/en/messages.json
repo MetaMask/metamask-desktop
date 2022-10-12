@@ -959,6 +959,57 @@
   "description": {
     "message": "Description"
   },
+  "desktopConnectionCriticalErrorDescription": {
+    "message": "This error could be intermittent, so try restarting the extension or disable MetaMask Desktop."
+  },
+  "desktopConnectionCriticalErrorTitle": {
+    "message": "MetaMask had trouble starting"
+  },
+  "desktopConnectionLostErrorCTA": {
+    "message": "Reconnect MetaMask Desktop"
+  },
+  "desktopConnectionLostErrorDescription": {
+    "message": "Please make sure you have the desktop app up and running."
+  },
+  "desktopConnectionLostErrorTitle": {
+    "message": "MetaMask Desktop connection was lost"
+  },
+  "desktopDisableErrorCTA": {
+    "message": "Disable MetaMask Desktop"
+  },
+  "desktopErrorRestartMMCTA": {
+    "message": "Restart MetaMask"
+  },
+  "desktopNotFoundErrorCTA": {
+    "message": "Download MetaMask Desktop"
+  },
+  "desktopNotFoundErrorDescription1": {
+    "message": "Please make sure you have the desktop app up and running."
+  },
+  "desktopNotFoundErrorDescription2": {
+    "message": "If you have no desktop app installed, please download it on the MetaMask website."
+  },
+  "desktopNotFoundErrorTitle": {
+    "message": "MetaMask Desktop was not found"
+  },
+  "desktopOutdatedErrorCTA": {
+    "message": "Update MetaMask Desktop"
+  },
+  "desktopOutdatedErrorDescription": {
+    "message": "Your MetaMask desktop app needs to be upgraded."
+  },
+  "desktopOutdatedErrorTitle": {
+    "message": "MetaMask Desktop is outdated"
+  },
+  "desktopUnexpectedErrorCTA": {
+    "message": "Return MetaMask Home"
+  },
+  "desktopUnexpectedErrorDescription": {
+    "message": "Check your MetaMask Desktop to restore connection"
+  },
+  "desktopUnexpectedErrorTitle": {
+    "message": "Something went wrong..."
+  },
   "details": {
     "message": "Details"
   },
