@@ -53,11 +53,6 @@ async function withFixtures(options, testSuite) {
   const fixtureServer = new FixtureServer();
   const ganacheServer = new Ganache();
 
-  console.info(
-    'Close MM Desktop App if for any chance did not get closed before',
-  );
-  cp.spawn('kill -9 `lsof -t -i:7071`', { shell: true });
-
   const https = await mockttp.generateCACertificate();
   const mockServer = mockttp.getLocal({ https, cors: true });
   let secondaryGanacheServer;
@@ -91,8 +86,13 @@ async function withFixtures(options, testSuite) {
 
     await fixtureServer.start();
 
-    // Load state in electron app => copy state.json to config.json in electron
     if (process.env.RUN_WITH_DESKTOP === 'true') {
+      console.info(
+        'Close MM Desktop App if for any chance did not get closed before',
+      );
+      cp.spawn('kill -9 `lsof -t -i:7071`', { shell: true });
+
+      // Load state in electron app => copy state.json to config.json in electron
       const electronPath =
         process.env.CI === 'true'
           ? process.env.UBUNTU_ELECTRON_CONFIG_FILE_PATH
@@ -102,9 +102,7 @@ async function withFixtures(options, testSuite) {
         path.join(__dirname, 'fixtures', fixtures),
         electronPath,
       );
-    }
 
-    if (process.env.RUN_WITH_DESKTOP === 'true') {
       if (process.env.CI === 'true') {
         console.info('Open MM Desktop App on CI');
         desktop = cp.spawn('xvfb-run -a yarn start:desktop', { shell: true });
@@ -118,9 +116,9 @@ async function withFixtures(options, testSuite) {
       desktop.stderr.on('data', (data) => {
         console.error(`stderr: ${data}`);
       });
+      // Wait 5 secs to let desktop initialise
+      await delay(5000);
     }
-    // Wait 5 secs to let desktop initialise
-    await delay(5000);
 
     await fixtureServer.loadState(path.join(__dirname, 'fixtures', fixtures));
 
