@@ -2398,6 +2398,7 @@
         "@keystonehq/bc-ur-registry-eth>@keystonehq/bc-ur-registry": true,
         "browserify>buffer": true,
         "eth-lattice-keyring>@ethereumjs/util": true,
+        "hdkey": true,
         "uuid": true
       }
     },
@@ -2433,10 +2434,10 @@
       "packages": {
         "@ethereumjs/tx": true,
         "@keystonehq/bc-ur-registry-eth": true,
-        "@keystonehq/bc-ur-registry-eth>hdkey": true,
         "@keystonehq/metamask-airgapped-keyring>@keystonehq/base-eth-keyring>rlp": true,
         "browserify>buffer": true,
         "eth-lattice-keyring>@ethereumjs/util": true,
+        "hdkey": true,
         "uuid": true
       }
     },
@@ -2465,12 +2466,12 @@
         "console.log": true
       },
       "packages": {
+        "@ethersproject/bignumber": true,
+        "@ethersproject/bignumber>@ethersproject/bytes": true,
+        "@ethersproject/bignumber>@ethersproject/logger": true,
         "ethers>@ethersproject/hdnode>@ethersproject/strings": true,
-        "ethers>@ethersproject/units>@ethersproject/bignumber": true,
         "ethers>@ethersproject/units>@ethersproject/constants": true,
-        "ethers>@ethersproject/units>@ethersproject/logger": true,
         "ethers>@ethersproject/wallet>@ethersproject/address": true,
-        "ethers>@ethersproject/wallet>@ethersproject/bytes": true,
         "ethers>@ethersproject/wallet>@ethersproject/hash": true,
         "ethers>@ethersproject/wallet>@ethersproject/keccak256": true,
         "ethers>@ethersproject/wallet>@ethersproject/properties": true
@@ -2478,8 +2479,8 @@
     },
     "@ledgerhq/hw-app-eth>@ethersproject/rlp": {
       "packages": {
-        "ethers>@ethersproject/units>@ethersproject/logger": true,
-        "ethers>@ethersproject/wallet>@ethersproject/bytes": true
+        "@ethersproject/bignumber>@ethersproject/bytes": true,
+        "@ethersproject/bignumber>@ethersproject/logger": true
       }
     },
     "@material-ui/core": {
@@ -3370,22 +3371,6 @@
         "watchify>xtend": true
       }
     },
-    "@metamask/rpc-methods>@metamask/controllers>@ethersproject/abi": {
-      "globals": {
-        "console.log": true
-      },
-      "packages": {
-        "@ethersproject/bignumber": true,
-        "@ethersproject/bignumber>@ethersproject/bytes": true,
-        "@ethersproject/bignumber>@ethersproject/logger": true,
-        "ethers>@ethersproject/hdnode>@ethersproject/strings": true,
-        "ethers>@ethersproject/units>@ethersproject/constants": true,
-        "ethers>@ethersproject/wallet>@ethersproject/address": true,
-        "ethers>@ethersproject/wallet>@ethersproject/hash": true,
-        "ethers>@ethersproject/wallet>@ethersproject/keccak256": true,
-        "ethers>@ethersproject/wallet>@ethersproject/properties": true
-      }
-    },
     "@metamask/rpc-methods>@metamask/key-tree>@noble/hashes": {
       "globals": {
         "TextEncoder": true,
@@ -3450,12 +3435,6 @@
       },
       "packages": {
         "@ethersproject/bignumber>@ethersproject/bytes": true
-      }
-    },
-    "@metamask/smart-transactions-controller>@ethersproject/providers>@ethersproject/rlp": {
-      "packages": {
-        "@ethersproject/bignumber>@ethersproject/bytes": true,
-        "@ethersproject/bignumber>@ethersproject/logger": true
       }
     },
     "@metamask/smart-transactions-controller>@metamask/controllers>nanoid": {
@@ -4505,9 +4484,9 @@
         "electron-store>conf>atomically": true,
         "electron-store>conf>debounce-fn": true,
         "electron-store>conf>dot-prop": true,
-        "electron-store>conf>env-paths": true,
         "electron-store>conf>onetime": true,
         "electron-store>conf>pkg-up": true,
+        "electron>@electron/get>env-paths": true,
         "semver": true
       }
     },
@@ -4551,13 +4530,6 @@
     "electron-store>conf>dot-prop": {
       "packages": {
         "electron-store>conf>dot-prop>is-obj": true
-      }
-    },
-    "electron-store>conf>env-paths": {
-      "packages": {
-        "browserify>os-browserify": true,
-        "browserify>path-browserify": true,
-        "browserify>process": true
       }
     },
     "electron-store>conf>onetime": {
@@ -4656,6 +4628,13 @@
         "browserify>insert-module-globals>is-buffer": true,
         "electron-updater>fs-extra>universalify": true,
         "fs-extra>graceful-fs": true
+      }
+    },
+    "electron>@electron/get>env-paths": {
+      "packages": {
+        "browserify>os-browserify": true,
+        "browserify>path-browserify": true,
+        "browserify>process": true
       }
     },
     "end-of-stream": {
@@ -6542,7 +6521,7 @@
         "@ethersproject/bignumber": true,
         "@ethersproject/bignumber>@ethersproject/bytes": true,
         "@ethersproject/bignumber>@ethersproject/logger": true,
-        "@metamask/smart-transactions-controller>@ethersproject/providers>@ethersproject/rlp": true,
+        "@ledgerhq/hw-app-eth>@ethersproject/rlp": true,
         "ethers>@ethersproject/wallet>@ethersproject/keccak256": true
       }
     },
@@ -6588,7 +6567,7 @@
         "@ethersproject/bignumber": true,
         "@ethersproject/bignumber>@ethersproject/bytes": true,
         "@ethersproject/bignumber>@ethersproject/logger": true,
-        "@metamask/smart-transactions-controller>@ethersproject/providers>@ethersproject/rlp": true,
+        "@ledgerhq/hw-app-eth>@ethersproject/rlp": true,
         "ethers>@ethersproject/units>@ethersproject/constants": true,
         "ethers>@ethersproject/wallet>@ethersproject/address": true,
         "ethers>@ethersproject/wallet>@ethersproject/keccak256": true,
@@ -6868,6 +6847,32 @@
     "globalthis>define-properties>has-property-descriptors": {
       "packages": {
         "string.prototype.matchall>get-intrinsic": true
+      }
+    },
+    "hdkey": {
+      "packages": {
+        "browserify>assert": true,
+        "browserify>crypto-browserify": true,
+        "hdkey>bs58check": true,
+        "hdkey>safe-buffer": true,
+        "hdkey>secp256k1": true
+      }
+    },
+    "hdkey>bs58check": {
+      "packages": {
+        "3box>ipfs>bs58": true,
+        "ethereumjs-util>create-hash": true,
+        "hdkey>safe-buffer": true
+      }
+    },
+    "hdkey>safe-buffer": {
+      "packages": {
+        "browserify>buffer": true
+      }
+    },
+    "hdkey>secp256k1": {
+      "packages": {
+        "3box>ethers>elliptic": true
       }
     },
     "jsdom>sax": {

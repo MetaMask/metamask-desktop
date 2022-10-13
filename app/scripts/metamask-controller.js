@@ -165,12 +165,12 @@ let TrezorKeyring = require('eth-trezor-keyring');
 import cfg from './desktop/config';
 import { checkSnapsBlockList } from './flask/snaps-utilities';
 import { SNAP_BLOCKLIST } from './flask/snaps-blocklist';
-import { LedgerBridgeKeyring as ElectronLedgerBridgeKeyring } from './desktop/hw/ledger-keyring';
 
 if (cfg().desktop.isApp) {
   /* eslint-disable node/global-require */
+  LedgerBridgeKeyring =
+    require('./desktop/hw/ledger-keyring').LedgerBridgeKeyring;
   TrezorKeyring = require('./desktop/hw/trezor/trezor-keyring');
-  LedgerBridgeKeyring = ElectronLedgerBridgeKeyring;
   /* eslint-enable node/global-require */
 }
 /* eslint-enable import/first */
