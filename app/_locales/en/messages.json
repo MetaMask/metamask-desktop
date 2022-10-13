@@ -963,6 +963,12 @@
   "description": {
     "message": "Description"
   },
+  "desktopPageSubTitle": {
+    "message": "Open your MetaMask Desktop and type this code"
+  },
+  "desktopPageTitle": {
+    "message": "Sync with Desktop"
+  },
   "details": {
     "message": "Details"
   },

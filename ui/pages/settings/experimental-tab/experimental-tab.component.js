@@ -291,7 +291,7 @@ export default class ExperimentalTab extends PureComponent {
       <div
         ref={this.settingsRefs[6]}
         className="settings-page__content-row"
-        data-testid="advanced-setting-desktop-sync"
+        data-testid="advanced-setting-desktop-pairing"
       >
         <div className="settings-page__content-item">
           <span>Click to run all background processes in the desktop app.</span>

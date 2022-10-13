@@ -3,11 +3,15 @@ import PropTypes from 'prop-types';
 import Button from '../../components/ui/button';
 import { SECOND } from '../../../shared/constants/time';
 import Typography from '../../components/ui/typography';
+import IconDesktopPairing from '../../components/ui/icon/icon-desktop-pairing';
 import {
   TEXT_ALIGN,
   TYPOGRAPHY,
-  FONT_WEIGHT,
+  DISPLAY,
+  ALIGN_ITEMS,
+  FLEX_DIRECTION,
 } from '../../helpers/constants/design-system';
+import Box from '../../components/ui/box/box';
 
 const OTP_DURATION = SECOND * 30;
 const REFRESH_INTERVAL = SECOND;
@@ -78,6 +82,24 @@ export default class DesktopPairingPage extends Component {
     history.push(mostRecentOverviewPage);
   }
 
+  renderIcon() {
+    return (
+      <div>
+        <Box
+          display={DISPLAY.FLEX}
+          alignItems={ALIGN_ITEMS.CENTER}
+          textAlign={TEXT_ALIGN.CENTER}
+          flexDirection={FLEX_DIRECTION.COLUMN}
+          marginLeft={6}
+          marginRight={6}
+          marginTop={12}
+        >
+          <IconDesktopPairing size={64} />
+        </Box>
+      </div>
+    );
+  }
+
   renderContent() {
     const { showLoadingIndication, hideLoadingIndication } = this.props;
     const { otp } = this.state;
@@ -91,15 +113,32 @@ export default class DesktopPairingPage extends Component {
 
     return (
       <div>
-        <Typography
-          variant={TYPOGRAPHY.H2}
-          align={TEXT_ALIGN.CENTER}
-          fontWeight={FONT_WEIGHT.BOLD}
+        <Box
+          display={DISPLAY.FLEX}
+          alignItems={ALIGN_ITEMS.CENTER}
+          textAlign={TEXT_ALIGN.CENTER}
+          flexDirection={FLEX_DIRECTION.COLUMN}
+          marginLeft={6}
+          marginRight={6}
         >
-          {otp}
-        </Typography>
-        <Typography variant={TYPOGRAPHY.H4} align={TEXT_ALIGN.CENTER}>
-          Expires in {this.getExpireDuration()} seconds
+          <Typography
+            align={TEXT_ALIGN.CENTER}
+            className="desktop-pairing__otp"
+          >
+            {otp}
+          </Typography>
+        </Box>
+
+        <Typography
+          variant={TYPOGRAPHY.Paragraph}
+          align={TEXT_ALIGN.CENTER}
+          className="desktop-pairing__countdown-timer"
+        >
+          Code expires in{' '}
+          <span className="desktop-pairing__countdown-timer-seconds">
+            {this.getExpireDuration()}
+          </span>{' '}
+          seconds
         </Typography>
       </div>
     );
@@ -108,10 +147,7 @@ export default class DesktopPairingPage extends Component {
   renderFooter() {
     const { t } = this.context;
     return (
-      <div
-        className="new-account-import-form__buttons"
-        style={{ padding: '30px 15px 30px 15px', marginTop: 0 }}
-      >
+      <div className="desktop-pairing__buttons">
         <Button
           type="primary"
           rounded
@@ -126,15 +162,17 @@ export default class DesktopPairingPage extends Component {
   }
 
   render() {
+    const { t } = this.context;
     return (
-      <div className="page-container">
-        <div className="page-container__header">
-          <div className="page-container__title">Sync with Desktop</div>
-          <div className="page-container__subtitle">
-            Open your MetaMask Desktop and type this code
+      <div className="page-container__content">
+        <div className="desktop-pairing">
+          {this.renderIcon()}
+          <div className="desktop-pairing__title">{t('desktopPageTitle')}</div>
+          <div className="desktop-pairing__subtitle">
+            {t('desktopPageSubTitle')}
           </div>
         </div>
-        <div className="page-container__content">{this.renderContent()}</div>
+        <div className="desktop-pairing">{this.renderContent()}</div>
         {this.renderFooter()}
       </div>
     );
