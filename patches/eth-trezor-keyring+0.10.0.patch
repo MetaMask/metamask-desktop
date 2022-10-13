@@ -1,5 +1,5 @@
 diff --git a/node_modules/eth-trezor-keyring/index.js b/node_modules/eth-trezor-keyring/index.js
-index 9b76a29..145728f 100644
+index 9b76a29..1a3c4e5 100644
 --- a/node_modules/eth-trezor-keyring/index.js
 +++ b/node_modules/eth-trezor-keyring/index.js
 @@ -1,7 +1,7 @@
@@ -7,56 +7,29 @@ index 9b76a29..145728f 100644
  const ethUtil = require('ethereumjs-util');
  const HDKey = require('hdkey');
 -const TrezorConnect = require('trezor-connect').default;
-+const TrezorConnectSDK = require('trezor-connect').default;
++const { default: TrezorConnectSDK, DEVICE_EVENT } = require('trezor-connect');
  const { TransactionFactory } = require('@ethereumjs/tx');
  const transformTypedData = require('trezor-connect/lib/plugins/ethereum/typedData');
  
-@@ -48,6 +48,36 @@ function isOldStyleEthereumjsTx(tx) {
+@@ -48,6 +48,8 @@ function isOldStyleEthereumjsTx(tx) {
    return typeof tx.getChainId === 'function';
  }
  
-+let TrezorConnect = {
-+  on(event, callback) {
-+    TrezorConnectSDK.on(event, callback);
-+  },
-+
-+  init(payload) {
-+    return TrezorConnectSDK.init(payload);
-+  },
-+
-+  dispose() {
-+    TrezorConnectSDK.dispose();
-+  },
-+
-+  getPublicKey(payload) {
-+    return TrezorConnectSDK.getPublicKey(payload);
-+  },
-+
-+  ethereumSignTransaction(payload) {
-+    return TrezorConnectSDK.ethereumSignTransaction(payload);
-+  },
-+
-+  ethereumSignMessage(payload) {
-+    return TrezorConnectSDK.ethereumSignMessage(payload);
-+  },
-+
-+  ethereumSignTypedData(payload) {
-+    return TrezorConnectSDK.ethereumSignTypedData(payload);
-+  }
-+}
++let TrezorConnect = TrezorConnectSDK;
 +
  class TrezorKeyring extends EventEmitter {
    constructor(opts = {}) {
      super();
-@@ -60,12 +90,19 @@ class TrezorKeyring extends EventEmitter {
+@@ -60,12 +62,19 @@ class TrezorKeyring extends EventEmitter {
      this.paths = {};
      this.deserialize(opts);
  
+-    TrezorConnect.on('DEVICE_EVENT', (event) => {
 +    if (opts.trezorConnectOverride) {
 +      TrezorConnect = opts.trezorConnectOverride;
 +    }
 +
-     TrezorConnect.on('DEVICE_EVENT', (event) => {
++    TrezorConnect.on(DEVICE_EVENT, (event) => {
        if (event && event.payload && event.payload.features) {
          this.model = event.payload.features.model;
        }
@@ -69,3 +42,8 @@ index 9b76a29..145728f 100644
    }
  
    /**
+@@ -517,3 +526,4 @@ class TrezorKeyring extends EventEmitter {
+ 
+ TrezorKeyring.type = keyringType;
+ module.exports = TrezorKeyring;
++module.exports.DEVICE_EVENT = DEVICE_EVENT;

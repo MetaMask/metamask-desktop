@@ -239,7 +239,9 @@ export default class Desktop {
       },
     });
 
-    await trezorWindow.loadFile(path.resolve(__dirname, '../../trezor.html'));
+    await trezorWindow.loadFile(
+      path.resolve(__dirname, '../../desktop-trezor-renderer.html'),
+    );
 
     trezorWindow.webContents.setWindowOpenHandler((details) => ({
       action: details.url.startsWith('https://connect.trezor.io/')
