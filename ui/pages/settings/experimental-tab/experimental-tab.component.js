@@ -6,8 +6,7 @@ import {
   handleSettingsRefs,
 } from '../../../helpers/utils/settings-search';
 import { EVENT } from '../../../../shared/constants/metametrics';
-import Button from '../../../components/ui/button';
-import { DESKTOP_PAIRING_ROUTE } from '../../../helpers/constants/routes';
+import DesktopEnableButton from '../../../components/app/desktop-enable-button';
 
 export default class ExperimentalTab extends PureComponent {
   static contextTypes = {
@@ -24,14 +23,6 @@ export default class ExperimentalTab extends PureComponent {
     setEIP1559V2Enabled: PropTypes.func,
     customNetworkListEnabled: PropTypes.bool,
     setCustomNetworkListEnabled: PropTypes.func,
-    desktopEnabled: PropTypes.bool,
-    setDesktopEnabled: PropTypes.func,
-    history: PropTypes.object,
-    testDesktopConnection: PropTypes.func,
-    disableDesktop: PropTypes.func,
-    showLoader: PropTypes.func,
-    hideLoader: PropTypes.func,
-    displayWarning: PropTypes.func,
   };
 
   settingsRefs = Array(
@@ -239,54 +230,7 @@ export default class ExperimentalTab extends PureComponent {
     );
   }
 
-  async onDesktopPairingButtonClick() {
-    const {
-      desktopEnabled,
-      setDesktopEnabled,
-      testDesktopConnection,
-      disableDesktop,
-      history,
-      showLoader,
-      hideLoader,
-      displayWarning,
-    } = this.props;
-
-    if (desktopEnabled) {
-      await disableDesktop();
-      setDesktopEnabled(false);
-      return;
-    }
-
-    showLoader();
-    const testResult = await testDesktopConnection();
-    hideLoader();
-
-    if (!testResult.isConnected) {
-      displayWarning('Cannot connect to desktop app');
-      return;
-    }
-
-    if (!testResult.versionCheck.isExtensionVersionValid) {
-      displayWarning('Extension is outdated');
-      return;
-    }
-
-    if (!testResult.versionCheck.isDesktopVersionValid) {
-      displayWarning('Desktop app is outdated');
-      return;
-    }
-
-    if (process.env.SKIP_OTP_PAIRING_FLOW) {
-      setDesktopEnabled(true);
-      return;
-    }
-
-    history.push(DESKTOP_PAIRING_ROUTE);
-  }
-
-  renderDesktopPairingButton() {
-    const { desktopEnabled } = this.props;
-
+  renderDesktopEnableButton() {
     return (
       <div
         ref={this.settingsRefs[6]}
@@ -298,16 +242,7 @@ export default class ExperimentalTab extends PureComponent {
         </div>
         <div className="settings-page__content-item">
           <div className="settings-page__content-item-col">
-            <Button
-              type="primary"
-              large
-              onClick={(event) => {
-                event.preventDefault();
-                this.onDesktopPairingButtonClick();
-              }}
-            >
-              {desktopEnabled ? 'Disable Desktop App' : 'Enable Desktop App'}
-            </Button>
+            <DesktopEnableButton />
           </div>
         </div>
       </div>
@@ -321,7 +256,7 @@ export default class ExperimentalTab extends PureComponent {
         {this.renderCollectibleDetectionToggle()}
         {this.renderEIP1559V2EnabledToggle()}
         {this.renderCustomNetworkListToggle()}
-        {this.renderDesktopPairingButton()}
+        {this.renderDesktopEnableButton()}
       </div>
     );
   }

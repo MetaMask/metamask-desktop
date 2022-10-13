@@ -6,6 +6,7 @@ import {
 } from '../../ui/helpers/utils/i18n-helper';
 import { renderDesktopErrorContent } from '../../ui/pages/desktop-error/desktop-error.component';
 import { EXTENSION_ERROR_PAGE_TYPES } from '../constants/desktop';
+import { browser } from '../../app/scripts/desktop/browser/browser-polyfill';
 import switchDirection from './switch-direction';
 
 const _setupLocale = async (currentLocale) => {
@@ -21,6 +22,22 @@ const _setupLocale = async (currentLocale) => {
 
   return { currentLocaleMessages, enLocaleMessages };
 };
+
+function disableDesktop(backgroundConnection) {
+  backgroundConnection.disableDesktopError();
+}
+
+export function downloadDesktopApp() {
+  global.platform.openTab({ url: 'https://metamask.io/' });
+}
+
+export function downloadExtension() {
+  global.platform.openTab({ url: 'https://metamask.io/' });
+}
+
+export function restartExtension() {
+  browser.runtime.reload();
+}
 
 export const setupLocale = memoize(_setupLocale);
 
@@ -91,7 +108,7 @@ export async function getErrorHtml(supportLink, metamaskState, err) {
     `;
 }
 
-export function registerDesktopErrorActions(backgroundConnection, browser) {
+export function registerDesktopErrorActions(backgroundConnection) {
   const disableDesktopButton = document.getElementById(
     'desktop-error-button-disable-mmd',
   );
@@ -103,13 +120,14 @@ export function registerDesktopErrorActions(backgroundConnection, browser) {
   );
 
   disableDesktopButton?.addEventListener('click', (_) => {
-    backgroundConnection.disableDesktopError();
+    disableDesktop(backgroundConnection);
   });
+
   restartMMButton?.addEventListener('click', (_) => {
-    browser.runtime.reload();
+    restartExtension();
   });
+
   downloadMMDButton?.addEventListener('click', (_) => {
-    // TODO: Change to MMD link
-    global.platform.openTab({ url: 'https://metamask.io/' });
+    downloadDesktopApp();
   });
 }

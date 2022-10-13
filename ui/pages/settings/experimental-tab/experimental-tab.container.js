@@ -6,11 +6,6 @@ import {
   setOpenSeaEnabled,
   setEIP1559V2Enabled,
   setCustomNetworkListEnabled,
-  setDesktopEnabled,
-  testDesktopConnection,
-  disableDesktop,
-  hideLoadingIndication,
-  showLoadingIndication,
 } from '../../../store/actions';
 import {
   getUseCollectibleDetection,
@@ -39,15 +34,6 @@ const mapDispatchToProps = (dispatch) => {
     setEIP1559V2Enabled: (val) => dispatch(setEIP1559V2Enabled(val)),
     setCustomNetworkListEnabled: (val) =>
       dispatch(setCustomNetworkListEnabled(val)),
-    setDesktopEnabled: (val) => dispatch(setDesktopEnabled(val)),
-    testDesktopConnection: () => testDesktopConnection(),
-    disableDesktop: () => disableDesktop(),
-    showLoader: () => dispatch(showLoadingIndication()),
-    hideLoader: () => dispatch(hideLoadingIndication()),
-    displayWarning: (message) => {
-      // eslint-disable-next-line no-alert
-      window.alert(message);
-    },
   };
 };
 

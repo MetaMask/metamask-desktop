@@ -1001,6 +1001,15 @@
   "desktopOutdatedErrorTitle": {
     "message": "MetaMask Desktop is outdated"
   },
+  "desktopOutdatedExtensionErrorCTA": {
+    "message": "Update MetaMask Extension"
+  },
+  "desktopOutdatedExtensionErrorDescription": {
+    "message": "Your MetaMask extension needs to be upgraded."
+  },
+  "desktopOutdatedExtensionErrorTitle": {
+    "message": "MetaMask Extension is outdated"
+  },
   "desktopUnexpectedErrorCTA": {
     "message": "Return MetaMask Home"
   },

@@ -87,7 +87,7 @@ class DesktopManager {
 
       const versionCheckResult = await connection.checkVersions();
 
-      log.debug('Connection test successful');
+      log.debug('Connection test completed');
 
       return { isConnected: true, versionCheck: versionCheckResult };
     } catch {
