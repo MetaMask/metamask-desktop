@@ -769,6 +769,10 @@ export default class MetamaskController extends EventEmitter {
         },
       },
     });
+
+    this.desktopController = new DesktopController({
+      initState: initState.DesktopController,
+    });
     ///: END:ONLY_INCLUDE_IN
     this.detectTokensController = new DetectTokensController({
       preferences: this.preferencesController,
@@ -1029,10 +1033,6 @@ export default class MetamaskController extends EventEmitter {
       initState.SmartTransactionsController,
     );
 
-    this.desktopController = new DesktopController({
-      initState: initState.DesktopController,
-    });
-
     // ensure accountTracker updates balances after network change
     this.networkController.on(NETWORK_EVENTS.NETWORK_DID_CHANGE, () => {
       this.accountTracker._updateAccounts();
@@ -1078,8 +1078,8 @@ export default class MetamaskController extends EventEmitter {
       ///: BEGIN:ONLY_INCLUDE_IN(flask)
       SnapController: this.snapController,
       NotificationController: this.notificationController,
-      ///: END:ONLY_INCLUDE_IN
       DesktopController: this.desktopController.store,
+      ///: END:ONLY_INCLUDE_IN
     });
 
     this.memStore = new ComposableObservableStore({
@@ -1121,8 +1121,8 @@ export default class MetamaskController extends EventEmitter {
         ///: BEGIN:ONLY_INCLUDE_IN(flask)
         SnapController: this.snapController,
         NotificationController: this.notificationController,
-        ///: END:ONLY_INCLUDE_IN
         DesktopController: this.desktopController.store,
+        ///: END:ONLY_INCLUDE_IN
       },
       controllerMessenger: this.controllerMessenger,
     });
@@ -1551,7 +1551,6 @@ export default class MetamaskController extends EventEmitter {
       txController,
       assetsContractController,
       backupController,
-      desktopController,
     } = this;
 
     return {
@@ -1892,6 +1891,20 @@ export default class MetamaskController extends EventEmitter {
       ),
       dismissNotifications: this.dismissNotifications.bind(this),
       markNotificationsAsRead: this.markNotificationsAsRead.bind(this),
+
+      // DesktopController
+      setDesktopEnabled: this.desktopController.setDesktopEnabled.bind(
+        this.desktopController,
+      ),
+      generateOtp: this.desktopController.generateOtp.bind(
+        this.desktopController,
+      ),
+      testDesktopConnection: this.desktopController.testDesktopConnection.bind(
+        this.desktopController,
+      ),
+      disableDesktop: this.desktopController.disableDesktop.bind(
+        this.desktopController,
+      ),
       ///: END:ONLY_INCLUDE_IN
 
       // swaps
@@ -2040,14 +2053,6 @@ export default class MetamaskController extends EventEmitter {
         assetsContractController.getBalancesInSingleCall.bind(
           assetsContractController,
         ),
-
-      // DesktopController
-      setDesktopEnabled:
-        desktopController.setDesktopEnabled.bind(desktopController),
-      generateOtp: desktopController.generateOtp.bind(this),
-      testDesktopConnection:
-        desktopController.testDesktopConnection.bind(desktopController),
-      disableDesktop: desktopController.disableDesktop.bind(desktopController),
     };
   }
 

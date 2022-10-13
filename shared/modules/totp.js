@@ -34,5 +34,5 @@ export const validate = (token) => {
     window: 1,
   });
 
-  return result === 0;
+  return result !== null;
 };
