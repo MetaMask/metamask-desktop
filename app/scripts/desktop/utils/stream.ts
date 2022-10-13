@@ -2,7 +2,8 @@ import { Readable } from 'stream';
 
 export const waitForMessage = <T>(
   stream: Readable,
-  filter?: (data: T) => Promise<boolean>,
+  filter?: (data: T) => Promise<any>,
+  { returnFilterOutput = false } = {},
 ): Promise<T> => {
   return new Promise((resolve) => {
     const listener = async (data: T) => {
@@ -10,7 +11,7 @@ export const waitForMessage = <T>(
 
       if (isMatch) {
         stream.removeListener('data', listener);
-        resolve(data);
+        resolve(returnFilterOutput ? isMatch : data);
       }
     };
 

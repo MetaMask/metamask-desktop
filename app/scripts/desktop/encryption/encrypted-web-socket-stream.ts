@@ -10,6 +10,7 @@ import {
   NodeWebSocket,
   WebSocketStream,
 } from '../shared/web-socket-stream';
+import { waitForMessage } from '../utils/stream';
 import * as asymmetricEncryption from './asymmetric-encryption';
 import * as symmetricEncryption from './symmetric-encryption';
 
@@ -155,7 +156,10 @@ export default class EncryptedWebSocketStream extends Duplex {
     let data;
 
     if (!writeOnly) {
-      data = await this.waitForMessage(responseFilter);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      data = await waitForMessage(this.webSocketStream!, responseFilter, {
+        returnFilterOutput: true,
+      });
     }
 
     if (!sendFirst) {
@@ -163,23 +167,6 @@ export default class EncryptedWebSocketStream extends Duplex {
     }
 
     return data;
-  }
-
-  private async waitForMessage(
-    filter: (data: any) => Promise<any>,
-  ): Promise<any> {
-    return new Promise((resolve) => {
-      const listener = async (data: any) => {
-        const finalData = await filter(data);
-
-        if (finalData) {
-          this.webSocketStream?.removeListener('data', listener);
-          resolve(finalData);
-        }
-      };
-
-      this.webSocketStream?.on('data', listener);
-    });
   }
 
   private async decryptSymmetric(data: any): Promise<any> {
