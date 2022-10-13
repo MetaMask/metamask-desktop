@@ -2843,7 +2843,7 @@
     "@jridgewell/sourcemap-codec" "^1.4.10"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@jridgewell/resolve-uri@3.1.0", "@jridgewell/resolve-uri@^3.0.3":
+"@jridgewell/resolve-uri@3.1.0":
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/@jridgewell/resolve-uri/-/resolve-uri-3.1.0.tgz#2203b118c157721addfe69d47b70465463066d78"
   integrity sha512-F2msla3tad+Mfht5cJq7LSXcdudKTWCVYUgw6pLFOOHSTtZlj6SWNYAp+AhuqLmWdBO2X5hPrLcu8cVP8fy28w==
@@ -3612,23 +3612,25 @@
     readable-web-to-node-stream "^3.0.2"
     tar-stream "^2.2.0"
 
-"@metamask/snap-types@^0.22.0":
-  version "0.22.0"
-  resolved "https://registry.yarnpkg.com/@metamask/snap-types/-/snap-types-0.22.0.tgz#4d74e34eea69a7afe0ad9a4d54be83cf5391bf9e"
-  integrity sha512-XwJNk+Qbtr7xjuh1Iz7wqybp+xB3H6uRJjlOqtgIoOui9V2zfL/At/FzHMMvaLeUsWJhOVSJP5qmEzCYaOEvmQ==
+"@metamask/snap-types@^0.22.0", "@metamask/snap-types@^0.22.2":
+  version "0.22.2"
+  resolved "https://registry.yarnpkg.com/@metamask/snap-types/-/snap-types-0.22.2.tgz#590cfdd6088d77df6d103ceabdab4ae4d1bdcf03"
+  integrity sha512-8/KVU53ctZra7lQ9pjMScOXCBT7b3cmy2nilFDUHRPxEpw9XEgVtQVeekV7AVsXMcLEZdck+8tj5l7KUj5qxHg==
   dependencies:
     "@metamask/providers" "^9.0.0"
-    "@metamask/snap-utils" "^0.22.0"
+    "@metamask/snap-utils" "^0.22.2"
     "@metamask/types" "^1.1.0"
 
-"@metamask/snap-utils@^0.22.0":
-  version "0.22.0"
-  resolved "https://registry.yarnpkg.com/@metamask/snap-utils/-/snap-utils-0.22.0.tgz#1815eecfc8a388a4ae6744664ff28f58404730ee"
-  integrity sha512-mwe72I/sVMVogNU+gxUU1P2Kos4S/4lEX1MUz7Hr79jfYzTgwTfxz/gaMubjD6CF2q0ZvF5JQr6OBk6ZRLHhCw==
+"@metamask/snap-utils@^0.22.0", "@metamask/snap-utils@^0.22.2":
+  version "0.22.2"
+  resolved "https://registry.yarnpkg.com/@metamask/snap-utils/-/snap-utils-0.22.2.tgz#040b2fc1c6ccd406b049084d90542f77e9a51572"
+  integrity sha512-hhQHsHS6xkwmqvPrDnrXgu8IIEtaPwLr7PUwqIDSHBeBgbhlsbS7R63nhMtrRxognLmnWj0xWvAvoz25o+Q/Rw==
   dependencies:
     "@babel/core" "^7.18.6"
-    "@metamask/snap-types" "^0.22.0"
+    "@metamask/snap-types" "^0.22.2"
     "@metamask/utils" "^3.1.0"
+    "@noble/hashes" "^1.1.3"
+    "@scure/base" "^1.1.1"
     ajv "^8.11.0"
     eth-rpc-errors "^4.0.3"
     fast-deep-equal "^3.1.3"
@@ -3700,10 +3702,15 @@
   resolved "https://registry.yarnpkg.com/@noble/ed25519/-/ed25519-1.6.0.tgz#b55f7c9e532b478bf1d7c4f609e1f3a37850b583"
   integrity sha512-UKju89WV37IUALIMfKhKW3psO8AqmrE/GvH6QbPKjzolQ98zM7WmGUeY+xdIgSf5tqPFf75ZCYMgym6E9Jsw3Q==
 
-"@noble/hashes@1.1.2", "@noble/hashes@^1.0.0", "@noble/hashes@~1.1.1":
+"@noble/hashes@1.1.2":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@noble/hashes/-/hashes-1.1.2.tgz#e9e035b9b166ca0af657a7848eb2718f0f22f183"
   integrity sha512-KYRCASVTv6aeUi1tsF8/vpyR7zpfs3FUzy2Jqm+MU+LmUKhQ0y2FpfwqkCcxSg2ua4GALJd8k2R76WxwZGbQpA==
+
+"@noble/hashes@^1.0.0", "@noble/hashes@^1.1.3", "@noble/hashes@~1.1.1":
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/@noble/hashes/-/hashes-1.1.3.tgz#360afc77610e0a61f3417e497dcf36862e4f8111"
+  integrity sha512-CE0FCR57H2acVI5UOzIGSSIYxZ6v/HOhDR0Ro9VLyhnzLwx0o8W1mmgaqlEUx4049qJDlIBRztv5k+MM8vbO3A==
 
 "@noble/secp256k1@1.6.3", "@noble/secp256k1@~1.6.0":
   version "1.6.3"
@@ -3871,7 +3878,7 @@
     redux-thunk "^2.3.0"
     reselect "^4.0.0"
 
-"@scure/base@^1.0.0", "@scure/base@~1.1.0":
+"@scure/base@^1.0.0", "@scure/base@^1.1.1", "@scure/base@~1.1.0":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@scure/base/-/base-1.1.1.tgz#ebb651ee52ff84f420097055f4bf46cfba403938"
   integrity sha512-ZxOhsSyxYwLJj3pLZCefNitxsj093tb2vq90mp2txoYeBqbcjDjqFhyM8eUjq/uFm6zJ+mUuqxlS2FkuSY1MTA==
@@ -7481,11 +7488,6 @@ async-settle@^1.0.0:
   integrity sha1-HQqRS7Aldb7IqPOnTlCA9yssDGs=
   dependencies:
     async-done "^1.2.2"
-
-async@0.9.x:
-  version "0.9.2"
-  resolved "https://registry.yarnpkg.com/async/-/async-0.9.2.tgz#aea74d5e61c1f899613bf64bda66d4c78f2fd17d"
-  integrity sha1-rqdNXmHB+JlhO/ZL2mbUx48v0X0=
 
 async@^1.4.2:
   version "1.5.2"
@@ -17710,7 +17712,7 @@ iterall@^1.2.1, iterall@^1.3.0:
   resolved "https://registry.yarnpkg.com/iterall/-/iterall-1.3.0.tgz#afcb08492e2915cbd8a0884eb93a8c94d0d72fea"
   integrity sha512-QZ9qOMdF+QLHxy1QIpUHUU1D5pS2CG2P69LF6L6CPjPYA/XMOmKV3PZpawHoAjHNyB0swdVTRxdYT4tbBbxqwg==
 
-jake@^10.6.1, jake@^10.8.5:
+jake@^10.8.5:
   version "10.8.5"
   resolved "https://registry.yarnpkg.com/jake/-/jake-10.8.5.tgz#f2183d2c59382cb274226034543b9c03b8164c46"
   integrity sha512-sVpxYeuAhWt0OTWITwT98oyV0GsXyMlXCF+3L1SuafBVUIr/uILGRB+NqwkzhgXKvoJpDIpQvqkUALgdmQsQxw==
@@ -26691,7 +26693,7 @@ slide@~1.1.3:
   resolved "https://registry.yarnpkg.com/slide/-/slide-1.1.6.tgz#56eb027d65b4d2dce6cb2e2d32c4d4afc9e1d707"
   integrity sha1-VusCfWW00tzmyy4tMsTUr8nh1wc=
 
-smart-buffer@^4.0.2, smart-buffer@^4.1.0, smart-buffer@^4.2.0:
+smart-buffer@^4.0.2, smart-buffer@^4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/smart-buffer/-/smart-buffer-4.2.0.tgz#6e1d71fa4f18c05f7d0ff216dd16a481d0e8d9ae"
   integrity sha512-94hK0Hh8rPqQl2xXc3HsaBoOXKV20MToPkcXvwbISWLEs+64sBq5kFgn2kJDHb1Pry9yrP0dxrCI9RRci7RXKg==
