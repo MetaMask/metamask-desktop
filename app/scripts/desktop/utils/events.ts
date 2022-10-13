@@ -1,6 +1,6 @@
 import EventEmitter from 'events';
 
-export const bubbleEvents = (
+export const forwardEvents = (
   original: EventEmitter,
   repeater: EventEmitter,
   events: string[],

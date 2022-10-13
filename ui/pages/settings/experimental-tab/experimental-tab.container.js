@@ -12,7 +12,6 @@ import {
   getOpenSeaEnabled,
   getEIP1559V2Enabled,
   getIsCustomNetworkListEnabled,
-  getIsDesktopEnabled,
 } from '../../../selectors';
 import ExperimentalTab from './experimental-tab.component';
 
@@ -22,7 +21,6 @@ const mapStateToProps = (state) => {
     openSeaEnabled: getOpenSeaEnabled(state),
     eip1559V2Enabled: getEIP1559V2Enabled(state),
     customNetworkListEnabled: getIsCustomNetworkListEnabled(state),
-    desktopEnabled: getIsDesktopEnabled(state),
   };
 };
 

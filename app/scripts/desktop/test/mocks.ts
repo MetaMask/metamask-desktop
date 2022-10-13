@@ -14,6 +14,8 @@ import ExtensionConnection from '../app/extension-connection';
 import DesktopConnection from '../extension/desktop-connection';
 import { ExtensionPairing } from '../shared/pairing';
 import { TestConnectionResult } from '../types/desktop';
+import { ExtensionVersionCheck } from '../shared/version-check';
+import ExtensionPlatform from 'app/scripts/platforms/extension';
 
 export const PUBLIC_KEY_MOCK = 'testPublicKey';
 export const PRIVATE_KEY_MOCK = 'testPrivateKey';
@@ -25,7 +27,7 @@ export const PROPERTY_2_MOCK = 'test2';
 export const VALUE_MOCK = 'value';
 export const VALUE_2_MOCK = 'value2';
 export const DATA_MOCK = { [PROPERTY_MOCK]: VALUE_MOCK };
-export const DATA_2_MOCK = { test2: VALUE_2_MOCK };
+export const DATA_2_MOCK = { [PROPERTY_2_MOCK]: VALUE_2_MOCK };
 export const JSON_MOCK = '{"test":"value"}';
 export const STRING_DATA_MOCK = 'testStringData';
 export const STRING_DATA_BUFFER_MOCK = Buffer.from(STRING_DATA_MOCK);
@@ -95,6 +97,7 @@ export const createWebSocketBrowserMock = (): jest.Mocked<BrowserWebSocket> =>
     readyState: 1,
     addEventListener: jest.fn(),
     send: jest.fn(),
+    close: jest.fn(),
   } as unknown as jest.Mocked<BrowserWebSocket>);
 
 export const createStreamMock = (): jest.Mocked<Duplex> =>
@@ -167,6 +170,8 @@ export const createDesktopConnectionMock = (): jest.Mocked<DesktopConnection> =>
     on: jest.fn(),
     disconnect: jest.fn(),
     getDesktopVersion: jest.fn(),
+    createStream: jest.fn(),
+    removeAllListeners: jest.fn(),
   } as any);
 
 export const createObservableStoreMock = (): jest.Mocked<ObservableStore> =>
@@ -183,3 +188,9 @@ export const createElectronStoreMock = (): jest.Mocked<ElectronStore> =>
   ({
     clear: jest.fn(),
   } as any);
+
+export const createExtensionVersionCheckMock =
+  (): jest.Mocked<ExtensionVersionCheck> => ({ check: jest.fn() } as any);
+
+export const createExtensionPlatformMock = (): jest.Mocked<ExtensionPlatform> =>
+  ({ getVersion: jest.fn() } as any);

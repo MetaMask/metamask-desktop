@@ -1,14 +1,17 @@
 import ExtensionPlatform from '../../platforms/extension';
 import cfg from './config';
 
-const DESKTOP_VERSION = '10.19.0';
+const getPackageVersion = (): string => {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  return process.env.PACKAGE_VERSION!.replace('"', '');
+};
 
 const getExtensionVersion = (): string => {
   return new ExtensionPlatform().getVersion();
 };
 
 const getDesktopVersion = (): string => {
-  return `${DESKTOP_VERSION}-desktop.0`;
+  return `${getPackageVersion()}-desktop.0`;
 };
 
 export const getVersion = (): string => {

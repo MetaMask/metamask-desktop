@@ -7,7 +7,7 @@ import cfg from '../utils/config';
 import { NodeWebSocket, WebSocketStream } from '../shared/web-socket-stream';
 import EncryptedWebSocketStream from '../encryption/encrypted-web-socket-stream';
 import { NewConnectionMessage, StatusMessage } from '../types/message';
-import { onceAny, bubbleEvents } from '../utils/events';
+import { onceAny, forwardEvents } from '../utils/events';
 import * as RawState from '../utils/raw-state';
 import ExtensionConnection from './extension-connection';
 import { updateCheck } from './update-check';
@@ -111,7 +111,7 @@ class DesktopApp extends EventEmitter {
       this.statusWindow?.webContents.send('invalid-otp', false);
     });
 
-    bubbleEvents(extensionConnection, this, [
+    forwardEvents(extensionConnection, this, [
       'restart',
       'connect-remote',
       'connect-external',

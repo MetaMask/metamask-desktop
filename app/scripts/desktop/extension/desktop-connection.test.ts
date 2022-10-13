@@ -19,6 +19,7 @@ import {
   JSON_RPC_ID_MOCK,
   STREAM_MOCK,
   UUID_MOCK,
+  createExtensionVersionCheckMock,
 } from '../test/mocks';
 import {
   simulateStreamMessage,
@@ -28,11 +29,14 @@ import {
 import { browser } from '../browser/browser-polyfill';
 import { ConnectionType } from '../types/background';
 import { ClientId } from '../types/desktop';
+import { ExtensionVersionCheck } from '../shared/version-check';
+import * as RawState from '../utils/raw-state';
 import DesktopConnection from './desktop-connection';
 
 jest.mock('obj-multiplex', () => jest.fn(), { virtual: true });
 jest.mock('extension-port-stream');
 jest.mock('uuid');
+jest.mock('../utils/raw-state');
 jest.mock('../../../../shared/modules/totp');
 
 jest.mock(
@@ -49,7 +53,6 @@ jest.mock(
   '../browser/browser-polyfill',
   () => ({
     browser: {
-      storage: { local: { get: jest.fn(), set: jest.fn() } },
       runtime: { reload: jest.fn() },
     },
   }),
@@ -66,6 +69,8 @@ describe('Desktop Connection', () => {
   const browserMock = browser as any;
   const passThroughMock = createStreamMock();
   const uuidMock = uuidv4 as jest.MockedFunction<typeof uuidv4>;
+  const versionCheckMock = createExtensionVersionCheckMock();
+  const rawStateMock = RawState as jest.Mocked<typeof RawState>;
 
   const objectMultiplexConstructorMock = ObjectMultiplex as jest.MockedClass<
     typeof ObjectMultiplex
@@ -77,6 +82,10 @@ describe('Desktop Connection', () => {
 
   const passThroughConstructorMock = PassThrough as jest.MockedClass<
     typeof PassThrough
+  >;
+
+  const versionCheckConstructorMock = ExtensionVersionCheck as jest.MockedClass<
+    typeof ExtensionVersionCheck
   >;
 
   const multiplexStreamMocks: { [clientId: ClientId]: jest.Mocked<Duplex> } =
@@ -104,6 +113,7 @@ describe('Desktop Connection', () => {
     objectMultiplexConstructorMock.mockReturnValue(multiplexMock);
     portStreamConstructorMock.mockReturnValue(portStreamMock as any);
     passThroughConstructorMock.mockReturnValue(passThroughMock as any);
+    versionCheckConstructorMock.mockReturnValue(versionCheckMock as any);
     uuidMock.mockReturnValue(UUID_MOCK);
 
     multiplexMock.createStream.mockImplementation((name) => {
@@ -164,10 +174,7 @@ describe('Desktop Connection', () => {
 
   describe('transferState', () => {
     it('writes state to state stream', async () => {
-      browserMock.storage.local.get.mockResolvedValue({
-        ...DATA_MOCK,
-        data: { DesktopController: { desktopEnabled: false } },
-      });
+      rawStateMock.getAndUpdateDesktopState.mockResolvedValueOnce(DATA_MOCK);
 
       await desktopConnection.createStream(
         remotePortMock,
@@ -181,10 +188,14 @@ describe('Desktop Connection', () => {
       await simulateTranferStateReceipt(promise);
 
       expect(stateStreamMock.write).toHaveBeenCalledTimes(1);
-      expect(stateStreamMock.write).toHaveBeenCalledWith({
-        ...DATA_MOCK,
-        data: { DesktopController: { desktopEnabled: true } },
-      });
+      expect(stateStreamMock.write).toHaveBeenCalledWith(DATA_MOCK);
+    });
+  });
+
+  describe('checkVersion', () => {
+    it('invokes version check instance', async () => {
+      await desktopConnection.checkVersions();
+      expect(versionCheckMock.check).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -208,7 +219,7 @@ describe('Desktop Connection', () => {
   });
 
   describe('on disable message', () => {
-    beforeEach(async () => {
+    const simulateDisableMessage = async (data: any) => {
       await desktopConnection.createStream(
         remotePortMock,
         ConnectionType.INTERNAL,
@@ -216,16 +227,31 @@ describe('Desktop Connection', () => {
       );
 
       const disableStreamMock = multiplexStreamMocks[CLIENT_ID_DISABLE];
-      await simulateStreamMessage(disableStreamMock, DATA_MOCK);
+      await simulateStreamMessage(disableStreamMock, data);
+    };
+
+    it('updates state if message contains state', async () => {
+      await simulateDisableMessage(DATA_MOCK);
+
+      expect(rawStateMock.set).toHaveBeenCalledTimes(1);
+      expect(rawStateMock.set).toHaveBeenCalledWith(DATA_MOCK);
     });
 
-    it('updates state', async () => {
-      expect(browser.storage.local.set).toHaveBeenCalledTimes(1);
-      expect(browser.storage.local.set).toHaveBeenCalledWith(DATA_MOCK);
+    it('sets desktop enabled to false if no state in message', async () => {
+      await simulateDisableMessage(undefined);
+
+      expect(rawStateMock.setDesktopState).toHaveBeenCalledTimes(1);
+      expect(rawStateMock.setDesktopState).toHaveBeenCalledWith({
+        desktopEnabled: false,
+      });
     });
 
-    it('restarts extension', async () => {
-      expect(browser.runtime.reload).toHaveBeenCalledTimes(1);
+    it.each([
+      ['message contains state', DATA_MOCK],
+      ['no state in message', undefined],
+    ])('restarts extension if %s', async (_, data) => {
+      await simulateDisableMessage(data);
+      expect(browserMock.runtime.reload).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -242,24 +268,13 @@ describe('Desktop Connection', () => {
     });
 
     it('updates state', async () => {
-      expect(browser.storage.local.set).toHaveBeenCalledTimes(1);
-      expect(browser.storage.local.set).toHaveBeenCalledWith(DATA_MOCK);
+      expect(rawStateMock.set).toHaveBeenCalledTimes(1);
+      expect(rawStateMock.set).toHaveBeenCalledWith(DATA_MOCK);
     });
   });
 
   describe('on port stream message', () => {
-    const generateRawState = (desktopControllerState: any) => ({
-      data: {
-        ...DATA_MOCK,
-        DesktopController: desktopControllerState,
-      },
-    });
-
     const simulatePortStreamMessage = async (message: any) => {
-      browserMock.storage.local.get.mockResolvedValue(
-        generateRawState({ desktopEnabled: true, isPairing: false }),
-      );
-
       await desktopConnection.createStream(
         remotePortMock,
         ConnectionType.INTERNAL,
@@ -274,12 +289,12 @@ describe('Desktop Connection', () => {
         data: { method: 'disableDesktopError' },
       });
 
-      expect(browser.storage.local.set).toHaveBeenCalledTimes(1);
-      expect(browser.storage.local.set).toHaveBeenCalledWith(
-        generateRawState({ desktopEnabled: false, isPairing: false }),
-      );
+      expect(rawStateMock.setDesktopState).toHaveBeenCalledTimes(1);
+      expect(rawStateMock.setDesktopState).toHaveBeenCalledWith({
+        desktopEnabled: false,
+      });
 
-      expect(browser.runtime.reload).toHaveBeenCalledTimes(1);
+      expect(browserMock.runtime.reload).toHaveBeenCalledTimes(1);
     });
 
     it('sends response if method is getDesktopEnabled', async () => {

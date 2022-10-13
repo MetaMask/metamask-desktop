@@ -26,10 +26,6 @@ class DesktopManager {
     log.debug('Initialised desktop manager');
   }
 
-  public isDesktopEnabled(): boolean {
-    return RawState.getCachedDesktopState().desktopEnabled === true;
-  }
-
   public async getConnection(): Promise<DesktopConnection | undefined> {
     const desktopState = await RawState.getDesktopState();
     const { desktopEnabled } = desktopState;
