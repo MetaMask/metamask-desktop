@@ -62,6 +62,8 @@ export default class Desktop {
 
   private statusWindow?: BrowserWindow;
 
+  private trezorWindow?: BrowserWindow;
+
   private hasBeenInitializedWithExtensionState?: boolean;
 
   private isPaired?: boolean;
@@ -110,6 +112,7 @@ export default class Desktop {
     ipcMain.handle('minimize', (_event) => this.statusWindow?.minimize());
 
     this.statusWindow = await this.createStatusWindow();
+    this.trezorWindow = await this.createTrezorWindow();
 
     const state = await browser.storage.local.get();
     this.isPaired = state.data.PreferencesController.desktopEnabled;
@@ -159,6 +162,14 @@ export default class Desktop {
     this.stateStream?.write(rawState);
 
     log.debug('Sent state to extension');
+  }
+
+  public submitMessageToTrezorWindow(channel: string, ...args: any[]) {
+    if (!this.trezorWindow) {
+      throw new Error('No Trezor Window');
+    }
+
+    this.trezorWindow.webContents.send(channel, ...args);
   }
 
   private async disable() {
@@ -217,6 +228,33 @@ export default class Desktop {
     log.debug('Created status window');
 
     return statusWindow;
+  }
+
+  private async createTrezorWindow() {
+    const trezorWindow = new BrowserWindow({
+      show: false,
+      parent: this.statusWindow,
+      webPreferences: {
+        preload: path.resolve(
+          __dirname,
+          './hw/trezor/renderer/trezor-preload.js',
+        ),
+      },
+    });
+
+    await trezorWindow.loadFile(
+      path.resolve(__dirname, '../../desktop-trezor.html'),
+    );
+
+    trezorWindow.webContents.setWindowOpenHandler((details) => ({
+      action: details.url.startsWith('https://connect.trezor.io/')
+        ? 'allow'
+        : 'deny',
+    }));
+
+    log.debug('Created trezor window');
+
+    return trezorWindow;
   }
 
   private async onConnection(webSocket: WebSocket) {

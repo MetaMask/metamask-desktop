@@ -16,7 +16,6 @@ import {
 } from 'eth-rpc-errors';
 import { Mutex } from 'await-semaphore';
 import log from 'loglevel';
-import TrezorKeyring from 'eth-trezor-keyring';
 import LedgerBridgeKeyring from '@metamask/eth-ledger-bridge-keyring';
 import LatticeKeyring from 'eth-lattice-keyring';
 import { MetaMaskKeyring as QRHardwareKeyring } from '@keystonehq/metamask-airgapped-keyring';
@@ -156,10 +155,21 @@ import {
   ///: END:ONLY_INCLUDE_IN
 } from './controllers/permissions';
 import createRPCMethodTrackingMiddleware from './lib/createRPCMethodTrackingMiddleware';
+
+// eslint-disable-next-line import/order
+let TrezorKeyring = require('eth-trezor-keyring');
+
 ///: BEGIN:ONLY_INCLUDE_IN(flask)
+/* eslint-disable import/first */
 import cfg from './desktop/config';
 import { checkSnapsBlockList } from './flask/snaps-utilities';
 import { SNAP_BLOCKLIST } from './flask/snaps-blocklist';
+
+if (cfg().desktop.isApp) {
+  // eslint-disable-next-line node/global-require
+  TrezorKeyring = require('./desktop/hw/trezor/trezor-keyring');
+}
+/* eslint-enable import/first */
 ///: END:ONLY_INCLUDE_IN
 
 export const METAMASK_CONTROLLER_EVENTS = {

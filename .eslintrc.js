@@ -381,5 +381,17 @@ module.exports = {
         ],
       },
     },
+    /**
+     * Electron renderer process scripts
+     */
+    {
+      files: [
+        'app/scripts/desktop/hw/trezor/renderer/trezor-renderer.js',
+        'app/scripts/desktop/hw/trezor/renderer/trezor-connect.js',
+      ],
+      parserOptions: {
+        sourceType: 'script',
+      },
+    },
   ],
 };

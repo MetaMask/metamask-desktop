@@ -153,6 +153,7 @@ describe('Desktop', () => {
       loadFile: jest.fn(() => Promise.resolve()),
       webContents: {
         send: jest.fn(),
+        setWindowOpenHandler: jest.fn(),
       },
     });
 
