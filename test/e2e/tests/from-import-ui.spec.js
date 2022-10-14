@@ -6,6 +6,7 @@ const {
   regularDelayMs,
   largeDelayMs,
   completeImportSRPOnboardingFlow,
+  completeImportSRPOnboardingFlowDesktop,
   completeImportSRPOnboardingFlowWordByWord,
 } = require('../helpers');
 
@@ -36,11 +37,20 @@ describe('MetaMask Import UI', function () {
         await driver.navigate();
         await driver.navigate();
 
-        await completeImportSRPOnboardingFlow(
-          driver,
-          testSeedPhrase,
-          testPassword,
-        );
+        if (process.env.RUN_WITH_DESKTOP === 'true') {
+          // MMD
+          await completeImportSRPOnboardingFlowDesktop(
+            driver,
+            testSeedPhrase,
+            testPassword,
+          );
+        } else {
+          await completeImportSRPOnboardingFlow(
+            driver,
+            testSeedPhrase,
+            testPassword,
+          );
+        }
 
         // Show account information
         await driver.clickElement(
