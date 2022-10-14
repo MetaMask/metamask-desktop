@@ -143,6 +143,7 @@ class DesktopApp extends EventEmitter {
     }
 
     this.status.isWebSocketConnected = false;
+    this.status.connections = [];
 
     this.emit('restart');
   }

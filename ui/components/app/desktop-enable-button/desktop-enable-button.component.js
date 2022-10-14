@@ -15,6 +15,7 @@ import {
   testDesktopConnection,
   disableDesktop,
 } from '../../../store/actions';
+import { browser } from '../../../../app/scripts/desktop/browser/browser-polyfill';
 
 const DESKTOP_ERROR_DESKTOP_OUTDATED_ROUTE = `${DESKTOP_ERROR_ROUTE}/${EXTENSION_ERROR_PAGE_TYPES.DESKTOP_OUTDATED}`;
 const DESKTOP_ERROR_EXTENSION_OUTDATED_ROUTE = `${DESKTOP_ERROR_ROUTE}/${EXTENSION_ERROR_PAGE_TYPES.EXTENSION_OUTDATED}`;
@@ -27,6 +28,7 @@ export default function DesktopEnableButton() {
   const hideLoader = () => dispatch(hideLoadingIndication());
   const desktopEnabled = useSelector(getIsDesktopEnabled);
   const setDesktopEnabled = (val) => dispatch(setDesktopEnabledAction(val));
+  const restart = () => dispatch(browser.runtime.reload());
 
   const onClick = async () => {
     if (desktopEnabled) {
@@ -55,7 +57,13 @@ export default function DesktopEnableButton() {
     }
 
     if (process.env.SKIP_OTP_PAIRING_FLOW) {
+      showLoader();
       setDesktopEnabled(true);
+
+      // Wait for new state to persist before restarting
+      setTimeout(() => {
+        restart();
+      }, 2000);
       return;
     }
 
