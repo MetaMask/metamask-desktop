@@ -265,6 +265,11 @@
       "packages": {
         "@babel/cli>@jridgewell/trace-mapping": true
       }
+    },
+    "eth-json-rpc-middleware>@metamask/utils": {
+      "packages": {
+        "eslint>fast-deep-equal": true
+      }
     }
   }
 }
