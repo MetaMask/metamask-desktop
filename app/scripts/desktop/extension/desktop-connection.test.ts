@@ -1,6 +1,5 @@
-import { Duplex, PassThrough } from 'stream';
+import { Duplex } from 'stream';
 import ObjectMultiplex from 'obj-multiplex';
-import PortStream from 'extension-port-stream';
 import { v4 as uuidv4 } from 'uuid';
 import {
   CLIENT_ID_END_CONNECTION,
@@ -16,8 +15,6 @@ import {
   createStreamMock,
   createRemotePortMock,
   createMultiplexMock,
-  JSON_RPC_ID_MOCK,
-  STREAM_MOCK,
   UUID_MOCK,
   createExtensionVersionCheckMock,
 } from '../test/mocks';
@@ -64,24 +61,15 @@ jest.mock(
 describe('Desktop Connection', () => {
   const streamMock = createStreamMock();
   const multiplexMock = createMultiplexMock();
-  const portStreamMock = createStreamMock();
+  const uiStreamMock = createStreamMock();
   const remotePortMock = createRemotePortMock();
   const browserMock = browser as any;
-  const passThroughMock = createStreamMock();
   const uuidMock = uuidv4 as jest.MockedFunction<typeof uuidv4>;
   const versionCheckMock = createExtensionVersionCheckMock();
   const rawStateMock = RawState as jest.Mocked<typeof RawState>;
 
   const objectMultiplexConstructorMock = ObjectMultiplex as jest.MockedClass<
     typeof ObjectMultiplex
-  >;
-
-  const portStreamConstructorMock = PortStream as jest.MockedClass<
-    typeof PortStream
-  >;
-
-  const passThroughConstructorMock = PassThrough as jest.MockedClass<
-    typeof PassThrough
   >;
 
   const versionCheckConstructorMock = ExtensionVersionCheck as jest.MockedClass<
@@ -108,11 +96,8 @@ describe('Desktop Connection', () => {
     jest.resetAllMocks();
 
     streamMock.pipe.mockReturnValue(multiplexMock);
-    portStreamMock.pipe.mockImplementation((dest) => dest);
-    passThroughMock.pipe.mockImplementation((dest) => dest);
+    uiStreamMock.pipe.mockImplementation((dest) => dest);
     objectMultiplexConstructorMock.mockReturnValue(multiplexMock);
-    portStreamConstructorMock.mockReturnValue(portStreamMock as any);
-    passThroughConstructorMock.mockReturnValue(passThroughMock as any);
     versionCheckConstructorMock.mockReturnValue(versionCheckMock as any);
     uuidMock.mockReturnValue(UUID_MOCK);
 
@@ -133,28 +118,25 @@ describe('Desktop Connection', () => {
       desktopConnection.createStream(
         remotePortMock,
         connectionType,
-        portStreamMock,
+        uiStreamMock,
       );
       expect(multiplexMock.createStream).toHaveBeenCalledTimes(8);
       expect(multiplexMock.createStream).toHaveBeenLastCalledWith(UUID_MOCK);
 
       const clientStreamMock = multiplexStreamMocks[UUID_MOCK];
 
-      expect(portStreamMock.pipe).toHaveBeenCalledTimes(1);
-      expect(portStreamMock.pipe).toHaveBeenCalledWith(passThroughMock);
-
-      expect(passThroughMock.pipe).toHaveBeenCalledTimes(1);
-      expect(passThroughMock.pipe).toHaveBeenCalledWith(clientStreamMock);
+      expect(uiStreamMock.pipe).toHaveBeenCalledTimes(1);
+      expect(uiStreamMock.pipe).toHaveBeenCalledWith(clientStreamMock);
 
       expect(clientStreamMock.pipe).toHaveBeenCalledTimes(1);
-      expect(clientStreamMock.pipe).toHaveBeenCalledWith(portStreamMock);
+      expect(clientStreamMock.pipe).toHaveBeenCalledWith(uiStreamMock);
     });
 
     it('sends new connection message', async () => {
       desktopConnection.createStream(
         remotePortMock,
         connectionType,
-        portStreamMock,
+        uiStreamMock,
       );
 
       const newConnectionStreamMock =
@@ -179,7 +161,7 @@ describe('Desktop Connection', () => {
       await desktopConnection.createStream(
         remotePortMock,
         ConnectionType.INTERNAL,
-        portStreamMock,
+        uiStreamMock,
       );
 
       const stateStreamMock = multiplexStreamMocks[CLIENT_ID_STATE];
@@ -199,15 +181,15 @@ describe('Desktop Connection', () => {
     });
   });
 
-  describe('on port stream disconnect', () => {
+  describe('on UI stream end', () => {
     it('sends end connection message', async () => {
       await desktopConnection.createStream(
         remotePortMock,
         ConnectionType.INTERNAL,
-        portStreamMock,
+        uiStreamMock,
       );
 
-      await simulateNodeEvent(portStreamMock, 'finish');
+      await simulateNodeEvent(uiStreamMock, 'finish');
 
       const endConnectionStreamMock =
         multiplexStreamMocks[CLIENT_ID_END_CONNECTION];
@@ -223,7 +205,7 @@ describe('Desktop Connection', () => {
       await desktopConnection.createStream(
         remotePortMock,
         ConnectionType.INTERNAL,
-        portStreamMock,
+        uiStreamMock,
       );
 
       const disableStreamMock = multiplexStreamMocks[CLIENT_ID_DISABLE];
@@ -260,7 +242,7 @@ describe('Desktop Connection', () => {
       await desktopConnection.createStream(
         remotePortMock,
         ConnectionType.INTERNAL,
-        portStreamMock,
+        uiStreamMock,
       );
 
       const stateStreaMock = multiplexStreamMocks[CLIENT_ID_STATE];
@@ -270,44 +252,6 @@ describe('Desktop Connection', () => {
     it('updates state', async () => {
       expect(rawStateMock.set).toHaveBeenCalledTimes(1);
       expect(rawStateMock.set).toHaveBeenCalledWith(DATA_MOCK);
-    });
-  });
-
-  describe('on port stream message', () => {
-    const simulatePortStreamMessage = async (message: any) => {
-      await desktopConnection.createStream(
-        remotePortMock,
-        ConnectionType.INTERNAL,
-        portStreamMock,
-      );
-
-      await simulateStreamMessage(portStreamMock, message);
-    };
-
-    it('updates state and restarts if method is disableDesktopError', async () => {
-      await simulatePortStreamMessage({
-        data: { method: 'disableDesktopError' },
-      });
-
-      expect(rawStateMock.setDesktopState).toHaveBeenCalledTimes(1);
-      expect(rawStateMock.setDesktopState).toHaveBeenCalledWith({
-        desktopEnabled: false,
-      });
-
-      expect(browserMock.runtime.reload).toHaveBeenCalledTimes(1);
-    });
-
-    it('sends response if method is getDesktopEnabled', async () => {
-      await simulatePortStreamMessage({
-        name: STREAM_MOCK,
-        data: { id: JSON_RPC_ID_MOCK, method: 'getDesktopEnabled' },
-      });
-
-      expect(portStreamMock.write).toHaveBeenCalledTimes(1);
-      expect(portStreamMock.write).toHaveBeenCalledWith({
-        name: STREAM_MOCK,
-        data: { jsonrpc: '2.0', id: JSON_RPC_ID_MOCK, result: true },
-      });
     });
   });
 });

@@ -74,7 +74,7 @@ export async function getErrorHtml(supportLink, metamaskState, err) {
     let errorType = EXTENSION_ERROR_PAGE_TYPES.CRITICAL_ERROR;
 
     if (err?.message.includes('No response from RPC')) {
-      errorType = EXTENSION_ERROR_PAGE_TYPES.NOT_FOUND;
+      errorType = EXTENSION_ERROR_PAGE_TYPES.CONNECTION_LOST;
     }
 
     return renderDesktopErrorContent({

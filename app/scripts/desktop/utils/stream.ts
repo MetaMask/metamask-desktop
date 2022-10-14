@@ -1,4 +1,4 @@
-import { Readable } from 'stream';
+import { Duplex, Readable } from 'stream';
 
 export const waitForMessage = <T>(
   stream: Readable,
@@ -18,3 +18,33 @@ export const waitForMessage = <T>(
     stream.on('data', listener);
   });
 };
+
+export class DuplexCopy extends Duplex {
+  private stream: Duplex;
+
+  constructor(stream: Duplex) {
+    super({ objectMode: true });
+
+    this.stream = stream;
+
+    this.stream.on('data', (data: any) => {
+      this.onMessage(data);
+    });
+  }
+
+  private onMessage(data: any) {
+    this.push(data);
+  }
+
+  public _read() {
+    return null;
+  }
+
+  public _write(
+    msg: any,
+    encoding: BufferEncoding | undefined,
+    cb: () => void,
+  ) {
+    this.stream.write(msg, encoding, cb);
+  }
+}

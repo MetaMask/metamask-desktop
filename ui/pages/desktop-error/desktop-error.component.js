@@ -31,10 +31,6 @@ export function renderDesktopErrorContent({
 }) {
   let content;
 
-  const noop = () => {
-    // do nothing
-  };
-
   const returnExtensionHome = () => {
     history?.push(DEFAULT_ROUTE);
   };
@@ -88,9 +84,9 @@ export function renderDesktopErrorContent({
           {renderHeader(t('desktopConnectionLostErrorTitle'))}
           {renderDescription(t('desktopConnectionLostErrorDescription'))}
           {renderCTA(
-            'desktop-error-button-reconnect',
-            t('desktopConnectionLostErrorCTA'),
-            noop,
+            'desktop-error-button-disable-mmd',
+            t('desktopDisableErrorCTA'),
+            disableDesktop,
           )}
         </>
       );

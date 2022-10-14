@@ -40,20 +40,6 @@ describe('Raw State Utils', () => {
     });
   });
 
-  describe('getCachedDesktopState', () => {
-    it('synchronously returns desktop controller state cached from previous operations', async () => {
-      browserMock.storage.local.get.mockResolvedValueOnce({
-        data: { DesktopController: { desktopEnabled: true } },
-      });
-
-      await RawState.get();
-
-      expect(RawState.getCachedDesktopState()).toStrictEqual({
-        desktopEnabled: true,
-      });
-    });
-  });
-
   describe('getAndUpdateDesktopState', () => {
     it('returns state from browser local storage and mutates desktop controller state', async () => {
       browserMock.storage.local.get.mockResolvedValueOnce({

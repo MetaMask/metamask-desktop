@@ -1,4 +1,4 @@
-import { Duplex, PassThrough } from 'stream';
+import { Duplex } from 'stream';
 import EventEmitter from 'events';
 import endOfStream from 'end-of-stream';
 import ObjectMultiplex from 'obj-multiplex';
@@ -87,29 +87,18 @@ export default class DesktopConnection extends EventEmitter {
     connectionType: ConnectionType,
     uiStream: Duplex,
   ) {
-    uiStream.on('data', (data) => this.onUIMessage(data, uiStream as any));
-
-    // Wrapping the original UI stream allows us to intercept messages required for error handling,
-    // while still pausing messages from the UI until we are connected to the desktop.
-    const uiInputStream = new PassThrough({ objectMode: true });
-    uiInputStream.pause();
-
-    uiStream.pipe(uiInputStream);
-    uiStream.resume();
-
     const clientId = this.generateClientId();
     const clientStream = this.multiplex.createStream(clientId);
 
-    uiInputStream.pipe(clientStream).pipe(uiStream as any);
+    uiStream.pipe(clientStream).pipe(uiStream as any);
 
     endOfStream(uiStream, () => {
-      uiInputStream.destroy();
       this.onUIStreamEnd(clientId, clientStream);
     });
 
     this.sendNewConnectionMessage(remotePort, clientId, connectionType);
 
-    uiInputStream.resume();
+    uiStream.resume();
   }
 
   public async transferState() {
@@ -169,22 +158,6 @@ export default class DesktopConnection extends EventEmitter {
     log.debug('Synchronised state with desktop');
   }
 
-  private async onUIMessage(data: any, stream: Duplex) {
-    const method = data.data?.method;
-    const id = data.data?.id;
-
-    if (method === 'disableDesktopError') {
-      await this.disable();
-    }
-
-    if (method === 'getDesktopEnabled') {
-      stream.write({
-        name: data.name,
-        data: { jsonrpc: '2.0', result: true, id },
-      });
-    }
-  }
-
   private sendNewConnectionMessage(
     remotePort: RemotePortData,
     clientId: ClientId,
@@ -207,14 +180,6 @@ export default class DesktopConnection extends EventEmitter {
     log.debug('Sending new connection message', newConnectionMessage);
 
     this.newConnectionStream.write(newConnectionMessage);
-  }
-
-  private async disable() {
-    log.debug('Disabling desktop app');
-
-    await RawState.setDesktopState({ desktopEnabled: false });
-
-    this.restart();
   }
 
   private async restart() {

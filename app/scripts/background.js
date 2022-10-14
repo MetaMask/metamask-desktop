@@ -728,6 +728,10 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     updateBadge();
   }
 
+  controller.store.subscribe((state) => {
+    DesktopManager?.setState(state);
+  });
+
   DesktopApp?.on('connect-remote', (connectRequest) => {
     connectRemote(connectRequest);
   });

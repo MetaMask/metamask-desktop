@@ -1,27 +1,50 @@
 import { Duplex } from 'stream';
+import PortStream from 'extension-port-stream';
 import {
   createWebSocketBrowserMock,
   createWebSocketStreamMock,
   createDesktopConnectionMock,
   createRemotePortMock,
+  createStreamMock,
+  STREAM_MOCK,
+  JSON_RPC_ID_MOCK,
 } from '../test/mocks';
-import { simulateBrowserEvent, flushPromises } from '../test/utils';
+import {
+  simulateBrowserEvent,
+  flushPromises,
+  simulateStreamMessage,
+} from '../test/utils';
 import EncryptedWebSocketStream from '../encryption/encrypted-web-socket-stream';
 import { WebSocketStream } from '../shared/web-socket-stream';
 import cfg from '../utils/config';
 import { TestConnectionResult } from '../types/desktop';
 import * as RawState from '../utils/raw-state';
 import { ConnectionType } from '../types/background';
+import { browser } from '../browser/browser-polyfill';
 import DesktopConnection from './desktop-connection';
 import DesktopManager from './desktop-manager';
 
+jest.mock('extension-port-stream');
 jest.mock('../shared/web-socket-stream');
 jest.mock('../encryption/encrypted-web-socket-stream');
 jest.mock('./desktop-connection');
 jest.mock('../utils/raw-state');
+
 jest.mock('../../../../shared/modules/mv3.utils', () => ({}), {
   virtual: true,
 });
+
+jest.mock(
+  '../browser/browser-polyfill',
+  () => ({
+    browser: {
+      runtime: { reload: jest.fn() },
+    },
+  }),
+  {
+    virtual: true,
+  },
+);
 
 const removeInstance = () => {
   // eslint-disable-next-line
@@ -41,6 +64,8 @@ describe('Desktop Manager', () => {
   const desktopConnectionMock = createDesktopConnectionMock();
   const rawStateMock = RawState as jest.Mocked<typeof RawState>;
   const remotePortMock = createRemotePortMock();
+  const portStreamMock = createStreamMock();
+  const browserMock = browser as any;
 
   const webSocketStreamConstructorMock = WebSocketStream as jest.MockedClass<
     typeof WebSocketStream
@@ -53,6 +78,10 @@ describe('Desktop Manager', () => {
 
   const desktopConnectionConstructorMock =
     DesktopConnection as jest.MockedClass<typeof DesktopConnection>;
+
+  const portStreamConstructorMock = PortStream as jest.MockedClass<
+    typeof PortStream
+  >;
 
   const initDesktopManager = async <T>(
     promise?: Promise<T>,
@@ -72,6 +101,7 @@ describe('Desktop Manager', () => {
     jest.spyOn(global, 'WebSocket').mockImplementation(() => webSocketMock);
     webSocketStreamConstructorMock.mockReturnValue(webSocketStreamMock);
     desktopConnectionConstructorMock.mockReturnValue(desktopConnectionMock);
+    portStreamConstructorMock.mockReturnValue(portStreamMock as any);
 
     encryptedWebSocketStreamConstructorMock.mockReturnValue(
       webSocketStreamMock as any,
@@ -134,9 +164,7 @@ describe('Desktop Manager', () => {
 
   describe('getConnection', () => {
     it('returns existing connection if desktop state enabled', async () => {
-      rawStateMock.getDesktopState.mockResolvedValueOnce({
-        desktopEnabled: true,
-      });
+      DesktopManager.setState({ DesktopController: { desktopEnabled: true } });
 
       setInstance(desktopConnectionMock);
 
@@ -144,9 +172,7 @@ describe('Desktop Manager', () => {
     });
 
     it('creates connection if desktop state enabled and no existing connection', async () => {
-      rawStateMock.getDesktopState.mockResolvedValueOnce({
-        desktopEnabled: true,
-      });
+      DesktopManager.setState({ DesktopController: { desktopEnabled: true } });
 
       expect(await initDesktopManager(DesktopManager.getConnection())).toBe(
         desktopConnectionMock,
@@ -156,9 +182,7 @@ describe('Desktop Manager', () => {
     });
 
     it('returns undefined if desktop not enabled', async () => {
-      rawStateMock.getDesktopState.mockResolvedValueOnce({
-        desktopEnabled: false,
-      });
+      DesktopManager.setState({ DesktopController: { desktopEnabled: false } });
 
       expect(await DesktopManager.getConnection()).toBeUndefined();
     });
@@ -166,9 +190,7 @@ describe('Desktop Manager', () => {
 
   describe('createStream', () => {
     it('returns false if desktop not enabled', async () => {
-      rawStateMock.getCachedDesktopState.mockReturnValueOnce({
-        desktopEnabled: false,
-      });
+      DesktopManager.setState({ DesktopController: { desktopEnabled: false } });
 
       const result = DesktopManager.createStream(
         createRemotePortMock(),
@@ -180,9 +202,7 @@ describe('Desktop Manager', () => {
     });
 
     it('returns true if desktop enabled', async () => {
-      rawStateMock.getCachedDesktopState.mockReturnValueOnce({
-        desktopEnabled: true,
-      });
+      DesktopManager.setState({ DesktopController: { desktopEnabled: true } });
 
       rawStateMock.getDesktopState.mockResolvedValueOnce({
         desktopEnabled: true,
@@ -198,9 +218,7 @@ describe('Desktop Manager', () => {
     });
 
     it('gets connection and calls create stream if desktop enabled', async () => {
-      rawStateMock.getCachedDesktopState.mockReturnValueOnce({
-        desktopEnabled: true,
-      });
+      DesktopManager.setState({ DesktopController: { desktopEnabled: true } });
 
       rawStateMock.getDesktopState.mockResolvedValueOnce({
         desktopEnabled: true,
@@ -290,6 +308,43 @@ describe('Desktop Manager', () => {
 
     it('closes web socket', async () => {
       expect(webSocketMock.close).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('on UI message', () => {
+    const simulatePortStreamMessage = async (message: any) => {
+      await DesktopManager.createStream(
+        remotePortMock,
+        ConnectionType.INTERNAL,
+      );
+
+      await simulateStreamMessage(portStreamMock, message);
+    };
+
+    it('updates state and restarts if method is disableDesktopError', async () => {
+      await simulatePortStreamMessage({
+        data: { method: 'disableDesktopError' },
+      });
+
+      expect(rawStateMock.setDesktopState).toHaveBeenCalledTimes(1);
+      expect(rawStateMock.setDesktopState).toHaveBeenCalledWith({
+        desktopEnabled: false,
+      });
+
+      expect(browserMock.runtime.reload).toHaveBeenCalledTimes(1);
+    });
+
+    it('sends response if method is getDesktopEnabled', async () => {
+      await simulatePortStreamMessage({
+        name: STREAM_MOCK,
+        data: { id: JSON_RPC_ID_MOCK, method: 'getDesktopEnabled' },
+      });
+
+      expect(portStreamMock.write).toHaveBeenCalledTimes(1);
+      expect(portStreamMock.write).toHaveBeenCalledWith({
+        name: STREAM_MOCK,
+        data: { jsonrpc: '2.0', id: JSON_RPC_ID_MOCK, result: true },
+      });
     });
   });
 });

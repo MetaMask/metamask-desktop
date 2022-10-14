@@ -1,14 +1,17 @@
 import { Duplex } from 'stream';
 import log from 'loglevel';
 import PortStream from 'extension-port-stream';
+import endOfStream from 'end-of-stream';
 import cfg from '../utils/config';
 import { BrowserWebSocket, WebSocketStream } from '../shared/web-socket-stream';
 import EncryptedWebSocketStream from '../encryption/encrypted-web-socket-stream';
 import { timeoutPromise } from '../utils/utils';
-import { TestConnectionResult } from '../types/desktop';
+import { DesktopState, TestConnectionResult } from '../types/desktop';
 import * as RawState from '../utils/raw-state';
 import { ConnectionType } from '../types/background';
 import { isManifestV3 } from '../../../../shared/modules/mv3.utils';
+import { browser } from '../browser/browser-polyfill';
+import { DuplexCopy } from '../utils/stream';
 import DesktopConnection from './desktop-connection';
 
 const TIMEOUT_CONNECT = 10000;
@@ -16,22 +19,27 @@ const TIMEOUT_CONNECT = 10000;
 class DesktopManager {
   private desktopConnection?: DesktopConnection;
 
+  private desktopState: DesktopState;
+
+  public constructor() {
+    this.desktopState = {};
+  }
+
   public async init(state: any) {
     if (state?.DesktopController?.desktopEnabled === true) {
       this.desktopConnection = await this.createConnection();
-
       await this.desktopConnection.transferState();
     }
 
     log.debug('Initialised desktop manager');
   }
 
-  public async getConnection(): Promise<DesktopConnection | undefined> {
-    const desktopState = await RawState.getDesktopState();
-    const { desktopEnabled } = desktopState;
+  public setState(state: any) {
+    this.desktopState = state.DesktopController || {};
+  }
 
-    if (!desktopEnabled) {
-      log.debug('Desktop not enabled, no connection');
+  public async getConnection(): Promise<DesktopConnection | undefined> {
+    if (!this.desktopState.desktopEnabled) {
       return undefined;
     }
 
@@ -46,12 +54,24 @@ class DesktopManager {
     remotePort: any,
     connectionType: ConnectionType,
   ): boolean => {
-    if (!RawState.getCachedDesktopState().desktopEnabled) {
+    if (!this.desktopState.desktopEnabled) {
       return false;
     }
 
     const uiStream = new PortStream(remotePort as any) as any as Duplex;
     uiStream.pause();
+    uiStream.on('data', (data) => this.onUIMessage(data, uiStream));
+
+    // Wrapping the original UI stream allows us to intercept messages required for error handling,
+    // while still pausing messages from the UI until we are connected to the desktop.
+    const uiInputStream = new DuplexCopy(uiStream);
+    uiInputStream.pause();
+
+    uiStream.resume();
+
+    endOfStream(uiStream, () => {
+      uiInputStream.destroy();
+    });
 
     (async () => {
       const desktopConnection = await this.getConnection();
@@ -59,7 +79,7 @@ class DesktopManager {
       await desktopConnection?.createStream(
         remotePort,
         connectionType,
-        uiStream,
+        uiInputStream,
       );
 
       if (isManifestV3 && connectionType === ConnectionType.INTERNAL) {
@@ -131,6 +151,30 @@ class DesktopManager {
     if (connection === this.desktopConnection) {
       this.desktopConnection = undefined;
     }
+  }
+
+  private async onUIMessage(data: any, stream: Duplex) {
+    const method = data.data?.method;
+    const id = data.data?.id;
+
+    if (method === 'disableDesktopError') {
+      await this.disable();
+    }
+
+    if (method === 'getDesktopEnabled') {
+      stream.write({
+        name: data.name,
+        data: { jsonrpc: '2.0', result: true, id },
+      });
+    }
+  }
+
+  private async disable() {
+    log.debug('Disabling desktop mode');
+
+    await RawState.setDesktopState({ desktopEnabled: false });
+
+    browser.runtime.reload();
   }
 
   private async createWebSocket(): Promise<WebSocket> {
