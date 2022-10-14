@@ -235,12 +235,15 @@ export default class Desktop {
       show: false,
       parent: this.statusWindow,
       webPreferences: {
-        preload: path.resolve(__dirname, './trezor/trezor-preload.js'),
+        preload: path.resolve(
+          __dirname,
+          './hw/trezor/renderer/trezor-preload.js',
+        ),
       },
     });
 
     await trezorWindow.loadFile(
-      path.resolve(__dirname, '../../desktop-trezor-renderer.html'),
+      path.resolve(__dirname, '../../desktop-trezor.html'),
     );
 
     trezorWindow.webContents.setWindowOpenHandler((details) => ({

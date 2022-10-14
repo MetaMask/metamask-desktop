@@ -167,7 +167,7 @@ import { SNAP_BLOCKLIST } from './flask/snaps-blocklist';
 
 if (cfg().desktop.isApp) {
   // eslint-disable-next-line node/global-require
-  TrezorKeyring = require('./desktop/trezor/trezor-keyring');
+  TrezorKeyring = require('./desktop/hw/trezor/trezor-keyring');
 }
 /* eslint-enable import/first */
 ///: END:ONLY_INCLUDE_IN

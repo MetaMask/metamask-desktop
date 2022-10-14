@@ -384,8 +384,8 @@ module.exports = {
      */
     {
       files: [
-        'app/scripts/desktop/trezor/trezor-renderer.js',
-        'app/scripts/desktop/trezor/trezor-connect.js',
+        'app/scripts/desktop/hw/trezor/renderer/trezor-renderer.js',
+        'app/scripts/desktop/hw/trezor/renderer/trezor-connect.js',
       ],
       parserOptions: {
         sourceType: 'script',

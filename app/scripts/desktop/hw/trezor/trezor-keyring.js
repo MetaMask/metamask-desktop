@@ -2,7 +2,7 @@
 const { ipcMain } = require('electron');
 const TrezorKeyring = require('eth-trezor-keyring');
 const { DEVICE_EVENT } = require('eth-trezor-keyring');
-const Desktop = require('../desktop').default;
+const Desktop = require('../../desktop').default;
 
 const channelPrefix = 'trezor-connect';
 const responseSufix = 'response';
