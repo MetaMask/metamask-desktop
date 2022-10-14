@@ -1,16 +1,17 @@
 import * as totp from '../../../../shared/modules/totp';
-import { DATA_MOCK, createStreamMock, OTP_MOCK } from '../test/mocks';
+import { createStreamMock, OTP_MOCK } from '../test/mocks';
 import { expectEventToFire, simulateStreamMessage } from '../test/utils';
 import { browser } from '../browser/browser-polyfill';
+import * as RawState from '../utils/raw-state';
 import { DesktopPairing, ExtensionPairing } from './pairing';
 
 jest.mock('../../../../shared/modules/totp');
+jest.mock('../utils/raw-state');
 
 jest.mock(
   '../browser/browser-polyfill',
   () => ({
     browser: {
-      storage: { local: { get: jest.fn(), set: jest.fn() } },
       runtime: { reload: jest.fn() },
     },
   }),
@@ -23,6 +24,7 @@ describe('Pairing', () => {
   const streamMock = createStreamMock();
   const browserMock = browser as any;
   const totpMock = totp as jest.Mocked<typeof totp>;
+  const rawStateMock = RawState as jest.Mocked<typeof RawState>;
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -45,13 +47,6 @@ describe('Pairing', () => {
     });
 
     describe('on message', () => {
-      const DATA_MOCK_STATE_PAIRED = {
-        ...DATA_MOCK,
-        data: {
-          DesktopController: { desktopEnabled: true },
-        },
-      };
-
       const simulatePairingMessage = async () => {
         await simulateStreamMessage(streamMock, {
           otp: OTP_MOCK,
@@ -61,26 +56,18 @@ describe('Pairing', () => {
       describe('if OTP is valid', () => {
         beforeEach(async () => {
           totpMock.validate.mockReturnValue(true);
-
-          browserMock.storage.local.get.mockResolvedValue({
-            ...DATA_MOCK,
-            data: {
-              DesktopController: { desktopEnabled: true },
-            },
-          });
-
           await simulatePairingMessage();
         });
 
         it('updates state', async () => {
-          expect(browser.storage.local.set).toHaveBeenCalledTimes(1);
-          expect(browser.storage.local.set).toHaveBeenCalledWith(
-            DATA_MOCK_STATE_PAIRED,
-          );
+          expect(rawStateMock.setDesktopState).toHaveBeenCalledTimes(1);
+          expect(rawStateMock.setDesktopState).toHaveBeenCalledWith({
+            desktopEnabled: true,
+          });
         });
 
         it('restarts extension', async () => {
-          expect(browser.runtime.reload).toHaveBeenCalledTimes(1);
+          expect(browserMock.runtime.reload).toHaveBeenCalledTimes(1);
         });
       });
 
