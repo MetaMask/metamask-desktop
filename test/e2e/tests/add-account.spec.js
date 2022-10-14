@@ -3,7 +3,6 @@ const {
   convertToHexValue,
   withFixtures,
   regularDelayMs,
-  completeImportSRPOnboardingFlow,
   completeImportSRPOnboardingFlowDesktop,
 } = require('../helpers');
 const enLocaleMessages = require('../../../app/_locales/en/messages.json');
@@ -61,20 +60,12 @@ describe('Add account', function () {
         await driver.navigate();
         await driver.navigate();
 
-        if (process.env.RUN_WITH_DESKTOP === 'true') {
-          // MMD
-          await completeImportSRPOnboardingFlowDesktop(
-            driver,
-            testSeedPhrase,
-            testPassword,
-          );
-        } else {
-          await completeImportSRPOnboardingFlow(
-            driver,
-            testSeedPhrase,
-            testPassword,
-          );
-        }
+        // MMD
+        await completeImportSRPOnboardingFlowDesktop(
+          driver,
+          testSeedPhrase,
+          testPassword,
+        );
 
         await driver.clickElement('.account-menu__icon');
         await driver.clickElement({ text: 'Create account', tag: 'div' });

@@ -1,7 +1,6 @@
 const path = require('path');
 const { promises: fs } = require('fs');
 const cp = require('child_process');
-const psTree = require('ps-tree');
 const BigNumber = require('bignumber.js');
 const mockttp = require('mockttp');
 const createStaticServer = require('../../development/create-static-server');
@@ -196,22 +195,6 @@ async function withFixtures(options, testSuite) {
     throw error;
   } finally {
     if (!failed || process.env.E2E_LEAVE_RUNNING !== 'true') {
-      // Close MM desktop app
-      if (process.env.RUN_WITH_DESKTOP === 'true') {
-        console.info('closing Desktop App');
-        // eslint-disable-next-line node/handle-callback-err
-        psTree(desktop.pid, function (_err, children) {
-          cp.spawn(
-            'kill',
-            ['-9'].concat(
-              children.map(function (p) {
-                return p.PID;
-              }),
-            ),
-          );
-        });
-      }
-
       await fixtureServer.stop();
       await ganacheServer.quit();
       if (ganacheOptions?.concurrent) {
@@ -238,6 +221,12 @@ async function withFixtures(options, testSuite) {
         await phishingPageServer.quit();
       }
       await mockServer.stop();
+
+      // Close MM desktop app
+      if (process.env.RUN_WITH_DESKTOP === 'true') {
+        console.info('closing Desktop App');
+        cp.spawn('kill -9 `lsof -t -i:7071`', { shell: true });
+      }
     }
   }
 }
