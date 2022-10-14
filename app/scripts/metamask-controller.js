@@ -170,7 +170,7 @@ import { SNAP_BLOCKLIST } from './flask/snaps-blocklist';
 if (cfg().desktop.isApp) {
   /* eslint-disable node/global-require */
   LedgerBridgeKeyring =
-    require('./desktop/hw/ledger-keyring').LedgerBridgeKeyring;
+    require('./desktop/hw/ledger/ledger-keyring').LedgerBridgeKeyring;
   TrezorKeyring = require('./desktop/hw/trezor/trezor-keyring');
   /* eslint-enable node/global-require */
 }
