@@ -22,7 +22,7 @@
     "builds/**/*",
     "dist/**/*",
     "node_modules/**",
-    "playwright/chrome"
+    "playwright/**"
   ],
   "extends": "@tsconfig/node16/tsconfig.json",
   "paths": {
