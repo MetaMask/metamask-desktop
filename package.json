@@ -345,7 +345,6 @@
     "del": "^3.0.0",
     "depcheck": "^1.4.3",
     "dependency-tree": "^8.1.2",
-    "dotenv": "^16.0.2",
     "duplexify": "^4.1.1",
     "electron": "22.0.0-alpha.1",
     "electron-builder": "^23.3.3",

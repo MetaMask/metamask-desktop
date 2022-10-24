@@ -391,8 +391,8 @@ jobs:
             - dist-test
             - builds-test
       - store_artifacts:
-          path: ./builds
-          destination: builds
+          path: ./builds-test
+          destination: builds-test
 
   prep-build-test-nolavamoat:
     executor: node-browsers-medium-plus
