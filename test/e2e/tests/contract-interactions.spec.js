@@ -26,7 +26,7 @@ describe('Deploy contract and call contract methods', function () {
         const contractAddress = await contractRegistry.getContractAddress(
           smartContract,
         );
-                if (process.env.RUN_WITH_DESKTOP === 'true') {
+        if (process.env.RUN_WITH_DESKTOP === 'true') {
           await driver.navigate();
         }
         await driver.navigate();

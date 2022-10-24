@@ -55,7 +55,7 @@ describe('Backup', function () {
       },
       async ({ driver }) => {
         await createDownloadFolder(downloadsFolder);
-                if (process.env.RUN_WITH_DESKTOP === 'true') {
+        if (process.env.RUN_WITH_DESKTOP === 'true') {
           await driver.navigate();
         }
         await driver.navigate();

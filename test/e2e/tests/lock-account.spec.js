@@ -19,7 +19,7 @@ describe('Lock and unlock', function () {
         title: this.test.title,
       },
       async ({ driver }) => {
-                if (process.env.RUN_WITH_DESKTOP === 'true') {
+        if (process.env.RUN_WITH_DESKTOP === 'true') {
           await driver.navigate();
         }
         await driver.navigate();

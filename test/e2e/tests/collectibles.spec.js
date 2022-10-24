@@ -25,7 +25,7 @@ describe('Collectibles', function () {
       },
       async ({ driver, _, contractRegistry }) => {
         const contract = contractRegistry.getContractAddress(smartContract);
-                if (process.env.RUN_WITH_DESKTOP === 'true') {
+        if (process.env.RUN_WITH_DESKTOP === 'true') {
           await driver.navigate();
         }
         await driver.navigate();
@@ -80,7 +80,7 @@ describe('Collectibles', function () {
       },
       async ({ driver, _, contractRegistry }) => {
         const contract = contractRegistry.getContractAddress(smartContract);
-                if (process.env.RUN_WITH_DESKTOP === 'true') {
+        if (process.env.RUN_WITH_DESKTOP === 'true') {
           await driver.navigate();
         }
         await driver.navigate();
@@ -148,7 +148,7 @@ describe('Collectibles', function () {
       },
       async ({ driver, _, contractRegistry }) => {
         const contract = contractRegistry.getContractAddress(smartContract);
-                if (process.env.RUN_WITH_DESKTOP === 'true') {
+        if (process.env.RUN_WITH_DESKTOP === 'true') {
           await driver.navigate();
         }
         await driver.navigate();
@@ -220,7 +220,7 @@ describe('Collectibles', function () {
       },
       async ({ driver, _, contractRegistry }) => {
         const contract = contractRegistry.getContractAddress(smartContract);
-                if (process.env.RUN_WITH_DESKTOP === 'true') {
+        if (process.env.RUN_WITH_DESKTOP === 'true') {
           await driver.navigate();
         }
         await driver.navigate();

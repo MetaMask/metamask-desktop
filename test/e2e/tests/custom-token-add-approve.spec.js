@@ -28,10 +28,10 @@ describe.skip('Create token, approve token and approve token without gas', funct
           title: this.test.title,
         },
         async ({ driver }) => {
-                  if (process.env.RUN_WITH_DESKTOP === 'true') {
+          if (process.env.RUN_WITH_DESKTOP === 'true') {
+            await driver.navigate();
+          }
           await driver.navigate();
-        }
-        await driver.navigate();
           await driver.fill('#password', 'correct horse battery staple');
           await driver.press('#password', driver.Key.ENTER);
 
@@ -122,10 +122,10 @@ describe.skip('Create token, approve token and approve token without gas', funct
           title: this.test.title,
         },
         async ({ driver }) => {
-                  if (process.env.RUN_WITH_DESKTOP === 'true') {
+          if (process.env.RUN_WITH_DESKTOP === 'true') {
+            await driver.navigate();
+          }
           await driver.navigate();
-        }
-        await driver.navigate();
           await driver.fill('#password', 'correct horse battery staple');
           await driver.press('#password', driver.Key.ENTER);
 
@@ -193,10 +193,10 @@ describe.skip('Create token, approve token and approve token without gas', funct
           title: this.test.title,
         },
         async ({ driver }) => {
-                  if (process.env.RUN_WITH_DESKTOP === 'true') {
+          if (process.env.RUN_WITH_DESKTOP === 'true') {
+            await driver.navigate();
+          }
           await driver.navigate();
-        }
-        await driver.navigate();
           await driver.fill('#password', 'correct horse battery staple');
           await driver.press('#password', driver.Key.ENTER);
 
@@ -306,10 +306,10 @@ describe.skip('Create token, approve token and approve token without gas', funct
           title: this.test.title,
         },
         async ({ driver }) => {
-                  if (process.env.RUN_WITH_DESKTOP === 'true') {
+          if (process.env.RUN_WITH_DESKTOP === 'true') {
+            await driver.navigate();
+          }
           await driver.navigate();
-        }
-        await driver.navigate();
           await driver.fill('#password', 'correct horse battery staple');
           await driver.press('#password', driver.Key.ENTER);
 

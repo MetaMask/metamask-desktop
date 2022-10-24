@@ -34,7 +34,7 @@ describe('Segment metrics', function () {
       },
       async ({ driver, mockServer }) => {
         const mockedEndpoints = await mockSegment(mockServer);
-                if (process.env.RUN_WITH_DESKTOP === 'true') {
+        if (process.env.RUN_WITH_DESKTOP === 'true') {
           await driver.navigate();
         }
         await driver.navigate();

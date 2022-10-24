@@ -59,9 +59,10 @@ Run unit tests and the linter with `yarn test`. To run just unit tests, run `yar
 
 You can run the linter by itself with `yarn lint`, and you can automatically fix some lint problems with `yarn lint:fix`. You can also run these two commands just on your local changes to save time with `yarn lint:changed` and `yarn lint:changed:fix` respectively.
 
-### Running E2E Tests
+### Running E2E Tests (No desktop)
 
 Our e2e test suite can be run on either Firefox or Chrome. In either case, start by creating a test build by running `yarn build:test`.
+
 
 - Firefox e2e tests can be run with `yarn test:e2e:firefox`.
 
@@ -80,6 +81,34 @@ Our e2e test suite can be run on either Firefox or Chrome. In either case, start
 
 An example for running `account-details` testcase with chrome and leaving the browser open would be:
 `yarn test:e2e:single test/e2e/tests/account-details.spec.js --browser=chrome --leave-running`
+
+### Running E2E Tests with Desktop
+Config:
+We need these env vars setup:
+```
+LOCAL_ELECTRON_CONFIG_FILE_PATH=/Users/***/Library/Application Support/Electron/config.json #<mac>
+RUN_WITH_DESKTOP=true
+```
+
+Generate Desktop App:
+```
+yarn build:desktop:test
+```
+
+Generate extension for desktop:
+```
+yarn build:desktop:extension:test
+```
+
+Run tests with:
+```
+yarn test:e2e:chrome
+```
+
+Run all without stopping if error:
+```
+TEST_DEBUG=true yarn test:e2e:chrome
+```
 
 ### Changing dependencies
 

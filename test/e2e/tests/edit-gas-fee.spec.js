@@ -25,7 +25,7 @@ describe('Editing Confirm Transaction', function () {
         title: this.test.title,
       },
       async ({ driver }) => {
-                if (process.env.RUN_WITH_DESKTOP === 'true') {
+        if (process.env.RUN_WITH_DESKTOP === 'true') {
           await driver.navigate();
         }
         await driver.navigate();
@@ -106,7 +106,7 @@ describe('Editing Confirm Transaction', function () {
         title: this.test.title,
       },
       async ({ driver }) => {
-                if (process.env.RUN_WITH_DESKTOP === 'true') {
+        if (process.env.RUN_WITH_DESKTOP === 'true') {
           await driver.navigate();
         }
         await driver.navigate();
@@ -193,7 +193,7 @@ describe('Editing Confirm Transaction', function () {
         dapp: true,
       },
       async ({ driver }) => {
-                if (process.env.RUN_WITH_DESKTOP === 'true') {
+        if (process.env.RUN_WITH_DESKTOP === 'true') {
           await driver.navigate();
         }
         await driver.navigate();

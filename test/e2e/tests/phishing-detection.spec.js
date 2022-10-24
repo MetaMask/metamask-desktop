@@ -51,7 +51,7 @@ describe('Phishing Detection', function () {
         failOnConsoleError: false,
       },
       async ({ driver }) => {
-                if (process.env.RUN_WITH_DESKTOP === 'true') {
+        if (process.env.RUN_WITH_DESKTOP === 'true') {
           await driver.navigate();
         }
         await driver.navigate();
@@ -82,7 +82,7 @@ describe('Phishing Detection', function () {
         failOnConsoleError: false,
       },
       async ({ driver }) => {
-                if (process.env.RUN_WITH_DESKTOP === 'true') {
+        if (process.env.RUN_WITH_DESKTOP === 'true') {
           await driver.navigate();
         }
         await driver.navigate();
@@ -121,7 +121,7 @@ describe('Phishing Detection', function () {
         failOnConsoleError: false,
       },
       async ({ driver }) => {
-                if (process.env.RUN_WITH_DESKTOP === 'true') {
+        if (process.env.RUN_WITH_DESKTOP === 'true') {
           await driver.navigate();
         }
         await driver.navigate();
@@ -159,7 +159,7 @@ describe('Phishing Detection', function () {
         failOnConsoleError: false,
       },
       async ({ driver }) => {
-                if (process.env.RUN_WITH_DESKTOP === 'true') {
+        if (process.env.RUN_WITH_DESKTOP === 'true') {
           await driver.navigate();
         }
         await driver.navigate();
