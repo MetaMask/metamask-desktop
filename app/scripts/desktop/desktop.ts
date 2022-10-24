@@ -195,26 +195,30 @@ export default class Desktop {
 
   private async createStatusWindow() {
     const statusWindow = new BrowserWindow({
-      width: 800,
-      height: 400,
+      width: process.env.METAMASK_DEBUG ? 1800 : 1000,
+      height: 800,
+      vibrancy: 'dark',
+      titleBarStyle: 'hidden',
+      visualEffectState: 'active',
       webPreferences: {
-        preload: path.resolve(__dirname, './status-preload.js'),
+        nodeIntegration: true,
+        contextIsolation: false,
       },
       // Doesn not work because it's not currently being added to dist_desktop
       // icon: path.resolve(__dirname, '../../build-types/desktop/images/icon-512.png')
     });
 
-    if (cfg().desktop.skipOtpPairingFlow) {
-      await statusWindow.loadFile(
-        path.resolve(__dirname, '../../desktop.html'),
-      );
-    } else {
-      await statusWindow.loadFile(
-        path.resolve(__dirname, '../../desktop-pairing.html'),
-      );
-    }
+    await statusWindow.loadFile(
+      path.resolve(__dirname, '../../../../dist_desktop_ui/desktop-ui.html'),
+      // Temporary open pair page, it will redirect to settings page if isPaired is true
+      { hash: 'pair' },
+    );
 
     log.debug('Created status window');
+
+    if (process.env.METAMASK_DEBUG) {
+      await statusWindow.webContents.openDevTools();
+    }
 
     return statusWindow;
   }

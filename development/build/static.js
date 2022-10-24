@@ -57,7 +57,7 @@ module.exports = function createStaticAssetTasks({
     composeSeries(
       ...copyTargetsDev.map((target) => {
         return async function copyStaticAssets() {
-          await setupLiveCopy(target, includeDesktopUi);
+          await setupLiveCopy(target);
         };
       }),
     ),
@@ -69,9 +69,9 @@ module.exports = function createStaticAssetTasks({
     const pattern = target.pattern || '/**/*';
     watch(target.src + pattern, (event) => {
       livereload.changed(event.path);
-      performCopy(target, includeDesktopUi);
+      performCopy(target);
     });
-    await performCopy(target, includeDesktopUi);
+    await performCopy(target);
   }
 
   async function performCopy(target) {
@@ -108,7 +108,7 @@ module.exports = function createStaticAssetTasks({
     await Promise.all(
       sources.map(async (src) => {
         const relativePath = path.relative(baseDir, src);
-        await fs.copy(src, `${dest}${relativePath}`);
+        await fs.copySync(src, `${dest}${relativePath}`);
       }),
     );
   }

@@ -1,0 +1,27 @@
+.mmd-pair-status {
+  padding: 8px 16px;
+  border: 1px solid var(--color-border-muted);
+  border-radius: 4px;
+  width: 300px;
+  margin-bottom: 10px;
+
+  &__status {
+    display: flex;
+    align-items: center;
+
+    &__chip {
+      padding: 4px 8px !important;
+      margin-left: 12px;
+
+      > p {
+        font-size: 14px !important;
+      }
+    }
+  }
+
+  &__last-active,
+  &__temporary-pair-link {
+    font-size: 12px;
+    margin: 16px 0 10px;
+  }
+}
