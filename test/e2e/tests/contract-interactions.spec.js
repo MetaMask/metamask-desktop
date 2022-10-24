@@ -26,6 +26,9 @@ describe('Deploy contract and call contract methods', function () {
         const contractAddress = await contractRegistry.getContractAddress(
           smartContract,
         );
+                if (process.env.RUN_WITH_DESKTOP === 'true') {
+          await driver.navigate();
+        }
         await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);

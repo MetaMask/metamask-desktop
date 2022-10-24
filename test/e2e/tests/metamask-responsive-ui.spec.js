@@ -14,6 +14,9 @@ describe('MetaMask Responsive UI', function () {
         failOnConsoleError: false,
       },
       async ({ driver }) => {
+                if (process.env.RUN_WITH_DESKTOP === 'true') {
+          await driver.navigate();
+        }
         await driver.navigate();
 
         async function clickWordAndWait(word) {
@@ -160,6 +163,9 @@ describe('MetaMask Responsive UI', function () {
         failOnConsoleError: false,
       },
       async ({ driver }) => {
+                if (process.env.RUN_WITH_DESKTOP === 'true') {
+          await driver.navigate();
+        }
         await driver.navigate();
 
         // Import Secret Recovery Phrase
@@ -206,6 +212,9 @@ describe('MetaMask Responsive UI', function () {
         title: this.test.title,
       },
       async ({ driver }) => {
+                if (process.env.RUN_WITH_DESKTOP === 'true') {
+          await driver.navigate();
+        }
         await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);

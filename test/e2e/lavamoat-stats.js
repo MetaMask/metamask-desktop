@@ -13,7 +13,10 @@ async function measurePage() {
   try {
     await withFixtures({ fixtures: 'imported-account' }, async ({ driver }) => {
       await driver.delay(tinyDelayMs);
-      await driver.navigate();
+              if (process.env.RUN_WITH_DESKTOP === 'true') {
+          await driver.navigate();
+        }
+        await driver.navigate();
       await driver.findElement('#password');
       await driver.delay(1000);
       const logs = await driver.checkBrowserForLavamoatLogs();
