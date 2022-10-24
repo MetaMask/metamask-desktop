@@ -2971,6 +2971,11 @@
         "eslint>strip-ansi>ansi-regex": true
       }
     },
+    "eth-json-rpc-middleware>@metamask/utils": {
+      "packages": {
+        "eslint>fast-deep-equal": true
+      }
+    },
     "fancy-log": {
       "builtin": {
         "console.Console": true
