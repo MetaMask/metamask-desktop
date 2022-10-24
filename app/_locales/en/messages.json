@@ -965,9 +965,6 @@
   "desktopConnectionCriticalErrorTitle": {
     "message": "MetaMask had trouble starting"
   },
-  "desktopConnectionLostErrorCTA": {
-    "message": "Reconnect MetaMask Desktop"
-  },
   "desktopConnectionLostErrorDescription": {
     "message": "Please make sure you have the desktop app up and running."
   },
