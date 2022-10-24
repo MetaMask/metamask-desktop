@@ -1,5 +1,6 @@
 const path = require('path');
 const { promises: fs } = require('fs');
+const cp = require('child_process');
 const BigNumber = require('bignumber.js');
 const mockttp = require('mockttp');
 const createStaticServer = require('../../development/create-static-server');
@@ -24,6 +25,12 @@ const createDownloadFolder = async (downloadsFolder) => {
 };
 
 const convertToHexValue = (val) => `0x${new BigNumber(val, 10).toString(16)}`;
+
+function delay(milliseconds) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, milliseconds);
+  });
+}
 
 async function withFixtures(options, testSuite) {
   const {
@@ -52,6 +59,7 @@ async function withFixtures(options, testSuite) {
 
   let webDriver;
   let failed = false;
+  let desktop;
   try {
     await ganacheServer.start(ganacheOptions);
     let contractRegistry;
@@ -73,6 +81,41 @@ async function withFixtures(options, testSuite) {
       });
     }
     await fixtureServer.start();
+
+    if (process.env.RUN_WITH_DESKTOP === 'true') {
+      console.info(
+        'Close MM Desktop App if for any chance did not get closed before',
+      );
+      cp.spawn('kill -9 `lsof -t -i:7071`', { shell: true });
+
+      // Load state in electron app => copy state.json to config.json in electron
+      const electronPath =
+        process.env.CI === 'true'
+          ? process.env.UBUNTU_ELECTRON_CONFIG_FILE_PATH
+          : process.env.LOCAL_ELECTRON_CONFIG_FILE_PATH;
+      console.info(`ELECTRON_CONFIG_FILE_PATH: ${electronPath}`);
+      await fixtureServer.loadStateDesktop(
+        path.join(__dirname, 'fixtures', fixtures),
+        electronPath,
+      );
+
+      if (process.env.CI === 'true') {
+        console.info('Open MM Desktop App on CI');
+        desktop = cp.spawn('xvfb-run -a yarn start:desktop', { shell: true });
+      } else {
+        console.info('Open MM Desktop App');
+        desktop = cp.spawn('yarn start:desktop', { shell: true });
+      }
+      desktop.stdout.on('data', (data) => {
+        console.log(`stdout: ${data}`);
+      });
+      desktop.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+      });
+      // Wait 5 secs to let desktop initialise
+      await delay(5000);
+    }
+
     await fixtureServer.loadState(path.join(__dirname, 'fixtures', fixtures));
     await phishingPageServer.start();
     if (dapp) {
@@ -119,17 +162,20 @@ async function withFixtures(options, testSuite) {
       contractRegistry,
     });
 
-    if (process.env.SELENIUM_BROWSER === 'chrome') {
-      const errors = await driver.checkBrowserForConsoleErrors(driver);
-      if (errors.length) {
-        const errorReports = errors.map((err) => err.message);
-        const errorMessage = `Errors found in browser console:\n${errorReports.join(
-          '\n',
-        )}`;
-        if (failOnConsoleError) {
-          throw new Error(errorMessage);
-        } else {
-          console.error(new Error(errorMessage));
+    // MMD
+    if (process.env.RUN_WITH_DESKTOP !== 'true') {
+      if (process.env.SELENIUM_BROWSER === 'chrome') {
+        const errors = await driver.checkBrowserForConsoleErrors(driver);
+        if (errors.length) {
+          const errorReports = errors.map((err) => err.message);
+          const errorMessage = `Errors found in browser console:\n${errorReports.join(
+            '\n',
+          )}`;
+          if (failOnConsoleError) {
+            throw new Error(errorMessage);
+          } else {
+            console.error(new Error(errorMessage));
+          }
         }
       }
     }
@@ -171,6 +217,12 @@ async function withFixtures(options, testSuite) {
         await phishingPageServer.quit();
       }
       await mockServer.stop();
+
+      // Close MM desktop app
+      if (process.env.RUN_WITH_DESKTOP === 'true') {
+        console.info('closing Desktop App');
+        cp.spawn('kill -9 `lsof -t -i:7071`', { shell: true });
+      }
     }
   }
 }
@@ -284,6 +336,35 @@ const completeImportSRPOnboardingFlow = async (
   }
 };
 
+const completeImportSRPOnboardingFlowDesktop = async (
+  driver,
+  seedPhrase,
+  password,
+) => {
+  await driver.clickElement({ text: 'I accept the risk', tag: 'button' });
+  await driver.clickElement({ text: 'Import wallet', tag: 'button' });
+
+  // Import Secret Recovery Phrase
+  await driver.pasteIntoField(
+    '[data-testid="import-srp__srp-word-0"]',
+    seedPhrase,
+  );
+
+  await driver.fill('#password', password);
+  await driver.fill('#confirm-password', password);
+
+  await driver.clickElement('[data-testid="create-new-vault__terms-checkbox"]');
+
+  await driver.clickElement({ text: 'Import', tag: 'button' });
+
+  // clicks through the success screen
+  await driver.findElement({ text: 'Congratulations', tag: 'div' });
+  await driver.clickElement({
+    text: enLocaleMessages.endOfFlowMessage10.message,
+    tag: 'button',
+  });
+};
+
 const completeImportSRPOnboardingFlowWordByWord = async (
   driver,
   seedPhrase,
@@ -335,6 +416,7 @@ module.exports = {
   withFixtures,
   connectDappWithExtensionPopup,
   completeImportSRPOnboardingFlow,
+  completeImportSRPOnboardingFlowDesktop,
   completeImportSRPOnboardingFlowWordByWord,
   createDownloadFolder,
 };
