@@ -27,7 +27,11 @@ class DesktopApp extends EventEmitter {
     this.status = new Proxy(
       { isWebSocketConnected: false, connections: [] },
       {
-        set: (target: any, property: string | symbol, value: any): boolean => {
+        set: <T extends keyof StatusMessage>(
+          target: StatusMessage,
+          property: T,
+          value: StatusMessage[T],
+        ): boolean => {
           target[property] = value;
           this.updateStatusWindow();
           return true;

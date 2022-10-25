@@ -9,7 +9,6 @@ import { timeoutPromise } from '../utils/utils';
 import { DesktopState, TestConnectionResult } from '../types/desktop';
 import * as RawState from '../utils/raw-state';
 import { ConnectionType } from '../types/background';
-import { isManifestV3 } from '../../../../shared/modules/mv3.utils';
 import { browser } from '../browser/browser-polyfill';
 import { DuplexCopy } from '../utils/stream';
 import DesktopConnection from './desktop-connection';
@@ -50,14 +49,11 @@ class DesktopManager {
     return this.desktopConnection;
   }
 
-  public createStream = (
-    remotePort: any,
-    connectionType: ConnectionType,
-  ): boolean => {
-    if (!this.desktopState.desktopEnabled) {
-      return false;
-    }
+  public isDesktopEnabled(): boolean {
+    return this.desktopState.desktopEnabled === true;
+  }
 
+  public async createStream(remotePort: any, connectionType: ConnectionType) {
     const uiStream = new PortStream(remotePort as any) as any as Duplex;
     uiStream.pause();
     uiStream.on('data', (data) => this.onUIMessage(data, uiStream));
@@ -73,26 +69,14 @@ class DesktopManager {
       uiInputStream.destroy();
     });
 
-    (async () => {
-      const desktopConnection = await this.getConnection();
+    const desktopConnection = await this.getConnection();
 
-      await desktopConnection?.createStream(
-        remotePort,
-        connectionType,
-        uiInputStream,
-      );
-
-      if (isManifestV3 && connectionType === ConnectionType.INTERNAL) {
-        // When in Desktop Mode the responsibility to send CONNECTION_READY is on the desktop app side
-        // Message below if captured by UI code in app/scripts/ui.js which will trigger UI initialisation
-        // This ensures that UI is initialised only after background is ready
-        // It fixes the issue of blank screen coming when extension is loaded, the issue is very frequent in MV3
-        remotePort.postMessage({ name: 'CONNECTION_READY' });
-      }
-    })();
-
-    return true;
-  };
+    await desktopConnection?.createStream(
+      remotePort,
+      connectionType,
+      uiInputStream,
+    );
+  }
 
   public async testConnection(): Promise<TestConnectionResult> {
     log.debug('Testing desktop connection');

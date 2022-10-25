@@ -1513,10 +1513,6 @@ export default class MetamaskController extends EventEmitter {
     };
   }
 
-  getDesktopEnabled() {
-    return this.getState()?.desktopEnabled === true;
-  }
-
   /**
    * Returns an Object containing API Callback Functions.
    * These functions are the interface for the UI.
@@ -1556,7 +1552,6 @@ export default class MetamaskController extends EventEmitter {
     return {
       // etc
       getState: this.getState.bind(this),
-      getDesktopEnabled: this.getDesktopEnabled.bind(this),
       setCurrentCurrency: currencyRateController.setCurrentCurrency.bind(
         currencyRateController,
       ),
@@ -1893,6 +1888,9 @@ export default class MetamaskController extends EventEmitter {
       markNotificationsAsRead: this.markNotificationsAsRead.bind(this),
 
       // DesktopController
+      getDesktopEnabled: this.desktopController.getDesktopEnabled.bind(
+        this.desktopController,
+      ),
       setDesktopEnabled: this.desktopController.setDesktopEnabled.bind(
         this.desktopController,
       ),

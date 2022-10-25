@@ -84,7 +84,7 @@ export default class DesktopPairingPage extends Component {
 
     if (!otp) {
       showLoadingIndication();
-      return <div></div>;
+      return null;
     }
 
     hideLoadingIndication();

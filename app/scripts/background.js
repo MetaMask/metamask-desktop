@@ -464,7 +464,18 @@ function setupController(initState, initLangCode, remoteSourcePort) {
    * @param {Port} remotePort - The port provided by a new context.
    */
   function connectRemote(remotePort) {
-    if (DesktopManager?.createStream(remotePort, CONNECTION_TYPE_INTERNAL)) {
+    if (DesktopManager?.isDesktopEnabled()) {
+      DesktopManager.createStream(remotePort, CONNECTION_TYPE_INTERNAL).then(
+        () => {
+          // When in Desktop Mode the responsibility to send CONNECTION_READY is on the desktop app side
+          if (isManifestV3) {
+            // Message below if captured by UI code in app/scripts/ui.js which will trigger UI initialisation
+            // This ensures that UI is initialised only after background is ready
+            // It fixes the issue of blank screen coming when extension is loaded, the issue is very frequent in MV3
+            remotePort.postMessage({ name: 'CONNECTION_READY' });
+          }
+        },
+      );
       return;
     }
 
@@ -496,6 +507,13 @@ function setupController(initState, initLangCode, remoteSourcePort) {
       // communication with popup
       controller.isClientOpen = true;
       controller.setupTrustedCommunication(portStream, remotePort.sender);
+
+      if (isManifestV3 && cfg().desktop.isExtension) {
+        // Message below if captured by UI code in app/scripts/ui.js which will trigger UI initialisation
+        // This ensures that UI is initialised only after background is ready
+        // It fixes the issue of blank screen coming when extension is loaded, the issue is very frequent in MV3
+        remotePort.postMessage({ name: 'CONNECTION_READY' });
+      }
 
       if (processName === ENVIRONMENT_TYPE_POPUP) {
         popupIsOpen = true;
@@ -565,7 +583,8 @@ function setupController(initState, initLangCode, remoteSourcePort) {
 
   // communication with page or other extension
   function connectExternal(remotePort) {
-    if (DesktopManager?.createStream(remotePort, CONNECTION_TYPE_EXTERNAL)) {
+    if (DesktopManager?.isDesktopEnabled()) {
+      DesktopManager.createStream(remotePort, CONNECTION_TYPE_EXTERNAL);
       return;
     }
 

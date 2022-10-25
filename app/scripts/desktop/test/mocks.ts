@@ -176,6 +176,7 @@ export const createDesktopConnectionMock = (): jest.Mocked<DesktopConnection> =>
 
 export const createObservableStoreMock = (): jest.Mocked<ObservableStore> =>
   ({
+    getState: jest.fn(),
     updateState: jest.fn(),
   } as any);
 

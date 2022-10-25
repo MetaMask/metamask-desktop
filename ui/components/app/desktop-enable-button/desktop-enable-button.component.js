@@ -16,10 +16,12 @@ import {
   disableDesktop,
 } from '../../../store/actions';
 import { browser } from '../../../../app/scripts/desktop/browser/browser-polyfill';
+import { SECOND } from '../../../../shared/constants/time';
 
 const DESKTOP_ERROR_DESKTOP_OUTDATED_ROUTE = `${DESKTOP_ERROR_ROUTE}/${EXTENSION_ERROR_PAGE_TYPES.DESKTOP_OUTDATED}`;
 const DESKTOP_ERROR_EXTENSION_OUTDATED_ROUTE = `${DESKTOP_ERROR_ROUTE}/${EXTENSION_ERROR_PAGE_TYPES.EXTENSION_OUTDATED}`;
 const DESKTOP_ERROR_NOT_FOUND_ROUTE = `${DESKTOP_ERROR_ROUTE}/${EXTENSION_ERROR_PAGE_TYPES.NOT_FOUND}`;
+const SKIP_PAIRING_RESTART_DELAY = 2 * SECOND;
 
 export default function DesktopEnableButton() {
   const dispatch = useDispatch();
@@ -63,7 +65,7 @@ export default function DesktopEnableButton() {
       // Wait for new state to persist before restarting
       setTimeout(() => {
         restart();
-      }, 2000);
+      }, SKIP_PAIRING_RESTART_DELAY);
       return;
     }
 

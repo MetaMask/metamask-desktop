@@ -188,35 +188,20 @@ describe('Desktop Manager', () => {
     });
   });
 
+  describe('isDesktopEnabled', () => {
+    it.each([{ desktopEnabled: true }, { desktopEnabled: false }])(
+      'returns $desktopEnabled if desktop state contains desktop enabled as $desktopEnabled',
+      async ({ desktopEnabled }) => {
+        DesktopManager.setState({
+          DesktopController: { desktopEnabled },
+        });
+
+        expect(DesktopManager.isDesktopEnabled()).toBe(desktopEnabled);
+      },
+    );
+  });
+
   describe('createStream', () => {
-    it('returns false if desktop not enabled', async () => {
-      DesktopManager.setState({ DesktopController: { desktopEnabled: false } });
-
-      const result = DesktopManager.createStream(
-        createRemotePortMock(),
-        ConnectionType.INTERNAL,
-      );
-      await flushPromises();
-
-      expect(result).toBe(false);
-    });
-
-    it('returns true if desktop enabled', async () => {
-      DesktopManager.setState({ DesktopController: { desktopEnabled: true } });
-
-      rawStateMock.getDesktopState.mockResolvedValueOnce({
-        desktopEnabled: true,
-      });
-
-      const result = DesktopManager.createStream(
-        createRemotePortMock(),
-        ConnectionType.INTERNAL,
-      );
-      await flushPromises();
-
-      expect(result).toBe(true);
-    });
-
     it('gets connection and calls create stream if desktop enabled', async () => {
       DesktopManager.setState({ DesktopController: { desktopEnabled: true } });
 
@@ -226,8 +211,10 @@ describe('Desktop Manager', () => {
 
       setInstance(desktopConnectionMock);
 
-      DesktopManager.createStream(remotePortMock, ConnectionType.INTERNAL);
-      await flushPromises();
+      await DesktopManager.createStream(
+        remotePortMock,
+        ConnectionType.INTERNAL,
+      );
 
       expect(desktopConnectionMock.createStream).toHaveBeenCalledTimes(1);
       expect(desktopConnectionMock.createStream).toHaveBeenCalledWith(
@@ -313,6 +300,10 @@ describe('Desktop Manager', () => {
 
   describe('on UI message', () => {
     const simulatePortStreamMessage = async (message: any) => {
+      DesktopManager.setState({ DesktopController: { desktopEnabled: true } });
+
+      setInstance(desktopConnectionMock);
+
       await DesktopManager.createStream(
         remotePortMock,
         ConnectionType.INTERNAL,

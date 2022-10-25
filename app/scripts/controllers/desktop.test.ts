@@ -63,6 +63,13 @@ describe('Desktop Controller', () => {
     desktopController = new DesktopController({ initState: {} });
   });
 
+  describe('getDesktopEnabled', () => {
+    it.each([true, false])('returns value matching state if %s', (value) => {
+      storeMock.getState.mockReturnValueOnce({ desktopEnabled: value });
+      expect(desktopController.getDesktopEnabled()).toBe(value);
+    });
+  });
+
   describe('setDesktopEnabled', () => {
     it.each([true, false])('updates store state if %s', (value) => {
       desktopController.setDesktopEnabled(value);

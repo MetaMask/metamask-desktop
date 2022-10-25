@@ -26,6 +26,10 @@ export default class DesktopController {
     });
   }
 
+  public getDesktopEnabled() {
+    return this.store.getState().desktopEnabled === true;
+  }
+
   public setDesktopEnabled(desktopEnabled: boolean) {
     this.store.updateState({
       desktopEnabled,
