@@ -414,10 +414,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     },
   );
 
-  // TODO If we use sentry with desktop, this needs to be fixed
-  ///: BEGIN:EXCLUDE_IN(desktopapp)
   setupSentryGetStateGlobal(controller);
-  ///: END:EXCLUDE_IN
 
   //
   // connect to other contexts
@@ -877,13 +874,15 @@ browser.runtime.onInstalled.addListener(({ reason }) => {
 });
 
 function setupSentryGetStateGlobal(store) {
-  global.sentryHooks.getSentryState = function () {
-    const fullState = store.getState();
-    const debugState = maskObject({ metamask: fullState }, SENTRY_STATE);
-    return {
-      browser: window.navigator.userAgent,
-      store: debugState,
-      version: platform.getVersion(),
+  if (global.sentryHooks.getSentryState) {
+    global.sentryHooks.getSentryState = function () {
+      const fullState = store.getState();
+      const debugState = maskObject({ metamask: fullState }, SENTRY_STATE);
+      return {
+        browser: window.navigator.userAgent,
+        store: debugState,
+        version: platform.getVersion(),
+      };
     };
-  };
+  }
 }

@@ -1,5 +1,8 @@
 import setupSentry from './lib/setupSentry';
 
+// TO BE REMOVED BEFORE MERGING
+console.log('SENTRY INSTALL');
+
 // The root compartment will populate this with hooks
 global.sentryHooks = {};
 

@@ -22,6 +22,13 @@ class Index extends PureComponent {
     Sentry.captureException(error);
   }
 
+  // TO BE REMOVED BEFORE MERGING, JUST CREATING A SENTRY EVENT
+  componentDidMount() {
+    console.log('SENTRY UI TEST MESSAGE 1');
+    const eventId = Sentry.captureMessage('SENTRY UI TEST MESSAGE');
+    console.log('SENTRY UI TEST MESSAGE 2', eventId);
+  }
+
   render() {
     const { error, errorId } = this.state;
     const { store } = this.props;

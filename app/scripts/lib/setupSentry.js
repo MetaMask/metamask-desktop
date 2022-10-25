@@ -67,6 +67,7 @@ export const SENTRY_STATE = {
 };
 
 export default function setupSentry({ release, getState }) {
+  console.log('SETUP SENTRY', { release, METAMASK_DEBUG, IN_TEST });
   if (!release) {
     throw new Error('Missing release');
   } else if (METAMASK_DEBUG && !IN_TEST) {
@@ -76,7 +77,8 @@ export default function setupSentry({ release, getState }) {
      * The IN_TEST condition allows the e2e tests to run with both
      * yarn start:test and yarn build:test
      */
-    return undefined;
+    // TO BE UNCOMMENTED BEFORE MERGING
+    // return undefined;
   }
 
   const environment =

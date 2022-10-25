@@ -20,7 +20,7 @@ import LatticeKeyring from 'eth-lattice-keyring';
 import { MetaMaskKeyring as QRHardwareKeyring } from '@keystonehq/metamask-airgapped-keyring';
 import EthQuery from 'eth-query';
 import nanoid from 'nanoid';
-import { captureException } from '@sentry/browser';
+import { captureException, captureMessage } from '@sentry/browser';
 import {
   AddressBookController,
   ApprovalController,
@@ -211,6 +211,11 @@ export default class MetamaskController extends EventEmitter {
    */
   constructor(opts) {
     super();
+
+    // TO BE REMOVED BEFORE MERGING, JUST CREATING A SENTRY EVENT
+    console.log('SENTRY MMCONTROLLER TEST MESSAGE 1');
+    const eventId = captureMessage('SENTRY MMCONTROLLER TEST MESSAGE');
+    console.log('SENTRY MMCONTROLLER TEST MESSAGE 2', eventId);
 
     this.defaultMaxListeners = 20;
 
