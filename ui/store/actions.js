@@ -3903,46 +3903,6 @@ export function setCustomNetworkListEnabled(customNetworkListEnabled) {
   };
 }
 
-export function setDesktopEnabled(desktopEnabled) {
-  return async () => {
-    try {
-      await submitRequestToBackground('setDesktopEnabled', [desktopEnabled]);
-    } catch (error) {
-      log.error(error);
-    }
-  };
-}
-
-export function generateOtp() {
-  return async () => {
-    try {
-      await submitRequestToBackground('generateOtp', []);
-    } catch (error) {
-      log.error(error);
-    }
-  };
-}
-
-export function setIsPairing(isPairing) {
-  return async () => {
-    try {
-      await submitRequestToBackground('setIsPairing', [isPairing]);
-    } catch (error) {
-      log.error(error);
-    }
-  };
-}
-
-export function setOtpPairing(otp) {
-  return async () => {
-    try {
-      await submitRequestToBackground('setOtpPairing', [otp]);
-    } catch (error) {
-      log.error(error);
-    }
-  };
-}
-
 export function setFirstTimeUsedNetwork(chainId) {
   return submitRequestToBackground('setFirstTimeUsedNetwork', [chainId]);
 }
@@ -4001,4 +3961,28 @@ export function requestAddNetworkApproval(customRpc, originIsMetaMask) {
       dispatch(displayWarning('Had a problem changing networks!'));
     }
   };
+}
+
+// Desktop
+
+export function setDesktopEnabled(desktopEnabled) {
+  return async () => {
+    try {
+      await submitRequestToBackground('setDesktopEnabled', [desktopEnabled]);
+    } catch (error) {
+      log.error(error);
+    }
+  };
+}
+
+export async function generateOtp() {
+  return await submitRequestToBackground('generateOtp', []);
+}
+
+export async function testDesktopConnection() {
+  return await submitRequestToBackground('testDesktopConnection');
+}
+
+export async function disableDesktop() {
+  return await submitRequestToBackground('disableDesktop');
 }

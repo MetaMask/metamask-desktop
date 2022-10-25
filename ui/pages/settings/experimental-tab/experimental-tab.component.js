@@ -6,8 +6,7 @@ import {
   handleSettingsRefs,
 } from '../../../helpers/utils/settings-search';
 import { EVENT } from '../../../../shared/constants/metametrics';
-import Button from '../../../components/ui/button';
-import { DESKTOP_PAIRING_ROUTE } from '../../../helpers/constants/routes';
+import DesktopEnableButton from '../../../components/app/desktop-enable-button';
 
 export default class ExperimentalTab extends PureComponent {
   static contextTypes = {
@@ -24,12 +23,6 @@ export default class ExperimentalTab extends PureComponent {
     setEIP1559V2Enabled: PropTypes.func,
     customNetworkListEnabled: PropTypes.bool,
     setCustomNetworkListEnabled: PropTypes.func,
-    desktopEnabled: PropTypes.bool,
-    setDesktopEnabled: PropTypes.func,
-    setIsPairing: PropTypes.func,
-    isPairing: PropTypes.bool,
-    history: PropTypes.object,
-    generateOtp: PropTypes.func,
   };
 
   settingsRefs = Array(
@@ -237,46 +230,7 @@ export default class ExperimentalTab extends PureComponent {
     );
   }
 
-  renderDesktopToggle() {
-    const { t } = this.context;
-    const { desktopEnabled, setDesktopEnabled, setIsPairing } = this.props;
-
-    return (
-      <div ref={this.settingsRefs[5]} className="settings-page__content-row">
-        <div className="settings-page__content-item">
-          <span>Enable desktop app</span>
-          <div className="settings-page__content-description">
-            Select this to run all background processes in the desktop app.
-          </div>
-        </div>
-        <div className="settings-page__content-item">
-          <div className="settings-page__content-item-col">
-            <ToggleButton
-              value={desktopEnabled}
-              onToggle={(value) => {
-                this.context.trackEvent({
-                  category: EVENT.CATEGORIES.SETTINGS,
-                  event: 'Enabled/Disable Desktop',
-                  properties: {
-                    action: 'Enabled/Disable Desktop',
-                    legacy_event: true,
-                  },
-                });
-                setIsPairing(!value);
-                setDesktopEnabled(!value);
-              }}
-              offLabel={t('off')}
-              onLabel={t('on')}
-            />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  renderDesktopPairingButton() {
-    const { history, setIsPairing, isPairing, generateOtp } = this.props;
-
+  renderDesktopEnableButton() {
     return (
       <div
         ref={this.settingsRefs[6]}
@@ -284,23 +238,11 @@ export default class ExperimentalTab extends PureComponent {
         data-testid="advanced-setting-desktop-sync"
       >
         <div className="settings-page__content-item">
-          <span>Sync with Desktop</span>
+          <span>Click to run all background processes in the desktop app.</span>
         </div>
         <div className="settings-page__content-item">
           <div className="settings-page__content-item-col">
-            <Button
-              type="secondary"
-              large
-              value={isPairing}
-              onClick={(event, value) => {
-                event.preventDefault();
-                history.push(DESKTOP_PAIRING_ROUTE);
-                setIsPairing(!value);
-                generateOtp();
-              }}
-            >
-              Sync With Desktop
-            </Button>
+            <DesktopEnableButton />
           </div>
         </div>
       </div>
@@ -308,16 +250,13 @@ export default class ExperimentalTab extends PureComponent {
   }
 
   render() {
-    const { desktopEnabled } = this.props;
     return (
       <div className="settings-page__body">
         {this.renderOpenSeaEnabledToggle()}
         {this.renderCollectibleDetectionToggle()}
         {this.renderEIP1559V2EnabledToggle()}
         {this.renderCustomNetworkListToggle()}
-        {desktopEnabled || process.env.SKIP_OTP_PAIRING_FLOW
-          ? this.renderDesktopToggle()
-          : this.renderDesktopPairingButton()}
+        {this.renderDesktopEnableButton()}
       </div>
     );
   }

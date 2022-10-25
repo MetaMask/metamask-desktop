@@ -1,4 +1,4 @@
-import cfg from './config';
+import cfg from '../utils/config';
 
 if (cfg().desktop.isApp) {
   global.self = {} as unknown as Window & typeof globalThis;

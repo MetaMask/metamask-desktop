@@ -2,7 +2,7 @@
  * @file The entry point for the web extension singleton process.
  */
 
-import './desktop/globals';
+import './desktop/app/globals';
 import endOfStream from 'end-of-stream';
 import pump from 'pump';
 import debounce from 'debounce-stream';
@@ -51,19 +51,21 @@ import getFirstPreferredLangCode from './lib/get-first-preferred-lang-code';
 import getObjStructure from './lib/getObjStructure';
 import setupEnsIpfsResolver from './lib/ens-ipfs/setup';
 import { getPlatform } from './lib/util';
-import cfg from './desktop/config';
+import cfg from './desktop/utils/config';
 
-let Desktop;
-let DesktopConnection;
+// Desktop
+
+let DesktopApp;
+let DesktopManager;
 
 if (cfg().desktop.isApp) {
   // eslint-disable-next-line node/global-require
-  Desktop = require('./desktop/desktop').default;
+  DesktopApp = require('./desktop/app/desktop-app').default;
 }
 
 if (cfg().desktop.isExtension) {
   // eslint-disable-next-line node/global-require
-  DesktopConnection = require('./desktop/desktop-connection').default;
+  DesktopManager = require('./desktop/extension/desktop-manager').default;
 }
 
 /* eslint-enable import/first */
@@ -121,12 +123,25 @@ const initApp = async (remotePort) => {
   log.info('MetaMask initialization complete.');
 };
 
+const onDesktopRestart = async (desktopApp) => {
+  desktopApp.removeAllListeners();
+  desktopApp.on('restart', () => onDesktopRestart(desktopApp));
+
+  log.debug('Re-initializing background script');
+  await initialize();
+};
+
+const initDesktopApp = async () => {
+  await DesktopApp.init();
+  DesktopApp.on('restart', () => onDesktopRestart(DesktopApp));
+};
+
 if (isManifestV3 && cfg().desktop.isExtension) {
   browser.runtime.onConnect.addListener(initApp);
 } else {
   // initialization flow
   const initDesktop = cfg().desktop.isApp
-    ? Desktop.init(initialize)
+    ? initDesktopApp()
     : Promise.resolve();
 
   initDesktop.then(initialize).catch(log.error);
@@ -198,7 +213,7 @@ async function initialize(remotePort) {
   const initLangCode = await getFirstPreferredLangCode();
 
   if (cfg().desktop.isExtension) {
-    await DesktopConnection.initIfEnabled(initState);
+    await DesktopManager.init(initState);
   }
 
   await setupController(initState, initLangCode, remotePort);
@@ -386,7 +401,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     debounce(1000),
     createStreamSink(async (state) => {
       await localStore.set(state);
-      await Desktop?.getInstance()?.transferState(state);
+      await DesktopApp?.getConnection()?.transferState({ data: state });
     }),
     (error) => {
       log.error('MetaMask - Persistence pipeline failed', error);
@@ -449,19 +464,18 @@ function setupController(initState, initLangCode, remoteSourcePort) {
    * @param {Port} remotePort - The port provided by a new context.
    */
   function connectRemote(remotePort) {
-    if (DesktopConnection?.hasInstance()) {
-      DesktopConnection?.getInstance().createStream(
-        remotePort,
-        CONNECTION_TYPE_INTERNAL,
+    if (DesktopManager?.isDesktopEnabled()) {
+      DesktopManager.createStream(remotePort, CONNECTION_TYPE_INTERNAL).then(
+        () => {
+          // When in Desktop Mode the responsibility to send CONNECTION_READY is on the desktop app side
+          if (isManifestV3) {
+            // Message below if captured by UI code in app/scripts/ui.js which will trigger UI initialisation
+            // This ensures that UI is initialised only after background is ready
+            // It fixes the issue of blank screen coming when extension is loaded, the issue is very frequent in MV3
+            remotePort.postMessage({ name: 'CONNECTION_READY' });
+          }
+        },
       );
-
-      // When in Desktop Mode the responsibility to send CONNECTION_READY is on the desktop app side
-      if (isManifestV3) {
-        // Message below if captured by UI code in app/scripts/ui.js which will trigger UI initialisation
-        // This ensures that UI is initialised only after background is ready
-        // It fixes the issue of blank screen coming when extension is loaded, the issue is very frequent in MV3
-        remotePort.postMessage({ name: 'CONNECTION_READY' });
-      }
       return;
     }
 
@@ -493,6 +507,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
       // communication with popup
       controller.isClientOpen = true;
       controller.setupTrustedCommunication(portStream, remotePort.sender);
+
       if (isManifestV3 && cfg().desktop.isExtension) {
         // Message below if captured by UI code in app/scripts/ui.js which will trigger UI initialisation
         // This ensures that UI is initialised only after background is ready
@@ -568,11 +583,8 @@ function setupController(initState, initLangCode, remoteSourcePort) {
 
   // communication with page or other extension
   function connectExternal(remotePort) {
-    if (DesktopConnection?.hasInstance()) {
-      DesktopConnection?.getInstance().createStream(
-        remotePort,
-        CONNECTION_TYPE_EXTERNAL,
-      );
+    if (DesktopManager?.isDesktopEnabled()) {
+      DesktopManager.createStream(remotePort, CONNECTION_TYPE_EXTERNAL);
       return;
     }
 
@@ -735,18 +747,17 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     updateBadge();
   }
 
-  /**
-   * Once registerCallbacks is set, the desktop app can be called by the extension through the websocket.
-   * Consequently, we set those functions only once the MetaMask Controller is fully configured, e. g. at the whole end of the setupController function.
-   * This guarantees the desktop app can only be called by the extension when fully setup.
-   */
-  Desktop?.getInstance()?.registerCallbacks(
-    connectRemote,
-    connectExternal,
-    controller,
-  );
+  controller.store.subscribe((state) => {
+    DesktopManager?.setState(state);
+  });
 
-  DesktopConnection?.registerCallbacks(controller);
+  DesktopApp?.on('connect-remote', (connectRequest) => {
+    connectRemote(connectRequest);
+  });
+
+  DesktopApp?.on('connect-external', (connectRequest) => {
+    connectExternal(connectRequest);
+  });
 
   return Promise.resolve();
 }

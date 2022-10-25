@@ -1,11 +1,8 @@
 import {
   MESSAGE_HANDSHAKE_FINISH,
   MESSAGE_HANDSHAKE_START,
-} from '../../../shared/constants/desktop';
-import EncryptedWebSocketStream from './encrypted-web-socket-stream';
-import { NodeWebSocket, WebSocketStream } from './web-socket-stream';
-import * as asymmetricEncryption from './asymmetric-encryption';
-import * as symmetricEncryption from './symmetric-encryption';
+} from '../../../../shared/constants/desktop';
+import { NodeWebSocket, WebSocketStream } from '../shared/web-socket-stream';
 import {
   PUBLIC_KEY_MOCK,
   PRIVATE_KEY_MOCK,
@@ -18,12 +15,19 @@ import {
   IV_HEX_MOCK,
   DECRYPTED_STRING_MOCK,
   ENCRYPTED_HEX_MOCK,
-} from './test/mocks';
-import { flushPromises, simulateNodeEvent } from './test/utils';
+} from '../test/mocks';
+import { flushPromises, simulateNodeEvent } from '../test/utils';
+import EncryptedWebSocketStream from './encrypted-web-socket-stream';
+import * as asymmetricEncryption from './asymmetric-encryption';
+import * as symmetricEncryption from './symmetric-encryption';
 
-jest.mock('./web-socket-stream', () => ({ WebSocketStream: jest.fn() }), {
-  virtual: true,
-});
+jest.mock(
+  '../shared/web-socket-stream',
+  () => ({ WebSocketStream: jest.fn() }),
+  {
+    virtual: true,
+  },
+);
 
 jest.mock(
   './asymmetric-encryption',

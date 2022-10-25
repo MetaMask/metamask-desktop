@@ -1,5 +1,4 @@
 import eciesjs, { PrivateKey } from 'eciesjs';
-import { createKeyPair, encrypt, decrypt } from './asymmetric-encryption';
 import {
   ENCRYPTED_BUFFER_MOCK,
   ENCRYPTED_HEX_MOCK,
@@ -7,7 +6,8 @@ import {
   PUBLIC_KEY_MOCK,
   STRING_DATA_BUFFER_MOCK,
   STRING_DATA_MOCK,
-} from './test/mocks';
+} from '../test/mocks';
+import { createKeyPair, encrypt, decrypt } from './asymmetric-encryption';
 
 jest.mock(
   'eciesjs',

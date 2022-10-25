@@ -1,6 +1,6 @@
 import { Duplex } from 'stream';
 import log from 'loglevel';
-import ObfuscatedStore from '../storage';
+import ObfuscatedStore from '../app/storage';
 import {
   Browser,
   BrowserProxyRequest,
@@ -33,7 +33,7 @@ const PROXY_FUNCTIONS = [
 ];
 
 const requestPromises: { [id: string]: (result: any) => void } = {};
-let requestStream: Duplex;
+let requestStream: Duplex | undefined;
 
 const raw = {
   storage: {
@@ -42,6 +42,7 @@ const raw = {
       set: async (data: any) => {
         await ObfuscatedStore.setStore(data);
       },
+      clear: () => ObfuscatedStore.clear(),
     },
   },
   runtime: {
@@ -60,6 +61,8 @@ const warn = (key: string[]) => {
 };
 
 const proxy = (key: string[], args: any[]) => {
+  log.debug('Sending browser request', { key, args });
+
   if (!requestStream) {
     log.error('Cannot send browser request as stream not registered', key);
     return undefined;
@@ -68,8 +71,6 @@ const proxy = (key: string[], args: any[]) => {
   const requestId = uuid();
   const request: BrowserProxyRequest = { id: requestId, key, args };
   requestStream.write(request);
-
-  log.debug('Sent browser request', { requestId, key, args });
 
   const waitForResultMessage = new Promise((resolve) => {
     requestPromises[requestId] = resolve;
@@ -153,4 +154,13 @@ export const registerRequestStream = (stream: Duplex) => {
   requestStream.on('data', (data: BrowserProxyResponse) =>
     onFunctionResponse(data),
   );
+};
+
+export const unregisterRequestStream = () => {
+  if (!requestStream) {
+    return;
+  }
+
+  requestStream.removeAllListeners();
+  requestStream = undefined;
 };

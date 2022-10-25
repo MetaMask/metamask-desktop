@@ -16,13 +16,20 @@ import { DEFAULT_ROUTE } from '../../helpers/constants/routes';
 import Typography from '../../components/ui/typography';
 import Button from '../../components/ui/button';
 import Box from '../../components/ui/box';
+import {
+  downloadDesktopApp,
+  downloadExtension,
+  restartExtension,
+} from '../../../shared/lib/error-utils';
 
-export function renderDesktopErrorContent({ type, t, isHtmlError, history }) {
+export function renderDesktopErrorContent({
+  type,
+  t,
+  isHtmlError,
+  history,
+  disableDesktop,
+}) {
   let content;
-
-  const noop = () => {
-    // do nothing
-  };
 
   const returnExtensionHome = () => {
     history?.push(DEFAULT_ROUTE);
@@ -65,12 +72,7 @@ export function renderDesktopErrorContent({ type, t, isHtmlError, history }) {
           {renderCTA(
             'desktop-error-button-download-mmd',
             t('desktopNotFoundErrorCTA'),
-            noop,
-          )}
-          {renderCTA(
-            'desktop-error-button-disable-mmd',
-            t('desktopDisableErrorCTA'),
-            noop,
+            downloadDesktopApp,
           )}
         </>
       );
@@ -82,9 +84,9 @@ export function renderDesktopErrorContent({ type, t, isHtmlError, history }) {
           {renderHeader(t('desktopConnectionLostErrorTitle'))}
           {renderDescription(t('desktopConnectionLostErrorDescription'))}
           {renderCTA(
-            'desktop-error-button-reconnect',
-            t('desktopConnectionLostErrorCTA'),
-            noop,
+            'desktop-error-button-disable-mmd',
+            t('desktopDisableErrorCTA'),
+            disableDesktop,
           )}
         </>
       );
@@ -98,7 +100,21 @@ export function renderDesktopErrorContent({ type, t, isHtmlError, history }) {
           {renderCTA(
             'desktop-error-button-update-mmd',
             t('desktopOutdatedErrorCTA'),
-            noop,
+            downloadDesktopApp,
+          )}
+        </>
+      );
+      break;
+
+    case EXTENSION_ERROR_PAGE_TYPES.EXTENSION_OUTDATED:
+      content = (
+        <>
+          {renderHeader(t('desktopOutdatedExtensionErrorTitle'))}
+          {renderDescription(t('desktopOutdatedExtensionErrorDescription'))}
+          {renderCTA(
+            'desktop-error-button-update-extension',
+            t('desktopOutdatedExtensionErrorCTA'),
+            downloadExtension,
           )}
         </>
       );
@@ -112,12 +128,12 @@ export function renderDesktopErrorContent({ type, t, isHtmlError, history }) {
           {renderCTA(
             'desktop-error-button-restart-mm',
             t('desktopErrorRestartMMCTA'),
-            noop,
+            restartExtension,
           )}
           {renderCTA(
             'desktop-error-button-disable-mmd',
             t('desktopDisableErrorCTA'),
-            noop,
+            disableDesktop,
           )}
         </>
       );
@@ -160,7 +176,7 @@ export function renderDesktopErrorContent({ type, t, isHtmlError, history }) {
   return errorContent;
 }
 
-export default function DesktopError() {
+export default function DesktopError({ disableDesktop }) {
   const t = useI18nContext();
   const { errorType } = useParams();
   const history = useHistory();
@@ -170,5 +186,6 @@ export default function DesktopError() {
     t,
     isHtmlError: false,
     history,
+    disableDesktop,
   });
 }

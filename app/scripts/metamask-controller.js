@@ -162,9 +162,10 @@ let TrezorKeyring = require('eth-trezor-keyring');
 
 ///: BEGIN:ONLY_INCLUDE_IN(flask)
 /* eslint-disable import/first */
-import cfg from './desktop/config';
+import cfg from './desktop/utils/config';
 import { checkSnapsBlockList } from './flask/snaps-utilities';
 import { SNAP_BLOCKLIST } from './flask/snaps-blocklist';
+import DesktopController from './controllers/desktop';
 /* eslint-enable import/first */
 
 if (cfg().desktop.isApp) {
@@ -768,6 +769,10 @@ export default class MetamaskController extends EventEmitter {
         },
       },
     });
+
+    this.desktopController = new DesktopController({
+      initState: initState.DesktopController,
+    });
     ///: END:ONLY_INCLUDE_IN
     this.detectTokensController = new DetectTokensController({
       preferences: this.preferencesController,
@@ -1073,6 +1078,7 @@ export default class MetamaskController extends EventEmitter {
       ///: BEGIN:ONLY_INCLUDE_IN(flask)
       SnapController: this.snapController,
       NotificationController: this.notificationController,
+      DesktopController: this.desktopController.store,
       ///: END:ONLY_INCLUDE_IN
     });
 
@@ -1115,6 +1121,7 @@ export default class MetamaskController extends EventEmitter {
         ///: BEGIN:ONLY_INCLUDE_IN(flask)
         SnapController: this.snapController,
         NotificationController: this.notificationController,
+        DesktopController: this.desktopController.store,
         ///: END:ONLY_INCLUDE_IN
       },
       controllerMessenger: this.controllerMessenger,
@@ -1152,15 +1159,6 @@ export default class MetamaskController extends EventEmitter {
     this.extension.runtime.onMessageExternal.addListener(onMessageReceived);
     // Fire a ping message to check if other extensions are running
     checkForMultipleVersionsRunning();
-
-    this._desktopPairingOtp =
-      opts.initState?.PreferencesController?.desktopPairingOtp;
-
-    this.setOtpPairing = opts.setOtpPairing;
-
-    this._onDesktopGenerateOtp = opts.onDesktopGenerateOtp;
-
-    this._generateOtp = opts.generateOtp;
   }
 
   ///: BEGIN:ONLY_INCLUDE_IN(flask)
@@ -1515,14 +1513,6 @@ export default class MetamaskController extends EventEmitter {
     };
   }
 
-  getDesktopEnabled() {
-    return this.getState()?.desktopEnabled === true;
-  }
-
-  getDesktopPairing() {
-    return this.getState()?.isPairing === true;
-  }
-
   /**
    * Returns an Object containing API Callback Functions.
    * These functions are the interface for the UI.
@@ -1562,7 +1552,6 @@ export default class MetamaskController extends EventEmitter {
     return {
       // etc
       getState: this.getState.bind(this),
-      getDesktopEnabled: this.getDesktopEnabled.bind(this),
       setCurrentCurrency: currencyRateController.setCurrentCurrency.bind(
         currencyRateController,
       ),
@@ -1688,16 +1677,6 @@ export default class MetamaskController extends EventEmitter {
         preferencesController.setCustomNetworkListEnabled.bind(
           preferencesController,
         ),
-      setDesktopEnabled: preferencesController.setDesktopEnabled.bind(
-        preferencesController,
-      ),
-      setIsPairing: preferencesController.setIsPairing.bind(
-        preferencesController,
-      ),
-      setOtpPairing: preferencesController.setOtpPairing.bind(
-        preferencesController,
-      ),
-      generateOtp: this.generateOtp.bind(this),
       // AssetsContractController
       getTokenStandardAndDetails: this.getTokenStandardAndDetails.bind(this),
 
@@ -1907,6 +1886,23 @@ export default class MetamaskController extends EventEmitter {
       ),
       dismissNotifications: this.dismissNotifications.bind(this),
       markNotificationsAsRead: this.markNotificationsAsRead.bind(this),
+
+      // DesktopController
+      getDesktopEnabled: this.desktopController.getDesktopEnabled.bind(
+        this.desktopController,
+      ),
+      setDesktopEnabled: this.desktopController.setDesktopEnabled.bind(
+        this.desktopController,
+      ),
+      generateOtp: this.desktopController.generateOtp.bind(
+        this.desktopController,
+      ),
+      testDesktopConnection: this.desktopController.testDesktopConnection.bind(
+        this.desktopController,
+      ),
+      disableDesktop: this.desktopController.disableDesktop.bind(
+        this.desktopController,
+      ),
       ///: END:ONLY_INCLUDE_IN
 
       // swaps
@@ -2132,12 +2128,6 @@ export default class MetamaskController extends EventEmitter {
         throw error;
       }
     }
-  }
-
-  async generateOtp() {
-    this.emit('generate-otp', (otp) => {
-      this.preferencesController.setOtpPairing(otp);
-    });
   }
 
   async addCustomNetwork(customRpc) {
@@ -4076,14 +4066,6 @@ export default class MetamaskController extends EventEmitter {
       method: NOTIFICATION_NAMES.chainChanged,
       params: this.getProviderNetworkState(newState),
     });
-
-    if (
-      this.setOtpPairing &&
-      newState.desktopPairingOtp !== this._desktopPairingOtp
-    ) {
-      this._desktopPairingOtp = newState.desktopPairingOtp;
-      this.setOtpPairing(this._desktopPairingOtp);
-    }
   }
 
   // misc

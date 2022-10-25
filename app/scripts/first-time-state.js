@@ -20,6 +20,9 @@ const initialState = {
       },
     ],
   },
+  DesktopController: {
+    desktopEnabled: false,
+  },
 };
 
 export default initialState;

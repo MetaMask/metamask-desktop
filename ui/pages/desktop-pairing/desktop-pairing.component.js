@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
-
 import PropTypes from 'prop-types';
-import { generate } from '../../../shared/modules/totp';
-
 import Button from '../../components/ui/button';
 import { SECOND } from '../../../shared/constants/time';
 import Typography from '../../components/ui/typography';
@@ -11,9 +8,9 @@ import {
   TYPOGRAPHY,
   FONT_WEIGHT,
 } from '../../helpers/constants/design-system';
-// import CountdownTimer from '../swaps/countdown-timer/countdown-timer';
 
-const OTP_GENERATION_TIME = SECOND * 30;
+const OTP_DURATION = SECOND * 30;
+const REFRESH_INTERVAL = SECOND;
 
 export default class DesktopPairingPage extends Component {
   static contextTypes = {
@@ -22,18 +19,58 @@ export default class DesktopPairingPage extends Component {
 
   static propTypes = {
     history: PropTypes.object.isRequired,
-    setIsPairing: PropTypes.func.isRequired,
-    isPairing: PropTypes.bool.isRequired,
     mostRecentOverviewPage: PropTypes.string.isRequired,
+    showLoadingIndication: PropTypes.func,
+    hideLoadingIndication: PropTypes.func,
     generateOtp: PropTypes.func,
-    otpState: PropTypes.string,
   };
 
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
   componentDidMount() {
-    this.interval = setInterval(
-      () => this.props.generateOtp(),
-      OTP_GENERATION_TIME,
+    this.generate();
+    this.updateCurrentTime();
+
+    this.generateInterval = setInterval(() => this.generate(), OTP_DURATION);
+    this.refreshinterval = setInterval(
+      () => this.updateCurrentTime(),
+      REFRESH_INTERVAL,
     );
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.generateInterval);
+    clearInterval(this.refreshinterval);
+  }
+
+  async generate() {
+    const { generateOtp } = this.props;
+
+    const otp = await generateOtp();
+    const lastOtpTime = new Date().getTime();
+
+    this.setState({ otp, lastOtpTime });
+  }
+
+  updateCurrentTime() {
+    const currentTime = new Date().getTime();
+    this.setState({ currentTime });
+  }
+
+  getExpireDuration() {
+    const { currentTime, lastOtpTime } = this.state;
+
+    const timeSinceOtp = currentTime - lastOtpTime;
+    const expireDurationMilliseconds = OTP_DURATION - timeSinceOtp;
+
+    const expireDurationSeconds = Math.round(
+      expireDurationMilliseconds / SECOND,
+    );
+
+    return expireDurationSeconds;
   }
 
   goBack() {
@@ -41,28 +78,17 @@ export default class DesktopPairingPage extends Component {
     history.push(mostRecentOverviewPage);
   }
 
-  componentWillUnmount() {
-    if (this.props.isPairing) {
-      this.props.setIsPairing(false);
-    }
-    clearInterval(this.interval);
-  }
-
-  renderWarning(text) {
-    return (
-      <div className="page-container__warning-container">
-        <div className="page-container__warning-message">
-          <div>{text}</div>
-        </div>
-      </div>
-    );
-  }
-
-  generateOTPCode() {
-    return generate();
-  }
-
   renderContent() {
+    const { showLoadingIndication, hideLoadingIndication } = this.props;
+    const { otp } = this.state;
+
+    if (!otp) {
+      showLoadingIndication();
+      return null;
+    }
+
+    hideLoadingIndication();
+
     return (
       <div>
         <Typography
@@ -70,15 +96,11 @@ export default class DesktopPairingPage extends Component {
           align={TEXT_ALIGN.CENTER}
           fontWeight={FONT_WEIGHT.BOLD}
         >
-          {this.props.otpState}
+          {otp}
         </Typography>
-        {/* <div className="view-quote__countdown-timer-container">
-          <CountdownTimer
-            timerBase={OTP_GENERATION_TIME}
-            // timeStarted={OTP_GENERATION_TIME}
-            labelKey="New quotes in $1"
-          />
-        </div> */}
+        <Typography variant={TYPOGRAPHY.H4} align={TEXT_ALIGN.CENTER}>
+          Expires in {this.getExpireDuration()} seconds
+        </Typography>
       </div>
     );
   }
@@ -93,10 +115,8 @@ export default class DesktopPairingPage extends Component {
         <Button
           type="primary"
           rounded
-          value={this.props.isPairing}
-          onClick={(value) => {
+          onClick={() => {
             this.goBack();
-            this.props.setIsPairing(!value);
           }}
         >
           {t('done')}

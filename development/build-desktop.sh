@@ -30,6 +30,9 @@ echo "Desktop Mode: $DESKTOP"
 PHISHING_WARNING_PAGE_URL=https://metamask.github.io/phishing-warning/v1.1.0/
 echo "Phishing Warning Page URL: $PHISHING_WARNING_PAGE_URL"
 
+PACKAGE_VERSION=$(npm pkg get version)
+echo "Package Version: ${PACKAGE_VERSION}"
+
 # Add variables from .metamaskrc
 # shellcheck disable=SC2046
 export $(< .metamaskrc grep -v ";" | xargs)

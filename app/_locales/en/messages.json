@@ -965,9 +965,6 @@
   "desktopConnectionCriticalErrorTitle": {
     "message": "MetaMask had trouble starting"
   },
-  "desktopConnectionLostErrorCTA": {
-    "message": "Reconnect MetaMask Desktop"
-  },
   "desktopConnectionLostErrorDescription": {
     "message": "Please make sure you have the desktop app up and running."
   },
@@ -1000,6 +997,15 @@
   },
   "desktopOutdatedErrorTitle": {
     "message": "MetaMask Desktop is outdated"
+  },
+  "desktopOutdatedExtensionErrorCTA": {
+    "message": "Update MetaMask Extension"
+  },
+  "desktopOutdatedExtensionErrorDescription": {
+    "message": "Your MetaMask extension needs to be upgraded."
+  },
+  "desktopOutdatedExtensionErrorTitle": {
+    "message": "MetaMask Extension is outdated"
   },
   "desktopUnexpectedErrorCTA": {
     "message": "Return MetaMask Home"
