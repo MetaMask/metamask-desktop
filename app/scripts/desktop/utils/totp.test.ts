@@ -1,24 +1,26 @@
-import { TOTP } from 'otpauth';
-import * as totp from './totp';
+
+
+import { TOTP as TOTPAuth } from 'otpauth';
+import TOTP from './totp';
 
 const OTPMock = '123456';
 
 describe('TOTP', () => {
   beforeEach(() => {
     jest.resetAllMocks();
-    jest.spyOn(TOTP, 'validate').mockImplementation(() => 0);
-    jest.spyOn(TOTP, 'generate').mockImplementation(() => OTPMock);
+    jest.spyOn(TOTPAuth, 'validate').mockImplementation(() => 0);
+    jest.spyOn(TOTPAuth, 'generate').mockImplementation(() => OTPMock);
   });
 
   it('generates OTP', async () => {
-    const response = totp.generate();
+    const response = TOTP.generate();
 
     expect(response).toBeDefined();
     expect(TOTP.generate).toHaveBeenCalledTimes(1);
   });
 
   it('validates OTP', async () => {
-    const response = totp.validate(OTPMock);
+    const response = TOTP.validate(OTPMock);
 
     expect(response).toBe(true);
     expect(TOTP.validate).toHaveBeenCalledTimes(1);
