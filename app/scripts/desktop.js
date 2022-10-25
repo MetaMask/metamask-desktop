@@ -1,4 +1,4 @@
-import launchDesktopUi from '../../desktop-ui';
+import launchDesktopUi from '../../ui/desktop';
 
 start().catch((error) => {
   console.log('Error starting desktop app', error);

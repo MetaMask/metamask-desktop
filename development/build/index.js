@@ -241,7 +241,7 @@ testDev: Create an unoptimized, live-reloading build for debugging e2e tests.`,
         })
         .option('include-desktop-ui', {
           default: false,
-          description: 'Whether to include electron desktop ui to the build',
+          description: 'Whether to also build the Electron desktop UI',
           type: 'boolean',
         })
         .option('skip-stats', {

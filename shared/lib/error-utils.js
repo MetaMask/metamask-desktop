@@ -4,7 +4,7 @@ import {
   fetchLocale,
   loadRelativeTimeFormatLocaleData,
 } from '../../ui/helpers/utils/i18n-helper';
-import { renderDesktopErrorContent } from '../../ui/pages/desktop-error/desktop-error.component';
+import { renderDesktopError } from '../../ui/pages/desktop-error/render-desktop-error';
 import { EXTENSION_ERROR_PAGE_TYPES } from '../constants/desktop';
 import { browser } from '../../app/scripts/desktop/browser/browser-polyfill';
 import switchDirection from './switch-direction';
@@ -77,7 +77,7 @@ export async function getErrorHtml(supportLink, metamaskState, err) {
       errorType = EXTENSION_ERROR_PAGE_TYPES.CONNECTION_LOST;
     }
 
-    return renderDesktopErrorContent({
+    return renderDesktopError({
       type: errorType,
       t,
       isHtmlError: true,

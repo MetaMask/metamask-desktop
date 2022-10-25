@@ -81,7 +81,6 @@ module.exports = {
         'app/**/*.js',
         'shared/**/*.js',
         'ui/**/*.js',
-        'desktop-ui/**/*.js',
         '**/*.test.js',
         'test/lib/**/*.js',
         'test/mocks/**/*.js',
@@ -188,7 +187,6 @@ module.exports = {
         'test/lib/render-helpers.js',
         'test/jest/rendering.js',
         'ui/**/*.js',
-        'desktop-ui/**/*.js',
       ],
       extends: ['plugin:react/recommended', 'plugin:react-hooks/recommended'],
       parserOptions: {

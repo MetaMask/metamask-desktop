@@ -31,7 +31,7 @@ function createStyleTasks({ livereload }) {
       src: 'ui/css/index.scss',
       dest: 'ui/css/output',
       devMode: true,
-      pattern: ['ui/**/*.scss', 'desktop-ui/**/*.scss'],
+      pattern: 'ui/**/*.scss',
     }),
   );
 
