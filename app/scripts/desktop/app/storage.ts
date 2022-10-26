@@ -1,7 +1,7 @@
 import { randomBytes } from 'crypto';
 import Store from 'electron-store';
 import keytar from 'keytar';
-import cfg from './config';
+import cfg from '../utils/config';
 
 const KEY_LENGTH = 32;
 const KEYTAR_SETTINGS_KEY_NAME = 'settingsKey';
