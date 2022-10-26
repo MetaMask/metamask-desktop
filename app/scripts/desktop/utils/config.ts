@@ -22,8 +22,6 @@ const loadConfig = () => {
   return {
     desktop: {
       isTest: envStringMatch(process.env.APP_ENV, 'TEST'),
-      isApp: envStringMatch(process.env.DESKTOP, 'APP'),
-      isExtension: envStringMatch(process.env.DESKTOP, 'EXTENSION'),
       mv3: Boolean(process.env.ENABLE_MV3),
       webSocket: {
         port,

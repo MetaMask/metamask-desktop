@@ -296,6 +296,7 @@ describe('Extension Connection', () => {
       );
     });
 
+    // eslint-disable-next-line jest/expect-expect
     it('fires paired event', async () => {
       await expectEventToFire(
         extensionConnection,

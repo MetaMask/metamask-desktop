@@ -2,6 +2,7 @@ node_modules/**
 lavamoat/**/policy.json
 dist/**
 dist_desktop/**
+dist_desktop_ui/**
 builds/**
 builds_desktop/**
 test-*/**

@@ -1,32 +1,34 @@
-import cfg from '../utils/config';
+export {};
 
-if (cfg().desktop.isApp) {
-  global.self = {} as unknown as Window & typeof globalThis;
+///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
 
-  // Ternary prevents LavaMoat failing as the library can't be found
-  // eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
-  global.crypto = require(cfg().desktop.isApp ? `node:crypto` : ``).webcrypto;
+// eslint-disable-next-line
+const { webcrypto } = require(true ? 'node:crypto' : '');
 
-  global.navigator = {
-    userAgent: 'Firefox',
-  } as Navigator;
+global.self = {} as unknown as Window & typeof globalThis;
+global.crypto = webcrypto as any;
 
-  global.window = {
-    navigator: global.navigator,
-    location: {
-      href: 'test.com',
-    },
-    postMessage: () => undefined,
-    addEventListener: () => undefined,
-  } as unknown as Window & typeof globalThis;
+global.navigator = {
+  userAgent: 'Firefox',
+} as Navigator;
 
-  global.document = {
-    createElement: () => ({
-      pathname: '/',
-      setAttribute: () => undefined,
-    }),
-    head: {
-      appendChild: () => undefined,
-    },
-  } as unknown as Document;
-}
+global.window = {
+  navigator: global.navigator,
+  location: {
+    href: 'test.com',
+  },
+  postMessage: () => undefined,
+  addEventListener: () => undefined,
+} as unknown as Window & typeof globalThis;
+
+global.document = {
+  createElement: () => ({
+    pathname: '/',
+    setAttribute: () => undefined,
+  }),
+  head: {
+    appendChild: () => undefined,
+  },
+} as unknown as Document;
+
+///: END:ONLY_INCLUDE_IN

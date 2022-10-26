@@ -55,7 +55,7 @@ import { SUPPORT_LINK } from '../../../shared/lib/ui-utils';
 ///: BEGIN:ONLY_INCLUDE_IN(beta)
 import BetaHomeFooter from './beta/beta-home-footer.component';
 ///: END:ONLY_INCLUDE_IN
-///: BEGIN:ONLY_INCLUDE_IN(flask)
+///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
 import FlaskHomeFooter from './flask/flask-home-footer.component';
 ///: END:ONLY_INCLUDE_IN
 
@@ -122,7 +122,7 @@ export default class Home extends PureComponent {
     portfolioTooltipWasShownInThisSession: PropTypes.bool.isRequired,
     setPortfolioTooltipWasShownInThisSession: PropTypes.func.isRequired,
     announcementsToShow: PropTypes.bool.isRequired,
-    ///: BEGIN:ONLY_INCLUDE_IN(flask)
+    ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
     errorsToShow: PropTypes.object.isRequired,
     shouldShowErrors: PropTypes.bool.isRequired,
     removeSnapError: PropTypes.func.isRequired,
@@ -284,7 +284,7 @@ export default class Home extends PureComponent {
       setWeb3ShimUsageAlertDismissed,
       originOfCurrentTab,
       disableWeb3ShimUsageAlert,
-      ///: BEGIN:ONLY_INCLUDE_IN(flask)
+      ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
       removeSnapError,
       errorsToShow,
       shouldShowErrors,
@@ -303,7 +303,7 @@ export default class Home extends PureComponent {
     return (
       <MultipleNotifications>
         {
-          ///: BEGIN:ONLY_INCLUDE_IN(flask)
+          ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
           shouldShowErrors
             ? Object.entries(errorsToShow).map(([errorId, error]) => {
                 return (
@@ -799,7 +799,7 @@ export default class Home extends PureComponent {
                 ///: END:ONLY_INCLUDE_IN
               }
               {
-                ///: BEGIN:ONLY_INCLUDE_IN(flask)
+                ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
                 <FlaskHomeFooter />
                 ///: END:ONLY_INCLUDE_IN
               }

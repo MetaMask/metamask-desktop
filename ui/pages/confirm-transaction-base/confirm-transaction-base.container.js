@@ -35,7 +35,7 @@ import {
   getEIP1559V2Enabled,
   getIsBuyableChain,
   getEnsResolutionByAddress,
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   getInsightSnaps,
   ///: END:ONLY_INCLUDE_IN
 } from '../../selectors';
@@ -201,7 +201,7 @@ const mapStateToProps = (state, ownProps) => {
   const isMultiLayerFeeNetwork = getIsMultiLayerFeeNetwork(state);
   const eip1559V2Enabled = getEIP1559V2Enabled(state);
 
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   const insightSnaps = getInsightSnaps(state);
   ///: END:ONLY_INCLUDE_IN
 
@@ -257,7 +257,7 @@ const mapStateToProps = (state, ownProps) => {
     chainId,
     eip1559V2Enabled,
     isBuyableChain,
-    ///: BEGIN:ONLY_INCLUDE_IN(flask)
+    ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
     insightSnaps,
     ///: END:ONLY_INCLUDE_IN
   };

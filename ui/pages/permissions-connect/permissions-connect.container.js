@@ -5,7 +5,7 @@ import {
   getLastConnectedInfo,
   getPermissionsRequests,
   getSelectedAddress,
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   getSnapInstallOrUpdateRequests,
   ///: END:ONLY_INCLUDE_IN
   getTargetSubjectMetadata,
@@ -19,7 +19,7 @@ import {
   showModal,
   getCurrentWindowTab,
   getRequestAccountTabIds,
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   resolvePendingApproval,
   rejectPendingApproval,
   ///: END:ONLY_INCLUDE_IN
@@ -27,7 +27,7 @@ import {
 import {
   CONNECT_ROUTE,
   CONNECT_CONFIRM_PERMISSIONS_ROUTE,
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   CONNECT_SNAP_INSTALL_ROUTE,
   CONNECT_SNAP_UPDATE_ROUTE,
   ///: END:ONLY_INCLUDE_IN
@@ -43,7 +43,7 @@ const mapStateToProps = (state, ownProps) => {
     location: { pathname },
   } = ownProps;
   let permissionsRequests = getPermissionsRequests(state);
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   permissionsRequests = [
     ...permissionsRequests,
     ...getSnapInstallOrUpdateRequests(state),
@@ -71,7 +71,7 @@ const mapStateToProps = (state, ownProps) => {
     subjectType: SUBJECT_TYPES.UNKNOWN,
   };
 
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   const isSnap = targetSubjectMetadata.subjectType === SUBJECT_TYPES.SNAP;
   ///: END:ONLY_INCLUDE_IN
 
@@ -89,13 +89,13 @@ const mapStateToProps = (state, ownProps) => {
 
   const connectPath = `${CONNECT_ROUTE}/${permissionsRequestId}`;
   const confirmPermissionPath = `${CONNECT_ROUTE}/${permissionsRequestId}${CONNECT_CONFIRM_PERMISSIONS_ROUTE}`;
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   const snapInstallPath = `${CONNECT_ROUTE}/${permissionsRequestId}${CONNECT_SNAP_INSTALL_ROUTE}`;
   const snapUpdatePath = `${CONNECT_ROUTE}/${permissionsRequestId}${CONNECT_SNAP_UPDATE_ROUTE}`;
   ///: END:ONLY_INCLUDE_IN
 
   let totalPages = 1 + isRequestingAccounts;
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   totalPages += isSnap;
   ///: END:ONLY_INCLUDE_IN
   totalPages = totalPages.toString();
@@ -105,7 +105,7 @@ const mapStateToProps = (state, ownProps) => {
     page = '1';
   } else if (pathname === confirmPermissionPath) {
     page = isRequestingAccounts ? '2' : '1';
-    ///: BEGIN:ONLY_INCLUDE_IN(flask)
+    ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   } else if (pathname === snapInstallPath || pathname === snapUpdatePath) {
     page = isRequestingAccounts ? '3' : '2';
     ///: END:ONLY_INCLUDE_IN
@@ -115,7 +115,7 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     isRequestingAccounts,
-    ///: BEGIN:ONLY_INCLUDE_IN(flask)
+    ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
     isSnap,
     snapInstallPath,
     snapUpdatePath,
@@ -143,7 +143,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(approvePermissionsRequest(request)),
     rejectPermissionsRequest: (requestId) =>
       dispatch(rejectPermissionsRequest(requestId)),
-    ///: BEGIN:ONLY_INCLUDE_IN(flask)
+    ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
     approvePendingApproval: (id, value) =>
       dispatch(resolvePendingApproval(id, value)),
     rejectPendingApproval: (id, error) =>

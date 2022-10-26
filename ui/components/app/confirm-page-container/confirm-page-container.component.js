@@ -72,7 +72,7 @@ export default class ConfirmPageContainer extends Component {
     dataComponent: PropTypes.node,
     dataHexComponent: PropTypes.node,
     detailsComponent: PropTypes.node,
-    ///: BEGIN:ONLY_INCLUDE_IN(flask)
+    ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
     insightComponent: PropTypes.node,
     ///: END:ONLY_INCLUDE_IN
     tokenAddress: PropTypes.string,
@@ -166,7 +166,7 @@ export default class ConfirmPageContainer extends Component {
       isBuyableChain,
       networkIdentifier,
       isApprovalOrRejection,
-      ///: BEGIN:ONLY_INCLUDE_IN(flask)
+      ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
       insightComponent,
       ///: END:ONLY_INCLUDE_IN
       accountBalance,
@@ -270,7 +270,7 @@ export default class ConfirmPageContainer extends Component {
               detailsComponent={detailsComponent}
               dataComponent={dataComponent}
               dataHexComponent={dataHexComponent}
-              ///: BEGIN:ONLY_INCLUDE_IN(flask)
+              ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
               insightComponent={insightComponent}
               ///: END:ONLY_INCLUDE_IN
               errorMessage={errorMessage}

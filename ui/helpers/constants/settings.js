@@ -7,7 +7,7 @@ import {
   NETWORKS_ROUTE,
   CONTACT_LIST_ROUTE,
   EXPERIMENTAL_ROUTE,
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   SNAPS_LIST_ROUTE,
   ///: END:ONLY_INCLUDE_IN
 } from './routes';
@@ -153,7 +153,7 @@ export const SETTINGS_CONSTANTS = [
     route: CONTACT_LIST_ROUTE,
     icon: 'fa fa-address-book',
   },
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   {
     tabMessage: (t) => t('snaps'),
     sectionMessage: (t) => t('snaps'),

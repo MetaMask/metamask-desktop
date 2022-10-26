@@ -7,6 +7,8 @@ const BuildType = {
   beta: 'beta',
   flask: 'flask',
   main: 'main',
+  desktopapp: 'desktopapp',
+  desktopextension: 'desktopextension',
 };
 
 module.exports = { BuildType };

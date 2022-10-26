@@ -23,10 +23,6 @@ cp -r app/_locales $OUTPUT_DIR/app
 # Export all shell variables
 set -a
 
-# Set desktop specific variables
-DESKTOP=APP
-echo "Desktop Mode: $DESKTOP"
-
 PHISHING_WARNING_PAGE_URL=https://metamask.github.io/phishing-warning/v1.1.0/
 echo "Phishing Warning Page URL: $PHISHING_WARNING_PAGE_URL"
 

@@ -13,7 +13,7 @@ import {
   ABOUT_US_ROUTE,
   SETTINGS_ROUTE,
   NETWORKS_ROUTE,
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   SNAPS_VIEW_ROUTE,
   SNAPS_LIST_ROUTE,
   ///: END:ONLY_INCLUDE_IN
@@ -36,7 +36,7 @@ import InfoTab from './info-tab';
 import SecurityTab from './security-tab';
 import ContactListTab from './contact-list-tab';
 import ExperimentalTab from './experimental-tab';
-///: BEGIN:ONLY_INCLUDE_IN(flask)
+///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
 import SnapListTab from './flask/snaps-list-tab';
 import ViewSnap from './flask/view-snap';
 ///: END:ONLY_INCLUDE_IN
@@ -271,7 +271,7 @@ class SettingsPage extends PureComponent {
             icon: <i className="fa fa-address-book" />,
             key: CONTACT_LIST_ROUTE,
           },
-          ///: BEGIN:ONLY_INCLUDE_IN(flask)
+          ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
           {
             content: t('snaps'),
             icon: (
@@ -366,12 +366,12 @@ class SettingsPage extends PureComponent {
           component={ContactListTab}
         />
         {
-          ///: BEGIN:ONLY_INCLUDE_IN(flask)
+          ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
           <Route exact path={SNAPS_LIST_ROUTE} component={SnapListTab} />
           ///: END:ONLY_INCLUDE_IN
         }
         {
-          ///: BEGIN:ONLY_INCLUDE_IN(flask)
+          ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
           <Route exact path={`${SNAPS_VIEW_ROUTE}/:id`} component={ViewSnap} />
           ///: END:ONLY_INCLUDE_IN
         }

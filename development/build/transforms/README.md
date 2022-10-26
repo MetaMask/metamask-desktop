@@ -29,7 +29,7 @@ this.store.updateStructure({
   ...,
   GasFeeController: this.gasFeeController,
   TokenListController: this.tokenListController,
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   SnapController: this.snapController,
   ///: END:ONLY_INCLUDE_IN
 });

@@ -230,6 +230,7 @@ export default class ExperimentalTab extends PureComponent {
     );
   }
 
+  ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
   renderDesktopEnableButton() {
     return (
       <div
@@ -248,6 +249,7 @@ export default class ExperimentalTab extends PureComponent {
       </div>
     );
   }
+  ///: END:ONLY_INCLUDE_IN
 
   render() {
     return (
@@ -256,7 +258,11 @@ export default class ExperimentalTab extends PureComponent {
         {this.renderCollectibleDetectionToggle()}
         {this.renderEIP1559V2EnabledToggle()}
         {this.renderCustomNetworkListToggle()}
-        {this.renderDesktopEnableButton()}
+        {
+          ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
+          this.renderDesktopEnableButton()
+          ///: END:ONLY_INCLUDE_IN
+        }
       </div>
     );
   }

@@ -17,7 +17,6 @@ const configurationPropertyNames = [
   'SENTRY_DSN_DEV',
   'SIWE_V1',
   'SWAPS_USE_DEV_APIS',
-  'DESKTOP',
   'DISABLE_WEB_SOCKET_ENCRYPTION',
 ];
 
@@ -72,7 +71,6 @@ async function getConfig() {
     SIWE_V1: process.env.SIWE_V1,
     SWAPS_USE_DEV_APIS: process.env.SWAPS_USE_DEV_APIS,
     METAMASK_DEBUG: process.env.METAMASK_DEBUG,
-    DESKTOP: process.env.DESKTOP,
     DISABLE_WEB_SOCKET_ENCRYPTION: process.env.DISABLE_WEB_SOCKET_ENCRYPTION,
     SKIP_OTP_PAIRING_FLOW: process.env.SKIP_OTP_PAIRING_FLOW,
     ...ini.parse(configContents),

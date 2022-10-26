@@ -12,7 +12,10 @@ module.exports = function (api) {
       '@babel/preset-env',
       '@babel/preset-react',
     ],
-    plugins: ['transform-inline-environment-variables'],
+    plugins: [
+      ['./code-fencing-babel', { buildType: 'desktopapp' }],
+      'transform-inline-environment-variables',
+    ],
     ignore: [
       'dist',
       'dist_desktop',

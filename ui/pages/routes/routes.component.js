@@ -36,7 +36,7 @@ import Alerts from '../../components/app/alerts';
 import Asset from '../asset';
 import OnboardingAppHeader from '../onboarding-flow/onboarding-app-header/onboarding-app-header';
 import TokenDetailsPage from '../token-details';
-///: BEGIN:ONLY_INCLUDE_IN(flask)
+///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
 import Notifications from '../notifications';
 ///: END:ONLY_INCLUDE_IN
 
@@ -66,7 +66,7 @@ import {
   TOKEN_DETAILS,
   DESKTOP_PAIRING_ROUTE,
   DESKTOP_ERROR_ROUTE,
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   NOTIFICATIONS_ROUTE,
   ///: END:ONLY_INCLUDE_IN
 } from '../../helpers/constants/routes';
@@ -177,11 +177,15 @@ export default class Routes extends Component {
         )}
         <Route path={LOCK_ROUTE} component={Lock} exact />
         <Route path={INITIALIZE_ROUTE} component={FirstTimeFlow} />
-        <Route
-          path={`${DESKTOP_ERROR_ROUTE}/:errorType`}
-          component={DesktopErrorPage}
-          exact
-        />
+        {
+          ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
+          <Route
+            path={`${DESKTOP_ERROR_ROUTE}/:errorType`}
+            component={DesktopErrorPage}
+            exact
+          />
+          ///: END:ONLY_INCLUDE_IN
+        }
         <Initialized path={UNLOCK_ROUTE} component={UnlockPage} exact />
         <Initialized
           path={RESTORE_VAULT_ROUTE}
@@ -205,7 +209,7 @@ export default class Routes extends Component {
         />
         <Authenticated path={SETTINGS_ROUTE} component={Settings} />
         {
-          ///: BEGIN:ONLY_INCLUDE_IN(flask)
+          ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
           <Authenticated path={NOTIFICATIONS_ROUTE} component={Notifications} />
           ///: END:ONLY_INCLUDE_IN
         }

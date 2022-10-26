@@ -4,7 +4,7 @@ export const CaveatTypes = Object.freeze({
 
 export const RestrictedMethods = Object.freeze({
   eth_accounts: 'eth_accounts',
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   snap_confirm: 'snap_confirm',
   snap_notify: 'snap_notify',
   snap_manageState: 'snap_manageState',
@@ -15,7 +15,7 @@ export const RestrictedMethods = Object.freeze({
   ///: END:ONLY_INCLUDE_IN
 } as const);
 
-///: BEGIN:ONLY_INCLUDE_IN(flask)
+///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
 export const PermissionNamespaces = Object.freeze({
   wallet_snap_: 'wallet_snap_*',
 } as const);
