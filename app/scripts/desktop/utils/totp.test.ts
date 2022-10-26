@@ -1,5 +1,3 @@
-
-
 import { TOTP as TOTPAuth } from 'otpauth';
 import TOTP from './totp';
 

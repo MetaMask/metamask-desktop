@@ -27,7 +27,7 @@ class TOTP {
       window: 1,
     });
 
-    return result === 0;
+    return result !== null;
   };
 }
 
