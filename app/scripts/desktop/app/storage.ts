@@ -41,7 +41,7 @@ class ObfuscatedStore {
     if (this.appStore) {
       return this.appStore;
     }
-    console.log('IS TEST', cfg().desktop.isTest);
+
     if (cfg().desktop.isTest) {
       this.appStore = new Store(this.initialOptions);
       return this.appStore;
