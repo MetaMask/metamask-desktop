@@ -17,7 +17,7 @@ export class DesktopVersionCheck {
   }
 
   private onMessage(data: VersionMessage) {
-    log.debug('Recieved version request', data);
+    log.debug('Received version request', data);
 
     const isExtensionVersionValid = this.checkExtensionVersion(data.version);
     const desktopVersion = getVersion();

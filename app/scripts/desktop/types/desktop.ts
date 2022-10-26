@@ -2,6 +2,7 @@ export type ClientId = string;
 
 export interface DesktopState {
   desktopEnabled?: boolean;
+  pairingKey?: string;
 }
 
 export interface VersionCheckResult {

@@ -115,6 +115,11 @@ class DesktopApp extends EventEmitter {
       this.mainWindow?.webContents.send('invalid-otp', false);
     });
 
+    extensionConnection.getPairing().on('desktop-paired-restart', () => {
+      this.emit('restart');
+      this.statusWindow?.webContents.reloadIgnoringCache();
+    });
+
     forwardEvents(extensionConnection, this, [
       'restart',
       'connect-remote',

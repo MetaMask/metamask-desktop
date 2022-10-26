@@ -183,6 +183,8 @@ export const createObservableStoreMock = (): jest.Mocked<ObservableStore> =>
 export const createExtensionPairingMock = (): jest.Mocked<ExtensionPairing> =>
   ({
     generateOTP: jest.fn(),
+    isPairingKeyMatch: jest.fn(),
+    init: jest.fn(),
   } as any);
 
 export const createElectronStoreMock = (): jest.Mocked<ElectronStore> =>

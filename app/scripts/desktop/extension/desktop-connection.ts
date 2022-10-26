@@ -38,6 +38,8 @@ export default class DesktopConnection extends EventEmitter {
 
   private versionCheck: ExtensionVersionCheck;
 
+  private extensionPairing: ExtensionPairing;
+
   public constructor(stream: Duplex) {
     super();
 
@@ -61,7 +63,9 @@ export default class DesktopConnection extends EventEmitter {
     this.disableStream.on('data', (data: State) => this.onDisable(data));
 
     const pairingStream = this.multiplex.createStream(CLIENT_ID_PAIRING);
-    new ExtensionPairing(pairingStream, () => this.transferState()).init();
+    this.extensionPairing = new ExtensionPairing(pairingStream, () =>
+      this.transferState(),
+    ).init();
 
     const versionStream = this.multiplex.createStream(CLIENT_ID_VERSION);
     this.versionCheck = new ExtensionVersionCheck(versionStream);
@@ -119,6 +123,10 @@ export default class DesktopConnection extends EventEmitter {
     return await this.versionCheck.check();
   }
 
+  public async checkPairingKey(): Promise<boolean> {
+    return await this.extensionPairing.isPairingKeyMatch();
+  }
+
   private async onDisable(state: State) {
     log.debug('Received desktop disable message');
 
@@ -126,7 +134,10 @@ export default class DesktopConnection extends EventEmitter {
       await RawState.set(state);
       log.debug('Synchronised with final desktop state');
     } else {
-      await RawState.setDesktopState({ desktopEnabled: false });
+      await RawState.setDesktopState({
+        desktopEnabled: false,
+        pairingKey: undefined,
+      });
       log.debug('Disabled desktop mode');
     }
 

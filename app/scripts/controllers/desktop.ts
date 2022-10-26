@@ -36,6 +36,12 @@ export default class DesktopController {
     });
   }
 
+  setPairingKey(pairingKey: string) {
+    this.store.updateState({
+      pairingKey,
+    });
+  }
+
   public generateOtp(): string {
     return ExtensionPairing.generateOTP();
   }
