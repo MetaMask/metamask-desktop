@@ -1,8 +1,10 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Button from '../../components/ui/button';
 import { SECOND } from '../../../shared/constants/time';
 import Typography from '../../components/ui/typography';
+import { I18nContext } from '../../contexts/i18n';
 import IconDesktopPairing from '../../components/ui/icon/icon-desktop-pairing';
 import {
   TEXT_ALIGN,
@@ -13,60 +15,33 @@ import {
 } from '../../helpers/constants/design-system';
 import Box from '../../components/ui/box/box';
 
-const OTP_DURATION = SECOND * 30;
-const REFRESH_INTERVAL = SECOND;
+export default function DesktopPairingPage({
+  generateOtp,
+  mostRecentOverviewPage,
+  showLoadingIndication,
+  hideLoadingIndication,
+}) {
+  const t = useContext(I18nContext);
+  const history = useHistory();
+  const OTP_DURATION = SECOND * 30;
+  const REFRESH_INTERVAL = SECOND;
 
-export default class DesktopPairingPage extends Component {
-  static contextTypes = {
-    t: PropTypes.func,
+  const [otp, setOtp] = useState();
+  const [lastOtpTime, setLastOtpTime] = useState(new Date().getTime());
+  const [currentTime, setCurrentTime] = useState(new Date().getTime());
+  const generateIntervalRef = useRef();
+  const refreshIntervalRef = useRef();
+
+  const generate = async () => {
+    setLastOtpTime(new Date().getTime());
+    setOtp(await generateOtp());
   };
 
-  static propTypes = {
-    history: PropTypes.object.isRequired,
-    mostRecentOverviewPage: PropTypes.string.isRequired,
-    showLoadingIndication: PropTypes.func,
-    hideLoadingIndication: PropTypes.func,
-    generateOtp: PropTypes.func,
+  const updateCurrentTime = () => {
+    setCurrentTime(new Date().getTime());
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  componentDidMount() {
-    this.generate();
-    this.updateCurrentTime();
-
-    this.generateInterval = setInterval(() => this.generate(), OTP_DURATION);
-    this.refreshinterval = setInterval(
-      () => this.updateCurrentTime(),
-      REFRESH_INTERVAL,
-    );
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.generateInterval);
-    clearInterval(this.refreshinterval);
-  }
-
-  async generate() {
-    const { generateOtp } = this.props;
-
-    const otp = await generateOtp();
-    const lastOtpTime = new Date().getTime();
-
-    this.setState({ otp, lastOtpTime });
-  }
-
-  updateCurrentTime() {
-    const currentTime = new Date().getTime();
-    this.setState({ currentTime });
-  }
-
-  getExpireDuration() {
-    const { currentTime, lastOtpTime } = this.state;
-
+  const getExpireDuration = () => {
     const timeSinceOtp = currentTime - lastOtpTime;
     const expireDurationMilliseconds = OTP_DURATION - timeSinceOtp;
 
@@ -75,9 +50,25 @@ export default class DesktopPairingPage extends Component {
     );
 
     return expireDurationSeconds;
-  }
+  };
 
-  renderIcon() {
+  useEffect(() => {
+    generate();
+    updateCurrentTime();
+
+    generateIntervalRef.current = setInterval(() => generate(), OTP_DURATION);
+    refreshIntervalRef.current = setInterval(
+      () => updateCurrentTime(),
+      REFRESH_INTERVAL,
+    );
+
+    return function cleanup() {
+      clearInterval(generateIntervalRef.current);
+      clearInterval(refreshIntervalRef.current);
+    };
+  }, [OTP_DURATION, REFRESH_INTERVAL]);
+
+  const renderIcon = () => {
     return (
       <div>
         <Box
@@ -93,17 +84,13 @@ export default class DesktopPairingPage extends Component {
         </Box>
       </div>
     );
-  }
+  };
 
-  goBack() {
-    const { history, mostRecentOverviewPage } = this.props;
-    history.push(mostRecentOverviewPage);
-  }
+  const goBack = () => {
+    history?.push(mostRecentOverviewPage);
+  };
 
-  renderContent() {
-    const { showLoadingIndication, hideLoadingIndication } = this.props;
-    const { otp } = this.state;
-
+  const renderContent = () => {
     if (!otp) {
       showLoadingIndication();
       return null;
@@ -136,45 +123,48 @@ export default class DesktopPairingPage extends Component {
         >
           Code expires in{' '}
           <span className="desktop-pairing__countdown-timer-seconds">
-            {this.getExpireDuration()}
+            {getExpireDuration()}
           </span>{' '}
           seconds
         </Typography>
       </div>
     );
-  }
+  };
 
-  renderFooter() {
-    const { t } = this.context;
+  const renderFooter = () => {
     return (
       <div className="desktop-pairing__buttons">
         <Button
           type="primary"
           rounded
           onClick={() => {
-            this.goBack();
+            goBack();
           }}
         >
           {t('done')}
         </Button>
       </div>
     );
-  }
+  };
 
-  render() {
-    const { t } = this.context;
-    return (
-      <div className="page-container__content">
-        <div className="desktop-pairing">
-          {this.renderIcon()}
-          <div className="desktop-pairing__title">{t('desktopPageTitle')}</div>
-          <div className="desktop-pairing__subtitle">
-            {t('desktopPageSubTitle')}
-          </div>
+  return (
+    <div className="page-container__content">
+      <div className="desktop-pairing">
+        {renderIcon()}
+        <div className="desktop-pairing__title">{t('desktopPageTitle')}</div>
+        <div className="desktop-pairing__subtitle">
+          {t('desktopPageSubTitle')}
         </div>
-        <div className="desktop-pairing">{this.renderContent()}</div>
-        {this.renderFooter()}
       </div>
-    );
-  }
+      <div className="desktop-pairing">{renderContent()}</div>
+      {renderFooter()}
+    </div>
+  );
 }
+
+DesktopPairingPage.propTypes = {
+  mostRecentOverviewPage: PropTypes.string,
+  showLoadingIndication: PropTypes.func,
+  hideLoadingIndication: PropTypes.func,
+  generateOtp: PropTypes.func,
+};
