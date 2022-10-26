@@ -22,6 +22,9 @@ async function profilePageLoad() {
   try {
     await withFixtures({ fixtures: 'imported-account' }, async ({ driver }) => {
       await driver.delay(tinyDelayMs);
+      if (process.env.RUN_WITH_DESKTOP === 'true') {
+        await driver.navigate();
+      }
       await driver.navigate();
       await driver.delay(1000);
       const logs = await driver.checkBrowserForLavamoatLogs();

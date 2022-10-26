@@ -58,7 +58,15 @@ async function main() {
   }
 
   for (const testPath of testPaths) {
-    await runInShell('node', [...args, testPath]);
+    if (process.env.TEST_DEBUG === 'true') {
+      try {
+        await runInShell('node', [...args, testPath]);
+      } catch (e) {
+        console.log(`Errors in: ${testPath}`);
+      }
+    } else {
+      await runInShell('node', [...args, testPath]);
+    }
   }
 }
 
