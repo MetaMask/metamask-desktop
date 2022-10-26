@@ -778,7 +778,9 @@ export default class MetamaskController extends EventEmitter {
         },
       },
     });
+    ///: END:ONLY_INCLUDE_IN
 
+    ///: BEGIN:ONLY_INCLUDE_IN(desktopextension,desktopapp)
     this.desktopController = new DesktopController({
       initState: initState.DesktopController,
     });
@@ -1088,6 +1090,8 @@ export default class MetamaskController extends EventEmitter {
       ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
       SnapController: this.snapController,
       NotificationController: this.notificationController,
+      ///: END:ONLY_INCLUDE_IN
+      ///: BEGIN:ONLY_INCLUDE_IN(desktopextension,desktopapp)
       DesktopController: this.desktopController.store,
       ///: END:ONLY_INCLUDE_IN
     });
@@ -1131,6 +1135,8 @@ export default class MetamaskController extends EventEmitter {
         ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
         SnapController: this.snapController,
         NotificationController: this.notificationController,
+        ///: END:ONLY_INCLUDE_IN
+        ///: BEGIN:ONLY_INCLUDE_IN(desktopextension,desktopapp)
         DesktopController: this.desktopController.store,
         ///: END:ONLY_INCLUDE_IN
       },
@@ -1896,23 +1902,6 @@ export default class MetamaskController extends EventEmitter {
       ),
       dismissNotifications: this.dismissNotifications.bind(this),
       markNotificationsAsRead: this.markNotificationsAsRead.bind(this),
-
-      // DesktopController
-      getDesktopEnabled: this.desktopController.getDesktopEnabled.bind(
-        this.desktopController,
-      ),
-      setDesktopEnabled: this.desktopController.setDesktopEnabled.bind(
-        this.desktopController,
-      ),
-      generateOtp: this.desktopController.generateOtp.bind(
-        this.desktopController,
-      ),
-      testDesktopConnection: this.desktopController.testDesktopConnection.bind(
-        this.desktopController,
-      ),
-      disableDesktop: this.desktopController.disableDesktop.bind(
-        this.desktopController,
-      ),
       ///: END:ONLY_INCLUDE_IN
 
       // swaps
@@ -2061,6 +2050,24 @@ export default class MetamaskController extends EventEmitter {
         assetsContractController.getBalancesInSingleCall.bind(
           assetsContractController,
         ),
+
+      ///: BEGIN:ONLY_INCLUDE_IN(desktopextension,desktopapp)
+      getDesktopEnabled: this.desktopController.getDesktopEnabled.bind(
+        this.desktopController,
+      ),
+      setDesktopEnabled: this.desktopController.setDesktopEnabled.bind(
+        this.desktopController,
+      ),
+      generateOtp: this.desktopController.generateOtp.bind(
+        this.desktopController,
+      ),
+      testDesktopConnection: this.desktopController.testDesktopConnection.bind(
+        this.desktopController,
+      ),
+      disableDesktop: this.desktopController.disableDesktop.bind(
+        this.desktopController,
+      ),
+      ///: END:ONLY_INCLUDE_IN
     };
   }
 

@@ -27,10 +27,6 @@ import {
 } from '../../shared/constants/metametrics';
 import { isManifestV3 } from '../../shared/modules/mv3.utils';
 import { maskObject } from '../../shared/modules/object.utils';
-import {
-  CONNECTION_TYPE_EXTERNAL,
-  CONNECTION_TYPE_INTERNAL,
-} from '../../shared/constants/desktop';
 import { browser } from './desktop/browser/browser-polyfill';
 import migrations from './migrations';
 import Migrator from './lib/migrator';
@@ -54,6 +50,7 @@ import { getPlatform } from './lib/util';
 
 /* eslint-disable import/first */
 /* eslint-disable prefer-const */
+/* eslint-disable import/order */
 
 ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
 import DesktopApp from './desktop/app/desktop-app';
@@ -61,10 +58,15 @@ import DesktopApp from './desktop/app/desktop-app';
 
 ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
 import DesktopManager from './desktop/extension/desktop-manager';
+import {
+  CONNECTION_TYPE_EXTERNAL,
+  CONNECTION_TYPE_INTERNAL,
+} from '../../shared/constants/desktop';
 ///: END:ONLY_INCLUDE_IN
 
 /* eslint-enable import/first */
 /* eslint-enable prefer-const */
+/* eslint-enable import/order */
 
 const { sentry } = global;
 const firstTimeState = { ...rawFirstTimeState };
