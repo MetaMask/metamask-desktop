@@ -874,15 +874,13 @@ browser.runtime.onInstalled.addListener(({ reason }) => {
 });
 
 function setupSentryGetStateGlobal(store) {
-  if (global.sentryHooks.getSentryState) {
-    global.sentryHooks.getSentryState = function () {
-      const fullState = store.getState();
-      const debugState = maskObject({ metamask: fullState }, SENTRY_STATE);
-      return {
-        browser: window.navigator.userAgent,
-        store: debugState,
-        version: platform.getVersion(),
-      };
+  global.sentryHooks.getSentryState = function () {
+    const fullState = store.getState();
+    const debugState = maskObject({ metamask: fullState }, SENTRY_STATE);
+    return {
+      browser: window.navigator.userAgent,
+      store: debugState,
+      version: platform.getVersion(),
     };
-  }
+  };
 }

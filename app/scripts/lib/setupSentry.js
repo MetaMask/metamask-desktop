@@ -1,9 +1,14 @@
-import * as Sentry from '@sentry/browser';
 import { Dedupe, ExtraErrorData } from '@sentry/integrations';
 
 import { BuildType } from '../../../shared/constants/app';
+import cfg from '../desktop/config';
 import { FilterEvents } from './sentry-filter-events';
 import extractEthjsErrorMessage from './extractEthjsErrorMessage';
+
+// eslint-disable-next-line node/global-require
+const Sentry = cfg().desktop.isApp
+  ? require('@sentry/electron/main')
+  : require('@sentry/browser');
 
 /* eslint-disable prefer-destructuring */
 // Destructuring breaks the inlining of the environment variables
@@ -67,7 +72,6 @@ export const SENTRY_STATE = {
 };
 
 export default function setupSentry({ release, getState }) {
-  console.log('SETUP SENTRY', { release, METAMASK_DEBUG, IN_TEST });
   if (!release) {
     throw new Error('Missing release');
   } else if (METAMASK_DEBUG && !IN_TEST) {
@@ -208,8 +212,12 @@ function rewriteErrorMessages(report, rewriteFn) {
 }
 
 function rewriteReportUrls(report) {
-  // update request url
-  report.request.url = toMetamaskUrl(report.request.url);
+  // Sentry in electron does not have a request object
+  if (report?.request?.url) {
+    // update request url
+    report.request.url = toMetamaskUrl(report.request.url);
+  }
+
   // update exception stack trace
   if (report.exception && report.exception.values) {
     report.exception.values.forEach((item) => {
