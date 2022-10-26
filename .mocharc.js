@@ -2,7 +2,7 @@ module.exports = {
   // TODO: Remove the `exit` setting, it can hide broken tests.
   exit: true,
   ignore: [
-    './app/scripts/desktop/**/*.test.js',
+    './app/scripts/desktop/**/*.test.ts',
     './app/scripts/lib/**/*.test.js',
     './app/scripts/migrations/*.test.js',
     './app/scripts/platforms/*.test.js',
