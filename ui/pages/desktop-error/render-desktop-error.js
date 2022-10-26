@@ -16,11 +16,6 @@ import Typography from '../../components/ui/typography';
 import Button from '../../components/ui/button';
 import Box from '../../components/ui/box';
 
-import {
-  downloadDesktopApp,
-  downloadExtension,
-  restartExtension,
-} from '../../../shared/lib/error-utils';
 
 export function renderDesktopError({
   type,
@@ -28,6 +23,9 @@ export function renderDesktopError({
   isHtmlError,
   history,
   disableDesktop,
+  downloadDesktopApp,
+  downloadExtension,
+  restartExtension,
 }) {
   let content;
 
@@ -59,7 +57,7 @@ export function renderDesktopError({
   const renderCTA = (id, text, onClick) => {
     return (
       <Box marginTop={6}>
-        <Button type="primary" onClick={onClick} id={id}>
+        <Button type="primary" onClick={onClick ?? noop} id={id}>
           {text}
         </Button>
       </Box>

@@ -189,7 +189,7 @@ class DesktopApp extends EventEmitter {
     });
 
     await statusWindow.loadFile(
-      path.resolve(__dirname, '../../../../dist_desktop_ui/desktop-ui.html'),
+      path.resolve(__dirname, '../../../../../dist_desktop_ui/desktop-ui.html'),
       // Temporary open pair page, it will redirect to settings page if isPaired is true
       { hash: 'pair' },
     );
