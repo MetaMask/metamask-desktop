@@ -1,29 +1,33 @@
 import { TOTP as TOTPAuth } from 'otpauth';
+import { OTP_MOCK } from '../test/mocks';
 import TOTP from './totp';
 
-const OTPMock = '123456';
-
 describe('TOTP', () => {
+  let validateMock;
+  let generateMock;
+
   beforeEach(() => {
     jest.resetAllMocks();
-    jest.spyOn(TOTPAuth, 'validate').mockImplementation(() => 0);
-    jest.spyOn(TOTPAuth, 'generate').mockImplementation(() => OTPMock);
+    validateMock = jest.spyOn(TOTPAuth, 'validate').mockImplementation(() => 0);
+    generateMock = jest
+      .spyOn(TOTPAuth, 'generate')
+      .mockImplementation(() => OTP_MOCK);
   });
 
   it('generates OTP', async () => {
     const response = TOTP.generate();
 
-    expect(response).toBeDefined();
-    expect(TOTP.generate).toHaveBeenCalledTimes(1);
+    expect(response).toStrictEqual(OTP_MOCK);
+    expect(generateMock).toHaveBeenCalledTimes(1);
   });
 
   it('validates OTP', async () => {
-    const response = TOTP.validate(OTPMock);
+    const response = TOTP.validate(OTP_MOCK);
 
     expect(response).toBe(true);
-    expect(TOTP.validate).toHaveBeenCalledTimes(1);
-    expect(TOTP.validate).toHaveBeenCalledWith({
-      token: OTPMock,
+    expect(validateMock).toHaveBeenCalledTimes(1);
+    expect(validateMock).toHaveBeenCalledWith({
+      token: OTP_MOCK,
       window: 1,
       algorithm: 'SHA1',
       digits: 6,

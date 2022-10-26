@@ -1,12 +1,23 @@
-import * as totp from '../../../../shared/modules/totp';
-import { createStreamMock, OTP_MOCK } from '../test/mocks';
-import { expectEventToFire, simulateStreamMessage } from '../test/utils';
+import TOTP from '../utils/totp';
+import {
+  createStreamMock,
+  DECRYPTED_STRING_MOCK,
+  OTP_MOCK,
+} from '../test/mocks';
+import {
+  expectEventToFire,
+  flushPromises,
+  simulateStreamMessage,
+} from '../test/utils';
 import { browser } from '../browser/browser-polyfill';
 import * as RawState from '../utils/raw-state';
+import { MESSAGE_ACKNOWLEDGE } from '../../../../shared/constants/desktop';
+import * as encryption from '../encryption/symmetric-encryption';
 import { DesktopPairing, ExtensionPairing } from './pairing';
 
-jest.mock('../../../../shared/modules/totp');
+jest.mock('../utils/totp');
 jest.mock('../utils/raw-state');
+jest.mock('../encryption/symmetric-encryption');
 
 jest.mock(
   '../browser/browser-polyfill',
@@ -23,8 +34,9 @@ jest.mock(
 describe('Pairing', () => {
   const streamMock = createStreamMock();
   const browserMock = browser as any;
-  const totpMock = totp as jest.Mocked<typeof totp>;
+  const totpMock = TOTP as jest.Mocked<typeof TOTP>;
   const rawStateMock = RawState as jest.Mocked<typeof RawState>;
+  const encryptionMock = encryption as jest.Mocked<typeof encryption>;
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -42,7 +54,7 @@ describe('Pairing', () => {
         totpMock.generate.mockReturnValue(OTP_MOCK);
 
         expect(ExtensionPairing.generateOTP()).toStrictEqual(OTP_MOCK);
-        expect(totp.generate).toHaveBeenCalledTimes(1);
+        expect(TOTP.generate).toHaveBeenCalledTimes(1);
       });
     });
 
@@ -55,14 +67,20 @@ describe('Pairing', () => {
 
       describe('if OTP is valid', () => {
         beforeEach(async () => {
+          encryptionMock.createKey.mockImplementation(
+            async () => DECRYPTED_STRING_MOCK,
+          );
           totpMock.validate.mockReturnValue(true);
           await simulatePairingMessage();
+          await flushPromises();
+          await simulateStreamMessage(streamMock, MESSAGE_ACKNOWLEDGE);
         });
 
         it('updates state', async () => {
           expect(rawStateMock.setDesktopState).toHaveBeenCalledTimes(1);
           expect(rawStateMock.setDesktopState).toHaveBeenCalledWith({
             desktopEnabled: true,
+            pairingKey: DECRYPTED_STRING_MOCK,
           });
         });
 

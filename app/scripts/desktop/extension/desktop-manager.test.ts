@@ -127,7 +127,12 @@ describe('Desktop Manager', () => {
         beforeEach(async () => {
           cfg().desktop.webSocket.disableEncryption = disableEncryption;
 
-          await init({ DesktopController: { desktopEnabled: true } });
+          await init({
+            DesktopController: {
+              desktopEnabled: true,
+              pairingKey: 'mockedKey',
+            },
+          });
         });
 
         it(`creates and inits ${streamType} web socket stream`, async () => {
@@ -172,6 +177,7 @@ describe('Desktop Manager', () => {
     });
 
     it('creates connection if desktop state enabled and no existing connection', async () => {
+      desktopConnectionMock.checkPairingKey.mockResolvedValue(true);
       DesktopManager.setState({ DesktopController: { desktopEnabled: true } });
 
       expect(await initDesktopManager(DesktopManager.getConnection())).toBe(
@@ -276,6 +282,7 @@ describe('Desktop Manager', () => {
 
   describe('on disconnect', () => {
     beforeEach(async () => {
+      desktopConnectionMock.checkPairingKey.mockResolvedValue(true);
       rawStateMock.getDesktopState.mockResolvedValueOnce({
         desktopEnabled: true,
       });
