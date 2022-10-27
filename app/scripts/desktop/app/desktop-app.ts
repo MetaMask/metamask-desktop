@@ -181,6 +181,7 @@ class DesktopApp extends EventEmitter {
       titleBarStyle: 'hidden',
       visualEffectState: 'active',
       webPreferences: {
+        preload: path.resolve(__dirname, './status-preload.js'),
         nodeIntegration: true,
         contextIsolation: false,
       },

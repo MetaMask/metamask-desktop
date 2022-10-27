@@ -12,7 +12,7 @@ const AboutTab = () => {
     <>
       <div className="about-tab__item">
         <div className="about-tab__link-header">MetaMask Desktop</div>
-        <div className="about-tab__version-number">0.0.0</div>
+        <div className="about-tab__version-number">{window["mmd-version"]}</div>
       </div>
       <hr className="about-tab__separator" />
       <div className="about-tab__link-header">{t('links')}</div>
