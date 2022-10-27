@@ -8,8 +8,8 @@ const deLocales = {
   cancel: {
     message: 'Abbrechen',
   },
-  currentLanguage: {
-    message: 'Aktuelle Sprache',
+  language: {
+    message: 'Sprache',
   },
   dark: {
     message: 'Dunkel',

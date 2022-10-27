@@ -8,8 +8,8 @@ const enLocales = {
   cancel: {
     message: 'Cancel',
   },
-  currentLanguage: {
-    message: 'Current Language',
+  language: {
+    message: 'Language',
   },
   dark: {
     message: 'Dark',

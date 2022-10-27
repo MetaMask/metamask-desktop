@@ -26,15 +26,12 @@ const GeneralTab = ({
         value: locale.code,
       };
     });
-    const currentLanguage = localeOptions.find(
-      (option) => option.value === language,
-    );
 
     return (
       <div className="mmd-settings-page__setting-row">
         <div className="mmd-settings-page__setting-item">
           <Typography variant={TYPOGRAPHY.H5}>
-            {t('currentLanguage')}
+            {t('language')}
           </Typography>
           <Typography variant={TYPOGRAPHY.H6}>
             {t('chooseYourPreferredLanguage')}
