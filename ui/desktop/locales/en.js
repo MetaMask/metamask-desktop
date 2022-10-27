@@ -50,6 +50,9 @@ const enLocales = {
   chooseYourPreferredMetaMaskTheme: {
     message: 'Choose your preferred MetaMask theme.',
   },
+  chooseYourPreferredLanguage: {
+    message: 'Choose your preferred language.',
+  },
   links: {
     message: 'Links',
   },

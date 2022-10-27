@@ -51,6 +51,9 @@ const deLocales = {
   chooseYourPreferredMetaMaskTheme: {
     message: 'Wählen Sie Ihr bevorzugtes MetaMask-Thema aus.',
   },
+  chooseYourPreferredLanguage: {
+    message: 'Wählen Sie Ihre bevorzugte Sprache aus.',
+  },
 };
 
 export default deLocales;

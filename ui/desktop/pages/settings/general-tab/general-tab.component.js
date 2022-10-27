@@ -37,7 +37,7 @@ const GeneralTab = ({
             {t('currentLanguage')}
           </Typography>
           <Typography variant={TYPOGRAPHY.H6}>
-            {currentLanguage.name}
+            {t('chooseYourPreferredLanguage')}
           </Typography>
         </div>
         <div className="mmd-settings-page__setting-item">
