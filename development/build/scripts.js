@@ -229,9 +229,9 @@ function createScriptTasks({
   function createTasksForScriptBundles({ buildTarget, taskPrefix }) {
     let standardEntryPoints = ['background', 'ui', 'content-script'];
     if (includeDesktopUi) {
-      standardEntryPoints.push('desktop');
+      standardEntryPoints.push('desktop-ui');
       if (buildTarget === BUILD_TARGETS.DIST) {
-        standardEntryPoints = ['desktop'];
+        standardEntryPoints = ['desktop-ui'];
       }
     }
     const standardSubtask = createTask(
