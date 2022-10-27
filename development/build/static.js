@@ -47,7 +47,7 @@ module.exports = function createStaticAssetTasks({
     composeSeries(
       ...copyTargetsProd.map((target) => {
         return async function copyStaticAssets() {
-          await performCopy(target, includeDesktopUi);
+          await performCopy(target);
         };
       }),
     ),
