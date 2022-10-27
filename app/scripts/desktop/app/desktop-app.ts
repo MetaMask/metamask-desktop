@@ -13,7 +13,7 @@ import ExtensionConnection from './extension-connection';
 import { updateCheck } from './update-check';
 
 class DesktopApp extends EventEmitter {
-  private statusWindow?: BrowserWindow;
+  private mainWindow?: BrowserWindow;
 
   private trezorWindow?: BrowserWindow;
 
@@ -33,7 +33,7 @@ class DesktopApp extends EventEmitter {
           value: StatusMessage[T],
         ): boolean => {
           target[property] = value;
-          this.updateStatusWindow();
+          this.updateMainWindow();
           return true;
         },
       },
@@ -51,9 +51,9 @@ class DesktopApp extends EventEmitter {
       log.debug('Show popup not implemented');
     });
 
-    ipcMain.handle('minimize', (_event) => this.statusWindow?.minimize());
+    ipcMain.handle('minimize', (_event) => this.mainWindow?.minimize());
 
-    this.statusWindow = await this.createStatusWindow();
+    this.mainWindow = await this.createMainWindow();
     this.trezorWindow = await this.createTrezorWindow();
 
     const server = await this.createWebSocketServer();
@@ -112,7 +112,7 @@ class DesktopApp extends EventEmitter {
     });
 
     extensionConnection.getPairing().on('invalid-otp', () => {
-      this.statusWindow?.webContents.send('invalid-otp', false);
+      this.mainWindow?.webContents.send('invalid-otp', false);
     });
 
     forwardEvents(extensionConnection, this, [
@@ -164,19 +164,19 @@ class DesktopApp extends EventEmitter {
     });
   }
 
-  private updateStatusWindow() {
-    if (!this.statusWindow) {
+  private updateMainWindow() {
+    if (!this.mainWindow) {
       log.error('Status window not created');
       return;
     }
 
-    this.statusWindow.webContents.send('status', { ...this.status });
+    this.mainWindow.webContents.send('status', { ...this.status });
   }
 
-  private async createStatusWindow() {
-    const statusWindow = new BrowserWindow({
+  private async createMainWindow() {
+    const mainWindow = new BrowserWindow({
       width: 800,
-      height: 400,
+      height: 600,
       vibrancy: 'dark',
       titleBarStyle: 'hidden',
       visualEffectState: 'active',
@@ -188,7 +188,7 @@ class DesktopApp extends EventEmitter {
       // icon: path.resolve(__dirname, '../../build-types/desktop/images/icon-512.png')
     });
 
-    await statusWindow.loadFile(
+    await mainWindow.loadFile(
       path.resolve(__dirname, '../../../../../dist_desktop_ui/desktop-ui.html'),
       // Temporary open pair page, it will redirect to settings page if isPaired is true
       { hash: 'pair' },
@@ -197,16 +197,16 @@ class DesktopApp extends EventEmitter {
     log.debug('Created status window');
 
     if (process.env.METAMASK_DEBUG) {
-      await statusWindow.webContents.openDevTools();
+      await mainWindow.webContents.openDevTools();
     }
 
-    return statusWindow;
+    return mainWindow;
   }
 
   private async createTrezorWindow() {
     const trezorWindow = new BrowserWindow({
       show: false,
-      parent: this.statusWindow,
+      parent: this.mainWindow,
       webPreferences: {
         preload: path.resolve(
           __dirname,

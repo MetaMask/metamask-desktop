@@ -665,7 +665,7 @@ function createFactoredBuild({
             });
             break;
           }
-          case 'desktop': {
+          case 'desktop-ui': {
             renderHtmlFile({
               htmlName: 'desktop-ui',
               isDesktopUIHtml: true,
