@@ -1,3 +1,3 @@
 import { getVersion } from '../utils/version';
 
-window['mmd-version'] = getVersion();
+(window as any)['mmd-version'] = getVersion();
