@@ -16,7 +16,8 @@ export default function pairStatusReducer(
   switch (action.type) {
     case UPDATE_PAIR_STATUS: {
       const isActivated =
-        state.isPaired === false && action.payload.isPaired === true;
+        state.isWebSocketConnected === false &&
+        action.payload.isWebSocketConnected === true;
       const lastActivation = new Date().getTime();
       return {
         ...state,
@@ -32,6 +33,7 @@ export default function pairStatusReducer(
 // Selectors
 export const getLastActivation = (state) => state.pairStatus.lastActivation;
 export const getIsPaired = (state) => state.pairStatus.isPaired;
+export const getIsWebSocketConnected = (state) => state.pairStatus.isPaired;
 
 // Action Creators
 export function updatePairStatus(payload) {

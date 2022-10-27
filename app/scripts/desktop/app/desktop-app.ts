@@ -185,7 +185,10 @@ class DesktopApp extends EventEmitter {
         nodeIntegration: true,
         contextIsolation: false,
       },
-      icon: path.resolve(__dirname, '../../../../../dist_desktop_ui/images/icon-128.png')
+      icon: path.resolve(
+        __dirname,
+        '../../../../../dist_desktop_ui/images/icon-128.png',
+      ),
     });
 
     await mainWindow.loadFile(

@@ -12,13 +12,17 @@ import {
 } from '../../../helpers/constants/design-system';
 import { formatDate } from '../../../helpers/utils/util';
 
-const PairStatus = ({ isPaired, lastActivation }) => {
+const PairStatus = ({ isWebSocketConnected, lastActivation }) => {
   const t = useI18nContext();
 
   const renderChip = () => {
-    const color = isPaired ? COLORS.SUCCESS_DEFAULT : COLORS.ERROR_DEFAULT;
-    const bgColor = isPaired ? COLORS.SUCCESS_MUTED : COLORS.ERROR_MUTED;
-    const label = isPaired ? t('active') : t('inactive');
+    const color = isWebSocketConnected
+      ? COLORS.SUCCESS_DEFAULT
+      : COLORS.ERROR_DEFAULT;
+    const bgColor = isWebSocketConnected
+      ? COLORS.SUCCESS_MUTED
+      : COLORS.ERROR_MUTED;
+    const label = isWebSocketConnected ? t('active') : t('inactive');
 
     return (
       <Chip
@@ -46,7 +50,7 @@ const PairStatus = ({ isPaired, lastActivation }) => {
       <div className="mmd-pair-status__status">
         {t('status')} {renderChip()}
       </div>
-      {isPaired ? (
+      {isWebSocketConnected ? (
         <div className="mmd-pair-status__last-active">
           {t('lastTimeActive')} {renderlastActivation()}
         </div>
@@ -61,9 +65,9 @@ const PairStatus = ({ isPaired, lastActivation }) => {
 
 PairStatus.propTypes = {
   /**
-   * Whether the extension is paired with the app
+   * Whether the web socket is connected with the extension
    */
-  isPaired: PropTypes.bool,
+  isWebSocketConnected: PropTypes.bool,
   /**
    * The last time the desktop app was activated
    */

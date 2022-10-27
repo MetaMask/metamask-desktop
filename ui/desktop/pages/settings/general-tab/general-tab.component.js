@@ -10,7 +10,7 @@ import themeIndex from '../../../helpers/constants/themeIndex';
 import useI18nContext from '../../../hooks/useI18nContext';
 
 const GeneralTab = ({
-  isPaired,
+  isWebSocketConnected,
   lastActivation,
   language,
   updateCurrentLanguage,
@@ -30,9 +30,7 @@ const GeneralTab = ({
     return (
       <div className="mmd-settings-page__setting-row">
         <div className="mmd-settings-page__setting-item">
-          <Typography variant={TYPOGRAPHY.H5}>
-            {t('language')}
-          </Typography>
+          <Typography variant={TYPOGRAPHY.H5}>{t('language')}</Typography>
           <Typography variant={TYPOGRAPHY.H6}>
             {t('chooseYourPreferredLanguage')}
           </Typography>
@@ -82,7 +80,10 @@ const GeneralTab = ({
 
   return (
     <>
-      <PairStatus isPaired={isPaired} lastActivation={lastActivation} />
+      <PairStatus
+        isWebSocketConnected={isWebSocketConnected}
+        lastActivation={lastActivation}
+      />
       {renderLanguageSettings()}
       {renderThemeSettings()}
     </>
@@ -91,9 +92,9 @@ const GeneralTab = ({
 
 GeneralTab.propTypes = {
   /**
-   * Whether the app is paired with the extension
+   * Whether the web socket is connected with the extension
    */
-  isPaired: PropTypes.bool,
+  isWebSocketConnected: PropTypes.bool,
   /**
    * The last time the app was activated
    */

@@ -29,12 +29,12 @@ describe('Pair Status State', () => {
     ]);
   });
 
-  it('updates last activation if just paired', () => {
+  it('updates last activation if just connected', () => {
     jest.useFakeTimers('modern').setSystemTime(1000);
     const state = pairStatusReducer(initialState, {
       type: UPDATE_PAIR_STATUS,
       payload: {
-        isPaired: true,
+        isWebSocketConnected: true,
       },
     });
     expect(state.lastActivation).toBe(1000);

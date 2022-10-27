@@ -16,7 +16,6 @@ import Typography from '../../components/ui/typography';
 import Button from '../../components/ui/button';
 import Box from '../../components/ui/box';
 
-
 export function renderDesktopError({
   type,
   t,
