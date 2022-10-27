@@ -196,7 +196,7 @@ class DesktopApp extends EventEmitter {
 
     log.debug('Created status window');
 
-    if (process.env.METAMASK_DEBUG) {
+    if (process.env.DESKTOP_UI_DEBUG) {
       await mainWindow.webContents.openDevTools();
     }
 
