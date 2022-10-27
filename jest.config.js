@@ -44,7 +44,7 @@ module.exports = {
   setupFiles: ['<rootDir>/test/setup.js', '<rootDir>/test/env.js'],
   setupFilesAfterEnv: ['<rootDir>/test/jest/setup.js'],
   testMatch: [
-    '<rootDir>/ui/desktop/**/*.test.js',
+    '<rootDir>/ui/**/*.test.js',
     '<rootDir>/shared/**/*.test.js',
     '<rootDir>/app/scripts/desktop/**/*.test.{js,ts}',
     '<rootDir>/app/scripts/lib/**/*.test.js',
