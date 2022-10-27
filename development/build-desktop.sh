@@ -36,6 +36,9 @@ if [ -f ".metamaskrc" ]; then
     export $(< .metamaskrc grep -v ";" | xargs)
 fi
 
+# Generate MM version
+METAMASK_VERSION=="$(node -e "console.log(require('./development/lib/get-version.js').getVersion('desktop', 0))")"
+
 echo "Transpiling JavaScript"
 babel . \
     -d ./$OUTPUT_DIR \

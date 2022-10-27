@@ -81,8 +81,7 @@ export default function setupSentry({ release, getState }) {
      * The IN_TEST condition allows the e2e tests to run with both
      * yarn start:test and yarn build:test
      */
-    // TO BE UNCOMMENTED BEFORE MERGING
-    // return undefined;
+    return undefined;
   }
 
   const environment =

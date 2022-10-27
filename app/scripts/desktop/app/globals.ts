@@ -33,8 +33,7 @@ global.document = {
 
 // setup sentry error reporting
 (global as any).sentry = setupSentry({
-  // TODO BEFORE MERGE: GET VERSION FROM ENV ONLY
-  release: process.env.METAMASK_VERSION || '10.20.0-desktop.0',
+  release: process.env.METAMASK_VERSION,
   getState: () => (global as any).sentryHooks?.getSentryState?.() || {},
 });
 
