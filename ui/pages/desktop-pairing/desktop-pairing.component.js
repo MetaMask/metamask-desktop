@@ -25,10 +25,11 @@ export default function DesktopPairingPage({
   const history = useHistory();
   const OTP_DURATION = SECOND * 30;
   const REFRESH_INTERVAL = SECOND;
+  const time = new Date().getTime();
 
   const [otp, setOtp] = useState();
-  const [lastOtpTime, setLastOtpTime] = useState(new Date().getTime());
-  const [currentTime, setCurrentTime] = useState(new Date().getTime());
+  const [lastOtpTime, setLastOtpTime] = useState(time);
+  const [currentTime, setCurrentTime] = useState(time);
   const generateIntervalRef = useRef();
   const refreshIntervalRef = useRef();
 
