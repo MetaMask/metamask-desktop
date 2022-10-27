@@ -185,8 +185,7 @@ class DesktopApp extends EventEmitter {
         nodeIntegration: true,
         contextIsolation: false,
       },
-      // Doesn not work because it's not currently being added to dist_desktop
-      // icon: path.resolve(__dirname, '../../build-types/desktop/images/icon-512.png')
+      icon: path.resolve(__dirname, '../../../../../dist_desktop_ui/images/icon-128.png')
     });
 
     await mainWindow.loadFile(
