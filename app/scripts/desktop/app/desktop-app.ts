@@ -175,8 +175,8 @@ class DesktopApp extends EventEmitter {
 
   private async createStatusWindow() {
     const statusWindow = new BrowserWindow({
-      width: process.env.METAMASK_DEBUG ? 1800 : 1000,
-      height: 800,
+      width: 800,
+      height: 400,
       vibrancy: 'dark',
       titleBarStyle: 'hidden',
       visualEffectState: 'active',
