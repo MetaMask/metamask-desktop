@@ -35,7 +35,10 @@ echo "Package Version: ${PACKAGE_VERSION}"
 
 # Add variables from .metamaskrc
 # shellcheck disable=SC2046
-export $(< .metamaskrc grep -v ";" | xargs)
+if [ -f ".metamaskrc" ]; then
+    echo "Loading .metamaskrc on environment"
+    export $(< .metamaskrc grep -v ";" | xargs)
+fi
 
 echo "Transpiling JavaScript"
 babel . \

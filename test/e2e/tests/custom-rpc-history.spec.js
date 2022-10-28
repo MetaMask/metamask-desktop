@@ -22,6 +22,9 @@ describe('Stores custom RPC history', function () {
         title: this.test.title,
       },
       async ({ driver }) => {
+        if (process.env.RUN_WITH_DESKTOP === 'true') {
+          await driver.navigate();
+        }
         await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);
@@ -72,6 +75,9 @@ describe('Stores custom RPC history', function () {
         title: this.test.title,
       },
       async ({ driver }) => {
+        if (process.env.RUN_WITH_DESKTOP === 'true') {
+          await driver.navigate();
+        }
         await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);
@@ -109,6 +115,9 @@ describe('Stores custom RPC history', function () {
         failOnConsoleError: false,
       },
       async ({ driver }) => {
+        if (process.env.RUN_WITH_DESKTOP === 'true') {
+          await driver.navigate();
+        }
         await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);
@@ -155,6 +164,9 @@ describe('Stores custom RPC history', function () {
         title: this.test.title,
       },
       async ({ driver }) => {
+        if (process.env.RUN_WITH_DESKTOP === 'true') {
+          await driver.navigate();
+        }
         await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);
@@ -176,6 +188,9 @@ describe('Stores custom RPC history', function () {
         title: this.test.title,
       },
       async ({ driver }) => {
+        if (process.env.RUN_WITH_DESKTOP === 'true') {
+          await driver.navigate();
+        }
         await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);
@@ -206,6 +221,9 @@ describe('Stores custom RPC history', function () {
         failOnConsoleError: false,
       },
       async ({ driver }) => {
+        if (process.env.RUN_WITH_DESKTOP === 'true') {
+          await driver.navigate();
+        }
         await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);
