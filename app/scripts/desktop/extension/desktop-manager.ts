@@ -113,7 +113,6 @@ class DesktopManager {
 
     log.debug('Created web socket connection');
 
-    log.debug('Check is desktopEnabled', this.isDesktopEnabled());
     if (this.isDesktopEnabled()) {
       log.debug('Desktop enabled, checking pairing key');
 

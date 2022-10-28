@@ -115,11 +115,6 @@ class DesktopApp extends EventEmitter {
       this.mainWindow?.webContents.send('invalid-otp', false);
     });
 
-    extensionConnection.getPairing().on('desktop-paired-restart', () => {
-      this.emit('restart');
-      this.statusWindow?.webContents.reloadIgnoringCache();
-    });
-
     forwardEvents(extensionConnection, this, [
       'restart',
       'connect-remote',
@@ -198,7 +193,7 @@ class DesktopApp extends EventEmitter {
 
     await mainWindow.loadFile(
       path.resolve(__dirname, '../../../../../dist_desktop_ui/desktop-ui.html'),
-      // Temporary open pair page, it will redirect to settings page if isPaired is true
+      // Temporary open pair page, it will redirect to settings page if isDesktopEnabled is true
       { hash: 'pair' },
     );
 

@@ -116,7 +116,6 @@ export class DesktopPairing extends EventEmitter {
     if (pairingMessage?.isDesktopEnabled) {
       await rawState.setDesktopState({ desktopEnabled: true });
       this.stream.write(MESSAGE_ACKNOWLEDGE);
-      this.emit('desktop-paired-restart');
       return;
     }
 
