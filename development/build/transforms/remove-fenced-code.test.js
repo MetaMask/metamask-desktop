@@ -213,7 +213,7 @@ describe('build/transforms/remove-fenced-code', () => {
     const mockFileName = 'file.js';
 
     // Valid inputs
-    Object.keys(BuildType).forEach((buildType) => {
+    [BuildType.main, BuildType.beta, BuildType.flask].forEach((buildType) => {
       it(`transforms file with fences for build type "${buildType}"`, () => {
         expect(
           removeFencedCode(
