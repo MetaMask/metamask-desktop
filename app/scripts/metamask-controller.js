@@ -46,9 +46,13 @@ import SmartTransactionsController from '@metamask/smart-transactions-controller
 ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
 import {
   SnapController,
-  NodeThreadExecutionService,
   IframeExecutionService,
+  // eslint-disable-next-line import/no-duplicates
 } from '@metamask/snap-controllers';
+///: END:ONLY_INCLUDE_IN
+///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
+// eslint-disable-next-line import/no-duplicates
+import { NodeThreadExecutionService } from '@metamask/snap-controllers';
 ///: END:ONLY_INCLUDE_IN
 
 import {
@@ -164,6 +168,9 @@ let TrezorKeyring;
 ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
 import { checkSnapsBlockList } from './flask/snaps-utilities';
 import { SNAP_BLOCKLIST } from './flask/snaps-blocklist';
+///: END:ONLY_INCLUDE_IN
+
+///: BEGIN:ONLY_INCLUDE_IN(desktopextension,desktopapp)
 import DesktopController from './controllers/desktop';
 ///: END:ONLY_INCLUDE_IN
 
