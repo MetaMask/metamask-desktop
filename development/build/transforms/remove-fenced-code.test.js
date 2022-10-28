@@ -660,6 +660,10 @@ Always_Included
 Conditionally_Included
 
        ///: END:ONLY_INCLUDE_IN
+
+///: BEGIN:EXCLUDE_IN(main)
+Conditionally_Included
+///: END:EXCLUDE_IN
 `,
 
       extraContentWithFences: `
@@ -694,6 +698,11 @@ Always_Included
 Conditionally_Included
 
        ///: END:ONLY_INCLUDE_IN
+
+///: BEGIN:EXCLUDE_IN(main)
+Conditionally_Included
+///: END:EXCLUDE_IN
+
     Always_Included
       Always_Included
 Always_Included
@@ -712,6 +721,7 @@ Always_Included
    Always_Included
 Always_Included
 
+
 `,
 
       extraContentWithoutFences: `
@@ -726,6 +736,8 @@ Always_Included
 Always_Included
    Always_Included
 Always_Included
+
+
 
     Always_Included
       Always_Included
@@ -757,6 +769,10 @@ Always_Included
    Always_Included
 Always_Included
 
+
+///: BEGIN:EXCLUDE_IN(main)
+Conditionally_Included
+///: END:EXCLUDE_IN
 `,
         true,
       ],
@@ -785,6 +801,11 @@ Always_Included
 Always_Included
    Always_Included
 Always_Included
+
+
+///: BEGIN:EXCLUDE_IN(main)
+Conditionally_Included
+///: END:EXCLUDE_IN
 
     Always_Included
       Always_Included
