@@ -1,7 +1,11 @@
+import { Duplex } from 'stream';
 import { Browser } from '../types/browser';
 
-// eslint-disable-next-line import/no-mutable-exports
+/* eslint-disable import/no-mutable-exports */
 let browser: Browser;
+let registerRequestStream: (stream: Duplex) => void;
+let unregisterRequestStream: () => void;
+/* eslint-enable import/no-mutable-exports */
 
 ///: BEGIN:EXCLUDE_IN(desktopapp)
 // eslint-disable-next-line
@@ -13,8 +17,12 @@ browser = WebExtensionPolyfill as any;
 ///: END:EXCLUDE_IN
 
 ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
-// eslint-disable-next-line
-browser ||= require('./node-browser').browser;
+if (!browser) {
+  // eslint-disable-next-line
+  const NodeBrowser = require('./node-browser');
+  ({ browser, registerRequestStream, unregisterRequestStream } = NodeBrowser);
+}
+
 ///: END:ONLY_INCLUDE_IN
 
-export { browser };
+export { browser, registerRequestStream, unregisterRequestStream };

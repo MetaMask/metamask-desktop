@@ -20,7 +20,7 @@ import { ClientId } from '../types/desktop';
 import {
   registerRequestStream,
   unregisterRequestStream,
-} from '../browser/node-browser';
+} from '../browser/browser-polyfill';
 import { waitForMessage } from '../utils/stream';
 import { DesktopPairing } from '../shared/pairing';
 import * as RawState from '../utils/raw-state';
