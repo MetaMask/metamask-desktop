@@ -41,7 +41,7 @@ export class ExtensionPairing {
 
     if (!isValidOTP) {
       log.debug('Received invalid OTP');
-      this.stream.write({ ...pairingMessage, isPaired: false });
+      this.stream.write({ ...pairingMessage, isDesktopEnabled: false });
       return;
     }
 
@@ -51,7 +51,7 @@ export class ExtensionPairing {
       pairingKey: await createKey(),
     });
 
-    this.stream.write({ ...pairingMessage, isPaired: true });
+    this.stream.write({ ...pairingMessage, isDesktopEnabled: true });
     await waitForMessage(this.stream, (data) =>
       Promise.resolve(data === MESSAGE_ACKNOWLEDGE),
     );
@@ -65,16 +65,14 @@ export class ExtensionPairing {
   }
 
   public async isPairingKeyMatch(): Promise<boolean> {
-    log.debug('checking pairing key');
-    const desktopController = (await rawState.get()).data?.DesktopController;
-    const extensionPairingKey = desktopController.pairingKey;
+    const extensionPairingKey = (await rawState.getDesktopState()).pairingKey;
 
     this.stream.write({ pairingKey: extensionPairingKey });
 
     const response = await waitForMessage<PairingMessage>(this.stream);
 
-    log.debug('Completed pairing key check', response.isPaired);
-    return response.isPaired as boolean;
+    log.debug('Completed pairing key check', response.isDesktopEnabled);
+    return response.isDesktopEnabled as boolean;
   }
 }
 
@@ -95,19 +93,18 @@ export class DesktopPairing extends EventEmitter {
 
   public async submitOTP(otp: string) {
     log.debug('Received OTP', otp);
-    this.stream.write({ otp, isPaired: false });
+    this.stream.write({ otp, isDesktopEnabled: false });
   }
 
   private async onCheckPairingKey(pairingMessage: PairingMessage) {
-    const desktopController = (await rawState.get()).data?.DesktopController;
-    const extensionPairingKey = desktopController.pairingKey;
+    const desktopPairingKey = (await rawState.getDesktopState()).pairingKey;
     log.debug('Comparing desktop and extension pairing keys');
 
-    const isPaired = pairingMessage.pairingKey === extensionPairingKey;
+    const isDesktopEnabled = pairingMessage.pairingKey === desktopPairingKey;
 
     const response: PairingMessage = {
       ...pairingMessage,
-      isPaired,
+      isDesktopEnabled,
       pairingKey: pairingMessage.pairingKey,
     };
     this.stream.write(response);
@@ -116,7 +113,7 @@ export class DesktopPairing extends EventEmitter {
   private async onMessage(pairingMessage: PairingMessage) {
     log.debug('Received pairing message', pairingMessage);
 
-    if (pairingMessage?.isPaired) {
+    if (pairingMessage?.isDesktopEnabled) {
       await rawState.setDesktopState({ desktopEnabled: true });
       this.stream.write(MESSAGE_ACKNOWLEDGE);
       this.emit('desktop-paired-restart');

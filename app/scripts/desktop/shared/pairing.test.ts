@@ -98,7 +98,7 @@ describe('Pairing', () => {
         it('writes message to pairing stream', async () => {
           expect(streamMock.write).toHaveBeenCalledTimes(1);
           expect(streamMock.write).toHaveBeenCalledWith({
-            isPaired: false,
+            isDesktopEnabled: false,
             otp: OTP_MOCK,
           });
         });
@@ -120,7 +120,7 @@ describe('Pairing', () => {
         expect(streamMock.write).toHaveBeenCalledTimes(1);
         expect(streamMock.write).toHaveBeenCalledWith({
           otp: OTP_MOCK,
-          isPaired: false,
+          isDesktopEnabled: false,
         });
       });
     });
@@ -133,7 +133,9 @@ describe('Pairing', () => {
           'invalid-otp',
           undefined,
           async () => {
-            await simulateStreamMessage(streamMock, { isPaired: false });
+            await simulateStreamMessage(streamMock, {
+              isDesktopEnabled: false,
+            });
           },
         );
       });

@@ -113,12 +113,11 @@ class DesktopManager {
 
     log.debug('Created web socket connection');
 
-    log.debug('check is desktopEnabled', this.isDesktopEnabled());
+    log.debug('Check is desktopEnabled', this.isDesktopEnabled());
     if (this.isDesktopEnabled()) {
       log.debug('Desktop enabled, checking pairing key');
-      const isPaired = await connection.checkPairingKey();
 
-      if (!isPaired) {
+      if (!(await connection.checkPairingKey())) {
         webSocket.close();
         throw new Error('Desktop app not recognized');
       }
