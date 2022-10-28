@@ -15,13 +15,13 @@ describe('Pair Status State', () => {
     const state = pairStatusReducer(initialState, {
       type: UPDATE_PAIR_STATUS,
       payload: {
-        isPaired: false,
+        isDesktopEnabled: false,
         isWebSocketConnected: true,
         connections: ['testConnection', 'testConnection2'],
       },
     });
 
-    expect(state.isPaired).toBe(false);
+    expect(state.isDesktopEnabled).toBe(false);
     expect(state.isWebSocketConnected).toBe(true);
     expect(state.connections).toStrictEqual([
       'testConnection',
