@@ -16,6 +16,7 @@ module.exports = function createStaticAssetTasks({
   browserPlatforms,
   shouldIncludeLockdown = true,
   buildType,
+  includeDesktopUi,
 }) {
   const [copyTargetsProd, copyTargetsDev] = getCopyTargets(
     shouldIncludeLockdown,
@@ -74,23 +75,32 @@ module.exports = function createStaticAssetTasks({
   }
 
   async function performCopy(target) {
-    await Promise.all(
-      browserPlatforms.map(async (platform) => {
-        if (target.pattern) {
-          await copyGlob(
-            target.src,
-            `${target.src}${target.pattern}`,
-            `./dist/${platform}/${target.dest}`,
-          );
-        } else {
-          await copyGlob(
-            target.src,
-            `${target.src}`,
-            `./dist/${platform}/${target.dest}`,
-          );
-        }
-      }),
+    const defineCopyPromise = (platform, distFolder) => {
+      const platformFolder = platform ? `${platform}/` : '';
+      if (target.pattern) {
+        return copyGlob(
+          target.src,
+          `${target.src}${target.pattern}`,
+          `./${distFolder}/${platformFolder}${target.dest}`,
+        );
+      }
+      return copyGlob(
+        target.src,
+        `${target.src}`,
+        `./${distFolder}/${platformFolder}${target.dest}`,
+      );
+    };
+
+    const copiesForBrowserPlatforms = browserPlatforms.map((platform) =>
+      defineCopyPromise(platform, 'dist'),
     );
+    const allCopies = copiesForBrowserPlatforms;
+
+    if (includeDesktopUi) {
+      allCopies.push(defineCopyPromise(null, 'dist_desktop_ui'));
+    }
+
+    await Promise.all(allCopies);
   }
 
   async function copyGlob(baseDir, srcGlob, dest) {
@@ -98,7 +108,7 @@ module.exports = function createStaticAssetTasks({
     await Promise.all(
       sources.map(async (src) => {
         const relativePath = path.relative(baseDir, src);
-        await fs.copy(src, `${dest}${relativePath}`);
+        await fs.copySync(src, `${dest}${relativePath}`);
       }),
     );
   }
