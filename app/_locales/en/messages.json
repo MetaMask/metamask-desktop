@@ -966,7 +966,7 @@
     "message": "MetaMask had trouble starting"
   },
   "desktopConnectionLostErrorDescription": {
-    "message": "Please make sure you have the desktop app up and running."
+    "message": "Please make sure you have the desktop app up and running or disable MetaMask Desktop."
   },
   "desktopConnectionLostErrorTitle": {
     "message": "MetaMask Desktop connection was lost"
