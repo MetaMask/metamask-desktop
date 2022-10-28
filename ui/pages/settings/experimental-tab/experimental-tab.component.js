@@ -6,7 +6,9 @@ import {
   handleSettingsRefs,
 } from '../../../helpers/utils/settings-search';
 import { EVENT } from '../../../../shared/constants/metametrics';
+///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
 import DesktopEnableButton from '../../../components/app/desktop-enable-button';
+///: END:ONLY_INCLUDE_IN
 
 export default class ExperimentalTab extends PureComponent {
   static contextTypes = {

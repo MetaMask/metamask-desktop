@@ -1,5 +1,7 @@
 import { Duplex, EventEmitter } from 'stream';
 import endOfStream from 'end-of-stream';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import ObjectMultiplex from 'obj-multiplex';
 import log from 'loglevel';
 import {

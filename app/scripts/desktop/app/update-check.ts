@@ -3,14 +3,14 @@ import { autoUpdater, UpdateCheckResult } from 'electron-updater';
 import log from 'loglevel';
 import cfg from '../utils/config';
 
-autoUpdater.logger = log;
-autoUpdater.autoDownload = false;
-
 export const updateCheck = async (): Promise<UpdateCheckResult | null> => {
   if (!cfg().desktop.enableUpdates || !autoUpdater.isUpdaterActive()) {
     log.debug('Updater not active');
     return null;
   }
+
+  autoUpdater.logger = log;
+  autoUpdater.autoDownload = false;
 
   autoUpdater.on('error', (error) => {
     dialog.showErrorBox(

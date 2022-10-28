@@ -24,7 +24,9 @@ export default class AppHeader extends PureComponent {
     unreadNotificationsCount: PropTypes.number,
     ///: END:ONLY_INCLUDE_IN
     onClick: PropTypes.func,
+    ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
     desktopEnabled: PropTypes.bool,
+    ///: END:ONLY_INCLUDE_IN
   };
 
   static contextTypes = {
@@ -113,7 +115,9 @@ export default class AppHeader extends PureComponent {
       disableNetworkIndicator,
       disabled,
       onClick,
+      ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
       desktopEnabled,
+      ///: END:ONLY_INCLUDE_IN
     } = this.props;
 
     return (

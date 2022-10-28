@@ -23,7 +23,9 @@ import AddCollectiblePage from '../add-collectible';
 import ConfirmImportTokenPage from '../confirm-import-token';
 import ConfirmAddSuggestedTokenPage from '../confirm-add-suggested-token';
 import CreateAccountPage from '../create-account';
+///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
 import DesktopErrorPage from '../desktop-error';
+///: END:ONLY_INCLUDE_IN(desktopextension)
 import Loading from '../../components/ui/loading-screen';
 import LoadingNetwork from '../../components/app/loading-network-screen';
 import NetworkDropdown from '../../components/app/dropdowns/network-dropdown';
@@ -65,7 +67,9 @@ import {
   ADD_COLLECTIBLE_ROUTE,
   TOKEN_DETAILS,
   DESKTOP_PAIRING_ROUTE,
+  ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
   DESKTOP_ERROR_ROUTE,
+  ///: END:ONLY_INCLUDE_IN
   ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   NOTIFICATIONS_ROUTE,
   ///: END:ONLY_INCLUDE_IN

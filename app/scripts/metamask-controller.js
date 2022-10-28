@@ -161,14 +161,6 @@ let TrezorKeyring;
 /* eslint-disable import/first */
 /* eslint-disable import/order */
 
-///: BEGIN:EXCLUDE_IN(desktopapp)
-import LedgerBridgeKeyringPackage from '@metamask/eth-ledger-bridge-keyring';
-import TrezorKeyringPackage from 'eth-trezor-keyring';
-
-LedgerBridgeKeyring = LedgerBridgeKeyringPackage;
-TrezorKeyring = TrezorKeyringPackage;
-///: END:EXCLUDE_IN
-
 ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
 import { checkSnapsBlockList } from './flask/snaps-utilities';
 import { SNAP_BLOCKLIST } from './flask/snaps-blocklist';
@@ -182,6 +174,14 @@ import TrezorKeyringDesktop from './desktop/hw/trezor/trezor-keyring';
 LedgerBridgeKeyring = LedgerBridgeKeyringDesktop;
 TrezorKeyring = TrezorKeyringDesktop;
 ///: END:ONLY_INCLUDE_IN
+
+///: BEGIN:EXCLUDE_IN(desktopapp)
+import LedgerBridgeKeyringPackage from '@metamask/eth-ledger-bridge-keyring';
+import TrezorKeyringPackage from 'eth-trezor-keyring';
+
+LedgerBridgeKeyring = LedgerBridgeKeyringPackage;
+TrezorKeyring = TrezorKeyringPackage;
+///: END:EXCLUDE_IN
 
 /* eslint-enable import/first */
 /* eslint-enable import/order */

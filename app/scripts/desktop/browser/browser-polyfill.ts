@@ -11,7 +11,9 @@ browser = NodeBrowser;
 ///: END:ONLY_INCLUDE_IN
 
 ///: BEGIN:EXCLUDE_IN(desktopapp)
-// eslint-disable-next-line import/first, import/order
+// eslint-disable-next-line
+// @ts-ignore
+// eslint-disable-next-line
 import WebExtensionPolyfill from 'webextension-polyfill';
 
 browser = WebExtensionPolyfill as any;
