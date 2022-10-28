@@ -37,7 +37,7 @@ if [ -f ".metamaskrc" ]; then
 fi
 
 # Generate MM version
-METAMASK_VERSION=="$(node -e "console.log(require('./development/lib/get-version.js').getVersion('desktop', 0))")"
+METAMASK_VERSION="$(node -e "console.log(require('./development/lib/get-version.js').getVersion('desktop', 0))")"
 
 echo "Transpiling JavaScript"
 babel . \

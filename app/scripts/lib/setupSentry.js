@@ -1,14 +1,20 @@
 import { Dedupe, ExtraErrorData } from '@sentry/integrations';
 
 import { BuildType } from '../../../shared/constants/app';
-import cfg from '../desktop/utils/config';
 import { FilterEvents } from './sentry-filter-events';
 import extractEthjsErrorMessage from './extractEthjsErrorMessage';
 
-// eslint-disable-next-line node/global-require
-const Sentry = cfg().desktop.isApp
-  ? require('@sentry/electron/main')
-  : require('@sentry/browser');
+let Sentry = require('@sentry/browser');
+
+///: BEGIN:ONLY_INCLUDE_IN(flask)
+// eslint-disable-next-line import/first, import/order
+import cfg from '../desktop/utils/config';
+
+if (cfg().desktop.isApp) {
+  // eslint-disable-next-line node/global-require
+  Sentry = require('@sentry/electron/main');
+}
+///: END:ONLY_INCLUDE_IN
 
 /* eslint-disable prefer-destructuring */
 // Destructuring breaks the inlining of the environment variables
@@ -211,8 +217,7 @@ function rewriteErrorMessages(report, rewriteFn) {
 }
 
 function rewriteReportUrls(report) {
-  // Sentry in electron does not have a request object
-  if (report?.request?.url) {
+  if (report.request?.url) {
     // update request url
     report.request.url = toMetamaskUrl(report.request.url);
   }

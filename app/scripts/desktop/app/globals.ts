@@ -2,6 +2,11 @@ import { webcrypto } from 'node:crypto';
 
 import setupSentry from '../../lib/setupSentry';
 
+declare const global: typeof globalThis & {
+  sentryHooks: Record<string, any>;
+  sentry: unknown;
+};
+
 global.self = {} as unknown as Window & typeof globalThis;
 global.crypto = webcrypto as any;
 
@@ -29,12 +34,12 @@ global.document = {
 } as unknown as Document;
 
 // The root compartment will populate this with hooks
-(global as any).sentryHooks = {};
+global.sentryHooks = {};
 
 // setup sentry error reporting
-(global as any).sentry = setupSentry({
+global.sentry = setupSentry({
   release: process.env.METAMASK_VERSION,
-  getState: () => (global as any).sentryHooks?.getSentryState?.() || {},
+  getState: () => global.sentryHooks?.getSentryState?.() || {},
 });
 
 export {};
