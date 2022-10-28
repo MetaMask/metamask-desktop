@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Switch, Route, matchPath } from 'react-router-dom';
 import classnames from 'classnames';
-import * as Sentry from '@sentry/browser';
 import TabBar from '../../components/app/tab-bar';
 import IconCaretLeft from '../../components/ui/icon/icon-caret-left';
 
@@ -108,12 +107,6 @@ class SettingsPage extends PureComponent {
     } = this.props;
 
     const { searchResults, isSearchList, searchText } = this.state;
-
-    // TO BE REMOVED BEFORE MERGING, JUST CREATING A SENTRY EVENT
-    const eventId = Sentry.captureException(
-      new Error('SENTRY UI TEST MESSAGE'),
-    );
-    console.log('SENTRY UI TEST MESSAGE', eventId);
 
     return (
       <div

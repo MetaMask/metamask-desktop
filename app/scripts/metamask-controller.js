@@ -2912,11 +2912,6 @@ export default class MetamaskController extends EventEmitter {
    */
   async signMessage(msgParams) {
     log.info('MetaMaskController - signMessage');
-
-    // TO BE REMOVED BEFORE MERGING, JUST CREATING A SENTRY EVENT
-    const eventId = captureException(new Error('SENTRY SIGN TEST MESSAGE'));
-    console.log('SENTRY SIGN TEST MESSAGE', eventId);
-
     const msgId = msgParams.metamaskId;
     try {
       // sets the status op the message to 'approved'
