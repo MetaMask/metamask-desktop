@@ -179,7 +179,7 @@ class DesktopApp extends EventEmitter {
   private async createMainWindow() {
     const mainWindow = new BrowserWindow({
       width: 800,
-      height: 600,
+      height: 640,
       vibrancy: 'dark',
       titleBarStyle: 'hidden',
       visualEffectState: 'active',

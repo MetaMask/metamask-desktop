@@ -90,8 +90,8 @@ export function renderDesktopError({
           {renderHeader(t('desktopConnectionLostErrorTitle'))}
           {renderDescription(t('desktopConnectionLostErrorDescription'))}
           {renderCTA(
-            'desktop-error-button-reconnect',
-            t('desktopConnectionLostErrorCTA'),
+            'desktop-error-button-disable-mmd',
+            t('desktopDisableErrorCTA'),
             noop,
           )}
         </>
