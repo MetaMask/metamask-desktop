@@ -44,6 +44,7 @@ export const SENTRY_STATE = {
     currentLocale: true,
     customNonceValue: true,
     defaultHomeActiveTabName: true,
+    desktopEnabled: true,
     featureFlags: true,
     firstTimeFlowType: true,
     forgottenPassword: true,
