@@ -38,6 +38,7 @@ fi
 
 # Generate MM version
 METAMASK_VERSION="$(node -e "console.log(require('./development/lib/get-version.js').getVersion('desktop', 0))")"
+echo "Metamask Version: ${METAMASK_VERSION}"
 
 echo "Transpiling JavaScript"
 babel . \
