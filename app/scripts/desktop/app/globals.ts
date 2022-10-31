@@ -1,9 +1,6 @@
-export {};
-
 ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
 
-// eslint-disable-next-line
-const { webcrypto } = require(true ? 'node:crypto' : '');
+import { webcrypto } from 'node:crypto';
 
 global.self = {} as unknown as Window & typeof globalThis;
 global.crypto = webcrypto as any;
@@ -32,3 +29,5 @@ global.document = {
 } as unknown as Document;
 
 ///: END:ONLY_INCLUDE_IN
+
+export {};

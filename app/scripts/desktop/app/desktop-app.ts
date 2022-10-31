@@ -9,8 +9,11 @@ import EncryptedWebSocketStream from '../encryption/encrypted-web-socket-stream'
 import { NewConnectionMessage, StatusMessage } from '../types/message';
 import { onceAny, forwardEvents } from '../utils/events';
 import * as RawState from '../utils/raw-state';
+import { MILLISECOND } from '../../../../shared/constants/time';
 import ExtensionConnection from './extension-connection';
 import { updateCheck } from './update-check';
+
+const MAIN_WINDOW_SHOW_DELAY = 750 * MILLISECOND;
 
 class DesktopApp extends EventEmitter {
   private mainWindow?: BrowserWindow;
@@ -180,6 +183,7 @@ class DesktopApp extends EventEmitter {
       vibrancy: 'dark',
       titleBarStyle: 'hidden',
       visualEffectState: 'active',
+      show: false,
       webPreferences: {
         preload: path.resolve(__dirname, './status-preload.js'),
         nodeIntegration: true,
@@ -191,11 +195,15 @@ class DesktopApp extends EventEmitter {
       ),
     });
 
-    await mainWindow.loadFile(
+    mainWindow.loadFile(
       path.resolve(__dirname, '../../../../../dist_desktop_ui/desktop-ui.html'),
       // Temporary open pair page, it will redirect to settings page if isPaired is true
       { hash: 'pair' },
     );
+
+    setTimeout(() => {
+      mainWindow.show();
+    }, MAIN_WINDOW_SHOW_DELAY);
 
     log.debug('Created status window');
 

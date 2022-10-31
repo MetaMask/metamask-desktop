@@ -48,8 +48,6 @@ import getObjStructure from './lib/getObjStructure';
 import setupEnsIpfsResolver from './lib/ens-ipfs/setup';
 import { getPlatform } from './lib/util';
 
-/* eslint-disable import/first */
-/* eslint-disable prefer-const */
 /* eslint-disable import/order */
 
 ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
@@ -64,8 +62,6 @@ import {
 } from '../../shared/constants/desktop';
 ///: END:ONLY_INCLUDE_IN
 
-/* eslint-enable import/first */
-/* eslint-enable prefer-const */
 /* eslint-enable import/order */
 
 const { sentry } = global;
@@ -408,7 +404,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
       await localStore.set(state);
 
       ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
-      await DesktopApp.getConnection()?.transferState({ data: state });
+      DesktopApp.getConnection()?.transferState({ data: state });
       ///: END:ONLY_INCLUDE_IN
     }),
     (error) => {

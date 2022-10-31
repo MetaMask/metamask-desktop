@@ -6,6 +6,7 @@ import { PairingMessage } from '../types/message';
 import * as rawState from '../utils/raw-state';
 import { browser } from '../browser/browser-polyfill';
 
+///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
 export class ExtensionPairing {
   private stream: Duplex;
 
@@ -46,7 +47,9 @@ export class ExtensionPairing {
     log.debug('Paired with desktop');
   }
 }
+///: END:ONLY_INCLUDE_IN
 
+///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
 export class DesktopPairing extends EventEmitter {
   private stream: Duplex;
 
@@ -76,3 +79,4 @@ export class DesktopPairing extends EventEmitter {
     this.emit('invalid-otp', false);
   }
 }
+///: END:ONLY_INCLUDE_IN

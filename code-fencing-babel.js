@@ -1,5 +1,4 @@
 var CodeFencing = require('./development/build/transforms/remove-fenced-code.js');
-var DONE_IDENTIFIER = 'codeFencingComplete';
 
 module.exports = function (babel) {
   return {

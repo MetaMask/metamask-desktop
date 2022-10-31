@@ -1,17 +1,21 @@
+///: BEGIN:EXCLUDE_IN(desktopapp)
 import ExtensionPlatform from '../../platforms/extension';
 
+const getExtensionVersion = (): string => {
+  return new ExtensionPlatform().getVersion();
+};
+///: END:EXCLUDE_IN
+
+///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
 const getPackageVersion = (): string => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return process.env.PACKAGE_VERSION!.replace('"', '');
 };
 
-const getExtensionVersion = (): string => {
-  return new ExtensionPlatform().getVersion();
-};
-
 const getDesktopVersion = (): string => {
   return `${getPackageVersion()}-desktop.0`;
 };
+///: END:ONLY_INCLUDE_IN
 
 export const getVersion = (): string => {
   let version: string;
