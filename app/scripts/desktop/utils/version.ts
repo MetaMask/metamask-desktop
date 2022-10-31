@@ -9,7 +9,7 @@ const getExtensionVersion = (): string => {
 ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
 const getPackageVersion = (): string => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  return process.env.PACKAGE_VERSION!.replace('"', '');
+  return process.env.PACKAGE_VERSION!.replace(/["]+/gu, '');
 };
 
 const getDesktopVersion = (): string => {
