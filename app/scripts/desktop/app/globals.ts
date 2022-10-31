@@ -1,5 +1,3 @@
-///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
-
 import { webcrypto } from 'node:crypto';
 
 global.self = {} as unknown as Window & typeof globalThis;
@@ -27,7 +25,5 @@ global.document = {
     appendChild: () => undefined,
   },
 } as unknown as Document;
-
-///: END:ONLY_INCLUDE_IN
 
 export {};

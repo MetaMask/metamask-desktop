@@ -3963,7 +3963,7 @@ export function requestAddNetworkApproval(customRpc, originIsMetaMask) {
   };
 }
 
-// Desktop
+///: BEGIN:ONLY_INCLUDE_IN(desktopextension,desktopapp)
 
 export function setDesktopEnabled(desktopEnabled) {
   return async () => {
@@ -3986,3 +3986,5 @@ export async function testDesktopConnection() {
 export async function disableDesktop() {
   return await submitRequestToBackground('disableDesktop');
 }
+
+///: END:ONLY_INCLUDE_IN

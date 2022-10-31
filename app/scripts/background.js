@@ -2,7 +2,10 @@
  * @file The entry point for the web extension singleton process.
  */
 
+///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
 import './desktop/app/globals';
+///: END:ONLY_INCLUDE_IN
+
 import endOfStream from 'end-of-stream';
 import pump from 'pump';
 import debounce from 'debounce-stream';

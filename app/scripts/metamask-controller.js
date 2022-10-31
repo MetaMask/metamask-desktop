@@ -696,7 +696,7 @@ export default class MetamaskController extends EventEmitter {
     });
     ///: END:ONLY_INCLUDE_IN
 
-    ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
+    ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension)
     this.snapExecutionService ||= new IframeExecutionService({
       iframeUrl: new URL(
         'https://metamask.github.io/iframe-execution-environment/0.9.0',
@@ -706,7 +706,9 @@ export default class MetamaskController extends EventEmitter {
       }),
       setupSnapProvider: this.setupSnapProvider.bind(this),
     });
+    ///: END:ONLY_INCLUDE_IN
 
+    ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
     const snapControllerMessenger = this.controllerMessenger.getRestricted({
       name: 'SnapController',
       allowedEvents: [
