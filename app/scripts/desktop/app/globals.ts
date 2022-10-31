@@ -1,6 +1,7 @@
 import { webcrypto } from 'node:crypto';
 
 import setupSentry from '../../lib/setupSentry';
+import { getVersion } from '../utils/version';
 
 declare const global: typeof globalThis & {
   sentryHooks: Record<string, any>;
@@ -38,7 +39,7 @@ global.sentryHooks = {};
 
 // setup sentry error reporting
 global.sentry = setupSentry({
-  release: process.env.METAMASK_VERSION,
+  release: getVersion(),
   getState: () => global.sentryHooks?.getSentryState?.() || {},
 });
 
