@@ -20,11 +20,13 @@ export default class AppHeader extends PureComponent {
     disabled: PropTypes.bool,
     disableNetworkIndicator: PropTypes.bool,
     isAccountMenuOpen: PropTypes.bool,
-    ///: BEGIN:ONLY_INCLUDE_IN(flask)
+    ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
     unreadNotificationsCount: PropTypes.number,
     ///: END:ONLY_INCLUDE_IN
     onClick: PropTypes.func,
+    ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
     desktopEnabled: PropTypes.bool,
+    ///: END:ONLY_INCLUDE_IN
   };
 
   static contextTypes = {
@@ -67,7 +69,7 @@ export default class AppHeader extends PureComponent {
       selectedAddress,
       disabled,
       isAccountMenuOpen,
-      ///: BEGIN:ONLY_INCLUDE_IN(flask)
+      ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
       unreadNotificationsCount,
       ///: END:ONLY_INCLUDE_IN
     } = this.props;
@@ -93,7 +95,7 @@ export default class AppHeader extends PureComponent {
         >
           <Identicon address={selectedAddress} diameter={32} addBorder />
           {
-            ///: BEGIN:ONLY_INCLUDE_IN(flask)
+            ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
             unreadNotificationsCount > 0 && (
               <div className="account-menu__icon__notification-count">
                 {unreadNotificationsCount}
@@ -113,7 +115,9 @@ export default class AppHeader extends PureComponent {
       disableNetworkIndicator,
       disabled,
       onClick,
+      ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
       desktopEnabled,
+      ///: END:ONLY_INCLUDE_IN
     } = this.props;
 
     return (
@@ -128,9 +132,14 @@ export default class AppHeader extends PureComponent {
               history.push(DEFAULT_ROUTE);
             }}
           />
-          {desktopEnabled && (
-            <MetaFoxLogo unsetIconHeight src="./images/logo/desktop.svg" />
-          )}
+
+          {
+            ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
+            desktopEnabled && (
+              <MetaFoxLogo unsetIconHeight src="./images/logo/desktop.svg" />
+            )
+            ///: END:ONLY_INCLUDE_IN
+          }
           <div className="app-header__account-menu-container">
             {!hideNetworkIndicator && (
               <div className="app-header__network-component-wrapper">

@@ -52,7 +52,7 @@ export const MESSAGE_TYPE = {
   WALLET_REQUEST_PERMISSIONS: 'wallet_requestPermissions',
   WATCH_ASSET: 'wallet_watchAsset',
   WATCH_ASSET_LEGACY: 'metamask_watchAsset',
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   SNAP_CONFIRM: RestrictedMethods.snap_confirm,
   ///: END:ONLY_INCLUDE_IN
 } as const;
@@ -66,7 +66,7 @@ export const SUBJECT_TYPES = {
   INTERNAL: 'internal',
   UNKNOWN: 'unknown',
   WEBSITE: 'website',
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   SNAP: 'snap',
   ///: END:ONLY_INCLUDE_IN
 } as const;

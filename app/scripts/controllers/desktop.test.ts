@@ -18,15 +18,13 @@ jest.mock(
   { virtual: true },
 );
 
-jest.mock(
-  '../desktop/app/desktop-app',
-  () => ({ default: { getConnection: jest.fn() } }),
-  { virtual: true },
-);
+jest.mock('../desktop/app/desktop-app', () => ({ getConnection: jest.fn() }), {
+  virtual: true,
+});
 
 jest.mock(
   '../desktop/extension/desktop-manager',
-  () => ({ default: { testConnection: jest.fn() } }),
+  () => ({ testConnection: jest.fn() }),
   { virtual: true },
 );
 
@@ -42,12 +40,12 @@ describe('Desktop Controller', () => {
   const extensionConnectionMock = createExtensionConnectionMock();
 
   // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
-  const desktopAppMock = require('../desktop/app/desktop-app')
-    .default as jest.Mocked<typeof DesktopApp>;
+  const desktopAppMock = DesktopApp as jest.Mocked<typeof DesktopApp>;
 
   // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
-  const desktopManagerMock = require('../desktop/extension/desktop-manager')
-    .default as jest.Mocked<typeof DesktopManager>;
+  const desktopManagerMock = DesktopManager as jest.Mocked<
+    typeof DesktopManager
+  >;
 
   const observableStoreConstructorMock = ObservableStore as jest.MockedClass<
     typeof ObservableStore

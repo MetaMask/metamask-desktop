@@ -7,12 +7,12 @@ import {
   FLEX_DIRECTION,
   JUSTIFY_CONTENT,
 } from '../../../helpers/constants/design-system';
-///: BEGIN:ONLY_INCLUDE_IN(flask)
+///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
 import SnapsAuthorshipPill from '../flask/snaps-authorship-pill';
 ///: END:ONLY_INCLUDE_IN
 
 export default class PermissionsConnectHeader extends Component {
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   static contextTypes = {
     t: PropTypes.func,
   };
@@ -28,7 +28,7 @@ export default class PermissionsConnectHeader extends Component {
     headerText: PropTypes.string,
     leftIcon: PropTypes.node,
     rightIcon: PropTypes.node,
-    ///: BEGIN:ONLY_INCLUDE_IN(flask)
+    ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
     snapVersion: PropTypes.string,
     isSnapInstallOrUpdate: PropTypes.bool,
     ///: END:ONLY_INCLUDE_IN
@@ -48,12 +48,12 @@ export default class PermissionsConnectHeader extends Component {
       siteOrigin,
       leftIcon,
       rightIcon,
-      ///: BEGIN:ONLY_INCLUDE_IN(flask)
+      ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
       isSnapInstallOrUpdate,
       ///: END:ONLY_INCLUDE_IN
     } = this.props;
 
-    ///: BEGIN:ONLY_INCLUDE_IN(flask)
+    ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
     if (isSnapInstallOrUpdate) {
       return null;
     }
@@ -79,7 +79,7 @@ export default class PermissionsConnectHeader extends Component {
       className,
       headerTitle,
       headerText,
-      ///: BEGIN:ONLY_INCLUDE_IN(flask)
+      ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
       siteOrigin,
       snapVersion,
       isSnapInstallOrUpdate,
@@ -95,7 +95,7 @@ export default class PermissionsConnectHeader extends Component {
         {this.renderHeaderIcon()}
         <div className="permissions-connect-header__title">{headerTitle}</div>
         {
-          ///: BEGIN:ONLY_INCLUDE_IN(flask)
+          ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
           isSnapInstallOrUpdate && (
             <SnapsAuthorshipPill snapId={siteOrigin} version={snapVersion} />
           )

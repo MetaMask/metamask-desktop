@@ -37,18 +37,22 @@ import {
   CollectibleDetectionController,
   PermissionController,
   SubjectMetadataController,
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   RateLimitController,
   NotificationController,
   ///: END:ONLY_INCLUDE_IN
 } from '@metamask/controllers';
 import SmartTransactionsController from '@metamask/smart-transactions-controller';
-///: BEGIN:ONLY_INCLUDE_IN(flask)
+///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
 import {
   SnapController,
-  NodeThreadExecutionService,
   IframeExecutionService,
+  // eslint-disable-next-line import/no-duplicates
 } from '@metamask/snap-controllers';
+///: END:ONLY_INCLUDE_IN
+///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
+// eslint-disable-next-line import/no-duplicates
+import { NodeThreadExecutionService } from '@metamask/snap-controllers';
 ///: END:ONLY_INCLUDE_IN
 
 import {
@@ -70,7 +74,7 @@ import {
 import {
   CaveatTypes,
   RestrictedMethods,
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   EndowmentPermissions,
   ///: END:ONLY_INCLUDE_IN
 } from '../../shared/constants/permissions';
@@ -82,7 +86,7 @@ import {
 import { MILLISECOND } from '../../shared/constants/time';
 import {
   ORIGIN_METAMASK,
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   MESSAGE_TYPE,
   ///: END:ONLY_INCLUDE_IN
   POLLING_TOKEN_ENVIRONMENT_TYPES,
@@ -107,7 +111,7 @@ import AccountTracker from './lib/account-tracker';
 import createLoggerMiddleware from './lib/createLoggerMiddleware';
 import {
   createMethodMiddleware,
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   createSnapMethodMiddleware,
   ///: END:ONLY_INCLUDE_IN
 } from './lib/rpc-method-middleware';
@@ -148,34 +152,46 @@ import {
   NOTIFICATION_NAMES,
   PermissionLogController,
   unrestrictedMethods,
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   buildSnapEndowmentSpecifications,
   buildSnapRestrictedMethodSpecifications,
   ///: END:ONLY_INCLUDE_IN
 } from './controllers/permissions';
 import createRPCMethodTrackingMiddleware from './lib/createRPCMethodTrackingMiddleware';
 
-/* eslint-disable import/order */
-let LedgerBridgeKeyring = require('@metamask/eth-ledger-bridge-keyring');
-let TrezorKeyring = require('eth-trezor-keyring');
-/* eslint-enable import/order */
+let LedgerBridgeKeyring;
+let TrezorKeyring;
 
-///: BEGIN:ONLY_INCLUDE_IN(flask)
 /* eslint-disable import/first */
-import cfg from './desktop/utils/config';
+/* eslint-disable import/order */
+
+///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
 import { checkSnapsBlockList } from './flask/snaps-utilities';
 import { SNAP_BLOCKLIST } from './flask/snaps-blocklist';
-import DesktopController from './controllers/desktop';
-/* eslint-enable import/first */
-
-if (cfg().desktop.isApp) {
-  /* eslint-disable node/global-require */
-  LedgerBridgeKeyring =
-    require('./desktop/hw/ledger/ledger-keyring').LedgerBridgeKeyring;
-  TrezorKeyring = require('./desktop/hw/trezor/trezor-keyring');
-  /* eslint-enable node/global-require */
-}
 ///: END:ONLY_INCLUDE_IN
+
+///: BEGIN:ONLY_INCLUDE_IN(desktopextension,desktopapp)
+import DesktopController from './controllers/desktop';
+///: END:ONLY_INCLUDE_IN
+
+///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
+import { LedgerBridgeKeyring as LedgerBridgeKeyringDesktop } from './desktop/hw/ledger/ledger-keyring';
+import TrezorKeyringDesktop from './desktop/hw/trezor/trezor-keyring';
+
+LedgerBridgeKeyring = LedgerBridgeKeyringDesktop;
+TrezorKeyring = TrezorKeyringDesktop;
+///: END:ONLY_INCLUDE_IN
+
+///: BEGIN:EXCLUDE_IN(desktopapp)
+import LedgerBridgeKeyringPackage from '@metamask/eth-ledger-bridge-keyring';
+import TrezorKeyringPackage from 'eth-trezor-keyring';
+
+LedgerBridgeKeyring = LedgerBridgeKeyringPackage;
+TrezorKeyring = TrezorKeyringPackage;
+///: END:EXCLUDE_IN
+
+/* eslint-enable import/first */
+/* eslint-enable import/order */
 
 export const METAMASK_CONTROLLER_EVENTS = {
   // Fired after state changes that impact the extension badge (unapproved msg count)
@@ -650,7 +666,7 @@ export default class MetamaskController extends EventEmitter {
             );
           },
         }),
-        ///: BEGIN:ONLY_INCLUDE_IN(flask)
+        ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
         ...this.getSnapPermissionSpecifications(),
         ///: END:ONLY_INCLUDE_IN
       },
@@ -671,26 +687,28 @@ export default class MetamaskController extends EventEmitter {
       subjectCacheLimit: 100,
     });
 
-    ///: BEGIN:ONLY_INCLUDE_IN(flask)
-    if (cfg().desktop.isApp) {
-      this.snapExecutionService = new NodeThreadExecutionService({
-        messenger: this.controllerMessenger.getRestricted({
-          name: 'ExecutionService',
-        }),
-        setupSnapProvider: this.setupSnapProvider.bind(this),
-      });
-    } else {
-      this.snapExecutionService = new IframeExecutionService({
-        iframeUrl: new URL(
-          'https://metamask.github.io/iframe-execution-environment/0.9.0',
-        ),
-        messenger: this.controllerMessenger.getRestricted({
-          name: 'ExecutionService',
-        }),
-        setupSnapProvider: this.setupSnapProvider.bind(this),
-      });
-    }
+    ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
+    this.snapExecutionService = new NodeThreadExecutionService({
+      messenger: this.controllerMessenger.getRestricted({
+        name: 'ExecutionService',
+      }),
+      setupSnapProvider: this.setupSnapProvider.bind(this),
+    });
+    ///: END:ONLY_INCLUDE_IN
 
+    ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension)
+    this.snapExecutionService ||= new IframeExecutionService({
+      iframeUrl: new URL(
+        'https://metamask.github.io/iframe-execution-environment/0.9.0',
+      ),
+      messenger: this.controllerMessenger.getRestricted({
+        name: 'ExecutionService',
+      }),
+      setupSnapProvider: this.setupSnapProvider.bind(this),
+    });
+    ///: END:ONLY_INCLUDE_IN
+
+    ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
     const snapControllerMessenger = this.controllerMessenger.getRestricted({
       name: 'SnapController',
       allowedEvents: [
@@ -769,11 +787,14 @@ export default class MetamaskController extends EventEmitter {
         },
       },
     });
+    ///: END:ONLY_INCLUDE_IN
 
+    ///: BEGIN:ONLY_INCLUDE_IN(desktopextension,desktopapp)
     this.desktopController = new DesktopController({
       initState: initState.DesktopController,
     });
     ///: END:ONLY_INCLUDE_IN
+
     this.detectTokensController = new DetectTokensController({
       preferences: this.preferencesController,
       tokensController: this.tokensController,
@@ -1075,9 +1096,11 @@ export default class MetamaskController extends EventEmitter {
       TokensController: this.tokensController,
       SmartTransactionsController: this.smartTransactionsController,
       CollectiblesController: this.collectiblesController,
-      ///: BEGIN:ONLY_INCLUDE_IN(flask)
+      ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
       SnapController: this.snapController,
       NotificationController: this.notificationController,
+      ///: END:ONLY_INCLUDE_IN
+      ///: BEGIN:ONLY_INCLUDE_IN(desktopextension,desktopapp)
       DesktopController: this.desktopController.store,
       ///: END:ONLY_INCLUDE_IN
     });
@@ -1118,9 +1141,11 @@ export default class MetamaskController extends EventEmitter {
         TokensController: this.tokensController,
         SmartTransactionsController: this.smartTransactionsController,
         CollectiblesController: this.collectiblesController,
-        ///: BEGIN:ONLY_INCLUDE_IN(flask)
+        ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
         SnapController: this.snapController,
         NotificationController: this.notificationController,
+        ///: END:ONLY_INCLUDE_IN
+        ///: BEGIN:ONLY_INCLUDE_IN(desktopextension,desktopapp)
         DesktopController: this.desktopController.store,
         ///: END:ONLY_INCLUDE_IN
       },
@@ -1161,7 +1186,7 @@ export default class MetamaskController extends EventEmitter {
     checkForMultipleVersionsRunning();
   }
 
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   /**
    * Constructor helper for getting Snap permission specifications.
    */
@@ -1307,7 +1332,7 @@ export default class MetamaskController extends EventEmitter {
       getPermittedAccountsByOrigin,
     );
 
-    ///: BEGIN:ONLY_INCLUDE_IN(flask)
+    ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
     // Record Snap metadata whenever a Snap is added to state.
     this.controllerMessenger.subscribe(
       `${this.snapController.name}:snapAdded`,
@@ -1862,7 +1887,7 @@ export default class MetamaskController extends EventEmitter {
         ),
       ...getPermissionBackgroundApiMethods(permissionController),
 
-      ///: BEGIN:ONLY_INCLUDE_IN(flask)
+      ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
       // snaps
       removeSnapError: this.controllerMessenger.call.bind(
         this.controllerMessenger,
@@ -1886,23 +1911,6 @@ export default class MetamaskController extends EventEmitter {
       ),
       dismissNotifications: this.dismissNotifications.bind(this),
       markNotificationsAsRead: this.markNotificationsAsRead.bind(this),
-
-      // DesktopController
-      getDesktopEnabled: this.desktopController.getDesktopEnabled.bind(
-        this.desktopController,
-      ),
-      setDesktopEnabled: this.desktopController.setDesktopEnabled.bind(
-        this.desktopController,
-      ),
-      generateOtp: this.desktopController.generateOtp.bind(
-        this.desktopController,
-      ),
-      testDesktopConnection: this.desktopController.testDesktopConnection.bind(
-        this.desktopController,
-      ),
-      disableDesktop: this.desktopController.disableDesktop.bind(
-        this.desktopController,
-      ),
       ///: END:ONLY_INCLUDE_IN
 
       // swaps
@@ -2051,6 +2059,24 @@ export default class MetamaskController extends EventEmitter {
         assetsContractController.getBalancesInSingleCall.bind(
           assetsContractController,
         ),
+
+      ///: BEGIN:ONLY_INCLUDE_IN(desktopextension,desktopapp)
+      getDesktopEnabled: this.desktopController.getDesktopEnabled.bind(
+        this.desktopController,
+      ),
+      setDesktopEnabled: this.desktopController.setDesktopEnabled.bind(
+        this.desktopController,
+      ),
+      generateOtp: this.desktopController.generateOtp.bind(
+        this.desktopController,
+      ),
+      testDesktopConnection: this.desktopController.testDesktopConnection.bind(
+        this.desktopController,
+      ),
+      disableDesktop: this.desktopController.disableDesktop.bind(
+        this.desktopController,
+      ),
+      ///: END:ONLY_INCLUDE_IN
     };
   }
 
@@ -2904,7 +2930,7 @@ export default class MetamaskController extends EventEmitter {
     return await promise;
   }
 
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   /**
    * Gets an "app key" corresponding to an Ethereum address. An app key is more
    * or less an addrdess hashed together with some string, in this case a
@@ -3575,7 +3601,7 @@ export default class MetamaskController extends EventEmitter {
     if (subjectType === SUBJECT_TYPES.INTERNAL) {
       origin = ORIGIN_METAMASK;
     }
-    ///: BEGIN:ONLY_INCLUDE_IN(flask)
+    ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
     else if (subjectType === SUBJECT_TYPES.SNAP) {
       origin = sender.snapId;
     }
@@ -3623,7 +3649,7 @@ export default class MetamaskController extends EventEmitter {
     });
   }
 
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   /**
    * For snaps running in workers.
    *
@@ -3795,7 +3821,7 @@ export default class MetamaskController extends EventEmitter {
       }),
     );
 
-    ///: BEGIN:ONLY_INCLUDE_IN(flask)
+    ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
     engine.push(
       createSnapMethodMiddleware(subjectType === SUBJECT_TYPES.SNAP, {
         getAppKey: this.getAppKeyForSubject.bind(this, origin),

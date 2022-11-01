@@ -1,5 +1,7 @@
 import { Duplex, EventEmitter } from 'stream';
 import endOfStream from 'end-of-stream';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import ObjectMultiplex from 'obj-multiplex';
 import log from 'loglevel';
 import {
@@ -18,7 +20,7 @@ import { ClientId } from '../types/desktop';
 import {
   registerRequestStream,
   unregisterRequestStream,
-} from '../browser/node-browser';
+} from '../browser/browser-polyfill';
 import { waitForMessage } from '../utils/stream';
 import { DesktopPairing } from '../shared/pairing';
 import * as RawState from '../utils/raw-state';

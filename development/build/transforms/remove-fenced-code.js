@@ -111,7 +111,7 @@ function createRemoveFencedCodeTransform(
    * @returns {Transform} The transform stream.
    */
   return function removeFencedCodeTransform(filePath) {
-    if (!['.js', '.cjs', '.mjs'].includes(path.extname(filePath))) {
+    if (!['.js', '.cjs', '.mjs', '.ts'].includes(path.extname(filePath))) {
       return new PassThrough();
     }
 
@@ -130,6 +130,7 @@ const DirectiveTerminuses = {
 
 const DirectiveCommands = {
   ONLY_INCLUDE_IN: 'ONLY_INCLUDE_IN',
+  EXCLUDE_IN: 'EXCLUDE_IN',
 };
 
 const CommandValidators = {
@@ -156,6 +157,8 @@ const CommandValidators = {
       }
     });
   },
+  [DirectiveCommands.EXCLUDE_IN]: (params, filePath) =>
+    CommandValidators[DirectiveCommands.ONLY_INCLUDE_IN](params, filePath),
 };
 
 // Matches lines starting with "///:", and any preceding whitespace, except
@@ -337,7 +340,14 @@ function removeFencedCode(filePath, typeOfCurrentBuild, fileContent) {
       // Throws an error if the command parameters are invalid
       CommandValidators[command](parameters, filePath);
 
-      if (parameters.includes(typeOfCurrentBuild)) {
+      const buildTypeMatches = parameters.includes(typeOfCurrentBuild);
+
+      const keepCode =
+        currentCommand === DirectiveCommands.ONLY_INCLUDE_IN
+          ? buildTypeMatches
+          : !buildTypeMatches;
+
+      if (keepCode) {
         shouldSplice = false;
       } else {
         shouldSplice = true;

@@ -1,15 +1,15 @@
 import deepFreeze from 'deep-freeze-strict';
-///: BEGIN:ONLY_INCLUDE_IN(flask)
+///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
 import React from 'react';
 ///: END:ONLY_INCLUDE_IN
 import {
   RestrictedMethods,
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   EndowmentPermissions,
   PermissionNamespaces,
   ///: END:ONLY_INCLUDE_IN
 } from '../../../shared/constants/permissions';
-///: BEGIN:ONLY_INCLUDE_IN(flask)
+///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
 import { coinTypeToProtocolName } from './util';
 ///: END:ONLY_INCLUDE_IN
 
@@ -21,7 +21,7 @@ const PERMISSION_DESCRIPTIONS = deepFreeze({
     leftIcon: 'fas fa-eye',
     rightIcon: null,
   },
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   [RestrictedMethods.snap_confirm]: {
     label: (t) => t('permission_customConfirmation'),
     leftIcon: 'fas fa-user-check',
@@ -134,7 +134,7 @@ export const getPermissionDescription = (
   if (Object.hasOwnProperty.call(PERMISSION_DESCRIPTIONS, permissionName)) {
     value = PERMISSION_DESCRIPTIONS[permissionName];
   }
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   for (const namespace of Object.keys(PermissionNamespaces)) {
     if (permissionName.startsWith(namespace)) {
       value = PERMISSION_DESCRIPTIONS[PermissionNamespaces[namespace]];

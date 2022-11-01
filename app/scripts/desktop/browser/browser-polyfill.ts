@@ -1,15 +1,28 @@
-import cfg from '../utils/config';
+import { Duplex } from 'stream';
 import { Browser } from '../types/browser';
 
-// eslint-disable-next-line import/no-mutable-exports
+/* eslint-disable import/no-mutable-exports */
 let browser: Browser;
+let registerRequestStream: (stream: Duplex) => void;
+let unregisterRequestStream: () => void;
+/* eslint-enable import/no-mutable-exports */
 
-if (cfg().desktop.isApp) {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
-  browser = require('./node-browser').browser;
-} else {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  browser = require('webextension-polyfill');
+///: BEGIN:EXCLUDE_IN(desktopapp)
+// eslint-disable-next-line
+// @ts-ignore
+// eslint-disable-next-line
+import WebExtensionPolyfill from 'webextension-polyfill';
+
+browser = WebExtensionPolyfill as any;
+///: END:EXCLUDE_IN
+
+///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
+if (!browser) {
+  // eslint-disable-next-line
+  const NodeBrowser = require('./node-browser');
+  ({ browser, registerRequestStream, unregisterRequestStream } = NodeBrowser);
 }
 
-export { browser };
+///: END:ONLY_INCLUDE_IN
+
+export { browser, registerRequestStream, unregisterRequestStream };

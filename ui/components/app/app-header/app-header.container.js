@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'redux';
-///: BEGIN:ONLY_INCLUDE_IN(flask)
+///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
 import { getUnreadNotificationsCount } from '../../../selectors';
 ///: END:ONLY_INCLUDE_IN
 
@@ -14,7 +14,7 @@ const mapStateToProps = (state) => {
   const { selectedAddress, isUnlocked, isAccountMenuOpen, desktopEnabled } =
     metamask;
 
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   const unreadNotificationsCount = getUnreadNotificationsCount(state);
   ///: END:ONLY_INCLUDE_IN
 
@@ -23,7 +23,7 @@ const mapStateToProps = (state) => {
     selectedAddress,
     isUnlocked,
     isAccountMenuOpen,
-    ///: BEGIN:ONLY_INCLUDE_IN(flask)
+    ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
     unreadNotificationsCount,
     ///: END:ONLY_INCLUDE_IN
     desktopEnabled,

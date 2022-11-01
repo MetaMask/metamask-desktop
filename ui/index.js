@@ -12,7 +12,6 @@ import { SENTRY_STATE } from '../app/scripts/lib/setupSentry';
 import { ENVIRONMENT_TYPE_POPUP } from '../shared/constants/app';
 import switchDirection from '../shared/lib/switch-direction';
 import { setupLocale } from '../shared/lib/error-utils';
-import cfg from '../app/scripts/desktop/utils/config';
 import * as actions from './store/actions';
 import configureStore from './store/store';
 import {
@@ -56,15 +55,15 @@ export default function launchMetamaskUi(opts, cb) {
   const { backgroundConnection } = opts;
   let desktopEnabled = false;
 
-  if (cfg().desktop.isExtension) {
-    backgroundConnection.getDesktopEnabled(function (err, result) {
-      if (err) {
-        return;
-      }
+  ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
+  backgroundConnection.getDesktopEnabled(function (err, result) {
+    if (err) {
+      return;
+    }
 
-      desktopEnabled = result;
-    });
-  }
+    desktopEnabled = result;
+  });
+  ///: END:ONLY_INCLUDE_IN
 
   // check if we are unlocked first
   backgroundConnection.getState(function (err, metamaskState) {

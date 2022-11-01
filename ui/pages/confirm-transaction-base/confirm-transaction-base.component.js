@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-///: BEGIN:ONLY_INCLUDE_IN(flask)
+///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
 import { stripHexPrefix } from 'ethereumjs-util';
 ///: END:ONLY_INCLUDE_IN
 import ConfirmPageContainer from '../../components/app/confirm-page-container';
@@ -62,14 +62,14 @@ import { MIN_GAS_LIMIT_DEC } from '../send/send.constants';
 
 import { hexToDecimal } from '../../../shared/lib/metamask-controller-utils';
 import { hexWEIToDecGWEI } from '../../../shared/lib/transactions-controller-utils';
-///: BEGIN:ONLY_INCLUDE_IN(flask)
+///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
 import { SnapInsight } from '../../components/app/confirm-page-container/flask/snap-insight';
 import { DropdownTab, Tab } from '../../components/ui/tabs';
 ///: END:ONLY_INCLUDE_IN
 
 import {
   NETWORK_TO_NAME_MAP,
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   CHAIN_ID_TO_NETWORK_ID_MAP,
   ///: END:ONLY_INCLUDE_IN
 } from '../../../shared/constants/network';
@@ -162,7 +162,7 @@ export default class ConfirmTransactionBase extends Component {
     showBuyModal: PropTypes.func,
     isBuyableChain: PropTypes.bool,
     isApprovalOrRejection: PropTypes.bool,
-    ///: BEGIN:ONLY_INCLUDE_IN(flask)
+    ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
     insightSnaps: PropTypes.arrayOf(PropTypes.object),
     ///: END:ONLY_INCLUDE_IN
     assetStandard: PropTypes.string,
@@ -175,7 +175,7 @@ export default class ConfirmTransactionBase extends Component {
     ethGasPriceWarning: '',
     editingGas: false,
     userAcknowledgedGasMissing: false,
-    ///: BEGIN:ONLY_INCLUDE_IN(flask)
+    ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
     selectedInsightSnapId: this.props.insightSnaps[0]?.id,
     ///: END:ONLY_INCLUDE_IN
   };
@@ -321,7 +321,7 @@ export default class ConfirmTransactionBase extends Component {
     this.setState({ editingGas: false });
   }
 
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   handleSnapSelected(snapId) {
     this.setState({ selectedInsightSnapId: snapId });
   }
@@ -754,7 +754,7 @@ export default class ConfirmTransactionBase extends Component {
     );
   }
 
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   renderInsight() {
     const { txData, insightSnaps } = this.props;
     const { selectedInsightSnapId } = this.state;
@@ -1192,7 +1192,7 @@ export default class ConfirmTransactionBase extends Component {
           detailsComponent={this.renderDetails()}
           dataComponent={this.renderData(functionType)}
           dataHexComponent={this.renderDataHex(functionType)}
-          ///: BEGIN:ONLY_INCLUDE_IN(flask)
+          ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
           insightComponent={this.renderInsight()}
           ///: END:ONLY_INCLUDE_IN
           contentComponent={contentComponent}

@@ -6,7 +6,7 @@ import {
   LOCK_ROUTE,
   INITIALIZE_END_OF_FLOW_ROUTE,
   INITIALIZE_UNLOCK_ROUTE,
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   INITIALIZE_EXPERIMENTAL_AREA,
   ///: END:ONLY_INCLUDE_IN
   ///: BEGIN:ONLY_INCLUDE_IN(main,beta)
@@ -45,7 +45,7 @@ export default class FirstTimeFlowSwitch extends PureComponent {
     if (!isInitialized) {
       /* eslint-disable prefer-const */
       let redirect;
-      ///: BEGIN:ONLY_INCLUDE_IN(flask)
+      ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
       redirect = <Redirect to={{ pathname: INITIALIZE_EXPERIMENTAL_AREA }} />;
       ///: END:ONLY_INCLUDE_IN
       ///: BEGIN:ONLY_INCLUDE_IN(main,beta)

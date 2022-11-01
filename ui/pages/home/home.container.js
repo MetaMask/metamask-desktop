@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import {
   activeTabHasPermissions,
   getFirstPermissionRequest,
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   getFirstSnapInstallOrUpdateRequest,
   ///: END:ONLY_INCLUDE_IN
   getIsMainnet,
@@ -43,7 +43,7 @@ import {
   setNewCollectibleAddedMessage,
   setNewTokensImported,
   setRpcTarget,
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   removeSnapError,
   ///: END:ONLY_INCLUDE_IN
 } from '../../store/actions';
@@ -96,7 +96,7 @@ const mapStateToProps = (state) => {
 
   // getFirstPermissionRequest should be updated with snap update logic once we hit main extension release
 
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   if (!firstPermissionsRequest) {
     firstPermissionsRequest = getFirstSnapInstallOrUpdateRequest(state);
     firstPermissionsRequestId = firstPermissionsRequest?.metadata.id || null;
@@ -142,7 +142,7 @@ const mapStateToProps = (state) => {
     pendingConfirmations,
     infuraBlocked: getInfuraBlocked(state),
     announcementsToShow: getSortedAnnouncementsToShow(state).length > 0,
-    ///: BEGIN:ONLY_INCLUDE_IN(flask)
+    ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
     errorsToShow: metamask.snapErrors,
     shouldShowErrors: Object.entries(metamask.snapErrors || []).length > 0,
     ///: END:ONLY_INCLUDE_IN
@@ -174,7 +174,7 @@ const mapDispatchToProps = (dispatch) => ({
       }
     });
   },
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   removeSnapError: async (id) => await removeSnapError(id),
   ///: END:ONLY_INCLUDE_IN
   restoreFromThreeBox: (address) => dispatch(restoreFromThreeBox(address)),

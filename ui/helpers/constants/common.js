@@ -16,7 +16,7 @@ let _supportRequestLink = 'https://metamask.zendesk.com/hc/en-us';
 const _contractAddressLink =
   'https://metamask.zendesk.com/hc/en-us/articles/360020028092-What-is-the-known-contract-address-warning-';
 
-///: BEGIN:ONLY_INCLUDE_IN(flask)
+///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
 _supportRequestLink =
   'https://metamask-flask.zendesk.com/hc/en-us/requests/new';
 ///: END:ONLY_INCLUDE_IN

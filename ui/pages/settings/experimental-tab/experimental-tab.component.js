@@ -6,7 +6,9 @@ import {
   handleSettingsRefs,
 } from '../../../helpers/utils/settings-search';
 import { EVENT } from '../../../../shared/constants/metametrics';
+///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
 import DesktopEnableButton from '../../../components/app/desktop-enable-button';
+///: END:ONLY_INCLUDE_IN
 
 export default class ExperimentalTab extends PureComponent {
   static contextTypes = {
@@ -230,6 +232,7 @@ export default class ExperimentalTab extends PureComponent {
     );
   }
 
+  ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
   renderDesktopEnableButton() {
     return (
       <div
@@ -248,6 +251,7 @@ export default class ExperimentalTab extends PureComponent {
       </div>
     );
   }
+  ///: END:ONLY_INCLUDE_IN
 
   render() {
     return (
@@ -256,7 +260,11 @@ export default class ExperimentalTab extends PureComponent {
         {this.renderCollectibleDetectionToggle()}
         {this.renderEIP1559V2EnabledToggle()}
         {this.renderCustomNetworkListToggle()}
-        {this.renderDesktopEnableButton()}
+        {
+          ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
+          this.renderDesktopEnableButton()
+          ///: END:ONLY_INCLUDE_IN
+        }
       </div>
     );
   }

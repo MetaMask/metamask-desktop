@@ -2,11 +2,16 @@ module.exports = {
   collectCoverageFrom: [
     '<rootDir>/app/scripts/controllers/permissions/**/*.js',
     '<rootDir>/app/scripts/lib/createRPCMethodTrackingMiddleware.js',
+    '<rootDir>/app/scripts/desktop/**/*.{js,ts}',
     '<rootDir>/shared/**/*.js',
     '<rootDir>/ui/**/*.js',
   ],
   coverageDirectory: './jest-coverage/main',
-  coveragePathIgnorePatterns: ['.stories.js', '.snap'],
+  coveragePathIgnorePatterns: [
+    '.stories.js',
+    '.snap',
+    '<rootDir>/app/scripts/desktop/hw/trezor/renderer/trezor-connect.js',
+  ],
   coverageReporters: ['html', 'text-summary', 'json-summary'],
   coverageThreshold: {
     global: {

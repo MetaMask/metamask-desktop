@@ -5,6 +5,7 @@ import { VersionMessage } from '../types/message';
 import { waitForMessage } from '../utils/stream';
 import { getVersion } from '../utils/version';
 
+///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
 export class DesktopVersionCheck {
   private stream: Duplex;
 
@@ -36,7 +37,9 @@ export class DesktopVersionCheck {
     return true;
   }
 }
+///: END:ONLY_INCLUDE_IN
 
+///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
 export class ExtensionVersionCheck {
   private stream: Duplex;
 
@@ -74,3 +77,4 @@ export class ExtensionVersionCheck {
     return true;
   }
 }
+///: END:ONLY_INCLUDE_IN

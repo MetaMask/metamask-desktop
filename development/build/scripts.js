@@ -1051,7 +1051,6 @@ async function getEnvironmentVariables({ buildTarget, buildType, version }) {
   return {
     COLLECTIBLES_V1: config.COLLECTIBLES_V1 === '1',
     CONF: devMode ? config : {},
-    DESKTOP: config.DESKTOP,
     DISABLE_WEB_SOCKET_ENCRYPTION: config.DISABLE_WEB_SOCKET_ENCRYPTION === '1',
     ICON_NAMES: iconNames,
     SKIP_OTP_PAIRING_FLOW: config.SKIP_OTP_PAIRING_FLOW === '1',

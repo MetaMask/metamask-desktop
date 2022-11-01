@@ -1,5 +1,5 @@
 import { constructPermission, PermissionType } from '@metamask/controllers';
-///: BEGIN:ONLY_INCLUDE_IN(flask)
+///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
 import { endowmentCaveatSpecifications as snapsEndowmentCaveatSpecifications } from '@metamask/snap-controllers';
 import { caveatSpecifications as snapsCaveatsSpecifications } from '@metamask/rpc-methods';
 ///: END:ONLY_INCLUDE_IN
@@ -68,7 +68,7 @@ export const getCaveatSpecifications = ({ getIdentities }) => {
         validateCaveatAccounts(caveat.value, getIdentities),
     },
 
-    ///: BEGIN:ONLY_INCLUDE_IN(flask)
+    ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
     ...snapsCaveatsSpecifications,
     ...snapsEndowmentCaveatSpecifications,
     ///: END:ONLY_INCLUDE_IN

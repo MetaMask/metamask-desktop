@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
-///: BEGIN:ONLY_INCLUDE_IN(flask)
+///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
 import { ethErrors, serializeError } from 'eth-rpc-errors';
 ///: END:ONLY_INCLUDE_IN
 import { getEnvironmentType } from '../../../app/scripts/lib/util';
@@ -11,7 +11,7 @@ import { DEFAULT_ROUTE } from '../../helpers/constants/routes';
 import PermissionPageContainer from '../../components/app/permission-page-container';
 import ChooseAccount from './choose-account';
 import PermissionsRedirect from './redirect';
-///: BEGIN:ONLY_INCLUDE_IN(flask)
+///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
 import SnapInstall from './flask/snap-install';
 import SnapUpdate from './flask/snap-update';
 ///: END:ONLY_INCLUDE_IN
@@ -37,7 +37,7 @@ export default class PermissionConnect extends Component {
     history: PropTypes.object.isRequired,
     connectPath: PropTypes.string.isRequired,
     confirmPermissionPath: PropTypes.string.isRequired,
-    ///: BEGIN:ONLY_INCLUDE_IN(flask)
+    ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
     snapInstallPath: PropTypes.string.isRequired,
     snapUpdatePath: PropTypes.string.isRequired,
     isSnap: PropTypes.bool.isRequired,
@@ -95,7 +95,7 @@ export default class PermissionConnect extends Component {
     const {
       connectPath,
       confirmPermissionPath,
-      ///: BEGIN:ONLY_INCLUDE_IN(flask)
+      ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
       snapInstallPath,
       snapUpdatePath,
       isSnap,
@@ -120,7 +120,7 @@ export default class PermissionConnect extends Component {
     }
 
     if (history.location.pathname === connectPath && !isRequestingAccounts) {
-      ///: BEGIN:ONLY_INCLUDE_IN(flask)
+      ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
       if (isSnap) {
         history.push(
           permissionsRequest.newPermissions ? snapUpdatePath : snapInstallPath,
@@ -128,7 +128,7 @@ export default class PermissionConnect extends Component {
       } else {
         ///: END:ONLY_INCLUDE_IN
         history.push(confirmPermissionPath);
-        ///: BEGIN:ONLY_INCLUDE_IN(flask)
+        ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
       }
       ///: END:ONLY_INCLUDE_IN
     }
@@ -237,7 +237,7 @@ export default class PermissionConnect extends Component {
       permissionsRequestId,
       connectPath,
       confirmPermissionPath,
-      ///: BEGIN:ONLY_INCLUDE_IN(flask)
+      ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
       snapInstallPath,
       snapUpdatePath,
       approvePendingApproval,
@@ -304,7 +304,7 @@ export default class PermissionConnect extends Component {
               )}
             />
             {
-              ///: BEGIN:ONLY_INCLUDE_IN(flask)
+              ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
             }
             <Route
               path={snapInstallPath}
@@ -331,7 +331,7 @@ export default class PermissionConnect extends Component {
               ///: END:ONLY_INCLUDE_IN
             }
             {
-              ///: BEGIN:ONLY_INCLUDE_IN(flask)
+              ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
             }
             <Route
               path={snapUpdatePath}

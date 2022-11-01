@@ -20,14 +20,12 @@ import {
   expectEventToFire,
   flushPromises,
 } from '../test/utils';
-import { browser } from '../browser/browser-polyfill';
+import { browser, unregisterRequestStream } from '../browser/browser-polyfill';
 import { ClientId } from '../types/desktop';
 import { ConnectionType } from '../types/background';
 import { DesktopPairing } from '../shared/pairing';
-import { unregisterRequestStream } from '../browser/node-browser';
 import ExtensionConnection from './extension-connection';
 
-jest.mock('../browser/node-browser');
 jest.mock('obj-multiplex', () => jest.fn(), { virtual: true });
 
 jest.mock(
@@ -36,6 +34,8 @@ jest.mock(
     browser: {
       storage: { local: { get: jest.fn(), set: jest.fn(), clear: jest.fn() } },
     },
+    registerRequestStream: jest.fn(),
+    unregisterRequestStream: jest.fn(),
   }),
   {
     virtual: true,
@@ -296,6 +296,7 @@ describe('Extension Connection', () => {
       );
     });
 
+    // eslint-disable-next-line jest/expect-expect
     it('fires paired event', async () => {
       await expectEventToFire(
         extensionConnection,

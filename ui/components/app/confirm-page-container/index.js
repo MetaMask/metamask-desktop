@@ -7,6 +7,6 @@ export {
   default as ConfirmPageContainerContent,
   ConfirmPageContainerSummary,
 } from './confirm-page-container-content';
-///: BEGIN:ONLY_INCLUDE_IN(flask)
+///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
 export { SnapInsight } from './flask/snap-insight';
 ///: END:ONLY_INCLUDE_IN

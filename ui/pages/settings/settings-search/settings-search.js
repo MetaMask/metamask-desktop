@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-///: BEGIN:ONLY_INCLUDE_IN(flask)
+///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
 import { useSelector } from 'react-redux';
 ///: END:ONLY_INCLUDE_IN
 import PropTypes from 'prop-types';
@@ -9,7 +9,7 @@ import TextField from '../../../components/ui/text-field';
 import { I18nContext } from '../../../contexts/i18n';
 import SearchIcon from '../../../components/ui/icon/search-icon';
 import { isEqualCaseInsensitive } from '../../../../shared/modules/string-utils';
-///: BEGIN:ONLY_INCLUDE_IN(flask)
+///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
 import { getSnapsRouteObjects } from '../../../selectors';
 ///: END:ONLY_INCLUDE_IN
 
@@ -26,7 +26,7 @@ export default function SettingsSearch({
   );
 
   const settingsRoutesListArray = Object.values(settingsRoutesList);
-  ///: BEGIN:ONLY_INCLUDE_IN(flask)
+  ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   const snaps = useSelector(getSnapsRouteObjects);
   settingsRoutesListArray.push(...snaps);
   ///: END:ONLY_INCLUDE_IN

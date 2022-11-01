@@ -2,7 +2,10 @@
  * @file The entry point for the web extension singleton process.
  */
 
+///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
 import './desktop/app/globals';
+///: END:ONLY_INCLUDE_IN
+
 import endOfStream from 'end-of-stream';
 import pump from 'pump';
 import debounce from 'debounce-stream';
@@ -27,10 +30,6 @@ import {
 } from '../../shared/constants/metametrics';
 import { isManifestV3 } from '../../shared/modules/mv3.utils';
 import { maskObject } from '../../shared/modules/object.utils';
-import {
-  CONNECTION_TYPE_EXTERNAL,
-  CONNECTION_TYPE_INTERNAL,
-} from '../../shared/constants/desktop';
 import { browser } from './desktop/browser/browser-polyfill';
 import migrations from './migrations';
 import Migrator from './lib/migrator';
@@ -51,24 +50,22 @@ import getFirstPreferredLangCode from './lib/get-first-preferred-lang-code';
 import getObjStructure from './lib/getObjStructure';
 import setupEnsIpfsResolver from './lib/ens-ipfs/setup';
 import { getPlatform } from './lib/util';
-import cfg from './desktop/utils/config';
 
-// Desktop
+/* eslint-disable import/order */
 
-let DesktopApp;
-let DesktopManager;
+///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
+import DesktopApp from './desktop/app/desktop-app';
+///: END:ONLY_INCLUDE_IN
 
-if (cfg().desktop.isApp) {
-  // eslint-disable-next-line node/global-require
-  DesktopApp = require('./desktop/app/desktop-app').default;
-}
+///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
+import DesktopManager from './desktop/extension/desktop-manager';
+import {
+  CONNECTION_TYPE_EXTERNAL,
+  CONNECTION_TYPE_INTERNAL,
+} from '../../shared/constants/desktop';
+///: END:ONLY_INCLUDE_IN
 
-if (cfg().desktop.isExtension) {
-  // eslint-disable-next-line node/global-require
-  DesktopManager = require('./desktop/extension/desktop-manager').default;
-}
-
-/* eslint-enable import/first */
+/* eslint-enable import/order */
 
 const { sentry } = global;
 const firstTimeState = { ...rawFirstTimeState };
@@ -123,6 +120,7 @@ const initApp = async (remotePort) => {
   log.info('MetaMask initialization complete.');
 };
 
+///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
 const onDesktopRestart = async (desktopApp) => {
   desktopApp.removeAllListeners();
   desktopApp.on('restart', () => onDesktopRestart(desktopApp));
@@ -135,16 +133,20 @@ const initDesktopApp = async () => {
   await DesktopApp.init();
   DesktopApp.on('restart', () => onDesktopRestart(DesktopApp));
 };
+///: END:ONLY_INCLUDE_IN
 
-if (isManifestV3 && cfg().desktop.isExtension) {
+if (isManifestV3) {
+  ///: BEGIN:EXCLUDE_IN(desktopapp)
   browser.runtime.onConnect.addListener(initApp);
+  ///: END:EXCLUDE_IN
 } else {
-  // initialization flow
-  const initDesktop = cfg().desktop.isApp
-    ? initDesktopApp()
-    : Promise.resolve();
+  let initPromise = Promise.resolve();
 
-  initDesktop.then(initialize).catch(log.error);
+  ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
+  initPromise = initDesktopApp();
+  ///: END:ONLY_INCLUDE_IN
+
+  initPromise.then(initialize).catch(log.error);
 }
 
 /**
@@ -212,15 +214,17 @@ async function initialize(remotePort) {
   const initState = await loadStateFromPersistence();
   const initLangCode = await getFirstPreferredLangCode();
 
-  if (cfg().desktop.isExtension) {
-    await DesktopManager.init(initState);
-  }
+  ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
+  await DesktopManager.init(initState);
+  ///: END:ONLY_INCLUDE_IN
 
   await setupController(initState, initLangCode, remotePort);
 
-  if (!cfg().desktop.isApp && !isManifestV3) {
+  ///: BEGIN:EXCLUDE_IN(desktopapp)
+  if (!isManifestV3) {
     await loadPhishingWarningPage();
   }
+  ///: END:EXCLUDE_IN
 
   log.info('MetaMask initialization complete.');
 }
@@ -401,7 +405,10 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     debounce(1000),
     createStreamSink(async (state) => {
       await localStore.set(state);
-      await DesktopApp?.getConnection()?.transferState({ data: state });
+
+      ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
+      DesktopApp.getConnection()?.transferState({ data: state });
+      ///: END:ONLY_INCLUDE_IN
     }),
     (error) => {
       log.error('MetaMask - Persistence pipeline failed', error);
@@ -409,16 +416,18 @@ function setupController(initState, initLangCode, remoteSourcePort) {
   );
 
   // TODO If we use sentry with desktop, this needs to be fixed
-  if (cfg().desktop.isExtension) {
-    setupSentryGetStateGlobal(controller);
-  }
+  ///: BEGIN:EXCLUDE_IN(desktopapp)
+  setupSentryGetStateGlobal(controller);
+  ///: END:EXCLUDE_IN
 
   //
   // connect to other contexts
   //
-  if (isManifestV3 && remoteSourcePort && cfg().desktop.isExtension) {
+  ///: BEGIN:EXCLUDE_IN(desktopapp)
+  if (isManifestV3 && remoteSourcePort) {
     connectRemote(remoteSourcePort);
   }
+  ///: END:EXCLUDE_IN
 
   browser.runtime.onConnect.addListener(connectRemote);
   browser.runtime.onConnectExternal.addListener(connectExternal);
@@ -464,7 +473,8 @@ function setupController(initState, initLangCode, remoteSourcePort) {
    * @param {Port} remotePort - The port provided by a new context.
    */
   function connectRemote(remotePort) {
-    if (DesktopManager?.isDesktopEnabled()) {
+    ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
+    if (DesktopManager.isDesktopEnabled()) {
       DesktopManager.createStream(remotePort, CONNECTION_TYPE_INTERNAL).then(
         () => {
           // When in Desktop Mode the responsibility to send CONNECTION_READY is on the desktop app side
@@ -478,6 +488,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
       );
       return;
     }
+    ///: END:ONLY_INCLUDE_IN
 
     const processName = remotePort.name;
 
@@ -500,20 +511,28 @@ function setupController(initState, initLangCode, remoteSourcePort) {
       : null;
 
     if (isMetaMaskInternalProcess) {
-      const portStream = cfg().desktop.isApp
-        ? remotePort.stream
-        : new PortStream(remotePort);
+      let portStream;
+
+      ///: BEGIN:EXCLUDE_IN(desktopapp)
+      portStream = new PortStream(remotePort);
+      ///: END:EXCLUDE_IN
+
+      ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
+      portStream = remotePort.stream;
+      ///: END:ONLY_INCLUDE_IN
 
       // communication with popup
       controller.isClientOpen = true;
       controller.setupTrustedCommunication(portStream, remotePort.sender);
 
-      if (isManifestV3 && cfg().desktop.isExtension) {
+      ///: BEGIN:EXCLUDE_IN(desktopapp)
+      if (isManifestV3) {
         // Message below if captured by UI code in app/scripts/ui.js which will trigger UI initialisation
         // This ensures that UI is initialised only after background is ready
         // It fixes the issue of blank screen coming when extension is loaded, the issue is very frequent in MV3
         remotePort.postMessage({ name: 'CONNECTION_READY' });
       }
+      ///: END:EXCLUDE_IN
 
       if (processName === ENVIRONMENT_TYPE_POPUP) {
         popupIsOpen = true;
@@ -558,9 +577,15 @@ function setupController(initState, initLangCode, remoteSourcePort) {
       senderUrl.origin === phishingPageUrl.origin &&
       senderUrl.pathname === phishingPageUrl.pathname
     ) {
-      const portStream = cfg().desktop.isApp
-        ? remotePort.stream
-        : new PortStream(remotePort);
+      let portStream;
+
+      ///: BEGIN:EXCLUDE_IN(desktopapp)
+      portStream = new PortStream(remotePort);
+      ///: END:EXCLUDE_IN
+
+      ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
+      portStream = remotePort.stream;
+      ///: END:ONLY_INCLUDE_IN
 
       controller.setupPhishingCommunication({
         connectionStream: portStream,
@@ -583,14 +608,22 @@ function setupController(initState, initLangCode, remoteSourcePort) {
 
   // communication with page or other extension
   function connectExternal(remotePort) {
-    if (DesktopManager?.isDesktopEnabled()) {
+    ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
+    if (DesktopManager.isDesktopEnabled()) {
       DesktopManager.createStream(remotePort, CONNECTION_TYPE_EXTERNAL);
       return;
     }
+    ///: END:ONLY_INCLUDE_IN
 
-    const portStream = cfg().desktop.isApp
-      ? remotePort.stream
-      : new PortStream(remotePort);
+    let portStream;
+
+    ///: BEGIN:EXCLUDE_IN(desktopapp)
+    portStream = new PortStream(remotePort);
+    ///: END:EXCLUDE_IN
+
+    ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
+    portStream = remotePort.stream;
+    ///: END:ONLY_INCLUDE_IN
 
     controller.setupUntrustedCommunication({
       connectionStream: portStream,
@@ -747,17 +780,21 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     updateBadge();
   }
 
+  ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
   controller.store.subscribe((state) => {
-    DesktopManager?.setState(state);
+    DesktopManager.setState(state);
   });
+  ///: END:ONLY_INCLUDE_IN
 
-  DesktopApp?.on('connect-remote', (connectRequest) => {
+  ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
+  DesktopApp.on('connect-remote', (connectRequest) => {
     connectRemote(connectRequest);
   });
 
-  DesktopApp?.on('connect-external', (connectRequest) => {
+  DesktopApp.on('connect-external', (connectRequest) => {
     connectExternal(connectRequest);
   });
+  ///: END:ONLY_INCLUDE_IN
 
   return Promise.resolve();
 }

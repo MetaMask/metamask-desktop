@@ -1,20 +1,15 @@
 import { ObservableStore } from '@metamask/obs-store';
-import cfg from '../desktop/utils/config';
 import { ExtensionPairing } from '../desktop/shared/pairing';
 import { TestConnectionResult } from '../desktop/types/desktop';
 
-let DesktopApp: any;
-let DesktopManager: any;
+///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
+// eslint-disable-next-line import/first
+import DesktopApp from '../desktop/app/desktop-app';
+///: END:ONLY_INCLUDE_IN
 
-if (cfg().desktop.isApp) {
-  // eslint-disable-next-line node/global-require, @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
-  DesktopApp = require('../desktop/app/desktop-app').default;
-}
-
-if (cfg().desktop.isExtension) {
-  // eslint-disable-next-line node/global-require, @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
-  DesktopManager = require('../desktop/extension/desktop-manager').default;
-}
+///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
+import DesktopManager from '../desktop/extension/desktop-manager';
+///: END:ONLY_INCLUDE_IN
 
 export default class DesktopController {
   private store: ObservableStore;

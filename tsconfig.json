@@ -21,6 +21,8 @@
     ".storybook/**/*",
     "builds/**/*",
     "dist/**/*",
+    "dist_desktop/**/*",
+    "dist_desktop_ui/**/*",
     "node_modules/**"
   ],
   "extends": "@tsconfig/node16/tsconfig.json",
