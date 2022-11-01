@@ -10,6 +10,10 @@ start().catch((error) => {
 });
 
 async function start() {
+  const validBuildTypes = Object.values(BuildType).filter(
+    (v) => v !== BuildType.desktopapp,
+  );
+
   const {
     argv: { buildTypes, parallel },
   } = yargs(hideBin(process.argv)).usage(
@@ -19,8 +23,8 @@ async function start() {
       yargsInstance
         .option('build-types', {
           alias: ['t'],
-          choices: Object.values(BuildType),
-          default: Object.values(BuildType),
+          choices: validBuildTypes,
+          default: validBuildTypes,
           demandOption: true,
           description: 'The build type(s) to generate policy files for.',
         })
