@@ -1,5 +1,3 @@
-const { promises: fs } = require('fs');
-const path = require('path');
 const Koa = require('koa');
 const { isObject, mapValues } = require('lodash');
 
@@ -57,7 +55,6 @@ class FixtureServer {
   constructor() {
     this._app = new Koa();
     this._stateMap = new Map([[DEFAULT_STATE_KEY, Object.create(null)]]);
-    this._initialStateCache = new Map();
 
     this._app.use(async (ctx) => {
       // Firefox is _super_ strict about needing CORS headers
@@ -94,45 +91,15 @@ class FixtureServer {
     });
   }
 
-  async loadStateDesktop(fixturePath, desktopConfigPath) {
-    const statePath = path.resolve(__dirname, fixturePath, 'state.json');
-    let state;
-    if (this._initialStateCache.has(statePath)) {
-      await fs.writeFile(
-        desktopConfigPath,
-        JSON.stringify(this._initialStateCache.get(statePath), null, 2),
-      );
-    } else {
-      const data = await fs.readFile(statePath);
-      const rawState = JSON.parse(data.toString('utf-8'));
-      if (process.env.RUN_WITH_DESKTOP === 'true') {
-        rawState.data.PreferencesController.desktopEnabled = true;
-      }
-      state = performStateSubstitutions(rawState);
-      this._initialStateCache.set(statePath, state);
-      await fs.writeFile(desktopConfigPath, JSON.stringify(state, null, 2));
+  loadJsonState(rawState) {
+    if (process.env.RUN_WITH_DESKTOP === 'true') {
+      rawState.data.PreferencesController.desktopEnabled = true;
     }
 
+    const state = performStateSubstitutions(rawState);
     this._stateMap.set(CURRENT_STATE_KEY, state);
-  }
 
-  async loadState(directory) {
-    const statePath = path.resolve(__dirname, directory, 'state.json');
-
-    let state;
-    if (this._initialStateCache.has(statePath)) {
-      state = this._initialStateCache.get(statePath);
-    } else {
-      const data = await fs.readFile(statePath);
-      const rawState = JSON.parse(data.toString('utf-8'));
-      if (process.env.RUN_WITH_DESKTOP === 'true') {
-        rawState.data.PreferencesController.desktopEnabled = true;
-      }
-      state = performStateSubstitutions(rawState);
-      this._initialStateCache.set(statePath, state);
-    }
-
-    this._stateMap.set(CURRENT_STATE_KEY, state);
+    return state;
   }
 
   _isStateRequest(ctx) {

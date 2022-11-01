@@ -1,15 +1,6 @@
 {
   "resources": {
-    "3box>ipfs>superstruct>clone-deep>shallow-clone>mixin-object": {
-      "packages": {
-        "3box>ipfs>superstruct>clone-deep>shallow-clone>mixin-object>for-in": true,
-        "webpack>micromatch>extglob>extend-shallow>is-extendable": true
-      }
-    },
     "@babel/cli>@jridgewell/trace-mapping": {
-      "globals": {
-        "define": true
-      },
       "packages": {
         "@babel/cli>@jridgewell/trace-mapping>@jridgewell/resolve-uri": true,
         "@babel/cli>@jridgewell/trace-mapping>@jridgewell/sourcemap-codec": true
@@ -82,8 +73,8 @@
         "define": true
       },
       "packages": {
-        "@babel/cli>@jridgewell/trace-mapping": true,
-        "@babel/core>@ampproject/remapping>@jridgewell/gen-mapping": true
+        "@babel/core>@ampproject/remapping>@jridgewell/gen-mapping": true,
+        "terser>@jridgewell/source-map>@jridgewell/trace-mapping": true
       }
     },
     "@babel/core>@ampproject/remapping>@jridgewell/gen-mapping": {
@@ -2300,7 +2291,7 @@
         "process": true
       },
       "packages": {
-        "analytics-node>ms": true,
+        "gulp-livereload>debug>ms": true,
         "sinon>supports-color": true
       }
     },
@@ -2413,7 +2404,7 @@
         "process": true
       },
       "packages": {
-        "analytics-node>ms": true,
+        "gulp-livereload>debug>ms": true,
         "sinon>supports-color": true
       }
     },
@@ -3458,8 +3449,8 @@
         "process": true
       },
       "packages": {
-        "analytics-node>ms": true,
-        "gulp-livereload>chalk>supports-color": true
+        "gulp-livereload>chalk>supports-color": true,
+        "gulp-livereload>debug>ms": true
       }
     },
     "gulp-livereload>event-stream": {
@@ -3585,7 +3576,7 @@
         "process": true
       },
       "packages": {
-        "analytics-node>ms": true,
+        "gulp-livereload>debug>ms": true,
         "sinon>supports-color": true
       }
     },
@@ -3910,7 +3901,7 @@
         "process": true
       },
       "packages": {
-        "analytics-node>ms": true,
+        "gulp-livereload>debug>ms": true,
         "sinon>supports-color": true
       }
     },
@@ -4126,9 +4117,9 @@
     },
     "gulp-watch>anymatch>micromatch>braces>expand-range>fill-range>randomatic": {
       "packages": {
-        "3box>ipfs>kind-of": true,
         "gulp-watch>anymatch>micromatch>braces>expand-range>fill-range>randomatic>math-random": true,
-        "gulp>undertaker>bach>array-last>is-number": true
+        "gulp>undertaker>bach>array-last>is-number": true,
+        "webpack>micromatch>kind-of": true
       }
     },
     "gulp-watch>anymatch>micromatch>braces>expand-range>fill-range>randomatic>math-random": {
@@ -4798,7 +4789,6 @@
         "process.platform": true
       },
       "packages": {
-        "3box>ipfs>kind-of": true,
         "gulp>glob-watcher>anymatch>micromatch>define-property": true,
         "gulp>glob-watcher>anymatch>micromatch>extend-shallow": true,
         "gulp>glob-watcher>chokidar>braces": true,
@@ -4806,6 +4796,7 @@
         "webpack>micromatch>array-unique": true,
         "webpack>micromatch>extglob": true,
         "webpack>micromatch>fragment-cache": true,
+        "webpack>micromatch>kind-of": true,
         "webpack>micromatch>nanomatch": true,
         "webpack>micromatch>object.pick": true,
         "webpack>micromatch>regex-not": true,
@@ -5020,7 +5011,7 @@
     },
     "gulp>undertaker>arr-map>make-iterator": {
       "packages": {
-        "3box>ipfs>kind-of": true
+        "webpack>micromatch>kind-of": true
       }
     },
     "gulp>undertaker>bach": {
@@ -5651,9 +5642,9 @@
     },
     "lavamoat>lavamoat-core>merge-deep>clone-deep>shallow-clone": {
       "packages": {
-        "3box>ipfs>superstruct>clone-deep>shallow-clone>mixin-object": true,
         "lavamoat>lavamoat-core>merge-deep>clone-deep>shallow-clone>kind-of": true,
         "lavamoat>lavamoat-core>merge-deep>clone-deep>shallow-clone>lazy-cache": true,
+        "lavamoat>lavamoat-core>merge-deep>clone-deep>shallow-clone>mixin-object": true,
         "webpack>micromatch>extglob>extend-shallow>is-extendable": true
       }
     },
@@ -5668,6 +5659,12 @@
     "lavamoat>lavamoat-core>merge-deep>clone-deep>shallow-clone>lazy-cache": {
       "globals": {
         "process.env.UNLAZY": true
+      }
+    },
+    "lavamoat>lavamoat-core>merge-deep>clone-deep>shallow-clone>mixin-object": {
+      "packages": {
+        "lavamoat>lavamoat-core>merge-deep>clone-deep>shallow-clone>mixin-object>for-in": true,
+        "webpack>micromatch>extglob>extend-shallow>is-extendable": true
       }
     },
     "lavamoat>lavamoat-core>merge-deep>kind-of": {
@@ -5802,11 +5799,13 @@
         "fs.readFileSync": true,
         "path.resolve": true
       },
-      "globals": {
-        "Buffer": true,
-        "atob": true,
-        "btoa": true,
-        "value": true
+      "packages": {
+        "nyc>convert-source-map>safe-buffer": true
+      }
+    },
+    "nyc>convert-source-map>safe-buffer": {
+      "builtin": {
+        "buffer": true
       }
     },
     "nyc>glob": {
@@ -6911,12 +6910,22 @@
       "packages": {
         "@babel/cli>@jridgewell/trace-mapping": true,
         "@babel/cli>@jridgewell/trace-mapping>@jridgewell/sourcemap-codec": true,
-        "terser>@jridgewell/source-map>@jridgewell/gen-mapping>@jridgewell/set-array": true
+        "terser>@jridgewell/source-map>@jridgewell/gen-mapping>@jridgewell/set-array": true,
+        "terser>@jridgewell/source-map>@jridgewell/trace-mapping": true
       }
     },
     "terser>@jridgewell/source-map>@jridgewell/gen-mapping>@jridgewell/set-array": {
       "globals": {
         "define": true
+      }
+    },
+    "terser>@jridgewell/source-map>@jridgewell/trace-mapping": {
+      "globals": {
+        "define": true
+      },
+      "packages": {
+        "@babel/cli>@jridgewell/trace-mapping>@jridgewell/resolve-uri": true,
+        "@babel/cli>@jridgewell/trace-mapping>@jridgewell/sourcemap-codec": true
       }
     },
     "terser>acorn": {
@@ -7214,19 +7223,19 @@
     },
     "webpack>micromatch>define-property>is-descriptor": {
       "packages": {
-        "3box>ipfs>kind-of": true,
         "webpack>micromatch>define-property>is-descriptor>is-accessor-descriptor": true,
-        "webpack>micromatch>define-property>is-descriptor>is-data-descriptor": true
+        "webpack>micromatch>define-property>is-descriptor>is-data-descriptor": true,
+        "webpack>micromatch>kind-of": true
       }
     },
     "webpack>micromatch>define-property>is-descriptor>is-accessor-descriptor": {
       "packages": {
-        "3box>ipfs>kind-of": true
+        "webpack>micromatch>kind-of": true
       }
     },
     "webpack>micromatch>define-property>is-descriptor>is-data-descriptor": {
       "packages": {
-        "3box>ipfs>kind-of": true
+        "webpack>micromatch>kind-of": true
       }
     },
     "webpack>micromatch>extglob": {
@@ -7329,11 +7338,11 @@
         "util.inspect": true
       },
       "packages": {
-        "3box>ipfs>kind-of": true,
         "nyc>spawn-wrap>is-windows": true,
         "webpack>micromatch>arr-diff": true,
         "webpack>micromatch>array-unique": true,
         "webpack>micromatch>fragment-cache": true,
+        "webpack>micromatch>kind-of": true,
         "webpack>micromatch>nanomatch>define-property": true,
         "webpack>micromatch>nanomatch>extend-shallow": true,
         "webpack>micromatch>nanomatch>is-odd": true,
@@ -7646,7 +7655,7 @@
     },
     "webpack>micromatch>snapdragon>use": {
       "packages": {
-        "3box>ipfs>kind-of": true
+        "webpack>micromatch>kind-of": true
       }
     },
     "webpack>micromatch>to-regex": {
