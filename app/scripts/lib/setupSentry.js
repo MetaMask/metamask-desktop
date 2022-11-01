@@ -4,17 +4,21 @@ import { BuildType } from '../../../shared/constants/app';
 import { FilterEvents } from './sentry-filter-events';
 import extractEthjsErrorMessage from './extractEthjsErrorMessage';
 
-let Sentry = require('@sentry/browser');
+let Sentry;
 
-///: BEGIN:ONLY_INCLUDE_IN(flask)
-// eslint-disable-next-line import/first, import/order
-import cfg from '../desktop/utils/config';
+/* eslint-disable import/first, import/order */
+///: BEGIN:EXCLUDE_IN(desktopapp)
+import * as SentryBrowser from '@sentry/browser';
 
-if (cfg().desktop.isApp) {
-  // eslint-disable-next-line node/global-require
-  Sentry = require('@sentry/electron/main');
-}
+Sentry = SentryBrowser;
+///: END:EXCLUDE_IN
+
+///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
+import * as SentryElectron from '@sentry/electron/main';
+
+Sentry = SentryElectron;
 ///: END:ONLY_INCLUDE_IN
+/* eslint-enable import/first, import/order */
 
 /* eslint-disable prefer-destructuring */
 // Destructuring breaks the inlining of the environment variables
