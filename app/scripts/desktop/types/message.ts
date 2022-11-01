@@ -1,5 +1,5 @@
 import { ConnectionType, RemotePortData } from './background';
-import { ClientId } from './desktop';
+import { ClientId, VersionData } from './desktop';
 
 export interface NewConnectionMessage {
   clientId: ClientId;
@@ -39,7 +39,11 @@ export type PairingKeyResponseMessage = {
   pairingKey: string | undefined;
 };
 
-export type VersionMessage = {
-  version: string;
-  isValid?: boolean;
+export type CheckVersionRequestMessage = {
+  extensionVersionData: VersionData;
+};
+
+export type CheckVersionResponseMessage = {
+  desktopVersionData: VersionData;
+  isExtensionSupported: boolean;
 };

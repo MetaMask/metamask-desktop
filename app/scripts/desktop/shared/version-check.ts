@@ -1,11 +1,25 @@
 import { Duplex } from 'stream';
 import log from 'loglevel';
-import { VersionCheckResult } from '../types/desktop';
-import { VersionMessage } from '../types/message';
+import { VersionCheckResult, VersionData } from '../types/desktop';
+import {
+  CheckVersionRequestMessage,
+  CheckVersionResponseMessage,
+} from '../types/message';
 import { waitForMessage } from '../utils/stream';
 import { getVersion } from '../utils/version';
 
+const checkIfOverridden = (hardcodedValue: number, envValue?: string) => {
+  if (envValue) {
+    return parseInt(envValue, 10);
+  }
+
+  return hardcodedValue;
+};
+
 ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
+
+const COMPATIBILITY_VERSION_DESKTOP = 1;
+
 export class DesktopVersionCheck {
   private stream: Duplex;
 
@@ -14,32 +28,57 @@ export class DesktopVersionCheck {
   }
 
   public init() {
-    this.stream.on('data', (data: VersionMessage) => this.onMessage(data));
+    this.stream.on('data', (data: CheckVersionRequestMessage) =>
+      this.onMessage(data),
+    );
   }
 
-  private onMessage(data: VersionMessage) {
+  private onMessage(data: CheckVersionRequestMessage) {
     log.debug('Received version request', data);
 
-    const isExtensionVersionValid = this.checkExtensionVersion(data.version);
-    const desktopVersion = getVersion();
+    const { extensionVersionData } = data;
 
-    const response: VersionMessage = {
-      version: desktopVersion,
-      isValid: isExtensionVersionValid,
+    const desktopCompatibilityVersion = checkIfOverridden(
+      COMPATIBILITY_VERSION_DESKTOP,
+      process.env.COMPATIBILITY_VERSION_DESKTOP,
+    );
+
+    const desktopVersionData = {
+      version: getVersion(),
+      compatibilityVersion: desktopCompatibilityVersion,
     };
 
-    this.stream.write(response);
+    const isExtensionSupported = this.isExtensionVersionSupported(
+      extensionVersionData,
+      desktopVersionData,
+    );
 
-    log.debug('Sent version', response);
+    const checkVersionResponse: CheckVersionResponseMessage = {
+      desktopVersionData,
+      isExtensionSupported,
+    };
+
+    this.stream.write(checkVersionResponse);
+
+    log.debug('Sent version', checkVersionResponse);
   }
 
-  private checkExtensionVersion(_: string): boolean {
-    return true;
+  private isExtensionVersionSupported(
+    extensionVersionData: VersionData,
+    desktopVersionData: VersionData,
+  ): boolean {
+    return (
+      extensionVersionData.compatibilityVersion >=
+      desktopVersionData.compatibilityVersion
+    );
   }
 }
 ///: END:ONLY_INCLUDE_IN
 
 ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
+
+const COMPATIBILITY_VERSION_EXTENSION = 1;
+
 export class ExtensionVersionCheck {
   private stream: Duplex;
 
@@ -50,16 +89,35 @@ export class ExtensionVersionCheck {
   public async check(): Promise<VersionCheckResult> {
     log.debug('Checking versions');
 
-    const extensionVersion = getVersion();
-    const message: VersionMessage = { version: extensionVersion };
+    const extensionCompatibilityVersion = checkIfOverridden(
+      COMPATIBILITY_VERSION_EXTENSION,
+      process.env.COMPATIBILITY_VERSION_EXTENSION,
+    );
 
-    this.stream.write(message);
+    const extensionVersionData = {
+      version: getVersion(),
+      compatibilityVersion: extensionCompatibilityVersion,
+    };
 
-    const response = await waitForMessage<VersionMessage>(this.stream);
-    const desktopVersion = response.version;
+    const checkVersionRequest: CheckVersionRequestMessage = {
+      extensionVersionData,
+    };
 
-    const isExtensionVersionValid = response.isValid as boolean;
-    const isDesktopVersionValid = this.checkDesktopVersion(desktopVersion);
+    this.stream.write(checkVersionRequest);
+
+    const response = await waitForMessage<CheckVersionResponseMessage>(
+      this.stream,
+    );
+
+    const isExtensionVersionValid = response.isExtensionSupported;
+
+    const isDesktopVersionValid = this.isDesktopVersionSupported(
+      response.desktopVersionData,
+      extensionVersionData,
+    );
+
+    const extensionVersion = extensionVersionData.version;
+    const desktopVersion = response.desktopVersionData.version;
 
     const result: VersionCheckResult = {
       extensionVersion,
@@ -73,8 +131,14 @@ export class ExtensionVersionCheck {
     return result;
   }
 
-  private checkDesktopVersion(_: string): boolean {
-    return true;
+  private isDesktopVersionSupported(
+    desktopVersionData: VersionData,
+    extensionVersionData: VersionData,
+  ): boolean {
+    return (
+      desktopVersionData.compatibilityVersion >=
+      extensionVersionData.compatibilityVersion
+    );
   }
 }
 ///: END:ONLY_INCLUDE_IN

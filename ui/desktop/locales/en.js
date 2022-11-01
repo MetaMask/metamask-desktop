@@ -42,7 +42,7 @@ const enLocales = {
     message: 'Sync with Extension',
   },
   typeTheSixDigitCodeBelow: {
-    message: 'Open your MetaMask Extansion and type the six-digit code below.',
+    message: 'Open your MetaMask Extension and type the six-digit code below.',
   },
   theme: {
     message: 'Theme',

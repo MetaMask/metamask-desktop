@@ -16,3 +16,8 @@ export interface TestConnectionResult {
   isConnected: boolean;
   versionCheck?: VersionCheckResult;
 }
+
+export interface VersionData {
+  version: string;
+  compatibilityVersion: number;
+}
