@@ -23,10 +23,17 @@ export interface StatusMessage {
   isDesktopEnabled?: boolean;
 }
 
-export type PairingMessage = {
+export type PairingResultMessage = {
   otp?: string;
   isDesktopEnabled?: boolean;
-  pairingKey?: string | undefined;
+};
+
+export type PairingKeyRequestMessage = {
+  isRequestPairingKey: boolean;
+};
+
+export type PairingKeyResponseMessage = {
+  pairingKey: string | undefined;
 };
 
 export type VersionMessage = {

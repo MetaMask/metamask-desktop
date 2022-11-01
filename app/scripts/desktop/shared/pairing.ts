@@ -2,7 +2,11 @@ import { Duplex } from 'stream';
 import EventEmitter from 'events';
 import log from 'loglevel';
 import TOTP from '../utils/totp';
-import { PairingMessage } from '../types/message';
+import {
+  PairingKeyRequestMessage,
+  PairingKeyResponseMessage,
+  PairingResultMessage,
+} from '../types/message';
 import * as rawState from '../utils/raw-state';
 import { browser } from '../browser/browser-polyfill';
 import { waitForMessage } from '../utils/stream';
@@ -26,11 +30,33 @@ export class ExtensionPairing {
   }
 
   public init() {
-    this.stream.on('data', (data: PairingMessage) => this.onMessage(data));
+    this.stream.on('data', (data: PairingResultMessage) =>
+      this.onMessage(data),
+    );
     return this;
   }
 
-  private async onMessage(pairingMessage: PairingMessage) {
+  public async isPairingKeyMatch(): Promise<boolean> {
+    const extensionPairingKey = (await rawState.getDesktopState()).pairingKey;
+    const requestPairingKey: PairingKeyRequestMessage = {
+      isRequestPairingKey: true,
+    };
+    this.stream.write(requestPairingKey);
+
+    // wait for desktop pairing key
+    const response = await waitForMessage<PairingKeyResponseMessage>(
+      this.stream,
+    );
+
+    const isDesktopEnabled = extensionPairingKey === response.pairingKey;
+
+    log.debug('Completed pairing key check', isDesktopEnabled);
+    // inform desktop
+    this.stream.write({ isDesktopEnabled });
+    return isDesktopEnabled as boolean;
+  }
+
+  private async onMessage(pairingMessage: PairingResultMessage) {
     log.debug('Received pairing message', pairingMessage);
 
     if (!pairingMessage?.otp) {
@@ -63,17 +89,6 @@ export class ExtensionPairing {
 
     log.debug('Paired with desktop');
   }
-
-  public async isPairingKeyMatch(): Promise<boolean> {
-    const extensionPairingKey = (await rawState.getDesktopState()).pairingKey;
-
-    this.stream.write({ pairingKey: extensionPairingKey });
-
-    const response = await waitForMessage<PairingMessage>(this.stream);
-
-    log.debug('Completed pairing key check', response.isDesktopEnabled);
-    return response.isDesktopEnabled as boolean;
-  }
 }
 
 export class DesktopPairing extends EventEmitter {
@@ -85,8 +100,8 @@ export class DesktopPairing extends EventEmitter {
   }
 
   public init() {
-    this.stream.on('data', (data: PairingMessage) =>
-      data.pairingKey ? this.onCheckPairingKey(data) : this.onMessage(data),
+    this.stream.on('data', (data: PairingResultMessage) =>
+      this.onMessage(data),
     );
     return this;
   }
@@ -96,24 +111,30 @@ export class DesktopPairing extends EventEmitter {
     this.stream.write({ otp, isDesktopEnabled: false });
   }
 
-  private async onCheckPairingKey(pairingMessage: PairingMessage) {
+  private async onPairingKeyRequestMessage(
+    pairingMessage: PairingKeyRequestMessage,
+  ) {
     const desktopPairingKey = (await rawState.getDesktopState()).pairingKey;
     log.debug('Comparing desktop and extension pairing keys');
 
-    const isDesktopEnabled = pairingMessage.pairingKey === desktopPairingKey;
-
-    const response: PairingMessage = {
+    const response: PairingKeyResponseMessage = {
       ...pairingMessage,
-      isDesktopEnabled,
-      pairingKey: pairingMessage.pairingKey,
+      pairingKey: desktopPairingKey,
     };
     this.stream.write(response);
   }
 
-  private async onMessage(pairingMessage: PairingMessage) {
+  private async onMessage(
+    pairingMessage: PairingResultMessage | PairingKeyRequestMessage,
+  ) {
     log.debug('Received pairing message', pairingMessage);
 
-    if (pairingMessage?.isDesktopEnabled) {
+    if (this.isPairingKeyRequestMessage(pairingMessage)) {
+      await this.onPairingKeyRequestMessage(pairingMessage);
+      return;
+    }
+
+    if ((pairingMessage as PairingResultMessage)?.isDesktopEnabled) {
       await rawState.setDesktopState({ desktopEnabled: true });
       this.stream.write(MESSAGE_ACKNOWLEDGE);
       return;
@@ -121,5 +142,11 @@ export class DesktopPairing extends EventEmitter {
 
     log.debug('Submitted OTP was invalid');
     this.emit('invalid-otp', false);
+  }
+
+  private isPairingKeyRequestMessage(
+    msg: PairingResultMessage | PairingKeyRequestMessage,
+  ): msg is PairingKeyRequestMessage {
+    return (msg as PairingKeyRequestMessage)?.isRequestPairingKey !== undefined;
   }
 }

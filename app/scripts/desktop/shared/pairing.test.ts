@@ -67,9 +67,7 @@ describe('Pairing', () => {
 
       describe('if OTP is valid', () => {
         beforeEach(async () => {
-          encryptionMock.createKey.mockImplementation(
-            async () => DECRYPTED_STRING_MOCK,
-          );
+          encryptionMock.createKey.mockResolvedValue(DECRYPTED_STRING_MOCK);
           totpMock.validate.mockReturnValue(true);
           await simulatePairingMessage();
           await flushPromises();
