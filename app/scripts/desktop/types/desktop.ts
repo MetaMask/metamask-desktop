@@ -16,3 +16,7 @@ export interface TestConnectionResult {
   isConnected: boolean;
   versionCheck?: VersionCheckResult;
 }
+
+export interface DisconnectEventOpts {
+  isDisconnectedByUser: boolean;
+}

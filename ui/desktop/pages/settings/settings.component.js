@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { PropTypes } from 'prop-types';
-import { Switch, Route, matchPath } from 'react-router-dom';
+import { Switch, Route, matchPath, useHistory } from 'react-router-dom';
 
 import {
   GENERAL_ROUTE,
   ABOUT_US_ROUTE,
   SETTINGS_ROUTE,
+  PAIR_ROUTE,
 } from '../../helpers/constants/routes';
 import TabBar from '../../../components/app/tab-bar';
 import Typography from '../../../components/ui/typography';
@@ -14,8 +15,16 @@ import useI18nContext from '../../hooks/useI18nContext';
 import GeneralTab from './general-tab';
 import AboutTab from './about-tab';
 
-const Settings = ({ currentPath, isAboutPage, history }) => {
+const Settings = ({ currentPath, isAboutPage, isDesktopEnabled }) => {
   const t = useI18nContext();
+  const history = useHistory();
+
+  useEffect(() => {
+    if (!isDesktopEnabled) {
+      console.log('Unpaired, redirecting');
+      history.push(PAIR_ROUTE);
+    }
+  }, [isDesktopEnabled, history]);
 
   const renderTabs = () => {
     return (
@@ -99,9 +108,9 @@ Settings.propTypes = {
    */
   isAboutPage: PropTypes.bool,
   /**
-   * History object from react-router
+   * Whether the extension is paired with the desktop app
    */
-  history: PropTypes.object,
+  isDesktopEnabled: PropTypes.bool,
 };
 
 export default Settings;

@@ -11,7 +11,7 @@ const pairStatusPersistConfig = {
   storage: createElectronStorage({
     name: 'mmd-desktop-ui-v0.0.0-pair-status',
   }),
-  blacklist: ['isPaired', 'connections', 'isWebSocketConnected'],
+  blacklist: ['connections', 'isWebSocketConnected'],
 };
 const persistedPairStatusReducer = persistReducer(
   pairStatusPersistConfig,
