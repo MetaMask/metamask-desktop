@@ -1,5 +1,7 @@
 import { Duplex } from 'stream';
+///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
 import EventEmitter from 'events';
+///: END:ONLY_INCLUDE_IN
 import log from 'loglevel';
 import * as totp from '../../../../shared/modules/totp';
 import { PairingMessage } from '../types/message';
