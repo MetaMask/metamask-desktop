@@ -1,6 +1,7 @@
 import { createStreamMock, VERSION_2_MOCK, VERSION_MOCK } from '../test/mocks';
 import { simulateStreamMessage } from '../test/utils';
 import { VersionCheckResult } from '../types/desktop';
+import { CheckVersionResponseMessage } from '../types/message';
 import { getVersion } from '../utils/version';
 import { DesktopVersionCheck, ExtensionVersionCheck } from './version-check';
 
@@ -20,16 +21,37 @@ describe('Version Check', () => {
     });
 
     describe('on message', () => {
-      it('writes desktop version and extension validity to stream', async () => {
-        getVersionMock.mockReturnValueOnce(VERSION_MOCK);
-        await simulateStreamMessage(streamMock, { version: VERSION_MOCK });
+      it.each([
+        ['supported', 'matches', 1, true],
+        ['unsupported', 'less than', 0, false],
+        ['supported', 'greater than', 2, true],
+      ])(
+        'responds indicating extension %s if extension compatibility version %s',
+        async (
+          _: string,
+          __: string,
+          extensionCompatibilityVersion: number,
+          isExtensionSupported: boolean,
+        ) => {
+          getVersionMock.mockReturnValueOnce(VERSION_2_MOCK);
 
-        expect(streamMock.write).toHaveBeenCalledTimes(1);
-        expect(streamMock.write).toHaveBeenCalledWith({
-          version: VERSION_MOCK,
-          isValid: true,
-        });
-      });
+          await simulateStreamMessage(streamMock, {
+            extensionVersionData: {
+              version: VERSION_MOCK,
+              compatibilityVersion: extensionCompatibilityVersion,
+            },
+          });
+
+          expect(streamMock.write).toHaveBeenCalledTimes(1);
+          expect(streamMock.write).toHaveBeenCalledWith({
+            desktopVersionData: {
+              version: VERSION_2_MOCK,
+              compatibilityVersion: 1,
+            },
+            isExtensionSupported,
+          });
+        },
+      );
     });
   });
 
@@ -41,13 +63,24 @@ describe('Version Check', () => {
     });
 
     describe('check', () => {
-      const check = async (): Promise<VersionCheckResult> => {
+      const check = async ({
+        isExtensionSupported = true,
+        desktopCompatibilityVersion = 1,
+      }: {
+        isExtensionSupported?: boolean;
+        desktopCompatibilityVersion?: number;
+      } = {}): Promise<VersionCheckResult> => {
         const promise = extensionVersionCheck.check();
 
-        await simulateStreamMessage(streamMock, {
-          version: VERSION_2_MOCK,
-          isValid: false,
-        });
+        const checkVersionResponse: CheckVersionResponseMessage = {
+          desktopVersionData: {
+            version: VERSION_2_MOCK,
+            compatibilityVersion: desktopCompatibilityVersion,
+          },
+          isExtensionSupported,
+        };
+
+        await simulateStreamMessage(streamMock, checkVersionResponse);
 
         return await promise;
       };
@@ -59,22 +92,56 @@ describe('Version Check', () => {
 
         expect(streamMock.write).toHaveBeenCalledTimes(1);
         expect(streamMock.write).toHaveBeenCalledWith({
-          version: VERSION_MOCK,
+          extensionVersionData: {
+            version: VERSION_MOCK,
+            compatibilityVersion: 1,
+          },
         });
       });
 
-      it('returns result using response', async () => {
-        getVersionMock.mockReturnValueOnce(VERSION_MOCK);
+      it.each([
+        ['valid', 'supported', true],
+        ['invalid', 'unsupported', false],
+      ])(
+        'returns result with extension version %s if %s in response',
+        async (_: string, __: string, isExtensionSupported: boolean) => {
+          getVersionMock.mockReturnValueOnce(VERSION_MOCK);
 
-        const result = await check();
+          const result = await check({ isExtensionSupported });
 
-        expect(result).toStrictEqual({
-          extensionVersion: VERSION_MOCK,
-          desktopVersion: VERSION_2_MOCK,
-          isExtensionVersionValid: false,
-          isDesktopVersionValid: true,
-        });
-      });
+          expect(result).toStrictEqual({
+            extensionVersion: VERSION_MOCK,
+            desktopVersion: VERSION_2_MOCK,
+            isExtensionVersionValid: isExtensionSupported,
+            isDesktopVersionValid: true,
+          });
+        },
+      );
+
+      it.each([
+        ['valid', 'matches', 1, true],
+        ['invalid', 'less than', 0, false],
+        ['valid', 'greater than', 2, true],
+      ])(
+        'returns result with desktop version %s if desktop compatibility version %s',
+        async (
+          _: string,
+          __: string,
+          desktopCompatibilityVersion: number,
+          isDesktopValid: boolean,
+        ) => {
+          getVersionMock.mockReturnValueOnce(VERSION_MOCK);
+
+          const result = await check({ desktopCompatibilityVersion });
+
+          expect(result).toStrictEqual({
+            extensionVersion: VERSION_MOCK,
+            desktopVersion: VERSION_2_MOCK,
+            isExtensionVersionValid: true,
+            isDesktopVersionValid: isDesktopValid,
+          });
+        },
+      );
     });
   });
 });

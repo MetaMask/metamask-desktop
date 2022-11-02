@@ -106,7 +106,7 @@ export function renderDesktopError({
           {renderCTA(
             'desktop-error-button-update-mmd',
             t('desktopOutdatedErrorCTA'),
-            noop,
+            downloadDesktopApp,
           )}
         </>
       );
