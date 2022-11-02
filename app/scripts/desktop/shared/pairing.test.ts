@@ -75,7 +75,7 @@ describe('Pairing', () => {
         });
 
         it('updates state', async () => {
-          expect(rawStateMock.setDesktopState).toHaveBeenCalledTimes(1);
+          expect(rawStateMock.setDesktopState).toHaveBeenCalledTimes(2);
           expect(rawStateMock.setDesktopState).toHaveBeenCalledWith({
             desktopEnabled: true,
             pairingKey: DECRYPTED_STRING_MOCK,
@@ -97,7 +97,6 @@ describe('Pairing', () => {
           expect(streamMock.write).toHaveBeenCalledTimes(1);
           expect(streamMock.write).toHaveBeenCalledWith({
             isDesktopEnabled: false,
-            otp: OTP_MOCK,
           });
         });
       });
@@ -118,7 +117,6 @@ describe('Pairing', () => {
         expect(streamMock.write).toHaveBeenCalledTimes(1);
         expect(streamMock.write).toHaveBeenCalledWith({
           otp: OTP_MOCK,
-          isDesktopEnabled: false,
         });
       });
     });
@@ -131,9 +129,7 @@ describe('Pairing', () => {
           'invalid-otp',
           undefined,
           async () => {
-            await simulateStreamMessage(streamMock, {
-              isDesktopEnabled: false,
-            });
+            await simulateStreamMessage(streamMock, {});
           },
         );
       });

@@ -5,6 +5,7 @@ import TOTP from '../utils/totp';
 import {
   PairingKeyRequestMessage,
   PairingKeyResponseMessage,
+  PairingRequestMessage,
   PairingResultMessage,
 } from '../types/message';
 import * as rawState from '../utils/raw-state';
@@ -30,7 +31,7 @@ export class ExtensionPairing {
   }
 
   public init() {
-    this.stream.on('data', (data: PairingResultMessage) =>
+    this.stream.on('data', (data: PairingRequestMessage) =>
       this.onMessage(data),
     );
     return this;
@@ -51,23 +52,20 @@ export class ExtensionPairing {
     const isDesktopEnabled = extensionPairingKey === response.pairingKey;
 
     log.debug('Completed pairing key check', isDesktopEnabled);
-    // inform desktop
-    this.stream.write({ isDesktopEnabled });
     return isDesktopEnabled as boolean;
   }
 
-  private async onMessage(pairingMessage: PairingResultMessage) {
-    log.debug('Received pairing message', pairingMessage);
+  private async onMessage(pairingRequestMessage: PairingRequestMessage) {
+    log.debug('Received pairing message', pairingRequestMessage);
 
-    if (!pairingMessage?.otp) {
-      return;
-    }
-
-    const isValidOTP = TOTP.validate(pairingMessage?.otp);
+    const isValidOTP = TOTP.validate(pairingRequestMessage?.otp);
 
     if (!isValidOTP) {
       log.debug('Received invalid OTP');
-      this.stream.write({ ...pairingMessage, isDesktopEnabled: false });
+      const pairingResultMessage: PairingResultMessage = {
+        isDesktopEnabled: false,
+      };
+      this.stream.write(pairingResultMessage);
       return;
     }
 
@@ -77,7 +75,10 @@ export class ExtensionPairing {
       pairingKey: await createKey(),
     });
 
-    this.stream.write({ ...pairingMessage, isDesktopEnabled: true });
+    const pairingResultMessage: PairingResultMessage = {
+      isDesktopEnabled: true,
+    };
+    this.stream.write(pairingResultMessage);
     await waitForMessage(this.stream, (data) =>
       Promise.resolve(data === MESSAGE_ACKNOWLEDGE),
     );
@@ -108,17 +109,17 @@ export class DesktopPairing extends EventEmitter {
 
   public async submitOTP(otp: string) {
     log.debug('Received OTP', otp);
-    this.stream.write({ otp, isDesktopEnabled: false });
+    this.stream.write({ otp });
   }
 
   private async onPairingKeyRequestMessage(
-    pairingMessage: PairingKeyRequestMessage,
+    pairingKeyRequestMessage: PairingKeyRequestMessage,
   ) {
+    log.debug('Received pairing key request message', pairingKeyRequestMessage);
     const desktopPairingKey = (await rawState.getDesktopState()).pairingKey;
     log.debug('Comparing desktop and extension pairing keys');
 
     const response: PairingKeyResponseMessage = {
-      ...pairingMessage,
       pairingKey: desktopPairingKey,
     };
     this.stream.write(response);
