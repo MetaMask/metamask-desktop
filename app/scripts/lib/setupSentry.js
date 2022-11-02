@@ -1,9 +1,24 @@
-import * as Sentry from '@sentry/browser';
 import { Dedupe, ExtraErrorData } from '@sentry/integrations';
 
 import { BuildType } from '../../../shared/constants/app';
 import { FilterEvents } from './sentry-filter-events';
 import extractEthjsErrorMessage from './extractEthjsErrorMessage';
+
+let Sentry;
+
+/* eslint-disable import/first, import/order */
+///: BEGIN:EXCLUDE_IN(desktopapp)
+import * as SentryBrowser from '@sentry/browser';
+
+Sentry = SentryBrowser;
+///: END:EXCLUDE_IN
+
+///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
+import * as SentryElectron from '@sentry/electron/main';
+
+Sentry = SentryElectron;
+///: END:ONLY_INCLUDE_IN
+/* eslint-enable import/first, import/order */
 
 /* eslint-disable prefer-destructuring */
 // Destructuring breaks the inlining of the environment variables
@@ -33,6 +48,7 @@ export const SENTRY_STATE = {
     currentLocale: true,
     customNonceValue: true,
     defaultHomeActiveTabName: true,
+    desktopEnabled: true,
     featureFlags: true,
     firstTimeFlowType: true,
     forgottenPassword: true,
@@ -206,8 +222,11 @@ function rewriteErrorMessages(report, rewriteFn) {
 }
 
 function rewriteReportUrls(report) {
-  // update request url
-  report.request.url = toMetamaskUrl(report.request.url);
+  if (report.request?.url) {
+    // update request url
+    report.request.url = toMetamaskUrl(report.request.url);
+  }
+
   // update exception stack trace
   if (report.exception && report.exception.values) {
     report.exception.values.forEach((item) => {
@@ -221,6 +240,10 @@ function rewriteReportUrls(report) {
 }
 
 function toMetamaskUrl(origUrl) {
+  if (!globalThis.location?.origin) {
+    return origUrl;
+  }
+
   const filePath = origUrl.split(globalThis.location.origin)[1];
   if (!filePath) {
     return origUrl;
