@@ -14,7 +14,7 @@ import Mascot from '../../../components/ui/mascot';
 
 const { ipcRenderer } = window.require('electron');
 
-const Pair = ({ isPaired, history }) => {
+const Pair = ({ isDesktopEnabled, history }) => {
   const t = useI18nContext();
   const [otp, setOtp] = React.useState('');
   const [otpError, setOtpError] = React.useState();
@@ -32,11 +32,11 @@ const Pair = ({ isPaired, history }) => {
   }, []);
 
   useEffect(() => {
-    if (isPaired) {
+    if (isDesktopEnabled) {
       console.log('Paired, redirecting');
       history.push(SETTINGS_ROUTE);
     }
-  }, [isPaired, history]);
+  }, [isDesktopEnabled, history]);
 
   const handleOTPChange = (otpValue) => {
     setOtp(otpValue);
@@ -79,7 +79,7 @@ Pair.propTypes = {
   /**
    * Whether the app is paired with the extension
    */
-  isPaired: PropTypes.bool,
+  isDesktopEnabled: PropTypes.bool,
   /**
    * History object from react-router
    */

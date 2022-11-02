@@ -172,6 +172,7 @@ export const createDesktopConnectionMock = (): jest.Mocked<DesktopConnection> =>
     getDesktopVersion: jest.fn(),
     createStream: jest.fn(),
     removeAllListeners: jest.fn(),
+    checkPairingKey: jest.fn(),
   } as any);
 
 export const createObservableStoreMock = (): jest.Mocked<ObservableStore> =>
@@ -183,6 +184,8 @@ export const createObservableStoreMock = (): jest.Mocked<ObservableStore> =>
 export const createExtensionPairingMock = (): jest.Mocked<ExtensionPairing> =>
   ({
     generateOTP: jest.fn(),
+    isPairingKeyMatch: jest.fn(),
+    init: jest.fn(),
   } as any);
 
 export const createElectronStoreMock = (): jest.Mocked<ElectronStore> =>

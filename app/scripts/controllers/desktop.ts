@@ -17,6 +17,7 @@ export default class DesktopController {
   constructor({ initState }: { initState: any }) {
     this.store = new ObservableStore({
       desktopEnabled: false,
+      pairingKey: undefined,
       ...initState,
     });
   }
@@ -28,6 +29,12 @@ export default class DesktopController {
   public setDesktopEnabled(desktopEnabled: boolean) {
     this.store.updateState({
       desktopEnabled,
+    });
+  }
+
+  setPairingKey(pairingKey: string) {
+    this.store.updateState({
+      pairingKey,
     });
   }
 

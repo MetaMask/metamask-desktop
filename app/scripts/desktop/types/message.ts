@@ -20,12 +20,23 @@ export type BrowserControllerMessage = BrowserControllerAction;
 export interface StatusMessage {
   isWebSocketConnected: boolean;
   connections: NewConnectionMessage[];
-  isPaired?: boolean;
+  isDesktopEnabled?: boolean;
 }
 
-export type PairingMessage = {
+export type PairingRequestMessage = {
   otp: string;
-  isPaired: boolean;
+};
+
+export type PairingResultMessage = {
+  isDesktopEnabled: boolean;
+};
+
+export type PairingKeyRequestMessage = {
+  isRequestPairingKey: boolean;
+};
+
+export type PairingKeyResponseMessage = {
+  pairingKey: string | undefined;
 };
 
 export type VersionMessage = {

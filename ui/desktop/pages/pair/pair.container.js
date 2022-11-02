@@ -5,7 +5,7 @@ import Pair from './pair.component';
 
 function mapStateToProps(state) {
   return {
-    isPaired: state.pairStatus.isPaired,
+    isDesktopEnabled: state.pairStatus.isDesktopEnabled,
   };
 }
 

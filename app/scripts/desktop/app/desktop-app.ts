@@ -62,7 +62,7 @@ class DesktopApp extends EventEmitter {
     const server = await this.createWebSocketServer();
     server.on('connection', (webSocket) => this.onConnection(webSocket));
 
-    this.status.isPaired =
+    this.status.isDesktopEnabled =
       (await RawState.getDesktopState()).desktopEnabled === true;
 
     log.debug('Initialised desktop app');
@@ -111,7 +111,7 @@ class DesktopApp extends EventEmitter {
     );
 
     extensionConnection.on('paired', () => {
-      this.status.isPaired = true;
+      this.status.isDesktopEnabled = true;
     });
 
     extensionConnection.getPairing().on('invalid-otp', () => {
@@ -197,7 +197,7 @@ class DesktopApp extends EventEmitter {
 
     mainWindow.loadFile(
       path.resolve(__dirname, '../../../../../dist_desktop_ui/desktop-ui.html'),
-      // Temporary open pair page, it will redirect to settings page if isPaired is true
+      // Temporary open pair page, it will redirect to settings page if isDesktopEnabled is true
       { hash: 'pair' },
     );
 

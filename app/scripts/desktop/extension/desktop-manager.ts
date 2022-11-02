@@ -113,6 +113,15 @@ class DesktopManager {
 
     log.debug('Created web socket connection');
 
+    if (this.isDesktopEnabled()) {
+      log.debug('Desktop enabled, checking pairing key');
+
+      if (!(await connection.checkPairingKey())) {
+        webSocket.close();
+        throw new Error('Desktop app not recognized');
+      }
+    }
+
     this.desktopConnection = connection;
 
     return connection;
@@ -156,7 +165,10 @@ class DesktopManager {
   private async disable() {
     log.debug('Disabling desktop mode');
 
-    await RawState.setDesktopState({ desktopEnabled: false });
+    await RawState.setDesktopState({
+      desktopEnabled: false,
+      pairingKey: undefined,
+    });
 
     browser.runtime.reload();
   }

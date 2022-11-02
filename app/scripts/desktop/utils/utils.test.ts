@@ -1,11 +1,12 @@
 import {
   DATA_MOCK,
+  IV_BUFFER_MOCK,
   METHOD_MOCK,
   RESULT_MOCK,
   STREAM_MOCK,
   TYPE_MOCK,
 } from '../test/mocks';
-import { flattenMessage } from './utils';
+import { flattenMessage, randomHex } from './utils';
 
 describe('Desktop Utils', () => {
   describe('flattenMessage', () => {
@@ -55,6 +56,25 @@ describe('Desktop Utils', () => {
         method: METHOD_MOCK,
         isResult: true,
       });
+    });
+  });
+
+  describe('randomHex', () => {
+    let cryptoMock: jest.Mocked<Crypto>;
+    beforeEach(() => {
+      jest.resetAllMocks();
+
+      cryptoMock = {
+        getRandomValues: jest.fn(),
+      } as any;
+
+      jest.spyOn(global, 'crypto', 'get').mockImplementation(() => cryptoMock);
+    });
+
+    it('returns random hex', () => {
+      cryptoMock.getRandomValues.mockReturnValueOnce(IV_BUFFER_MOCK);
+      const result = randomHex();
+      expect(result).toBeDefined();
     });
   });
 });

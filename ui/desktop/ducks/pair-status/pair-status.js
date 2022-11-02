@@ -1,5 +1,5 @@
 export const initialPairStatusState = {
-  isPaired: false,
+  isDesktopEnabled: false,
   isWebSocketConnected: false,
   connections: [],
   lastActivation: null,
@@ -32,8 +32,9 @@ export default function pairStatusReducer(
 
 // Selectors
 export const getLastActivation = (state) => state.pairStatus.lastActivation;
-export const getIsPaired = (state) => state.pairStatus.isPaired;
-export const getIsWebSocketConnected = (state) => state.pairStatus.isPaired;
+export const getIsDesktopEnabled = (state) => state.pairStatus.isDesktopEnabled;
+export const getIsWebSocketConnected = (state) =>
+  state.pairStatus.isWebSocketConnected;
 
 // Action Creators
 export function updatePairStatus(payload) {

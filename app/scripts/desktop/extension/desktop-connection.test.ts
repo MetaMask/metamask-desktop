@@ -17,6 +17,7 @@ import {
   createMultiplexMock,
   UUID_MOCK,
   createExtensionVersionCheckMock,
+  createExtensionPairingMock,
 } from '../test/mocks';
 import {
   simulateStreamMessage,
@@ -28,17 +29,24 @@ import { ConnectionType } from '../types/background';
 import { ClientId } from '../types/desktop';
 import { ExtensionVersionCheck } from '../shared/version-check';
 import * as RawState from '../utils/raw-state';
+import { ExtensionPairing } from '../shared/pairing';
 import DesktopConnection from './desktop-connection';
 
 jest.mock('obj-multiplex', () => jest.fn(), { virtual: true });
 jest.mock('extension-port-stream');
 jest.mock('uuid');
 jest.mock('../utils/raw-state');
-jest.mock('../../../../shared/modules/totp');
+jest.mock('../utils/totp');
 
 jest.mock(
   '../shared/version-check',
   () => ({ ExtensionVersionCheck: jest.fn() }),
+  { virtual: true },
+);
+
+jest.mock(
+  '../shared/pairing',
+  () => ({ ExtensionPairing: jest.fn(), DesktopPairing: jest.fn() }),
   { virtual: true },
 );
 
@@ -66,6 +74,7 @@ describe('Desktop Connection', () => {
   const browserMock = browser as any;
   const uuidMock = uuidv4 as jest.MockedFunction<typeof uuidv4>;
   const versionCheckMock = createExtensionVersionCheckMock();
+  const extensionPairingMock = createExtensionPairingMock();
   const rawStateMock = RawState as jest.Mocked<typeof RawState>;
 
   const objectMultiplexConstructorMock = ObjectMultiplex as jest.MockedClass<
@@ -76,12 +85,16 @@ describe('Desktop Connection', () => {
     typeof ExtensionVersionCheck
   >;
 
+  const extensionPairingConstructorMock = ExtensionPairing as jest.MockedClass<
+    typeof ExtensionPairing
+  >;
+
   const multiplexStreamMocks: { [clientId: ClientId]: jest.Mocked<Duplex> } =
     {};
 
   let desktopConnection: DesktopConnection;
 
-  const simulateTranferStateReceipt = async (promise: Promise<any>) => {
+  const simulateTransferStateReceipt = async (promise: Promise<any>) => {
     await flushPromises();
 
     await simulateStreamMessage(
@@ -99,7 +112,9 @@ describe('Desktop Connection', () => {
     uiStreamMock.pipe.mockImplementation((dest) => dest);
     objectMultiplexConstructorMock.mockReturnValue(multiplexMock);
     versionCheckConstructorMock.mockReturnValue(versionCheckMock as any);
+    extensionPairingConstructorMock.mockReturnValue(extensionPairingMock);
     uuidMock.mockReturnValue(UUID_MOCK);
+    extensionPairingMock.init.mockReturnValue(extensionPairingMock);
 
     multiplexMock.createStream.mockImplementation((name) => {
       const newStream = createStreamMock();
@@ -167,7 +182,7 @@ describe('Desktop Connection', () => {
       const stateStreamMock = multiplexStreamMocks[CLIENT_ID_STATE];
       const promise = desktopConnection.transferState();
 
-      await simulateTranferStateReceipt(promise);
+      await simulateTransferStateReceipt(promise);
 
       expect(stateStreamMock.write).toHaveBeenCalledTimes(1);
       expect(stateStreamMock.write).toHaveBeenCalledWith(DATA_MOCK);
@@ -178,6 +193,16 @@ describe('Desktop Connection', () => {
     it('invokes version check instance', async () => {
       await desktopConnection.checkVersions();
       expect(versionCheckMock.check).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('checkPairingKey', () => {
+    it('invokes pairing key check instance', async () => {
+      extensionPairingMock.isPairingKeyMatch.mockImplementation(
+        async () => true,
+      );
+      expect(await desktopConnection.checkPairingKey()).toBe(true);
+      expect(extensionPairingMock.isPairingKeyMatch).toHaveBeenCalledTimes(1);
     });
   });
 
