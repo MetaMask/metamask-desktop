@@ -7,18 +7,9 @@ import {
 } from '../types/message';
 import { waitForMessage } from '../utils/stream';
 import { getVersion } from '../utils/version';
-
-const checkIfOverridden = (hardcodedValue: number, envValue?: string) => {
-  if (envValue) {
-    return parseInt(envValue, 10);
-  }
-
-  return hardcodedValue;
-};
+import cfg from '../utils/config';
 
 ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
-
-const COMPATIBILITY_VERSION_DESKTOP = 1;
 
 export class DesktopVersionCheck {
   private stream: Duplex;
@@ -38,14 +29,9 @@ export class DesktopVersionCheck {
 
     const { extensionVersionData } = data;
 
-    const desktopCompatibilityVersion = checkIfOverridden(
-      COMPATIBILITY_VERSION_DESKTOP,
-      process.env.COMPATIBILITY_VERSION_DESKTOP,
-    );
-
     const desktopVersionData = {
       version: getVersion(),
-      compatibilityVersion: desktopCompatibilityVersion,
+      compatibilityVersion: cfg().desktop.compatibilityVersion.desktop,
     };
 
     const isExtensionSupported = this.isExtensionVersionSupported(
@@ -77,8 +63,6 @@ export class DesktopVersionCheck {
 
 ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
 
-const COMPATIBILITY_VERSION_EXTENSION = 1;
-
 export class ExtensionVersionCheck {
   private stream: Duplex;
 
@@ -89,14 +73,9 @@ export class ExtensionVersionCheck {
   public async check(): Promise<VersionCheckResult> {
     log.debug('Checking versions');
 
-    const extensionCompatibilityVersion = checkIfOverridden(
-      COMPATIBILITY_VERSION_EXTENSION,
-      process.env.COMPATIBILITY_VERSION_EXTENSION,
-    );
-
     const extensionVersionData = {
       version: getVersion(),
-      compatibilityVersion: extensionCompatibilityVersion,
+      compatibilityVersion: cfg().desktop.compatibilityVersion.extension,
     };
 
     const checkVersionRequest: CheckVersionRequestMessage = {
