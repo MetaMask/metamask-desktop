@@ -2,8 +2,8 @@
 
 OUTPUT_DIR="dist_desktop"
 
-echo "Rebuilding leveldown for Electron to support 3box"
-yarn electron-rebuild -o leveldown,keytar
+echo "Rebuilding keytar"
+yarn electron-rebuild -o keytar
 
 echo "Removing existing build files"
 rm -rf $OUTPUT_DIR

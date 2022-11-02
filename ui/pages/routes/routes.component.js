@@ -121,6 +121,8 @@ export default class Routes extends Component {
     currentChainId: PropTypes.string,
     shouldShowSeedPhraseReminder: PropTypes.bool,
     portfolioTooltipIsBeingShown: PropTypes.bool,
+    forgottenPassword: PropTypes.bool,
+    isCurrentProviderCustom: PropTypes.bool,
   };
 
   static contextTypes = {
@@ -173,7 +175,10 @@ export default class Routes extends Component {
   }
 
   renderRoutes() {
-    const { autoLockTimeLimit, setLastActiveTime } = this.props;
+    const { autoLockTimeLimit, setLastActiveTime, forgottenPassword } =
+      this.props;
+    const RestoreVaultComponent = forgottenPassword ? Route : Initialized;
+
     const routes = (
       <Switch>
         {process.env.ONBOARDING_V2 && (
@@ -191,7 +196,7 @@ export default class Routes extends Component {
           ///: END:ONLY_INCLUDE_IN
         }
         <Initialized path={UNLOCK_ROUTE} component={UnlockPage} exact />
-        <Initialized
+        <RestoreVaultComponent
           path={RESTORE_VAULT_ROUTE}
           component={RestoreVaultPage}
           exact
@@ -395,6 +400,7 @@ export default class Routes extends Component {
       currentChainId,
       shouldShowSeedPhraseReminder,
       portfolioTooltipIsBeingShown,
+      isCurrentProviderCustom,
     } = this.props;
     const loadMessage =
       loadingMessage || isNetworkLoading
@@ -406,6 +412,7 @@ export default class Routes extends Component {
       currentChainId &&
       !isTestNet &&
       !isNetworkUsed &&
+      !isCurrentProviderCustom &&
       allAccountsOnNetworkAreEmpty;
 
     const windowType = getEnvironmentType();

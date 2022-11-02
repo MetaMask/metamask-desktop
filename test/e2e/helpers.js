@@ -87,17 +87,19 @@ async function withFixtures(options, testSuite) {
         'Close MM Desktop App if for any chance did not get closed before',
       );
       cp.spawn('kill -9 `lsof -t -i:7071`', { shell: true });
+    }
 
+    const state = fixtureServer.loadJsonState(fixtures);
+
+    if (process.env.RUN_WITH_DESKTOP === 'true') {
       // Load state in electron app => copy state.json to config.json in electron
       const electronPath =
         process.env.CI === 'true'
           ? process.env.UBUNTU_ELECTRON_CONFIG_FILE_PATH
           : process.env.LOCAL_ELECTRON_CONFIG_FILE_PATH;
       console.info(`ELECTRON_CONFIG_FILE_PATH: ${electronPath}`);
-      await fixtureServer.loadStateDesktop(
-        path.join(__dirname, 'fixtures', fixtures),
-        electronPath,
-      );
+
+      await fs.writeFile(electronPath, JSON.stringify(state, null, 2));
 
       if (process.env.CI === 'true') {
         console.info('Open MM Desktop App on CI');
@@ -116,7 +118,6 @@ async function withFixtures(options, testSuite) {
       await delay(5000);
     }
 
-    await fixtureServer.loadState(path.join(__dirname, 'fixtures', fixtures));
     await phishingPageServer.start();
     if (dapp) {
       if (dappOptions?.numberOfDapps) {
@@ -248,26 +249,6 @@ const getWindowHandles = async (driver, handlesCount) => {
     (handle) => handle !== extension && handle !== dapp,
   );
   return { extension, dapp, popup };
-};
-
-const connectDappWithExtensionPopup = async (driver) => {
-  await driver.openNewPage(`http://127.0.0.1:${dappBasePort}/`);
-  await driver.delay(regularDelayMs);
-  await driver.clickElement({ text: 'Connect', tag: 'button' });
-  await driver.delay(regularDelayMs);
-
-  const windowHandles = await getWindowHandles(driver, 3);
-
-  // open extension popup and confirm connect
-  await driver.switchToWindow(windowHandles.popup);
-  await driver.delay(largeDelayMs);
-  await driver.clickElement({ text: 'Next', tag: 'button' });
-  await driver.clickElement({ text: 'Connect', tag: 'button' });
-
-  // send from dapp
-  await driver.waitUntilXWindowHandles(2);
-  await driver.switchToWindow(windowHandles.dapp);
-  await driver.delay(regularDelayMs);
 };
 
 const completeImportSRPOnboardingFlow = async (
@@ -414,7 +395,6 @@ module.exports = {
   largeDelayMs,
   veryLargeDelayMs,
   withFixtures,
-  connectDappWithExtensionPopup,
   completeImportSRPOnboardingFlow,
   completeImportSRPOnboardingFlowDesktop,
   completeImportSRPOnboardingFlowWordByWord,

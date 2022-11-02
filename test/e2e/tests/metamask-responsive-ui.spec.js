@@ -1,6 +1,7 @@
 const { strict: assert } = require('assert');
 const { convertToHexValue, withFixtures, tinyDelayMs } = require('../helpers');
 const enLocaleMessages = require('../../../app/_locales/en/messages.json');
+const FixtureBuilder = require('../fixture-builder');
 
 describe('MetaMask Responsive UI', function () {
   it('Creating a new wallet', async function () {
@@ -8,7 +9,7 @@ describe('MetaMask Responsive UI', function () {
 
     await withFixtures(
       {
-        fixtures: 'onboarding',
+        fixtures: new FixtureBuilder({ onboarding: true }).build(),
         driverOptions,
         title: this.test.title,
         failOnConsoleError: false,
@@ -157,7 +158,7 @@ describe('MetaMask Responsive UI', function () {
 
     await withFixtures(
       {
-        fixtures: 'imported-account',
+        fixtures: new FixtureBuilder().build(),
         driverOptions,
         title: this.test.title,
         failOnConsoleError: false,
@@ -206,7 +207,7 @@ describe('MetaMask Responsive UI', function () {
     };
     await withFixtures(
       {
-        fixtures: 'imported-account',
+        fixtures: new FixtureBuilder().build(),
         driverOptions,
         ganacheOptions,
         title: this.test.title,
