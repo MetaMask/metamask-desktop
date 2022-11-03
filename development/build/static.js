@@ -110,7 +110,9 @@ module.exports = function createStaticAssetTasks({
   }
 
   async function copyGlob(baseDir, srcGlob, dest) {
-    const sources = await glob(srcGlob, { onlyFiles: false });
+    const fixedSrcGlob = process.platform === 'win32' ? srcGlob.replace(/\\/g, '/') : srcGlob;
+    const sources = await glob(fixedSrcGlob, { onlyFiles: false });
+
     await Promise.all(
       sources.map(async (src) => {
         const relativePath = path.relative(baseDir, src);

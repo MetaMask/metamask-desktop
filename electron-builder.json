@@ -4,7 +4,12 @@
   "directories": {
     "output": "builds_desktop"
   },
-  "files": ["dist_desktop/**/*", "node_modules/**/*", "package.json"],
+  "files": [
+    "dist_desktop/**/*",
+    "dist_desktop_ui/**/*",
+    "node_modules/**/*",
+    "package.json"
+  ],
   "linux": {
     "icon": "app/build-types/desktop/images/icon-512.png",
     "target": "AppImage",
@@ -25,7 +30,10 @@
     "target": [
       {
         "target": "dmg",
-        "arch": ["x64", "arm64"]
+        "arch": [
+          "x64",
+          "arm64"
+        ]
       }
     ]
   },
@@ -42,6 +50,11 @@
   "productName": "MetaMask Desktop",
   "win": {
     "icon": "app/build-types/desktop/images/icon-512.png",
-    "target": ["nsis", "portable"]
+    "forceCodeSigning": true,
+    "signAndEditExecutable": true,
+    "target": [
+      "nsis",
+      "portable"
+    ]
   }
 }
