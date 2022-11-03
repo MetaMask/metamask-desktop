@@ -30,10 +30,7 @@
     "target": [
       {
         "target": "dmg",
-        "arch": [
-          "x64",
-          "arm64"
-        ]
+        "arch": ["x64", "arm64"]
       }
     ]
   },
@@ -52,9 +49,6 @@
     "icon": "app/build-types/desktop/images/icon-512.png",
     "forceCodeSigning": true,
     "signAndEditExecutable": true,
-    "target": [
-      "nsis",
-      "portable"
-    ]
+    "target": ["nsis", "portable"]
   }
 }
