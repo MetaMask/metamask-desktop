@@ -1,11 +1,16 @@
 import { Duplex } from 'stream';
 import log from 'loglevel';
-import { VersionCheckResult } from '../types/desktop';
-import { VersionMessage } from '../types/message';
+import { VersionCheckResult, VersionData } from '../types/desktop';
+import {
+  CheckVersionRequestMessage,
+  CheckVersionResponseMessage,
+} from '../types/message';
 import { waitForMessage } from '../utils/stream';
 import { getVersion } from '../utils/version';
+import cfg from '../utils/config';
 
 ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
+
 export class DesktopVersionCheck {
   private stream: Duplex;
 
@@ -14,32 +19,50 @@ export class DesktopVersionCheck {
   }
 
   public init() {
-    this.stream.on('data', (data: VersionMessage) => this.onMessage(data));
+    this.stream.on('data', (data: CheckVersionRequestMessage) =>
+      this.onMessage(data),
+    );
   }
 
-  private onMessage(data: VersionMessage) {
+  private onMessage(data: CheckVersionRequestMessage) {
     log.debug('Received version request', data);
 
-    const isExtensionVersionValid = this.checkExtensionVersion(data.version);
-    const desktopVersion = getVersion();
+    const { extensionVersionData } = data;
 
-    const response: VersionMessage = {
-      version: desktopVersion,
-      isValid: isExtensionVersionValid,
+    const desktopVersionData = {
+      version: getVersion(),
+      compatibilityVersion: cfg().desktop.compatibilityVersion.desktop,
     };
 
-    this.stream.write(response);
+    const isExtensionSupported = this.isExtensionVersionSupported(
+      extensionVersionData,
+      desktopVersionData,
+    );
 
-    log.debug('Sent version', response);
+    const checkVersionResponse: CheckVersionResponseMessage = {
+      desktopVersionData,
+      isExtensionSupported,
+    };
+
+    this.stream.write(checkVersionResponse);
+
+    log.debug('Sent version', checkVersionResponse);
   }
 
-  private checkExtensionVersion(_: string): boolean {
-    return true;
+  private isExtensionVersionSupported(
+    extensionVersionData: VersionData,
+    desktopVersionData: VersionData,
+  ): boolean {
+    return (
+      extensionVersionData.compatibilityVersion >=
+      desktopVersionData.compatibilityVersion
+    );
   }
 }
 ///: END:ONLY_INCLUDE_IN
 
 ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
+
 export class ExtensionVersionCheck {
   private stream: Duplex;
 
@@ -50,16 +73,30 @@ export class ExtensionVersionCheck {
   public async check(): Promise<VersionCheckResult> {
     log.debug('Checking versions');
 
-    const extensionVersion = getVersion();
-    const message: VersionMessage = { version: extensionVersion };
+    const extensionVersionData = {
+      version: getVersion(),
+      compatibilityVersion: cfg().desktop.compatibilityVersion.extension,
+    };
 
-    this.stream.write(message);
+    const checkVersionRequest: CheckVersionRequestMessage = {
+      extensionVersionData,
+    };
 
-    const response = await waitForMessage<VersionMessage>(this.stream);
-    const desktopVersion = response.version;
+    this.stream.write(checkVersionRequest);
 
-    const isExtensionVersionValid = response.isValid as boolean;
-    const isDesktopVersionValid = this.checkDesktopVersion(desktopVersion);
+    const response = await waitForMessage<CheckVersionResponseMessage>(
+      this.stream,
+    );
+
+    const isExtensionVersionValid = response.isExtensionSupported;
+
+    const isDesktopVersionValid = this.isDesktopVersionSupported(
+      response.desktopVersionData,
+      extensionVersionData,
+    );
+
+    const extensionVersion = extensionVersionData.version;
+    const desktopVersion = response.desktopVersionData.version;
 
     const result: VersionCheckResult = {
       extensionVersion,
@@ -73,8 +110,14 @@ export class ExtensionVersionCheck {
     return result;
   }
 
-  private checkDesktopVersion(_: string): boolean {
-    return true;
+  private isDesktopVersionSupported(
+    desktopVersionData: VersionData,
+    extensionVersionData: VersionData,
+  ): boolean {
+    return (
+      desktopVersionData.compatibilityVersion >=
+      extensionVersionData.compatibilityVersion
+    );
   }
 }
 ///: END:ONLY_INCLUDE_IN

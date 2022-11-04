@@ -1051,9 +1051,7 @@ async function getEnvironmentVariables({ buildTarget, buildType, version }) {
   return {
     COLLECTIBLES_V1: config.COLLECTIBLES_V1 === '1',
     CONF: devMode ? config : {},
-    DISABLE_WEB_SOCKET_ENCRYPTION: config.DISABLE_WEB_SOCKET_ENCRYPTION === '1',
     ICON_NAMES: iconNames,
-    SKIP_OTP_PAIRING_FLOW: config.SKIP_OTP_PAIRING_FLOW === '1',
     IN_TEST: testing,
     INFURA_PROJECT_ID: getInfuraProjectId({
       buildType,
@@ -1078,6 +1076,10 @@ async function getEnvironmentVariables({ buildTarget, buildType, version }) {
     SIWE_V1: config.SIWE_V1 === '1',
     SWAPS_USE_DEV_APIS: config.SWAPS_USE_DEV_APIS === '1',
     TOKEN_ALLOWANCE_IMPROVEMENTS: config.TOKEN_ALLOWANCE_IMPROVEMENTS === '1',
+    // Desktop
+    COMPATIBILITY_VERSION_EXTENSION: config.COMPATIBILITY_VERSION_EXTENSION,
+    DISABLE_WEB_SOCKET_ENCRYPTION: config.DISABLE_WEB_SOCKET_ENCRYPTION === '1',
+    SKIP_OTP_PAIRING_FLOW: config.SKIP_OTP_PAIRING_FLOW === '1',
   };
 }
 

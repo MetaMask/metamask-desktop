@@ -1,0 +1,13 @@
+diff --git a/node_modules/@sentry/electron/common/process.js b/node_modules/@sentry/electron/common/process.js
+index fb00e31..d51c255 100644
+--- a/node_modules/@sentry/electron/common/process.js
++++ b/node_modules/@sentry/electron/common/process.js
+@@ -4,7 +4,7 @@ exports.ensureProcess = void 0;
+ function ensureProcess(expected) {
+     // eslint-disable-next-line no-restricted-globals
+     const current = typeof window !== 'undefined' ? 'renderer' : 'main';
+-    if (current !== expected) {
++    if (expected !== 'main' && current !== expected) {
+         throw new Error(`This code is intended to run in the Electron ${expected} process but is currently running in the ${current} process.
+ This can occur if a bundler picks the wrong entry point.
+ 

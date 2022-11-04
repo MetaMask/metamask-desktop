@@ -414,10 +414,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     },
   );
 
-  // TODO If we use sentry with desktop, this needs to be fixed
-  ///: BEGIN:EXCLUDE_IN(desktopapp)
   setupSentryGetStateGlobal(controller);
-  ///: END:EXCLUDE_IN
 
   //
   // connect to other contexts
