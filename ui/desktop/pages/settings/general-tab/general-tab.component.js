@@ -3,11 +3,14 @@ import { PropTypes } from 'prop-types';
 
 import PairStatus from '../../../components/pair-status';
 import Typography from '../../../../components/ui/typography';
+import Button from '../../../../components/ui/button';
 import Dropdown from '../../../../components/ui/dropdown';
 import { TYPOGRAPHY } from '../../../../helpers/constants/design-system';
 import localeIndex from '../../../helpers/constants/localeIndex';
 import themeIndex from '../../../helpers/constants/themeIndex';
 import useI18nContext from '../../../hooks/useI18nContext';
+
+const { ipcRenderer } = window.require('electron');
 
 const GeneralTab = ({
   isWebSocketConnected,
@@ -78,6 +81,44 @@ const GeneralTab = ({
     );
   };
 
+  const renderUnpairButton = () => {
+    return (
+      <div className="mmd-settings-page__setting-row">
+        <div className="mmd-settings-page__setting-item">
+          <div className="mmd-settings-page__setting-col">
+            <Button
+              type="danger"
+              onClick={() => {
+                ipcRenderer.invoke('unpair');
+              }}
+            >
+              {t('removeConnection')}
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderResetButton = () => {
+    return (
+      <div className="mmd-settings-page__setting-row">
+        <div className="mmd-settings-page__setting-item">
+          <div className="mmd-settings-page__setting-col">
+            <Button
+              type="danger"
+              onClick={() => {
+                ipcRenderer.invoke('reset');
+              }}
+            >
+              {t('resetConnection')}
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
       <PairStatus
@@ -86,6 +127,7 @@ const GeneralTab = ({
       />
       {renderLanguageSettings()}
       {renderThemeSettings()}
+      {isWebSocketConnected ? renderUnpairButton() : renderResetButton()}
     </>
   );
 };

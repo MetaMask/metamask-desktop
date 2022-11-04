@@ -5,6 +5,8 @@ body {
 #mmd-root {
   height: 100%;
   width: 100%;
+  overflow-y: scroll;
+  padding-top: 30px;
 }
 
 #mmd-app-content {
@@ -16,6 +18,8 @@ body {
   height: 30px;
   width: 100%;
   -webkit-app-region: drag;
+  position: fixed;
+  top: 0;
 }
 
 @import './pages/mmd-pages.scss';

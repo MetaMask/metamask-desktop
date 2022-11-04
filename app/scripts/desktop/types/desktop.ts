@@ -17,6 +17,10 @@ export interface TestConnectionResult {
   versionCheck?: VersionCheckResult;
 }
 
+export interface DisconnectEventOpts {
+  isDisconnectedByUser: boolean;
+}
+
 export interface VersionData {
   version: string;
   compatibilityVersion: number;

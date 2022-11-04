@@ -22,8 +22,8 @@ export function renderDesktopError({
   isHtmlError,
   history,
   disableDesktop,
-  downloadDesktopApp,
   downloadExtension,
+  downloadDesktopApp,
   restartExtension,
 }) {
   let content;
@@ -73,11 +73,6 @@ export function renderDesktopError({
           {renderCTA(
             'desktop-error-button-download-mmd',
             t('desktopNotFoundErrorCTA'),
-            noop,
-          )}
-          {renderCTA(
-            'desktop-error-button-disable-mmd',
-            t('desktopDisableErrorCTA'),
             downloadDesktopApp,
           )}
         </>
@@ -90,9 +85,9 @@ export function renderDesktopError({
           {renderHeader(t('desktopConnectionLostErrorTitle'))}
           {renderDescription(t('desktopConnectionLostErrorDescription'))}
           {renderCTA(
-            'desktop-error-button-reconnect',
-            t('desktopConnectionLostErrorCTA'),
-            noop,
+            'desktop-error-button-disable-mmd',
+            t('desktopDisableErrorCTA'),
+            disableDesktop,
           )}
         </>
       );

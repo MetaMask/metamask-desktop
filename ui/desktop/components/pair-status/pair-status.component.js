@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 
 import useI18nContext from '../../hooks/useI18nContext';
 import Chip from '../../../components/ui/chip';
@@ -50,13 +49,9 @@ const PairStatus = ({ isWebSocketConnected, lastActivation }) => {
       <div className="mmd-pair-status__status">
         {t('status')} {renderChip()}
       </div>
-      {isWebSocketConnected ? (
+      {isWebSocketConnected && (
         <div className="mmd-pair-status__last-active">
           {t('lastTimeActive')} {renderlastActivation()}
-        </div>
-      ) : (
-        <div className="mmd-pair-status__last-active">
-          <Link to="/pair">{t('temporaryPairLink')}</Link>
         </div>
       )}
     </div>

@@ -7,7 +7,8 @@ import cfg from '../utils/config';
 import { NodeWebSocket, WebSocketStream } from '../shared/web-socket-stream';
 import EncryptedWebSocketStream from '../encryption/encrypted-web-socket-stream';
 import { NewConnectionMessage, StatusMessage } from '../types/message';
-import { onceAny, forwardEvents } from '../utils/events';
+import { DisconnectEventOpts } from '../types/desktop';
+import { forwardEvents } from '../utils/events';
 import * as RawState from '../utils/raw-state';
 import { MILLISECOND } from '../../../../shared/constants/time';
 import ExtensionConnection from './extension-connection';
@@ -56,6 +57,15 @@ class DesktopApp extends EventEmitter {
 
     ipcMain.handle('minimize', (_event) => this.mainWindow?.minimize());
 
+    ipcMain.handle('unpair', async (_event) => {
+      await this.extensionConnection?.disable();
+    });
+
+    ipcMain.handle('reset', async (_event) => {
+      await RawState.clear();
+      this.status.isDesktopEnabled = false;
+    });
+
     this.mainWindow = await this.createMainWindow();
     this.trezorWindow = await this.createTrezorWindow();
 
@@ -93,14 +103,15 @@ class DesktopApp extends EventEmitter {
 
     const extensionConnection = new ExtensionConnection(webSocketStream);
 
-    onceAny(
-      [
-        [webSocket, 'close'],
-        [extensionConnection, 'disable'],
-      ],
-      () => {
-        this.onDisconnect(webSocket, webSocketStream, extensionConnection);
-      },
+    webSocket.on('close', () =>
+      this.onDisconnect(webSocket, webSocketStream, extensionConnection, {
+        isDisconnectedByUser: false,
+      }),
+    );
+    extensionConnection.on('disable', () =>
+      this.onDisconnect(webSocket, webSocketStream, extensionConnection, {
+        isDisconnectedByUser: true,
+      }),
     );
 
     extensionConnection.on(
@@ -133,6 +144,7 @@ class DesktopApp extends EventEmitter {
     webSocket: NodeWebSocket,
     stream: Duplex,
     connection: ExtensionConnection,
+    { isDisconnectedByUser }: DisconnectEventOpts,
   ) {
     log.debug('Extension connection disconnected');
 
@@ -151,6 +163,9 @@ class DesktopApp extends EventEmitter {
 
     this.status.isWebSocketConnected = false;
     this.status.connections = [];
+    if (isDisconnectedByUser) {
+      this.status.isDesktopEnabled = false;
+    }
 
     this.emit('restart');
   }
@@ -179,7 +194,7 @@ class DesktopApp extends EventEmitter {
   private async createMainWindow() {
     const mainWindow = new BrowserWindow({
       width: 800,
-      height: 600,
+      height: 640,
       vibrancy: 'dark',
       titleBarStyle: 'hidden',
       visualEffectState: 'active',

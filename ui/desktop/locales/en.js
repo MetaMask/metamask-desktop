@@ -127,6 +127,12 @@ const enLocales = {
   desktopUnexpectedErrorTitle: {
     message: 'Something went wrong...',
   },
+  removeConnection: {
+    message: 'Remove Connection',
+  },
+  resetConnection: {
+    message: 'Reset Connection',
+  },
 };
 
 export default enLocales;
