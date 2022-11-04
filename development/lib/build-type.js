@@ -9,6 +9,7 @@ const BuildType = {
   main: 'main',
   desktopapp: 'desktopapp',
   desktopextension: 'desktopextension',
+  desktopui: 'desktopui',
 };
 
 module.exports = { BuildType };

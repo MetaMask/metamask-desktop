@@ -11,7 +11,7 @@ start().catch((error) => {
 
 async function start() {
   const validBuildTypes = Object.values(BuildType).filter(
-    (v) => v !== BuildType.desktopapp,
+    (v) => ![BuildType.desktopapp, BuildType.desktopui].includes(v),
   );
 
   const {
