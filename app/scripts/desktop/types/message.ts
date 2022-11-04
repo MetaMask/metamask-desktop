@@ -29,6 +29,7 @@ export type PairingRequestMessage = {
 
 export type PairingResultMessage = {
   isDesktopEnabled: boolean;
+  pairingKey?: string;
 };
 
 export type PairingKeyRequestMessage = {

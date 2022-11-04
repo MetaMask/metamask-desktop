@@ -18,6 +18,7 @@ import {
   UUID_MOCK,
   createExtensionVersionCheckMock,
   createExtensionPairingMock,
+  DATA_2_MOCK,
 } from '../test/mocks';
 import {
   simulateStreamMessage,
@@ -116,6 +117,10 @@ describe('Desktop Connection', () => {
     uuidMock.mockReturnValue(UUID_MOCK);
     extensionPairingMock.init.mockReturnValue(extensionPairingMock);
 
+    rawStateMock.addPairingKey.mockImplementation((data) =>
+      Promise.resolve(data),
+    );
+
     multiplexMock.createStream.mockImplementation((name) => {
       const newStream = createStreamMock();
       multiplexStreamMocks[name] = newStream;
@@ -171,7 +176,11 @@ describe('Desktop Connection', () => {
 
   describe('transferState', () => {
     it('writes state to state stream', async () => {
-      rawStateMock.getAndUpdateDesktopState.mockResolvedValueOnce(DATA_MOCK);
+      rawStateMock.getAndUpdateDesktopState.mockResolvedValueOnce(
+        DATA_MOCK as any,
+      );
+
+      rawStateMock.removePairingKey.mockReturnValueOnce(DATA_2_MOCK as any);
 
       await desktopConnection.createStream(
         remotePortMock,
@@ -185,7 +194,7 @@ describe('Desktop Connection', () => {
       await simulateTransferStateReceipt(promise);
 
       expect(stateStreamMock.write).toHaveBeenCalledTimes(1);
-      expect(stateStreamMock.write).toHaveBeenCalledWith(DATA_MOCK);
+      expect(stateStreamMock.write).toHaveBeenCalledWith(DATA_2_MOCK);
     });
   });
 

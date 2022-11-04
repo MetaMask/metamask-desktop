@@ -13,16 +13,15 @@ import {
   CLIENT_ID_DISABLE,
   CLIENT_ID_VERSION,
   CLIENT_ID_PAIRING,
-  MESSAGE_ACKNOWLEDGE,
 } from '../../../../shared/constants/desktop';
 import { browser } from '../browser/browser-polyfill';
-import { ConnectionType, RemotePortData, State } from '../types/background';
-import { ClientId, VersionCheckResult } from '../types/desktop';
+import { ConnectionType, RemotePortData } from '../types/background';
+import { ClientId, RawState, VersionCheckResult } from '../types/desktop';
 import { registerResponseStream } from '../browser/browser-proxy';
 import { uuid } from '../utils/utils';
-import { waitForMessage } from '../utils/stream';
+import { acknowledge, waitForAcknowledge } from '../utils/stream';
 import { ExtensionPairing } from '../shared/pairing';
-import * as RawState from '../utils/raw-state';
+import * as RawStateUtils from '../utils/raw-state';
 import { ExtensionVersionCheck } from '../shared/version-check';
 
 export default class DesktopConnection extends EventEmitter {
@@ -57,12 +56,12 @@ export default class DesktopConnection extends EventEmitter {
     );
 
     this.stateStream = this.multiplex.createStream(CLIENT_ID_STATE);
-    this.stateStream.on('data', (rawState: State) =>
+    this.stateStream.on('data', (rawState: RawState) =>
       this.onDesktopState(rawState),
     );
 
     this.disableStream = this.multiplex.createStream(CLIENT_ID_DISABLE);
-    this.disableStream.on('data', (data: State) => this.onDisable(data));
+    this.disableStream.on('data', (data: RawState) => this.onDisable(data));
 
     const pairingStream = this.multiplex.createStream(CLIENT_ID_PAIRING);
     this.extensionPairing = new ExtensionPairing(pairingStream, () =>
@@ -108,15 +107,15 @@ export default class DesktopConnection extends EventEmitter {
   }
 
   public async transferState() {
-    const stateToTransfer = await RawState.getAndUpdateDesktopState({
+    const stateToTransfer = await RawStateUtils.getAndUpdateDesktopState({
       desktopEnabled: true,
     });
 
-    this.stateStream.write(stateToTransfer);
+    const filteredState = RawStateUtils.removePairingKey(stateToTransfer);
 
-    await waitForMessage(this.stateStream, (data) =>
-      Promise.resolve(data === MESSAGE_ACKNOWLEDGE),
-    );
+    this.stateStream.write(filteredState);
+
+    await waitForAcknowledge(this.stateStream);
 
     log.debug('Sent extension state to desktop');
   }
@@ -129,21 +128,21 @@ export default class DesktopConnection extends EventEmitter {
     return await this.extensionPairing.isPairingKeyMatch();
   }
 
-  private async onDisable(state: State) {
+  private async onDisable(state: RawState) {
     log.debug('Received desktop disable message');
 
     if (state) {
-      await RawState.set(state);
+      await RawStateUtils.set(state);
       log.debug('Synchronised with final desktop state');
     } else {
-      await RawState.setDesktopState({
+      await RawStateUtils.setDesktopState({
         desktopEnabled: false,
         pairingKey: undefined,
       });
       log.debug('Disabled desktop mode');
     }
 
-    this.disableStream?.write(MESSAGE_ACKNOWLEDGE);
+    acknowledge(this.disableStream);
 
     this.restart();
   }
@@ -161,12 +160,10 @@ export default class DesktopConnection extends EventEmitter {
     this.endConnectionStream.write({ clientId });
   }
 
-  private async onDesktopState(rawState: State) {
-    if (rawState === MESSAGE_ACKNOWLEDGE) {
-      return;
-    }
+  private async onDesktopState(rawState: RawState) {
+    const newRawState = await RawStateUtils.addPairingKey(rawState);
 
-    await RawState.set(rawState);
+    await RawStateUtils.set(newRawState);
 
     log.debug('Synchronised state with desktop');
   }

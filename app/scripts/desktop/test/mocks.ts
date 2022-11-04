@@ -12,7 +12,7 @@ import {
 } from '../shared/web-socket-stream';
 import ExtensionConnection from '../app/extension-connection';
 import DesktopConnection from '../extension/desktop-connection';
-import { ExtensionPairing } from '../shared/pairing';
+import { DesktopPairing, ExtensionPairing } from '../shared/pairing';
 import { TestConnectionResult } from '../types/desktop';
 import { ExtensionVersionCheck } from '../shared/version-check';
 import ExtensionPlatform from 'app/scripts/platforms/extension';
@@ -144,7 +144,7 @@ export const createMultiplexMock = (): jest.Mocked<ObjectMultiplex & Duplex> =>
   ({
     ...createStreamMock(),
     createStream: jest.fn(),
-  } as unknown as jest.Mocked<ObjectMultiplex>);
+  } as any);
 
 export const createEventEmitterMock = (): jest.Mocked<EventEmitter> =>
   ({
@@ -198,3 +198,6 @@ export const createExtensionVersionCheckMock =
 
 export const createExtensionPlatformMock = (): jest.Mocked<ExtensionPlatform> =>
   ({ getVersion: jest.fn() } as any);
+
+export const createDesktopPairingMock = (): jest.Mocked<DesktopPairing> =>
+  ({ init: jest.fn() } as any);

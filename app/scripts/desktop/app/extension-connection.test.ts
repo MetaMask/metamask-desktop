@@ -14,26 +14,28 @@ import {
   createStreamMock,
   createMultiplexMock,
   CLIENT_ID_2_MOCK,
+  createDesktopPairingMock,
+  DATA_2_MOCK,
 } from '../test/mocks';
 import {
   simulateStreamMessage,
   expectEventToFire,
   flushPromises,
 } from '../test/utils';
-import { browser, unregisterRequestStream } from '../browser/browser-polyfill';
+import { unregisterRequestStream } from '../browser/browser-polyfill';
 import { ClientId } from '../types/desktop';
 import { ConnectionType } from '../types/background';
 import { DesktopPairing } from '../shared/pairing';
+import * as RawStateUtils from '../utils/raw-state';
 import ExtensionConnection from './extension-connection';
 
 jest.mock('obj-multiplex', () => jest.fn(), { virtual: true });
+jest.mock('../shared/pairing');
+jest.mock('../utils/raw-state');
 
 jest.mock(
   '../browser/browser-polyfill',
   () => ({
-    browser: {
-      storage: { local: { get: jest.fn(), set: jest.fn(), clear: jest.fn() } },
-    },
     registerRequestStream: jest.fn(),
     unregisterRequestStream: jest.fn(),
   }),
@@ -46,7 +48,12 @@ describe('Extension Connection', () => {
   const streamMock = createStreamMock();
   const multiplexMock = createMultiplexMock();
   const objectMultiplexConstructorMock = ObjectMultiplex;
-  const browserMock = browser as any;
+  const desktopPairingMock = createDesktopPairingMock();
+  const rawStateUtilsMock = RawStateUtils as jest.Mocked<typeof RawStateUtils>;
+
+  const DesktopPairingConstructorMock = DesktopPairing as jest.MockedClass<
+    typeof DesktopPairing
+  >;
 
   const unregisterRequestStreamMock =
     unregisterRequestStream as jest.MockedFunction<
@@ -69,13 +76,19 @@ describe('Extension Connection', () => {
 
     streamMock.pipe.mockReturnValue(multiplexMock as any);
     objectMultiplexConstructorMock.mockReturnValue(multiplexMock);
+    DesktopPairingConstructorMock.mockReturnValue(desktopPairingMock);
+    desktopPairingMock.init.mockReturnValue(desktopPairingMock);
+
+    rawStateUtilsMock.addPairingKey.mockImplementation((data) =>
+      Promise.resolve(data),
+    );
 
     extensionConnection = new ExtensionConnection(streamMock);
   });
 
   describe('getPairing', () => {
     it('returns instance', () => {
-      expect(extensionConnection.getPairing()).toBeInstanceOf(DesktopPairing);
+      expect(extensionConnection.getPairing()).toBe(desktopPairingMock);
     });
   });
 
@@ -128,12 +141,16 @@ describe('Extension Connection', () => {
     };
 
     it('writes state to state stream if extension state already received', async () => {
+      rawStateUtilsMock.removePairingKey.mockReturnValueOnce(
+        DATA_2_MOCK as any,
+      );
+
       await transferState(DATA_MOCK, {
         afterExtensionState: true,
       });
 
       expect(stateStreamMock.write).toHaveBeenCalledTimes(2);
-      expect(stateStreamMock.write).toHaveBeenCalledWith(DATA_MOCK);
+      expect(stateStreamMock.write).toHaveBeenCalledWith(DATA_2_MOCK);
     });
 
     it('does nothing if extension state not yet received', async () => {
@@ -151,12 +168,10 @@ describe('Extension Connection', () => {
     }: {
       afterExtensionState: boolean;
     }) => {
-      browserMock.storage.local.get.mockResolvedValue({
+      rawStateUtilsMock.getAndUpdateDesktopState.mockResolvedValue({
         ...DATA_MOCK,
-        data: { DesktopController: { desktopEnabled: true } },
+        data: { DesktopController: { desktopEnabled: false } },
       });
-
-      browserMock.storage.local.set.mockResolvedValue();
 
       if (afterExtensionState) {
         const stateStreamMock = multiplexStreamMocks[CLIENT_ID_STATE];
@@ -202,7 +217,7 @@ describe('Extension Connection', () => {
       'clears state if extension state %s received',
       async (_, isExtensionStateReceived) => {
         await disable({ afterExtensionState: isExtensionStateReceived });
-        expect(browser.storage.local.clear).toHaveBeenCalledTimes(1);
+        expect(rawStateUtilsMock.clear).toHaveBeenCalledTimes(1);
       },
     );
   });
@@ -280,8 +295,8 @@ describe('Extension Connection', () => {
     it('updates state', async () => {
       await simulateExtensionState();
 
-      expect(browserMock.storage.local.set).toHaveBeenCalledTimes(1);
-      expect(browserMock.storage.local.set).toHaveBeenCalledWith(DATA_MOCK);
+      expect(rawStateUtilsMock.set).toHaveBeenCalledTimes(1);
+      expect(rawStateUtilsMock.set).toHaveBeenCalledWith(DATA_MOCK);
     });
 
     // eslint-disable-next-line jest/expect-expect

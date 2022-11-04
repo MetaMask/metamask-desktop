@@ -1,4 +1,5 @@
-import { Duplex, Readable } from 'stream';
+import { Duplex, Readable, Writable } from 'stream';
+import { MESSAGE_ACKNOWLEDGE } from '../../../../shared/constants/desktop';
 
 export const waitForMessage = <T>(
   stream: Readable,
@@ -17,6 +18,16 @@ export const waitForMessage = <T>(
 
     stream.on('data', listener);
   });
+};
+
+export const waitForAcknowledge = async (stream: Readable) => {
+  await waitForMessage(stream, (data) =>
+    Promise.resolve(data === MESSAGE_ACKNOWLEDGE),
+  );
+};
+
+export const acknowledge = (stream: Writable) => {
+  stream.write(MESSAGE_ACKNOWLEDGE);
 };
 
 export class DuplexCopy extends Duplex {

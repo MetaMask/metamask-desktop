@@ -1,8 +1,11 @@
+import ObjectMultiplex from 'obj-multiplex';
 import TOTP from '../utils/totp';
 import {
+  createMultiplexMock,
   createStreamMock,
   DECRYPTED_STRING_MOCK,
   OTP_MOCK,
+  STRING_DATA_MOCK,
 } from '../test/mocks';
 import {
   expectEventToFire,
@@ -13,11 +16,14 @@ import { browser } from '../browser/browser-polyfill';
 import * as RawState from '../utils/raw-state';
 import { MESSAGE_ACKNOWLEDGE } from '../../../../shared/constants/desktop';
 import * as encryption from '../encryption/symmetric-encryption';
+import { hashString } from '../utils/crypto';
 import { DesktopPairing, ExtensionPairing } from './pairing';
 
 jest.mock('../utils/totp');
 jest.mock('../utils/raw-state');
 jest.mock('../encryption/symmetric-encryption');
+jest.mock('obj-multiplex');
+jest.mock('../utils/crypto');
 
 jest.mock(
   '../browser/browser-polyfill',
@@ -37,9 +43,19 @@ describe('Pairing', () => {
   const totpMock = TOTP as jest.Mocked<typeof TOTP>;
   const rawStateMock = RawState as jest.Mocked<typeof RawState>;
   const encryptionMock = encryption as jest.Mocked<typeof encryption>;
+  const multiplexMock = createMultiplexMock();
+  const requestStreamMock = createStreamMock();
+  const keyStreamMock = createStreamMock();
+  const multiplexConstructorMock = ObjectMultiplex as any;
+  const hashStringMock = hashString as jest.MockedFunction<typeof hashString>;
 
   beforeEach(() => {
     jest.resetAllMocks();
+
+    streamMock.pipe.mockReturnValue(multiplexMock);
+    multiplexMock.createStream.mockReturnValueOnce(requestStreamMock);
+    multiplexMock.createStream.mockReturnValueOnce(keyStreamMock);
+    multiplexConstructorMock.mockReturnValue(multiplexMock);
   });
 
   describe('Extension', () => {
@@ -60,7 +76,7 @@ describe('Pairing', () => {
 
     describe('on message', () => {
       const simulatePairingMessage = async () => {
-        await simulateStreamMessage(streamMock, {
+        await simulateStreamMessage(requestStreamMock, {
           otp: OTP_MOCK,
         });
       };
@@ -68,17 +84,20 @@ describe('Pairing', () => {
       describe('if OTP is valid', () => {
         beforeEach(async () => {
           encryptionMock.createKey.mockResolvedValue(DECRYPTED_STRING_MOCK);
+          hashStringMock.mockResolvedValueOnce(STRING_DATA_MOCK);
+
           totpMock.validate.mockReturnValue(true);
+
           await simulatePairingMessage();
           await flushPromises();
-          await simulateStreamMessage(streamMock, MESSAGE_ACKNOWLEDGE);
+          await simulateStreamMessage(requestStreamMock, MESSAGE_ACKNOWLEDGE);
         });
 
         it('updates state', async () => {
-          expect(rawStateMock.setDesktopState).toHaveBeenCalledTimes(2);
+          expect(rawStateMock.setDesktopState).toHaveBeenCalledTimes(1);
           expect(rawStateMock.setDesktopState).toHaveBeenCalledWith({
             desktopEnabled: true,
-            pairingKey: DECRYPTED_STRING_MOCK,
+            pairingKeyHash: STRING_DATA_MOCK,
           });
         });
 
@@ -93,9 +112,9 @@ describe('Pairing', () => {
           await simulatePairingMessage();
         });
 
-        it('writes message to pairing stream', async () => {
-          expect(streamMock.write).toHaveBeenCalledTimes(1);
-          expect(streamMock.write).toHaveBeenCalledWith({
+        it('writes message to pairing request stream', async () => {
+          expect(requestStreamMock.write).toHaveBeenCalledTimes(1);
+          expect(requestStreamMock.write).toHaveBeenCalledWith({
             isDesktopEnabled: false,
           });
         });
@@ -107,6 +126,10 @@ describe('Pairing', () => {
     let desktopPairing: DesktopPairing;
 
     beforeEach(() => {
+      streamMock.pipe.mockReturnValue(multiplexMock);
+      multiplexMock.createStream.mockReturnValueOnce(requestStreamMock);
+      multiplexMock.createStream.mockReturnValueOnce(keyStreamMock);
+
       desktopPairing = new DesktopPairing(streamMock).init();
     });
 
@@ -114,8 +137,8 @@ describe('Pairing', () => {
       it('writes message to stream', () => {
         desktopPairing.submitOTP(OTP_MOCK);
 
-        expect(streamMock.write).toHaveBeenCalledTimes(1);
-        expect(streamMock.write).toHaveBeenCalledWith({
+        expect(requestStreamMock.write).toHaveBeenCalledTimes(1);
+        expect(requestStreamMock.write).toHaveBeenCalledWith({
           otp: OTP_MOCK,
         });
       });

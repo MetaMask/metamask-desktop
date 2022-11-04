@@ -18,6 +18,7 @@ export default class DesktopController {
     this.store = new ObservableStore({
       desktopEnabled: false,
       pairingKey: undefined,
+      pairingKeyHash: undefined,
       ...initState,
     });
   }
