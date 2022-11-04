@@ -17,6 +17,13 @@
     "build:desktop:extension": "yarn start --build-type desktopextension --include-desktop-ui true",
     "build:desktop:extension:test": "yarn start:test --build-type desktopextension",
     "build:desktop:extension:mv3": "ENABLE_MV3=true yarn start --build-type desktopextension",
+    "package:desktop:linux": "electron-builder -l",
+    "package:desktop:mac": "electron-builder -m",
+    "package:desktop:mac:ci": "electron-builder --config electron-builder.ci.json -m",
+    "package:desktop:win": "electron-builder -w",
+    "package:desktop:win:dev": "set CSC_LINK=desktop_packaging/windows/test_certificate.pfx && set CSC_KEY_PASSWORD=test123* && electron-builder -w",
+    "release:desktop:linux": "electron-builder -l -p 'onTagOrDraft'",
+    "generate:certificate:win": "@powershell ./desktop_packaging/windows/generate_certificate.ps1",
     "start:desktop": "electron dist_desktop/app/scripts/background.js",
     "start:lavamoat": "yarn build:dev dev --apply-lavamoat=true",
     "start:mv3": "ENABLE_MV3=true yarn build:dev dev --apply-lavamoat=false",
@@ -91,12 +98,7 @@
     "ts-migration:enumerate": "ts-node development/ts-migration-dashboard/scripts/write-list-of-files-to-convert.ts",
     "ts-migration:dashboard:watch": "ts-node development/ts-migration-dashboard/scripts/build.ts --watch",
     "ts-migration:dashboard:build": "ts-node development/ts-migration-dashboard/scripts/build.ts",
-    "ts-migration:dashboard:deploy": "gh-pages --dist development/ts-migration-dashboard/build --remote ts-migration-dashboard",
-    "electron:build:linux": "electron-builder -l",
-    "electron:build:mac": "electron-builder -m",
-    "electron:build:mac:ci": "electron-builder --config electron-builder.ci.json -m",
-    "electron:build:win": "electron-builder -w",
-    "electron:release:linux": "electron-builder -l -p 'onTagOrDraft'"
+    "ts-migration:dashboard:deploy": "gh-pages --dist development/ts-migration-dashboard/build --remote ts-migration-dashboard"
   },
   "resolutions": {
     "**/regenerator-runtime": "^0.13.7",

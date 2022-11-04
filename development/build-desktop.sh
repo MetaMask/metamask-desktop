@@ -33,7 +33,7 @@ echo "Package Version: ${PACKAGE_VERSION}"
 # shellcheck disable=SC2046
 if [ -f ".metamaskrc" ]; then
     echo "Loading .metamaskrc on environment"
-    export $(< .metamaskrc grep -v ";" | xargs)
+    export $(< .metamaskrc grep -v ";" | grep -v -e '^$' | grep -v -e '=$')
 fi
 
 echo "Transpiling JavaScript"
