@@ -69,7 +69,6 @@ async function defineAndRunBuildTasks() {
     shouldLintFenceFiles,
     skipStats,
     version,
-    includeDesktopUi,
   } = await parseArgv();
 
   const browserPlatforms = ['firefox', 'chrome', 'brave', 'opera'];
@@ -80,10 +79,9 @@ async function defineAndRunBuildTasks() {
 
   const staticTasks = createStaticAssetTasks({
     livereload,
-    browserPlatforms,
     shouldIncludeLockdown,
     buildType,
-    includeDesktopUi,
+    browserPlatforms,
   });
 
   const manifestTasks = createManifestTasks({
@@ -104,7 +102,6 @@ async function defineAndRunBuildTasks() {
     policyOnly,
     shouldLintFenceFiles,
     version,
-    includeDesktopUi,
   });
 
   const { clean, reload, zip } = createEtcTasks({
@@ -214,7 +211,9 @@ testDev: Create an unoptimized, live-reloading build for debugging e2e tests.`,
         .option('build-type', {
           default: BuildType.main,
           description: 'The type of build to create.',
-          choices: Object.keys(BuildType),
+          choices: Object.keys(BuildType).filter(
+            (buildType) => buildType !== BuildType.desktopui,
+          ),
         })
         .option('build-version', {
           default: 0,
@@ -237,11 +236,6 @@ testDev: Create an unoptimized, live-reloading build for debugging e2e tests.`,
           default: false,
           description:
             'Stop the build after generating the LavaMoat policy, skipping any writes to disk other than the LavaMoat policy itself.',
-          type: 'boolean',
-        })
-        .option('include-desktop-ui', {
-          default: false,
-          description: 'Whether to also build the Electron desktop UI',
           type: 'boolean',
         })
         .option('skip-stats', {
@@ -274,7 +268,6 @@ testDev: Create an unoptimized, live-reloading build for debugging e2e tests.`,
     policyOnly,
     skipStats,
     task,
-    includeDesktopUi,
   } = argv;
 
   // Manually default this to `false` for dev builds only.
@@ -304,7 +297,6 @@ testDev: Create an unoptimized, live-reloading build for debugging e2e tests.`,
     shouldLintFenceFiles,
     skipStats,
     version,
-    includeDesktopUi,
   };
 }
 

@@ -171,7 +171,6 @@ module.exports = createScriptTasks;
  * @param {boolean} options.shouldLintFenceFiles - Whether files with code
  * fences should be linted after fences have been removed.
  * @param {string} options.version - The current version of the extension.
- * @param {string} options.includeDesktopUi - Whether to include desktop UI
  * @returns {object} A set of tasks, one for each build target.
  */
 function createScriptTasks({
@@ -184,7 +183,6 @@ function createScriptTasks({
   policyOnly,
   shouldLintFenceFiles,
   version,
-  includeDesktopUi,
 }) {
   // high level tasks
   return {
@@ -227,13 +225,7 @@ function createScriptTasks({
    * each defined task.
    */
   function createTasksForScriptBundles({ buildTarget, taskPrefix }) {
-    let standardEntryPoints = ['background', 'ui', 'content-script'];
-    if (includeDesktopUi) {
-      standardEntryPoints.push('desktop-ui');
-      if (buildTarget === BUILD_TARGETS.DIST) {
-        standardEntryPoints = ['desktop-ui'];
-      }
-    }
+    const standardEntryPoints = ['background', 'ui', 'content-script'];
     const standardSubtask = createTask(
       `${taskPrefix}:standardEntryPoints`,
       createFactoredBuild({
@@ -251,7 +243,6 @@ function createScriptTasks({
         policyOnly,
         shouldLintFenceFiles,
         version,
-        includeDesktopUi,
       }),
     );
 
@@ -303,7 +294,6 @@ function createScriptTasks({
         isLavaMoat,
         policyOnly,
         shouldLintFenceFiles,
-        includeDesktopUi,
       }),
     );
     // make a parent task that runs each task in a child thread
@@ -507,7 +497,6 @@ async function createManifestV3AppInitializationBundle({
  * @param {boolean} options.shouldLintFenceFiles - Whether files with code
  * fences should be linted after fences have been removed.
  * @param {string} options.version - The current version of the extension.
- * @param options.includeDesktopUi
  * @returns {Function} A function that creates the set of bundles.
  */
 function createFactoredBuild({
@@ -520,7 +509,6 @@ function createFactoredBuild({
   policyOnly,
   shouldLintFenceFiles,
   version,
-  includeDesktopUi,
 }) {
   return async function () {
     // create bundler setup and apply defaults
@@ -611,19 +599,13 @@ function createFactoredBuild({
           contents: lavapack.makePolicyLoaderStream(lavamoatOpts),
         }),
       );
+
       // setup bundle destination
       browserPlatforms.forEach((platform) => {
         const dest = `./dist/${platform}/`;
         const destination = policyOnly ? noopWriteStream : gulp.dest(dest);
         pipeline.get('dest').push(destination);
       });
-
-      // Add another destination for desktop ui
-      if (includeDesktopUi) {
-        const dest = `./dist_desktop_ui/`;
-        const destination = policyOnly ? noopWriteStream : gulp.dest(dest);
-        pipeline.get('dest').push(destination);
-      }
     });
 
     // wait for bundle completion for postprocessing
@@ -661,16 +643,6 @@ function createFactoredBuild({
               groupSet,
               commonSet,
               browserPlatforms,
-              applyLavaMoat,
-            });
-            break;
-          }
-          case 'desktop-ui': {
-            renderHtmlFile({
-              htmlName: 'desktop-ui',
-              isDesktopUIHtml: true,
-              groupSet,
-              commonSet,
               applyLavaMoat,
             });
             break;
@@ -1089,7 +1061,6 @@ function renderHtmlFile({
   commonSet,
   browserPlatforms,
   applyLavaMoat,
-  isDesktopUIHtml,
 }) {
   if (applyLavaMoat === undefined) {
     throw new Error(
@@ -1102,13 +1073,6 @@ function renderHtmlFile({
     (label) => `./${label}.js`,
   );
   const htmlOutput = Sqrl.render(htmlTemplate, { jsBundles, applyLavaMoat });
-
-  // Early return if this is Desktop UI
-  if (isDesktopUIHtml) {
-    const dest = `./dist_desktop_ui/${htmlName}.html`;
-    writeFileSync(dest, htmlOutput);
-    return;
-  }
 
   browserPlatforms.forEach((platform) => {
     const dest = `./dist/${platform}/${htmlName}.html`;

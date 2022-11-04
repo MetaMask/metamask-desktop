@@ -16,7 +16,6 @@ module.exports = function createStaticAssetTasks({
   browserPlatforms,
   shouldIncludeLockdown = true,
   buildType,
-  includeDesktopUi,
 }) {
   const [copyTargetsProd, copyTargetsDev] = getCopyTargets(
     shouldIncludeLockdown,
@@ -97,14 +96,9 @@ module.exports = function createStaticAssetTasks({
       );
     };
 
-    const copiesForBrowserPlatforms = browserPlatforms.map((platform) =>
-      defineCopyPromise(platform, 'dist'),
-    );
-    const allCopies = copiesForBrowserPlatforms;
-
-    if (includeDesktopUi) {
-      allCopies.push(defineCopyPromise(null, 'dist_desktop_ui'));
-    }
+    const allCopies = browserPlatforms.map((platform) => {
+      return defineCopyPromise(platform, 'dist');
+    });
 
     await Promise.all(allCopies);
   }
