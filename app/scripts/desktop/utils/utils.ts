@@ -51,9 +51,3 @@ export const timeoutPromise = <T>(
 };
 
 export const uuid = uuidv4;
-
-export const randomHex = (): string => {
-  const random =
-    global.crypto?.getRandomValues(new Uint8Array(12)) || Buffer.from([]);
-  return Buffer.from(random).toString('hex');
-};

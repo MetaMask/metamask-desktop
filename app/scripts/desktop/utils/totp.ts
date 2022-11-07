@@ -1,5 +1,5 @@
 import * as OTPAuth from 'otpauth';
-import { randomHex } from './utils';
+import { randomHex } from './crypto';
 
 class TOTP {
   private static instance: OTPAuth.TOTP;

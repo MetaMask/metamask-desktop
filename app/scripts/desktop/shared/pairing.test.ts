@@ -4,6 +4,8 @@ import {
   createMultiplexMock,
   createStreamMock,
   DECRYPTED_STRING_MOCK,
+  HASH_BUFFER_2_HEX_MOCK,
+  HASH_BUFFER_HEX_MOCK,
   OTP_MOCK,
   STRING_DATA_MOCK,
 } from '../test/mocks';
@@ -23,7 +25,11 @@ jest.mock('../utils/totp');
 jest.mock('../utils/raw-state');
 jest.mock('../encryption/symmetric-encryption');
 jest.mock('obj-multiplex');
-jest.mock('../utils/crypto');
+
+jest.mock('../utils/crypto', () => ({
+  randomHex: jest.fn(() => []),
+  hashString: jest.fn(),
+}));
 
 jest.mock(
   '../browser/browser-polyfill',
@@ -53,16 +59,20 @@ describe('Pairing', () => {
     jest.resetAllMocks();
 
     streamMock.pipe.mockReturnValue(multiplexMock);
-    multiplexMock.createStream.mockReturnValueOnce(requestStreamMock);
-    multiplexMock.createStream.mockReturnValueOnce(keyStreamMock);
+    multiplexMock.createStream.mockReturnValueOnce(requestStreamMock as any);
+    multiplexMock.createStream.mockReturnValueOnce(keyStreamMock as any);
     multiplexConstructorMock.mockReturnValue(multiplexMock);
   });
 
   describe('Extension', () => {
     const transferStateMock = jest.fn();
+    let extensionPairing: ExtensionPairing;
 
     beforeEach(() => {
-      new ExtensionPairing(streamMock, transferStateMock).init();
+      extensionPairing = new ExtensionPairing(
+        streamMock,
+        transferStateMock,
+      ).init();
     });
 
     describe('generateOTP', () => {
@@ -104,6 +114,14 @@ describe('Pairing', () => {
         it('restarts extension', async () => {
           expect(browserMock.runtime.reload).toHaveBeenCalledTimes(1);
         });
+
+        it('writes message to pairing request stream', async () => {
+          expect(requestStreamMock.write).toHaveBeenCalledTimes(1);
+          expect(requestStreamMock.write).toHaveBeenCalledWith({
+            isDesktopEnabled: true,
+            pairingKey: DECRYPTED_STRING_MOCK,
+          });
+        });
       });
 
       describe('if OTP is invalid', () => {
@@ -116,8 +134,59 @@ describe('Pairing', () => {
           expect(requestStreamMock.write).toHaveBeenCalledTimes(1);
           expect(requestStreamMock.write).toHaveBeenCalledWith({
             isDesktopEnabled: false,
+            pairingKey: undefined,
           });
         });
+      });
+    });
+
+    describe('isPairingKeyMatch', () => {
+      it('sends request message to desktop', async () => {
+        extensionPairing.isPairingKeyMatch();
+        await simulateStreamMessage(keyStreamMock, {});
+
+        expect(keyStreamMock.write).toHaveBeenCalledTimes(1);
+        expect(keyStreamMock.write).toHaveBeenCalledWith({
+          isRequestPairingKey: true,
+        });
+      });
+
+      it('returns true is desktop responds with pairing key matching extension hash', async () => {
+        const isMatchPromise = extensionPairing.isPairingKeyMatch();
+
+        hashStringMock.mockResolvedValueOnce(HASH_BUFFER_HEX_MOCK);
+
+        rawStateMock.getDesktopState.mockResolvedValueOnce({
+          pairingKeyHash: HASH_BUFFER_HEX_MOCK,
+        });
+
+        await simulateStreamMessage(keyStreamMock, {
+          pairingKey: STRING_DATA_MOCK,
+        });
+
+        expect(await isMatchPromise).toBe(true);
+      });
+
+      it('returns false is desktop responds with no pairing key', async () => {
+        const isMatchPromise = extensionPairing.isPairingKeyMatch();
+        await simulateStreamMessage(keyStreamMock, {});
+        expect(await isMatchPromise).toBe(false);
+      });
+
+      it('returns false is desktop responds with pairing key not matching extension hash', async () => {
+        const isMatchPromise = extensionPairing.isPairingKeyMatch();
+
+        hashStringMock.mockResolvedValueOnce(HASH_BUFFER_HEX_MOCK);
+
+        rawStateMock.getDesktopState.mockResolvedValueOnce({
+          pairingKeyHash: HASH_BUFFER_2_HEX_MOCK,
+        });
+
+        await simulateStreamMessage(keyStreamMock, {
+          pairingKey: STRING_DATA_MOCK,
+        });
+
+        expect(await isMatchPromise).toBe(false);
       });
     });
   });
@@ -127,8 +196,8 @@ describe('Pairing', () => {
 
     beforeEach(() => {
       streamMock.pipe.mockReturnValue(multiplexMock);
-      multiplexMock.createStream.mockReturnValueOnce(requestStreamMock);
-      multiplexMock.createStream.mockReturnValueOnce(keyStreamMock);
+      multiplexMock.createStream.mockReturnValueOnce(requestStreamMock as any);
+      multiplexMock.createStream.mockReturnValueOnce(keyStreamMock as any);
 
       desktopPairing = new DesktopPairing(streamMock).init();
     });
@@ -144,17 +213,59 @@ describe('Pairing', () => {
       });
     });
 
-    describe('on message', () => {
+    describe('on request message', () => {
       // eslint-disable-next-line jest/expect-expect
-      it('emits event if not paired', async () => {
-        expectEventToFire(
+      it('emits event if not successful', async () => {
+        await expectEventToFire(
           desktopPairing,
           'invalid-otp',
           undefined,
           async () => {
-            await simulateStreamMessage(streamMock, {});
+            await simulateStreamMessage(requestStreamMock, {
+              isDesktopEnabled: false,
+            });
           },
         );
+      });
+
+      it('updates state with pairing key if successful', async () => {
+        await simulateStreamMessage(requestStreamMock, {
+          isDesktopEnabled: true,
+          pairingKey: DECRYPTED_STRING_MOCK,
+        });
+
+        expect(rawStateMock.setDesktopState).toHaveBeenCalledTimes(1);
+        expect(rawStateMock.setDesktopState).toHaveBeenCalledWith({
+          desktopEnabled: true,
+          pairingKey: DECRYPTED_STRING_MOCK,
+        });
+      });
+
+      it('sends acknowledge if successful', async () => {
+        await simulateStreamMessage(requestStreamMock, {
+          isDesktopEnabled: true,
+          pairingKey: DECRYPTED_STRING_MOCK,
+        });
+
+        expect(requestStreamMock.write).toHaveBeenCalledTimes(1);
+        expect(requestStreamMock.write).toHaveBeenCalledWith(
+          MESSAGE_ACKNOWLEDGE,
+        );
+      });
+    });
+
+    describe('on key message', () => {
+      it('replies with pairing key', async () => {
+        rawStateMock.getDesktopState.mockResolvedValueOnce({
+          pairingKey: DECRYPTED_STRING_MOCK,
+        });
+
+        await simulateStreamMessage(keyStreamMock, {});
+
+        expect(keyStreamMock.write).toHaveBeenCalledTimes(1);
+        expect(keyStreamMock.write).toHaveBeenCalledWith({
+          pairingKey: DECRYPTED_STRING_MOCK,
+        });
       });
     });
   });

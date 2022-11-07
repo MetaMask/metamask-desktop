@@ -3,6 +3,8 @@ import { Duplex } from 'stream';
 import EventEmitter from 'events';
 ///: END:ONLY_INCLUDE_IN
 import log from 'loglevel';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import ObjectMultiplex from 'obj-multiplex';
 import TOTP from '../utils/totp';
 import {
