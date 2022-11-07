@@ -105,6 +105,10 @@ async function getProductionConfig(buildType) {
     all: ['PUBNUB_PUB_KEY', 'PUBNUB_SUB_KEY', 'SENTRY_DSN'],
     [BuildType.beta]: ['INFURA_BETA_PROJECT_ID', 'SEGMENT_BETA_WRITE_KEY'],
     [BuildType.flask]: ['INFURA_FLASK_PROJECT_ID', 'SEGMENT_FLASK_WRITE_KEY'],
+    [BuildType.desktopextension]: [
+      'INFURA_FLASK_PROJECT_ID',
+      'SEGMENT_FLASK_WRITE_KEY',
+    ],
     [BuildType.main]: ['INFURA_PROD_PROJECT_ID', 'SEGMENT_PROD_WRITE_KEY'],
   };
 

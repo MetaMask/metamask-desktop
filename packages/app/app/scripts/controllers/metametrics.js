@@ -720,6 +720,8 @@ export default class MetaMetricsController {
       [TRAITS.THREE_BOX_ENABLED]: false, // deprecated, hard-coded as false
       [TRAITS.THEME]: metamaskState.theme || 'default',
       [TRAITS.TOKEN_DETECTION_ENABLED]: metamaskState.useTokenDetection,
+      [TRAITS.VERSION]: this.version,
+      [TRAITS.DESKTOP_ENABLED]: metamaskState.desktopEnabled,
     };
 
     if (!this.previousTraits) {

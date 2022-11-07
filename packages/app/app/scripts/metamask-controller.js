@@ -190,6 +190,7 @@ LatticeKeyring = LatticeKeyringDesktop;
 import LedgerBridgeKeyringPackage from '@metamask/eth-ledger-bridge-keyring';
 import TrezorKeyringPackage from 'eth-trezor-keyring';
 import LatticeKeyringPackage from 'eth-lattice-keyring';
+import { getVersion } from './desktop/utils/version';
 
 LedgerBridgeKeyring = LedgerBridgeKeyringPackage;
 TrezorKeyring = TrezorKeyringPackage;
@@ -428,6 +429,14 @@ export default class MetamaskController extends EventEmitter {
         },
       ));
 
+    let mmVersionForMetaMetricsController;
+    ///: BEGIN:EXCLUDE_IN(desktopapp)
+    mmVersionForMetaMetricsController = this.platform.getVersion();
+    ///: END:EXCLUDE_IN
+    ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
+    mmVersionForMetaMetricsController = getVersion();
+    ///: END:ONLY_INCLUDE_IN
+
     this.metaMetricsController = new MetaMetricsController({
       segment,
       preferencesStore: this.preferencesController.store,
@@ -441,7 +450,7 @@ export default class MetamaskController extends EventEmitter {
       getCurrentChainId: this.networkController.getCurrentChainId.bind(
         this.networkController,
       ),
-      version: this.platform.getVersion(),
+      version: mmVersionForMetaMetricsController,
       environment: process.env.METAMASK_ENVIRONMENT,
       extension: this.extension,
       initState: initState.MetaMetricsController,

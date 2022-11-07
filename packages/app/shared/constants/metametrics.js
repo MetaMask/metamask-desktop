@@ -206,6 +206,8 @@ export const TRAITS = {
   THEME: 'theme',
   THREE_BOX_ENABLED: 'three_box_enabled',
   TOKEN_DETECTION_ENABLED: 'token_detection_enabled',
+  VERSION: 'version',
+  DESKTOP_ENABLED: 'desktop_enabled',
 };
 
 /**
