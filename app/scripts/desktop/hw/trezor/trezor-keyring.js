@@ -15,14 +15,8 @@ const buildChannelName = (identifier, isResponse = false) => {
 
 function promisifyEvent(identifier, payload) {
   return new Promise((resolve, reject) => {
-    if (!Desktop.hasInstance()) {
-      reject(new Error('No Desktop instance'));
-    }
-
-    const desktop = Desktop.getInstance();
-
     try {
-      desktop.submitMessageToTrezorWindow(
+      Desktop.submitMessageToTrezorWindow(
         buildChannelName(identifier),
         payload,
       );
@@ -55,12 +49,7 @@ class TrezorKeyringElectron extends TrezorKeyring {
       },
 
       dispose() {
-        if (!Desktop.hasInstance()) {
-          throw new Error('No Desktop instance');
-        }
-
-        const { trezorWindow } = Desktop.getInstance();
-        trezorWindow.webContents.send(buildChannelName('dispose'));
+        Desktop.submitMessageToTrezorWindow(buildChannelName('dispose'));
       },
 
       getPublicKey(payload) {
