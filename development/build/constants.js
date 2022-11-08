@@ -34,6 +34,8 @@ const TASKS = {
   MANIFEST_TEST: 'manifest:test',
   MANIFEST_TEST_DEV: 'manifest:testDev',
   RELOAD: 'reload',
+  SCRIPTS_CORE_DEV_STANDARD_ENTRY_POINTS_DESKTOP:
+    'scripts:core:dev:standardEntryPoints:desktop',
   SCRIPTS_CORE_DEV_STANDARD_ENTRY_POINTS:
     'scripts:core:dev:standardEntryPoints',
   SCRIPTS_CORE_DEV_CONTENTSCRIPT: 'scripts:core:dev:contentscript',
@@ -42,12 +44,16 @@ const TASKS = {
   SCRIPTS_CORE_DEV_PHISHING_DETECT: 'scripts:core:dev:phishing-detect',
   SCRIPTS_CORE_DIST_STANDARD_ENTRY_POINTS:
     'scripts:core:dist:standardEntryPoints',
+  SCRIPTS_CORE_DIST_STANDARD_ENTRY_POINTS_DESKTOP:
+    'scripts:core:dist:standardEntryPoints:desktop',
   SCRIPTS_CORE_DIST_CONTENTSCRIPT: 'scripts:core:dist:contentscript',
   SCRIPTS_CORE_DIST_DISABLE_CONSOLE: 'scripts:core:dist:disable-console',
   SCRIPTS_CORE_DIST_SENTRY: 'scripts:core:dist:sentry',
   SCRIPTS_CORE_DIST_PHISHING_DETECT: 'scripts:core:dist:phishing-detect',
   SCRIPTS_CORE_PROD_STANDARD_ENTRY_POINTS:
     'scripts:core:prod:standardEntryPoints',
+  SCRIPTS_CORE_PROD_STANDARD_ENTRY_POINTS_DESKTOP:
+    'scripts:core:prod:standardEntryPoints:desktop',
   SCRIPTS_CORE_PROD_CONTENTSCRIPT: 'scripts:core:prod:contentscript',
   SCRIPTS_CORE_PROD_DISABLE_CONSOLE: 'scripts:core:prod:disable-console',
   SCRIPTS_CORE_PROD_SENTRY: 'scripts:core:prod:sentry',
@@ -62,6 +68,8 @@ const TASKS = {
     'scripts:core:test-live:phishing-detect',
   SCRIPTS_CORE_TEST_STANDARD_ENTRY_POINTS:
     'scripts:core:test:standardEntryPoints',
+  SCRIPTS_CORE_TEST_STANDARD_ENTRY_POINTS_DESKTOP:
+    'scripts:core:test:standardEntryPoints:desktop',
   SCRIPTS_CORE_TEST_CONTENTSCRIPT: 'scripts:core:test:contentscript',
   SCRIPTS_CORE_TEST_DISABLE_CONSOLE: 'scripts:core:test:disable-console',
   SCRIPTS_CORE_TEST_SENTRY: 'scripts:core:test:sentry',

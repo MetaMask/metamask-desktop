@@ -3,49 +3,18 @@ const fs = require('fs-extra');
 const watch = require('gulp-watch');
 const glob = require('fast-glob');
 
-const locales = require('../../app/_locales/index.json');
-const { BuildType } = require('../lib/build-type');
-
-const { TASKS } = require('./constants');
-const { createTask, composeSeries } = require('./task');
+const { createTask, composeSeries } = require('../../../build/task');
+const { TASKS } = require('../../../build/constants');
 
 const EMPTY_JS_FILE = './development/empty.js';
 
 module.exports = function createStaticAssetTasks({
   livereload,
-  browserPlatforms,
   shouldIncludeLockdown = true,
-  buildType,
 }) {
   const [copyTargetsProd, copyTargetsDev] = getCopyTargets(
     shouldIncludeLockdown,
   );
-
-  const additionalBuildTargets = {
-    [BuildType.beta]: [
-      {
-        src: './app/build-types/beta/images/',
-        dest: `images`,
-      },
-    ],
-    [BuildType.flask]: [
-      {
-        src: './app/build-types/flask/images/',
-        dest: `images`,
-      },
-    ],
-    [BuildType.desktopextension]: [
-      {
-        src: './app/build-types/desktopextension/images/',
-        dest: `images`,
-      },
-    ],
-  };
-
-  if (Object.keys(additionalBuildTargets).includes(buildType)) {
-    copyTargetsProd.push(...additionalBuildTargets[buildType]);
-    copyTargetsDev.push(...additionalBuildTargets[buildType]);
-  }
 
   const prod = createTask(
     TASKS.STATIC_PROD,
@@ -80,35 +49,24 @@ module.exports = function createStaticAssetTasks({
   }
 
   async function performCopy(target) {
-    const defineCopyPromise = (platform, distFolder) => {
-      const platformFolder = platform ? `${platform}/` : '';
-      if (target.pattern) {
-        return copyGlob(
-          target.src,
-          `${target.src}${target.pattern}`,
-          `./${distFolder}/${platformFolder}${target.dest}`,
-        );
-      }
-      return copyGlob(
+    if (target.pattern) {
+      await copyGlob(
         target.src,
-        `${target.src}`,
-        `./${distFolder}/${platformFolder}${target.dest}`,
+        `${target.src}${target.pattern}`,
+        `./dist_desktop_ui/${target.dest}`,
       );
-    };
+      return;
+    }
 
-    const allCopies = browserPlatforms.map((platform) => {
-      return defineCopyPromise(platform, 'dist');
-    });
-
-    await Promise.all(allCopies);
+    await copyGlob(
+      target.src,
+      `${target.src}`,
+      `./dist_desktop_ui/${target.dest}`,
+    );
   }
 
   async function copyGlob(baseDir, srcGlob, dest) {
-    const fixedSrcGlob =
-      process.platform === 'win32' ? srcGlob.replace(/\\/gu, '/') : srcGlob;
-
-    const sources = await glob(fixedSrcGlob, { onlyFiles: false });
-
+    const sources = await glob(srcGlob, { onlyFiles: false });
     await Promise.all(
       sources.map(async (src) => {
         const relativePath = path.relative(baseDir, src);
@@ -120,18 +78,6 @@ module.exports = function createStaticAssetTasks({
 
 function getCopyTargets(shouldIncludeLockdown) {
   const allCopyTargets = [
-    {
-      src: `./app/_locales/`,
-      dest: `_locales`,
-    },
-    {
-      src: `./app/images/`,
-      dest: `images`,
-    },
-    {
-      src: `./node_modules/@metamask/contract-metadata/images/`,
-      dest: `images/contract`,
-    },
     {
       src: `./app/fonts/`,
       dest: `fonts`,
@@ -152,10 +98,6 @@ function getCopyTargets(shouldIncludeLockdown) {
       src: `./ui/css/output/`,
       pattern: `*.css`,
       dest: ``,
-    },
-    {
-      src: `./app/loading.html`,
-      dest: `loading.html`,
     },
     {
       src: `./node_modules/globalthis/dist/browser.js`,
@@ -194,20 +136,6 @@ function getCopyTargets(shouldIncludeLockdown) {
       dest: `runtime-lavamoat.js`,
     },
   ];
-
-  const languageTags = new Set();
-  for (const locale of locales) {
-    const { code } = locale;
-    const tag = code.split('_')[0];
-    languageTags.add(tag);
-  }
-
-  for (const tag of languageTags) {
-    allCopyTargets.push({
-      src: `./node_modules/@formatjs/intl-relativetimeformat/dist/locale-data/${tag}.json`,
-      dest: `intl/${tag}/relative-time-format-data.json`,
-    });
-  }
 
   const copyTargetsDev = [
     ...allCopyTargets,
