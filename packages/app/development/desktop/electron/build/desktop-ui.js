@@ -4,18 +4,17 @@
 //
 // run any task with "yarn build ${taskName}"
 //
-const livereload = require('gulp-livereload');
 const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
 const { BuildType } = require('../../../lib/build-type');
 const { TASKS } = require('../../../build/constants');
+const { getConfig } = require('../../../build/config');
 const {
   createTask,
   composeSeries,
   composeParallel,
   runTask,
-} = require('../../../build/task');
-const { getConfig } = require('../../../build/config');
+} = require('./task');
 const createStaticAssetTasks = require('./static');
 const createStyleTasks = require('./styles');
 const createScriptTasks = require('./scripts');
@@ -47,14 +46,10 @@ require('eslint-plugin-react');
 require('eslint-plugin-react-hooks');
 require('eslint-plugin-jest');
 
-buildDesktopUi()
-  .then(() => {
-    process.exit(0);
-  })
-  .catch((error) => {
-    console.error(error.stack || error);
-    process.exitCode = 1;
-  });
+buildDesktopUi().catch((error) => {
+  console.error(error.stack || error);
+  process.exitCode = 1;
+});
 
 async function buildDesktopUi() {
   const {
@@ -69,33 +64,29 @@ async function buildDesktopUi() {
   } = await parseArgv();
 
   const staticTasks = createStaticAssetTasks({
-    livereload,
     shouldIncludeLockdown,
     buildType,
   });
 
-  const styleTasks = createStyleTasks({ livereload });
+  const styleTasks = createStyleTasks();
 
   const scriptTasks = createScriptTasks({
     applyLavaMoat,
     buildType,
     isLavaMoat,
-    livereload,
     policyOnly,
     shouldLintFenceFiles,
   });
 
-  const { clean, reload } = createEtcTasks({
-    livereload,
-  });
+  const { clean } = createEtcTasks();
 
-  // build for development (livereload)
+  // build for development
   createTask(
     TASKS.DEV,
     composeSeries(
       clean,
       styleTasks.dev,
-      composeParallel(scriptTasks.dev, staticTasks.dev, reload),
+      composeParallel(scriptTasks.dev, staticTasks.dev),
     ),
   );
 
@@ -136,7 +127,7 @@ async function parseArgv() {
         .positional('task', {
           description: `The task to run. There are a number of main tasks, each of which calls other tasks internally. The main tasks are:
 
-dev: Create an unoptimized, live-reloading build for local development.
+dev: Create an unoptimized for local development.
 
 dist: Create an optimized production-like for a non-production environment.
 

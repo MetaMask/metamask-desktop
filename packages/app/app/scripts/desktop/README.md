@@ -11,20 +11,23 @@
 - Copy the `.metamaskrc.dist` file to `.metamaskrc`
     - Replace the `INFURA_PROJECT_ID` value with your own personal [Infura Project ID](https://infura.io/docs).
     - Optionally, replace the `PASSWORD` value with your development wallet password to avoid entering it each time you open the app.
-- Build the extension with desktop support using `yarn build:desktop:extension`.
-- Build the desktop app using `yarn build:desktop`.
-    - Run `yarn start:desktop` to run dev mode.
-
+- Run `yarn build:desktop:dev` to start development environment. (This will open up extension, desktop main process and desktop renderer process in watch mode)
+    - Run `yarn start:desktop` to run the electron application.
 
 ### Building locally with MV3 enabled
 
 - Install dependencies: `yarn setup` (not the usual install command)
 - Copy the `.metamaskrc.dist` file to `.metamaskrc`
     - `ENABLE_MV3=true` is automatically set at build step.
-- Build the extension with desktop support using `yarn build:desktop:extension:mv3`.
-- Build the desktop app using `yarn build:desktop:mv3`.
-    - Run `yarn start:desktop` to run the desktop app.
+- Build the desktop app using `yarn build:desktop:dev:mv3`.
+    - Run `yarn start:desktop` to run the electron application.
 
+### Building locally with Lavamoat enabled
+
+- Install dependencies: `yarn setup` (not the usual install command)
+- Copy the `.metamaskrc.dist` file to `.metamaskrc`
+- Build the desktop app using `yarn build:desktop:dev:lavamoat`.
+    - Run `yarn start:desktop` to run the electron application.
 
 ### Running Unit Tests and Linting
 
