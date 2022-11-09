@@ -236,7 +236,7 @@ class DesktopApp extends EventEmitter {
       webPreferences: {
         preload: path.resolve(
           __dirname,
-          './hw/trezor/renderer/trezor-preload.js',
+          '../hw/trezor/renderer/trezor-preload.js',
         ),
       },
     });
