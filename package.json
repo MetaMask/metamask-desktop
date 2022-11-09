@@ -101,7 +101,7 @@
     "lavamoat:background:auto:ci": "node ./development/generate-lavamoat-policies.js --parallel=false",
     "lavamoat:auto": "yarn lavamoat:build:auto && yarn lavamoat:background:auto",
     "lavamoat:auto:ci": "yarn lavamoat:build:auto && yarn lavamoat:background:auto:ci",
-    "lavamoat:desktop:app": "lavamoat dist_desktop/app/scripts/background.js --autopolicy --policy lavamoat/desktop/node/policy.json --policyOverride lavamoat/desktop/node/policy-override.json",
+    "lavamoat:desktop:app": "lavamoat dist_desktop/app/scripts/background.js --autopolicy --policy lavamoat/desktop/node/policy.json --policyOverride lavamoat/desktop/node/policy-override.json --includeDevDeps=false",
     "lavamoat:desktop:ui:auto": "yarn lavamoat:desktop:ui:build:auto && yarn lavamoat:desktop:ui:background",
     "lavamoat:desktop:ui:background": "WRITE_AUTO_POLICY=1 yarn lavamoat:desktop:ui:build scripts:dist --policy-only",
     "lavamoat:desktop:ui:build:auto": "yarn lavamoat:desktop:ui:build scripts:dist --policy-only --writeAutoPolicy",
@@ -269,6 +269,7 @@
     "uuid": "^8.3.2",
     "valid-url": "^1.0.9",
     "web3-stream-provider": "^4.0.0",
+    "webextension-polyfill": "^0.8.0",
     "ws": "^7.4.6",
     "zxcvbn": "^4.4.2"
   },
@@ -444,7 +445,6 @@
     "vinyl-source-stream": "^2.0.0",
     "vinyl-sourcemaps-apply": "^0.2.1",
     "watchify": "^4.0.0",
-    "webextension-polyfill": "^0.8.0",
     "webpack": "^4.41.6",
     "yargs": "^17.0.1",
     "yarn-deduplicate": "^3.1.0"

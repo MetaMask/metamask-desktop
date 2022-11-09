@@ -25,6 +25,7 @@ runLava({
   policyOverridePath,
   projectRoot: appPath,
   isPackagedApp: app.isPackaged,
+  includeDevDeps: false,
 }).catch((err: Error) => {
   // explicity log stack to workaround https://github.com/endojs/endo/issues/944
   console.error(err.stack || err);
