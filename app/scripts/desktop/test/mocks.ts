@@ -12,7 +12,7 @@ import {
 } from '../shared/web-socket-stream';
 import ExtensionConnection from '../app/extension-connection';
 import DesktopConnection from '../extension/desktop-connection';
-import { ExtensionPairing } from '../shared/pairing';
+import { DesktopPairing, ExtensionPairing } from '../shared/pairing';
 import { TestConnectionResult } from '../types/desktop';
 import { ExtensionVersionCheck } from '../shared/version-check';
 import ExtensionPlatform from 'app/scripts/platforms/extension';
@@ -51,6 +51,11 @@ export const UUID_MOCK = '6328e6ae-f867-4876-af6f-22a44efbe251';
 export const OTP_MOCK = '123456';
 export const VERSION_MOCK = '123.456.789.012';
 export const VERSION_2_MOCK = '456.123.789.012';
+export const HASH_BUFFER_MOCK = Buffer.from([10, 11, 12]);
+export const HASH_BUFFER_2_MOCK = Buffer.from([10, 11, 13]);
+export const IV_HEX_MOCK = Buffer.from(IV_BUFFER_MOCK).toString('hex');
+export const HASH_BUFFER_HEX_MOCK = HASH_BUFFER_MOCK.toString('hex');
+export const HASH_BUFFER_2_HEX_MOCK = HASH_BUFFER_2_MOCK.toString('hex');
 
 export const EXPORTED_KEY_HEX_MOCK =
   Buffer.from(EXPORTED_KEY_MOCK).toString('hex');
@@ -58,8 +63,6 @@ export const EXPORTED_KEY_HEX_MOCK =
 export const ENCRYPTED_HEX_MOCK = Buffer.from(ENCRYPTED_BUFFER_MOCK).toString(
   'hex',
 );
-
-export const IV_HEX_MOCK = Buffer.from(IV_BUFFER_MOCK).toString('hex');
 
 export const NEW_CONNECTION_MESSAGE_MOCK = {
   clientId: CLIENT_ID_MOCK,
@@ -144,7 +147,7 @@ export const createMultiplexMock = (): jest.Mocked<ObjectMultiplex & Duplex> =>
   ({
     ...createStreamMock(),
     createStream: jest.fn(),
-  } as unknown as jest.Mocked<ObjectMultiplex>);
+  } as any);
 
 export const createEventEmitterMock = (): jest.Mocked<EventEmitter> =>
   ({
@@ -198,3 +201,6 @@ export const createExtensionVersionCheckMock =
 
 export const createExtensionPlatformMock = (): jest.Mocked<ExtensionPlatform> =>
   ({ getVersion: jest.fn() } as any);
+
+export const createDesktopPairingMock = (): jest.Mocked<DesktopPairing> =>
+  ({ init: jest.fn() } as any);

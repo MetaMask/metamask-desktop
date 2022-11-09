@@ -1,7 +1,7 @@
 import { browser } from '../browser/browser-polyfill';
-import { DesktopState } from '../types/desktop';
+import { DesktopState, RawState } from '../types/desktop';
 
-export const get = async (): Promise<any> => {
+export const get = async (): Promise<RawState> => {
   return await browser.storage.local.get();
 };
 
@@ -12,7 +12,7 @@ export const getDesktopState = async (): Promise<DesktopState> => {
 
 export const getAndUpdateDesktopState = async (
   desktopState: DesktopState,
-): Promise<any> => {
+): Promise<RawState> => {
   const state = await get();
   const currentDesktopState = state.data.DesktopController;
 
@@ -21,7 +21,7 @@ export const getAndUpdateDesktopState = async (
   return state;
 };
 
-export const set = async (state: any) => {
+export const set = async (state: RawState) => {
   await browser.storage.local.set(state);
 };
 
@@ -32,4 +32,34 @@ export const setDesktopState = async (desktopState: DesktopState) => {
 
 export const clear = async () => {
   await browser.storage.local.clear();
+};
+
+export const addPairingKey = async (state: RawState): Promise<RawState> => {
+  const existingDeskotpState = await getDesktopState();
+
+  return {
+    ...state,
+    data: {
+      ...state.data,
+      DesktopController: {
+        ...state.data?.DesktopController,
+        pairingKey: existingDeskotpState.pairingKey,
+        pairingKeyHash: existingDeskotpState.pairingKeyHash,
+      },
+    },
+  };
+};
+
+export const removePairingKey = (state: RawState) => {
+  return {
+    ...state,
+    data: {
+      ...state.data,
+      DesktopController: {
+        ...state.data.DesktopController,
+        pairingKey: undefined,
+        pairingKeyHash: undefined,
+      },
+    },
+  };
 };

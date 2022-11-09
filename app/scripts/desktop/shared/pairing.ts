@@ -3,6 +3,9 @@ import { Duplex } from 'stream';
 import EventEmitter from 'events';
 ///: END:ONLY_INCLUDE_IN
 import log from 'loglevel';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import ObjectMultiplex from 'obj-multiplex';
 import TOTP from '../utils/totp';
 import {
   PairingKeyRequestMessage,
@@ -12,18 +15,38 @@ import {
 } from '../types/message';
 import * as rawState from '../utils/raw-state';
 import { browser } from '../browser/browser-polyfill';
-import { waitForMessage } from '../utils/stream';
+import {
+  acknowledge,
+  waitForAcknowledge,
+  waitForMessage,
+} from '../utils/stream';
 import { MESSAGE_ACKNOWLEDGE } from '../../../../shared/constants/desktop';
 import { createKey } from '../encryption/symmetric-encryption';
+import { hashString } from '../utils/crypto';
+
+const createStreams = (stream: Duplex) => {
+  const multiplex = new ObjectMultiplex();
+  const requestStream = multiplex.createStream('request');
+  const keyStream = multiplex.createStream('key');
+
+  stream.pipe(multiplex).pipe(stream);
+
+  return { requestStream, keyStream };
+};
 
 ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
 export class ExtensionPairing {
-  private stream: Duplex;
+  private requestStream: Duplex;
+
+  private keyStream: Duplex;
 
   private transferState: () => Promise<void>;
 
   constructor(stream: Duplex, transferState: () => Promise<void>) {
-    this.stream = stream;
+    const streams = createStreams(stream);
+
+    this.requestStream = streams.requestStream;
+    this.keyStream = streams.keyStream;
     this.transferState = transferState;
   }
 
@@ -34,58 +57,86 @@ export class ExtensionPairing {
   }
 
   public init() {
-    this.stream.on('data', (data: PairingRequestMessage) =>
-      this.onMessage(data),
-    );
+    this.requestStream.on('data', (data: PairingRequestMessage | string) => {
+      if (data === MESSAGE_ACKNOWLEDGE) {
+        return;
+      }
+
+      this.onRequestMessage(data as PairingRequestMessage);
+    });
+
     return this;
   }
 
   public async isPairingKeyMatch(): Promise<boolean> {
-    const extensionPairingKey = (await rawState.getDesktopState()).pairingKey;
+    log.debug('Validating pairing key');
+
     const requestPairingKey: PairingKeyRequestMessage = {
       isRequestPairingKey: true,
     };
-    this.stream.write(requestPairingKey);
 
-    // wait for desktop pairing key
+    this.keyStream.write(requestPairingKey);
+
+    // Wait for desktop pairing key
     const response = await waitForMessage<PairingKeyResponseMessage>(
-      this.stream,
+      this.keyStream,
     );
 
-    const isDesktopEnabled = extensionPairingKey === response.pairingKey;
+    const desktopPairingKey = response.pairingKey;
 
-    log.debug('Completed pairing key check', isDesktopEnabled);
-    return isDesktopEnabled as boolean;
+    if (!desktopPairingKey) {
+      log.debug('Desktop has no pairing key');
+      return false;
+    }
+
+    const desktopPairingKeyHash = await hashString(desktopPairingKey, {
+      isHex: true,
+    });
+
+    const extensionPairingKeyHash = (await rawState.getDesktopState())
+      .pairingKeyHash;
+
+    const isMatch = extensionPairingKeyHash === desktopPairingKeyHash;
+
+    log.debug('Completed pairing key check', isMatch);
+
+    return isMatch;
   }
 
-  private async onMessage(pairingRequestMessage: PairingRequestMessage) {
-    log.debug('Received pairing message', pairingRequestMessage);
+  private async onRequestMessage(pairingRequest: PairingRequestMessage) {
+    log.debug('Received pairing request message', pairingRequest);
 
-    const isValidOTP = TOTP.validate(pairingRequestMessage?.otp);
+    const isValidOTP = TOTP.validate(pairingRequest.otp);
 
     if (!isValidOTP) {
       log.debug('Received invalid OTP');
+
       const pairingResultMessage: PairingResultMessage = {
         isDesktopEnabled: false,
       };
-      this.stream.write(pairingResultMessage);
+
+      this.requestStream.write(pairingResultMessage);
       return;
     }
 
-    // Generate random pairing key and save it in state
+    const pairingKey = await createKey();
+    const pairingKeyHash = await hashString(pairingKey, { isHex: true });
+
     await rawState.setDesktopState({
       desktopEnabled: true,
-      pairingKey: await createKey(),
+      pairingKeyHash,
     });
 
     const pairingResultMessage: PairingResultMessage = {
       isDesktopEnabled: true,
+      pairingKey,
     };
-    this.stream.write(pairingResultMessage);
-    await waitForMessage(this.stream, (data) =>
-      Promise.resolve(data === MESSAGE_ACKNOWLEDGE),
-    );
-    log.debug('Saved pairing key');
+
+    this.requestStream.write(pairingResultMessage);
+
+    await waitForAcknowledge(this.requestStream);
+
+    log.debug('Saved pairing key', { pairingKey, pairingKeyHash });
 
     await this.transferState();
 
@@ -98,62 +149,69 @@ export class ExtensionPairing {
 
 ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
 export class DesktopPairing extends EventEmitter {
-  private stream: Duplex;
+  private requestStream: Duplex;
+
+  private keyStream: Duplex;
 
   constructor(stream: Duplex) {
     super();
-    this.stream = stream;
+
+    const streams = createStreams(stream);
+
+    this.requestStream = streams.requestStream;
+    this.keyStream = streams.keyStream;
   }
 
   public init() {
-    this.stream.on('data', (data: PairingResultMessage) =>
-      this.onMessage(data),
+    this.requestStream.on('data', (data: PairingResultMessage) =>
+      this.onRequestMessage(data),
     );
+
+    this.keyStream.on('data', (data: PairingKeyRequestMessage) =>
+      this.onKeyMessage(data),
+    );
+
     return this;
   }
 
   public async submitOTP(otp: string) {
     log.debug('Received OTP', otp);
-    this.stream.write({ otp });
+    this.requestStream.write({ otp });
   }
 
-  private async onPairingKeyRequestMessage(
-    pairingKeyRequestMessage: PairingKeyRequestMessage,
-  ) {
-    log.debug('Received pairing key request message', pairingKeyRequestMessage);
+  private async onRequestMessage(pairingResult: PairingResultMessage) {
+    log.debug('Received pairing request response', pairingResult);
+
+    if (!pairingResult.isDesktopEnabled) {
+      log.debug('Submitted OTP was invalid');
+      this.emit('invalid-otp', false);
+      return;
+    }
+
+    const { pairingKey } = pairingResult;
+
+    await rawState.setDesktopState({
+      desktopEnabled: true,
+      pairingKey,
+    });
+
+    log.debug('Saved pairing key', pairingKey);
+
+    acknowledge(this.requestStream);
+  }
+
+  private async onKeyMessage(_: PairingKeyRequestMessage) {
+    log.debug('Received pairing key request');
+
     const desktopPairingKey = (await rawState.getDesktopState()).pairingKey;
-    log.debug('Comparing desktop and extension pairing keys');
 
     const response: PairingKeyResponseMessage = {
       pairingKey: desktopPairingKey,
     };
-    this.stream.write(response);
-  }
 
-  private async onMessage(
-    pairingMessage: PairingResultMessage | PairingKeyRequestMessage,
-  ) {
-    log.debug('Received pairing message', pairingMessage);
+    log.debug('Sending pairing key response', response);
 
-    if (this.isPairingKeyRequestMessage(pairingMessage)) {
-      await this.onPairingKeyRequestMessage(pairingMessage);
-      return;
-    }
-
-    if ((pairingMessage as PairingResultMessage)?.isDesktopEnabled) {
-      await rawState.setDesktopState({ desktopEnabled: true });
-      this.stream.write(MESSAGE_ACKNOWLEDGE);
-      return;
-    }
-
-    log.debug('Submitted OTP was invalid');
-    this.emit('invalid-otp', false);
-  }
-
-  private isPairingKeyRequestMessage(
-    msg: PairingResultMessage | PairingKeyRequestMessage,
-  ): msg is PairingKeyRequestMessage {
-    return (msg as PairingKeyRequestMessage)?.isRequestPairingKey !== undefined;
+    this.keyStream.write(response);
   }
 }
 ///: END:ONLY_INCLUDE_IN

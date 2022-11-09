@@ -12,18 +12,17 @@ import {
   CLIENT_ID_DISABLE,
   CLIENT_ID_VERSION,
   CLIENT_ID_PAIRING,
-  MESSAGE_ACKNOWLEDGE,
 } from '../../../../shared/constants/desktop';
 import { ConnectionType } from '../types/background';
 import { EndConnectionMessage, NewConnectionMessage } from '../types/message';
-import { ClientId } from '../types/desktop';
+import { ClientId, RawState } from '../types/desktop';
 import {
   registerRequestStream,
   unregisterRequestStream,
 } from '../browser/browser-polyfill';
-import { waitForMessage } from '../utils/stream';
+import { acknowledge, waitForAcknowledge } from '../utils/stream';
 import { DesktopPairing } from '../shared/pairing';
-import * as RawState from '../utils/raw-state';
+import * as RawStateUtils from '../utils/raw-state';
 import { DesktopVersionCheck } from '../shared/version-check';
 
 export default class ExtensionConnection extends EventEmitter {
@@ -102,7 +101,7 @@ export default class ExtensionConnection extends EventEmitter {
     );
   }
 
-  public transferState(rawState: any) {
+  public transferState(rawState: RawState) {
     if (!this.canTransferState()) {
       log.debug(
         'Cannot transfer state to extension as waiting for initial state from extension',
@@ -110,7 +109,9 @@ export default class ExtensionConnection extends EventEmitter {
       return;
     }
 
-    this.stateStream.write(rawState);
+    const filteredState = RawStateUtils.removePairingKey(rawState);
+
+    this.stateStream.write(filteredState);
 
     log.debug('Sent state to extension');
   }
@@ -123,18 +124,16 @@ export default class ExtensionConnection extends EventEmitter {
     this.hasBeenInitializedWithExtensionState = false;
 
     const message = shouldTransfer
-      ? await RawState.getAndUpdateDesktopState({ desktopEnabled: false })
+      ? await RawStateUtils.getAndUpdateDesktopState({ desktopEnabled: false })
       : undefined;
 
     this.disableStream.write(message);
 
-    await waitForMessage(this.disableStream, (data) =>
-      Promise.resolve(data === MESSAGE_ACKNOWLEDGE),
-    );
+    await waitForAcknowledge(this.disableStream);
 
     log.debug('Sent disable request to extension');
 
-    await RawState.clear();
+    await RawStateUtils.clear();
 
     log.debug('Removed all desktop state');
 
@@ -202,12 +201,14 @@ export default class ExtensionConnection extends EventEmitter {
     this.emit('connection-update', this.connections);
   }
 
-  private async onExtensionState(data: any) {
+  private async onExtensionState(data: RawState) {
     log.debug('Received extension state');
 
-    await RawState.set(data);
+    const newRawState = await RawStateUtils.addPairingKey(data);
 
-    this.stateStream.write(MESSAGE_ACKNOWLEDGE);
+    await RawStateUtils.set(newRawState);
+
+    acknowledge(this.stateStream);
 
     this.hasBeenInitializedWithExtensionState = true;
 
