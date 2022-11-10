@@ -19,7 +19,7 @@ function receiveMessage(event) {
 }
 
 window.latticeApi.openWindowSetup((payload) => {
-  const response = window.open(payload, '_blank', 'width=980,height=700');
+  const response = window.open(payload, '_blank', 'width=1200,height=700');
 
   window.addEventListener('message', receiveMessage, false);
 

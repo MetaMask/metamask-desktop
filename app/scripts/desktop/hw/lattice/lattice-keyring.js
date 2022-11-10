@@ -35,17 +35,16 @@ class LatticeKeyringElectron extends LatticeKeyring {
     try {
       // We only need to setup if we don't have a deviceID
       if (this._hasCreds()) {
-        return;
+        return {};
       }
       // If we are not aware of what Lattice we should be talking to,
       // we need to open a window that lets the user go through the
       // pairing or connection process.
-
       const name = this.appName ? this.appName : 'Unknown';
       const base = 'https://lattice.gridplus.io';
-      const url = `${base}?keyring=${name}&forceLogin=true`; // Open the tab
+      const url = `${base}?keyring=${name}&forceLogin=true`;
 
-      await this._openConnectorTab(url);
+      return await this._openConnectorTab(url);
     } catch (err) {
       throw new Error(err);
     }
