@@ -3,11 +3,10 @@ import { app } from 'electron';
 import { runLava } from 'lavamoat';
 
 let appPath = process.cwd();
-let policyRelativePath = '/lavamoat/desktop/node/';
+const policyRelativePath = '/lavamoat/desktop/node/';
 
 if (app.isPackaged) {
   appPath = app.getAppPath();
-  policyRelativePath = '/lavamoat/desktop/electron/';
 }
 
 const entryPath = path.join(appPath, '/dist_desktop/app/scripts/background.js');
@@ -24,7 +23,7 @@ runLava({
   policyPath,
   policyOverridePath,
   projectRoot: appPath,
-  isPackagedApp: app.isPackaged,
+  includeDevDeps: false,
 }).catch((err: Error) => {
   // explicity log stack to workaround https://github.com/endojs/endo/issues/944
   console.error(err.stack || err);
