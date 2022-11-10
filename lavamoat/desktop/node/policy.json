@@ -419,37 +419,7 @@
         "process.nextTick": true
       },
       "packages": {
-        "@ledgerhq/hw-transport-node-hid-noevents>node-hid>bindings": true
-      }
-    },
-    "@ledgerhq/hw-transport-node-hid-noevents>node-hid>bindings": {
-      "builtin": {
-        "fs.accessSync": true,
-        "fs.existsSync": true,
-        "path.dirname": true,
-        "path.existsSync": true,
-        "path.extname": true,
-        "path.join": true
-      },
-      "globals": {
-        "__filename": true,
-        "__non_webpack_require__": true,
-        "__webpack_require__": true,
-        "process.arch": true,
-        "process.cwd": true,
-        "process.env.NODE_BINDINGS_ARROW": true,
-        "process.env.NODE_BINDINGS_COMPILED_DIR": true,
-        "process.platform": true,
-        "process.versions.modules": true,
-        "process.versions.node": true
-      },
-      "packages": {
-        "@ledgerhq/hw-transport-node-hid-noevents>node-hid>bindings>file-uri-to-path": true
-      }
-    },
-    "@ledgerhq/hw-transport-node-hid-noevents>node-hid>bindings>file-uri-to-path": {
-      "builtin": {
-        "path.sep": true
+        "lavamoat>bindings": true
       }
     },
     "@metamask/controllers": {
@@ -823,8 +793,8 @@
         "@metamask/controllers>web3-provider-engine>semaphore": true,
         "@metamask/controllers>web3-provider-engine>ws": true,
         "eth-json-rpc-filters": true,
-        "eth-json-rpc-middleware>json-stable-stringify": true,
-        "eth-query>xtend": true
+        "eth-query>xtend": true,
+        "lavamoat>json-stable-stringify": true
       }
     },
     "@metamask/controllers>web3-provider-engine>async": {
@@ -887,8 +857,8 @@
         "@metamask/controllers>web3-provider-engine>eth-rpc-errors": true,
         "eth-json-rpc-middleware>btoa": true,
         "eth-json-rpc-middleware>clone": true,
-        "eth-json-rpc-middleware>json-stable-stringify": true,
-        "eth-json-rpc-middleware>node-fetch": true
+        "eth-json-rpc-middleware>node-fetch": true,
+        "lavamoat>json-stable-stringify": true
       }
     },
     "@metamask/controllers>web3-provider-engine>eth-json-rpc-middleware>node-fetch": {
@@ -1059,11 +1029,11 @@
         "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>pify": true,
         "eth-json-rpc-middleware>btoa": true,
         "eth-json-rpc-middleware>clone": true,
-        "eth-json-rpc-middleware>json-stable-stringify": true,
         "eth-json-rpc-middleware>node-fetch": true,
         "eth-rpc-errors": true,
         "json-rpc-engine": true,
-        "json-rpc-engine>@metamask/safe-event-emitter": true
+        "json-rpc-engine>@metamask/safe-event-emitter": true,
+        "lavamoat>json-stable-stringify": true
       }
     },
     "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util": {
@@ -2173,20 +2143,20 @@
       },
       "packages": {
         "@metamask/snap-utils>@babel/core>@ampproject/remapping": true,
-        "@metamask/snap-utils>@babel/core>@babel/code-frame": true,
         "@metamask/snap-utils>@babel/core>@babel/generator": true,
         "@metamask/snap-utils>@babel/core>@babel/helper-compilation-targets": true,
         "@metamask/snap-utils>@babel/core>@babel/helper-module-transforms": true,
         "@metamask/snap-utils>@babel/core>@babel/helpers": true,
-        "@metamask/snap-utils>@babel/core>@babel/parser": true,
         "@metamask/snap-utils>@babel/core>@babel/template": true,
-        "@metamask/snap-utils>@babel/core>@babel/traverse": true,
         "@metamask/snap-utils>@babel/core>@babel/types": true,
         "@metamask/snap-utils>@babel/core>convert-source-map": true,
         "@metamask/snap-utils>@babel/core>gensync": true,
         "@metamask/snap-utils>@babel/core>json5": true,
         "@metamask/snap-utils>@babel/core>semver": true,
-        "@truffle/codec>debug": true
+        "@truffle/codec>debug": true,
+        "lavamoat>@babel/code-frame": true,
+        "lavamoat>lavamoat-tofu>@babel/parser": true,
+        "lavamoat>lavamoat-tofu>@babel/traverse": true
       }
     },
     "@metamask/snap-utils>@babel/core>@ampproject/remapping": {
@@ -2219,58 +2189,6 @@
     "@metamask/snap-utils>@babel/core>@ampproject/remapping>@jridgewell/trace-mapping>@jridgewell/resolve-uri": {
       "globals": {
         "define": true
-      }
-    },
-    "@metamask/snap-utils>@babel/core>@babel/code-frame": {
-      "globals": {
-        "console.warn": true,
-        "process.emitWarning": true
-      },
-      "packages": {
-        "@metamask/snap-utils>@babel/core>@babel/code-frame>@babel/highlight": true
-      }
-    },
-    "@metamask/snap-utils>@babel/core>@babel/code-frame>@babel/highlight": {
-      "packages": {
-        "@metamask/snap-utils>@babel/core>@babel/code-frame>@babel/highlight>chalk": true,
-        "@metamask/snap-utils>@babel/core>@babel/types>@babel/helper-validator-identifier": true,
-        "react>loose-envify>js-tokens": true
-      }
-    },
-    "@metamask/snap-utils>@babel/core>@babel/code-frame>@babel/highlight>chalk": {
-      "globals": {
-        "process.env.TERM": true,
-        "process.platform": true
-      },
-      "packages": {
-        "@metamask/snap-utils>@babel/core>@babel/code-frame>@babel/highlight>chalk>ansi-styles": true,
-        "@metamask/snap-utils>@babel/core>@babel/code-frame>@babel/highlight>chalk>escape-string-regexp": true,
-        "@metamask/snap-utils>@babel/core>@babel/code-frame>@babel/highlight>chalk>supports-color": true
-      }
-    },
-    "@metamask/snap-utils>@babel/core>@babel/code-frame>@babel/highlight>chalk>ansi-styles": {
-      "packages": {
-        "@metamask/jazzicon>color>color-convert": true
-      }
-    },
-    "@metamask/snap-utils>@babel/core>@babel/code-frame>@babel/highlight>chalk>supports-color": {
-      "builtin": {
-        "os.release": true
-      },
-      "globals": {
-        "process.env": true,
-        "process.platform": true,
-        "process.stderr": true,
-        "process.stdout": true,
-        "process.versions.node.split": true
-      },
-      "packages": {
-        "@metamask/snap-utils>@babel/core>@babel/code-frame>@babel/highlight>chalk>supports-color>has-flag": true
-      }
-    },
-    "@metamask/snap-utils>@babel/core>@babel/code-frame>@babel/highlight>chalk>supports-color>has-flag": {
-      "globals": {
-        "process.argv": true
       }
     },
     "@metamask/snap-utils>@babel/core>@babel/generator": {
@@ -2366,11 +2284,11 @@
         "@metamask/snap-utils>@babel/core>@babel/helper-module-transforms>@babel/helper-module-imports": true,
         "@metamask/snap-utils>@babel/core>@babel/helper-module-transforms>@babel/helper-simple-access": true,
         "@metamask/snap-utils>@babel/core>@babel/template": true,
-        "@metamask/snap-utils>@babel/core>@babel/traverse": true,
-        "@metamask/snap-utils>@babel/core>@babel/traverse>@babel/helper-environment-visitor": true,
-        "@metamask/snap-utils>@babel/core>@babel/traverse>@babel/helper-split-export-declaration": true,
         "@metamask/snap-utils>@babel/core>@babel/types": true,
-        "@metamask/snap-utils>@babel/core>@babel/types>@babel/helper-validator-identifier": true
+        "lavamoat>@babel/highlight>@babel/helper-validator-identifier": true,
+        "lavamoat>lavamoat-tofu>@babel/traverse": true,
+        "lavamoat>lavamoat-tofu>@babel/traverse>@babel/helper-environment-visitor": true,
+        "lavamoat>lavamoat-tofu>@babel/traverse>@babel/helper-split-export-declaration": true
       }
     },
     "@metamask/snap-utils>@babel/core>@babel/helper-module-transforms>@babel/helper-module-imports": {
@@ -2389,49 +2307,15 @@
     "@metamask/snap-utils>@babel/core>@babel/helpers": {
       "packages": {
         "@metamask/snap-utils>@babel/core>@babel/template": true,
-        "@metamask/snap-utils>@babel/core>@babel/traverse": true,
-        "@metamask/snap-utils>@babel/core>@babel/types": true
+        "@metamask/snap-utils>@babel/core>@babel/types": true,
+        "lavamoat>lavamoat-tofu>@babel/traverse": true
       }
     },
     "@metamask/snap-utils>@babel/core>@babel/template": {
       "packages": {
-        "@metamask/snap-utils>@babel/core>@babel/code-frame": true,
-        "@metamask/snap-utils>@babel/core>@babel/parser": true,
-        "@metamask/snap-utils>@babel/core>@babel/types": true
-      }
-    },
-    "@metamask/snap-utils>@babel/core>@babel/traverse": {
-      "globals": {
-        "console.log": true,
-        "console.trace": true
-      },
-      "packages": {
-        "@metamask/snap-utils>@babel/core>@babel/code-frame": true,
-        "@metamask/snap-utils>@babel/core>@babel/generator": true,
-        "@metamask/snap-utils>@babel/core>@babel/parser": true,
-        "@metamask/snap-utils>@babel/core>@babel/traverse>@babel/helper-environment-visitor": true,
-        "@metamask/snap-utils>@babel/core>@babel/traverse>@babel/helper-function-name": true,
-        "@metamask/snap-utils>@babel/core>@babel/traverse>@babel/helper-hoist-variables": true,
-        "@metamask/snap-utils>@babel/core>@babel/traverse>@babel/helper-split-export-declaration": true,
-        "@metamask/snap-utils>@babel/core>@babel/traverse>globals": true,
         "@metamask/snap-utils>@babel/core>@babel/types": true,
-        "@truffle/codec>debug": true
-      }
-    },
-    "@metamask/snap-utils>@babel/core>@babel/traverse>@babel/helper-function-name": {
-      "packages": {
-        "@metamask/snap-utils>@babel/core>@babel/template": true,
-        "@metamask/snap-utils>@babel/core>@babel/types": true
-      }
-    },
-    "@metamask/snap-utils>@babel/core>@babel/traverse>@babel/helper-hoist-variables": {
-      "packages": {
-        "@metamask/snap-utils>@babel/core>@babel/types": true
-      }
-    },
-    "@metamask/snap-utils>@babel/core>@babel/traverse>@babel/helper-split-export-declaration": {
-      "packages": {
-        "@metamask/snap-utils>@babel/core>@babel/types": true
+        "lavamoat>@babel/code-frame": true,
+        "lavamoat>lavamoat-tofu>@babel/parser": true
       }
     },
     "@metamask/snap-utils>@babel/core>@babel/types": {
@@ -2441,8 +2325,8 @@
       },
       "packages": {
         "@metamask/snap-utils>@babel/core>@babel/types>@babel/helper-string-parser": true,
-        "@metamask/snap-utils>@babel/core>@babel/types>@babel/helper-validator-identifier": true,
-        "@metamask/snap-utils>@babel/core>@babel/types>to-fast-properties": true
+        "@metamask/snap-utils>@babel/core>@babel/types>to-fast-properties": true,
+        "lavamoat>@babel/highlight>@babel/helper-validator-identifier": true
       }
     },
     "@metamask/snap-utils>@babel/core>convert-source-map": {
@@ -3354,12 +3238,12 @@
         "eth-json-rpc-middleware>@metamask/eth-sig-util": true,
         "eth-json-rpc-middleware>btoa": true,
         "eth-json-rpc-middleware>clone": true,
-        "eth-json-rpc-middleware>json-stable-stringify": true,
         "eth-json-rpc-middleware>node-fetch": true,
         "eth-json-rpc-middleware>pify": true,
         "eth-rpc-errors": true,
         "json-rpc-engine": true,
-        "json-rpc-engine>@metamask/safe-event-emitter": true
+        "json-rpc-engine>@metamask/safe-event-emitter": true,
+        "lavamoat>json-stable-stringify": true
       }
     },
     "eth-json-rpc-middleware>@metamask/eth-sig-util": {
@@ -3414,11 +3298,6 @@
     "eth-json-rpc-middleware>clone": {
       "globals": {
         "Buffer": true
-      }
-    },
-    "eth-json-rpc-middleware>json-stable-stringify": {
-      "packages": {
-        "eth-json-rpc-middleware>json-stable-stringify>jsonify": true
       }
     },
     "eth-json-rpc-middleware>node-fetch": {
@@ -3872,7 +3751,7 @@
       },
       "packages": {
         "hdkey>secp256k1>elliptic": true,
-        "ws>bufferutil>node-gyp-build": true
+        "lavamoat>node-gyp-build": true
       }
     },
     "eth-lattice-keyring>rlp": {
@@ -4035,12 +3914,12 @@
         "process.env.DEBUG": true
       },
       "packages": {
-        "@ledgerhq/hw-transport-node-hid-noevents>node-hid>bindings": true,
         "bn.js": true,
         "eth-trezor-keyring>hdkey>secp256k1>bip66": true,
         "ethereumjs-util>create-hash": true,
         "hdkey>safe-buffer": true,
-        "hdkey>secp256k1>elliptic": true
+        "hdkey>secp256k1>elliptic": true,
+        "lavamoat>bindings": true
       }
     },
     "eth-trezor-keyring>hdkey>secp256k1>bip66": {
@@ -4259,10 +4138,10 @@
         "setTimeout": true
       },
       "packages": {
-        "eth-json-rpc-middleware>json-stable-stringify": true,
         "eth-trezor-keyring>trezor-connect>@trezor/transport>bytebuffer": true,
         "eth-trezor-keyring>trezor-connect>@trezor/transport>long": true,
-        "eth-trezor-keyring>trezor-connect>@trezor/transport>protobufjs": true
+        "eth-trezor-keyring>trezor-connect>@trezor/transport>protobufjs": true,
+        "lavamoat>json-stable-stringify": true
       }
     },
     "eth-trezor-keyring>trezor-connect>@trezor/transport>bytebuffer": {
@@ -4382,7 +4261,7 @@
       },
       "packages": {
         "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>blake-hash>readable-stream": true,
-        "ws>bufferutil>node-gyp-build": true
+        "lavamoat>node-gyp-build": true
       }
     },
     "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>blake-hash>readable-stream": {
@@ -4419,10 +4298,10 @@
         "Buffer": true
       },
       "packages": {
-        "@ledgerhq/hw-transport-node-hid-noevents>node-hid>bindings": true,
         "bn.js": true,
         "ethereumjs-util>ethereum-cryptography>create-hmac": true,
-        "hdkey>secp256k1>elliptic": true
+        "hdkey>secp256k1>elliptic": true,
+        "lavamoat>bindings": true
       }
     },
     "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>typeforce": {
@@ -4576,7 +4455,7 @@
       },
       "packages": {
         "ethereumjs-util>ethereum-cryptography>keccak>readable-stream": true,
-        "ws>bufferutil>node-gyp-build": true
+        "lavamoat>node-gyp-build": true
       }
     },
     "ethereumjs-util>ethereum-cryptography>keccak>readable-stream": {
@@ -6150,7 +6029,7 @@
       },
       "packages": {
         "hdkey>secp256k1>elliptic": true,
-        "ws>bufferutil>node-gyp-build": true
+        "lavamoat>node-gyp-build": true
       }
     },
     "hdkey>secp256k1>elliptic": {
@@ -6212,6 +6091,143 @@
     },
     "keytar": {
       "native": true
+    },
+    "lavamoat>@babel/code-frame": {
+      "globals": {
+        "console.warn": true,
+        "process.emitWarning": true
+      },
+      "packages": {
+        "lavamoat>@babel/highlight": true
+      }
+    },
+    "lavamoat>@babel/highlight": {
+      "packages": {
+        "lavamoat>@babel/highlight>@babel/helper-validator-identifier": true,
+        "lavamoat>@babel/highlight>chalk": true,
+        "react>loose-envify>js-tokens": true
+      }
+    },
+    "lavamoat>@babel/highlight>chalk": {
+      "globals": {
+        "process.env.TERM": true,
+        "process.platform": true
+      },
+      "packages": {
+        "lavamoat>@babel/highlight>chalk>ansi-styles": true,
+        "lavamoat>@babel/highlight>chalk>escape-string-regexp": true,
+        "lavamoat>@babel/highlight>chalk>supports-color": true
+      }
+    },
+    "lavamoat>@babel/highlight>chalk>ansi-styles": {
+      "packages": {
+        "@metamask/jazzicon>color>color-convert": true
+      }
+    },
+    "lavamoat>@babel/highlight>chalk>supports-color": {
+      "builtin": {
+        "os.release": true
+      },
+      "globals": {
+        "process.env": true,
+        "process.platform": true,
+        "process.stderr": true,
+        "process.stdout": true,
+        "process.versions.node.split": true
+      },
+      "packages": {
+        "lavamoat>@babel/highlight>chalk>supports-color>has-flag": true
+      }
+    },
+    "lavamoat>@babel/highlight>chalk>supports-color>has-flag": {
+      "globals": {
+        "process.argv": true
+      }
+    },
+    "lavamoat>bindings": {
+      "builtin": {
+        "fs.accessSync": true,
+        "fs.existsSync": true,
+        "path.dirname": true,
+        "path.existsSync": true,
+        "path.extname": true,
+        "path.join": true
+      },
+      "globals": {
+        "__filename": true,
+        "__non_webpack_require__": true,
+        "__webpack_require__": true,
+        "process.arch": true,
+        "process.cwd": true,
+        "process.env.NODE_BINDINGS_ARROW": true,
+        "process.env.NODE_BINDINGS_COMPILED_DIR": true,
+        "process.platform": true,
+        "process.versions.modules": true,
+        "process.versions.node": true
+      },
+      "packages": {
+        "lavamoat>bindings>file-uri-to-path": true
+      }
+    },
+    "lavamoat>bindings>file-uri-to-path": {
+      "builtin": {
+        "path.sep": true
+      }
+    },
+    "lavamoat>json-stable-stringify": {
+      "packages": {
+        "lavamoat>json-stable-stringify>jsonify": true
+      }
+    },
+    "lavamoat>lavamoat-tofu>@babel/traverse": {
+      "globals": {
+        "console.log": true,
+        "console.trace": true
+      },
+      "packages": {
+        "@metamask/snap-utils>@babel/core>@babel/generator": true,
+        "@metamask/snap-utils>@babel/core>@babel/types": true,
+        "@truffle/codec>debug": true,
+        "lavamoat>@babel/code-frame": true,
+        "lavamoat>lavamoat-tofu>@babel/parser": true,
+        "lavamoat>lavamoat-tofu>@babel/traverse>@babel/helper-environment-visitor": true,
+        "lavamoat>lavamoat-tofu>@babel/traverse>@babel/helper-function-name": true,
+        "lavamoat>lavamoat-tofu>@babel/traverse>@babel/helper-hoist-variables": true,
+        "lavamoat>lavamoat-tofu>@babel/traverse>@babel/helper-split-export-declaration": true,
+        "lavamoat>lavamoat-tofu>@babel/traverse>globals": true
+      }
+    },
+    "lavamoat>lavamoat-tofu>@babel/traverse>@babel/helper-function-name": {
+      "packages": {
+        "@metamask/snap-utils>@babel/core>@babel/template": true,
+        "@metamask/snap-utils>@babel/core>@babel/types": true
+      }
+    },
+    "lavamoat>lavamoat-tofu>@babel/traverse>@babel/helper-hoist-variables": {
+      "packages": {
+        "@metamask/snap-utils>@babel/core>@babel/types": true
+      }
+    },
+    "lavamoat>lavamoat-tofu>@babel/traverse>@babel/helper-split-export-declaration": {
+      "packages": {
+        "@metamask/snap-utils>@babel/core>@babel/types": true
+      }
+    },
+    "lavamoat>node-gyp-build": {
+      "builtin": {
+        "fs.existsSync": true,
+        "fs.readdirSync": true,
+        "os.arch": true,
+        "os.platform": true,
+        "path.dirname": true,
+        "path.join": true,
+        "path.resolve": true
+      },
+      "globals": {
+        "__non_webpack_require__": true,
+        "__webpack_require__": true,
+        "process": true
+      }
     },
     "localforage": {
       "globals": {
@@ -6506,23 +6522,7 @@
       },
       "native": true,
       "packages": {
-        "ws>bufferutil>node-gyp-build": true
-      }
-    },
-    "ws>bufferutil>node-gyp-build": {
-      "builtin": {
-        "fs.existsSync": true,
-        "fs.readdirSync": true,
-        "os.arch": true,
-        "os.platform": true,
-        "path.dirname": true,
-        "path.join": true,
-        "path.resolve": true
-      },
-      "globals": {
-        "__non_webpack_require__": true,
-        "__webpack_require__": true,
-        "process": true
+        "lavamoat>node-gyp-build": true
       }
     },
     "ws>utf-8-validate": {
@@ -6531,7 +6531,7 @@
       },
       "native": true,
       "packages": {
-        "ws>bufferutil>node-gyp-build": true
+        "lavamoat>node-gyp-build": true
       }
     }
   }

@@ -7,7 +7,7 @@ let policyRelativePath = '/lavamoat/desktop/node/';
 
 if (app.isPackaged) {
   appPath = app.getAppPath();
-  policyRelativePath = '/lavamoat/desktop/electron/';
+  policyRelativePath = '/lavamoat/desktop/node/';
 }
 
 const entryPath = path.join(appPath, '/dist_desktop/app/scripts/background.js');

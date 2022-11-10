@@ -8,7 +8,8 @@
     "dist_desktop/**/*",
     "dist_desktop_ui/**/*",
     "node_modules/**/*",
-    "package.json"
+    "package.json",
+    "lavamoat/desktop/**/*"
   ],
   "linux": {
     "icon": "app/build-types/desktop/images/icon-512.png",
