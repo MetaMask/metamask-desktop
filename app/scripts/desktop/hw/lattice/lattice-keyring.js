@@ -1,3 +1,4 @@
+/* eslint-disable import/unambiguous */
 const LatticeKeyring = require('eth-lattice-keyring');
 const { ipcMain } = require('electron');
 const Desktop = require('../../app/desktop-app').default;

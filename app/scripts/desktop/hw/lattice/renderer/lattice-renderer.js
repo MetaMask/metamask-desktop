@@ -1,10 +1,11 @@
+/* eslint-disable import/unambiguous */
 let listenInterval;
 
 function receiveMessage(event) {
   try {
     // Stop the listener
     clearInterval(listenInterval);
-    // Parse and return creds
+    // Parse and return credentials
     const creds = JSON.parse(event.data);
     if (!creds.deviceID || !creds.password) {
       window.latticeApi.openWindowResponse({
