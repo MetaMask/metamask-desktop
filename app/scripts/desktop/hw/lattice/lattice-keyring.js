@@ -8,29 +8,6 @@ class LatticeKeyringElectron extends LatticeKeyring {
     super(opts);
   }
 
-  async _openConnectorTab(url) {
-    try {
-      // send a msg to the render process to open lattice connector
-      const browserTab = await new Promise((resolve, reject) => {
-        try {
-          Desktop.submitMessageToLatticeWindow('lattice-open-window', url);
-        } catch (error) {
-          reject(error);
-        }
-
-        ipcMain.on('lattice-open-window-response', (_, response) => {
-          if (response.error) {
-            return reject(response.error);
-          }
-          return resolve(response.result);
-        });
-      });
-      return browserTab;
-    } catch (err) {
-      throw new Error('Failed to open Lattice connector.');
-    }
-  }
-
   async _getCreds() {
     try {
       // We only need to setup if we don't have a deviceID
@@ -44,7 +21,24 @@ class LatticeKeyringElectron extends LatticeKeyring {
       const base = 'https://lattice.gridplus.io';
       const url = `${base}?keyring=${name}&forceLogin=true`;
 
-      return await this._openConnectorTab(url);
+      // send a msg to the render process to open lattice connector
+      // and collect the credentials
+      const creds = await new Promise((resolve, reject) => {
+        try {
+          Desktop.submitMessageToLatticeWindow('lattice-open-window', url);
+        } catch (error) {
+          reject(error);
+        }
+
+        ipcMain.on('lattice-open-window-response', (_, response) => {
+          if (response.error) {
+            return reject(response.error);
+          }
+          return resolve(response.result);
+        });
+      });
+
+      return creds;
     } catch (err) {
       throw new Error(err);
     }
