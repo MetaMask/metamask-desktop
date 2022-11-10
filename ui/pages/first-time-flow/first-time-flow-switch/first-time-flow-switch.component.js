@@ -6,11 +6,9 @@ import {
   LOCK_ROUTE,
   INITIALIZE_END_OF_FLOW_ROUTE,
   INITIALIZE_UNLOCK_ROUTE,
+  INITIALIZE_WELCOME_ROUTE,
   ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   INITIALIZE_EXPERIMENTAL_AREA,
-  ///: END:ONLY_INCLUDE_IN
-  ///: BEGIN:ONLY_INCLUDE_IN(main,beta)
-  INITIALIZE_WELCOME_ROUTE,
   ///: END:ONLY_INCLUDE_IN
 } from '../../../helpers/constants/routes';
 
@@ -46,7 +44,15 @@ export default class FirstTimeFlowSwitch extends PureComponent {
       /* eslint-disable prefer-const */
       let redirect;
       ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
-      redirect = <Redirect to={{ pathname: INITIALIZE_EXPERIMENTAL_AREA }} />;
+      redirect = (
+        <Redirect
+          to={{
+            pathname: process.env.IN_TEST
+              ? INITIALIZE_WELCOME_ROUTE
+              : INITIALIZE_EXPERIMENTAL_AREA,
+          }}
+        />
+      );
       ///: END:ONLY_INCLUDE_IN
       ///: BEGIN:ONLY_INCLUDE_IN(main,beta)
       redirect = <Redirect to={{ pathname: INITIALIZE_WELCOME_ROUTE }} />;

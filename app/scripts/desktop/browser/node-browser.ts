@@ -11,6 +11,8 @@ import { timeoutPromise, uuid } from '../utils/utils';
 const TIMEOUT_REQUEST = 5000;
 
 const UNHANDLED_FUNCTIONS = [
+  'notifications.onClicked.addListener',
+  'notifications.onClicked.hasListener',
   'runtime.getBrowserInfo',
   'runtime.onConnect.addListener',
   'runtime.onConnectExternal.addListener',
@@ -25,6 +27,8 @@ const UNHANDLED_FUNCTIONS = [
 const PROXY_FUNCTIONS = [
   'browserAction.setBadgeBackgroundColor',
   'browserAction.setBadgeText',
+  'notifications.create',
+  'runtime.getURL',
   'tabs.query',
   'windows.create',
   'windows.getAll',

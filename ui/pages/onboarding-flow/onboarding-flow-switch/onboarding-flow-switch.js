@@ -6,11 +6,9 @@ import {
   ONBOARDING_COMPLETION_ROUTE,
   ONBOARDING_UNLOCK_ROUTE,
   LOCK_ROUTE,
+  ONBOARDING_WELCOME_ROUTE,
   ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
   ONBOARDING_EXPERIMENTAL_AREA, // eslint-disable-line no-unused-vars
-  ///: END:ONLY_INCLUDE_IN
-  ///: BEGIN:ONLY_INCLUDE_IN(main,beta)
-  ONBOARDING_WELCOME_ROUTE, // eslint-disable-line no-unused-vars
   ///: END:ONLY_INCLUDE_IN
 } from '../../../helpers/constants/routes';
 import {
@@ -43,7 +41,15 @@ export default function OnboardingFlowSwitch() {
     let redirect;
     /* eslint-disable prefer-const */
     ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
-    redirect = <Redirect to={{ pathname: ONBOARDING_EXPERIMENTAL_AREA }} />;
+    redirect = (
+      <Redirect
+        to={{
+          pathname: process.env.IN_TEST
+            ? ONBOARDING_WELCOME_ROUTE
+            : ONBOARDING_EXPERIMENTAL_AREA,
+        }}
+      />
+    );
     ///: END:ONLY_INCLUDE_IN
     ///: BEGIN:ONLY_INCLUDE_IN(main,beta)
     redirect = <Redirect to={{ pathname: ONBOARDING_WELCOME_ROUTE }} />;

@@ -24,6 +24,7 @@ import { acknowledge, waitForAcknowledge } from '../utils/stream';
 import { DesktopPairing } from '../shared/pairing';
 import * as RawStateUtils from '../utils/raw-state';
 import { DesktopVersionCheck } from '../shared/version-check';
+import cfg from '../utils/config';
 
 export default class ExtensionConnection extends EventEmitter {
   private stream: Duplex;
@@ -206,7 +207,9 @@ export default class ExtensionConnection extends EventEmitter {
 
     const newRawState = await RawStateUtils.addPairingKey(data);
 
-    await RawStateUtils.set(newRawState);
+    if (!cfg().desktop.isTest) {
+      await RawStateUtils.set(newRawState);
+    }
 
     acknowledge(this.stateStream);
 

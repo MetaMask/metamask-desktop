@@ -1,5 +1,6 @@
+import 'global-agent/bootstrap';
 import { webcrypto } from 'node:crypto';
-
+import { Headers } from 'node-fetch';
 import setupSentry from '../../lib/setupSentry';
 import { getVersion } from '../utils/version';
 
@@ -16,6 +17,7 @@ global.navigator = {
 } as Navigator;
 
 global.window = {
+  Headers,
   navigator: global.navigator,
   location: {
     href: 'test.com',

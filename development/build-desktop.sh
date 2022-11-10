@@ -23,7 +23,7 @@ cp -r app/_locales $OUTPUT_DIR/app
 # Export all shell variables
 set -a
 
-PHISHING_WARNING_PAGE_URL=https://metamask.github.io/phishing-warning/v1.1.0/
+PHISHING_WARNING_PAGE_URL=${PHISHING_WARNING_PAGE_URL-https://metamask.github.io/phishing-warning/v1.2.1/}
 echo "Phishing Warning Page URL: $PHISHING_WARNING_PAGE_URL"
 
 PACKAGE_VERSION=$(npm pkg get version)
@@ -37,8 +37,16 @@ if [ -f ".metamaskrc" ]; then
 fi
 
 echo "Transpiling JavaScript"
-babel . \
-    -d ./$OUTPUT_DIR \
-    --extensions ".ts,.js" \
-    --config-file "./babel-desktop.config.js" \
-    --watch
+
+if [ "$CI" = "true" ]; then
+    babel . \
+        -d ./$OUTPUT_DIR \
+        --extensions ".ts,.js" \
+        --config-file "./babel-desktop.config.js"
+else
+     babel . \
+        -d ./$OUTPUT_DIR \
+        --extensions ".ts,.js" \
+        --config-file "./babel-desktop.config.js" \
+        --watch
+fi

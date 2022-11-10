@@ -16,9 +16,6 @@ async function measurePage() {
       { fixtures: new FixtureBuilder().build() },
       async ({ driver }) => {
         await driver.delay(tinyDelayMs);
-        if (process.env.RUN_WITH_DESKTOP === 'true') {
-          await driver.navigate();
-        }
         await driver.navigate();
         await driver.findElement('#password');
         await driver.delay(1000);

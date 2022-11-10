@@ -59,6 +59,9 @@ workflows:
       - prep-build-test-flask:
           requires:
             - prep-deps
+      - prep-build-test-desktop:
+          requires:
+            - prep-deps
       - test-storybook:
           requires:
             - prep-deps
@@ -93,6 +96,12 @@ workflows:
       - test-e2e-chrome-mv3:
           requires:
             - prep-build-test-mv3
+      - test-e2e-chrome-desktop:
+          requires:
+            - prep-build-test-desktop
+      - test-e2e-chrome-desktop-snaps:
+          requires:
+            - prep-build-test-desktop
       - test-unit:
           requires:
             - prep-deps
@@ -325,6 +334,35 @@ jobs:
             - dist-flask
             - builds-flask
 
+  prep-build-test-desktop:
+    executor: node-browsers-medium-plus
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Build desktop app for testing
+          command: yarn build:desktop:app:test
+      - run:
+          name: Build desktop UI for testing
+          command: yarn build:desktop:ui
+      - run:
+          name: Build extension for testing
+          command: yarn build:test:desktop
+      - run:
+          name: Move test build to 'dist-test' to avoid conflict with production build
+          command: mv ./dist ./dist-test-desktop
+      - run:
+          name: Move test zips to 'builds-test' to avoid conflict with production build
+          command: mv ./builds ./builds-test-desktop
+      - persist_to_workspace:
+          root: .
+          paths:
+            - dist-test-desktop
+            - builds-test-desktop
+            - dist_desktop
+            - dist_desktop_ui
+
   prep-build-test-flask:
     executor: node-browsers-medium-plus
     steps:
@@ -516,6 +554,7 @@ jobs:
 
   test-e2e-chrome:
     executor: node-browsers
+    parallelism: 8
     steps:
       - checkout
       - run:
@@ -540,9 +579,10 @@ jobs:
       - store_artifacts:
           path: test-artifacts
           destination: test-artifacts
-    
+
   test-e2e-chrome-mv3:
     executor: node-browsers
+    parallelism: 8
     steps:
       - checkout
       - run:
@@ -568,8 +608,65 @@ jobs:
           path: test-artifacts
           destination: test-artifacts
 
+  test-e2e-chrome-desktop:
+    executor: node-browsers
+    parallelism: 8
+    steps:
+      - checkout
+      - run:
+          name: Re-Install Chrome
+          command: ./.circleci/scripts/chrome-install.sh
+      - attach_workspace:
+          at: .
+      - run:
+          name: Move test build to dist
+          command: mv ./dist-test-desktop ./dist
+      - run:
+          name: Move test zips to builds
+          command: mv ./builds-test-desktop ./builds
+      - run:
+          name: test:e2e:chrome:desktop
+          command: |
+            if .circleci/scripts/test-run-e2e.sh
+            then
+              yarn test:e2e:chrome:desktop --retries 2
+            fi
+          no_output_timeout: 20m
+      - store_artifacts:
+          path: test-artifacts
+          destination: test-artifacts
+
+  test-e2e-chrome-desktop-snaps:
+    executor: node-browsers
+    parallelism: 2
+    steps:
+      - checkout
+      - run:
+          name: Re-Install Chrome
+          command: ./.circleci/scripts/chrome-install.sh
+      - attach_workspace:
+          at: .
+      - run:
+          name: Move test build to dist
+          command: mv ./dist-test-desktop ./dist
+      - run:
+          name: Move test zips to builds
+          command: mv ./builds-test-desktop ./builds
+      - run:
+          name: test:e2e:chrome:desktop:snaps
+          command: |
+            if .circleci/scripts/test-run-e2e.sh
+            then
+              yarn test:e2e:chrome:desktop:snaps --retries 2
+            fi
+          no_output_timeout: 20m
+      - store_artifacts:
+          path: test-artifacts
+          destination: test-artifacts
+
   test-e2e-firefox-snaps:
     executor: node-browsers
+    parallelism: 2
     steps:
       - checkout
       - run:
@@ -597,6 +694,7 @@ jobs:
 
   test-e2e-chrome-snaps:
     executor: node-browsers
+    parallelism: 2
     steps:
       - checkout
       - run:
@@ -624,6 +722,7 @@ jobs:
 
   test-e2e-firefox:
     executor: node-browsers-medium-plus
+    parallelism: 8
     steps:
       - checkout
       - run:
