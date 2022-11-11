@@ -123,7 +123,7 @@ const initApp = async (remotePort) => {
 
 ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
 const onDesktopRestart = async (desktopApp) => {
-  if (!cfg().desktop.isTest) {
+  if (cfg().desktop.isTest) {
     return;
   }
 
