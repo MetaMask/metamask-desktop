@@ -227,6 +227,7 @@ jobs:
           paths:
             - node_modules/
             - build-artifacts/yarn-install-har/
+            - packages/app/node_modules/
       - run:
           name: Postinstall
           command: |
@@ -236,6 +237,7 @@ jobs:
           paths:
             - node_modules
             - build-artifacts
+            - packages/app/node_modules
 
   validate-lavamoat-config:
     executor: node-browsers-medium-plus
@@ -279,12 +281,12 @@ jobs:
                 command: yarn app build prod
       - run:
           name: build:debug
-          command: find dist/ -type f -exec md5sum {} \; | sort -k 2
+          command: find packages/app/dist/ -type f -exec md5sum {} \; | sort -k 2
       - persist_to_workspace:
           root: .
           paths:
-            - dist
-            - builds
+            - packages/app/dist
+            - packages/app/builds
 
   prep-build-beta:
     executor: node-browsers-medium-plus
@@ -297,18 +299,18 @@ jobs:
           command: yarn app build --build-type beta dist
       - run:
           name: build:debug
-          command: find dist/ -type f -exec md5sum {} \; | sort -k 2
+          command: find packages/app/dist/ -type f -exec md5sum {} \; | sort -k 2
       - run:
           name: Move beta build to 'dist-beta' to avoid conflict with production build
-          command: mv ./dist ./dist-beta
+          command: mv ./packages/app/dist ./packages/app/dist-beta
       - run:
           name: Move beta zips to 'builds-beta' to avoid conflict with production build
-          command: mv ./builds ./builds-beta
+          command: mv ./packages/app/builds ./packages/app/builds-beta
       - persist_to_workspace:
           root: .
           paths:
-            - dist-beta
-            - builds-beta
+            - packages/app/dist-beta
+            - packages/app/builds-beta
 
   prep-build-flask:
     executor: node-browsers-medium-plus
@@ -321,18 +323,18 @@ jobs:
           command: yarn app build --build-type flask dist
       - run:
           name: build:debug
-          command: find dist/ -type f -exec md5sum {} \; | sort -k 2
+          command: find packages/app/dist/ -type f -exec md5sum {} \; | sort -k 2
       - run:
           name: Move flask build to 'dist-flask' to avoid conflict with production build
-          command: mv ./dist ./dist-flask
+          command: mv ./packages/app/dist ./packages/app/dist-flask
       - run:
           name: Move flask zips to 'builds-flask' to avoid conflict with production build
-          command: mv ./builds ./builds-flask
+          command: mv ./packages/app/builds ./packages/app/builds-flask
       - persist_to_workspace:
           root: .
           paths:
-            - dist-flask
-            - builds-flask
+            - packages/app/dist-flask
+            - packages/app/builds-flask
 
   prep-build-test-desktop:
     executor: node-browsers-medium-plus
@@ -374,15 +376,15 @@ jobs:
           command: yarn app build:test:flask
       - run:
           name: Move test build to 'dist-test' to avoid conflict with production build
-          command: mv ./dist ./dist-test-flask
+          command: mv ./packages/app/dist ./packages/app/dist-test-flask
       - run:
           name: Move test zips to 'builds-test' to avoid conflict with production build
-          command: mv ./builds ./builds-test-flask
+          command: mv ./packages/app/builds ./packages/app/builds-test-flask
       - persist_to_workspace:
           root: .
           paths:
-            - dist-test-flask
-            - builds-test-flask
+            - packages/app/dist-test-flask
+            - packages/app/builds-test-flask
 
   prep-build-test-mv3:
     executor: node-browsers-medium-plus
@@ -395,15 +397,15 @@ jobs:
           command: yarn app build:test:mv3
       - run:
           name: Move test build to 'dist-test' to avoid conflict with production build
-          command: mv ./dist ./dist-test-mv3
+          command: mv ./packages/app/dist ./packages/app/dist-test-mv3
       - run:
           name: Move test zips to 'builds-test' to avoid conflict with production build
-          command: mv ./builds ./builds-test-mv3
+          command: mv ./packages/app/builds ./packages/app/builds-test-mv3
       - persist_to_workspace:
           root: .
           paths:
-            - dist-test-mv3
-            - builds-test-mv3
+            - packages/app/dist-test-mv3
+            - packages/app/builds-test-mv3
 
   prep-build-test:
     executor: node-browsers-medium-plus
@@ -416,15 +418,15 @@ jobs:
           command: yarn app build:test
       - run:
           name: Move test build to 'dist-test' to avoid conflict with production build
-          command: mv ./dist ./dist-test
+          command: mv ./packages/app/dist ./packages/app/dist-test
       - run:
           name: Move test zips to 'builds-test' to avoid conflict with production build
-          command: mv ./builds ./builds-test
+          command: mv ./packages/app/builds ./packages/app/builds-test
       - persist_to_workspace:
           root: .
           paths:
-            - dist-test
-            - builds-test
+            - packages/app/dist-test
+            - packages/app/builds-test
 
   prep-build-storybook:
     executor: node-browsers-medium-plus
@@ -438,7 +440,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - storybook-build
+            - packages/app/storybook-build
 
   prep-build-ts-migration-dashboard:
     executor: node-browsers
@@ -452,7 +454,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - development/ts-migration-dashboard/build
+            - packages/app/development/ts-migration-dashboard/build
 
   test-storybook:
     executor: node-browsers
@@ -564,10 +566,10 @@ jobs:
           at: .
       - run:
           name: Move test build to dist
-          command: mv ./dist-test ./dist
+          command: mv ./packages/app/dist-test ./packages/app/dist
       - run:
           name: Move test zips to builds
-          command: mv ./builds-test ./builds
+          command: mv ./packages/app/builds-test ./packages/app/builds
       - run:
           name: test:e2e:chrome
           command: |
@@ -592,10 +594,10 @@ jobs:
           at: .
       - run:
           name: Move test build to dist
-          command: mv ./dist-test-mv3 ./dist
+          command: mv ./packages/app/dist-test-mv3 ./packages/app/dist
       - run:
           name: Move test zips to builds
-          command: mv ./builds-test-mv3 ./builds
+          command: mv ./packages/app/builds-test-mv3 ./packages/app/builds
       - run:
           name: test:e2e:chrome
           command: |
@@ -676,10 +678,10 @@ jobs:
           at: .
       - run:
           name: Move test build to dist
-          command: mv ./dist-test-flask ./dist
+          command: mv ./packages/app/dist-test-flask ./packages/app/dist
       - run:
           name: Move test zips to builds
-          command: mv ./builds-test-flask ./builds
+          command: mv ./packages/app/builds-test-flask ./packages/app/builds
       - run:
           name: test:e2e:firefox:snaps
           command: |
@@ -704,10 +706,10 @@ jobs:
           at: .
       - run:
           name: Move test build to dist
-          command: mv ./dist-test-flask ./dist
+          command: mv ./packages/app/dist-test-flask ./packages/app/dist
       - run:
           name: Move test zips to builds
-          command: mv ./builds-test-flask ./builds
+          command: mv ./packages/app/builds-test-flask ./packages/app/builds
       - run:
           name: test:e2e:chrome:snaps
           command: |
@@ -732,10 +734,10 @@ jobs:
           at: .
       - run:
           name: Move test build to dist
-          command: mv ./dist-test ./dist
+          command: mv ./packages/app/dist-test ./packages/app/dist
       - run:
           name: Move test zips to builds
-          command: mv ./builds-test ./builds
+          command: mv ./packages/app/builds-test ./packages/app/builds
       - run:
           name: test:e2e:firefox
           command: |
@@ -759,10 +761,10 @@ jobs:
           at: .
       - run:
           name: Move test build to dist
-          command: mv ./dist-test ./dist
+          command: mv ./packages/app/dist-test ./packages/app/dist
       - run:
           name: Move test zips to builds
-          command: mv ./builds-test ./builds
+          command: mv ./packages/app/builds-test ./packages/app/builds
       - run:
           name: Run page load benchmark
           command: yarn app benchmark:chrome --out test-artifacts/chrome/benchmark/pageload.json --retries 2
@@ -785,10 +787,10 @@ jobs:
           at: .
       - run:
           name: Move test build to dist
-          command: mv ./dist-test ./dist
+          command: mv ./packages/app/dist-test ./packages/app/dist
       - run:
           name: Move test zips to builds
-          command: mv ./builds-test ./builds
+          command: mv ./packages/app/builds-test ./packages/app/builds
       - run:
           name: Run page load benchmark
           command: yarn app user-actions-benchmark:chrome --out test-artifacts/chrome/benchmark/user_actions.json --retries 2
@@ -811,18 +813,18 @@ jobs:
           at: .
       - run:
           name: Move test build to dist
-          command: mv ./dist-test-mv3 ./dist
+          command: mv ./packages/app/dist-test-mv3 ./packages/app/dist
       - run:
           name: Move test zips to builds
-          command: mv ./builds-test-mv3 ./builds
+          command: mv ./packages/app/builds-test-mv3 ./packages/app/builds
       - run:
           name: Run page load benchmark
           command: |
             mkdir -p test-artifacts/chrome/mv3
-            cp -R development/charts/flamegraph test-artifacts/chrome/mv3/initialisation
-            cp -R development/charts/flamegraph/chart test-artifacts/chrome/mv3/initialisation/background
-            cp -R development/charts/flamegraph/chart test-artifacts/chrome/mv3/initialisation/ui
-            cp -R development/charts/table test-artifacts/chrome/mv3/load_time
+            cp -R packages/app/development/charts/flamegraph test-artifacts/chrome/mv3/initialisation
+            cp -R packages/app/development/charts/flamegraph/chart test-artifacts/chrome/mv3/initialisation/background
+            cp -R packages/app/development/charts/flamegraph/chart test-artifacts/chrome/mv3/initialisation/ui
+            cp -R packages/app/development/charts/table test-artifacts/chrome/mv3/load_time
       - run:
           name: Run page load benchmark
           command: yarn app mv3:stats:chrome --out test-artifacts/chrome/mv3
@@ -898,7 +900,7 @@ jobs:
             source $BASH_ENV
       - run:
           name: build:announce
-          command: ./development/metamaskbot-build-announce.js
+          command: ./packages/app/development/metamaskbot-build-announce.js
 
   job-publish-release:
     executor: node-browsers
@@ -922,7 +924,7 @@ jobs:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - '3d:49:29:f4:b2:e8:ea:af:d1:32:eb:2a:fc:15:85:d8'
+            - "3d:49:29:f4:b2:e8:ea:af:d1:32:eb:2a:fc:15:85:d8"
       - checkout
       - attach_workspace:
           at: .
@@ -975,7 +977,7 @@ jobs:
             - coverage
             - jest-coverage
       - store_test_results:
-          path: test/test-results/junit.xml
+          path: packages/app/test/test-results/junit.xml
   test-unit-global:
     executor: node-browsers
     steps:
@@ -1020,10 +1022,10 @@ jobs:
           at: .
       - run:
           name: Move flask build to dist
-          command: mv ./dist-flask ./dist
+          command: mv ./packages/app/dist-flask ./packages/app/dist
       - run:
           name: Move flask zips to builds
-          command: mv ./builds-flask ./builds
+          command: mv ./packages/app/builds-flask .packages/app//builds
       - run:
           name: Validate source maps
           command: yarn app validate-source-maps
@@ -1046,10 +1048,10 @@ jobs:
           at: .
       - run:
           name: Move beta build to dist
-          command: mv ./dist-beta ./dist
+          command: mv ./packages/app/dist-beta ./packages/app/dist
       - run:
           name: Move beta zips to builds
-          command: mv ./builds-beta ./builds
+          command: mv ./packages/app/builds-beta ./packages/app/builds
       - run:
           name: test:mozilla-lint
           command: NODE_OPTIONS=--max_old_space_size=3072 yarn app mozilla-lint
@@ -1062,10 +1064,10 @@ jobs:
           at: .
       - run:
           name: Move flask build to dist
-          command: mv ./dist-flask ./dist
+          command: mv ./packages/app/dist-flask ./packages/app/dist
       - run:
           name: Move flask zips to builds
-          command: mv ./builds-flask ./builds
+          command: mv ./packages/app/builds-flask ./packages/app/builds
       - run:
           name: test:mozilla-lint
           command: NODE_OPTIONS=--max_old_space_size=3072 yarn app mozilla-lint
