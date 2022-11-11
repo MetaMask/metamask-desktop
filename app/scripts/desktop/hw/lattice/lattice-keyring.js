@@ -10,10 +10,6 @@ class LatticeKeyringElectron extends LatticeKeyring {
 
   async _getCreds() {
     try {
-      // We only need to setup if we don't have a deviceID
-      if (this._hasCreds()) {
-        return {};
-      }
       // If we are not aware of what Lattice we should be talking to,
       // we need to open a window that lets the user go through the
       // pairing or connection process.
@@ -25,12 +21,12 @@ class LatticeKeyringElectron extends LatticeKeyring {
       // and collect the credentials
       const creds = await new Promise((resolve, reject) => {
         try {
-          Desktop.submitMessageToLatticeWindow('lattice-open-window', url);
+          Desktop.submitMessageToLatticeWindow('lattice-credentials', url);
         } catch (error) {
           reject(error);
         }
 
-        ipcMain.on('lattice-open-window-response', (_, response) => {
+        ipcMain.on('lattice-credentials-response', (_, response) => {
           if (response.error) {
             return reject(response.error);
           }

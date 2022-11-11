@@ -8,25 +8,25 @@ function receiveMessage(event) {
     // Parse and return credentials
     const creds = JSON.parse(event.data);
     if (!creds.deviceID || !creds.password) {
-      window.latticeApi.openWindowResponse({
+      window.latticeApi.getCredentialsResponse({
         error: 'Invalid credentials returned from Lattice',
       });
     }
-    window.latticeApi.openWindowResponse({ result: creds });
+    window.latticeApi.getCredentialsResponse({ result: creds });
   } catch (err) {
-    window.latticeApi.openWindowResponse({ error: 'Invalid response' });
+    window.latticeApi.getCredentialsResponse({ error: 'Invalid response' });
   }
 }
 
-window.latticeApi.openWindowSetup((payload) => {
+window.latticeApi.getCredentials((payload) => {
   const response = window.open(payload, '_blank', 'width=1200,height=700');
 
   window.addEventListener('message', receiveMessage, false);
 
   listenInterval = setInterval(() => {
-    if (response.closed) {
+    if (response && response.closed) {
       clearInterval(listenInterval);
-      window.latticeApi.openWindowResponse({
+      window.latticeApi.getCredentialsResponse({
         error: 'Lattice connector closed',
       });
     }

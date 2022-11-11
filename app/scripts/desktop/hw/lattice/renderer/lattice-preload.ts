@@ -1,17 +1,17 @@
 import { contextBridge, ipcRenderer } from 'electron';
 
-type OpenWindowResponse = {
+type CredentialsResponse = {
   result?: Record<string, any>;
   error?: string;
 };
 
 contextBridge.exposeInMainWorld('latticeApi', {
-  openWindowSetup: (callback: any) => {
-    ipcRenderer.on('lattice-open-window', (_, payload: string) => {
+  getCredentials: (callback: any) => {
+    ipcRenderer.on('lattice-credentials', (_, payload: string) => {
       callback(payload);
     });
   },
-  openWindowResponse: (response: OpenWindowResponse) => {
-    ipcRenderer.send('lattice-open-window-response', response);
+  getCredentialsResponse: (response: CredentialsResponse) => {
+    ipcRenderer.send('lattice-credentials-response', response);
   },
 });
