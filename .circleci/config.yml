@@ -474,7 +474,7 @@ jobs:
           at: .
       - run:
           name: Detect yarn app lock deduplications
-          command: yarn app yarn-deduplicate && git diff --exit-code yarn.lock
+          command: yarn yarn-deduplicate && git diff --exit-code yarn.lock
 
   test-lint:
     executor: node-browsers
@@ -966,7 +966,7 @@ jobs:
       - run:
           name: Validate coverage thresholds
           command: |
-            if ! git diff --exit-code jest.config.js development/jest.config.js; then
+            if ! git diff --exit-code packages/app/jest.config.js packages/app/development/jest.config.js; then
               echo "Detected changes in coverage thresholds"
               exit 1
             fi

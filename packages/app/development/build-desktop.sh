@@ -27,7 +27,7 @@ set -a
 PHISHING_WARNING_PAGE_URL=${PHISHING_WARNING_PAGE_URL-https://metamask.github.io/phishing-warning/v1.2.1/}
 echo "Phishing Warning Page URL: $PHISHING_WARNING_PAGE_URL"
 
-PACKAGE_VERSION=$(npm pkg get version)
+PACKAGE_VERSION=$(npm pkg get version | grep -Eo "[0-9.]+")
 echo "Package Version: ${PACKAGE_VERSION}"
 
 # Add variables from .metamaskrc
