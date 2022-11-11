@@ -973,9 +973,9 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - .nyc_output
-            - coverage
-            - jest-coverage
+            - packages/app/.nyc_output
+            - packages/app/coverage
+            - packages/app/jest-coverage
       - store_test_results:
           path: packages/app/test/test-results/junit.xml
   test-unit-global:
@@ -1006,10 +1006,10 @@ jobs:
           at: .
       - run:
           name: Move beta build to dist
-          command: mv ./dist-beta ./dist
+          command: mv ./packages/app/dist-beta ./packages/app/dist
       - run:
           name: Move beta zips to builds
-          command: mv ./builds-beta ./builds
+          command: mv ./packages/app/builds-beta ./packages/app/builds
       - run:
           name: Validate source maps
           command: yarn app validate-source-maps
@@ -1025,7 +1025,7 @@ jobs:
           command: mv ./packages/app/dist-flask ./packages/app/dist
       - run:
           name: Move flask zips to builds
-          command: mv ./packages/app/builds-flask .packages/app//builds
+          command: mv ./packages/app/builds-flask ./packages/app//builds
       - run:
           name: Validate source maps
           command: yarn app validate-source-maps
