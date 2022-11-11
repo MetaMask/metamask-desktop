@@ -494,7 +494,7 @@ jobs:
       - run: apk add --no-cache bash jq yarn
       - run:
           name: ShellCheck Lint
-          command: ./development/shellcheck.sh
+          command: ./packages/app/development/shellcheck.sh
 
   test-lint-lockfile:
     executor: node-browsers
