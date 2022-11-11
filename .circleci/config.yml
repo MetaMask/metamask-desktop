@@ -204,7 +204,7 @@ jobs:
           command: .circleci/scripts/release-bump-manifest-version.sh
       - run:
           name: Update changelog
-          command: yarn update-changelog --rc
+          command: yarn app update-changelog --rc
       - run:
           name: Commit changes
           command: .circleci/scripts/release-commit-version-bump.sh
@@ -230,7 +230,7 @@ jobs:
       - run:
           name: Postinstall
           command: |
-            yarn setup:postinstall
+            yarn app setup:postinstall
       - persist_to_workspace:
           root: .
           paths:
@@ -267,7 +267,7 @@ jobs:
           steps:
             - run:
                 name: build:dist
-                command: yarn build dist
+                command: yarn app build dist
       - when:
           condition:
             matches:
@@ -276,7 +276,7 @@ jobs:
           steps:
             - run:
                 name: build:prod
-                command: yarn build prod
+                command: yarn app build prod
       - run:
           name: build:debug
           command: find dist/ -type f -exec md5sum {} \; | sort -k 2
@@ -294,7 +294,7 @@ jobs:
           at: .
       - run:
           name: build:dist
-          command: yarn build --build-type beta dist
+          command: yarn app build --build-type beta dist
       - run:
           name: build:debug
           command: find dist/ -type f -exec md5sum {} \; | sort -k 2
@@ -318,7 +318,7 @@ jobs:
           at: .
       - run:
           name: build:dist
-          command: yarn build --build-type flask dist
+          command: yarn app build --build-type flask dist
       - run:
           name: build:debug
           command: find dist/ -type f -exec md5sum {} \; | sort -k 2
@@ -371,7 +371,7 @@ jobs:
           at: .
       - run:
           name: Build extension for testing
-          command: yarn build:test:flask
+          command: yarn app build:test:flask
       - run:
           name: Move test build to 'dist-test' to avoid conflict with production build
           command: mv ./dist ./dist-test-flask
@@ -392,7 +392,7 @@ jobs:
           at: .
       - run:
           name: Build extension in mv3 for testing
-          command: yarn build:test:mv3
+          command: yarn app build:test:mv3
       - run:
           name: Move test build to 'dist-test' to avoid conflict with production build
           command: mv ./dist ./dist-test-mv3
@@ -413,7 +413,7 @@ jobs:
           at: .
       - run:
           name: Build extension for testing
-          command: yarn build:test
+          command: yarn app build:test
       - run:
           name: Move test build to 'dist-test' to avoid conflict with production build
           command: mv ./dist ./dist-test
@@ -434,7 +434,7 @@ jobs:
           at: .
       - run:
           name: Build Storybook
-          command: yarn storybook:build
+          command: yarn app storybook:build
       - persist_to_workspace:
           root: .
           paths:
@@ -448,7 +448,7 @@ jobs:
           at: .
       - run:
           name: Build TypeScript migration dashboard
-          command: yarn ts-migration:dashboard:build
+          command: yarn app ts-migration:dashboard:build
       - persist_to_workspace:
           root: .
           paths:
@@ -462,7 +462,7 @@ jobs:
           at: .
       - run:
           name: Test Storybook
-          command: yarn storybook:test
+          command: yarn app storybook:test
 
   test-yarn-dedupe:
     executor: node-browsers
@@ -471,8 +471,8 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Detect yarn lock deduplications
-          command: yarn yarn-deduplicate && git diff --exit-code yarn.lock
+          name: Detect yarn app lock deduplications
+          command: yarn app yarn-deduplicate && git diff --exit-code yarn.lock
 
   test-lint:
     executor: node-browsers
@@ -482,10 +482,10 @@ jobs:
           at: .
       - run:
           name: Lint
-          command: yarn lint
+          command: yarn app lint
       - run:
           name: Verify locales
-          command: yarn verify-locales --quiet
+          command: yarn app verify-locales --quiet
 
   test-lint-shellcheck:
     executor: shellcheck
@@ -504,7 +504,7 @@ jobs:
           at: .
       - run:
           name: lockfile-lint
-          command: yarn lint:lockfile
+          command: yarn app lint:lockfile
 
   test-lint-changelog:
     executor: node-browsers
@@ -521,7 +521,7 @@ jobs:
           steps:
             - run:
                 name: Validate changelog
-                command: yarn lint:changelog
+                command: yarn app lint:changelog
       - when:
           condition:
             matches:
@@ -530,7 +530,7 @@ jobs:
           steps:
             - run:
                 name: Validate release candidate changelog
-                command: yarn lint:changelog:rc
+                command: yarn app lint:changelog:rc
 
   test-deps-audit:
     executor: node-browsers
@@ -539,7 +539,7 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: yarn audit
+          name: yarn app audit
           command: .circleci/scripts/yarn-audit.sh
 
   test-deps-depcheck:
@@ -550,7 +550,7 @@ jobs:
           at: .
       - run:
           name: depcheck
-          command: yarn depcheck
+          command: yarn app depcheck
 
   test-e2e-chrome:
     executor: node-browsers
@@ -573,7 +573,7 @@ jobs:
           command: |
             if .circleci/scripts/test-run-e2e.sh
             then
-              yarn test:e2e:chrome --retries 2
+              yarn app test:e2e:chrome --retries 2
             fi
           no_output_timeout: 20m
       - store_artifacts:
@@ -601,7 +601,7 @@ jobs:
           command: |
             if .circleci/scripts/test-run-e2e.sh
             then
-              yarn test:e2e:chrome --retries 2 || echo "Temporarily suppressing MV3 e2e test failures"
+              yarn app test:e2e:chrome --retries 2 || echo "Temporarily suppressing MV3 e2e test failures"
             fi
           no_output_timeout: 20m
       - store_artifacts:
@@ -685,7 +685,7 @@ jobs:
           command: |
             if .circleci/scripts/test-run-e2e.sh
             then
-              yarn test:e2e:firefox:snaps --retries 2
+              yarn app test:e2e:firefox:snaps --retries 2
             fi
           no_output_timeout: 20m
       - store_artifacts:
@@ -713,7 +713,7 @@ jobs:
           command: |
             if .circleci/scripts/test-run-e2e.sh
             then
-              yarn test:e2e:chrome:snaps --retries 2
+              yarn app test:e2e:chrome:snaps --retries 2
             fi
           no_output_timeout: 20m
       - store_artifacts:
@@ -741,7 +741,7 @@ jobs:
           command: |
             if .circleci/scripts/test-run-e2e.sh
             then
-              yarn test:e2e:firefox --retries 2
+              yarn app test:e2e:firefox --retries 2
             fi
           no_output_timeout: 20m
       - store_artifacts:
@@ -765,7 +765,7 @@ jobs:
           command: mv ./builds-test ./builds
       - run:
           name: Run page load benchmark
-          command: yarn benchmark:chrome --out test-artifacts/chrome/benchmark/pageload.json --retries 2
+          command: yarn app benchmark:chrome --out test-artifacts/chrome/benchmark/pageload.json --retries 2
       - store_artifacts:
           path: test-artifacts
           destination: test-artifacts
@@ -791,7 +791,7 @@ jobs:
           command: mv ./builds-test ./builds
       - run:
           name: Run page load benchmark
-          command: yarn user-actions-benchmark:chrome --out test-artifacts/chrome/benchmark/user_actions.json --retries 2
+          command: yarn app user-actions-benchmark:chrome --out test-artifacts/chrome/benchmark/user_actions.json --retries 2
       - store_artifacts:
           path: test-artifacts
           destination: test-artifacts
@@ -825,7 +825,7 @@ jobs:
             cp -R development/charts/table test-artifacts/chrome/mv3/load_time
       - run:
           name: Run page load benchmark
-          command: yarn mv3:stats:chrome --out test-artifacts/chrome/mv3
+          command: yarn app mv3:stats:chrome --out test-artifacts/chrome/mv3
       - run:
           name: Install jq
           command: sudo apt install jq -y
@@ -908,10 +908,10 @@ jobs:
           at: .
       - run:
           name: Publish main release to Sentry
-          command: yarn sentry:publish
+          command: yarn app sentry:publish
       - run:
           name: Publish Flask release to Sentry
-          command: yarn sentry:publish --build-type flask
+          command: yarn app sentry:publish --build-type flask
       - run:
           name: Create GitHub release
           command: |
@@ -930,7 +930,7 @@ jobs:
           name: storybook:deploy
           command: |
             git remote add storybook git@github.com:MetaMask/metamask-storybook.git
-            yarn storybook:deploy
+            yarn app storybook:deploy
 
   job-publish-ts-migration-dashboard:
     executor: node-browsers
@@ -947,7 +947,7 @@ jobs:
             git remote add ts-migration-dashboard git@github.com:MetaMask/metamask-extension-ts-migration-dashboard.git
             git config user.name "MetaMask Bot"
             git config user.email metamaskbot@users.noreply.github.com
-            yarn ts-migration:dashboard:deploy
+            yarn app ts-migration:dashboard:deploy
 
   test-unit:
     executor: node-browsers
@@ -957,10 +957,10 @@ jobs:
           at: .
       - run:
           name: test:coverage:mocha
-          command: yarn test:coverage:mocha
+          command: yarn app test:coverage:mocha
       - run:
           name: test:coverage:jest
-          command: yarn test:coverage:jest
+          command: yarn app test:coverage:jest
       - run:
           name: Validate coverage thresholds
           command: |
@@ -984,7 +984,7 @@ jobs:
           at: .
       - run:
           name: test:unit:global
-          command: yarn test:unit:global
+          command: yarn app test:unit:global
 
   validate-source-maps:
     executor: node-browsers
@@ -994,7 +994,7 @@ jobs:
           at: .
       - run:
           name: Validate source maps
-          command: yarn validate-source-maps
+          command: yarn app validate-source-maps
 
   validate-source-maps-beta:
     executor: node-browsers
@@ -1010,7 +1010,7 @@ jobs:
           command: mv ./builds-beta ./builds
       - run:
           name: Validate source maps
-          command: yarn validate-source-maps
+          command: yarn app validate-source-maps
 
   validate-source-maps-flask:
     executor: node-browsers
@@ -1026,7 +1026,7 @@ jobs:
           command: mv ./builds-flask ./builds
       - run:
           name: Validate source maps
-          command: yarn validate-source-maps
+          command: yarn app validate-source-maps
 
   test-mozilla-lint:
     executor: node-browsers
@@ -1036,7 +1036,7 @@ jobs:
           at: .
       - run:
           name: test:mozilla-lint
-          command: NODE_OPTIONS=--max_old_space_size=3072 yarn mozilla-lint
+          command: NODE_OPTIONS=--max_old_space_size=3072 yarn app mozilla-lint
 
   test-mozilla-lint-beta:
     executor: node-browsers
@@ -1052,7 +1052,7 @@ jobs:
           command: mv ./builds-beta ./builds
       - run:
           name: test:mozilla-lint
-          command: NODE_OPTIONS=--max_old_space_size=3072 yarn mozilla-lint
+          command: NODE_OPTIONS=--max_old_space_size=3072 yarn app mozilla-lint
 
   test-mozilla-lint-flask:
     executor: node-browsers
@@ -1068,7 +1068,7 @@ jobs:
           command: mv ./builds-flask ./builds
       - run:
           name: test:mozilla-lint
-          command: NODE_OPTIONS=--max_old_space_size=3072 yarn mozilla-lint
+          command: NODE_OPTIONS=--max_old_space_size=3072 yarn app mozilla-lint
 
   all-tests-pass:
     executor: node-browsers
