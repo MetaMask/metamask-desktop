@@ -4,15 +4,23 @@ executors:
   node-browsers:
     docker:
       - image: circleci/node:16-browsers
+    environment:
+      EXTENSION_DIR: packages/app
+      YARN: yarn app
   node-browsers-medium-plus:
     docker:
       - image: circleci/node:16-browsers
     resource_class: medium+
     environment:
       NODE_OPTIONS: --max_old_space_size=2048
+      EXTENSION_DIR: packages/app
+      YARN: yarn app
   shellcheck:
     docker:
       - image: koalaman/shellcheck-alpine@sha256:dfaf08fab58c158549d3be64fb101c626abc5f16f341b569092577ae207db199
+    environment:
+      EXTENSION_DIR: packages/app
+      YARN: yarn app
 
 workflows:
   test_and_release:
@@ -204,7 +212,7 @@ jobs:
           command: .circleci/scripts/release-bump-manifest-version.sh
       - run:
           name: Update changelog
-          command: yarn app update-changelog --rc
+          command: ${YARN} update-changelog --rc
       - run:
           name: Commit changes
           command: .circleci/scripts/release-commit-version-bump.sh
@@ -227,17 +235,17 @@ jobs:
           paths:
             - node_modules/
             - build-artifacts/yarn-install-har/
-            - packages/app/node_modules/
+            - ${EXTENSION_DIR}/node_modules/
       - run:
           name: Postinstall
           command: |
-            yarn app setup:postinstall
+            ${YARN} setup:postinstall
       - persist_to_workspace:
           root: .
           paths:
             - node_modules
             - build-artifacts
-            - packages/app/node_modules
+            - ${EXTENSION_DIR}/node_modules
 
   validate-lavamoat-config:
     executor: node-browsers-medium-plus
@@ -269,7 +277,7 @@ jobs:
           steps:
             - run:
                 name: build:dist
-                command: yarn app build dist
+                command: ${YARN} build dist
       - when:
           condition:
             matches:
@@ -278,15 +286,15 @@ jobs:
           steps:
             - run:
                 name: build:prod
-                command: yarn app build prod
+                command: ${YARN} build prod
       - run:
           name: build:debug
-          command: find packages/app/dist/ -type f -exec md5sum {} \; | sort -k 2
+          command: find ${EXTENSION_DIR}/dist/ -type f -exec md5sum {} \; | sort -k 2
       - persist_to_workspace:
           root: .
           paths:
-            - packages/app/dist
-            - packages/app/builds
+            - ${EXTENSION_DIR}/dist
+            - ${EXTENSION_DIR}/builds
 
   prep-build-beta:
     executor: node-browsers-medium-plus
@@ -296,21 +304,21 @@ jobs:
           at: .
       - run:
           name: build:dist
-          command: yarn app build --build-type beta dist
+          command: ${YARN} build --build-type beta dist
       - run:
           name: build:debug
-          command: find packages/app/dist/ -type f -exec md5sum {} \; | sort -k 2
+          command: find ${EXTENSION_DIR}/dist/ -type f -exec md5sum {} \; | sort -k 2
       - run:
           name: Move beta build to 'dist-beta' to avoid conflict with production build
-          command: mv ./packages/app/dist ./packages/app/dist-beta
+          command: mv ./${EXTENSION_DIR}/dist ./${EXTENSION_DIR}/dist-beta
       - run:
           name: Move beta zips to 'builds-beta' to avoid conflict with production build
-          command: mv ./packages/app/builds ./packages/app/builds-beta
+          command: mv ./${EXTENSION_DIR}/builds ./${EXTENSION_DIR}/builds-beta
       - persist_to_workspace:
           root: .
           paths:
-            - packages/app/dist-beta
-            - packages/app/builds-beta
+            - ${EXTENSION_DIR}/dist-beta
+            - ${EXTENSION_DIR}/builds-beta
 
   prep-build-flask:
     executor: node-browsers-medium-plus
@@ -320,21 +328,21 @@ jobs:
           at: .
       - run:
           name: build:dist
-          command: yarn app build --build-type flask dist
+          command: ${YARN} build --build-type flask dist
       - run:
           name: build:debug
-          command: find packages/app/dist/ -type f -exec md5sum {} \; | sort -k 2
+          command: find ${EXTENSION_DIR}/dist/ -type f -exec md5sum {} \; | sort -k 2
       - run:
           name: Move flask build to 'dist-flask' to avoid conflict with production build
-          command: mv ./packages/app/dist ./packages/app/dist-flask
+          command: mv ./${EXTENSION_DIR}/dist ./${EXTENSION_DIR}/dist-flask
       - run:
           name: Move flask zips to 'builds-flask' to avoid conflict with production build
-          command: mv ./packages/app/builds ./packages/app/builds-flask
+          command: mv ./${EXTENSION_DIR}/builds ./${EXTENSION_DIR}/builds-flask
       - persist_to_workspace:
           root: .
           paths:
-            - packages/app/dist-flask
-            - packages/app/builds-flask
+            - ${EXTENSION_DIR}/dist-flask
+            - ${EXTENSION_DIR}/builds-flask
 
   prep-build-test-desktop:
     executor: node-browsers-medium-plus
@@ -373,18 +381,18 @@ jobs:
           at: .
       - run:
           name: Build extension for testing
-          command: yarn app build:test:flask
+          command: ${YARN} build:test:flask
       - run:
           name: Move test build to 'dist-test' to avoid conflict with production build
-          command: mv ./packages/app/dist ./packages/app/dist-test-flask
+          command: mv ./${EXTENSION_DIR}/dist ./${EXTENSION_DIR}/dist-test-flask
       - run:
           name: Move test zips to 'builds-test' to avoid conflict with production build
-          command: mv ./packages/app/builds ./packages/app/builds-test-flask
+          command: mv ./${EXTENSION_DIR}/builds ./${EXTENSION_DIR}/builds-test-flask
       - persist_to_workspace:
           root: .
           paths:
-            - packages/app/dist-test-flask
-            - packages/app/builds-test-flask
+            - ${EXTENSION_DIR}/dist-test-flask
+            - ${EXTENSION_DIR}/builds-test-flask
 
   prep-build-test-mv3:
     executor: node-browsers-medium-plus
@@ -394,18 +402,18 @@ jobs:
           at: .
       - run:
           name: Build extension in mv3 for testing
-          command: yarn app build:test:mv3
+          command: ${YARN} build:test:mv3
       - run:
           name: Move test build to 'dist-test' to avoid conflict with production build
-          command: mv ./packages/app/dist ./packages/app/dist-test-mv3
+          command: mv ./${EXTENSION_DIR}/dist ./${EXTENSION_DIR}/dist-test-mv3
       - run:
           name: Move test zips to 'builds-test' to avoid conflict with production build
-          command: mv ./packages/app/builds ./packages/app/builds-test-mv3
+          command: mv ./${EXTENSION_DIR}/builds ./${EXTENSION_DIR}/builds-test-mv3
       - persist_to_workspace:
           root: .
           paths:
-            - packages/app/dist-test-mv3
-            - packages/app/builds-test-mv3
+            - ${EXTENSION_DIR}/dist-test-mv3
+            - ${EXTENSION_DIR}/builds-test-mv3
 
   prep-build-test:
     executor: node-browsers-medium-plus
@@ -415,18 +423,18 @@ jobs:
           at: .
       - run:
           name: Build extension for testing
-          command: yarn app build:test
+          command: ${YARN} build:test
       - run:
           name: Move test build to 'dist-test' to avoid conflict with production build
-          command: mv ./packages/app/dist ./packages/app/dist-test
+          command: mv ./${EXTENSION_DIR}/dist ./${EXTENSION_DIR}/dist-test
       - run:
           name: Move test zips to 'builds-test' to avoid conflict with production build
-          command: mv ./packages/app/builds ./packages/app/builds-test
+          command: mv ./${EXTENSION_DIR}/builds ./${EXTENSION_DIR}/builds-test
       - persist_to_workspace:
           root: .
           paths:
-            - packages/app/dist-test
-            - packages/app/builds-test
+            - ${EXTENSION_DIR}/dist-test
+            - ${EXTENSION_DIR}/builds-test
 
   prep-build-storybook:
     executor: node-browsers-medium-plus
@@ -436,11 +444,11 @@ jobs:
           at: .
       - run:
           name: Build Storybook
-          command: yarn app storybook:build
+          command: ${YARN} storybook:build
       - persist_to_workspace:
           root: .
           paths:
-            - packages/app/storybook-build
+            - ${EXTENSION_DIR}/storybook-build
 
   prep-build-ts-migration-dashboard:
     executor: node-browsers
@@ -450,11 +458,11 @@ jobs:
           at: .
       - run:
           name: Build TypeScript migration dashboard
-          command: yarn app ts-migration:dashboard:build
+          command: ${YARN} ts-migration:dashboard:build
       - persist_to_workspace:
           root: .
           paths:
-            - packages/app/development/ts-migration-dashboard/build
+            - ${EXTENSION_DIR}/development/ts-migration-dashboard/build
 
   test-storybook:
     executor: node-browsers
@@ -464,7 +472,7 @@ jobs:
           at: .
       - run:
           name: Test Storybook
-          command: yarn app storybook:test
+          command: ${YARN} storybook:test
 
   test-yarn-dedupe:
     executor: node-browsers
@@ -473,7 +481,7 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Detect yarn app lock deduplications
+          name: Detect ${YARN} lock deduplications
           command: yarn yarn-deduplicate && git diff --exit-code yarn.lock
 
   test-lint:
@@ -484,10 +492,10 @@ jobs:
           at: .
       - run:
           name: Lint
-          command: yarn app lint
+          command: ${YARN} lint
       - run:
           name: Verify locales
-          command: yarn app verify-locales --quiet
+          command: ${YARN} verify-locales --quiet
 
   test-lint-shellcheck:
     executor: shellcheck
@@ -496,7 +504,7 @@ jobs:
       - run: apk add --no-cache bash jq yarn
       - run:
           name: ShellCheck Lint
-          command: ./packages/app/development/shellcheck.sh
+          command: ./${EXTENSION_DIR}/development/shellcheck.sh
 
   test-lint-lockfile:
     executor: node-browsers
@@ -506,7 +514,7 @@ jobs:
           at: .
       - run:
           name: lockfile-lint
-          command: yarn app lint:lockfile
+          command: ${YARN} lint:lockfile
 
   test-lint-changelog:
     executor: node-browsers
@@ -523,7 +531,7 @@ jobs:
           steps:
             - run:
                 name: Validate changelog
-                command: yarn app lint:changelog
+                command: ${YARN} lint:changelog
       - when:
           condition:
             matches:
@@ -532,7 +540,7 @@ jobs:
           steps:
             - run:
                 name: Validate release candidate changelog
-                command: yarn app lint:changelog:rc
+                command: ${YARN} lint:changelog:rc
 
   test-deps-audit:
     executor: node-browsers
@@ -541,7 +549,7 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: yarn app audit
+          name: ${YARN} audit
           command: .circleci/scripts/yarn-audit.sh
 
   test-deps-depcheck:
@@ -552,7 +560,7 @@ jobs:
           at: .
       - run:
           name: depcheck
-          command: yarn app depcheck
+          command: ${YARN} depcheck
 
   test-e2e-chrome:
     executor: node-browsers
@@ -566,16 +574,16 @@ jobs:
           at: .
       - run:
           name: Move test build to dist
-          command: mv ./packages/app/dist-test ./packages/app/dist
+          command: mv ./${EXTENSION_DIR}/dist-test ./${EXTENSION_DIR}/dist
       - run:
           name: Move test zips to builds
-          command: mv ./packages/app/builds-test ./packages/app/builds
+          command: mv ./${EXTENSION_DIR}/builds-test ./${EXTENSION_DIR}/builds
       - run:
           name: test:e2e:chrome
           command: |
             if .circleci/scripts/test-run-e2e.sh
             then
-              yarn app test:e2e:chrome --retries 2
+              ${YARN} test:e2e:chrome --retries 2
             fi
           no_output_timeout: 20m
       - store_artifacts:
@@ -594,16 +602,16 @@ jobs:
           at: .
       - run:
           name: Move test build to dist
-          command: mv ./packages/app/dist-test-mv3 ./packages/app/dist
+          command: mv ./${EXTENSION_DIR}/dist-test-mv3 ./${EXTENSION_DIR}/dist
       - run:
           name: Move test zips to builds
-          command: mv ./packages/app/builds-test-mv3 ./packages/app/builds
+          command: mv ./${EXTENSION_DIR}/builds-test-mv3 ./${EXTENSION_DIR}/builds
       - run:
           name: test:e2e:chrome
           command: |
             if .circleci/scripts/test-run-e2e.sh
             then
-              yarn app test:e2e:chrome --retries 2 || echo "Temporarily suppressing MV3 e2e test failures"
+              ${YARN} test:e2e:chrome --retries 2 || echo "Temporarily suppressing MV3 e2e test failures"
             fi
           no_output_timeout: 20m
       - store_artifacts:
@@ -678,16 +686,16 @@ jobs:
           at: .
       - run:
           name: Move test build to dist
-          command: mv ./packages/app/dist-test-flask ./packages/app/dist
+          command: mv ./${EXTENSION_DIR}/dist-test-flask ./${EXTENSION_DIR}/dist
       - run:
           name: Move test zips to builds
-          command: mv ./packages/app/builds-test-flask ./packages/app/builds
+          command: mv ./${EXTENSION_DIR}/builds-test-flask ./${EXTENSION_DIR}/builds
       - run:
           name: test:e2e:firefox:snaps
           command: |
             if .circleci/scripts/test-run-e2e.sh
             then
-              yarn app test:e2e:firefox:snaps --retries 2
+              ${YARN} test:e2e:firefox:snaps --retries 2
             fi
           no_output_timeout: 20m
       - store_artifacts:
@@ -706,16 +714,16 @@ jobs:
           at: .
       - run:
           name: Move test build to dist
-          command: mv ./packages/app/dist-test-flask ./packages/app/dist
+          command: mv ./${EXTENSION_DIR}/dist-test-flask ./${EXTENSION_DIR}/dist
       - run:
           name: Move test zips to builds
-          command: mv ./packages/app/builds-test-flask ./packages/app/builds
+          command: mv ./${EXTENSION_DIR}/builds-test-flask ./${EXTENSION_DIR}/builds
       - run:
           name: test:e2e:chrome:snaps
           command: |
             if .circleci/scripts/test-run-e2e.sh
             then
-              yarn app test:e2e:chrome:snaps --retries 2
+              ${YARN} test:e2e:chrome:snaps --retries 2
             fi
           no_output_timeout: 20m
       - store_artifacts:
@@ -734,16 +742,16 @@ jobs:
           at: .
       - run:
           name: Move test build to dist
-          command: mv ./packages/app/dist-test ./packages/app/dist
+          command: mv ./${EXTENSION_DIR}/dist-test ./${EXTENSION_DIR}/dist
       - run:
           name: Move test zips to builds
-          command: mv ./packages/app/builds-test ./packages/app/builds
+          command: mv ./${EXTENSION_DIR}/builds-test ./${EXTENSION_DIR}/builds
       - run:
           name: test:e2e:firefox
           command: |
             if .circleci/scripts/test-run-e2e.sh
             then
-              yarn app test:e2e:firefox --retries 2
+              ${YARN} test:e2e:firefox --retries 2
             fi
           no_output_timeout: 20m
       - store_artifacts:
@@ -761,13 +769,13 @@ jobs:
           at: .
       - run:
           name: Move test build to dist
-          command: mv ./packages/app/dist-test ./packages/app/dist
+          command: mv ./${EXTENSION_DIR}/dist-test ./${EXTENSION_DIR}/dist
       - run:
           name: Move test zips to builds
-          command: mv ./packages/app/builds-test ./packages/app/builds
+          command: mv ./${EXTENSION_DIR}/builds-test ./${EXTENSION_DIR}/builds
       - run:
           name: Run page load benchmark
-          command: yarn app benchmark:chrome --out ../../test-artifacts/chrome/benchmark/pageload.json --retries 2
+          command: ${YARN} benchmark:chrome --out ../../test-artifacts/chrome/benchmark/pageload.json --retries 2
       - store_artifacts:
           path: test-artifacts
           destination: test-artifacts
@@ -787,13 +795,13 @@ jobs:
           at: .
       - run:
           name: Move test build to dist
-          command: mv ./packages/app/dist-test ./packages/app/dist
+          command: mv ./${EXTENSION_DIR}/dist-test ./${EXTENSION_DIR}/dist
       - run:
           name: Move test zips to builds
-          command: mv ./packages/app/builds-test ./packages/app/builds
+          command: mv ./${EXTENSION_DIR}/builds-test ./${EXTENSION_DIR}/builds
       - run:
           name: Run page load benchmark
-          command: yarn app user-actions-benchmark:chrome --out ../../test-artifacts/chrome/benchmark/user_actions.json --retries 2
+          command: ${YARN} user-actions-benchmark:chrome --out ../../test-artifacts/chrome/benchmark/user_actions.json --retries 2
       - store_artifacts:
           path: test-artifacts
           destination: test-artifacts
@@ -813,21 +821,21 @@ jobs:
           at: .
       - run:
           name: Move test build to dist
-          command: mv ./packages/app/dist-test-mv3 ./packages/app/dist
+          command: mv ./${EXTENSION_DIR}/dist-test-mv3 ./${EXTENSION_DIR}/dist
       - run:
           name: Move test zips to builds
-          command: mv ./packages/app/builds-test-mv3 ./packages/app/builds
+          command: mv ./${EXTENSION_DIR}/builds-test-mv3 ./${EXTENSION_DIR}/builds
       - run:
           name: Run page load benchmark
           command: |
             mkdir -p test-artifacts/chrome/mv3
-            cp -R packages/app/development/charts/flamegraph test-artifacts/chrome/mv3/initialisation
-            cp -R packages/app/development/charts/flamegraph/chart test-artifacts/chrome/mv3/initialisation/background
-            cp -R packages/app/development/charts/flamegraph/chart test-artifacts/chrome/mv3/initialisation/ui
-            cp -R packages/app/development/charts/table test-artifacts/chrome/mv3/load_time
+            cp -R ${EXTENSION_DIR}/development/charts/flamegraph test-artifacts/chrome/mv3/initialisation
+            cp -R ${EXTENSION_DIR}/development/charts/flamegraph/chart test-artifacts/chrome/mv3/initialisation/background
+            cp -R ${EXTENSION_DIR}/development/charts/flamegraph/chart test-artifacts/chrome/mv3/initialisation/ui
+            cp -R ${EXTENSION_DIR}/development/charts/table test-artifacts/chrome/mv3/load_time
       - run:
           name: Run page load benchmark
-          command: yarn app mv3:stats:chrome --out test-artifacts/chrome/mv3
+          command: ${YARN} mv3:stats:chrome --out test-artifacts/chrome/mv3
       - run:
           name: Install jq
           command: sudo apt install jq -y
@@ -900,7 +908,7 @@ jobs:
             source $BASH_ENV
       - run:
           name: build:announce
-          command: ./packages/app/development/metamaskbot-build-announce.js
+          command: ./${EXTENSION_DIR}/development/metamaskbot-build-announce.js
 
   job-publish-release:
     executor: node-browsers
@@ -910,10 +918,10 @@ jobs:
           at: .
       - run:
           name: Publish main release to Sentry
-          command: yarn app sentry:publish
+          command: ${YARN} sentry:publish
       - run:
           name: Publish Flask release to Sentry
-          command: yarn app sentry:publish --build-type flask
+          command: ${YARN} sentry:publish --build-type flask
       - run:
           name: Create GitHub release
           command: |
@@ -932,7 +940,7 @@ jobs:
           name: storybook:deploy
           command: |
             git remote add storybook git@github.com:MetaMask/metamask-storybook.git
-            yarn app storybook:deploy
+            ${YARN} storybook:deploy
 
   job-publish-ts-migration-dashboard:
     executor: node-browsers
@@ -949,7 +957,7 @@ jobs:
             git remote add ts-migration-dashboard git@github.com:MetaMask/metamask-extension-ts-migration-dashboard.git
             git config user.name "MetaMask Bot"
             git config user.email metamaskbot@users.noreply.github.com
-            yarn app ts-migration:dashboard:deploy
+            ${YARN} ts-migration:dashboard:deploy
 
   test-unit:
     executor: node-browsers
@@ -959,25 +967,25 @@ jobs:
           at: .
       - run:
           name: test:coverage:mocha
-          command: yarn app test:coverage:mocha
+          command: ${YARN} test:coverage:mocha
       - run:
           name: test:coverage:jest
-          command: yarn app test:coverage:jest
+          command: ${YARN} test:coverage:jest
       - run:
           name: Validate coverage thresholds
           command: |
-            if ! git diff --exit-code packages/app/jest.config.js packages/app/development/jest.config.js; then
+            if ! git diff --exit-code ${EXTENSION_DIR}/jest.config.js ${EXTENSION_DIR}/development/jest.config.js; then
               echo "Detected changes in coverage thresholds"
               exit 1
             fi
       - persist_to_workspace:
           root: .
           paths:
-            - packages/app/.nyc_output
-            - packages/app/coverage
-            - packages/app/jest-coverage
+            - ${EXTENSION_DIR}/.nyc_output
+            - ${EXTENSION_DIR}/coverage
+            - ${EXTENSION_DIR}/jest-coverage
       - store_test_results:
-          path: packages/app/test/test-results/junit.xml
+          path: ${EXTENSION_DIR}/test/test-results/junit.xml
   test-unit-global:
     executor: node-browsers
     steps:
@@ -986,7 +994,7 @@ jobs:
           at: .
       - run:
           name: test:unit:global
-          command: yarn app test:unit:global
+          command: ${YARN} test:unit:global
 
   validate-source-maps:
     executor: node-browsers
@@ -996,7 +1004,7 @@ jobs:
           at: .
       - run:
           name: Validate source maps
-          command: yarn app validate-source-maps
+          command: ${YARN} validate-source-maps
 
   validate-source-maps-beta:
     executor: node-browsers
@@ -1006,13 +1014,13 @@ jobs:
           at: .
       - run:
           name: Move beta build to dist
-          command: mv ./packages/app/dist-beta ./packages/app/dist
+          command: mv ./${EXTENSION_DIR}/dist-beta ./${EXTENSION_DIR}/dist
       - run:
           name: Move beta zips to builds
-          command: mv ./packages/app/builds-beta ./packages/app/builds
+          command: mv ./${EXTENSION_DIR}/builds-beta ./${EXTENSION_DIR}/builds
       - run:
           name: Validate source maps
-          command: yarn app validate-source-maps
+          command: ${YARN} validate-source-maps
 
   validate-source-maps-flask:
     executor: node-browsers
@@ -1022,13 +1030,13 @@ jobs:
           at: .
       - run:
           name: Move flask build to dist
-          command: mv ./packages/app/dist-flask ./packages/app/dist
+          command: mv ./${EXTENSION_DIR}/dist-flask ./${EXTENSION_DIR}/dist
       - run:
           name: Move flask zips to builds
-          command: mv ./packages/app/builds-flask ./packages/app//builds
+          command: mv ./${EXTENSION_DIR}/builds-flask ./${EXTENSION_DIR}//builds
       - run:
           name: Validate source maps
-          command: yarn app validate-source-maps
+          command: ${YARN} validate-source-maps
 
   test-mozilla-lint:
     executor: node-browsers
@@ -1038,7 +1046,7 @@ jobs:
           at: .
       - run:
           name: test:mozilla-lint
-          command: NODE_OPTIONS=--max_old_space_size=3072 yarn app mozilla-lint
+          command: NODE_OPTIONS=--max_old_space_size=3072 ${YARN} mozilla-lint
 
   test-mozilla-lint-beta:
     executor: node-browsers
@@ -1048,13 +1056,13 @@ jobs:
           at: .
       - run:
           name: Move beta build to dist
-          command: mv ./packages/app/dist-beta ./packages/app/dist
+          command: mv ./${EXTENSION_DIR}/dist-beta ./${EXTENSION_DIR}/dist
       - run:
           name: Move beta zips to builds
-          command: mv ./packages/app/builds-beta ./packages/app/builds
+          command: mv ./${EXTENSION_DIR}/builds-beta ./${EXTENSION_DIR}/builds
       - run:
           name: test:mozilla-lint
-          command: NODE_OPTIONS=--max_old_space_size=3072 yarn app mozilla-lint
+          command: NODE_OPTIONS=--max_old_space_size=3072 ${YARN} mozilla-lint
 
   test-mozilla-lint-flask:
     executor: node-browsers
@@ -1064,13 +1072,13 @@ jobs:
           at: .
       - run:
           name: Move flask build to dist
-          command: mv ./packages/app/dist-flask ./packages/app/dist
+          command: mv ./${EXTENSION_DIR}/dist-flask ./${EXTENSION_DIR}/dist
       - run:
           name: Move flask zips to builds
-          command: mv ./packages/app/builds-flask ./packages/app/builds
+          command: mv ./${EXTENSION_DIR}/builds-flask ./${EXTENSION_DIR}/builds
       - run:
           name: test:mozilla-lint
-          command: NODE_OPTIONS=--max_old_space_size=3072 yarn app mozilla-lint
+          command: NODE_OPTIONS=--max_old_space_size=3072 ${YARN} mozilla-lint
 
   all-tests-pass:
     executor: node-browsers
