@@ -767,7 +767,7 @@ jobs:
           command: mv ./packages/app/builds-test ./packages/app/builds
       - run:
           name: Run page load benchmark
-          command: yarn app benchmark:chrome --out test-artifacts/chrome/benchmark/pageload.json --retries 2
+          command: yarn app benchmark:chrome --out ../../test-artifacts/chrome/benchmark/pageload.json --retries 2
       - store_artifacts:
           path: test-artifacts
           destination: test-artifacts
@@ -793,7 +793,7 @@ jobs:
           command: mv ./packages/app/builds-test ./packages/app/builds
       - run:
           name: Run page load benchmark
-          command: yarn app user-actions-benchmark:chrome --out test-artifacts/chrome/benchmark/user_actions.json --retries 2
+          command: yarn app user-actions-benchmark:chrome --out ../../test-artifacts/chrome/benchmark/user_actions.json --retries 2
       - store_artifacts:
           path: test-artifacts
           destination: test-artifacts
