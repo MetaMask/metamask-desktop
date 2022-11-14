@@ -226,36 +226,45 @@ jobs:
     executor: node-browsers
     steps:
       - checkout
-      # Build desktop app
-      - run: SKIP_OTP_PAIRING_FLOW=1 yarn build:desktop:app
-      # Build extension
-      - run: SKIP_OTP_PAIRING_FLOW=1 yarn build:desktop:extension
-      - save_cache:
-          key: 'dependency-cache-{{ checksum "yarn.lock" }}'
-          paths:
-            - playwright/
-            - dist/chrome/
-            - dist_desktop/
+      - attach_workspace:
+          at: .      
+      - run: 
+          name: Build desktop app for testing
+          command: SKIP_OTP_PAIRING_FLOW=1 yarn build:desktop:app 
+      - run:          
+          name: Build extension for testing
+          command: SKIP_OTP_PAIRING_FLOW=1 yarn build:desktop:extension
+      - run:
+          name: Move test build to 'dist-test' to avoid conflict with production build
+          command: mv ./dist ./dist-test-desktop      
       - persist_to_workspace:
           root: .
           paths:
-            - playwright/
-            - dist/chrome/
-            - dist_desktop/
+            - dist-test-desktop
+            - dist_desktop
 
   e2e-desktop:
     executor: playwright
     steps:
       - checkout
+      - run:
+          name: Re-Install Chrome
+          command: ./.circleci/scripts/chrome-install.sh      
       - attach_workspace:
           at: .
+      - run:
+          name: Move test build to dist
+          command: mv ./dist-test-desktop ./dist    
       - run: cd playwright && yarn
       - run: cd playwright && node node_modules/electron/install.js
-      - run: cd playwright && npx playwright install chrome
       - run:
           name: e2e command
           command: |
-            cd playwright && xvfb-run yarn e2e:desktop
+            if .circleci/scripts/test-run-e2e.sh
+            then
+              cd playwright && xvfb-run yarn e2e:desktop
+            fi
+          no_output_timeout: 20m          
       - store_artifacts:
           name: html-report and artifacts
           path: playwright/playwright-reports/
