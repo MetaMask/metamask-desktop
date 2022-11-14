@@ -15,7 +15,7 @@ async function start() {
   );
 
   const {
-    argv: { buildTypes, parallel },
+    argv: { buildTypes, parallel, devMode },
   } = yargs(hideBin(process.argv)).usage(
     '$0 [options]',
     'Generate the LavaMoat policy file for one more more build types.',
@@ -35,13 +35,22 @@ async function start() {
           description: 'Whether to generate policies in parallel.',
           type: 'boolean',
         })
+        .option('devMode', {
+          alias: ['d'],
+          default: false,
+          demandOption: true,
+          description:
+            'Whether to run the process under lavamoat (devMode=false) or node (devMode=true)',
+          type: 'boolean',
+        })
         .strict(),
   );
 
+  const buildCommand = devMode ? 'build:dev' : 'build';
   await concurrently(
     (Array.isArray(buildTypes) ? buildTypes : [buildTypes]).map(
       (buildType) => ({
-        command: `yarn build scripts:dist --policy-only --build-type=${buildType}`,
+        command: `yarn ${buildCommand} scripts:dist --policy-only --lint-fence-files=false --build-type=${buildType}`,
         env: {
           WRITE_AUTO_POLICY: 1,
         },

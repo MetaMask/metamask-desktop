@@ -59,7 +59,7 @@ describe('Sign Typed Data V4 Signature Request', function () {
         const origin = content[0];
         const address = content[1];
         const message = await driver.findElement(
-          '.signature-request-message--node-value',
+          '.signature-request-data__node__value',
         );
         assert.equal(await title.getText(), 'Signature request');
         assert.equal(await name.getText(), 'Ether Mail');
@@ -146,7 +146,7 @@ describe('Sign Typed Data V3 Signature Request', function () {
         const origin = content[0];
         const address = content[1];
         const messages = await driver.findElements(
-          '.signature-request-message--node-value',
+          '.signature-request-data__node__value',
         );
         assert.equal(await title.getText(), 'Signature request');
         assert.equal(await name.getText(), 'Ether Mail');
@@ -160,6 +160,10 @@ describe('Sign Typed Data V3 Signature Request', function () {
         assert.equal(await messages[4].getText(), 'Hello, Bob!');
 
         // Approve signing typed data
+        await driver.clickElement(
+          '[data-testid="signature-request-scroll-button"]',
+        );
+        await driver.delay(regularDelayMs);
         await driver.clickElement({ text: 'Sign', tag: 'button' });
         await driver.waitUntilXWindowHandles(2);
         windowHandles = await driver.getAllWindowHandles();
