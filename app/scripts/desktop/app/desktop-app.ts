@@ -21,6 +21,8 @@ class DesktopApp extends EventEmitter {
 
   private trezorWindow?: BrowserWindow;
 
+  private latticeWindow?: BrowserWindow;
+
   private extensionConnection?: ExtensionConnection;
 
   private status: StatusMessage;
@@ -75,6 +77,7 @@ class DesktopApp extends EventEmitter {
     }
 
     this.trezorWindow = await this.createTrezorWindow();
+    this.latticeWindow = await this.createLatticeWindow();
 
     const server = await this.createWebSocketServer();
     server.on('connection', (webSocket) => this.onConnection(webSocket));
@@ -97,6 +100,14 @@ class DesktopApp extends EventEmitter {
     }
 
     this.trezorWindow.webContents.send(channel, ...args);
+  }
+
+  public submitMessageToLatticeWindow(channel: string, ...args: any[]) {
+    if (!this.latticeWindow) {
+      throw new Error('No Lattice Window');
+    }
+
+    this.latticeWindow.webContents.send(channel, ...args);
   }
 
   private async onConnection(webSocket: WebSocket) {
@@ -261,6 +272,33 @@ class DesktopApp extends EventEmitter {
     log.debug('Created trezor window');
 
     return trezorWindow;
+  }
+
+  private async createLatticeWindow() {
+    const latticeWindow = new BrowserWindow({
+      show: false,
+      parent: this.mainWindow,
+      webPreferences: {
+        preload: path.resolve(
+          __dirname,
+          '../hw/lattice/renderer/lattice-preload.js',
+        ),
+      },
+    });
+
+    await latticeWindow.loadFile(
+      path.resolve(__dirname, '../../../desktop-lattice.html'),
+    );
+
+    latticeWindow.webContents.setWindowOpenHandler((details) => ({
+      action: details.url.startsWith('https://lattice.gridplus.io/')
+        ? 'allow'
+        : 'deny',
+    }));
+
+    log.debug('Created lattice window');
+
+    return latticeWindow;
   }
 }
 

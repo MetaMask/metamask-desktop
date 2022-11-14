@@ -16,7 +16,6 @@ import {
 } from 'eth-rpc-errors';
 import { Mutex } from 'await-semaphore';
 import log from 'loglevel';
-import LatticeKeyring from 'eth-lattice-keyring';
 import { MetaMaskKeyring as QRHardwareKeyring } from '@keystonehq/metamask-airgapped-keyring';
 import EthQuery from 'eth-query';
 import nanoid from 'nanoid';
@@ -162,6 +161,7 @@ import createRPCMethodTrackingMiddleware from './lib/createRPCMethodTrackingMidd
 
 let LedgerBridgeKeyring;
 let TrezorKeyring;
+let LatticeKeyring;
 
 /* eslint-disable import/first */
 /* eslint-disable import/order */
@@ -178,17 +178,21 @@ import DesktopController from './controllers/desktop';
 ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
 import { LedgerBridgeKeyring as LedgerBridgeKeyringDesktop } from './desktop/hw/ledger/ledger-keyring';
 import TrezorKeyringDesktop from './desktop/hw/trezor/trezor-keyring';
+import LatticeKeyringDesktop from './desktop/hw/lattice/lattice-keyring';
 
 LedgerBridgeKeyring = LedgerBridgeKeyringDesktop;
 TrezorKeyring = TrezorKeyringDesktop;
+LatticeKeyring = LatticeKeyringDesktop;
 ///: END:ONLY_INCLUDE_IN
 
 ///: BEGIN:EXCLUDE_IN(desktopapp)
 import LedgerBridgeKeyringPackage from '@metamask/eth-ledger-bridge-keyring';
 import TrezorKeyringPackage from 'eth-trezor-keyring';
+import LatticeKeyringPackage from 'eth-lattice-keyring';
 
 LedgerBridgeKeyring = LedgerBridgeKeyringPackage;
 TrezorKeyring = TrezorKeyringPackage;
+LatticeKeyring = LatticeKeyringPackage;
 ///: END:EXCLUDE_IN
 
 /* eslint-enable import/first */

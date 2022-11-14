@@ -16,6 +16,7 @@ echo "Copying HTML"
 cp -r app/desktop-pairing.html $OUTPUT_DIR/app/desktop-pairing.html
 cp -r app/desktop.html $OUTPUT_DIR/app/desktop.html
 cp -r app/desktop-trezor.html $OUTPUT_DIR/app/desktop-trezor.html
+cp -r app/desktop-lattice.html $OUTPUT_DIR/app/desktop-lattice.html
 
 echo "Copying locales"
 cp -r app/_locales $OUTPUT_DIR/app
