@@ -360,26 +360,26 @@ jobs:
           at: .
       - run:
           name: Build desktop app for testing
-          command: yarn build:desktop:app:test
+          command: ${YARN} build:desktop:app:test
       - run:
           name: Build desktop UI for testing
-          command: yarn build:desktop:ui
+          command: ${YARN} build:desktop:ui
       - run:
           name: Build extension for testing
-          command: yarn build:test:desktop
+          command: ${YARN} build:test:desktop
       - run:
           name: Move test build to 'dist-test' to avoid conflict with production build
-          command: mv ./dist ./dist-test-desktop
+          command: mv ./${EXTENSION_DIR}/dist ./${EXTENSION_DIR}/dist-test-desktop
       - run:
           name: Move test zips to 'builds-test' to avoid conflict with production build
-          command: mv ./builds ./builds-test-desktop
+          command: mv ./${EXTENSION_DIR}/builds ./${EXTENSION_DIR}/builds-test-desktop
       - persist_to_workspace:
           root: .
           paths:
-            - dist-test-desktop
-            - builds-test-desktop
-            - dist_desktop
-            - dist_desktop_ui
+            - << pipeline.parameters.extension-dir >>/dist-test-desktop
+            - << pipeline.parameters.extension-dir >>/builds-test-desktop
+            - << pipeline.parameters.extension-dir >>/dist_desktop
+            - << pipeline.parameters.extension-dir >>/dist_desktop_ui
 
   prep-build-test-flask:
     executor: node-browsers-medium-plus
@@ -638,16 +638,16 @@ jobs:
           at: .
       - run:
           name: Move test build to dist
-          command: mv ./dist-test-desktop ./dist
+          command: mv ./${EXTENSION_DIR}/dist-test-desktop ./${EXTENSION_DIR}/dist
       - run:
           name: Move test zips to builds
-          command: mv ./builds-test-desktop ./builds
+          command: mv ./${EXTENSION_DIR}/builds-test-desktop ./${EXTENSION_DIR}/builds
       - run:
           name: test:e2e:chrome:desktop
           command: |
             if .circleci/scripts/test-run-e2e.sh
             then
-              yarn test:e2e:chrome:desktop --retries 2
+              ${YARN} test:e2e:chrome:desktop --retries 2
             fi
           no_output_timeout: 20m
       - store_artifacts:
@@ -666,16 +666,16 @@ jobs:
           at: .
       - run:
           name: Move test build to dist
-          command: mv ./dist-test-desktop ./dist
+          command: mv ./${EXTENSION_DIR}/dist-test-desktop ./${EXTENSION_DIR}/dist
       - run:
           name: Move test zips to builds
-          command: mv ./builds-test-desktop ./builds
+          command: mv ./${EXTENSION_DIR}/builds-test-desktop ./${EXTENSION_DIR}/builds
       - run:
           name: test:e2e:chrome:desktop:snaps
           command: |
             if .circleci/scripts/test-run-e2e.sh
             then
-              yarn test:e2e:chrome:desktop:snaps --retries 2
+              ${YARN} test:e2e:chrome:desktop:snaps --retries 2
             fi
           no_output_timeout: 20m
       - store_artifacts:
