@@ -163,7 +163,7 @@ export function renderDesktopError({
       flexDirection={FLEX_DIRECTION.COLUMN}
       marginLeft={6}
       marginRight={6}
-      marginTop={isHtmlError ? 8 : 0}
+      marginTop={isHtmlError ? 8 : 6}
     >
       <IconTimes size={64} color="var(--color-error-default" />
       {content}

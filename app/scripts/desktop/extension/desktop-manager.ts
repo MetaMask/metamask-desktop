@@ -147,6 +147,14 @@ class DesktopManager {
     if (connection === this.desktopConnection) {
       this.desktopConnection = undefined;
     }
+    this.runConnectionLostHookInExtensionViews();
+  }
+
+  private async runConnectionLostHookInExtensionViews() {
+    const views = await browser?.extension?.getViews?.();
+    views?.forEach((view: any) => {
+      view?.mmdHooks?.onConnectionLost?.();
+    });
   }
 
   private async onUIMessage(data: any, stream: Duplex) {
