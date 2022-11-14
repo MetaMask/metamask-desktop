@@ -5,9 +5,10 @@ import {
   downloadExtension,
   restartExtension,
 } from '../../../shared/lib/error-utils';
+import { DEFAULT_ROUTE } from '../../helpers/constants/routes';
 import { renderDesktopError } from './render-desktop-error';
 
-export default function DesktopError({ disableDesktop }) {
+export default function DesktopError({ forceDisableDesktop }) {
   const t = useI18nContext();
   const { errorType } = useParams();
   const history = useHistory();
@@ -17,7 +18,10 @@ export default function DesktopError({ disableDesktop }) {
     t,
     isHtmlError: false,
     history,
-    disableDesktop,
+    disableDesktop: () => {
+      forceDisableDesktop();
+      history.push(DEFAULT_ROUTE);
+    },
     downloadDesktopApp,
     downloadExtension,
     restartExtension,

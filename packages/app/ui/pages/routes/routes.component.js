@@ -75,6 +75,10 @@ import {
   ///: END:ONLY_INCLUDE_IN
 } from '../../helpers/constants/routes';
 
+///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
+import { EXTENSION_ERROR_PAGE_TYPES } from '../../../shared/constants/desktop';
+///: END:ONLY_INCLUDE_IN
+
 import {
   ENVIRONMENT_TYPE_NOTIFICATION,
   ENVIRONMENT_TYPE_POPUP,
@@ -137,6 +141,19 @@ export default class Routes extends Component {
 
     document.documentElement.setAttribute('data-theme', osTheme);
   }
+
+  ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
+  componentDidMount() {
+    const { history } = this.props;
+    const connectionLostRoute = `${DESKTOP_ERROR_ROUTE}/${EXTENSION_ERROR_PAGE_TYPES.CONNECTION_LOST}`;
+
+    global.mmdHooks = {
+      onConnectionLost: () => {
+        history.push(connectionLostRoute);
+      },
+    };
+  }
+  ///: END:ONLY_INCLUDE_IN
 
   componentDidUpdate(prevProps) {
     const { theme } = this.props;
@@ -325,6 +342,19 @@ export default class Routes extends Component {
 
   hideAppHeader() {
     const { location } = this.props;
+
+    ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
+    const isDesktopConnectionLostScreen = Boolean(
+      matchPath(location.pathname, {
+        path: `${DESKTOP_ERROR_ROUTE}/${EXTENSION_ERROR_PAGE_TYPES.CONNECTION_LOST}`,
+        exact: true,
+      }),
+    );
+
+    if (isDesktopConnectionLostScreen) {
+      return true;
+    }
+    ///: END:ONLY_INCLUDE_IN
 
     const isInitializing = Boolean(
       matchPath(location.pathname, {

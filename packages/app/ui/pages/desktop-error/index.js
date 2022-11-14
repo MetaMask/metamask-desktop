@@ -1,1 +1,1 @@
-export { default } from './desktop-error.component';
+export { default } from './desktop-error.container';

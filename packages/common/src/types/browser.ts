@@ -10,6 +10,9 @@ export interface Browser {
     id: string;
     reload: () => undefined;
   };
+  extension: {
+    getViews: () => Promise<any[]>;
+  };
 }
 
 export interface BrowserProxyRequest {

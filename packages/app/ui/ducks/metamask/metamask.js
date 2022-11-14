@@ -199,6 +199,14 @@ export default function reduceMetamask(state = {}, action) {
         nextNonce: action.value,
       };
     }
+    ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
+    case actionConstants.FORCE_DISABLE_DESKTOP: {
+      return {
+        ...metamaskState,
+        desktopEnabled: false,
+      };
+    }
+    ///: END:ONLY_INCLUDE_IN
 
     default:
       return metamaskState;
