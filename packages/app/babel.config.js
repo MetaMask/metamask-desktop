@@ -26,6 +26,7 @@ module.exports = function (api) {
       'build/code-fencing-babel.js',
       'dist',
       'packages',
+      'playwright',
       'submodules/extension/.storybook',
       'submodules/extension/.yarn',
       'submodules/extension/builds',

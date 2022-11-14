@@ -35,34 +35,17 @@ executors:
     environment:
       EXTENSION_DIR: << pipeline.parameters.extension-dir >>
       YARN_EXTENSION: << pipeline.parameters.yarn-extension >>
+  playwright:
+    docker:
+      - image: mcr.microsoft.com/playwright:v1.23.1-focal
+    resource_class: large
+    environment:
+      NODE_ENV: development
 
 workflows:
   test_and_release:
     jobs:
-      - create_release_pull_request:
-          requires:
-            - prep-deps
-          filters:
-            branches:
-              only:
-                - /^Version-v(\d+)[.](\d+)[.](\d+)/
-      - prep-deps
-      - test-deps-audit:
-          requires:
-            - prep-deps
-      - test-deps-depcheck:
-          requires:
-            - prep-deps
-      - test-yarn-dedupe:
-          requires:
-            - prep-deps
-      - validate-lavamoat-config:
-          filters:
-            branches:
-              only:
-                - /^Version-v(\d+)[.](\d+)[.](\d+)|master/
-          requires:
-            - prep-deps
+      - prep-deps 
       - prep-build:
           requires:
             - common-build
@@ -238,6 +221,49 @@ workflows:
             - common-build
 
 jobs:
+
+  prep-e2e-test-deps:
+    executor: node-browsers
+    steps:
+      - checkout
+      # Build desktop app
+      - run: SKIP_OTP_PAIRING_FLOW=1 yarn build:desktop:app
+      # Build extension
+      - run: SKIP_OTP_PAIRING_FLOW=1 yarn build:desktop:extension
+      - save_cache:
+          key: 'dependency-cache-{{ checksum "yarn.lock" }}'
+          paths:
+            - playwright/
+            - dist/chrome/
+            - dist_desktop/
+      - persist_to_workspace:
+          root: .
+          paths:
+            - playwright/
+            - dist/chrome/
+            - dist_desktop/
+
+  e2e-desktop:
+    executor: playwright
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run: cd playwright && yarn
+      - run: cd playwright && node node_modules/electron/install.js
+      - run: cd playwright && npx playwright install chrome
+      - run:
+          name: e2e command
+          command: |
+            cd playwright && xvfb-run yarn e2e:desktop
+      - store_artifacts:
+          name: html-report and artifacts
+          path: playwright/playwright-reports/
+      - store_test_results:
+          name: report for pipeline integration
+          path: playwright/playwright-reports/junit/test-results.xml
+
+
   create_release_pull_request:
     executor: node-browsers
     steps:
@@ -995,7 +1021,7 @@ jobs:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "8b:21:e3:20:7c:c9:db:82:74:2d:86:d6:11:a7:2f:49"
+            - '8b:21:e3:20:7c:c9:db:82:74:2d:86:d6:11:a7:2f:49'
       - checkout
       - attach_workspace:
           at: .
