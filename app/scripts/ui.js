@@ -254,7 +254,12 @@ async function start() {
     initializeUi(tab, connectionStream, (err, store, backgroundConnection) => {
       if (err) {
         // if there's an error, store will be = metamaskState
-        displayCriticalError('troubleStarting', err, store, backgroundConnection);
+        displayCriticalError(
+          'troubleStarting',
+          err,
+          store,
+          backgroundConnection,
+        );
         return;
       }
       isUIInitialised = true;
@@ -272,7 +277,12 @@ async function start() {
   function updateUiStreams() {
     connectToAccountManager(connectionStream, (err, backgroundConnection) => {
       if (err) {
-        displayCriticalError('troubleStarting', err, undefined, backgroundConnection);
+        displayCriticalError(
+          'troubleStarting',
+          err,
+          undefined,
+          backgroundConnection,
+        );
         return;
       }
 
@@ -323,7 +333,12 @@ function initializeUi(activeTab, connectionStream, cb) {
   });
 }
 
-async function displayCriticalError(errorKey, err, metamaskState, backgroundConnection) {
+async function displayCriticalError(
+  errorKey,
+  err,
+  metamaskState,
+  backgroundConnection,
+) {
   const html = await getErrorHtml(errorKey, SUPPORT_LINK, metamaskState, err);
 
   container.innerHTML = html;

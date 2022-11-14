@@ -166,7 +166,7 @@ export default class PermissionConnect extends Component {
   selectAccounts = (addresses) => {
     const {
       confirmPermissionPath,
-      ///: BEGIN:ONLY_INCLUDE_IN(flask)
+      ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
       snapInstallPath,
       snapUpdatePath,
       isSnap,
@@ -180,7 +180,7 @@ export default class PermissionConnect extends Component {
       ///: BEGIN:ONLY_INCLUDE_IN(main,beta)
       () => this.props.history.push(confirmPermissionPath),
       ///: END:ONLY_INCLUDE_IN
-      ///: BEGIN:ONLY_INCLUDE_IN(flask)
+      ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
       () =>
         this.props.history.push(
           // eslint-disable-next-line no-nested-ternary
