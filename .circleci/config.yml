@@ -918,7 +918,9 @@ jobs:
             source $BASH_ENV
       - run:
           name: build:announce
-          command: ./<< pipeline.parameters.extension-dir >>/development/metamaskbot-build-announce.js
+          command: |
+            cd ${EXTENSION_DIR}
+            ./development/metamaskbot-build-announce.js
 
   job-publish-release:
     executor: node-browsers

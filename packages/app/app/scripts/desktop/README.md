@@ -40,6 +40,6 @@ You can run the linter by itself with `yarn lint`, and you can automatically fix
 | Name | Description |
 | ---  | --- |
 | COMPATIBILITY_VERSION_DESKTOP | Override the compatibility version of the desktop app. |
-| COMPATIBILITY_VERSION_EXTENSION | Override the compatibility version of the extension app. |
+| COMPATIBILITY_VERSION_EXTENSION | Override the compatibility version of the extension. |
 | DISABLE_WEB_SOCKET_ENCRYPTION | Set this to `1` to disable all encryption when communicating with the desktop app. |
 | SKIP_OTP_PAIRING_FLOW | Set this to `1` to skip the pairing process when enabling desktop mode. |
