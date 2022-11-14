@@ -207,6 +207,8 @@ workflows:
               only: develop
           requires:
             - prep-build-ts-migration-dashboard
+      - common-build
+      - common-test
 
 jobs:
   create_release_pull_request:
@@ -1098,3 +1100,23 @@ jobs:
       - run:
           name: All Tests Passed
           command: echo 'weew - everything passed!'
+
+  common-build:
+    executor: node-browsers
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: build
+          command: yarn common build
+
+  common-test:
+    executor: node-browsers
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: test
+          command: yarn common test

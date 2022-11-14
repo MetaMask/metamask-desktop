@@ -1,5 +1,6 @@
 import { Duplex } from 'stream';
 import PortStream from 'extension-port-stream';
+import { WebSocketStream } from '@metamask/desktop';
 import {
   createWebSocketBrowserMock,
   createWebSocketStreamMock,
@@ -15,7 +16,6 @@ import {
   simulateStreamMessage,
 } from '../test/utils';
 import EncryptedWebSocketStream from '../encryption/encrypted-web-socket-stream';
-import { WebSocketStream } from '../shared/web-socket-stream';
 import cfg from '../utils/config';
 import { TestConnectionResult } from '../types/desktop';
 import * as RawState from '../utils/raw-state';
@@ -25,7 +25,7 @@ import DesktopConnection from './desktop-connection';
 import DesktopManager from './desktop-manager';
 
 jest.mock('extension-port-stream');
-jest.mock('../shared/web-socket-stream');
+jest.mock('@metamask/desktop');
 jest.mock('../encryption/encrypted-web-socket-stream');
 jest.mock('./desktop-connection');
 jest.mock('../utils/raw-state');

@@ -1,15 +1,15 @@
 import { Duplex } from 'stream';
 import log from 'loglevel';
 import {
+  BrowserWebSocket,
+  NodeWebSocket,
+  WebSocketStream,
+} from '@metamask/desktop';
+import {
   MESSAGE_HANDSHAKE_FINISH,
   MESSAGE_HANDSHAKE_START,
 } from '../../../../shared/constants/desktop';
 import { flattenMessage } from '../utils/utils';
-import {
-  BrowserWebSocket,
-  NodeWebSocket,
-  WebSocketStream,
-} from '../shared/web-socket-stream';
 import { waitForMessage } from '../utils/stream';
 import * as asymmetricEncryption from './asymmetric-encryption';
 import * as symmetricEncryption from './symmetric-encryption';

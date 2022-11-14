@@ -137,6 +137,7 @@
     "@metamask/contract-metadata": "^1.31.0",
     "@metamask/controllers": "^32.0.2",
     "@metamask/design-tokens": "^1.9.0",
+    "@metamask/desktop": "*",
     "@metamask/eth-json-rpc-infura": "^7.0.0",
     "@metamask/eth-ledger-bridge-keyring": "^0.13.0",
     "@metamask/eth-token-tracker": "^4.0.0",
