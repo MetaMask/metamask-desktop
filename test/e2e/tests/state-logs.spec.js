@@ -39,9 +39,7 @@ describe('State logs', function () {
       },
       async ({ driver }) => {
         await createDownloadFolder(downloadsFolder);
-        if (process.env.RUN_WITH_DESKTOP === 'true') {
-          await driver.navigate();
-        }
+
         await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);

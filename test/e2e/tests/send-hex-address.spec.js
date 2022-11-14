@@ -25,9 +25,6 @@ describe('Send ETH to a 40 character hexadecimal address', function () {
         failOnConsoleError: false,
       },
       async ({ driver }) => {
-        if (process.env.RUN_WITH_DESKTOP === 'true') {
-          await driver.navigate();
-        }
         await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);
@@ -79,9 +76,6 @@ describe('Send ETH to a 40 character hexadecimal address', function () {
         failOnConsoleError: false,
       },
       async ({ driver }) => {
-        if (process.env.RUN_WITH_DESKTOP === 'true') {
-          await driver.navigate();
-        }
         await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);
@@ -153,9 +147,7 @@ describe('Send ERC20 to a 40 character hexadecimal address', function () {
         const contractAddress = await contractRegistry.getContractAddress(
           smartContract,
         );
-        if (process.env.RUN_WITH_DESKTOP === 'true') {
-          await driver.navigate();
-        }
+
         await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);
@@ -247,9 +239,7 @@ describe('Send ERC20 to a 40 character hexadecimal address', function () {
         const contractAddress = await contractRegistry.getContractAddress(
           smartContract,
         );
-        if (process.env.RUN_WITH_DESKTOP === 'true') {
-          await driver.navigate();
-        }
+
         await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);

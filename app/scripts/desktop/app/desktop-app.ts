@@ -45,6 +45,10 @@ class DesktopApp extends EventEmitter {
   }
 
   public async init() {
+    if (cfg().desktop.isTest) {
+      app.disableHardwareAcceleration();
+    }
+
     await app.whenReady();
 
     ipcMain.handle('otp', (_, data) =>
@@ -66,7 +70,10 @@ class DesktopApp extends EventEmitter {
       this.status.isDesktopEnabled = false;
     });
 
-    this.mainWindow = await this.createMainWindow();
+    if (!cfg().desktop.isTest) {
+      this.mainWindow = await this.createMainWindow();
+    }
+
     this.trezorWindow = await this.createTrezorWindow();
 
     const server = await this.createWebSocketServer();

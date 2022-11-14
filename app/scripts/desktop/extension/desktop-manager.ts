@@ -27,7 +27,10 @@ class DesktopManager {
   public async init(state: any) {
     if (state?.DesktopController?.desktopEnabled === true) {
       this.desktopConnection = await this.createConnection();
-      await this.desktopConnection.transferState();
+
+      if (!cfg().desktop.isTest) {
+        await this.desktopConnection.transferState();
+      }
     }
 
     log.debug('Initialised desktop manager');
@@ -113,7 +116,7 @@ class DesktopManager {
 
     log.debug('Created web socket connection');
 
-    if (this.isDesktopEnabled()) {
+    if (!cfg().desktop.skipOtpPairingFlow && this.isDesktopEnabled()) {
       log.debug('Desktop enabled, checking pairing key');
 
       if (!(await connection.checkPairingKey())) {

@@ -1,6 +1,5 @@
 const path = require('path');
 const { promises: fs } = require('fs');
-const cp = require('child_process');
 const BigNumber = require('bignumber.js');
 const mockttp = require('mockttp');
 const createStaticServer = require('../../development/create-static-server');
@@ -12,6 +11,12 @@ const PhishingWarningPageServer = require('./phishing-warning-page-server');
 const { buildWebDriver } = require('./webdriver');
 const { ensureXServerIsRunning } = require('./x-server');
 const GanacheSeeder = require('./seeder/ganache-seeder');
+const {
+  isUsingDesktopApp,
+  stopDesktopApp,
+  startDesktopApp,
+  setDesktopAppState,
+} = require('./desktop');
 
 const tinyDelayMs = 200;
 const regularDelayMs = tinyDelayMs * 2;
@@ -25,12 +30,6 @@ const createDownloadFolder = async (downloadsFolder) => {
 };
 
 const convertToHexValue = (val) => `0x${new BigNumber(val, 10).toString(16)}`;
-
-function delay(milliseconds) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, milliseconds);
-  });
-}
 
 async function withFixtures(options, testSuite) {
   const {
@@ -59,7 +58,6 @@ async function withFixtures(options, testSuite) {
 
   let webDriver;
   let failed = false;
-  let desktop;
   try {
     await ganacheServer.start(ganacheOptions);
     let contractRegistry;
@@ -82,40 +80,18 @@ async function withFixtures(options, testSuite) {
     }
     await fixtureServer.start();
 
-    if (process.env.RUN_WITH_DESKTOP === 'true') {
-      console.info(
-        'Close MM Desktop App if for any chance did not get closed before',
-      );
-      cp.spawn('kill -9 `lsof -t -i:7071`', { shell: true });
+    if (isUsingDesktopApp()) {
+      stopDesktopApp();
     }
 
     const state = fixtureServer.loadJsonState(fixtures);
 
-    if (process.env.RUN_WITH_DESKTOP === 'true') {
-      // Load state in electron app => copy state.json to config.json in electron
-      const electronPath =
-        process.env.CI === 'true'
-          ? process.env.UBUNTU_ELECTRON_CONFIG_FILE_PATH
-          : process.env.LOCAL_ELECTRON_CONFIG_FILE_PATH;
-      console.info(`ELECTRON_CONFIG_FILE_PATH: ${electronPath}`);
+    await setupMocking(mockServer, testSpecificMock);
+    await mockServer.start(8000);
 
-      await fs.writeFile(electronPath, JSON.stringify(state, null, 2));
-
-      if (process.env.CI === 'true') {
-        console.info('Open MM Desktop App on CI');
-        desktop = cp.spawn('xvfb-run -a yarn start:desktop', { shell: true });
-      } else {
-        console.info('Open MM Desktop App');
-        desktop = cp.spawn('yarn start:desktop', { shell: true });
-      }
-      desktop.stdout.on('data', (data) => {
-        console.log(`stdout: ${data}`);
-      });
-      desktop.stderr.on('data', (data) => {
-        console.error(`stderr: ${data}`);
-      });
-      // Wait 5 secs to let desktop initialise
-      await delay(5000);
+    if (isUsingDesktopApp()) {
+      await setDesktopAppState(state);
+      await startDesktopApp();
     }
 
     await phishingPageServer.start();
@@ -146,8 +122,7 @@ async function withFixtures(options, testSuite) {
         });
       }
     }
-    await setupMocking(mockServer, testSpecificMock);
-    await mockServer.start(8000);
+
     if (
       process.env.SELENIUM_BROWSER === 'chrome' &&
       process.env.CI === 'true'
@@ -164,19 +139,18 @@ async function withFixtures(options, testSuite) {
     });
 
     // MMD
-    if (process.env.RUN_WITH_DESKTOP !== 'true') {
-      if (process.env.SELENIUM_BROWSER === 'chrome') {
-        const errors = await driver.checkBrowserForConsoleErrors(driver);
-        if (errors.length) {
-          const errorReports = errors.map((err) => err.message);
-          const errorMessage = `Errors found in browser console:\n${errorReports.join(
-            '\n',
-          )}`;
-          if (failOnConsoleError) {
-            throw new Error(errorMessage);
-          } else {
-            console.error(new Error(errorMessage));
-          }
+
+    if (!isUsingDesktopApp() && process.env.SELENIUM_BROWSER === 'chrome') {
+      const errors = await driver.checkBrowserForConsoleErrors(driver);
+      if (errors.length) {
+        const errorReports = errors.map((err) => err.message);
+        const errorMessage = `Errors found in browser console:\n${errorReports.join(
+          '\n',
+        )}`;
+        if (failOnConsoleError) {
+          throw new Error(errorMessage);
+        } else {
+          console.error(new Error(errorMessage));
         }
       }
     }
@@ -193,6 +167,11 @@ async function withFixtures(options, testSuite) {
   } finally {
     if (!failed || process.env.E2E_LEAVE_RUNNING !== 'true') {
       await fixtureServer.stop();
+
+      if (isUsingDesktopApp()) {
+        stopDesktopApp();
+      }
+
       await ganacheServer.quit();
       if (ganacheOptions?.concurrent) {
         await secondaryGanacheServer.quit();
@@ -218,12 +197,6 @@ async function withFixtures(options, testSuite) {
         await phishingPageServer.quit();
       }
       await mockServer.stop();
-
-      // Close MM desktop app
-      if (process.env.RUN_WITH_DESKTOP === 'true') {
-        console.info('closing Desktop App');
-        cp.spawn('kill -9 `lsof -t -i:7071`', { shell: true });
-      }
     }
   }
 }

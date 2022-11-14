@@ -30,9 +30,6 @@ describe('Add account', function () {
         title: this.test.title,
       },
       async ({ driver }) => {
-        if (process.env.RUN_WITH_DESKTOP === 'true') {
-          await driver.navigate();
-        }
         await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);
@@ -60,9 +57,6 @@ describe('Add account', function () {
         failOnConsoleError: false,
       },
       async ({ driver }) => {
-        if (process.env.RUN_WITH_DESKTOP === 'true') {
-          await driver.navigate();
-        }
         await driver.navigate();
 
         await completeImportSRPOnboardingFlow(
@@ -217,9 +211,6 @@ describe('Add account', function () {
         title: this.test.title,
       },
       async ({ driver }) => {
-        if (process.env.RUN_WITH_DESKTOP === 'true') {
-          await driver.navigate();
-        }
         await driver.navigate();
         await driver.fill('#password', 'correct horse battery staple');
         await driver.press('#password', driver.Key.ENTER);

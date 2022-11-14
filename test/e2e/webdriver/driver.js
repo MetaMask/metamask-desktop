@@ -2,6 +2,11 @@ const { promises: fs } = require('fs');
 const { strict: assert } = require('assert');
 const { until, error: webdriverError, By, Key } = require('selenium-webdriver');
 const cssToXPath = require('css-to-xpath');
+const {
+  isUsingDesktopApp,
+  beforeDesktopNavigate,
+  getElectronWindowCount,
+} = require('../desktop');
 
 /**
  * Temporary workaround to patch selenium's element handle API with methods
@@ -294,6 +299,10 @@ class Driver {
   // Navigation
 
   async navigate(page = Driver.PAGES.HOME) {
+    if (isUsingDesktopApp()) {
+      await beforeDesktopNavigate();
+    }
+
     return await this.driver.get(`${this.extensionUrl}/${page}.html`);
   }
 
@@ -323,15 +332,25 @@ class Driver {
     await this.driver.switchTo().frame(element);
   }
 
-  async getAllWindowHandles() {
+  async getAllWindowHandles(options = { electron: false }) {
+    if (options.electron) {
+      const electronWindowCount = getElectronWindowCount();
+      return Array.from({ length: electronWindowCount }, (_, i) => i);
+    }
+
     return await this.driver.getAllWindowHandles();
   }
 
-  async waitUntilXWindowHandles(x, delayStep = 1000, timeout = 5000) {
+  async waitUntilXWindowHandles(
+    x,
+    delayStep = 1000,
+    timeout = 5000,
+    options = { electron: false },
+  ) {
     let timeElapsed = 0;
     let windowHandles = [];
     while (timeElapsed <= timeout) {
-      windowHandles = await this.driver.getAllWindowHandles();
+      windowHandles = await this.getAllWindowHandles(options);
       if (windowHandles.length === x) {
         return windowHandles;
       }

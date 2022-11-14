@@ -16,7 +16,9 @@ import {
 import * as rawState from '../utils/raw-state';
 import { browser } from '../browser/browser-polyfill';
 import {
+  ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
   acknowledge,
+  ///: END:ONLY_INCLUDE_IN
   waitForAcknowledge,
   waitForMessage,
 } from '../utils/stream';

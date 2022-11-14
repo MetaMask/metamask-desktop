@@ -2,6 +2,7 @@
 
 import nock from 'nock';
 import '@testing-library/jest-dom';
+import cfg from '../../app/scripts/desktop/utils/config';
 
 jest.mock('webextension-polyfill', () => {
   return {
@@ -15,3 +16,6 @@ jest.mock('webextension-polyfill', () => {
 beforeEach(() => {
   nock.cleanAll();
 });
+
+// Disable the test flag in desktop unit tests as this is only used for E2E tests
+cfg().desktop.isTest = false;

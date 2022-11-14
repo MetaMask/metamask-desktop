@@ -1,4 +1,5 @@
 const { merge } = require('lodash');
+const { isUsingDesktopApp, addDesktopState } = require('./desktop');
 
 function defaultFixture() {
   return {
@@ -985,6 +986,11 @@ class FixtureBuilder {
     this.fixture.meta = {
       version: 74,
     };
+
+    if (isUsingDesktopApp()) {
+      addDesktopState(this.fixture);
+    }
+
     return this.fixture;
   }
 }

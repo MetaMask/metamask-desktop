@@ -55,6 +55,7 @@ import { getPlatform } from './lib/util';
 
 ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
 import DesktopApp from './desktop/app/desktop-app';
+import cfg from './desktop/utils/config';
 ///: END:ONLY_INCLUDE_IN
 
 ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
@@ -122,6 +123,10 @@ const initApp = async (remotePort) => {
 
 ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
 const onDesktopRestart = async (desktopApp) => {
+  if (cfg().desktop.isTest) {
+    return;
+  }
+
   desktopApp.removeAllListeners();
   desktopApp.on('restart', () => onDesktopRestart(desktopApp));
 

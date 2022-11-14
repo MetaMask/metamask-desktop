@@ -1,7 +1,13 @@
 import { randomBytes } from 'crypto';
 import Store from 'electron-store';
-import keytar from 'keytar';
 import cfg from '../utils/config';
+
+let keytar: any;
+
+if (!cfg().desktop.isTest) {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  keytar = require('keytar');
+}
 
 const KEY_LENGTH = 32;
 const KEYTAR_SETTINGS_KEY_NAME = 'settingsKey';
