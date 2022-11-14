@@ -207,8 +207,12 @@ workflows:
               only: develop
           requires:
             - prep-build-ts-migration-dashboard
-      - common-build
-      - common-test
+      - common-build:
+          requires:
+            - prep-deps
+      - common-test:
+          requires:
+            - prep-deps
 
 jobs:
   create_release_pull_request:
@@ -491,7 +495,7 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Detect ${YARN} lock deduplications
+          name: Detect yarn lock deduplications
           command: yarn yarn-deduplicate && git diff --exit-code yarn.lock
 
   test-lint:

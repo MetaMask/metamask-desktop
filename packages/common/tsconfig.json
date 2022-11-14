@@ -3,6 +3,7 @@
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
+    "declaration": true,
     "inlineSources": true,
     "isolatedModules": true,
     "jsx": "react",
@@ -10,11 +11,10 @@
     "moduleResolution": "node",
     "noEmitOnError": true,
     "outDir": "dist",
-    "rootDir": ".",
     "sourceMap": true,
     "strict": true
   },
-  "exclude": ["test/**", "**/*.test.ts", "dist/**", "node_modules/**"],
+  "exclude": ["test/**", "**/*.test.ts", "dist/**", "node_modules/**", "*.config.js*"],
   "extends": "@tsconfig/node16/tsconfig.json",
   "paths": {
     "*": ["./types/*"]
