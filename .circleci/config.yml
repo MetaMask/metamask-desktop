@@ -4,25 +4,31 @@ parameters:
   extension-dir:
     type: string
     default: packages/app
+  yarn:
+    type: string
+    default: yarn app
 
 executors:
   node-browsers:
     docker:
       - image: circleci/node:16-browsers
     environment:
-      YARN: yarn app
+      EXTENSION_DIR: << pipeline.parameters.extension-dir >>
+      YARN: << pipeline.parameters.yarn >>
   node-browsers-medium-plus:
     docker:
       - image: circleci/node:16-browsers
     resource_class: medium+
     environment:
+      EXTENSION_DIR: << pipeline.parameters.extension-dir >>
       NODE_OPTIONS: --max_old_space_size=2048
-      YARN: yarn app
+      YARN: << pipeline.parameters.yarn >>
   shellcheck:
     docker:
       - image: koalaman/shellcheck-alpine@sha256:dfaf08fab58c158549d3be64fb101c626abc5f16f341b569092577ae207db199
     environment:
-      YARN: yarn app
+      EXTENSION_DIR: << pipeline.parameters.extension-dir >>
+      YARN: << pipeline.parameters.yarn >>
 
 workflows:
   test_and_release:
@@ -291,7 +297,7 @@ jobs:
                 command: ${YARN} build prod
       - run:
           name: build:debug
-          command: find << pipeline.parameters.extension-dir >>/dist/ -type f -exec md5sum {} \; | sort -k 2
+          command: find ${EXTENSION_DIR}/dist/ -type f -exec md5sum {} \; | sort -k 2
       - persist_to_workspace:
           root: .
           paths:
@@ -309,13 +315,13 @@ jobs:
           command: ${YARN} build --build-type beta dist
       - run:
           name: build:debug
-          command: find << pipeline.parameters.extension-dir >>/dist/ -type f -exec md5sum {} \; | sort -k 2
+          command: find ${EXTENSION_DIR}/dist/ -type f -exec md5sum {} \; | sort -k 2
       - run:
           name: Move beta build to 'dist-beta' to avoid conflict with production build
-          command: mv ./<< pipeline.parameters.extension-dir >>/dist ./<< pipeline.parameters.extension-dir >>/dist-beta
+          command: mv ./${EXTENSION_DIR}/dist ./${EXTENSION_DIR}/dist-beta
       - run:
           name: Move beta zips to 'builds-beta' to avoid conflict with production build
-          command: mv ./<< pipeline.parameters.extension-dir >>/builds ./<< pipeline.parameters.extension-dir >>/builds-beta
+          command: mv ./${EXTENSION_DIR}/builds ./${EXTENSION_DIR}/builds-beta
       - persist_to_workspace:
           root: .
           paths:
@@ -333,13 +339,13 @@ jobs:
           command: ${YARN} build --build-type flask dist
       - run:
           name: build:debug
-          command: find << pipeline.parameters.extension-dir >>/dist/ -type f -exec md5sum {} \; | sort -k 2
+          command: find ${EXTENSION_DIR}/dist/ -type f -exec md5sum {} \; | sort -k 2
       - run:
           name: Move flask build to 'dist-flask' to avoid conflict with production build
-          command: mv ./<< pipeline.parameters.extension-dir >>/dist ./<< pipeline.parameters.extension-dir >>/dist-flask
+          command: mv ./${EXTENSION_DIR}/dist ./${EXTENSION_DIR}/dist-flask
       - run:
           name: Move flask zips to 'builds-flask' to avoid conflict with production build
-          command: mv ./<< pipeline.parameters.extension-dir >>/builds ./<< pipeline.parameters.extension-dir >>/builds-flask
+          command: mv ./${EXTENSION_DIR}/builds ./${EXTENSION_DIR}/builds-flask
       - persist_to_workspace:
           root: .
           paths:
@@ -386,10 +392,10 @@ jobs:
           command: ${YARN} build:test:flask
       - run:
           name: Move test build to 'dist-test' to avoid conflict with production build
-          command: mv ./<< pipeline.parameters.extension-dir >>/dist ./<< pipeline.parameters.extension-dir >>/dist-test-flask
+          command: mv ./${EXTENSION_DIR}/dist ./${EXTENSION_DIR}/dist-test-flask
       - run:
           name: Move test zips to 'builds-test' to avoid conflict with production build
-          command: mv ./<< pipeline.parameters.extension-dir >>/builds ./<< pipeline.parameters.extension-dir >>/builds-test-flask
+          command: mv ./${EXTENSION_DIR}/builds ./${EXTENSION_DIR}/builds-test-flask
       - persist_to_workspace:
           root: .
           paths:
@@ -407,10 +413,10 @@ jobs:
           command: ${YARN} build:test:mv3
       - run:
           name: Move test build to 'dist-test' to avoid conflict with production build
-          command: mv ./<< pipeline.parameters.extension-dir >>/dist ./<< pipeline.parameters.extension-dir >>/dist-test-mv3
+          command: mv ./${EXTENSION_DIR}/dist ./${EXTENSION_DIR}/dist-test-mv3
       - run:
           name: Move test zips to 'builds-test' to avoid conflict with production build
-          command: mv ./<< pipeline.parameters.extension-dir >>/builds ./<< pipeline.parameters.extension-dir >>/builds-test-mv3
+          command: mv ./${EXTENSION_DIR}/builds ./${EXTENSION_DIR}/builds-test-mv3
       - persist_to_workspace:
           root: .
           paths:
@@ -428,10 +434,10 @@ jobs:
           command: ${YARN} build:test
       - run:
           name: Move test build to 'dist-test' to avoid conflict with production build
-          command: mv ./<< pipeline.parameters.extension-dir >>/dist ./<< pipeline.parameters.extension-dir >>/dist-test
+          command: mv ./${EXTENSION_DIR}/dist ./${EXTENSION_DIR}/dist-test
       - run:
           name: Move test zips to 'builds-test' to avoid conflict with production build
-          command: mv ./<< pipeline.parameters.extension-dir >>/builds ./<< pipeline.parameters.extension-dir >>/builds-test
+          command: mv ./${EXTENSION_DIR}/builds ./${EXTENSION_DIR}/builds-test
       - persist_to_workspace:
           root: .
           paths:
@@ -576,10 +582,10 @@ jobs:
           at: .
       - run:
           name: Move test build to dist
-          command: mv ./<< pipeline.parameters.extension-dir >>/dist-test ./<< pipeline.parameters.extension-dir >>/dist
+          command: mv ./${EXTENSION_DIR}/dist-test ./${EXTENSION_DIR}/dist
       - run:
           name: Move test zips to builds
-          command: mv ./<< pipeline.parameters.extension-dir >>/builds-test ./<< pipeline.parameters.extension-dir >>/builds
+          command: mv ./${EXTENSION_DIR}/builds-test ./${EXTENSION_DIR}/builds
       - run:
           name: test:e2e:chrome
           command: |
@@ -604,10 +610,10 @@ jobs:
           at: .
       - run:
           name: Move test build to dist
-          command: mv ./<< pipeline.parameters.extension-dir >>/dist-test-mv3 ./<< pipeline.parameters.extension-dir >>/dist
+          command: mv ./${EXTENSION_DIR}/dist-test-mv3 ./${EXTENSION_DIR}/dist
       - run:
           name: Move test zips to builds
-          command: mv ./<< pipeline.parameters.extension-dir >>/builds-test-mv3 ./<< pipeline.parameters.extension-dir >>/builds
+          command: mv ./${EXTENSION_DIR}/builds-test-mv3 ./${EXTENSION_DIR}/builds
       - run:
           name: test:e2e:chrome
           command: |
@@ -688,10 +694,10 @@ jobs:
           at: .
       - run:
           name: Move test build to dist
-          command: mv ./<< pipeline.parameters.extension-dir >>/dist-test-flask ./<< pipeline.parameters.extension-dir >>/dist
+          command: mv ./${EXTENSION_DIR}/dist-test-flask ./${EXTENSION_DIR}/dist
       - run:
           name: Move test zips to builds
-          command: mv ./<< pipeline.parameters.extension-dir >>/builds-test-flask ./<< pipeline.parameters.extension-dir >>/builds
+          command: mv ./${EXTENSION_DIR}/builds-test-flask ./${EXTENSION_DIR}/builds
       - run:
           name: test:e2e:firefox:snaps
           command: |
@@ -716,10 +722,10 @@ jobs:
           at: .
       - run:
           name: Move test build to dist
-          command: mv ./<< pipeline.parameters.extension-dir >>/dist-test-flask ./<< pipeline.parameters.extension-dir >>/dist
+          command: mv ./${EXTENSION_DIR}/dist-test-flask ./${EXTENSION_DIR}/dist
       - run:
           name: Move test zips to builds
-          command: mv ./<< pipeline.parameters.extension-dir >>/builds-test-flask ./<< pipeline.parameters.extension-dir >>/builds
+          command: mv ./${EXTENSION_DIR}/builds-test-flask ./${EXTENSION_DIR}/builds
       - run:
           name: test:e2e:chrome:snaps
           command: |
@@ -744,10 +750,10 @@ jobs:
           at: .
       - run:
           name: Move test build to dist
-          command: mv ./<< pipeline.parameters.extension-dir >>/dist-test ./<< pipeline.parameters.extension-dir >>/dist
+          command: mv ./${EXTENSION_DIR}/dist-test ./${EXTENSION_DIR}/dist
       - run:
           name: Move test zips to builds
-          command: mv ./<< pipeline.parameters.extension-dir >>/builds-test ./<< pipeline.parameters.extension-dir >>/builds
+          command: mv ./${EXTENSION_DIR}/builds-test ./${EXTENSION_DIR}/builds
       - run:
           name: test:e2e:firefox
           command: |
@@ -771,10 +777,10 @@ jobs:
           at: .
       - run:
           name: Move test build to dist
-          command: mv ./<< pipeline.parameters.extension-dir >>/dist-test ./<< pipeline.parameters.extension-dir >>/dist
+          command: mv ./${EXTENSION_DIR}/dist-test ./${EXTENSION_DIR}/dist
       - run:
           name: Move test zips to builds
-          command: mv ./<< pipeline.parameters.extension-dir >>/builds-test ./<< pipeline.parameters.extension-dir >>/builds
+          command: mv ./${EXTENSION_DIR}/builds-test ./${EXTENSION_DIR}/builds
       - run:
           name: Run page load benchmark
           command: ${YARN} benchmark:chrome --out ../../test-artifacts/chrome/benchmark/pageload.json --retries 2
@@ -797,10 +803,10 @@ jobs:
           at: .
       - run:
           name: Move test build to dist
-          command: mv ./<< pipeline.parameters.extension-dir >>/dist-test ./<< pipeline.parameters.extension-dir >>/dist
+          command: mv ./${EXTENSION_DIR}/dist-test ./${EXTENSION_DIR}/dist
       - run:
           name: Move test zips to builds
-          command: mv ./<< pipeline.parameters.extension-dir >>/builds-test ./<< pipeline.parameters.extension-dir >>/builds
+          command: mv ./${EXTENSION_DIR}/builds-test ./${EXTENSION_DIR}/builds
       - run:
           name: Run page load benchmark
           command: ${YARN} user-actions-benchmark:chrome --out ../../test-artifacts/chrome/benchmark/user_actions.json --retries 2
@@ -823,18 +829,18 @@ jobs:
           at: .
       - run:
           name: Move test build to dist
-          command: mv ./<< pipeline.parameters.extension-dir >>/dist-test-mv3 ./<< pipeline.parameters.extension-dir >>/dist
+          command: mv ./${EXTENSION_DIR}/dist-test-mv3 ./${EXTENSION_DIR}/dist
       - run:
           name: Move test zips to builds
-          command: mv ./<< pipeline.parameters.extension-dir >>/builds-test-mv3 ./<< pipeline.parameters.extension-dir >>/builds
+          command: mv ./${EXTENSION_DIR}/builds-test-mv3 ./${EXTENSION_DIR}/builds
       - run:
           name: Run page load benchmark
           command: |
             mkdir -p test-artifacts/chrome/mv3
-            cp -R << pipeline.parameters.extension-dir >>/development/charts/flamegraph test-artifacts/chrome/mv3/initialisation
-            cp -R << pipeline.parameters.extension-dir >>/development/charts/flamegraph/chart test-artifacts/chrome/mv3/initialisation/background
-            cp -R << pipeline.parameters.extension-dir >>/development/charts/flamegraph/chart test-artifacts/chrome/mv3/initialisation/ui
-            cp -R << pipeline.parameters.extension-dir >>/development/charts/table test-artifacts/chrome/mv3/load_time
+            cp -R ${EXTENSION_DIR}/development/charts/flamegraph test-artifacts/chrome/mv3/initialisation
+            cp -R ${EXTENSION_DIR}/development/charts/flamegraph/chart test-artifacts/chrome/mv3/initialisation/background
+            cp -R ${EXTENSION_DIR}/development/charts/flamegraph/chart test-artifacts/chrome/mv3/initialisation/ui
+            cp -R ${EXTENSION_DIR}/development/charts/table test-artifacts/chrome/mv3/load_time
       - run:
           name: Run page load benchmark
           command: ${YARN} mv3:stats:chrome --out test-artifacts/chrome/mv3
@@ -860,7 +866,9 @@ jobs:
           at: .
       - run:
           name: build:source-map-explorer
-          command: ./<< pipeline.parameters.extension-dir >>/development/source-map-explorer.sh
+          command: |
+            cd ${EXTENSION_DIR}
+            ./development/source-map-explorer.sh
       - store_artifacts:
           path: << pipeline.parameters.extension-dir >>/dist/sourcemaps
           destination: builds/sourcemaps
