@@ -1,6 +1,9 @@
 version: 2.1
 
 parameters:
+  common-dir:
+    type: string
+    default: packages/common
   extension-dir:
     type: string
     default: packages/app
@@ -249,6 +252,7 @@ jobs:
           paths:
             - node_modules/
             - build-artifacts/yarn-install-har/
+            - << pipeline.parameters.common-dir >>/node_modules/
             - << pipeline.parameters.extension-dir >>/node_modules/
       - run:
           name: Postinstall
@@ -259,6 +263,7 @@ jobs:
           paths:
             - node_modules
             - build-artifacts
+            - << pipeline.parameters.common-dir >>/node_modules
             - << pipeline.parameters.extension-dir >>/node_modules
 
   validate-lavamoat-config:
