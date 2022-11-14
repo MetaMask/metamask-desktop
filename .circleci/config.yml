@@ -860,30 +860,30 @@ jobs:
           at: .
       - run:
           name: build:source-map-explorer
-          command: ./development/source-map-explorer.sh
+          command: ./<< pipeline.parameters.extension-dir >>/development/source-map-explorer.sh
       - store_artifacts:
-          path: dist/sourcemaps
+          path: << pipeline.parameters.extension-dir >>/dist/sourcemaps
           destination: builds/sourcemaps
       - store_artifacts:
-          path: dist-beta/sourcemaps
+          path: << pipeline.parameters.extension-dir >>/dist-beta/sourcemaps
           destination: builds-beta/sourcemaps
       - store_artifacts:
-          path: dist-flask/sourcemaps
+          path: << pipeline.parameters.extension-dir >>/dist-flask/sourcemaps
           destination: builds-flask/sourcemaps
       - store_artifacts:
-          path: builds
+          path: << pipeline.parameters.extension-dir >>/builds
           destination: builds
       - store_artifacts:
-          path: builds-beta
+          path: << pipeline.parameters.extension-dir >>/builds-beta
           destination: builds-beta
       - store_artifacts:
-          path: builds-flask
+          path: << pipeline.parameters.extension-dir >>/builds-flask
           destination: builds-flask
       - store_artifacts:
-          path: coverage
+          path: << pipeline.parameters.extension-dir >>/coverage
           destination: coverage
       - store_artifacts:
-          path: jest-coverage
+          path: << pipeline.parameters.extension-dir >>/jest-coverage
           destination: jest-coverage
       - store_artifacts:
           path: test-artifacts
@@ -898,10 +898,10 @@ jobs:
           path: build-artifacts
           destination: build-artifacts
       - store_artifacts:
-          path: storybook-build
+          path: << pipeline.parameters.extension-dir >>/storybook-build
           destination: storybook
       - store_artifacts:
-          path: development/ts-migration-dashboard/build
+          path: << pipeline.parameters.extension-dir >>/development/ts-migration-dashboard/build
           destination: ts-migration-dashboard
       - run:
           name: Set branch parent commit env var
