@@ -6,12 +6,12 @@ type CredentialsResponse = {
 };
 
 contextBridge.exposeInMainWorld('latticeApi', {
-  getCredentials: (callback: any) => {
+  addCredentialsListener: (callback: any) => {
     ipcRenderer.on('lattice-credentials', (_, payload: string) => {
       callback(payload);
     });
   },
-  getCredentialsResponse: (response: CredentialsResponse) => {
+  sendCredentialsResponse: (response: CredentialsResponse) => {
     ipcRenderer.send('lattice-credentials-response', response);
   },
 });
