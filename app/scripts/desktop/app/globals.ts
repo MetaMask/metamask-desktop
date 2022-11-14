@@ -4,8 +4,8 @@ import setupSentry from '../../lib/setupSentry';
 import { getVersion } from '../utils/version';
 
 declare const global: typeof globalThis & {
-  sentryHooks: Record<string, any>;
   sentry: unknown;
+  stateHooks: Record<string, any>;
 };
 
 global.self = {} as unknown as Window & typeof globalThis;
@@ -35,12 +35,12 @@ global.document = {
 } as unknown as Document;
 
 // The root compartment will populate this with hooks
-global.sentryHooks = {};
+global.stateHooks = {};
 
 // setup sentry error reporting
 global.sentry = setupSentry({
   release: getVersion(),
-  getState: () => global.sentryHooks?.getSentryState?.() || {},
+  getState: () => global.stateHooks?.getSentryState?.() || {},
 });
 
 export {};
