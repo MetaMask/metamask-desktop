@@ -233,7 +233,7 @@ jobs:
           command: SKIP_OTP_PAIRING_FLOW=1 yarn build:desktop:app 
       - run:          
           name: Build extension for testing
-          command: SKIP_OTP_PAIRING_FLOW=1 yarn build:desktop:extension
+          command: SKIP_OTP_PAIRING_FLOW=1 yarn build:desktop:extension:test
       - run:
           name: Move test build to 'dist-test' to avoid conflict with production build
           command: mv ./dist ./dist-test-desktop      
