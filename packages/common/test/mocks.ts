@@ -1,9 +1,9 @@
-import { BrowserWebSocket, NodeWebSocket } from "../src/web-socket-stream";
+import { BrowserWebSocket, NodeWebSocket } from '../src/web-socket-stream';
 
-export const PROPERTY_MOCK = "test";
-export const VALUE_MOCK = "value";
+export const PROPERTY_MOCK = 'test';
+export const VALUE_MOCK = 'value';
 export const DATA_MOCK = { [PROPERTY_MOCK]: VALUE_MOCK };
-export const STRING_DATA_MOCK = "testStringData";
+export const STRING_DATA_MOCK = 'testStringData';
 
 export const createWebSocketNodeMock = (): jest.Mocked<NodeWebSocket> =>
   ({

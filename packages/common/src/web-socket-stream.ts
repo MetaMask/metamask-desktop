@@ -1,7 +1,7 @@
-import { Duplex } from "stream";
-import log from "loglevel";
-import { WebSocket as WSWebSocket } from "ws";
-``;
+import { Duplex } from 'stream';
+import log from 'loglevel';
+import { WebSocket as WSWebSocket } from 'ws';
+
 export type BrowserWebSocket = WebSocket;
 export type NodeWebSocket = WSWebSocket;
 
@@ -18,12 +18,12 @@ export class WebSocketStream extends Duplex {
 
     if (this.isBrowser) {
       (this.webSocket as BrowserWebSocket).addEventListener(
-        "message",
-        (event) => this.onMessage(event.data)
+        'message',
+        (event) => this.onMessage(event.data),
       );
     } else {
-      (this.webSocket as NodeWebSocket).on("message", (message) =>
-        this.onMessage(message)
+      (this.webSocket as NodeWebSocket).on('message', (message) =>
+        this.onMessage(message),
       );
     }
   }
@@ -37,9 +37,9 @@ export class WebSocketStream extends Duplex {
   }
 
   public async _write(msg: any, _: string, cb: () => void) {
-    log.debug("Sending message to web socket");
+    log.debug('Sending message to web socket');
 
-    const rawData = typeof msg === "string" ? msg : JSON.stringify(msg);
+    const rawData = typeof msg === 'string' ? msg : JSON.stringify(msg);
 
     this.waitForSocketConnection(this.webSocket, () => {
       this.webSocket.send(rawData);
@@ -56,14 +56,14 @@ export class WebSocketStream extends Duplex {
       // Ignore as data is not a serialised object
     }
 
-    log.debug("Received web socket message");
+    log.debug('Received web socket message');
 
     this.push(data);
   }
 
   private waitForSocketConnection(
     socket: BrowserWebSocket | NodeWebSocket,
-    callback: () => void
+    callback: () => void,
   ) {
     if (socket.readyState === 1) {
       callback();

@@ -14,7 +14,13 @@
     "sourceMap": true,
     "strict": true
   },
-  "exclude": ["test/**", "**/*.test.ts", "dist/**", "node_modules/**", "*.config.js*"],
+  "exclude": [
+    "test/**",
+    "**/*.test.ts",
+    "dist/**",
+    "node_modules/**",
+    "*.config.js*"
+  ],
   "extends": "@tsconfig/node16/tsconfig.json",
   "paths": {
     "*": ["./types/*"]

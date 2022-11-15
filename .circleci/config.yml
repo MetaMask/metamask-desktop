@@ -213,6 +213,9 @@ workflows:
       - common-build:
           requires:
             - prep-deps
+      - common-lint:
+          requires:
+            - prep-deps
       - common-test:
           requires:
             - prep-deps
@@ -1123,6 +1126,16 @@ jobs:
           root: .
           paths:
             - << pipeline.parameters.common-dir >>/dist
+
+  common-lint:
+    executor: node-browsers
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: lint
+          command: yarn common lint
 
   common-test:
     executor: node-browsers

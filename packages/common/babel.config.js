@@ -5,8 +5,8 @@ module.exports = function (api) {
       strictMode: true,
     },
     targets: {
-      browsers: ["chrome >= 66", "firefox >= 68"],
+      browsers: ['chrome >= 66', 'firefox >= 68'],
     },
-    presets: ["@babel/preset-typescript", "@babel/preset-env"],
+    presets: ['@babel/preset-typescript', '@babel/preset-env'],
   };
 };
