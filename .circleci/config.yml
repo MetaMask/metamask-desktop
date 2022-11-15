@@ -1119,6 +1119,10 @@ jobs:
       - run:
           name: build
           command: yarn common build
+      - persist_to_workspace:
+          root: .
+          paths:
+            - << pipeline.parameters.common-dir >>/dist
 
   common-test:
     executor: node-browsers
