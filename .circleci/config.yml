@@ -247,15 +247,16 @@ jobs:
     executor: node-browsers
     steps:
       - checkout
-      - run:
-          name: Re-Install Chrome
-          command: ./.circleci/scripts/chrome-install.sh      
+      # - run:
+      #     name: Re-Install Chrome
+      #     command: ./.circleci/scripts/chrome-install.sh      
       - attach_workspace:
           at: .
       - run:
           name: Move test build to dist
           command: mv ./dist-test-desktop ./dist    
       - run: cd playwright && yarn
+      - run: cd playwright && npx playwright install chrome
       - run: cd playwright && node node_modules/electron/install.js
       - run:
           name: e2e command
