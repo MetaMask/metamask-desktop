@@ -6,19 +6,19 @@ require('dotenv').config();
 const config: PlaywrightTestConfig = {
   testDir: './specs',
   maxFailures: 2,
-  timeout: 40 * 1000,
+  timeout: 60 * 1000,
 
   expect: {
     /**
      * Maximum time expect() should wait for the condition to be met.
      * For example in `await expect(locator).toHaveText();`
      */
-    timeout: 5 * 1000,
+    timeout: 20 * 1000,
   },
 
   use: {
     /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
-    actionTimeout: 5 * 1000,
+    actionTimeout: 10000,
     /* Base URL to use in actions like `await page.goto('/')`. */
     // baseURL: 'http://localhost:3000',
 

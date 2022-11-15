@@ -6,7 +6,6 @@ import { _electron as electron } from 'playwright';
 import test from '../helpers/setup';
 import { ChromeExtensionPage } from '../pageObjects/mmd-extension-page';
 import { MMDMainMenuPage } from '../pageObjects/mmd-mainMenu-page';
-import { MMDNetworkPage } from '../pageObjects/mmd-network-page';
 import { MMDSignUpPage } from '../pageObjects/mmd-signup-page';
 import { MMDSignInPage } from '../pageObjects/mmd-signin-page';
 import { MMDInitialPage } from '../pageObjects/mmd-initial-page';
@@ -75,20 +74,25 @@ test.describe('Desktop send', () => {
     // );
 
     const initialPage = new MMDInitialPage(page);
+    await initialPage.hasDesktopEnabled();
+
     // await initialPage.closeHelpUsImproveBanner();
 
-    // Check network
-    // const networkPage = new MMDNetworkPage(page);
-    // await networkPage.open();
-    // await networkPage.selectNetwork('Goerli Test Network');
 
     await initialPage.hasFunds();
     // await initialPage.selectMainAction('Send');
     // await initialPage.cancelSend();
     await initialPage.selectMainAction('Send');
     await initialPage.sendFunds('0x2f318c334780961fb129d2a6c30d0763d9a5c970');
-    // await initialPage.checkLastTransactionStatus('Pending');
-    await initialPage.checkLastTransactionCSS('confirmed');
+    await initialPage.checkLastTransactionAction('Send');
+    await initialPage.checkLastTransactionStatus('pending');
+
+    // Get date in format "Month Day" like "Nov 15"
+    const date = new Date().toLocaleDateString('en-us', {
+      month: 'short',
+      day: 'numeric',
+    });
+    await initialPage.checkLastTransactionStatus(date);
 
     await electronApp.close();
   });
@@ -103,18 +107,22 @@ test.describe('Desktop send', () => {
     const initialPage = new MMDInitialPage(page);
     // await initialPage.closeHelpUsImproveBanner();
 
-    // Check network
-    // const networkPage = new MMDNetworkPage(page);
-    // await networkPage.open();
-    // await networkPage.selectNetwork('Goerli Test Network');
 
     // await initialPage.hasFunds();
     // await initialPage.selectMainAction('Send');
     // await initialPage.cancelSend();
+
     await initialPage.selectMainAction('Send');
     await initialPage.sendFunds('0x2f318c334780961fb129d2a6c30d0763d9a5c970');
-    // await initialPage.checkLastTransactionStatus('Pending');
-    await initialPage.checkLastTransactionCSS('confirmed');
+    await initialPage.checkLastTransactionAction('Send');
+    await initialPage.checkLastTransactionStatus('pending');
+
+    // Get date in format "Month Day" like "Nov 15"
+    const date = new Date().toLocaleDateString('en-us', {
+      month: 'short',
+      day: 'numeric',
+    });
+    await initialPage.checkLastTransactionStatus(date);
   });
 
 });

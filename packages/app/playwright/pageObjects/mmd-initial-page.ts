@@ -27,7 +27,7 @@ export class MMDInitialPage {
     await this.activityTab.click();
   }
 
-  async checkLastTransactionStatus(status: string) {
+  async checkLastTransactionAction(status: string) {
     // NOTE: Assumes that transaction is the first one on the activity list
     await expect(
       this.page.locator('.transaction-list-item >> nth=0 >> .list-item__title'),
@@ -43,6 +43,21 @@ export class MMDInitialPage {
     ).toBeVisible();
   }
 
+  async checkLastTransactionStatus(status: string) {
+    // NOTE: Assumes that transaction is the first one on the activity list
+    await expect(this.page.locator('.list-item__subheading')).toContainText(
+      status,
+      { ignoreCase: true },
+    );
+  }
+
+  async hasDesktopEnabled() {
+    // NOTE: Assumes that transaction is the first one on the activity list
+    await expect(this.page.locator('.app-header__logo-container')).toHaveCount(
+      2,
+    );
+  }
+
   async getCustodianTXId() {
     const custodianTxId = await this.page.$eval(
       '.test-transaction-meta',
@@ -53,7 +68,7 @@ export class MMDInitialPage {
 
   async selectMainAction(action: string) {
     await this.page
-      .locator(`.wallet-overview__buttons >> text=${action}`)
+      .locator('.wallet-overview__buttons', { hasText: `${action}` })
       .click();
   }
 
