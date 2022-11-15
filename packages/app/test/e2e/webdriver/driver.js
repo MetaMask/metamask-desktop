@@ -358,6 +358,11 @@ class Driver {
       await this.delay(delayStep);
       timeElapsed += delayStep;
     }
+
+    if (options.electron) {
+      console.log('Found Electron Windows', windowHandles);
+    }
+
     throw new Error('waitUntilXWindowHandles timed out polling window handles');
   }
 
