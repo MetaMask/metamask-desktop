@@ -231,10 +231,10 @@ describe('Address Book', function () {
         await driver.clickElement({ text: 'Edit', tag: 'button' });
         await driver.clickElement({ text: 'Delete account', tag: 'a' });
         // it checks if account is deleted
-        const contact = await driver.findElement(
+        await driver.delay(500);
+        const exists = await driver.isElementPresent(
           '.send__select-recipient-wrapper__group-item',
         );
-        const exists = await driver.isElementPresent(contact);
         assert.equal(exists, false, 'Contact is not deleted');
       },
     );
