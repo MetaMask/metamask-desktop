@@ -38,7 +38,7 @@ const enableDesktopAppFlow = async (page: Page) => {
 };
 
 test.describe('Desktop send', () => {
-  test('Ganache: Send a transaction from one account to another', async ({
+  test('Desktop: Send a transaction from one account to another', async ({
     page,
     context,
   }) => {
@@ -70,61 +70,51 @@ test.describe('Desktop send', () => {
 
     const signIn = new MMDSignInPage(page, extensionId as string);
     await signIn.signIn();
-    await expect(electronPage.locator('.mmd-pair-status')).toContainText(
-      'Active',
-    );
+    // await expect(electronPage.locator('.mmd-pair-status')).toContainText(
+    //   'Active',
+    // );
 
     const initialPage = new MMDInitialPage(page);
-    await initialPage.closeHelpUsImproveBanner();
+    // await initialPage.closeHelpUsImproveBanner();
 
     // Check network
-    const networkPage = new MMDNetworkPage(page);
-    await networkPage.open();
+    // const networkPage = new MMDNetworkPage(page);
+    // await networkPage.open();
     // await networkPage.selectNetwork('Goerli Test Network');
 
     await initialPage.hasFunds();
     // await initialPage.selectMainAction('Send');
     // await initialPage.cancelSend();
     await initialPage.selectMainAction('Send');
-    await initialPage.sendFunds('0xd14cdbdb1b72bbe169eb55fda1f368ff51869321');
-    await initialPage.checkLastTransactionStatus('Send');
+    await initialPage.sendFunds('0x2f318c334780961fb129d2a6c30d0763d9a5c970');
+    // await initialPage.checkLastTransactionStatus('Pending');
+    await initialPage.checkLastTransactionCSS('confirmed');
 
     await electronApp.close();
   });
 
-  // test('another test', async ({ page, context }) => {
-  //   const electronApp = await electron.launch({
-  //     args: [process.env.ELECTRON_APP_PATH as string],
-  //   });
-  //   const electronPage = await electronApp.firstWindow();
-  //   // await expect(electronPage.locator('.mmd-pair-status')).toContainText(
-  //   //   'Inactive',
-  //   // );
-  //   const initialFlow = await context.newPage();
-  //   const extensionId = await signUpFlow(initialFlow, context);
-  //   await enableDesktopAppFlow(initialFlow);
+  test('Extension: Send a transaction from one account to another', async ({
+    page,
+    context,
+  }) => {
+    const initialFlow = await context.newPage();
+    await signUpFlow(initialFlow, context);
 
-  //   const signIn = new MMDSignInPage(page, extensionId as string);
-  //   await signIn.signIn();
-  //   await expect(electronPage.locator('.mmd-pair-status')).toContainText(
-  //     'Active',
-  //   );
+    const initialPage = new MMDInitialPage(page);
+    // await initialPage.closeHelpUsImproveBanner();
 
-  //   const initialPage = new MMDInitialPage(page);
-  //   await initialPage.closeHelpUsImproveBanner();
+    // Check network
+    // const networkPage = new MMDNetworkPage(page);
+    // await networkPage.open();
+    // await networkPage.selectNetwork('Goerli Test Network');
 
-  //   // Check network
-  //   const networkPage = new MMDNetworkPage(page);
-  //   await networkPage.open();
-  //   // await networkPage.selectNetwork('Goerli Test Network');
+    // await initialPage.hasFunds();
+    // await initialPage.selectMainAction('Send');
+    // await initialPage.cancelSend();
+    await initialPage.selectMainAction('Send');
+    await initialPage.sendFunds('0x2f318c334780961fb129d2a6c30d0763d9a5c970');
+    // await initialPage.checkLastTransactionStatus('Pending');
+    await initialPage.checkLastTransactionCSS('confirmed');
+  });
 
-  //   await initialPage.hasFunds();
-  //   // await initialPage.selectMainAction('Send');
-  //   // await initialPage.cancelSend();
-  //   await initialPage.selectMainAction('Send');
-  //   await initialPage.sendFunds('0xd14cdbdb1b72bbe169eb55fda1f368ff51869321');
-  //   await initialPage.checkLastTransactionStatus('Send');
-
-  //   await electronApp.close();
-  // });
 });
