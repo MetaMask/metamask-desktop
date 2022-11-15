@@ -80,7 +80,7 @@ workflows:
             - prep-deps
       - prep-build-test-desktop:
           requires:
-            - prep-deps
+            - common-build
       - test-storybook:
           requires:
             - prep-deps
@@ -92,7 +92,7 @@ workflows:
             - prep-deps
       - test-lint:
           requires:
-            - prep-deps
+            - common-build
       - test-lint-shellcheck
       - test-lint-lockfile:
           requires:
@@ -123,7 +123,7 @@ workflows:
             - prep-build-test-desktop
       - test-unit:
           requires:
-            - prep-deps
+            - common-build
       - test-unit-global:
           requires:
             - prep-deps
