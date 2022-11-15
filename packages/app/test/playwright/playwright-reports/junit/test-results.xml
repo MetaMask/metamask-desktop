@@ -1,0 +1,8 @@
+<testsuites id="" name="" tests="1" failures="0" skipped="1" errors="0" time="26.155">
+<testsuite name="desktop.spec.ts" timestamp="1669129655712" hostname="" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Desktop send Desktop: Send a transaction from one account to another" classname="desktop.spec.ts:38:3 › Desktop send › Desktop: Send a transaction from one account to another" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+</testsuites>
