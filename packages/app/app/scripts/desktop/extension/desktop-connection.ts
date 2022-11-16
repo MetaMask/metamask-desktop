@@ -13,13 +13,14 @@ import {
   CLIENT_ID_DISABLE,
   CLIENT_ID_VERSION,
   CLIENT_ID_PAIRING,
-} from '../../../../shared/constants/desktop';
+  acknowledge,
+  waitForAcknowledge,
+} from '@metamask/desktop';
 import { browser } from '../browser/browser-polyfill';
 import { ConnectionType, RemotePortData } from '../types/background';
 import { ClientId, RawState, VersionCheckResult } from '../types/desktop';
 import { registerResponseStream } from '../browser/browser-proxy';
 import { uuid } from '../utils/utils';
-import { acknowledge, waitForAcknowledge } from '../utils/stream';
 import { ExtensionPairing } from '../shared/pairing';
 import * as RawStateUtils from '../utils/raw-state';
 import { ExtensionVersionCheck } from '../shared/version-check';

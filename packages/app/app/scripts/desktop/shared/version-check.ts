@@ -1,11 +1,11 @@
 import { Duplex } from 'stream';
 import log from 'loglevel';
+import { waitForMessage } from '@metamask/desktop';
 import { VersionCheckResult, VersionData } from '../types/desktop';
 import {
   CheckVersionRequestMessage,
   CheckVersionResponseMessage,
 } from '../types/message';
-import { waitForMessage } from '../utils/stream';
 import { getVersion } from '../utils/version';
 import cfg from '../utils/config';
 

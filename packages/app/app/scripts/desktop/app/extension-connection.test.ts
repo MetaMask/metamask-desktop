@@ -6,7 +6,7 @@ import {
   CLIENT_ID_NEW_CONNECTION,
   CLIENT_ID_STATE,
   MESSAGE_ACKNOWLEDGE,
-} from '../../../../shared/constants/desktop';
+} from '@metamask/desktop';
 import {
   CLIENT_ID_MOCK,
   NEW_CONNECTION_MESSAGE_MOCK,

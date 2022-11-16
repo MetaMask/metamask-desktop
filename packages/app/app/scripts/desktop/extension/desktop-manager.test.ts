@@ -25,10 +25,18 @@ import DesktopConnection from './desktop-connection';
 import DesktopManager from './desktop-manager';
 
 jest.mock('extension-port-stream');
-jest.mock('@metamask/desktop');
 jest.mock('../encryption/encrypted-web-socket-stream');
 jest.mock('./desktop-connection');
 jest.mock('../utils/raw-state');
+
+jest.mock(
+  '@metamask/desktop',
+  () => {
+    const original = jest.requireActual('@metamask/desktop');
+    return { WebSocketStream: jest.fn(), DuplexCopy: original.DuplexCopy };
+  },
+  { virtual: true },
+);
 
 jest.mock('../../../../shared/modules/mv3.utils', () => ({}), {
   virtual: true,

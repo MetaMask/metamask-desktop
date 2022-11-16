@@ -2,7 +2,11 @@ import { Duplex } from 'stream';
 import log from 'loglevel';
 import PortStream from 'extension-port-stream';
 import endOfStream from 'end-of-stream';
-import { BrowserWebSocket, WebSocketStream } from '@metamask/desktop';
+import {
+  BrowserWebSocket,
+  WebSocketStream,
+  DuplexCopy,
+} from '@metamask/desktop';
 import cfg from '../utils/config';
 import EncryptedWebSocketStream from '../encryption/encrypted-web-socket-stream';
 import { timeoutPromise } from '../utils/utils';
@@ -10,7 +14,6 @@ import { DesktopState, TestConnectionResult } from '../types/desktop';
 import * as RawState from '../utils/raw-state';
 import { ConnectionType } from '../types/background';
 import { browser } from '../browser/browser-polyfill';
-import { DuplexCopy } from '../utils/stream';
 import DesktopConnection from './desktop-connection';
 
 const TIMEOUT_CONNECT = 10000;
