@@ -62,22 +62,22 @@ workflows:
             - prep-deps
       - prep-build:
           requires:
-            - prep-deps
+            - common-build
       - prep-build-beta:
           requires:
-            - prep-deps
+            - common-build
       - prep-build-flask:
           requires:
-            - prep-deps
+            - common-build
       - prep-build-test:
           requires:
-            - prep-deps
+            - common-build
       - prep-build-test-mv3:
           requires:
-            - prep-deps
+            - common-build
       - prep-build-test-flask:
           requires:
-            - prep-deps
+            - common-build
       - prep-build-test-desktop:
           requires:
             - common-build
