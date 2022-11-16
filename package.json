@@ -17,6 +17,7 @@
     "build:desktop:app:mv3": "ENABLE_MV3=true yarn build:desktop:app",
     "build:desktop:app:test": "IN_TEST=true SEGMENT_HOST='https://api.segment.io' SEGMENT_WRITE_KEY='FAKE' PHISHING_WARNING_PAGE_URL=http://localhost:9999/ METAMASK_DEBUG=1 yarn build:desktop:app",
     "build:desktop:extension": "yarn start --build-type desktopextension",
+    "build:desktop:extension:lavamoat": "yarn build:dev dev --build-type desktopextension --apply-lavamoat=true",
     "build:desktop:extension:test": "yarn start:test --build-type desktopextension",
     "build:desktop:extension:mv3": "ENABLE_MV3=true yarn start --build-type desktopextension",
     "build:desktop:ui": "node development/desktop/electron/build/desktop-ui.js dev --apply-lavamoat=false",
