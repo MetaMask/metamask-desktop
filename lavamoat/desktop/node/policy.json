@@ -1109,10 +1109,69 @@
         "readable-stream": true
       }
     },
+    "@metamask/post-message-stream": {
+      "builtin": {
+        "worker_threads.parentPort": true
+      },
+      "globals": {
+        "WorkerGlobalScope": true,
+        "addEventListener": true,
+        "location.origin": true,
+        "onmessage": "write",
+        "postMessage": true,
+        "process.on": true,
+        "process.removeListener": true,
+        "process.send": true,
+        "removeEventListener": true
+      },
+      "packages": {
+        "@metamask/post-message-stream>@metamask/utils": true,
+        "@metamask/post-message-stream>readable-stream": true
+      }
+    },
+    "@metamask/post-message-stream>@metamask/utils": {
+      "packages": {
+        "@metamask/snap-utils>fast-deep-equal": true
+      }
+    },
+    "@metamask/post-message-stream>readable-stream": {
+      "builtin": {
+        "events.EventEmitter": true,
+        "stream": true,
+        "util": true
+      },
+      "globals": {
+        "process.browser": true,
+        "process.env.READABLE_STREAM": true,
+        "process.stderr": true,
+        "process.stdout": true,
+        "process.version.slice": true,
+        "setImmediate": true
+      },
+      "packages": {
+        "@metamask/post-message-stream>readable-stream>process-nextick-args": true,
+        "@metamask/post-message-stream>readable-stream>safe-buffer": true,
+        "@metamask/post-message-stream>readable-stream>string_decoder": true,
+        "readable-stream>core-util-is": true,
+        "readable-stream>inherits": true,
+        "readable-stream>isarray": true,
+        "readable-stream>util-deprecate": true
+      }
+    },
     "@metamask/post-message-stream>readable-stream>process-nextick-args": {
       "globals": {
         "process.nextTick": true,
         "process.version": true
+      }
+    },
+    "@metamask/post-message-stream>readable-stream>safe-buffer": {
+      "builtin": {
+        "buffer": true
+      }
+    },
+    "@metamask/post-message-stream>readable-stream>string_decoder": {
+      "packages": {
+        "@metamask/post-message-stream>readable-stream>safe-buffer": true
       }
     },
     "@metamask/providers>@metamask/object-multiplex": {
@@ -1130,7 +1189,7 @@
         "console.warn": true
       },
       "packages": {
-        "@metamask/rpc-methods>@metamask/controllers": true,
+        "@metamask/controllers": true,
         "@metamask/rpc-methods>@metamask/key-tree": true,
         "@metamask/rpc-methods>nanoid": true,
         "@metamask/snap-utils": true,
@@ -1139,155 +1198,9 @@
         "eth-rpc-errors": true
       }
     },
-    "@metamask/rpc-methods>@metamask/controllers": {
-      "builtin": {
-        "events.EventEmitter": true
-      },
-      "globals": {
-        "Buffer.from": true,
-        "Headers": true,
-        "URL": true,
-        "clearInterval": true,
-        "clearTimeout": true,
-        "console.error": true,
-        "console.log": true,
-        "fetch": true,
-        "setInterval": true,
-        "setTimeout": true
-      },
-      "packages": {
-        "@ethereumjs/common": true,
-        "@ethereumjs/tx": true,
-        "@ledgerhq/hw-app-eth>@ethersproject/abi": true,
-        "@metamask/contract-metadata": true,
-        "@metamask/controllers>@ethersproject/contracts": true,
-        "@metamask/controllers>@ethersproject/providers": true,
-        "@metamask/controllers>abort-controller": true,
-        "@metamask/controllers>async-mutex": true,
-        "@metamask/controllers>eth-json-rpc-infura": true,
-        "@metamask/controllers>eth-phishing-detect": true,
-        "@metamask/controllers>isomorphic-fetch": true,
-        "@metamask/controllers>multiformats": true,
-        "@metamask/controllers>web3": true,
-        "@metamask/controllers>web3-provider-engine": true,
-        "@metamask/metamask-eth-abis": true,
-        "@metamask/rpc-methods>@metamask/controllers>eth-method-registry": true,
-        "@metamask/rpc-methods>@metamask/controllers>ethereumjs-wallet": true,
-        "@metamask/rpc-methods>nanoid": true,
-        "@metamask/snap-utils>fast-deep-equal": true,
-        "deep-freeze-strict": true,
-        "eth-ens-namehash": true,
-        "eth-keyring-controller": true,
-        "eth-query": true,
-        "eth-rpc-errors": true,
-        "eth-sig-util": true,
-        "ethereumjs-util": true,
-        "ethjs>ethjs-unit": true,
-        "immer": true,
-        "json-rpc-engine": true,
-        "jsonschema": true,
-        "punycode": true,
-        "single-call-balance-checker-abi": true,
-        "uuid": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/controllers>eth-method-registry": {
-      "packages": {
-        "@metamask/rpc-methods>@metamask/controllers>eth-method-registry>ethjs": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/controllers>eth-method-registry>ethjs": {
-      "globals": {
-        "Buffer": true,
-        "clearInterval": true,
-        "setInterval": true
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/controllers>eth-method-registry>ethjs>bn.js": true,
-        "@metamask/rpc-methods>@metamask/controllers>eth-method-registry>ethjs>ethjs-abi": true,
-        "@metamask/rpc-methods>@metamask/controllers>eth-method-registry>ethjs>ethjs-contract": true,
-        "@metamask/rpc-methods>@metamask/controllers>eth-method-registry>ethjs>ethjs-query": true,
-        "ethjs>ethjs-filter": true,
-        "ethjs>ethjs-provider-http": true,
-        "ethjs>ethjs-unit": true,
-        "ethjs>ethjs-util": true,
-        "ethjs>js-sha3": true,
-        "ethjs>number-to-bn": true
-      }
-    },
     "@metamask/rpc-methods>@metamask/controllers>eth-method-registry>ethjs>bn.js": {
       "builtin": {
         "buffer.Buffer": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/controllers>eth-method-registry>ethjs>ethjs-abi": {
-      "globals": {
-        "Buffer": true
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/controllers>eth-method-registry>ethjs>bn.js": true,
-        "ethjs>js-sha3": true,
-        "ethjs>number-to-bn": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/controllers>eth-method-registry>ethjs>ethjs-contract": {
-      "packages": {
-        "@metamask/rpc-methods>@metamask/controllers>eth-method-registry>ethjs>ethjs-contract>ethjs-abi": true,
-        "ethjs-query>babel-runtime": true,
-        "ethjs>ethjs-filter": true,
-        "ethjs>ethjs-util": true,
-        "ethjs>js-sha3": true,
-        "promise-to-callback": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/controllers>eth-method-registry>ethjs>ethjs-contract>ethjs-abi": {
-      "globals": {
-        "Buffer": true
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/controllers>eth-method-registry>ethjs>bn.js": true,
-        "ethjs>js-sha3": true,
-        "ethjs>number-to-bn": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/controllers>eth-method-registry>ethjs>ethjs-query": {
-      "globals": {
-        "console": true
-      },
-      "packages": {
-        "ethjs-query>babel-runtime": true,
-        "ethjs-query>ethjs-format": true,
-        "ethjs-query>ethjs-rpc": true,
-        "promise-to-callback": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/controllers>ethereumjs-wallet": {
-      "builtin": {
-        "crypto.createCipheriv": true,
-        "crypto.createDecipheriv": true,
-        "crypto.createHash": true,
-        "crypto.pbkdf2Sync": true
-      },
-      "globals": {
-        "Buffer.alloc": true,
-        "Buffer.concat": true,
-        "Buffer.from": true,
-        "Buffer.isBuffer": true
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/controllers>ethereumjs-wallet>uuid": true,
-        "@truffle/codec>utf8": true,
-        "ethereumjs-util": true,
-        "ethereumjs-util>ethereum-cryptography": true,
-        "ethereumjs-wallet>aes-js": true,
-        "ethereumjs-wallet>randombytes": true,
-        "ethers>@ethersproject/json-wallets>scrypt-js": true,
-        "hdkey>bs58check": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/controllers>ethereumjs-wallet>uuid": {
-      "builtin": {
-        "crypto.randomBytes": true
       }
     },
     "@metamask/rpc-methods>@metamask/controllers>nanoid": {
@@ -1299,18 +1212,13 @@
       }
     },
     "@metamask/rpc-methods>@metamask/key-tree": {
-      "builtin": {
-        "buffer.Buffer": true
-      },
-      "globals": {
-        "Buffer": true
-      },
       "packages": {
         "@metamask/rpc-methods>@metamask/key-tree>@noble/ed25519": true,
         "@metamask/rpc-methods>@metamask/key-tree>@noble/secp256k1": true,
         "@metamask/rpc-methods>@metamask/key-tree>@scure/bip39": true,
         "@metamask/snap-utils>@noble/hashes": true,
-        "@metamask/snap-utils>@scure/base": true
+        "@metamask/snap-utils>@scure/base": true,
+        "eth-block-tracker>@metamask/utils": true
       }
     },
     "@metamask/rpc-methods>@metamask/key-tree>@noble/ed25519": {
@@ -1573,11 +1481,11 @@
         "setTimeout": true
       },
       "packages": {
+        "@metamask/controllers": true,
+        "@metamask/post-message-stream": true,
         "@metamask/providers>@metamask/object-multiplex": true,
         "@metamask/rpc-methods": true,
         "@metamask/snap-controllers>@metamask/browser-passworder": true,
-        "@metamask/snap-controllers>@metamask/controllers": true,
-        "@metamask/snap-controllers>@metamask/post-message-stream": true,
         "@metamask/snap-controllers>@xstate/fsm": true,
         "@metamask/snap-controllers>concat-stream": true,
         "@metamask/snap-controllers>gunzip-maybe": true,
@@ -1603,209 +1511,9 @@
         "crypto.subtle.importKey": true
       }
     },
-    "@metamask/snap-controllers>@metamask/controllers": {
-      "builtin": {
-        "events.EventEmitter": true
-      },
-      "globals": {
-        "Buffer.from": true,
-        "Headers": true,
-        "URL": true,
-        "clearInterval": true,
-        "clearTimeout": true,
-        "console.error": true,
-        "console.log": true,
-        "fetch": true,
-        "setInterval": true,
-        "setTimeout": true
-      },
-      "packages": {
-        "@ethereumjs/common": true,
-        "@ethereumjs/tx": true,
-        "@ledgerhq/hw-app-eth>@ethersproject/abi": true,
-        "@metamask/contract-metadata": true,
-        "@metamask/controllers>@ethersproject/contracts": true,
-        "@metamask/controllers>@ethersproject/providers": true,
-        "@metamask/controllers>abort-controller": true,
-        "@metamask/controllers>async-mutex": true,
-        "@metamask/controllers>eth-json-rpc-infura": true,
-        "@metamask/controllers>eth-phishing-detect": true,
-        "@metamask/controllers>isomorphic-fetch": true,
-        "@metamask/controllers>multiformats": true,
-        "@metamask/controllers>web3": true,
-        "@metamask/controllers>web3-provider-engine": true,
-        "@metamask/metamask-eth-abis": true,
-        "@metamask/snap-controllers>@metamask/controllers>eth-method-registry": true,
-        "@metamask/snap-controllers>@metamask/controllers>ethereumjs-wallet": true,
-        "@metamask/snap-controllers>nanoid": true,
-        "@metamask/snap-utils>fast-deep-equal": true,
-        "deep-freeze-strict": true,
-        "eth-ens-namehash": true,
-        "eth-keyring-controller": true,
-        "eth-query": true,
-        "eth-rpc-errors": true,
-        "eth-sig-util": true,
-        "ethereumjs-util": true,
-        "ethjs>ethjs-unit": true,
-        "immer": true,
-        "json-rpc-engine": true,
-        "jsonschema": true,
-        "punycode": true,
-        "single-call-balance-checker-abi": true,
-        "uuid": true
-      }
-    },
-    "@metamask/snap-controllers>@metamask/controllers>eth-method-registry": {
-      "packages": {
-        "@metamask/snap-controllers>@metamask/controllers>eth-method-registry>ethjs": true
-      }
-    },
-    "@metamask/snap-controllers>@metamask/controllers>eth-method-registry>ethjs": {
-      "globals": {
-        "Buffer": true,
-        "clearInterval": true,
-        "setInterval": true
-      },
-      "packages": {
-        "@metamask/snap-controllers>@metamask/controllers>eth-method-registry>ethjs>bn.js": true,
-        "@metamask/snap-controllers>@metamask/controllers>eth-method-registry>ethjs>ethjs-abi": true,
-        "@metamask/snap-controllers>@metamask/controllers>eth-method-registry>ethjs>ethjs-contract": true,
-        "@metamask/snap-controllers>@metamask/controllers>eth-method-registry>ethjs>ethjs-query": true,
-        "ethjs>ethjs-filter": true,
-        "ethjs>ethjs-provider-http": true,
-        "ethjs>ethjs-unit": true,
-        "ethjs>ethjs-util": true,
-        "ethjs>js-sha3": true,
-        "ethjs>number-to-bn": true
-      }
-    },
     "@metamask/snap-controllers>@metamask/controllers>eth-method-registry>ethjs>bn.js": {
       "builtin": {
         "buffer.Buffer": true
-      }
-    },
-    "@metamask/snap-controllers>@metamask/controllers>eth-method-registry>ethjs>ethjs-abi": {
-      "globals": {
-        "Buffer": true
-      },
-      "packages": {
-        "@metamask/snap-controllers>@metamask/controllers>eth-method-registry>ethjs>bn.js": true,
-        "ethjs>js-sha3": true,
-        "ethjs>number-to-bn": true
-      }
-    },
-    "@metamask/snap-controllers>@metamask/controllers>eth-method-registry>ethjs>ethjs-contract": {
-      "packages": {
-        "@metamask/snap-controllers>@metamask/controllers>eth-method-registry>ethjs>ethjs-contract>ethjs-abi": true,
-        "ethjs-query>babel-runtime": true,
-        "ethjs>ethjs-filter": true,
-        "ethjs>ethjs-util": true,
-        "ethjs>js-sha3": true,
-        "promise-to-callback": true
-      }
-    },
-    "@metamask/snap-controllers>@metamask/controllers>eth-method-registry>ethjs>ethjs-contract>ethjs-abi": {
-      "globals": {
-        "Buffer": true
-      },
-      "packages": {
-        "@metamask/snap-controllers>@metamask/controllers>eth-method-registry>ethjs>bn.js": true,
-        "ethjs>js-sha3": true,
-        "ethjs>number-to-bn": true
-      }
-    },
-    "@metamask/snap-controllers>@metamask/controllers>eth-method-registry>ethjs>ethjs-query": {
-      "globals": {
-        "console": true
-      },
-      "packages": {
-        "ethjs-query>babel-runtime": true,
-        "ethjs-query>ethjs-format": true,
-        "ethjs-query>ethjs-rpc": true,
-        "promise-to-callback": true
-      }
-    },
-    "@metamask/snap-controllers>@metamask/controllers>ethereumjs-wallet": {
-      "builtin": {
-        "crypto.createCipheriv": true,
-        "crypto.createDecipheriv": true,
-        "crypto.createHash": true,
-        "crypto.pbkdf2Sync": true
-      },
-      "globals": {
-        "Buffer.alloc": true,
-        "Buffer.concat": true,
-        "Buffer.from": true,
-        "Buffer.isBuffer": true
-      },
-      "packages": {
-        "@metamask/snap-controllers>@metamask/controllers>ethereumjs-wallet>uuid": true,
-        "@truffle/codec>utf8": true,
-        "ethereumjs-util": true,
-        "ethereumjs-util>ethereum-cryptography": true,
-        "ethereumjs-wallet>aes-js": true,
-        "ethereumjs-wallet>randombytes": true,
-        "ethers>@ethersproject/json-wallets>scrypt-js": true,
-        "hdkey>bs58check": true
-      }
-    },
-    "@metamask/snap-controllers>@metamask/controllers>ethereumjs-wallet>uuid": {
-      "builtin": {
-        "crypto.randomBytes": true
-      }
-    },
-    "@metamask/snap-controllers>@metamask/post-message-stream": {
-      "builtin": {
-        "worker_threads.parentPort": true
-      },
-      "globals": {
-        "WorkerGlobalScope": true,
-        "addEventListener": true,
-        "location.origin": true,
-        "onmessage": "write",
-        "postMessage": true,
-        "process.on": true,
-        "process.removeListener": true,
-        "process.send": true,
-        "removeEventListener": true
-      },
-      "packages": {
-        "@metamask/snap-controllers>@metamask/post-message-stream>@metamask/utils": true,
-        "@metamask/snap-controllers>@metamask/post-message-stream>readable-stream": true
-      }
-    },
-    "@metamask/snap-controllers>@metamask/post-message-stream>@metamask/utils": {
-      "packages": {
-        "@metamask/snap-utils>fast-deep-equal": true
-      }
-    },
-    "@metamask/snap-controllers>@metamask/post-message-stream>readable-stream": {
-      "builtin": {
-        "events.EventEmitter": true,
-        "stream": true,
-        "util": true
-      },
-      "globals": {
-        "process.browser": true,
-        "process.env.READABLE_STREAM": true,
-        "process.stderr": true,
-        "process.stdout": true,
-        "process.version.slice": true,
-        "setImmediate": true
-      },
-      "packages": {
-        "@metamask/post-message-stream>readable-stream>process-nextick-args": true,
-        "@metamask/snap-controllers>@metamask/post-message-stream>readable-stream>string_decoder": true,
-        "@metamask/snap-controllers>json-rpc-middleware-stream>readable-stream>safe-buffer": true,
-        "readable-stream>core-util-is": true,
-        "readable-stream>inherits": true,
-        "readable-stream>isarray": true,
-        "readable-stream>util-deprecate": true
-      }
-    },
-    "@metamask/snap-controllers>@metamask/post-message-stream>readable-stream>string_decoder": {
-      "packages": {
-        "@metamask/snap-controllers>json-rpc-middleware-stream>readable-stream>safe-buffer": true
       }
     },
     "@metamask/snap-controllers>@xstate/fsm": {
@@ -1941,47 +1649,8 @@
         "setTimeout": true
       },
       "packages": {
-        "@metamask/snap-controllers>json-rpc-middleware-stream>readable-stream": true,
-        "json-rpc-engine>@metamask/safe-event-emitter": true
-      }
-    },
-    "@metamask/snap-controllers>json-rpc-middleware-stream>readable-stream": {
-      "builtin": {
-        "events.EventEmitter": true,
-        "stream": true,
-        "util": true
-      },
-      "globals": {
-        "process.browser": true,
-        "process.env.READABLE_STREAM": true,
-        "process.stderr": true,
-        "process.stdout": true,
-        "process.version.slice": true,
-        "setImmediate": true
-      },
-      "packages": {
-        "@metamask/snap-controllers>json-rpc-middleware-stream>readable-stream>process-nextick-args": true,
-        "@metamask/snap-controllers>json-rpc-middleware-stream>readable-stream>safe-buffer": true,
-        "@metamask/snap-controllers>json-rpc-middleware-stream>readable-stream>string_decoder": true,
-        "readable-stream>core-util-is": true,
-        "readable-stream>inherits": true,
-        "readable-stream>isarray": true,
-        "readable-stream>util-deprecate": true
-      }
-    },
-    "@metamask/snap-controllers>json-rpc-middleware-stream>readable-stream>process-nextick-args": {
-      "globals": {
-        "process": true
-      }
-    },
-    "@metamask/snap-controllers>json-rpc-middleware-stream>readable-stream>safe-buffer": {
-      "builtin": {
-        "buffer": true
-      }
-    },
-    "@metamask/snap-controllers>json-rpc-middleware-stream>readable-stream>string_decoder": {
-      "packages": {
-        "@metamask/snap-controllers>json-rpc-middleware-stream>readable-stream>safe-buffer": true
+        "json-rpc-engine>@metamask/safe-event-emitter": true,
+        "readable-stream": true
       }
     },
     "@metamask/snap-controllers>nanoid": {
@@ -2116,10 +1785,10 @@
       },
       "packages": {
         "@metamask/snap-utils>@babel/core": true,
-        "@metamask/snap-utils>@babel/core>@babel/types": true,
+        "@metamask/snap-utils>@babel/types": true,
         "@metamask/snap-utils>@noble/hashes": true,
         "@metamask/snap-utils>@scure/base": true,
-        "@metamask/snap-utils>ajv": true,
+        "@metamask/snap-utils>cron-parser": true,
         "@metamask/snap-utils>fast-deep-equal": true,
         "@metamask/snap-utils>rfdc": true,
         "@metamask/snap-utils>superstruct": true,
@@ -2148,11 +1817,11 @@
         "@metamask/snap-utils>@babel/core>@babel/helper-module-transforms": true,
         "@metamask/snap-utils>@babel/core>@babel/helpers": true,
         "@metamask/snap-utils>@babel/core>@babel/template": true,
-        "@metamask/snap-utils>@babel/core>@babel/types": true,
         "@metamask/snap-utils>@babel/core>convert-source-map": true,
         "@metamask/snap-utils>@babel/core>gensync": true,
         "@metamask/snap-utils>@babel/core>json5": true,
         "@metamask/snap-utils>@babel/core>semver": true,
+        "@metamask/snap-utils>@babel/types": true,
         "@truffle/codec>debug": true,
         "lavamoat>@babel/code-frame": true,
         "lavamoat>lavamoat-tofu>@babel/parser": true,
@@ -2198,7 +1867,7 @@
       "packages": {
         "@metamask/snap-utils>@babel/core>@babel/generator>@jridgewell/gen-mapping": true,
         "@metamask/snap-utils>@babel/core>@babel/generator>jsesc": true,
-        "@metamask/snap-utils>@babel/core>@babel/types": true
+        "@metamask/snap-utils>@babel/types": true
       }
     },
     "@metamask/snap-utils>@babel/core>@babel/generator>@jridgewell/gen-mapping": {
@@ -2284,7 +1953,7 @@
         "@metamask/snap-utils>@babel/core>@babel/helper-module-transforms>@babel/helper-module-imports": true,
         "@metamask/snap-utils>@babel/core>@babel/helper-module-transforms>@babel/helper-simple-access": true,
         "@metamask/snap-utils>@babel/core>@babel/template": true,
-        "@metamask/snap-utils>@babel/core>@babel/types": true,
+        "@metamask/snap-utils>@babel/types": true,
         "lavamoat>@babel/highlight>@babel/helper-validator-identifier": true,
         "lavamoat>lavamoat-tofu>@babel/traverse": true,
         "lavamoat>lavamoat-tofu>@babel/traverse>@babel/helper-environment-visitor": true,
@@ -2296,37 +1965,26 @@
         "assert": true
       },
       "packages": {
-        "@metamask/snap-utils>@babel/core>@babel/types": true
+        "@metamask/snap-utils>@babel/types": true
       }
     },
     "@metamask/snap-utils>@babel/core>@babel/helper-module-transforms>@babel/helper-simple-access": {
       "packages": {
-        "@metamask/snap-utils>@babel/core>@babel/types": true
+        "@metamask/snap-utils>@babel/types": true
       }
     },
     "@metamask/snap-utils>@babel/core>@babel/helpers": {
       "packages": {
         "@metamask/snap-utils>@babel/core>@babel/template": true,
-        "@metamask/snap-utils>@babel/core>@babel/types": true,
+        "@metamask/snap-utils>@babel/types": true,
         "lavamoat>lavamoat-tofu>@babel/traverse": true
       }
     },
     "@metamask/snap-utils>@babel/core>@babel/template": {
       "packages": {
-        "@metamask/snap-utils>@babel/core>@babel/types": true,
+        "@metamask/snap-utils>@babel/types": true,
         "lavamoat>@babel/code-frame": true,
         "lavamoat>lavamoat-tofu>@babel/parser": true
-      }
-    },
-    "@metamask/snap-utils>@babel/core>@babel/types": {
-      "globals": {
-        "console.trace": true,
-        "process.env.BABEL_TYPES_8_BREAKING": true
-      },
-      "packages": {
-        "@metamask/snap-utils>@babel/core>@babel/types>@babel/helper-string-parser": true,
-        "@metamask/snap-utils>@babel/core>@babel/types>to-fast-properties": true,
-        "lavamoat>@babel/highlight>@babel/helper-validator-identifier": true
       }
     },
     "@metamask/snap-utils>@babel/core>convert-source-map": {
@@ -2352,6 +2010,17 @@
         "process": true
       }
     },
+    "@metamask/snap-utils>@babel/types": {
+      "globals": {
+        "console.trace": true,
+        "process.env.BABEL_TYPES_8_BREAKING": true
+      },
+      "packages": {
+        "@metamask/snap-utils>@babel/types>@babel/helper-string-parser": true,
+        "@metamask/snap-utils>@babel/types>to-fast-properties": true,
+        "lavamoat>@babel/highlight>@babel/helper-validator-identifier": true
+      }
+    },
     "@metamask/snap-utils>@noble/hashes": {
       "builtin": {
         "crypto": true
@@ -2366,9 +2035,12 @@
         "TextEncoder": true
       }
     },
-    "@metamask/snap-utils>ajv>uri-js": {
-      "globals": {
-        "define": true
+    "@metamask/snap-utils>cron-parser": {
+      "builtin": {
+        "fs.readFile": true
+      },
+      "packages": {
+        "luxon": true
       }
     },
     "@metamask/snap-utils>rfdc": {
@@ -2878,14 +2550,19 @@
         "console": true
       },
       "packages": {
-        "@metamask/snap-utils>ajv>uri-js": true,
         "@metamask/snap-utils>fast-deep-equal": true,
-        "electron-store>conf>ajv>json-schema-traverse": true
+        "electron-store>conf>ajv>json-schema-traverse": true,
+        "electron-store>conf>ajv>uri-js": true
       }
     },
     "electron-store>conf>ajv-formats": {
       "packages": {
         "electron-store>conf>ajv": true
+      }
+    },
+    "electron-store>conf>ajv>uri-js": {
+      "globals": {
+        "define": true
       }
     },
     "electron-store>conf>atomically": {
@@ -3159,11 +2836,11 @@
     },
     "eth-block-tracker>@metamask/utils": {
       "globals": {
+        "Buffer": true,
         "TextDecoder": true,
         "TextEncoder": true
       },
       "packages": {
-        "@metamask/snap-utils>fast-deep-equal": true,
         "@metamask/snap-utils>superstruct": true,
         "@truffle/codec>debug": true
       }
@@ -6261,7 +5938,7 @@
       },
       "packages": {
         "@metamask/snap-utils>@babel/core>@babel/generator": true,
-        "@metamask/snap-utils>@babel/core>@babel/types": true,
+        "@metamask/snap-utils>@babel/types": true,
         "@truffle/codec>debug": true,
         "lavamoat>@babel/code-frame": true,
         "lavamoat>lavamoat-tofu>@babel/parser": true,
@@ -6275,17 +5952,17 @@
     "lavamoat>lavamoat-tofu>@babel/traverse>@babel/helper-function-name": {
       "packages": {
         "@metamask/snap-utils>@babel/core>@babel/template": true,
-        "@metamask/snap-utils>@babel/core>@babel/types": true
+        "@metamask/snap-utils>@babel/types": true
       }
     },
     "lavamoat>lavamoat-tofu>@babel/traverse>@babel/helper-hoist-variables": {
       "packages": {
-        "@metamask/snap-utils>@babel/core>@babel/types": true
+        "@metamask/snap-utils>@babel/types": true
       }
     },
     "lavamoat>lavamoat-tofu>@babel/traverse>@babel/helper-split-export-declaration": {
       "packages": {
-        "@metamask/snap-utils>@babel/core>@babel/types": true
+        "@metamask/snap-utils>@babel/types": true
       }
     },
     "lavamoat>node-gyp-build": {
