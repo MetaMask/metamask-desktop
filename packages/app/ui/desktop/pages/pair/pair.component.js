@@ -3,7 +3,10 @@ import React, { useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 import OtpInput from 'react-otp-input';
 
-import { SETTINGS_ROUTE } from '../../helpers/constants/routes';
+import {
+  SETTINGS_ROUTE,
+  SUCCESSFUL_PAIR_ROUTE,
+} from '../../helpers/constants/routes';
 import useI18nContext from '../../hooks/useI18nContext';
 import Typography from '../../../components/ui/typography';
 import {
@@ -11,20 +14,23 @@ import {
   TYPOGRAPHY,
 } from '../../../helpers/constants/design-system';
 import Mascot from '../../../components/ui/mascot';
+import Spinner from '../../../components/ui/spinner';
 
 const { ipcRenderer } = window.require('electron');
 
-const Pair = ({ isDesktopEnabled, history }) => {
+const Pair = ({ isDesktopEnabled, isSuccessfulPairSeen, history }) => {
   const t = useI18nContext();
   const [otp, setOtp] = React.useState('');
+  const [isOtpValidating, setOtpValidating] = React.useState(false);
   const [otpError, setOtpError] = React.useState();
-  const [isOTPDisabled, setOTPDisabled] = React.useState(false);
+  const [isOtpDisabled, setOtpDisabled] = React.useState(false);
   const animationEventEmitter = new EventEmitter();
 
   useEffect(() => {
     ipcRenderer.on('invalid-otp', () => {
-      setOTPDisabled(false);
+      setOtpDisabled(false);
       setOtpError(true);
+      setOtpValidating(false);
     });
     return () => {
       ipcRenderer.removeAllListeners('invalid-otp');
@@ -34,15 +40,22 @@ const Pair = ({ isDesktopEnabled, history }) => {
   useEffect(() => {
     if (isDesktopEnabled) {
       console.log('Paired, redirecting');
-      history.push(SETTINGS_ROUTE);
+      if (isSuccessfulPairSeen) {
+        history.push(SETTINGS_ROUTE);
+      } else {
+        history.push(SUCCESSFUL_PAIR_ROUTE);
+      }
     }
-  }, [isDesktopEnabled, history]);
+  }, [isDesktopEnabled, isSuccessfulPairSeen, history]);
 
   const handleOTPChange = (otpValue) => {
     setOtp(otpValue);
     if (otpValue.length === 6) {
-      setOTPDisabled(true);
-      ipcRenderer.invoke('otp', otpValue);
+      setOtpDisabled(true);
+      setOtpValidating(true);
+      setTimeout(() => {
+        ipcRenderer.invoke('otp', otpValue);
+      }, 1000);
     }
   };
 
@@ -59,18 +72,25 @@ const Pair = ({ isDesktopEnabled, history }) => {
       <Typography variant={TYPOGRAPHY.Paragraph} fontSize={14}>
         {t('typeTheSixDigitCodeBelow')}
       </Typography>
-      <OtpInput
-        isInputNum
-        isDisabled={isOTPDisabled}
-        hasErrored={Boolean(otpError)}
-        value={otp}
-        onChange={handleOTPChange}
-        numInputs={6}
-        inputStyle="mmd-pair-page__otp-input"
-        containerStyle="mmd-pair-page__otp-input__container"
-        disabledStyle="mmd-pair-page__otp-input__disabled"
-        errorStyle="mmd-pair-page__otp-input__error"
-      />
+      {isOtpValidating ? (
+        <Spinner
+          className="mmd-pair-page__spinner"
+          color="var(--color-secondary-default)"
+        />
+      ) : (
+        <OtpInput
+          isInputNum
+          isDisabled={isOtpDisabled}
+          hasErrored={Boolean(otpError)}
+          value={otp}
+          onChange={handleOTPChange}
+          numInputs={6}
+          inputStyle="mmd-pair-page__otp-input"
+          containerStyle="mmd-pair-page__otp-input__container"
+          disabledStyle="mmd-pair-page__otp-input__disabled"
+          errorStyle="mmd-pair-page__otp-input__error"
+        />
+      )}
     </div>
   );
 };
@@ -84,6 +104,10 @@ Pair.propTypes = {
    * History object from react-router
    */
   history: PropTypes.any,
+  /**
+   * Whether the user has seen the successful pair screen
+   */
+  isSuccessfulPairSeen: PropTypes.bool,
 };
 
 export default Pair;

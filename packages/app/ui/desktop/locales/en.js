@@ -133,6 +133,16 @@ const enLocales = {
   resetConnection: {
     message: 'Reset Connection',
   },
+  someExplainer: {
+    message:
+      'Some explainer about using the extension as usual but keep this app open and check the alerts.',
+  },
+  goToSettings: {
+    message: 'Go to Settings',
+  },
+  allSetFox: {
+    message: 'All set, fox',
+  },
 };
 
 export default enLocales;

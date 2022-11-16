@@ -12,6 +12,7 @@ const pairStatusPersistConfig = {
     name: 'mmd-desktop-ui-v0.0.0-pair-status',
   }),
   blacklist: ['connections', 'isWebSocketConnected'],
+  whitelist: ['isDesktopEnabled', 'isSuccessfulPairSeen', 'lastActivation'],
 };
 const persistedPairStatusReducer = persistReducer(
   pairStatusPersistConfig,
