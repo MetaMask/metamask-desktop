@@ -15,8 +15,8 @@ import {
   CLIENT_ID_PAIRING,
   acknowledge,
   waitForAcknowledge,
+  browser,
 } from '@metamask/desktop';
-import { browser } from '../browser/browser-polyfill';
 import { ConnectionType, RemotePortData } from '../types/background';
 import { ClientId, RawState, VersionCheckResult } from '../types/desktop';
 import { registerResponseStream } from '../browser/browser-proxy';

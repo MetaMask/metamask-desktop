@@ -1,6 +1,6 @@
 import BN from 'bn.js';
 import { memoize } from 'lodash';
-import { browser } from '../desktop/browser/browser-polyfill';
+import { browser } from '@metamask/desktop';
 import { CHAIN_IDS, TEST_CHAINS } from '../../../shared/constants/network';
 
 import {

@@ -6,6 +6,7 @@ import {
   BrowserWebSocket,
   WebSocketStream,
   DuplexCopy,
+  browser,
 } from '@metamask/desktop';
 import cfg from '../utils/config';
 import EncryptedWebSocketStream from '../encryption/encrypted-web-socket-stream';
@@ -13,7 +14,6 @@ import { timeoutPromise } from '../utils/utils';
 import { DesktopState, TestConnectionResult } from '../types/desktop';
 import * as RawState from '../utils/raw-state';
 import { ConnectionType } from '../types/background';
-import { browser } from '../browser/browser-polyfill';
 import DesktopConnection from './desktop-connection';
 
 const TIMEOUT_CONNECT = 10000;

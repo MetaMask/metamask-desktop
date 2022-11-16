@@ -1,6 +1,6 @@
 import { app, BrowserWindow } from 'electron';
 import { Server as WebSocketServer } from 'ws';
-import { WebSocketStream } from '@metamask/desktop';
+import { WebSocketStream, browser } from '@metamask/desktop';
 import EncryptedWebSocketStream from '../encryption/encrypted-web-socket-stream';
 import cfg from '../utils/config';
 import {
@@ -12,15 +12,18 @@ import {
   createExtensionConnectionMock,
 } from '../test/mocks';
 import { simulateNodeEvent } from '../test/utils';
-import { browser } from '../browser/browser-polyfill';
 import ExtensionConnection from './extension-connection';
 import { updateCheck } from './update-check';
 import DesktopApp from './desktop-app';
 
 jest.mock('extension-port-stream');
-jest.mock('@metamask/desktop');
 jest.mock('../encryption/encrypted-web-socket-stream');
 jest.mock('./extension-connection');
+
+jest.mock('@metamask/desktop', () => ({
+  browser: { storage: { local: { get: jest.fn(), set: jest.fn() } } },
+  WebSocketStream: jest.fn(),
+}));
 
 jest.mock(
   './update-check',
@@ -46,16 +49,6 @@ jest.mock(
     Server: jest.fn(),
   }),
   { virtual: true },
-);
-
-jest.mock(
-  '../browser/browser-polyfill',
-  () => ({
-    browser: { storage: { local: { get: jest.fn(), set: jest.fn() } } },
-  }),
-  {
-    virtual: true,
-  },
 );
 
 const removeInstance = () => {

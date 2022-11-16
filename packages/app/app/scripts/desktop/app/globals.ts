@@ -1,4 +1,5 @@
 import 'global-agent/bootstrap';
+import '../browser/browser-init';
 import { webcrypto } from 'node:crypto';
 import { Headers } from 'node-fetch';
 import setupSentry from '../../lib/setupSentry';

@@ -1,5 +1,5 @@
 import log from 'loglevel';
-import { BrowserProxyRequest } from '../types/browser';
+import { browser, BrowserProxyRequest } from '@metamask/desktop';
 import {
   ARGS_MOCK,
   createStreamMock,
@@ -7,13 +7,12 @@ import {
   VALUE_MOCK,
 } from '../test/mocks';
 import { simulateStreamMessage } from '../test/utils';
-import { browser } from './browser-polyfill';
 import { registerResponseStream } from './browser-proxy';
 
 jest.mock('loglevel');
 
 jest.mock(
-  './browser-polyfill',
+  '@metamask/desktop',
   () => ({
     browser: {
       browserAction: {

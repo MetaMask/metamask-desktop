@@ -1,3 +1,5 @@
+import { browser, initBrowser } from './browser/browser-polyfill';
+
 import {
   CLIENT_ID_BROWSER_CONTROLLER,
   CLIENT_ID_DISABLE,
@@ -14,6 +16,12 @@ import {
 } from './constants';
 
 import {
+  Browser,
+  BrowserProxyRequest,
+  BrowserProxyResponse,
+} from './types/browser';
+
+import {
   acknowledge,
   waitForAcknowledge,
   waitForMessage,
@@ -26,7 +34,13 @@ import {
   WebSocketStream,
 } from './web-socket-stream';
 
-export type { BrowserWebSocket, NodeWebSocket };
+export type {
+  Browser,
+  BrowserProxyRequest,
+  BrowserProxyResponse,
+  BrowserWebSocket,
+  NodeWebSocket,
+};
 
 export {
   CLIENT_ID_BROWSER_CONTROLLER,
@@ -42,6 +56,8 @@ export {
   MESSAGE_HANDSHAKE_FINISH,
   MESSAGE_HANDSHAKE_START,
   acknowledge,
+  browser,
+  initBrowser,
   waitForAcknowledge,
   waitForMessage,
   DuplexCopy,

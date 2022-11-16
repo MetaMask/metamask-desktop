@@ -13,6 +13,7 @@ import {
   ///: END:ONLY_INCLUDE_IN
   waitForAcknowledge,
   waitForMessage,
+  browser,
 } from '@metamask/desktop';
 import TOTP from '../utils/totp';
 import {
@@ -22,7 +23,6 @@ import {
   PairingResultMessage,
 } from '../types/message';
 import * as rawState from '../utils/raw-state';
-import { browser } from '../browser/browser-polyfill';
 import { createKey } from '../encryption/symmetric-encryption';
 import { hashString } from '../utils/crypto';
 

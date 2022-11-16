@@ -1,6 +1,6 @@
 import { Duplex } from 'stream';
 import PortStream from 'extension-port-stream';
-import { WebSocketStream } from '@metamask/desktop';
+import { browser, WebSocketStream } from '@metamask/desktop';
 import {
   createWebSocketBrowserMock,
   createWebSocketStreamMock,
@@ -20,7 +20,6 @@ import cfg from '../utils/config';
 import { TestConnectionResult } from '../types/desktop';
 import * as RawState from '../utils/raw-state';
 import { ConnectionType } from '../types/background';
-import { browser } from '../browser/browser-polyfill';
 import DesktopConnection from './desktop-connection';
 import DesktopManager from './desktop-manager';
 
@@ -33,7 +32,13 @@ jest.mock(
   '@metamask/desktop',
   () => {
     const original = jest.requireActual('@metamask/desktop');
-    return { WebSocketStream: jest.fn(), DuplexCopy: original.DuplexCopy };
+    return {
+      browser: {
+        runtime: { reload: jest.fn() },
+      },
+      WebSocketStream: jest.fn(),
+      DuplexCopy: original.DuplexCopy,
+    };
   },
   { virtual: true },
 );
@@ -42,17 +47,9 @@ jest.mock('../../../../shared/modules/mv3.utils', () => ({}), {
   virtual: true,
 });
 
-jest.mock(
-  '../browser/browser-polyfill',
-  () => ({
-    browser: {
-      runtime: { reload: jest.fn() },
-    },
-  }),
-  {
-    virtual: true,
-  },
-);
+jest.mock('../browser/browser-polyfill', () => ({}), {
+  virtual: true,
+});
 
 const removeInstance = () => {
   // eslint-disable-next-line

@@ -1,9 +1,9 @@
+import { browser } from '@metamask/desktop';
 import { DATA_MOCK } from '../test/mocks';
-import { browser } from '../browser/browser-polyfill';
 import * as RawState from './raw-state';
 
 jest.mock(
-  '../browser/browser-polyfill',
+  '@metamask/desktop',
   () => ({
     browser: {
       storage: { local: { get: jest.fn(), set: jest.fn(), clear: jest.fn() } },

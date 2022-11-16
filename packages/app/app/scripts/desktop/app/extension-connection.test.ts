@@ -22,7 +22,7 @@ import {
   expectEventToFire,
   flushPromises,
 } from '../test/utils';
-import { unregisterRequestStream } from '../browser/browser-polyfill';
+import { unregisterRequestStream } from '../browser/node-browser';
 import { ClientId } from '../types/desktop';
 import { ConnectionType } from '../types/background';
 import { DesktopPairing } from '../shared/pairing';
@@ -34,7 +34,7 @@ jest.mock('../shared/pairing');
 jest.mock('../utils/raw-state');
 
 jest.mock(
-  '../browser/browser-polyfill',
+  '../browser/node-browser',
   () => ({
     registerRequestStream: jest.fn(),
     unregisterRequestStream: jest.fn(),

@@ -1,4 +1,4 @@
-import { browser } from '../browser/browser-polyfill';
+import { browser } from '@metamask/desktop';
 import { DesktopState, RawState } from '../types/desktop';
 
 export const get = async (): Promise<RawState> => {

@@ -1,8 +1,8 @@
-import browser from 'webextension-polyfill';
+import { browser } from '@metamask/desktop';
 import LocalStore from './local-store';
 
-jest.mock('webextension-polyfill', () => ({
-  storage: { local: true },
+jest.mock('@metamask/desktop', () => ({
+  browser: { storage: { local: true } },
 }));
 
 const setup = ({ isSupported }) => {

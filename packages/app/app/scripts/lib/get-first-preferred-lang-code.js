@@ -1,4 +1,4 @@
-import { browser } from '../desktop/browser/browser-polyfill';
+import { browser } from '@metamask/desktop';
 import allLocales from '../../_locales/index.json';
 
 // ensure that we default users with browser language code 'zh' to the supported 'zh_CN' language code

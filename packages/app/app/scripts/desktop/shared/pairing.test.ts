@@ -1,5 +1,5 @@
 import ObjectMultiplex from 'obj-multiplex';
-import { MESSAGE_ACKNOWLEDGE } from '@metamask/desktop';
+import { MESSAGE_ACKNOWLEDGE, browser } from '@metamask/desktop';
 import TOTP from '../utils/totp';
 import {
   createMultiplexMock,
@@ -15,7 +15,6 @@ import {
   flushPromises,
   simulateStreamMessage,
 } from '../test/utils';
-import { browser } from '../browser/browser-polyfill';
 import * as RawState from '../utils/raw-state';
 import * as encryption from '../encryption/symmetric-encryption';
 import { hashString } from '../utils/crypto';
@@ -32,12 +31,16 @@ jest.mock('../utils/crypto', () => ({
 }));
 
 jest.mock(
-  '../browser/browser-polyfill',
-  () => ({
-    browser: {
-      runtime: { reload: jest.fn() },
-    },
-  }),
+  '@metamask/desktop',
+  () => {
+    const original = jest.requireActual('@metamask/desktop');
+    return {
+      ...original,
+      browser: {
+        runtime: { reload: jest.fn() },
+      },
+    };
+  },
   {
     virtual: true,
   },

@@ -15,13 +15,13 @@ import {
   acknowledge,
   waitForAcknowledge,
 } from '@metamask/desktop';
-import { ConnectionType } from '../types/background';
-import { EndConnectionMessage, NewConnectionMessage } from '../types/message';
-import { ClientId, RawState } from '../types/desktop';
 import {
   registerRequestStream,
   unregisterRequestStream,
-} from '../browser/browser-polyfill';
+} from '../browser/node-browser';
+import { ConnectionType } from '../types/background';
+import { EndConnectionMessage, NewConnectionMessage } from '../types/message';
+import { ClientId, RawState } from '../types/desktop';
 import { DesktopPairing } from '../shared/pairing';
 import * as RawStateUtils from '../utils/raw-state';
 import { DesktopVersionCheck } from '../shared/version-check';

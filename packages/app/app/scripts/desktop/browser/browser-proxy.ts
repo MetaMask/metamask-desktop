@@ -1,7 +1,10 @@
 import { Duplex } from 'stream';
 import log from 'loglevel';
-import { BrowserProxyRequest, BrowserProxyResponse } from '../types/browser';
-import { browser } from './browser-polyfill';
+import {
+  BrowserProxyRequest,
+  BrowserProxyResponse,
+  browser,
+} from '@metamask/desktop';
 
 let responseStream: Duplex;
 

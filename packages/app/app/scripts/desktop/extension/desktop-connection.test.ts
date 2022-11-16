@@ -7,6 +7,7 @@ import {
   CLIENT_ID_STATE,
   CLIENT_ID_DISABLE,
   MESSAGE_ACKNOWLEDGE,
+  browser,
 } from '@metamask/desktop';
 import {
   REMOTE_PORT_NAME_MOCK,
@@ -25,7 +26,6 @@ import {
   simulateNodeEvent,
   flushPromises,
 } from '../test/utils';
-import { browser } from '../browser/browser-polyfill';
 import { ConnectionType } from '../types/background';
 import { ClientId } from '../types/desktop';
 import { ExtensionVersionCheck } from '../shared/version-check';
@@ -56,12 +56,16 @@ jest.mock('stream', () => ({ Duplex: jest.fn(), PassThrough: jest.fn() }), {
 });
 
 jest.mock(
-  '../browser/browser-polyfill',
-  () => ({
-    browser: {
-      runtime: { reload: jest.fn() },
-    },
-  }),
+  '@metamask/desktop',
+  () => {
+    const original = jest.requireActual('@metamask/desktop');
+    return {
+      ...original,
+      browser: {
+        runtime: { reload: jest.fn() },
+      },
+    };
+  },
   {
     virtual: true,
   },

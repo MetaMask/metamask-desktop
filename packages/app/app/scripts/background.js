@@ -6,6 +6,10 @@
 import './desktop/app/globals';
 ///: END:ONLY_INCLUDE_IN
 
+///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
+import './browser-init';
+///: END:ONLY_INCLUDE_IN
+
 import endOfStream from 'end-of-stream';
 import pump from 'pump';
 import debounce from 'debounce-stream';
@@ -14,6 +18,11 @@ import { storeAsStream } from '@metamask/obs-store';
 import PortStream from 'extension-port-stream';
 
 import { ethErrors } from 'eth-rpc-errors';
+import {
+  CONNECTION_TYPE_EXTERNAL,
+  CONNECTION_TYPE_INTERNAL,
+  browser,
+} from '@metamask/desktop';
 import {
   ENVIRONMENT_TYPE_POPUP,
   ENVIRONMENT_TYPE_NOTIFICATION,
@@ -30,7 +39,6 @@ import {
 } from '../../shared/constants/metametrics';
 import { isManifestV3 } from '../../shared/modules/mv3.utils';
 import { maskObject } from '../../shared/modules/object.utils';
-import { browser } from './desktop/browser/browser-polyfill';
 import migrations from './migrations';
 import Migrator from './lib/migrator';
 import ExtensionPlatform from './platforms/extension';
@@ -60,10 +68,6 @@ import cfg from './desktop/utils/config';
 
 ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
 import DesktopManager from './desktop/extension/desktop-manager';
-import {
-  CONNECTION_TYPE_EXTERNAL,
-  CONNECTION_TYPE_INTERNAL,
-} from '@metamask/desktop';
 ///: END:ONLY_INCLUDE_IN
 
 /* eslint-enable import/order */
