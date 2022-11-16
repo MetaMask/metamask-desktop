@@ -439,15 +439,16 @@ describe('MetaMask Import UI', function () {
         await driver.delay(largeDelayMs * 2);
         await driver.clickElement({ text: 'Continue', tag: 'button' });
 
-        await driver.waitUntilXWindowHandles(2, 1000, 5000, {
-          electron: isUsingDesktopApp(),
+        const electron = isUsingDesktopApp();
+        const expectedWindowCount = electron ? 3 : 2;
+
+        await driver.waitUntilXWindowHandles(expectedWindowCount, 1000, 5000, {
+          electron,
         });
 
-        const allWindows = await driver.getAllWindowHandles({
-          electron: isUsingDesktopApp(),
-        });
+        const allWindows = await driver.getAllWindowHandles({ electron });
 
-        assert.equal(allWindows.length, 2);
+        assert.equal(allWindows.length, expectedWindowCount);
       },
     );
   });
