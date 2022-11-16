@@ -8,7 +8,13 @@
   "dmg": {
     "sign": false
   },
-  "files": ["dist_desktop/**/*", "node_modules/**/*", "package.json"],
+  "files": [
+    "dist_desktop/**/*",
+    "dist_desktop_ui/**/*",
+    "lavamoat/desktop/node/**/*",
+    "node_modules/**/*",
+    "package.json"
+  ],
   "linux": {
     "icon": "app/build-types/desktop/images/icon-512.png",
     "target": "AppImage",
