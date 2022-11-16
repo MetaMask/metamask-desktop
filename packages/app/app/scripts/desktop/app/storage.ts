@@ -1,37 +1,52 @@
 import { randomBytes } from 'crypto';
+import path from 'path';
+import { readFile, writeFile } from 'fs/promises';
 import Store from 'electron-store';
+import { app } from 'electron';
+import log from 'loglevel';
 import cfg from '../utils/config';
 
-let keytar: any;
+let safeStorage: Electron.SafeStorage;
 
 if (!cfg().desktop.isTest) {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  keytar = require('keytar');
+  // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
+  safeStorage = require('electron').safeStorage;
 }
 
 const KEY_LENGTH = 32;
-const KEYTAR_SETTINGS_KEY_NAME = 'settingsKey';
-const KEYTAR_SERVICE = 'MMD';
+const ENCRYPTED_CYPHER_FILE = 'electron_store_cipher';
+const DEAFULT_ELECTRON_USER_PATH = 'userData';
 
 const createPrivateKey = (size: number = KEY_LENGTH): Buffer => {
   return randomBytes(size);
 };
 
+const encryptedCypherFilePath = () => {
+  const defaultCwd = app.getPath(DEAFULT_ELECTRON_USER_PATH);
+  return path.join(defaultCwd, ENCRYPTED_CYPHER_FILE);
+};
+
 const savePrivateKey = async (): Promise<string> => {
   const pk = createPrivateKey().toString('hex');
-  await keytar.setPassword(KEYTAR_SERVICE, KEYTAR_SETTINGS_KEY_NAME, pk);
+  const encryptedCypher = safeStorage.encryptString(pk);
+  await writeFile(encryptedCypherFilePath(), encryptedCypher);
 
   return pk;
 };
 
 const getPrivateKey = async (): Promise<string> => {
-  const pk = await keytar.getPassword(KEYTAR_SERVICE, KEYTAR_SETTINGS_KEY_NAME);
+  try {
+    const encryptedCypher = await readFile(encryptedCypherFilePath());
+    const pk = safeStorage.decryptString(encryptedCypher);
 
-  if (pk) {
     return pk;
+  } catch (error: any) {
+    if (error.code === 'ENOENT') {
+      log.error('Encrypted cypher file not found!');
+      return savePrivateKey();
+    }
+    throw error;
   }
-
-  return savePrivateKey();
 };
 
 class ObfuscatedStore {
@@ -48,7 +63,7 @@ class ObfuscatedStore {
       return this.appStore;
     }
 
-    if (cfg().desktop.isTest) {
+    if (cfg().desktop.isTest || !safeStorage.isEncryptionAvailable()) {
       this.appStore = new Store(this.initialOptions);
       return this.appStore;
     }
