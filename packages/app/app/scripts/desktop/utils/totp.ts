@@ -1,11 +1,48 @@
 import * as OTPAuth from 'otpauth';
 import { randomHex } from './crypto';
 
+const MAX_TOTP_VALIDATE_RETRY_IN_30_SECONDS = 10;
 class TOTP {
   private static instance: OTPAuth.TOTP;
 
+  private static validateAttemptsCounter = 0;
+
   constructor() {
-    if (!TOTP.instance) {
+    this.init({ resetInstance: false });
+  }
+
+  public generate = (): string => {
+    // reset counter
+    this.resetAttemptsCounter();
+    return TOTP.instance.generate();
+  };
+
+  public validate = (token: string): boolean => {
+    const result = TOTP.instance.validate({
+      token,
+      window: 1,
+    });
+
+    // Increase attempts counter
+    TOTP.validateAttemptsCounter += 1;
+    if (this.isMaxValidateAttemptsReach(TOTP.validateAttemptsCounter)) {
+      this.init({ resetInstance: true });
+    }
+
+    return result !== null;
+  };
+
+  private isMaxValidateAttemptsReach = (counter: number): boolean => {
+    return counter >= MAX_TOTP_VALIDATE_RETRY_IN_30_SECONDS;
+  };
+
+  private resetAttemptsCounter = () => {
+    TOTP.validateAttemptsCounter = 0;
+  };
+
+  private init = (opts: { resetInstance: boolean }) => {
+    const { resetInstance } = opts;
+    if (!TOTP.instance || resetInstance) {
       TOTP.instance = new OTPAuth.TOTP({
         issuer: 'MM',
         label: 'MetaMask',
@@ -14,20 +51,10 @@ class TOTP {
         period: 30,
         secret: OTPAuth.Secret.fromHex(randomHex()),
       });
+
+      // reset counter
+      this.resetAttemptsCounter();
     }
-  }
-
-  public generate = () => {
-    return TOTP.instance.generate();
-  };
-
-  public validate = (token: string) => {
-    const result = TOTP.instance.validate({
-      token,
-      window: 1,
-    });
-
-    return result !== null;
   };
 }
 
