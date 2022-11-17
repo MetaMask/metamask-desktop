@@ -25,14 +25,14 @@ class TOTP {
 
     // Increase attempts counter
     TOTP.validateAttemptsCounter += 1;
-    if (this.isMaxValidateAttemptsReach(TOTP.validateAttemptsCounter)) {
+    if (this.hasReachedMaxValidateAttempts(TOTP.validateAttemptsCounter)) {
       this.init({ resetInstance: true });
     }
 
     return result !== null;
   };
 
-  private isMaxValidateAttemptsReach = (counter: number): boolean => {
+  private hasReachedMaxValidateAttempts = (counter: number): boolean => {
     return counter >= MAX_TOTP_VALIDATE_RETRY_IN_30_SECONDS;
   };
 

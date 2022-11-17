@@ -49,6 +49,7 @@ export const JSON_RPC_ID_MOCK = 123456;
 export const ARGS_MOCK = ['test123', 123, true];
 export const UUID_MOCK = '6328e6ae-f867-4876-af6f-22a44efbe251';
 export const OTP_MOCK = '123456';
+export const WRONG_OTP_MOCK = '654321';
 export const VERSION_MOCK = '123.456.789.012';
 export const VERSION_2_MOCK = '456.123.789.012';
 export const HASH_BUFFER_MOCK = Buffer.from([10, 11, 12]);
