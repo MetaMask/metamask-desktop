@@ -5868,6 +5868,39 @@
         "browserify>stream-browserify": true
       }
     },
+    "external:../common/dist/index.js": {
+      "packages": {
+        "external:../common/dist/browser/browser-polyfill.js": true,
+        "external:../common/dist/constants.js": true,
+        "external:../common/dist/utils/stream.js": true,
+        "external:../common/dist/web-socket-stream.js": true
+      }
+    },
+    "external:../common/dist/utils/stream.js": {
+      "packages": {
+        "browserify>stream-browserify": true,
+        "external:../common/dist/constants.js": true
+      }
+    },
+    "external:../common/dist/web-socket-stream.js": {
+      "globals": {
+        "setTimeout": true
+      },
+      "packages": {
+        "browserify>stream-browserify": true,
+        "external:../common/node_modules/loglevel/lib/loglevel.js": true
+      }
+    },
+    "external:../common/node_modules/loglevel/lib/loglevel.js": {
+      "globals": {
+        "console": true,
+        "define": true,
+        "document.cookie": true,
+        "localStorage": true,
+        "log": "write",
+        "navigator": true
+      }
+    },
     "fast-json-patch": {
       "globals": {
         "addEventListener": true,

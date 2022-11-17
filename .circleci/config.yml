@@ -83,7 +83,7 @@ workflows:
             - common-build
       - test-storybook:
           requires:
-            - prep-deps
+            - common-build
       - prep-build-storybook:
           requires:
             - test-storybook
