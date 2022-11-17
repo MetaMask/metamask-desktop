@@ -1,5 +1,7 @@
 import { browser, initBrowser } from './browser/browser-polyfill';
 
+import { registerResponseStream } from './browser/browser-proxy';
+
 import {
   CLIENT_ID_BROWSER_CONTROLLER,
   CLIENT_ID_DISABLE,
@@ -58,6 +60,7 @@ export {
   acknowledge,
   browser,
   initBrowser,
+  registerResponseStream,
   waitForAcknowledge,
   waitForMessage,
   DuplexCopy,

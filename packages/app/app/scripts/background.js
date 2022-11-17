@@ -6,9 +6,9 @@
 import './desktop/app/globals';
 ///: END:ONLY_INCLUDE_IN
 
-///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
+///: BEGIN:EXCLUDE_IN(desktopapp)
 import './browser-init';
-///: END:ONLY_INCLUDE_IN
+///: END:EXCLUDE_IN
 
 import endOfStream from 'end-of-stream';
 import pump from 'pump';

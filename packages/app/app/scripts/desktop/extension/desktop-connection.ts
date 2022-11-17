@@ -16,10 +16,10 @@ import {
   acknowledge,
   waitForAcknowledge,
   browser,
+  registerResponseStream,
 } from '@metamask/desktop';
 import { ConnectionType, RemotePortData } from '../types/background';
 import { ClientId, RawState, VersionCheckResult } from '../types/desktop';
-import { registerResponseStream } from '../browser/browser-proxy';
 import { uuid } from '../utils/utils';
 import { ExtensionPairing } from '../shared/pairing';
 import * as RawStateUtils from '../utils/raw-state';
