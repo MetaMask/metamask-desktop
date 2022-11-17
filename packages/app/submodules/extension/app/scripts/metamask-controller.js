@@ -177,22 +177,22 @@ import DesktopController from './controllers/desktop';
 ///: END:ONLY_INCLUDE_IN
 
 ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
-import { LedgerBridgeKeyring as LedgerBridgeKeyringDesktop } from '../../../../src/hw/ledger/ledger-keyring';
-import TrezorKeyringDesktop from '../../../../src/hw/trezor/trezor-keyring';
+import { LedgerKeyringDesktop } from '../../../../src/hw/ledger/ledger-keyring-desktop';
+import { TrezorKeyringDesktop } from '../../../../src/hw/trezor/trezor-keyring-desktop';
 import LatticeKeyringDesktop from '../../../../src/hw/lattice/lattice-keyring';
 
-LedgerBridgeKeyring = LedgerBridgeKeyringDesktop;
+LedgerBridgeKeyring = LedgerKeyringDesktop;
 TrezorKeyring = TrezorKeyringDesktop;
 LatticeKeyring = LatticeKeyringDesktop;
 ///: END:ONLY_INCLUDE_IN
 
 ///: BEGIN:EXCLUDE_IN(desktopapp)
-import LedgerBridgeKeyringPackage from '@metamask/eth-ledger-bridge-keyring';
-import TrezorKeyringPackage from 'eth-trezor-keyring';
+import { LedgerKeyringMv2 } from '@metamask/eth-ledger-bridge-keyring';
+import { TrezorKeyringMv2 } from 'eth-trezor-keyring';
 import LatticeKeyringPackage from 'eth-lattice-keyring';
 
-LedgerBridgeKeyring = LedgerBridgeKeyringPackage;
-TrezorKeyring = TrezorKeyringPackage;
+LedgerBridgeKeyring = LedgerKeyringMv2;
+TrezorKeyring = TrezorKeyringMv2;
 LatticeKeyring = LatticeKeyringPackage;
 ///: END:EXCLUDE_IN
 
