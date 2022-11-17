@@ -11,7 +11,7 @@
 - Copy the `.metamaskrc.dist` file to `.metamaskrc`
     - Replace the `INFURA_PROJECT_ID` value with your own personal [Infura Project ID](https://infura.io/docs).
     - Optionally, replace the `PASSWORD` value with your development wallet password to avoid entering it each time you open the app.
-- Run `yarn build:desktop:dev` to start development environment. (This will open up extension, desktop main process and desktop renderer process in watch mode)
+- Run `yarn build:desktop` to start development environment. (This will open up extension, desktop main process and desktop renderer process in watch mode)
     - Run `yarn start:desktop` to run the electron application.
 
 ### Building locally with MV3 enabled
@@ -19,21 +19,24 @@
 - Install dependencies: `yarn setup` (not the usual install command)
 - Copy the `.metamaskrc.dist` file to `.metamaskrc`
     - `ENABLE_MV3=true` is automatically set at build step.
-- Build the desktop app using `yarn build:desktop:dev:mv3`.
-    - Run `yarn start:desktop` to run the electron application.
-
-### Building locally with Lavamoat enabled
-
-- Install dependencies: `yarn setup` (not the usual install command)
-- Copy the `.metamaskrc.dist` file to `.metamaskrc`
-- Build the desktop app using `yarn build:desktop:dev:lavamoat`.
-    - Run `yarn start:desktop` to run the electron application.
+- Build the extension with desktop support using `yarn build:desktop:extension:mv3`.
+- Build the desktop app using `yarn build:desktop:mv3`.
+    - Run `yarn start:desktop` to run the desktop app.
 
 ### Running Unit Tests and Linting
 
 Run unit tests and the linter with `yarn test`. To run just unit tests, run `yarn test:unit`.
 
 You can run the linter by itself with `yarn lint`, and you can automatically fix some lint problems with `yarn lint:fix`. You can also run these two commands just on your local changes to save time with `yarn lint:changed` and `yarn lint:changed:fix` respectively.
+
+### Clearing persistent data for desktop UI
+
+Desktop UI persists data for the user settings and extension. 
+
+To clear this data, run 
+- `rm ~/Library/Application\ Support/Electron/mmd-desktop-ui*.json` for MacOS
+- `del %APPDATA%\Electron\mmd-desktop-ui*.json` for Windows
+- `rm ~/.config/Electron/mmd-desktop-ui*.json` for Linux
 
 
 ### Environment Variables

@@ -363,7 +363,7 @@ jobs:
           command: ${YARN} build:desktop:app:test
       - run:
           name: Build desktop UI for testing
-          command: ${YARN} build:desktop:ui
+          command: ${YARN} dist:desktop:ui
       - run:
           name: Build extension for testing
           command: ${YARN} build:test:desktop

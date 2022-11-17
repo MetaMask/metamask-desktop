@@ -66,7 +66,9 @@ function runInChildProcess(
       [
         // Use the same build type for subprocesses, and only run them in
         // LavaMoat if the parent process also ran in LavaMoat.
-        isLavaMoat ? 'build:desktop:ui:lavamoat' : 'build:desktop:ui',
+        isLavaMoat
+          ? 'build:desktop:ui:subtask:lavamoat'
+          : 'build:desktop:ui:subtask',
         taskName,
         `--apply-lavamoat=${applyLavaMoat ? 'true' : 'false'}`,
         `--build-type=${buildType}`,
