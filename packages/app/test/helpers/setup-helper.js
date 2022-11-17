@@ -5,6 +5,7 @@ import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import log from 'loglevel';
 import { JSDOM } from 'jsdom';
+import { initBrowser } from '@metamask/desktop';
 
 process.env.IN_TEST = true;
 
@@ -115,3 +116,11 @@ if (!window.navigator.clipboard) {
 if (!window.navigator.clipboard.writeText) {
   window.navigator.clipboard.writeText = () => undefined;
 }
+
+initBrowser({
+  initialBrowser: {
+    runtime: {
+      getManifest: () => ({ manifest_version: 2 }),
+    },
+  },
+});

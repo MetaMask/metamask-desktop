@@ -87,6 +87,7 @@ workflows:
       - prep-build-storybook:
           requires:
             - test-storybook
+            - common-build
       - prep-build-ts-migration-dashboard:
           requires:
             - prep-deps

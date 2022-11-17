@@ -19,8 +19,10 @@ import PortStream from 'extension-port-stream';
 
 import { ethErrors } from 'eth-rpc-errors';
 import {
+  ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
   CONNECTION_TYPE_EXTERNAL,
   CONNECTION_TYPE_INTERNAL,
+  ///: END:ONLY_INCLUDE_IN
   browser,
 } from '@metamask/desktop';
 import {
