@@ -233,7 +233,7 @@ jobs:
           command: SKIP_OTP_PAIRING_FLOW=1 yarn build:desktop:app 
       - run:          
           name: Build extension for testing
-          command: SKIP_OTP_PAIRING_FLOW=1 yarn build:desktop:extension:test
+          command: yarn build:test:desktop:ui
       - run:
           name: Move test build to 'dist-test' to avoid conflict with production build
           command: mv ./dist ./dist-test-desktop      
@@ -263,7 +263,7 @@ jobs:
           command: |
             if .circleci/scripts/test-run-e2e.sh
             then
-              cd playwright && xvfb-run yarn e2e:desktop
+              cd playwright && xvfb-run yarn desktop:e2e
             fi
           no_output_timeout: 20m          
       - store_artifacts:
