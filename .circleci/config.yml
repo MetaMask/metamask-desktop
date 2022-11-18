@@ -46,12 +46,6 @@ workflows:
   test_and_release:
     jobs:
       - prep-deps 
-
-
-workflows:
-  test_and_release:
-    jobs:
-      - prep-deps 
       - prep-e2e-test-deps:
           requires:
             - common-build
