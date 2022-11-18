@@ -1,5 +1,5 @@
 import { ObservableStore } from '@metamask/obs-store';
-import { TestConnectionResult } from '@metamask/desktop';
+import { TestConnectionResult } from '@metamask/desktop/dist/types';
 import { ExtensionPairing } from '../desktop/shared/pairing';
 
 ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)

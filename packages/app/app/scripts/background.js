@@ -18,13 +18,13 @@ import { storeAsStream } from '@metamask/obs-store';
 import PortStream from 'extension-port-stream';
 
 import { ethErrors } from 'eth-rpc-errors';
+import { browser } from '@metamask/desktop/dist/browser';
+///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
 import {
-  ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
   CONNECTION_TYPE_EXTERNAL,
   CONNECTION_TYPE_INTERNAL,
-  ///: END:ONLY_INCLUDE_IN
-  browser,
-} from '@metamask/desktop';
+} from '@metamask/desktop/dist/constants';
+///: END:ONLY_INCLUDE_IN
 import {
   ENVIRONMENT_TYPE_POPUP,
   ENVIRONMENT_TYPE_NOTIFICATION,

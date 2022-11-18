@@ -1,4 +1,4 @@
-import { NewConnectionMessage } from '@metamask/desktop';
+import { NewConnectionMessage } from '@metamask/desktop/dist/types';
 
 export interface StatusMessage {
   isWebSocketConnected: boolean;

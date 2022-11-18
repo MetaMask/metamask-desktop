@@ -1,6 +1,7 @@
 import ObjectMultiplex from 'obj-multiplex';
-import { MESSAGE_ACKNOWLEDGE, browser } from '@metamask/desktop';
-import * as RawState from '@metamask/desktop';
+import { browser } from '@metamask/desktop/dist/browser';
+import { MESSAGE_ACKNOWLEDGE } from '@metamask/desktop/dist/constants';
+import * as RawState from '@metamask/desktop/dist/utils/state';
 import TOTP from '../utils/totp';
 import {
   createMultiplexMock,
@@ -29,23 +30,16 @@ jest.mock('../utils/crypto', () => ({
   hashString: jest.fn(),
 }));
 
-jest.mock(
-  '@metamask/desktop',
-  () => {
-    const original = jest.requireActual('@metamask/desktop');
-    return {
-      ...original,
-      browser: {
-        runtime: { reload: jest.fn() },
-      },
-      getDesktopState: jest.fn(),
-      setDesktopState: jest.fn(),
-    };
+jest.mock('@metamask/desktop/dist/browser', () => ({
+  browser: {
+    runtime: { reload: jest.fn() },
   },
-  {
-    virtual: true,
-  },
-);
+}));
+
+jest.mock('@metamask/desktop/dist/utils/state', () => ({
+  getDesktopState: jest.fn(),
+  setDesktopState: jest.fn(),
+}));
 
 describe('Pairing', () => {
   const streamMock = createStreamMock();

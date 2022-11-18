@@ -2,7 +2,7 @@
 
 import nock from 'nock';
 import '@testing-library/jest-dom';
-import { cfg as extensionCfg } from '@metamask/desktop';
+import { cfg as extensionCfg } from '@metamask/desktop/dist/utils/config';
 import desktopAppCfg from '../../app/scripts/desktop/utils/config';
 
 /* eslint-disable-next-line jest/require-top-level-describe */

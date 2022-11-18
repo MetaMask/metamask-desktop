@@ -1,6 +1,7 @@
 import { app, BrowserWindow } from 'electron';
 import { Server as WebSocketServer } from 'ws';
-import { WebSocketStream, browser, getDesktopState } from '@metamask/desktop';
+import { WebSocketStream, browser } from '@metamask/desktop';
+import * as RawStateUtils from '@metamask/desktop/dist/utils/state';
 import EncryptedWebSocketStream from '../encryption/encrypted-web-socket-stream';
 import {
   PORT_MOCK,
@@ -25,10 +26,13 @@ jest.mock('@metamask/desktop', () => {
   return {
     ...original,
     browser: { storage: { local: { get: jest.fn(), set: jest.fn() } } },
-    getDesktopState: jest.fn(),
     WebSocketStream: jest.fn(),
   };
 });
+
+jest.mock('@metamask/desktop/dist/utils/state', () => ({
+  getDesktopState: jest.fn(),
+}));
 
 jest.mock(
   './update-check',
@@ -66,7 +70,7 @@ describe('Desktop', () => {
   const extensionConnectionMock = createExtensionConnectionMock();
   const browserMock = browser as any;
   const pairingMock = createEventEmitterMock();
-  const rawStateUtilsMock = { getDesktopState } as any;
+  const rawStateUtilsMock = RawStateUtils as jest.Mocked<typeof RawStateUtils>;
 
   const webSocketStreamConstructorMock = WebSocketStream as jest.MockedClass<
     typeof WebSocketStream

@@ -7,10 +7,12 @@ import {
   BrowserWebSocket,
   NodeWebSocket,
   WebSocketStream,
+} from '@metamask/desktop';
+import {
   ConnectionType,
   RemotePort,
   TestConnectionResult,
-} from '@metamask/desktop';
+} from '@metamask/desktop/dist/types';
 import NotificationManager from '../../lib/notification-manager';
 import ExtensionConnection from '../app/extension-connection';
 import DesktopConnection from '../extension/desktop-connection';

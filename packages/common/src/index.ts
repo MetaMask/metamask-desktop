@@ -1,11 +1,2 @@
-export * from './browser/browser-polyfill';
-export * from './browser/browser-proxy';
-export * from './constants';
-export * from './types/background';
-export * from './types/browser';
-export * from './types/desktop';
-export * from './types/message';
-export * from './utils/config';
-export * from './utils/stream';
-export * from './utils/raw-state';
+export { browser } from './browser';
 export * from './web-socket-stream';

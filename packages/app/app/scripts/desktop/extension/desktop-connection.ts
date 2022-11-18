@@ -6,6 +6,10 @@ import endOfStream from 'end-of-stream';
 import ObjectMultiplex from 'obj-multiplex';
 import log from 'loglevel';
 import {
+  browser,
+  registerResponseStream,
+} from '@metamask/desktop/dist/browser';
+import {
   CLIENT_ID_BROWSER_CONTROLLER,
   CLIENT_ID_END_CONNECTION,
   CLIENT_ID_NEW_CONNECTION,
@@ -13,18 +17,26 @@ import {
   CLIENT_ID_DISABLE,
   CLIENT_ID_VERSION,
   CLIENT_ID_PAIRING,
-  acknowledge,
-  waitForAcknowledge,
-  browser,
-  registerResponseStream,
+} from '@metamask/desktop/dist/constants';
+import {
   ConnectionType,
   RemotePortData,
   ClientId,
   RawState,
   VersionCheckResult,
   RemotePort,
-} from '@metamask/desktop';
-import * as RawStateUtils from '@metamask/desktop';
+} from '@metamask/desktop/dist/types';
+import {
+  addPairingKeyToRawState,
+  getAndUpdateDesktopState,
+  removePairingKeyFromRawState,
+  setDesktopState,
+  setRawState,
+} from '@metamask/desktop/dist/utils/state';
+import {
+  acknowledge,
+  waitForAcknowledge,
+} from '@metamask/desktop/dist/utils/stream';
 import { uuid } from '../utils/utils';
 import { ExtensionPairing } from '../shared/pairing';
 import { ExtensionVersionCheck } from '../shared/version-check';
@@ -112,11 +124,11 @@ export default class DesktopConnection extends EventEmitter {
   }
 
   public async transferState() {
-    const stateToTransfer = await RawStateUtils.getAndUpdateDesktopState({
+    const stateToTransfer = await getAndUpdateDesktopState({
       desktopEnabled: true,
     });
 
-    const filteredState = RawStateUtils.removePairingKey(stateToTransfer);
+    const filteredState = removePairingKeyFromRawState(stateToTransfer);
 
     this.stateStream.write(filteredState);
 
@@ -137,10 +149,10 @@ export default class DesktopConnection extends EventEmitter {
     log.debug('Received desktop disable message');
 
     if (state) {
-      await RawStateUtils.set(state);
+      await setRawState(state);
       log.debug('Synchronised with final desktop state');
     } else {
-      await RawStateUtils.setDesktopState({
+      await setDesktopState({
         desktopEnabled: false,
         pairingKey: undefined,
       });
@@ -166,9 +178,9 @@ export default class DesktopConnection extends EventEmitter {
   }
 
   private async onDesktopState(rawState: RawState) {
-    const newRawState = await RawStateUtils.addPairingKey(rawState);
+    const newRawState = await addPairingKeyToRawState(rawState);
 
-    await RawStateUtils.set(newRawState);
+    await setRawState(newRawState);
 
     log.debug('Synchronised state with desktop');
   }

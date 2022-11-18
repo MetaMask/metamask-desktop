@@ -1,19 +1,19 @@
-import { DesktopState, RawState } from '../types/desktop';
-import { browser } from '../browser/browser-polyfill';
+import { DesktopState, RawState } from '../../types';
+import { browser } from '../../browser';
 
-export const get = async (): Promise<RawState> => {
+export const getRawState = async (): Promise<RawState> => {
   return await browser.storage.local.get();
 };
 
 export const getDesktopState = async (): Promise<DesktopState> => {
-  const state = await get();
+  const state = await getRawState();
   return state.data?.DesktopController || {};
 };
 
 export const getAndUpdateDesktopState = async (
   desktopState: DesktopState,
 ): Promise<RawState> => {
-  const state = await get();
+  const state = await getRawState();
   const currentDesktopState = state.data.DesktopController;
 
   state.data.DesktopController = { ...currentDesktopState, ...desktopState };
@@ -21,20 +21,22 @@ export const getAndUpdateDesktopState = async (
   return state;
 };
 
-export const set = async (state: RawState) => {
+export const setRawState = async (state: RawState) => {
   await browser.storage.local.set(state);
 };
 
 export const setDesktopState = async (desktopState: DesktopState) => {
   const state = await getAndUpdateDesktopState(desktopState);
-  await set(state);
+  await setRawState(state);
 };
 
-export const clear = async () => {
+export const clearRawState = async () => {
   await browser.storage.local.clear();
 };
 
-export const addPairingKey = async (state: RawState): Promise<RawState> => {
+export const addPairingKeyToRawState = async (
+  state: RawState,
+): Promise<RawState> => {
   const existingDeskotpState = await getDesktopState();
 
   return {
@@ -50,7 +52,7 @@ export const addPairingKey = async (state: RawState): Promise<RawState> => {
   };
 };
 
-export const removePairingKey = (state: RawState) => {
+export const removePairingKeyFromRawState = (state: RawState) => {
   return {
     ...state,
     data: {

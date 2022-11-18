@@ -3,13 +3,12 @@ import path from 'path';
 import { app, BrowserWindow, ipcMain } from 'electron';
 import { Server as WebSocketServer, WebSocket } from 'ws';
 import log from 'loglevel';
+import { NodeWebSocket, WebSocketStream } from '@metamask/desktop';
+import { NewConnectionMessage } from '@metamask/desktop/dist/types';
 import {
-  clear,
+  clearRawState,
   getDesktopState,
-  NodeWebSocket,
-  WebSocketStream,
-  NewConnectionMessage,
-} from '@metamask/desktop';
+} from '@metamask/desktop/dist/utils/state';
 import { StatusMessage } from '../types/message';
 import EncryptedWebSocketStream from '../encryption/encrypted-web-socket-stream';
 import { forwardEvents } from '../utils/events';
@@ -18,8 +17,6 @@ import cfg from '../utils/config';
 import ExtensionConnection from './extension-connection';
 import { updateCheck } from './update-check';
 import { titleBarOverlayOpts } from './ui-constants';
-
-const RawState = { clear, getDesktopState };
 
 const MAIN_WINDOW_SHOW_DELAY = 750 * MILLISECOND;
 
@@ -75,7 +72,7 @@ class DesktopApp extends EventEmitter {
     });
 
     ipcMain.handle('reset', async (_event) => {
-      await RawState.clear();
+      await clearRawState();
       this.status.isDesktopEnabled = false;
     });
 
@@ -95,7 +92,7 @@ class DesktopApp extends EventEmitter {
     server.on('connection', (webSocket) => this.onConnection(webSocket));
 
     this.status.isDesktopEnabled =
-      (await RawState.getDesktopState()).desktopEnabled === true;
+      (await getDesktopState()).desktopEnabled === true;
 
     log.debug('Initialised desktop app');
 

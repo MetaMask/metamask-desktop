@@ -4,7 +4,7 @@ import {
   Browser,
   BrowserProxyRequest,
   BrowserProxyResponse,
-} from '@metamask/desktop';
+} from '@metamask/desktop/dist/types';
 import ObfuscatedStore from '../app/storage';
 import { timeoutPromise, uuid } from '../utils/utils';
 

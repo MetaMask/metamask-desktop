@@ -1,4 +1,4 @@
-import { envBool, envInt } from '@metamask/desktop';
+import { envBool, envInt } from '@metamask/desktop/dist/utils/config';
 
 const loadConfig = () => {
   // Cannot use dynamic references to envs as build system does find and replace

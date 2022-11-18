@@ -5,7 +5,7 @@ import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import log from 'loglevel';
 import { JSDOM } from 'jsdom';
-import { initBrowser } from '@metamask/desktop';
+import { initBrowser } from '@metamask/desktop/dist/browser';
 
 process.env.IN_TEST = true;
 

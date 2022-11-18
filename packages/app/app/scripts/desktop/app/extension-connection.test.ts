@@ -6,10 +6,9 @@ import {
   CLIENT_ID_NEW_CONNECTION,
   CLIENT_ID_STATE,
   MESSAGE_ACKNOWLEDGE,
-  ClientId,
-  ConnectionType,
-} from '@metamask/desktop';
-import * as RawStateUtils from '@metamask/desktop';
+} from '@metamask/desktop/dist/constants';
+import { ClientId, ConnectionType } from '@metamask/desktop/dist/types';
+import * as RawStateUtils from '@metamask/desktop/dist/utils/state';
 import {
   CLIENT_ID_MOCK,
   NEW_CONNECTION_MESSAGE_MOCK,
@@ -32,17 +31,13 @@ import ExtensionConnection from './extension-connection';
 jest.mock('obj-multiplex', () => jest.fn(), { virtual: true });
 jest.mock('../shared/pairing');
 
-jest.mock('@metamask/desktop', () => {
-  const original = jest.requireActual('@metamask/desktop');
-  return {
-    ...original,
-    addPairingKey: jest.fn(),
-    clear: jest.fn(),
-    getAndUpdateDesktopState: jest.fn(),
-    removePairingKey: jest.fn(),
-    set: jest.fn(),
-  };
-});
+jest.mock('@metamask/desktop/dist/utils/state', () => ({
+  addPairingKeyToRawState: jest.fn(),
+  clearRawState: jest.fn(),
+  getAndUpdateDesktopState: jest.fn(),
+  removePairingKeyFromRawState: jest.fn(),
+  setRawState: jest.fn(),
+}));
 
 jest.mock(
   '../browser/node-browser',
@@ -90,7 +85,7 @@ describe('Extension Connection', () => {
     DesktopPairingConstructorMock.mockReturnValue(desktopPairingMock);
     desktopPairingMock.init.mockReturnValue(desktopPairingMock);
 
-    rawStateUtilsMock.addPairingKey.mockImplementation((data) =>
+    rawStateUtilsMock.addPairingKeyToRawState.mockImplementation((data) =>
       Promise.resolve(data),
     );
 
@@ -152,7 +147,7 @@ describe('Extension Connection', () => {
     };
 
     it('writes state to state stream if extension state already received', async () => {
-      rawStateUtilsMock.removePairingKey.mockReturnValueOnce(
+      rawStateUtilsMock.removePairingKeyFromRawState.mockReturnValueOnce(
         DATA_2_MOCK as any,
       );
 
@@ -228,7 +223,7 @@ describe('Extension Connection', () => {
       'clears state if extension state %s received',
       async (_, isExtensionStateReceived) => {
         await disable({ afterExtensionState: isExtensionStateReceived });
-        expect(rawStateUtilsMock.clear).toHaveBeenCalledTimes(1);
+        expect(rawStateUtilsMock.clearRawState).toHaveBeenCalledTimes(1);
       },
     );
   });
@@ -306,8 +301,8 @@ describe('Extension Connection', () => {
     it('updates state', async () => {
       await simulateExtensionState();
 
-      expect(rawStateUtilsMock.set).toHaveBeenCalledTimes(1);
-      expect(rawStateUtilsMock.set).toHaveBeenCalledWith(DATA_MOCK);
+      expect(rawStateUtilsMock.setRawState).toHaveBeenCalledTimes(1);
+      expect(rawStateUtilsMock.setRawState).toHaveBeenCalledWith(DATA_MOCK);
     });
 
     // eslint-disable-next-line jest/expect-expect

@@ -1,9 +1,9 @@
-import { browser } from '../browser/browser-polyfill';
-import { DATA_MOCK } from '../../test/mocks';
-import * as RawState from './raw-state';
+import { browser } from '../../browser';
+import { DATA_MOCK } from '../../../test/mocks';
+import * as RawState from '.';
 
 jest.mock(
-  '../browser/browser-polyfill',
+  '../../browser',
   () => ({
     browser: {
       storage: { local: { get: jest.fn(), set: jest.fn(), clear: jest.fn() } },
@@ -21,10 +21,10 @@ describe('Raw State Utils', () => {
     jest.resetAllMocks();
   });
 
-  describe('get', () => {
+  describe('getRawState', () => {
     it('returns browser local storage', async () => {
       browserMock.storage.local.get.mockResolvedValueOnce(DATA_MOCK);
-      expect(await RawState.get()).toStrictEqual(DATA_MOCK);
+      expect(await RawState.getRawState()).toStrictEqual(DATA_MOCK);
     });
   });
 
@@ -53,9 +53,9 @@ describe('Raw State Utils', () => {
     });
   });
 
-  describe('set', () => {
+  describe('setRawState', () => {
     it('updates browser local storage', async () => {
-      await RawState.set(DATA_MOCK as any);
+      await RawState.setRawState(DATA_MOCK as any);
 
       expect(browserMock.storage.local.set).toHaveBeenCalledTimes(1);
       expect(browserMock.storage.local.set).toHaveBeenCalledWith(DATA_MOCK);
@@ -77,9 +77,9 @@ describe('Raw State Utils', () => {
     });
   });
 
-  describe('clear', () => {
+  describe('clearRawState', () => {
     it('clears browser local storage', async () => {
-      await RawState.clear();
+      await RawState.clearRawState();
       expect(browserMock.storage.local.clear).toHaveBeenCalledTimes(1);
     });
   });

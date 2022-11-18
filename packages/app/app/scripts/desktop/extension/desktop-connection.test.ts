@@ -1,21 +1,16 @@
 import { Duplex } from 'stream';
 import ObjectMultiplex from 'obj-multiplex';
 import { v4 as uuidv4 } from 'uuid';
+import { browser } from '@metamask/desktop/dist/browser';
 import {
   CLIENT_ID_END_CONNECTION,
   CLIENT_ID_NEW_CONNECTION,
   CLIENT_ID_STATE,
   CLIENT_ID_DISABLE,
   MESSAGE_ACKNOWLEDGE,
-  addPairingKey,
-  browser,
-  getAndUpdateDesktopState,
-  removePairingKey,
-  set,
-  setDesktopState,
-  ConnectionType,
-  ClientId,
-} from '@metamask/desktop';
+} from '@metamask/desktop/dist/constants';
+import { ConnectionType, ClientId } from '@metamask/desktop/dist/types';
+import * as RawStateUtils from '@metamask/desktop/dist/utils/state';
 import {
   REMOTE_PORT_NAME_MOCK,
   REMOTE_PORT_SENDER_MOCK,
@@ -42,24 +37,23 @@ jest.mock('extension-port-stream');
 jest.mock('uuid');
 jest.mock('../utils/totp');
 
-jest.mock(
-  '@metamask/desktop',
-  () => {
-    const original = jest.requireActual('@metamask/desktop');
-    return {
-      ...original,
-      addPairingKey: jest.fn(),
-      browser: {
-        runtime: { reload: jest.fn() },
-      },
-      getAndUpdateDesktopState: jest.fn(),
-      removePairingKey: jest.fn(),
-      set: jest.fn(),
-      setDesktopState: jest.fn(),
-    };
-  },
-  { virtual: true },
-);
+jest.mock('@metamask/desktop/dist/browser', () => {
+  const original = jest.requireActual('@metamask/desktop/dist/browser');
+  return {
+    ...original,
+    browser: {
+      runtime: { reload: jest.fn() },
+    },
+  };
+});
+
+jest.mock('@metamask/desktop/dist/utils/state', () => ({
+  addPairingKeyToRawState: jest.fn(),
+  getAndUpdateDesktopState: jest.fn(),
+  removePairingKeyFromRawState: jest.fn(),
+  setRawState: jest.fn(),
+  setDesktopState: jest.fn(),
+}));
 
 jest.mock(
   '../shared/version-check',
@@ -86,13 +80,7 @@ describe('Desktop Connection', () => {
   const uuidMock = uuidv4 as jest.MockedFunction<typeof uuidv4>;
   const versionCheckMock = createExtensionVersionCheckMock();
   const extensionPairingMock = createExtensionPairingMock();
-  const rawStateMock = {
-    addPairingKey,
-    getAndUpdateDesktopState,
-    removePairingKey,
-    set,
-    setDesktopState,
-  } as any;
+  const rawStateMock = RawStateUtils as jest.Mocked<typeof RawStateUtils>;
 
   const objectMultiplexConstructorMock = ObjectMultiplex as jest.MockedClass<
     typeof ObjectMultiplex
@@ -133,7 +121,7 @@ describe('Desktop Connection', () => {
     uuidMock.mockReturnValue(UUID_MOCK);
     extensionPairingMock.init.mockReturnValue(extensionPairingMock);
 
-    rawStateMock.addPairingKey.mockImplementation((data) =>
+    rawStateMock.addPairingKeyToRawState.mockImplementation((data) =>
       Promise.resolve(data),
     );
 
@@ -196,7 +184,9 @@ describe('Desktop Connection', () => {
         DATA_MOCK as any,
       );
 
-      rawStateMock.removePairingKey.mockReturnValueOnce(DATA_2_MOCK as any);
+      rawStateMock.removePairingKeyFromRawState.mockReturnValueOnce(
+        DATA_2_MOCK as any,
+      );
 
       await desktopConnection.createStream(
         remotePortMock,
@@ -265,8 +255,8 @@ describe('Desktop Connection', () => {
     it('updates state if message contains state', async () => {
       await simulateDisableMessage(DATA_MOCK);
 
-      expect(rawStateMock.set).toHaveBeenCalledTimes(1);
-      expect(rawStateMock.set).toHaveBeenCalledWith(DATA_MOCK);
+      expect(rawStateMock.setRawState).toHaveBeenCalledTimes(1);
+      expect(rawStateMock.setRawState).toHaveBeenCalledWith(DATA_MOCK);
     });
 
     it('sets desktop enabled to false if no state in message', async () => {
@@ -300,8 +290,8 @@ describe('Desktop Connection', () => {
     });
 
     it('updates state', async () => {
-      expect(rawStateMock.set).toHaveBeenCalledTimes(1);
-      expect(rawStateMock.set).toHaveBeenCalledWith(DATA_MOCK);
+      expect(rawStateMock.setRawState).toHaveBeenCalledTimes(1);
+      expect(rawStateMock.setRawState).toHaveBeenCalledWith(DATA_MOCK);
     });
   });
 });

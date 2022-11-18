@@ -1,9 +1,8 @@
+import { NodeWebSocket, WebSocketStream } from '@metamask/desktop';
 import {
   MESSAGE_HANDSHAKE_FINISH,
   MESSAGE_HANDSHAKE_START,
-  NodeWebSocket,
-  WebSocketStream,
-} from '@metamask/desktop';
+} from '@metamask/desktop/dist/constants';
 import {
   PUBLIC_KEY_MOCK,
   PRIVATE_KEY_MOCK,

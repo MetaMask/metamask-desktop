@@ -1,13 +1,13 @@
 import { Duplex } from 'stream';
 import PortStream from 'extension-port-stream';
+import { WebSocketStream } from '@metamask/desktop';
+import { browser } from '@metamask/desktop/dist/browser';
 import {
-  browser,
-  cfg,
-  WebSocketStream,
   TestConnectionResult,
   ConnectionType,
-} from '@metamask/desktop';
-import * as RawState from '@metamask/desktop';
+} from '@metamask/desktop/dist/types';
+import { cfg } from '@metamask/desktop/dist/utils/config';
+import * as RawState from '@metamask/desktop/dist/utils/state';
 import {
   createWebSocketBrowserMock,
   createWebSocketStreamMock,
@@ -30,23 +30,20 @@ jest.mock('extension-port-stream');
 jest.mock('../encryption/encrypted-web-socket-stream');
 jest.mock('./desktop-connection');
 
-jest.mock(
-  '@metamask/desktop',
-  () => {
-    const original = jest.requireActual('@metamask/desktop');
-    return {
-      ...original,
-      browser: {
-        runtime: { reload: jest.fn() },
-      },
-      getDesktopState: jest.fn(),
-      setDesktopState: jest.fn(),
-      DuplexCopy: original.DuplexCopy,
-      WebSocketStream: jest.fn(),
-    };
+jest.mock('@metamask/desktop', () => ({
+  WebSocketStream: jest.fn(),
+}));
+
+jest.mock('@metamask/desktop/dist/browser', () => ({
+  browser: {
+    runtime: { reload: jest.fn() },
   },
-  { virtual: true },
-);
+}));
+
+jest.mock('@metamask/desktop/dist/utils/state', () => ({
+  getDesktopState: jest.fn(),
+  setDesktopState: jest.fn(),
+}));
 
 jest.mock('../../../../shared/modules/mv3.utils', () => ({}), {
   virtual: true,
