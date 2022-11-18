@@ -44,9 +44,10 @@ export default function OnboardingFlowSwitch() {
     redirect = (
       <Redirect
         to={{
-          pathname: process.env.IN_TEST || process.env.UI_TEST
-            ? ONBOARDING_WELCOME_ROUTE
-            : ONBOARDING_EXPERIMENTAL_AREA,
+          pathname:
+            process.env.IN_TEST || process.env.UI_TEST
+              ? ONBOARDING_WELCOME_ROUTE
+              : ONBOARDING_EXPERIMENTAL_AREA,
         }}
       />
     );

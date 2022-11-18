@@ -43,6 +43,8 @@ module.exports = {
     'dist',
     'lavamoat',
     'packages',
+    'playwright/playwright-reports/**/*',
+    'playwright/chrome/**/*',
     'src/hw/ledger/ledger-keyring.*',
     'submodules',
     'types',

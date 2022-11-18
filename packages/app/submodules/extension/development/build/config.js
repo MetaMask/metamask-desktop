@@ -22,7 +22,7 @@ const configurationPropertyNames = [
   'DISABLE_WEB_SOCKET_ENCRYPTION',
   'METAMASK_DEBUG',
   'SKIP_OTP_PAIRING_FLOW',
-  'UI_TEST'
+  'UI_TEST',
 ];
 
 const productionConfigurationPropertyNames = [

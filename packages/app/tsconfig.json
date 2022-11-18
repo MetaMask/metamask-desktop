@@ -19,7 +19,8 @@
     "**/*.test.ts",
     "dist/**/*",
     "node_modules/**",
-    "packages/**"
+    "packages/**",
+    "playwright/chrome/**"
   ],
   "extends": "@tsconfig/node16/tsconfig.json",
   "paths": {

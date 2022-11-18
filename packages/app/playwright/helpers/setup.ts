@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable no-empty-pattern */
 import * as path from 'path';
 import { test as base, chromium, firefox, webkit } from '@playwright/test';
-import Ganache from '../helpers/ganache';
+import Ganache from './ganache';
 
 const extensionPath = path.join(__dirname, '../../dist/chrome');
 console.log(extensionPath);
