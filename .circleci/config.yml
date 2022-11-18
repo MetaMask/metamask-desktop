@@ -37,7 +37,7 @@ executors:
       YARN_EXTENSION: << pipeline.parameters.yarn-extension >>
   playwright:
     docker:
-      - image: mcr.microsoft.com/playwright:v1.23.1-focal
+      - image: mcr.microsoft.com/playwright:v1.28.0-focal
     resource_class: large
     environment:
       NODE_ENV: development
