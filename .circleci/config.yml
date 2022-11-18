@@ -244,7 +244,7 @@ jobs:
             - dist_desktop
 
   e2e-desktop:
-    executor: playwright
+    executor: node-browsers
     steps:
       - checkout
       - run:

@@ -55,7 +55,7 @@ class DesktopApp extends EventEmitter {
   }
 
   public async init() {
-    if (cfg().isTest) {
+    if (cfg().isTest || cfg().isUITest) {
       app.disableHardwareAcceleration();
     }
 

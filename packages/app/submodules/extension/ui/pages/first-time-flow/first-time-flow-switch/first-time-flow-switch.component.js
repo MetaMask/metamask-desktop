@@ -47,7 +47,7 @@ export default class FirstTimeFlowSwitch extends PureComponent {
       redirect = (
         <Redirect
           to={{
-            pathname: process.env.IN_TEST
+            pathname: process.env.IN_TEST || process.env.UI_TEST
               ? INITIALIZE_WELCOME_ROUTE
               : INITIALIZE_EXPERIMENTAL_AREA,
           }}

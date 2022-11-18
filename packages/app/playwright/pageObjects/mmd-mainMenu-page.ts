@@ -134,6 +134,7 @@ export class MMDMainMenuPage {
         },
       )
       .toBe(true);
+    await new Promise((resolve) => setTimeout(resolve, 5000));
   }
 
   async closeSettings() {

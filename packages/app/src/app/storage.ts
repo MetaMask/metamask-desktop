@@ -8,9 +8,9 @@ import cfg from '../utils/config';
 
 let safeStorage: Electron.SafeStorage;
 
-if (!cfg().isTest) {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
-  safeStorage = require('electron').safeStorage;
+if (!cfg().isTest && !cfg().isUITest) {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  keytar = require('keytar');
 }
 
 const KEY_LENGTH = 32;
@@ -63,7 +63,7 @@ class ObfuscatedStore {
       return this.appStore;
     }
 
-    if (cfg().isTest || !safeStorage.isEncryptionAvailable()) {
+    if (cfg().isTest || !safeStorage.isEncryptionAvailable() || cfg().isUITest) {
       this.appStore = new Store(this.initialOptions);
       return this.appStore;
     }

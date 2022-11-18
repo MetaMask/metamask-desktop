@@ -11,6 +11,8 @@ export class MMDSignUpPage {
 
   readonly agreeBtn: Locator;
 
+  readonly noThanksBtn: Locator;
+
   readonly passwordTxt: Locator;
 
   readonly passwordConfirmTxt: Locator;
@@ -29,6 +31,7 @@ export class MMDSignUpPage {
     this.getStartedBtn = page.locator('button:has-text("Get started")');
     this.importWalletBtn = page.locator('button:has-text("Import wallet")');
     this.agreeBtn = page.locator('button:has-text("I agree")');
+    this.noThanksBtn = page.locator('button:has-text("No thanks")');
     this.passwordTxt = page.locator('input#password');
     this.passwordConfirmTxt = page.locator('input#confirm-password');
     this.agreeCheck = page.locator(
@@ -41,7 +44,9 @@ export class MMDSignUpPage {
 
   async goto() {
     await this.page.goto(`chrome-extension://${this.extensionId}/home.html`);
-    this.page.locator('button:has-text("I accept the risks")').click();
+    this.getStartedBtn.click();
+    this.noThanksBtn.click();
+    // this.page.locator('button:has-text("I accept the risks")').click();
   }
 
   async start() {
