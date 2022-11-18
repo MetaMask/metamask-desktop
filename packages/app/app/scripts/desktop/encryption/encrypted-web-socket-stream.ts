@@ -9,7 +9,7 @@ import {
   MESSAGE_HANDSHAKE_FINISH,
   MESSAGE_HANDSHAKE_START,
 } from '@metamask/desktop/dist/constants';
-import { waitForMessage } from '@metamask/desktop/dist/utils';
+import { waitForMessage } from '@metamask/desktop/dist/utils/stream';
 import { flattenMessage } from '../utils/utils';
 import * as asymmetricEncryption from './asymmetric-encryption';
 import * as symmetricEncryption from './symmetric-encryption';

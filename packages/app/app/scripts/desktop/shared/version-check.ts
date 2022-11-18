@@ -7,7 +7,7 @@ import {
   CheckVersionResponseMessage,
 } from '@metamask/desktop/dist/types';
 import { cfg } from '@metamask/desktop/dist/utils/config';
-import { waitForMessage } from '@metamask/desktop/dist/utils';
+import { waitForMessage } from '@metamask/desktop/dist/utils/stream';
 import { getVersion } from '../utils/version';
 
 ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
