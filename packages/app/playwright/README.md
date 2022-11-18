@@ -17,7 +17,7 @@
 
 1. Have generated a desktop app built with env param 
 ```
-SKIP_OTP_PAIRING_FLOW=1 yarn build:desktop:app
+SKIP_OTP_PAIRING_FLOW=1 yarn build:desktop:app:test:ui
 ```
 2. Have generated a desktop UI 
 ```
