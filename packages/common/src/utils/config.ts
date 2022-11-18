@@ -60,6 +60,7 @@ export type ConfigType = ReturnType<typeof loadConfig>;
 
 let configObject: ConfigType;
 
+// eslint-disable-next-line jsdoc/require-jsdoc
 export default function cfg(): ConfigType {
   if (!configObject) {
     configObject = loadConfig();

@@ -3,17 +3,23 @@ import path from 'path';
 import { app, BrowserWindow, ipcMain } from 'electron';
 import { Server as WebSocketServer, WebSocket } from 'ws';
 import log from 'loglevel';
-import { NodeWebSocket, WebSocketStream } from '@metamask/desktop';
-import cfg from '../utils/config';
+import {
+  cfg,
+  clear,
+  getDesktopState,
+  NodeWebSocket,
+  WebSocketStream,
+  NewConnectionMessage,
+} from '@metamask/desktop';
+import { StatusMessage } from '../types/message';
 import EncryptedWebSocketStream from '../encryption/encrypted-web-socket-stream';
-import { NewConnectionMessage, StatusMessage } from '../types/message';
-import { DisconnectEventOpts } from '../types/desktop';
 import { forwardEvents } from '../utils/events';
-import * as RawState from '../utils/raw-state';
 import { MILLISECOND } from '../../../../shared/constants/time';
 import ExtensionConnection from './extension-connection';
 import { updateCheck } from './update-check';
 import { titleBarOverlayOpts } from './ui-constants';
+
+const RawState = { clear, getDesktopState };
 
 const MAIN_WINDOW_SHOW_DELAY = 750 * MILLISECOND;
 
@@ -168,7 +174,7 @@ class DesktopApp extends EventEmitter {
     webSocket: NodeWebSocket,
     stream: Duplex,
     connection: ExtensionConnection,
-    { isDisconnectedByUser }: DisconnectEventOpts,
+    { isDisconnectedByUser }: { isDisconnectedByUser: boolean },
   ) {
     log.debug('Extension connection disconnected');
 

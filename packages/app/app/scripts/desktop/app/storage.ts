@@ -4,7 +4,7 @@ import { readFile, writeFile } from 'fs/promises';
 import Store from 'electron-store';
 import { app } from 'electron';
 import log from 'loglevel';
-import cfg from '../utils/config';
+import { cfg } from '@metamask/desktop';
 
 let safeStorage: Electron.SafeStorage;
 

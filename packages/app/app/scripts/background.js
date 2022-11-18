@@ -19,6 +19,9 @@ import PortStream from 'extension-port-stream';
 
 import { ethErrors } from 'eth-rpc-errors';
 import {
+  ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
+  cfg,
+  ///: END:ONLY_INCLUDE_IN
   ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
   CONNECTION_TYPE_EXTERNAL,
   CONNECTION_TYPE_INTERNAL,
@@ -65,7 +68,6 @@ import { getPlatform } from './lib/util';
 
 ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
 import DesktopApp from './desktop/app/desktop-app';
-import cfg from './desktop/utils/config';
 ///: END:ONLY_INCLUDE_IN
 
 ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)

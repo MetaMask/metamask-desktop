@@ -1,13 +1,14 @@
 import { Duplex } from 'stream';
 import log from 'loglevel';
-import { waitForMessage } from '@metamask/desktop';
-import { VersionCheckResult, VersionData } from '../types/desktop';
 import {
+  cfg,
+  waitForMessage,
+  VersionCheckResult,
+  VersionData,
   CheckVersionRequestMessage,
   CheckVersionResponseMessage,
-} from '../types/message';
+} from '@metamask/desktop';
 import { getVersion } from '../utils/version';
-import cfg from '../utils/config';
 
 ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
 

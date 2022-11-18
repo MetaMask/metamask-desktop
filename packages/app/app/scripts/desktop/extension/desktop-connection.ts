@@ -17,12 +17,16 @@ import {
   waitForAcknowledge,
   browser,
   registerResponseStream,
+  ConnectionType,
+  RemotePortData,
+  ClientId,
+  RawState,
+  VersionCheckResult,
+  RemotePort,
 } from '@metamask/desktop';
-import { ConnectionType, RemotePortData } from '../types/background';
-import { ClientId, RawState, VersionCheckResult } from '../types/desktop';
+import * as RawStateUtils from '@metamask/desktop';
 import { uuid } from '../utils/utils';
 import { ExtensionPairing } from '../shared/pairing';
-import * as RawStateUtils from '../utils/raw-state';
 import { ExtensionVersionCheck } from '../shared/version-check';
 
 export default class DesktopConnection extends EventEmitter {
@@ -89,7 +93,7 @@ export default class DesktopConnection extends EventEmitter {
    * @param uiStream - A paused stream to communicate with the remote port.
    */
   public async createStream(
-    remotePort: any,
+    remotePort: RemotePort,
     connectionType: ConnectionType,
     uiStream: Duplex,
   ) {

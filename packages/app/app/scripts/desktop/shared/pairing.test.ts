@@ -1,5 +1,6 @@
 import ObjectMultiplex from 'obj-multiplex';
 import { MESSAGE_ACKNOWLEDGE, browser } from '@metamask/desktop';
+import * as RawState from '@metamask/desktop';
 import TOTP from '../utils/totp';
 import {
   createMultiplexMock,
@@ -15,13 +16,11 @@ import {
   flushPromises,
   simulateStreamMessage,
 } from '../test/utils';
-import * as RawState from '../utils/raw-state';
 import * as encryption from '../encryption/symmetric-encryption';
 import { hashString } from '../utils/crypto';
 import { DesktopPairing, ExtensionPairing } from './pairing';
 
 jest.mock('../utils/totp');
-jest.mock('../utils/raw-state');
 jest.mock('../encryption/symmetric-encryption');
 jest.mock('obj-multiplex');
 
@@ -39,6 +38,8 @@ jest.mock(
       browser: {
         runtime: { reload: jest.fn() },
       },
+      getDesktopState: jest.fn(),
+      setDesktopState: jest.fn(),
     };
   },
   {

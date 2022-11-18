@@ -7,7 +7,14 @@ import {
   CLIENT_ID_STATE,
   CLIENT_ID_DISABLE,
   MESSAGE_ACKNOWLEDGE,
+  addPairingKey,
   browser,
+  getAndUpdateDesktopState,
+  removePairingKey,
+  set,
+  setDesktopState,
+  ConnectionType,
+  ClientId,
 } from '@metamask/desktop';
 import {
   REMOTE_PORT_NAME_MOCK,
@@ -26,18 +33,33 @@ import {
   simulateNodeEvent,
   flushPromises,
 } from '../test/utils';
-import { ConnectionType } from '../types/background';
-import { ClientId } from '../types/desktop';
 import { ExtensionVersionCheck } from '../shared/version-check';
-import * as RawState from '../utils/raw-state';
 import { ExtensionPairing } from '../shared/pairing';
 import DesktopConnection from './desktop-connection';
 
 jest.mock('obj-multiplex', () => jest.fn(), { virtual: true });
 jest.mock('extension-port-stream');
 jest.mock('uuid');
-jest.mock('../utils/raw-state');
 jest.mock('../utils/totp');
+
+jest.mock(
+  '@metamask/desktop',
+  () => {
+    const original = jest.requireActual('@metamask/desktop');
+    return {
+      ...original,
+      addPairingKey: jest.fn(),
+      browser: {
+        runtime: { reload: jest.fn() },
+      },
+      getAndUpdateDesktopState: jest.fn(),
+      removePairingKey: jest.fn(),
+      set: jest.fn(),
+      setDesktopState: jest.fn(),
+    };
+  },
+  { virtual: true },
+);
 
 jest.mock(
   '../shared/version-check',
@@ -55,22 +77,6 @@ jest.mock('stream', () => ({ Duplex: jest.fn(), PassThrough: jest.fn() }), {
   virtual: true,
 });
 
-jest.mock(
-  '@metamask/desktop',
-  () => {
-    const original = jest.requireActual('@metamask/desktop');
-    return {
-      ...original,
-      browser: {
-        runtime: { reload: jest.fn() },
-      },
-    };
-  },
-  {
-    virtual: true,
-  },
-);
-
 describe('Desktop Connection', () => {
   const streamMock = createStreamMock();
   const multiplexMock = createMultiplexMock();
@@ -80,7 +86,13 @@ describe('Desktop Connection', () => {
   const uuidMock = uuidv4 as jest.MockedFunction<typeof uuidv4>;
   const versionCheckMock = createExtensionVersionCheckMock();
   const extensionPairingMock = createExtensionPairingMock();
-  const rawStateMock = RawState as jest.Mocked<typeof RawState>;
+  const rawStateMock = {
+    addPairingKey,
+    getAndUpdateDesktopState,
+    removePairingKey,
+    set,
+    setDesktopState,
+  } as any;
 
   const objectMultiplexConstructorMock = ObjectMultiplex as jest.MockedClass<
     typeof ObjectMultiplex

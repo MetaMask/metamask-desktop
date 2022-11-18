@@ -1,6 +1,6 @@
 import { ObservableStore } from '@metamask/obs-store';
+import { TestConnectionResult } from '@metamask/desktop';
 import { ExtensionPairing } from '../desktop/shared/pairing';
-import { TestConnectionResult } from '../desktop/types/desktop';
 
 ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
 // eslint-disable-next-line import/first

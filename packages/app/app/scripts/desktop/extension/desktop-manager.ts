@@ -3,17 +3,18 @@ import log from 'loglevel';
 import PortStream from 'extension-port-stream';
 import endOfStream from 'end-of-stream';
 import {
+  cfg,
   BrowserWebSocket,
   WebSocketStream,
   DuplexCopy,
   browser,
+  DesktopState,
+  TestConnectionResult,
+  ConnectionType,
 } from '@metamask/desktop';
-import cfg from '../utils/config';
+import * as RawState from '@metamask/desktop';
 import EncryptedWebSocketStream from '../encryption/encrypted-web-socket-stream';
 import { timeoutPromise } from '../utils/utils';
-import { DesktopState, TestConnectionResult } from '../types/desktop';
-import * as RawState from '../utils/raw-state';
-import { ConnectionType } from '../types/background';
 import DesktopConnection from './desktop-connection';
 
 const TIMEOUT_CONNECT = 10000;

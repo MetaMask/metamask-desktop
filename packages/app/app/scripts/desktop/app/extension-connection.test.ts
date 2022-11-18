@@ -6,7 +6,10 @@ import {
   CLIENT_ID_NEW_CONNECTION,
   CLIENT_ID_STATE,
   MESSAGE_ACKNOWLEDGE,
+  ClientId,
+  ConnectionType,
 } from '@metamask/desktop';
+import * as RawStateUtils from '@metamask/desktop';
 import {
   CLIENT_ID_MOCK,
   NEW_CONNECTION_MESSAGE_MOCK,
@@ -23,15 +26,23 @@ import {
   flushPromises,
 } from '../test/utils';
 import { unregisterRequestStream } from '../browser/node-browser';
-import { ClientId } from '../types/desktop';
-import { ConnectionType } from '../types/background';
 import { DesktopPairing } from '../shared/pairing';
-import * as RawStateUtils from '../utils/raw-state';
 import ExtensionConnection from './extension-connection';
 
 jest.mock('obj-multiplex', () => jest.fn(), { virtual: true });
 jest.mock('../shared/pairing');
-jest.mock('../utils/raw-state');
+
+jest.mock('@metamask/desktop', () => {
+  const original = jest.requireActual('@metamask/desktop');
+  return {
+    ...original,
+    addPairingKey: jest.fn(),
+    clear: jest.fn(),
+    getAndUpdateDesktopState: jest.fn(),
+    removePairingKey: jest.fn(),
+    set: jest.fn(),
+  };
+});
 
 jest.mock(
   '../browser/node-browser',

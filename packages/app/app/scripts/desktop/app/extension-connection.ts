@@ -13,19 +13,33 @@ import {
   CLIENT_ID_VERSION,
   CLIENT_ID_PAIRING,
   acknowledge,
+  cfg,
+  clear,
   waitForAcknowledge,
+  ConnectionType,
+  ClientId,
+  RawState,
+  EndConnectionMessage,
+  NewConnectionMessage,
+  set,
+  addPairingKey,
+  removePairingKey,
+  getAndUpdateDesktopState,
 } from '@metamask/desktop';
 import {
   registerRequestStream,
   unregisterRequestStream,
 } from '../browser/node-browser';
-import { ConnectionType } from '../types/background';
-import { EndConnectionMessage, NewConnectionMessage } from '../types/message';
-import { ClientId, RawState } from '../types/desktop';
 import { DesktopPairing } from '../shared/pairing';
-import * as RawStateUtils from '../utils/raw-state';
 import { DesktopVersionCheck } from '../shared/version-check';
-import cfg from '../utils/config';
+
+const RawStateUtils = {
+  addPairingKey,
+  clear,
+  getAndUpdateDesktopState,
+  removePairingKey,
+  set,
+};
 
 export default class ExtensionConnection extends EventEmitter {
   private stream: Duplex;

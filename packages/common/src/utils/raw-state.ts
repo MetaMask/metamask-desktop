@@ -1,5 +1,5 @@
-import { browser } from '@metamask/desktop';
 import { DesktopState, RawState } from '../types/desktop';
+import { browser } from '../browser/browser-polyfill';
 
 export const get = async (): Promise<RawState> => {
   return await browser.storage.local.get();

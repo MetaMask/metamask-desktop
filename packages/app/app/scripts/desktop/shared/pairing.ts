@@ -14,15 +14,13 @@ import {
   waitForAcknowledge,
   waitForMessage,
   browser,
-} from '@metamask/desktop';
-import TOTP from '../utils/totp';
-import {
   PairingKeyRequestMessage,
   PairingKeyResponseMessage,
   PairingRequestMessage,
   PairingResultMessage,
-} from '../types/message';
-import * as rawState from '../utils/raw-state';
+} from '@metamask/desktop';
+import * as rawState from '@metamask/desktop';
+import TOTP from '../utils/totp';
 import { createKey } from '../encryption/symmetric-encryption';
 import { hashString } from '../utils/crypto';
 

@@ -1,7 +1,7 @@
 import { autoUpdater } from 'electron-updater';
 import { dialog, MessageBoxReturnValue } from 'electron';
 import log from 'loglevel';
-import cfg from '../utils/config';
+import { cfg } from '@metamask/desktop';
 import { simulateNodeEvent } from '../test/utils';
 import { updateCheck } from './update-check';
 

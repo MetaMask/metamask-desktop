@@ -1,7 +1,7 @@
 import { dialog } from 'electron';
 import { autoUpdater, UpdateCheckResult } from 'electron-updater';
 import log from 'loglevel';
-import cfg from '../utils/config';
+import { cfg } from '@metamask/desktop';
 
 export const updateCheck = async (): Promise<UpdateCheckResult | null> => {
   if (!cfg().desktop.enableUpdates || !autoUpdater.isUpdaterActive()) {

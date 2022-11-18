@@ -2,7 +2,7 @@
 
 import nock from 'nock';
 import '@testing-library/jest-dom';
-import cfg from '../../app/scripts/desktop/utils/config';
+import { cfg } from '@metamask/desktop';
 
 /* eslint-disable-next-line jest/require-top-level-describe */
 beforeEach(() => {

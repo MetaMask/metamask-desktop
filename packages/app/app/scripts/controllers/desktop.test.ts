@@ -13,8 +13,14 @@ import DesktopController from './desktop';
 jest.mock('@metamask/obs-store');
 
 jest.mock(
-  '../desktop/utils/config',
-  () => jest.fn(() => ({ desktop: { isExtension: true, isApp: true } })),
+  '@metamask/desktop',
+  () => {
+    const original = jest.requireActual('@metamask/desktop');
+    return {
+      ...original,
+      cfg: jest.fn(() => ({ desktop: { isExtension: true, isApp: true } })),
+    };
+  },
   { virtual: true },
 );
 

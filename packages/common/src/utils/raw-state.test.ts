@@ -1,9 +1,9 @@
-import { browser } from '@metamask/desktop';
-import { DATA_MOCK } from '../test/mocks';
+import { browser } from '../browser/browser-polyfill';
+import { DATA_MOCK } from '../../test/mocks';
 import * as RawState from './raw-state';
 
 jest.mock(
-  '@metamask/desktop',
+  '../browser/browser-polyfill',
   () => ({
     browser: {
       storage: { local: { get: jest.fn(), set: jest.fn(), clear: jest.fn() } },
@@ -55,7 +55,7 @@ describe('Raw State Utils', () => {
 
   describe('set', () => {
     it('updates browser local storage', async () => {
-      await RawState.set(DATA_MOCK);
+      await RawState.set(DATA_MOCK as any);
 
       expect(browserMock.storage.local.set).toHaveBeenCalledTimes(1);
       expect(browserMock.storage.local.set).toHaveBeenCalledWith(DATA_MOCK);
