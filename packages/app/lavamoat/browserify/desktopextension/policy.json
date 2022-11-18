@@ -5893,18 +5893,15 @@
         "external:../common/node_modules/loglevel/lib/loglevel.js": true
       }
     },
-    "external:../common/dist/index.js": {
+    "external:../common/dist/browser/index.js": {
       "packages": {
         "external:../common/dist/browser/browser-polyfill.js": true,
-        "external:../common/dist/browser/browser-proxy.js": true,
-        "external:../common/dist/constants.js": true,
-        "external:../common/dist/types/background.js": true,
-        "external:../common/dist/types/browser.js": true,
-        "external:../common/dist/types/desktop.js": true,
-        "external:../common/dist/types/message.js": true,
-        "external:../common/dist/utils/config.js": true,
-        "external:../common/dist/utils/raw-state.js": true,
-        "external:../common/dist/utils/stream.js": true,
+        "external:../common/dist/browser/browser-proxy.js": true
+      }
+    },
+    "external:../common/dist/index.js": {
+      "packages": {
+        "external:../common/dist/browser/index.js": true,
         "external:../common/dist/web-socket-stream.js": true
       }
     },
@@ -5913,9 +5910,9 @@
         "browserify>process": true
       }
     },
-    "external:../common/dist/utils/raw-state.js": {
+    "external:../common/dist/utils/state/index.js": {
       "packages": {
-        "external:../common/dist/browser/browser-polyfill.js": true
+        "external:../common/dist/browser/index.js": true
       }
     },
     "external:../common/dist/utils/stream.js": {
