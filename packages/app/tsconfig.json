@@ -20,7 +20,7 @@
     "dist/**/*",
     "node_modules/**",
     "packages/**",
-    "playwright/chrome/**"
+    "playwright/**"
   ],
   "extends": "@tsconfig/node16/tsconfig.json",
   "paths": {
