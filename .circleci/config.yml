@@ -230,8 +230,11 @@ jobs:
           at: .      
       - run: 
           name: Build desktop app for testing
-          command: SKIP_OTP_PAIRING_FLOW=1 yarn build:desktop:app 
-      - run:          
+          command: yarn build:desktop:app:test:ui
+      - run:
+          name: Build desktop UI for testing
+          command: yarn build:desktop:ui
+      - run:
           name: Build extension for testing
           command: yarn build:test:desktop:ui
       - run:
