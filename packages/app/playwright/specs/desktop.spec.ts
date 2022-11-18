@@ -1,8 +1,6 @@
 import { Page, BrowserContext, expect } from '@playwright/test';
 
 import { _electron as electron } from 'playwright';
-// import { test } from '../helpers/extension-loader';
-// import test from '../helpers/ganache-loader';
 import test from '../helpers/setup';
 import { ChromeExtensionPage } from '../pageObjects/mmd-extension-page';
 import { MMDMainMenuPage } from '../pageObjects/mmd-mainMenu-page';
@@ -59,19 +57,26 @@ test.describe('Desktop send', () => {
           console.log`stderr: ${Buffer.from(error, 'utf-8').toString('utf-8')}`,
       );
 
-    const electronPage = await electronApp.firstWindow();
-    // await expect(electronPage.locator('.mmd-pair-status')).toContainText(
-    //   'Inactive',
-    // );
+    const windows = electronApp.windows();
+    const main =
+      (await windows[0].title()) === 'MetaMask Desktop'
+        ? windows[0]
+        : windows[1];
+
+    await expect(main.locator('.mmd-pair-status')).toContainText('Inactive');
+    await main.screenshot({
+      path: 'test-results/visual/desktop-inactive.main.png',
+    });
     const initialFlow = await context.newPage();
     const extensionId = await signUpFlow(initialFlow, context);
     await enableDesktopAppFlow(initialFlow);
 
     const signIn = new MMDSignInPage(page, extensionId as string);
     await signIn.signIn();
-    // await expect(electronPage.locator('.mmd-pair-status')).toContainText(
-    //   'Active',
-    // );
+    await main.screenshot({
+      path: 'test-results/visual/desktop-active.main.png',
+    });
+    await expect(main.locator('.mmd-pair-status')).toContainText('Active');
 
     const initialPage = new MMDInitialPage(page);
     await initialPage.hasDesktopEnabled();
@@ -80,8 +85,6 @@ test.describe('Desktop send', () => {
 
 
     await initialPage.hasFunds();
-    // await initialPage.selectMainAction('Send');
-    // await initialPage.cancelSend();
     await initialPage.selectMainAction('Send');
     await initialPage.sendFunds('0x2f318c334780961fb129d2a6c30d0763d9a5c970');
     await initialPage.checkLastTransactionAction('Send');

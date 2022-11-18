@@ -46,6 +46,12 @@ workflows:
   test_and_release:
     jobs:
       - prep-deps 
+
+
+workflows:
+  test_and_release:
+    jobs:
+      - prep-deps 
       - prep-e2e-test-deps:
           requires:
             - common-build
@@ -108,6 +114,12 @@ workflows:
       - test-e2e-chrome-desktop-snaps:
           requires:
             - prep-build-test-desktop
+      - prep-e2e-test-desktop-deps:
+          requires:
+            - prep-deps
+      - test-e2e-desktop-app:
+          requires:
+            - prep-e2e-test-desktop-deps            
       - test-unit:
           requires:
             - common-build
@@ -221,8 +233,7 @@ workflows:
             - common-build
 
 jobs:
-
-  prep-e2e-test-deps:
+  prep-e2e-test-desktop-deps:
     executor: node-browsers
     steps:
       - checkout
@@ -843,6 +854,36 @@ jobs:
       - store_artifacts:
           path: test-artifacts
           destination: test-artifacts
+
+  test-e2e-desktop-app:
+    executor: playwright
+    steps:
+      - checkout  
+      - attach_workspace:
+          at: .
+      - run:
+          name: Move test build to dist
+          command: mv ./dist-test-desktop ./dist    
+      - run: 
+          name: Install PW dependencies
+          command: |
+            cd playwright && yarn
+            npx playwright install chrome
+            node node_modules/electron/install.js
+      - run:
+          name: Run e2e desktop command
+          command: |
+            if .circleci/scripts/test-run-e2e.sh
+            then
+              cd playwright && xvfb-run yarn desktop:e2e
+            fi
+          no_output_timeout: 20m          
+      - store_artifacts:
+          name: html-report and artifacts
+          path: playwright/playwright-reports/
+      - store_test_results:
+          name: report for pipeline integration
+          path: playwright/playwright-reports/junit/test-results.xml
 
   benchmark:
     executor: node-browsers-medium-plus
