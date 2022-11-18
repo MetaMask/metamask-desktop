@@ -127,7 +127,7 @@ workflows:
             - common-build
       - test-unit-global:
           requires:
-            - prep-deps
+            - common-build
       - validate-source-maps:
           requires:
             - prep-build
