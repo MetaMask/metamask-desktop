@@ -235,7 +235,7 @@ jobs:
           name: Build desktop UI for testing
           command: yarn build:desktop:ui
       - run:
-          name: Build extension for testing
+          name: Build extension (no lavamoat) for testing
           command: yarn build:test:desktop:ui
       - run:
           name: Move test build to 'dist-test' to avoid conflict with production build
@@ -258,9 +258,12 @@ jobs:
       - run:
           name: Move test build to dist
           command: mv ./dist-test-desktop ./dist    
-      - run: cd playwright && yarn
-      - run: cd playwright && npx playwright install chrome
-      - run: cd playwright && node node_modules/electron/install.js
+      - run: 
+          name: Install PW dependencies
+          command: |
+            cd playwright && yarn
+            npx playwright install chrome
+            node node_modules/electron/install.js
       - run:
           name: e2e command
           command: |
