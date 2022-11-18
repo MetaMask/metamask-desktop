@@ -9,7 +9,6 @@ const { TASKS } = require('../../../build/constants');
 const EMPTY_JS_FILE = './development/empty.js';
 
 module.exports = function createStaticAssetTasks({
-  livereload,
   shouldIncludeLockdown = true,
 }) {
   const [copyTargetsProd, copyTargetsDev] = getCopyTargets(
@@ -41,8 +40,7 @@ module.exports = function createStaticAssetTasks({
 
   async function setupLiveCopy(target) {
     const pattern = target.pattern || '/**/*';
-    watch(target.src + pattern, (event) => {
-      livereload.changed(event.path);
+    watch(target.src + pattern, () => {
       performCopy(target);
     });
     await performCopy(target);

@@ -3,7 +3,6 @@ const path = require('path');
 const { writeFileSync, readFileSync } = require('fs');
 const EventEmitter = require('events');
 const gulp = require('gulp');
-const watch = require('gulp-watch');
 const Vinyl = require('vinyl');
 const source = require('vinyl-source-stream');
 const buffer = require('vinyl-buffer');
@@ -37,10 +36,10 @@ const {
   logError,
 } = require('../../../build/utils');
 
-const { createTask, composeParallel, runTask } = require('../../../build/task');
 const {
   createRemoveFencedCodeTransform,
 } = require('../../../build/transforms/remove-fenced-code');
+const { runInChildProcess, createTask, composeParallel } = require('./task');
 
 /**
  * Get the appropriate Segment write key.
@@ -74,7 +73,6 @@ module.exports = createScriptTasks;
  * LavaMoat at runtime or not.
  * @param {BuildType} options.buildType - The current build type (e.g. "main",
  * "flask", etc.).
- * @param {object} options.livereload - The "gulp-livereload" server instance.
  * @param {boolean} options.policyOnly - Whether to stop the build after
  * generating the LavaMoat policy, skipping any writes to disk other than the
  * LavaMoat policy itself.
@@ -85,13 +83,12 @@ module.exports = createScriptTasks;
 function createScriptTasks({
   applyLavaMoat,
   buildType,
-  livereload,
   policyOnly,
   shouldLintFenceFiles,
 }) {
   // high level tasks
   return {
-    // dev tasks (live reload)
+    // dev tasks
     dev: createTasksForScriptBundles({
       buildTarget: BUILD_TARGETS.DEV,
       taskPrefix: 'scripts:core:dev',
@@ -120,24 +117,8 @@ function createScriptTasks({
    * each defined task.
    */
   function createTasksForScriptBundles({ buildTarget, taskPrefix }) {
-    // task for initiating browser livereload
-    const initiateLiveReload = async () => {
-      if (isDevBuild(buildTarget)) {
-        // trigger live reload when the bundles are updated
-        // this is not ideal, but overcomes the limitations:
-        // - run from the main process (not child process tasks)
-        // - after the first build has completed (thus the timeout)
-        // - build tasks never "complete" when run with livereload + child process
-        setTimeout(() => {
-          watch('./dist_desktop_ui/*/*.js', (event) => {
-            livereload.changed(event.path);
-          });
-        }, 75e3);
-      }
-    };
-
-    createTask(
-      `${taskPrefix}:standardEntryPoints:desktop`,
+    const standardSubtask = createTask(
+      `${taskPrefix}:standardEntryPoints:desktopui`,
       createFactoredBuild({
         applyLavaMoat,
         buildTarget,
@@ -150,14 +131,16 @@ function createScriptTasks({
       }),
     );
 
-    // make each bundle run in a separate process
-    const allSubtasks = () => {
-      return runTask(`${taskPrefix}:standardEntryPoints:desktop`, {
-        skipStats: true,
-      });
-    };
+    const allSubtasks = [standardSubtask].map((subtask) =>
+      runInChildProcess(subtask, {
+        applyLavaMoat,
+        buildType,
+        policyOnly,
+        shouldLintFenceFiles,
+      }),
+    );
     // make a parent task that runs each task in a child thread
-    return composeParallel(initiateLiveReload, allSubtasks);
+    return composeParallel(...allSubtasks);
   }
 }
 
@@ -318,6 +301,7 @@ function createFactoredBuild({
           }
         }
       }
+      console.log('Bundling done!');
     });
 
     await createBundle(buildConfiguration, { reloadOnChange });
@@ -486,7 +470,10 @@ async function createBundle(buildConfiguration, { reloadOnChange }) {
   bundler.on('log', log);
 
   // forward update event (used by watchify)
-  bundler.on('update', () => performBundle());
+  bundler.on('update', () => {
+    console.log('Changes detected, bundling...');
+    performBundle();
+  });
 
   console.log(`Bundle start: "${label}"`);
   await performBundle();

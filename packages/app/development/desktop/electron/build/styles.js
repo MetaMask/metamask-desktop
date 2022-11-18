@@ -14,7 +14,7 @@ let sass;
 // scss compilation and autoprefixing tasks
 module.exports = createStyleTasks;
 
-function createStyleTasks({ livereload }) {
+function createStyleTasks() {
   const prod = createTask(
     TASKS.STYLES_PROD,
     createScssBuildTask({
@@ -39,9 +39,8 @@ function createStyleTasks({ livereload }) {
   function createScssBuildTask({ src, dest, devMode, pattern }) {
     return async function () {
       if (devMode) {
-        watch(pattern, async (event) => {
+        watch(pattern, async () => {
           await buildScss();
-          livereload.changed(event.path);
         });
       }
       await buildScss();
