@@ -12,7 +12,8 @@
     "lint:eslint": "eslint . --ext js,ts --cache",
     "lint:eslint:fix": "yarn lint:eslint --fix",
     "lint:tsc": "tsc --project tsconfig.json --noEmit",
-    "test": "jest"
+    "test": "jest",
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "eciesjs": "^0.3.15",
