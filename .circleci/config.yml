@@ -40,6 +40,7 @@ executors:
       - image: mcr.microsoft.com/playwright:v1.23.1-focal
     resource_class: large
     environment:
+      APP_DIR: << pipeline.parameters.app-dir >>
       NODE_ENV: development
 
 workflows:
@@ -169,6 +170,7 @@ workflows:
             - test-e2e-chrome-desktop-snaps
             - common-test
             - app-test
+            - test-e2e-desktop-app
       - benchmark:
           requires:
             - prep-build-test
@@ -255,40 +257,6 @@ jobs:
           paths:
             - dist-test-desktop
             - dist_desktop
-
-  e2e-desktop:
-    executor: node-browsers
-    steps:
-      - checkout
-      # - run:
-      #     name: Re-Install Chrome
-      #     command: ./.circleci/scripts/chrome-install.sh      
-      - attach_workspace:
-          at: .
-      - run:
-          name: Move test build to dist
-          command: mv ./dist-test-desktop ./dist    
-      - run: 
-          name: Install PW dependencies
-          command: |
-            cd playwright && yarn
-            npx playwright install chrome
-            node node_modules/electron/install.js
-      - run:
-          name: e2e command
-          command: |
-            if .circleci/scripts/test-run-e2e.sh
-            then
-              cd playwright && xvfb-run yarn desktop:e2e
-            fi
-          no_output_timeout: 20m          
-      - store_artifacts:
-          name: html-report and artifacts
-          path: playwright/playwright-reports/
-      - store_test_results:
-          name: report for pipeline integration
-          path: playwright/playwright-reports/junit/test-results.xml
-
 
   create_release_pull_request:
     executor: node-browsers
@@ -866,7 +834,7 @@ jobs:
       - run: 
           name: Install PW dependencies
           command: |
-            cd playwright && yarn
+            cd ${APP_DIR}/playwright && yarn
             npx playwright install chrome
             node node_modules/electron/install.js
       - run:
@@ -874,15 +842,15 @@ jobs:
           command: |
             if .circleci/scripts/test-run-e2e.sh
             then
-              cd playwright && xvfb-run yarn desktop:e2e
+              cd ${APP_DIR}/playwright && xvfb-run yarn desktop:e2e
             fi
           no_output_timeout: 20m          
       - store_artifacts:
           name: html-report and artifacts
-          path: playwright/playwright-reports/
+          path: << pipeline.parameters.app-dir >>/playwright/playwright-reports/
       - store_test_results:
           name: report for pipeline integration
-          path: playwright/playwright-reports/junit/test-results.xml
+          path: << pipeline.parameters.app-dir >>/playwright/playwright-reports/junit/test-results.xml
 
   benchmark:
     executor: node-browsers-medium-plus
