@@ -1,4 +1,4 @@
-import { Page, BrowserContext, expect } from '@playwright/test';
+import { Page, BrowserContext } from '@playwright/test';
 
 import { _electron as electron } from 'playwright';
 import test from '../helpers/setup';
