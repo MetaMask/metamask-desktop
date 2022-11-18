@@ -4,11 +4,11 @@ import { readFile, writeFile } from 'fs/promises';
 import Store from 'electron-store';
 import { app } from 'electron';
 import log from 'loglevel';
-import { cfg } from '@metamask/desktop';
+import cfg from '../utils/config';
 
 let safeStorage: Electron.SafeStorage;
 
-if (!cfg().desktop.isTest) {
+if (!cfg().isTest) {
   // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
   safeStorage = require('electron').safeStorage;
 }
@@ -63,7 +63,7 @@ class ObfuscatedStore {
       return this.appStore;
     }
 
-    if (cfg().desktop.isTest || !safeStorage.isEncryptionAvailable()) {
+    if (cfg().isTest || !safeStorage.isEncryptionAvailable()) {
       this.appStore = new Store(this.initialOptions);
       return this.appStore;
     }

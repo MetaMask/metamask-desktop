@@ -5,7 +5,7 @@ export * from './types/background';
 export * from './types/browser';
 export * from './types/desktop';
 export * from './types/message';
-export { default as cfg } from './utils/config';
+export * from './utils/config';
 export * from './utils/stream';
 export * from './utils/raw-state';
 export * from './web-socket-stream';

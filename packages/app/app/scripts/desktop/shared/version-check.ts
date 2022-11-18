@@ -8,6 +8,7 @@ import {
   CheckVersionRequestMessage,
   CheckVersionResponseMessage,
 } from '@metamask/desktop';
+import desktopAppCfg from '../utils/config';
 import { getVersion } from '../utils/version';
 
 ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
@@ -32,7 +33,7 @@ export class DesktopVersionCheck {
 
     const desktopVersionData = {
       version: getVersion(),
-      compatibilityVersion: cfg().desktop.compatibilityVersion.desktop,
+      compatibilityVersion: desktopAppCfg().compatibilityVersion.desktop,
     };
 
     const isExtensionSupported = this.isExtensionVersionSupported(
@@ -76,7 +77,7 @@ export class ExtensionVersionCheck {
 
     const extensionVersionData = {
       version: getVersion(),
-      compatibilityVersion: cfg().desktop.compatibilityVersion.extension,
+      compatibilityVersion: cfg().compatibilityVersion.extension,
     };
 
     const checkVersionRequest: CheckVersionRequestMessage = {

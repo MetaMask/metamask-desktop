@@ -4,7 +4,6 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import { Server as WebSocketServer, WebSocket } from 'ws';
 import log from 'loglevel';
 import {
-  cfg,
   clear,
   getDesktopState,
   NodeWebSocket,
@@ -15,6 +14,7 @@ import { StatusMessage } from '../types/message';
 import EncryptedWebSocketStream from '../encryption/encrypted-web-socket-stream';
 import { forwardEvents } from '../utils/events';
 import { MILLISECOND } from '../../../../shared/constants/time';
+import cfg from '../utils/config';
 import ExtensionConnection from './extension-connection';
 import { updateCheck } from './update-check';
 import { titleBarOverlayOpts } from './ui-constants';
@@ -54,7 +54,7 @@ class DesktopApp extends EventEmitter {
   }
 
   public async init() {
-    if (cfg().desktop.isTest) {
+    if (cfg().isTest) {
       app.disableHardwareAcceleration();
     }
 
@@ -84,7 +84,7 @@ class DesktopApp extends EventEmitter {
       win?.setTitleBarOverlay(titleBarOverlayOpts[theme]);
     });
 
-    if (!cfg().desktop.isTest) {
+    if (!cfg().isTest) {
       this.mainWindow = await this.createMainWindow();
     }
 
@@ -125,7 +125,7 @@ class DesktopApp extends EventEmitter {
   private async onConnection(webSocket: WebSocket) {
     log.debug('Received web socket connection');
 
-    const webSocketStream = cfg().desktop.webSocket.disableEncryption
+    const webSocketStream = cfg().webSocket.disableEncryption
       ? new WebSocketStream(webSocket)
       : new EncryptedWebSocketStream(webSocket);
 
@@ -202,13 +202,10 @@ class DesktopApp extends EventEmitter {
 
   private async createWebSocketServer(): Promise<WebSocketServer> {
     return new Promise((resolve) => {
-      const server = new WebSocketServer(
-        { port: cfg().desktop.webSocket.port },
-        () => {
-          log.debug('Created web socket server');
-          resolve(server);
-        },
-      );
+      const server = new WebSocketServer({ port: cfg().webSocket.port }, () => {
+        log.debug('Created web socket server');
+        resolve(server);
+      });
     });
   }
 

@@ -1,11 +1,6 @@
 import { app, BrowserWindow } from 'electron';
 import { Server as WebSocketServer } from 'ws';
-import {
-  WebSocketStream,
-  browser,
-  cfg,
-  getDesktopState,
-} from '@metamask/desktop';
+import { WebSocketStream, browser, getDesktopState } from '@metamask/desktop';
 import EncryptedWebSocketStream from '../encryption/encrypted-web-socket-stream';
 import {
   PORT_MOCK,
@@ -16,6 +11,7 @@ import {
   createExtensionConnectionMock,
 } from '../test/mocks';
 import { simulateNodeEvent } from '../test/utils';
+import cfg from '../utils/config';
 import ExtensionConnection from './extension-connection';
 import { updateCheck } from './update-check';
 import DesktopApp from './desktop-app';
@@ -128,7 +124,7 @@ describe('Desktop', () => {
 
   describe('init', () => {
     it('creates web socket server', async () => {
-      cfg().desktop.webSocket.port = PORT_MOCK;
+      cfg().webSocket.port = PORT_MOCK;
 
       await DesktopApp.init();
 
@@ -165,7 +161,7 @@ describe('Desktop', () => {
     });
 
     it('creates extension connection with standard web socket stream if encryption disabled', async () => {
-      cfg().desktop.webSocket.disableEncryption = true;
+      cfg().webSocket.disableEncryption = true;
 
       await DesktopApp.init();
 

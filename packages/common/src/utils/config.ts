@@ -1,4 +1,4 @@
-const envStringMatch = (
+export const envStringMatch = (
   value: string | undefined,
   expected: string,
 ): boolean => {
@@ -11,14 +11,17 @@ const envStringMatch = (
     : false;
 };
 
-const envInt = (value: string | undefined, defaultValue: number): number => {
+export const envInt = (
+  value: string | undefined,
+  defaultValue: number,
+): number => {
   if (!value) {
     return defaultValue;
   }
   return parseInt(value, 10);
 };
 
-const envBool = (
+export const envBool = (
   value: string | boolean | undefined,
   defaultValue = false,
 ): boolean => {
@@ -38,20 +41,16 @@ const loadConfig = () => {
   const port = envInt(process.env.WEB_SOCKET_PORT, 7071);
 
   return {
-    desktop: {
-      enableUpdates: envBool(process.env.DESKTOP_ENABLE_UPDATES),
-      isTest: envBool(process.env.IN_TEST),
-      mv3: envBool(process.env.ENABLE_MV3),
-      skipOtpPairingFlow: envBool(process.env.SKIP_OTP_PAIRING_FLOW),
-      compatibilityVersion: {
-        desktop: envInt(process.env.COMPATIBILITY_VERSION_DESKTOP, 1),
-        extension: envInt(process.env.COMPATIBILITY_VERSION_EXTENSION, 1),
-      },
-      webSocket: {
-        disableEncryption: envBool(process.env.DISABLE_WEB_SOCKET_ENCRYPTION),
-        port,
-        url: `ws://localhost:${port}`,
-      },
+    isTest: envBool(process.env.IN_TEST),
+    mv3: envBool(process.env.ENABLE_MV3),
+    skipOtpPairingFlow: envBool(process.env.SKIP_OTP_PAIRING_FLOW),
+    compatibilityVersion: {
+      extension: envInt(process.env.COMPATIBILITY_VERSION_EXTENSION, 1),
+    },
+    webSocket: {
+      disableEncryption: envBool(process.env.DISABLE_WEB_SOCKET_ENCRYPTION),
+      port,
+      url: `ws://localhost:${port}`,
     },
   };
 };
@@ -60,11 +59,10 @@ export type ConfigType = ReturnType<typeof loadConfig>;
 
 let configObject: ConfigType;
 
-// eslint-disable-next-line jsdoc/require-jsdoc
-export default function cfg(): ConfigType {
+export const cfg = (): ConfigType => {
   if (!configObject) {
     configObject = loadConfig();
   }
 
   return configObject;
-}
+};

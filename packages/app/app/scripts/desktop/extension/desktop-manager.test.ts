@@ -119,7 +119,7 @@ describe('Desktop Manager', () => {
 
     removeInstance();
 
-    cfg().desktop.webSocket.disableEncryption = false;
+    cfg().webSocket.disableEncryption = false;
   });
 
   describe('init', () => {
@@ -135,7 +135,7 @@ describe('Desktop Manager', () => {
       'with encryption %s',
       (_, streamType, webSocketStreamConstructor, disableEncryption) => {
         beforeEach(async () => {
-          cfg().desktop.webSocket.disableEncryption = disableEncryption;
+          cfg().webSocket.disableEncryption = disableEncryption;
 
           await init({
             DesktopController: {
@@ -259,7 +259,7 @@ describe('Desktop Manager', () => {
       'with encryption %s',
       (_, streamType, webSocketStreamConstructor, disableEncryption) => {
         beforeEach(async () => {
-          cfg().desktop.webSocket.disableEncryption = disableEncryption;
+          cfg().webSocket.disableEncryption = disableEncryption;
         });
 
         it(`creates and inits ${streamType} web socket stream`, async () => {

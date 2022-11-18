@@ -1408,7 +1408,7 @@
         "@metamask/eth-token-tracker>deep-equal>is-date-object": true,
         "enzyme>is-regex": true,
         "enzyme>object-is": true,
-        "mocha>object.assign>object-keys": true,
+        "enzyme>object.assign>object-keys": true,
         "string.prototype.matchall>regexp.prototype.flags": true
       }
     },
@@ -3391,7 +3391,7 @@
     },
     "enzyme>has": {
       "packages": {
-        "mocha>object.assign>function-bind": true
+        "enzyme>has>function-bind": true
       }
     },
     "enzyme>is-regex": {
@@ -5958,8 +5958,8 @@
     },
     "globalthis>define-properties": {
       "packages": {
-        "globalthis>define-properties>has-property-descriptors": true,
-        "mocha>object.assign>object-keys": true
+        "enzyme>object.assign>object-keys": true,
+        "globalthis>define-properties>has-property-descriptors": true
       }
     },
     "globalthis>define-properties>has-property-descriptors": {
@@ -6070,8 +6070,8 @@
       "packages": {
         "browserify>process": true,
         "lavamoat>@babel/highlight>chalk>ansi-styles": true,
-        "lavamoat>@babel/highlight>chalk>supports-color": true,
-        "mocha>escape-string-regexp": true
+        "lavamoat>@babel/highlight>chalk>escape-string-regexp": true,
+        "lavamoat>@babel/highlight>chalk>supports-color": true
       }
     },
     "lavamoat>@babel/highlight>chalk>ansi-styles": {
@@ -6789,7 +6789,7 @@
     },
     "string.prototype.matchall>call-bind": {
       "packages": {
-        "mocha>object.assign>function-bind": true,
+        "enzyme>has>function-bind": true,
         "string.prototype.matchall>get-intrinsic": true
       }
     },
@@ -6801,7 +6801,7 @@
       },
       "packages": {
         "enzyme>has": true,
-        "mocha>object.assign>function-bind": true,
+        "enzyme>has>function-bind": true,
         "string.prototype.matchall>has-symbols": true
       }
     },

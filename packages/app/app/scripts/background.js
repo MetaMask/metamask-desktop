@@ -19,9 +19,6 @@ import PortStream from 'extension-port-stream';
 
 import { ethErrors } from 'eth-rpc-errors';
 import {
-  ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
-  cfg,
-  ///: END:ONLY_INCLUDE_IN
   ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
   CONNECTION_TYPE_EXTERNAL,
   CONNECTION_TYPE_INTERNAL,
@@ -67,6 +64,7 @@ import { getPlatform } from './lib/util';
 /* eslint-disable import/order */
 
 ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
+import desktopAppCfg from './desktop/utils/config';
 import DesktopApp from './desktop/app/desktop-app';
 ///: END:ONLY_INCLUDE_IN
 
@@ -134,7 +132,7 @@ const initApp = async (remotePort) => {
 
 ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
 const onDesktopRestart = async (desktopApp) => {
-  if (cfg().desktop.isTest) {
+  if (desktopAppCfg().isTest) {
     return;
   }
 
