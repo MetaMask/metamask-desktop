@@ -8,10 +8,11 @@ import {
   CheckVersionRequestMessage,
   CheckVersionResponseMessage,
 } from '@metamask/desktop';
-import desktopAppCfg from '../utils/config';
 import { getVersion } from '../utils/version';
 
 ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
+
+import desktopAppCfg from '../utils/config';
 
 export class DesktopVersionCheck {
   private stream: Duplex;
