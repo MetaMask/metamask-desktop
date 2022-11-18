@@ -46,6 +46,14 @@ workflows:
   test_and_release:
     jobs:
       - prep-deps 
+      - validate-lavamoat-config:
+          filters:
+            branches:
+              only:
+                - /^Version-v(\d+)[.](\d+)[.](\d+)|master/      
+      - prep-build:
+          requires:
+            - prep-deps      
       - prep-e2e-test-desktop-deps:
           requires:
             - common-build
@@ -108,9 +116,6 @@ workflows:
       - test-e2e-chrome-desktop-snaps:
           requires:
             - prep-build-test-desktop
-      - prep-e2e-test-desktop-deps:
-          requires:
-            - prep-deps
       - test-e2e-desktop-app:
           requires:
             - prep-e2e-test-desktop-deps            
