@@ -22,5 +22,5 @@ npx playwright install chrome
 ## Run e2e
 On `playwright` folder:
 ```
-yarn e2e:desktop
+yarn desktop:e2e
 ```
