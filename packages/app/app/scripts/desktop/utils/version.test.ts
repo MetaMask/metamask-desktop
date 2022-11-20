@@ -1,25 +1,17 @@
-import { createExtensionPlatformMock, VERSION_MOCK } from '../test/mocks';
-import ExtensionPlatform from '../../platforms/extension';
-import { getVersion } from './version';
+import { VERSION_MOCK } from '../test/mocks';
+import { getDesktopVersion } from './version';
 
 jest.mock('../../platforms/extension');
 
 describe('Version Utils', () => {
-  const extensionPlatformMock = createExtensionPlatformMock();
-
-  const extensionPlatformConstructorMock =
-    ExtensionPlatform as jest.MockedClass<typeof ExtensionPlatform>;
-
   beforeEach(() => {
     jest.resetAllMocks();
-    extensionPlatformConstructorMock.mockReturnValue(extensionPlatformMock);
   });
 
-  describe('getVersion', () => {
-    it('returns version from extension platform', async () => {
-      process.env.PACKAGE_VERSION = '';
-      extensionPlatformMock.getVersion.mockReturnValueOnce(VERSION_MOCK);
-      expect(getVersion()).toStrictEqual(VERSION_MOCK);
+  describe('getDesktopVersion', () => {
+    it('returns version from package version', async () => {
+      process.env.PACKAGE_VERSION = VERSION_MOCK;
+      expect(getDesktopVersion()).toStrictEqual(`${VERSION_MOCK}-desktop.0`);
     });
   });
 });

@@ -1,6 +1,7 @@
 import { Duplex } from 'stream';
 import ObjectMultiplex from 'obj-multiplex';
 import { v4 as uuidv4 } from 'uuid';
+import { VersionCheck } from '@metamask/desktop';
 import { browser } from '@metamask/desktop/dist/browser';
 import {
   CLIENT_ID_END_CONNECTION,
@@ -28,7 +29,6 @@ import {
   simulateNodeEvent,
   flushPromises,
 } from '../test/utils';
-import { ExtensionVersionCheck } from '../shared/version-check';
 import { ExtensionPairing } from '../shared/pairing';
 import DesktopConnection from './desktop-connection';
 
@@ -36,6 +36,11 @@ jest.mock('obj-multiplex', () => jest.fn(), { virtual: true });
 jest.mock('extension-port-stream');
 jest.mock('uuid');
 jest.mock('../utils/totp');
+jest.mock('../../platforms/extension', () => ({}), { virtual: true });
+
+jest.mock('@metamask/desktop', () => ({ VersionCheck: jest.fn() }), {
+  virtual: true,
+});
 
 jest.mock('@metamask/desktop/dist/browser', () => {
   const original = jest.requireActual('@metamask/desktop/dist/browser');
@@ -54,12 +59,6 @@ jest.mock('@metamask/desktop/dist/utils/state', () => ({
   setRawState: jest.fn(),
   setDesktopState: jest.fn(),
 }));
-
-jest.mock(
-  '../shared/version-check',
-  () => ({ ExtensionVersionCheck: jest.fn() }),
-  { virtual: true },
-);
 
 jest.mock(
   '../shared/pairing',
@@ -86,8 +85,8 @@ describe('Desktop Connection', () => {
     typeof ObjectMultiplex
   >;
 
-  const versionCheckConstructorMock = ExtensionVersionCheck as jest.MockedClass<
-    typeof ExtensionVersionCheck
+  const versionCheckConstructorMock = VersionCheck as jest.MockedClass<
+    typeof VersionCheck
   >;
 
   const extensionPairingConstructorMock = ExtensionPairing as jest.MockedClass<

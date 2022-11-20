@@ -5902,6 +5902,7 @@
     "external:../common/dist/index.js": {
       "packages": {
         "external:../common/dist/browser/index.js": true,
+        "external:../common/dist/version-check.js": true,
         "external:../common/dist/web-socket-stream.js": true
       }
     },
@@ -5919,6 +5920,13 @@
       "packages": {
         "browserify>stream-browserify": true,
         "external:../common/dist/constants.js": true
+      }
+    },
+    "external:../common/dist/version-check.js": {
+      "packages": {
+        "external:../common/dist/utils/config.js": true,
+        "external:../common/dist/utils/stream.js": true,
+        "external:../common/node_modules/loglevel/lib/loglevel.js": true
       }
     },
     "external:../common/dist/web-socket-stream.js": {

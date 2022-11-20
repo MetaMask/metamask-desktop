@@ -6,6 +6,7 @@ import ElectronStore from 'electron-store';
 import {
   BrowserWebSocket,
   NodeWebSocket,
+  VersionCheck,
   WebSocketStream,
 } from '@metamask/desktop';
 import {
@@ -17,7 +18,6 @@ import NotificationManager from '../../lib/notification-manager';
 import ExtensionConnection from '../app/extension-connection';
 import DesktopConnection from '../extension/desktop-connection';
 import { DesktopPairing, ExtensionPairing } from '../shared/pairing';
-import { ExtensionVersionCheck } from '../shared/version-check';
 import ExtensionPlatform from 'app/scripts/platforms/extension';
 
 export const PUBLIC_KEY_MOCK = 'testPublicKey';
@@ -202,8 +202,8 @@ export const createElectronStoreMock = (): jest.Mocked<ElectronStore> =>
     clear: jest.fn(),
   } as any);
 
-export const createExtensionVersionCheckMock =
-  (): jest.Mocked<ExtensionVersionCheck> => ({ check: jest.fn() } as any);
+export const createExtensionVersionCheckMock = (): jest.Mocked<VersionCheck> =>
+  ({ check: jest.fn() } as any);
 
 export const createExtensionPlatformMock = (): jest.Mocked<ExtensionPlatform> =>
   ({ getVersion: jest.fn() } as any);

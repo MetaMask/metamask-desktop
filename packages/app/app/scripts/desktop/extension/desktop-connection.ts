@@ -37,9 +37,10 @@ import {
   acknowledge,
   waitForAcknowledge,
 } from '@metamask/desktop/dist/utils/stream';
+import { VersionCheck } from '@metamask/desktop';
 import { uuid } from '../utils/utils';
 import { ExtensionPairing } from '../shared/pairing';
-import { ExtensionVersionCheck } from '../shared/version-check';
+import ExtensionPlatform from '../../platforms/extension';
 
 export default class DesktopConnection extends EventEmitter {
   private stream: Duplex;
@@ -54,7 +55,7 @@ export default class DesktopConnection extends EventEmitter {
 
   private disableStream: Duplex;
 
-  private versionCheck: ExtensionVersionCheck;
+  private versionCheck: VersionCheck;
 
   private extensionPairing: ExtensionPairing;
 
@@ -86,7 +87,9 @@ export default class DesktopConnection extends EventEmitter {
     ).init();
 
     const versionStream = this.multiplex.createStream(CLIENT_ID_VERSION);
-    this.versionCheck = new ExtensionVersionCheck(versionStream);
+    this.versionCheck = new VersionCheck(versionStream, () =>
+      this.getExtensionVersion(),
+    );
 
     const browserControllerStream = this.multiplex.createStream(
       CLIENT_ID_BROWSER_CONTROLLER,
@@ -216,5 +219,9 @@ export default class DesktopConnection extends EventEmitter {
 
   private generateClientId(): ClientId {
     return uuid();
+  }
+
+  private getExtensionVersion(): string {
+    return new ExtensionPlatform().getVersion();
   }
 }
