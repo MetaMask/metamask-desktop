@@ -1,5 +1,5 @@
 import log from 'loglevel';
-import { v4 as uuidv4 } from 'uuid';
+import { uuid } from '@metamask/desktop/dist/utils/utils';
 import {
   ARGS_MOCK,
   createStreamMock,
@@ -10,12 +10,23 @@ import { simulateNodeEvent } from '../test/utils';
 import { browser, registerRequestStream } from './node-browser';
 
 jest.mock('loglevel');
-jest.mock('uuid');
+jest.mock(
+  '@metamask/desktop/dist/utils/utils',
+  () => {
+    const original = jest.requireActual('@metamask/desktop/dist/utils/utils');
+    return {
+      uuid: jest.fn(),
+      timeoutPromise: original.timeoutPromise,
+      flattenMessage: original.flattenMessage,
+    };
+  },
+  { virtual: true },
+);
 
 describe('Node Browser', () => {
   const browserMock = browser as any;
   const streamMock = createStreamMock();
-  const uuidMock = uuidv4 as jest.MockedFunction<typeof uuidv4>;
+  const uuidMock = uuid as jest.MockedFunction<typeof uuid>;
 
   beforeEach(() => {
     jest.resetAllMocks();

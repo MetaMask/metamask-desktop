@@ -39,6 +39,7 @@ export const TYPE_MOCK = 'testType';
 export const HASH_BUFFER_MOCK = Buffer.from([10, 11, 12]);
 export const HASH_BUFFER_HEX_MOCK = HASH_BUFFER_MOCK.toString('hex');
 export const OTP_MOCK = '123456';
+export const WRONG_OTP_MOCK = '654321';
 
 export const createWebSocketNodeMock = (): jest.Mocked<NodeWebSocket> =>
   ({

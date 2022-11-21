@@ -15,8 +15,8 @@ import {
 } from '@metamask/desktop/dist/web-socket-stream';
 import { DuplexCopy } from '@metamask/desktop/dist/utils/stream';
 import * as RawState from '@metamask/desktop/dist/utils/state';
-import EncryptedWebSocketStream from '../encryption/encrypted-web-socket-stream';
-import { timeoutPromise } from '../utils/utils';
+import EncryptedWebSocketStream from '@metamask/desktop/dist/encryption/web-socket-stream';
+import { timeoutPromise } from '@metamask/desktop/dist/utils/utils';
 import DesktopConnection from './desktop-connection';
 
 const TIMEOUT_CONNECT = 10000;

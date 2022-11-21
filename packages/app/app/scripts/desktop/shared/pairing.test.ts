@@ -2,7 +2,9 @@ import ObjectMultiplex from 'obj-multiplex';
 import { browser } from '@metamask/desktop/dist/browser';
 import { MESSAGE_ACKNOWLEDGE } from '@metamask/desktop/dist/constants';
 import * as RawState from '@metamask/desktop/dist/utils/state';
-import TOTP from '../utils/totp';
+import TOTP from '@metamask/desktop/dist/utils/totp';
+import * as encryption from '@metamask/desktop/dist/encryption/symmetric';
+import { hashString } from '@metamask/desktop/dist/utils/crypto';
 import {
   createMultiplexMock,
   createStreamMock,
@@ -17,15 +19,13 @@ import {
   flushPromises,
   simulateStreamMessage,
 } from '../test/utils';
-import * as encryption from '../encryption/symmetric-encryption';
-import { hashString } from '../utils/crypto';
 import { DesktopPairing, ExtensionPairing } from './pairing';
 
-jest.mock('../utils/totp');
-jest.mock('../encryption/symmetric-encryption');
+jest.mock('@metamask/desktop/dist/utils/totp');
+jest.mock('@metamask/desktop/dist/encryption/symmetric');
 jest.mock('obj-multiplex');
 
-jest.mock('../utils/crypto', () => ({
+jest.mock('@metamask/desktop/dist/utils/crypto', () => ({
   randomHex: jest.fn(() => []),
   hashString: jest.fn(),
 }));

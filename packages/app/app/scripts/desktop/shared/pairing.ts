@@ -9,22 +9,22 @@ import ObjectMultiplex from 'obj-multiplex';
 import { browser } from '@metamask/desktop/dist/browser';
 import { MESSAGE_ACKNOWLEDGE } from '@metamask/desktop/dist/constants';
 import {
-  PairingKeyRequestMessage,
-  PairingKeyResponseMessage,
-  PairingRequestMessage,
-  PairingResultMessage,
-} from '@metamask/desktop/dist/types';
-import {
   ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
   acknowledge,
   ///: END:ONLY_INCLUDE_IN
   waitForAcknowledge,
   waitForMessage,
 } from '@metamask/desktop/dist/utils/stream';
+import TOTP from '@metamask/desktop/dist/utils/totp';
+import { createKey } from '@metamask/desktop/dist/encryption/symmetric';
+import { hashString } from '@metamask/desktop/dist/utils/crypto';
+import {
+  PairingKeyRequestMessage,
+  PairingKeyResponseMessage,
+  PairingRequestMessage,
+  PairingResultMessage,
+} from '@metamask/desktop/dist/types';
 import * as rawState from '@metamask/desktop/dist/utils/state';
-import TOTP from '../utils/totp';
-import { createKey } from '../encryption/symmetric-encryption';
-import { hashString } from '../utils/crypto';
 
 const createStreams = (stream: Duplex) => {
   const multiplex = new ObjectMultiplex();

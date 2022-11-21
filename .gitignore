@@ -23,4 +23,5 @@ temp
 # Linting
 .eslintcache
 
+# Testing
 packages/**/coverage
