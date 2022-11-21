@@ -2,9 +2,6 @@
 
 OUTPUT_DIR="dist_desktop"
 
-echo "Rebuilding keytar"
-yarn electron-rebuild -o keytar
-
 echo "Removing existing build files"
 rm -rf $OUTPUT_DIR
 

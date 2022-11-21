@@ -39,8 +39,8 @@ module.exports = {
     config.resolve.alias['webextension-polyfill'] = require.resolve(
       './__mocks__/webextension-polyfill.js',
     );
-    config.resolve.alias['keytar'] = require.resolve(
-      './__mocks__/keytar.js',
+    config.resolve.alias['fs/promises'] = require.resolve(
+      './__mocks__/fs-promises.js',
     );
     config.module.strictExportPresence = true;
     config.module.rules.push({

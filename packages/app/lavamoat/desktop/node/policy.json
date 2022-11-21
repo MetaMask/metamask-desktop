@@ -5841,9 +5841,6 @@
         "url.resolve": true
       }
     },
-    "keytar": {
-      "native": true
-    },
     "lavamoat>@babel/code-frame": {
       "globals": {
         "console.warn": true,

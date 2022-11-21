@@ -366,9 +366,6 @@ function setupBundlerDefaults(
     bundlerOpts.manualIgnore.push('remote-redux-devtools');
   }
 
-  // Ensure that desktop app only modules/files are excluded from the build
-  bundlerOpts.manualIgnore.push('keytar');
-
   // Inject environment variables via node-style `process.env`
   if (envVars) {
     bundlerOpts.transform.push([envify(envVars), { global: true }]);

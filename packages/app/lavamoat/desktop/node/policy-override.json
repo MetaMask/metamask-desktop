@@ -1,8 +1,5 @@
 {
   "resources": {
-    "keytar": {
-      "native": true
-    },
     "ethjs-query>babel-runtime": {
       "packages": {
         "@babel/runtime": true
