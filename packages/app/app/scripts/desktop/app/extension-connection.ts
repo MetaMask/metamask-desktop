@@ -12,7 +12,9 @@ import {
   CLIENT_ID_DISABLE,
   CLIENT_ID_VERSION,
   CLIENT_ID_PAIRING,
-} from '../../../../shared/constants/desktop';
+  acknowledge,
+  waitForAcknowledge,
+} from '@metamask/desktop';
 import { ConnectionType } from '../types/background';
 import { EndConnectionMessage, NewConnectionMessage } from '../types/message';
 import { ClientId, RawState } from '../types/desktop';
@@ -20,7 +22,6 @@ import {
   registerRequestStream,
   unregisterRequestStream,
 } from '../browser/browser-polyfill';
-import { acknowledge, waitForAcknowledge } from '../utils/stream';
 import { DesktopPairing } from '../shared/pairing';
 import * as RawStateUtils from '../utils/raw-state';
 import { DesktopVersionCheck } from '../shared/version-check';

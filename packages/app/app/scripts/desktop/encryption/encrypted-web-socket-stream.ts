@@ -3,14 +3,12 @@ import log from 'loglevel';
 import {
   MESSAGE_HANDSHAKE_FINISH,
   MESSAGE_HANDSHAKE_START,
-} from '../../../../shared/constants/desktop';
-import { flattenMessage } from '../utils/utils';
-import {
   BrowserWebSocket,
   NodeWebSocket,
   WebSocketStream,
-} from '../shared/web-socket-stream';
-import { waitForMessage } from '../utils/stream';
+  waitForMessage,
+} from '@metamask/desktop';
+import { flattenMessage } from '../utils/utils';
 import * as asymmetricEncryption from './asymmetric-encryption';
 import * as symmetricEncryption from './symmetric-encryption';
 

@@ -1,6 +1,9 @@
 version: 2.1
 
 parameters:
+  common-dir:
+    type: string
+    default: packages/common
   extension-dir:
     type: string
     default: packages/app
@@ -77,7 +80,7 @@ workflows:
             - prep-deps
       - prep-build-test-desktop:
           requires:
-            - prep-deps
+            - common-build
       - test-storybook:
           requires:
             - prep-deps
@@ -89,7 +92,7 @@ workflows:
             - prep-deps
       - test-lint:
           requires:
-            - prep-deps
+            - common-build
       - test-lint-shellcheck
       - test-lint-lockfile:
           requires:
@@ -120,7 +123,7 @@ workflows:
             - prep-build-test-desktop
       - test-unit:
           requires:
-            - prep-deps
+            - common-build
       - test-unit-global:
           requires:
             - prep-deps
@@ -207,6 +210,15 @@ workflows:
               only: develop
           requires:
             - prep-build-ts-migration-dashboard
+      - common-build:
+          requires:
+            - prep-deps
+      - common-lint:
+          requires:
+            - prep-deps
+      - common-test:
+          requires:
+            - prep-deps
 
 jobs:
   create_release_pull_request:
@@ -243,6 +255,7 @@ jobs:
           paths:
             - node_modules/
             - build-artifacts/yarn-install-har/
+            - << pipeline.parameters.common-dir >>/node_modules/
             - << pipeline.parameters.extension-dir >>/node_modules/
       - run:
           name: Postinstall
@@ -253,6 +266,7 @@ jobs:
           paths:
             - node_modules
             - build-artifacts
+            - << pipeline.parameters.common-dir >>/node_modules
             - << pipeline.parameters.extension-dir >>/node_modules
 
   validate-lavamoat-config:
@@ -489,7 +503,7 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Detect ${YARN} lock deduplications
+          name: Detect yarn lock deduplications
           command: yarn yarn-deduplicate && git diff --exit-code yarn.lock
 
   test-lint:
@@ -1098,3 +1112,37 @@ jobs:
       - run:
           name: All Tests Passed
           command: echo 'weew - everything passed!'
+
+  common-build:
+    executor: node-browsers
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: build
+          command: yarn common build
+      - persist_to_workspace:
+          root: .
+          paths:
+            - << pipeline.parameters.common-dir >>/dist
+
+  common-lint:
+    executor: node-browsers
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: lint
+          command: yarn common lint
+
+  common-test:
+    executor: node-browsers
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: test
+          command: yarn common test

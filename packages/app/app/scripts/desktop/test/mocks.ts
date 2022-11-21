@@ -3,13 +3,13 @@ import ObjectMultiplex from 'obj-multiplex';
 import { WebSocketServer } from 'ws';
 import { ObservableStore } from '@metamask/obs-store';
 import ElectronStore from 'electron-store';
-import NotificationManager from '../../lib/notification-manager';
-import { ConnectionType, RemotePort } from '../types/background';
 import {
   BrowserWebSocket,
   NodeWebSocket,
   WebSocketStream,
-} from '../shared/web-socket-stream';
+} from '@metamask/desktop';
+import NotificationManager from '../../lib/notification-manager';
+import { ConnectionType, RemotePort } from '../types/background';
 import ExtensionConnection from '../app/extension-connection';
 import DesktopConnection from '../extension/desktop-connection';
 import { DesktopPairing, ExtensionPairing } from '../shared/pairing';
@@ -37,6 +37,8 @@ export const CLIENT_ID_MOCK = 3;
 export const CLIENT_ID_2_MOCK = 12;
 export const PORT_MOCK = 123;
 export const PASSWORD_MOCK = 'testPassword';
+export const ENCRYPTED_CYPHER_MOCK = Buffer.from('encryptedCypherTest');
+export const ENCRYPTED_CYPHER_FILE_MOCK = 'encryptedCypherFileTest';
 export const STREAM_MOCK = 'testStream';
 export const TYPE_MOCK = 'testType';
 export const METHOD_MOCK = 'testMethod';
@@ -49,6 +51,7 @@ export const JSON_RPC_ID_MOCK = 123456;
 export const ARGS_MOCK = ['test123', 123, true];
 export const UUID_MOCK = '6328e6ae-f867-4876-af6f-22a44efbe251';
 export const OTP_MOCK = '123456';
+export const WRONG_OTP_MOCK = '654321';
 export const VERSION_MOCK = '123.456.789.012';
 export const VERSION_2_MOCK = '456.123.789.012';
 export const HASH_BUFFER_MOCK = Buffer.from([10, 11, 12]);

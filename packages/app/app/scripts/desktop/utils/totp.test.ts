@@ -1,10 +1,11 @@
 import { TOTP as TOTPAuth } from 'otpauth';
-import { OTP_MOCK } from '../test/mocks';
+import { OTP_MOCK, WRONG_OTP_MOCK } from '../test/mocks';
 import TOTP from './totp';
 
 describe('TOTP', () => {
   let validateMock;
   let generateMock;
+  let initMock;
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -12,6 +13,7 @@ describe('TOTP', () => {
     generateMock = jest
       .spyOn(TOTPAuth, 'generate')
       .mockImplementation(() => OTP_MOCK);
+    initMock = jest.spyOn(TOTP as any, 'init');
   });
 
   it('generates OTP', async () => {
@@ -35,5 +37,14 @@ describe('TOTP', () => {
       secret: expect.anything(),
       timestamp: undefined,
     });
+  });
+
+  it('resets TOTP instance after exceed the max attempts within 30 seconds', async () => {
+    for (let i = 0; i < 10; i++) {
+      TOTP.validate(WRONG_OTP_MOCK);
+      expect(validateMock).toHaveBeenCalled();
+    }
+    expect(validateMock).toHaveBeenCalledTimes(10);
+    expect(initMock).toHaveBeenCalledTimes(1);
   });
 });

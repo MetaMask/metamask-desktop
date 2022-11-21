@@ -63,7 +63,7 @@ import DesktopManager from './desktop/extension/desktop-manager';
 import {
   CONNECTION_TYPE_EXTERNAL,
   CONNECTION_TYPE_INTERNAL,
-} from '../../shared/constants/desktop';
+} from '@metamask/desktop';
 ///: END:ONLY_INCLUDE_IN
 
 /* eslint-enable import/order */
