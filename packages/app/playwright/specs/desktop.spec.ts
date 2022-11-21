@@ -100,33 +100,4 @@ test.describe('Desktop send', () => {
 
     await electronApp.close();
   });
-
-  test('Extension: Send a transaction from one account to another', async ({
-    page,
-    context,
-  }) => {
-    const initialFlow = await context.newPage();
-    await signUpFlow(initialFlow, context);
-
-    const initialPage = new MMDInitialPage(page);
-    // await initialPage.closeHelpUsImproveBanner();
-
-
-    // await initialPage.hasFunds();
-    // await initialPage.selectMainAction('Send');
-    // await initialPage.cancelSend();
-
-    await initialPage.selectMainAction('Send');
-    await initialPage.sendFunds('0x2f318c334780961fb129d2a6c30d0763d9a5c970');
-    await initialPage.checkLastTransactionAction('Send');
-    await initialPage.checkLastTransactionStatus('pending');
-
-    // Get date in format "Month Day" like "Nov 15"
-    const date = new Date().toLocaleDateString('en-us', {
-      month: 'short',
-      day: 'numeric',
-    });
-    await initialPage.checkLastTransactionStatus(date);
-  });
-
 });

@@ -17,15 +17,15 @@
 
 1. Have generated a desktop app built with env param 
 ```
-SKIP_OTP_PAIRING_FLOW=1 yarn build:desktop:app:test:ui
+yarn app build:app:test:ui
 ```
 2. Have generated a desktop UI 
 ```
-yarn build:desktop:ui
+yarn extension build:desktop:ui
 ```
 3. Have generated a MM extension built with env param 
 ```
-SKIP_OTP_PAIRING_FLOW=1 yarn build:test:desktop:ui
+yarn extension build:test:desktop:ui
 ```
 
 ## Installation

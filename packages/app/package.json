@@ -8,6 +8,7 @@
     "build:app": "./build/build.sh",
     "build:app:mv3": "ENABLE_MV3=true yarn build:app",
     "build:app:test": "IN_TEST=true SEGMENT_HOST='https://api.segment.io' SEGMENT_WRITE_KEY='FAKE' PHISHING_WARNING_PAGE_URL=http://localhost:9999/ METAMASK_DEBUG=1 yarn build:app",
+    "build:app:test:ui": "UI_TEST=true METAMASK_DEBUG=1 yarn build:app",
     "generate:certificate:win": "@powershell ./build/windows/generate_certificate.ps1",
     "lavamoat": "CI=true yarn build:app && lavamoat dist/app/submodules/extension/app/scripts/background.js --autopolicy --policy lavamoat/node/policy.json --policyOverride lavamoat/node/policy-override.json --includeDevDeps=false",
     "lint": "yarn lint:prettier && yarn lint:eslint && yarn lint:tsc",
