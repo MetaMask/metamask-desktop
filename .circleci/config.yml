@@ -444,7 +444,7 @@ jobs:
           command: yarn app build:app:test:ui
       - run:
           name: Build desktop UI for testing
-          command: ${YARN_EXTENSION} build:desktop:ui
+          command: ${YARN_EXTENSION} build:desktop:ui:ci
       - run:
           name: Build extension (no lavamoat) for testing
           command: ${YARN_EXTENSION} build:test:desktop:ui
@@ -850,11 +850,12 @@ jobs:
           at: .
       - run:
           name: Move test build to dist
-          command: mv ./dist-test-desktop ./dist    
+          command: mv ./${EXTENSION_DIR}/dist-test-desktop ./${EXTENSION_DIR}/dist    
       - run: 
           name: Install PW dependencies
           command: |
-            cd ${APP_DIR}/playwright && yarn
+            cd ./${APP_DIR}/playwright
+            yarn
             npx playwright install chrome
             node node_modules/electron/install.js
       - run:

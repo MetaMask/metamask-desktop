@@ -15,6 +15,7 @@
     "build:desktop:extension:test": "yarn start:test --build-type desktopextension",
     "build:desktop:extension:mv3": "ENABLE_MV3=true yarn start --build-type desktopextension",
     "build:desktop:ui": "node development/desktop/electron/build/desktop-ui.js dev --apply-lavamoat=false",
+    "build:desktop:ui:ci": "node development/desktop/electron/build/desktop-ui.js dist --apply-lavamoat=false",
     "build:desktop:ui:subtask": "node development/desktop/electron/build/desktop-ui.js",
     "build:desktop:ui:subtask:lavamoat": "node development/desktop/electron/build/desktop-ui.js --apply-lavamoat=true",
     "build:desktop:ui:lavamoat": "node development/desktop/electron/build/desktop-ui.js dev --apply-lavamoat=true",

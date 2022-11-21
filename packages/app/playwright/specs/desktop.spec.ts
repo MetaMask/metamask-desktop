@@ -84,7 +84,6 @@ test.describe('Desktop send', () => {
 
     // await initialPage.closeHelpUsImproveBanner();
 
-
     await initialPage.hasFunds();
     await initialPage.selectMainAction('Send');
     await initialPage.sendFunds('0x2f318c334780961fb129d2a6c30d0763d9a5c970');
