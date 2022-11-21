@@ -5887,7 +5887,7 @@
         "external:../common/dist/web-socket-stream.js": true
       }
     },
-    "external:../common/dist/utils/config.js": {
+    "external:../common/dist/utils/config/index.js": {
       "packages": {
         "browserify>process": true
       }
@@ -5900,7 +5900,7 @@
     },
     "external:../common/dist/version-check.js": {
       "packages": {
-        "external:../common/dist/utils/config.js": true,
+        "external:../common/dist/utils/config/index.js": true,
         "external:../common/dist/utils/stream.js": true,
         "external:../common/node_modules/loglevel/lib/loglevel.js": true
       }
