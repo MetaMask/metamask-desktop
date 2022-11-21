@@ -1,4 +1,5 @@
 import ObjectMultiplex from 'obj-multiplex';
+import { MESSAGE_ACKNOWLEDGE } from '@metamask/desktop';
 import TOTP from '../utils/totp';
 import {
   createMultiplexMock,
@@ -16,7 +17,6 @@ import {
 } from '../test/utils';
 import { browser } from '../browser/browser-polyfill';
 import * as RawState from '../utils/raw-state';
-import { MESSAGE_ACKNOWLEDGE } from '../../../../shared/constants/desktop';
 import * as encryption from '../encryption/symmetric-encryption';
 import { hashString } from '../utils/crypto';
 import { DesktopPairing, ExtensionPairing } from './pairing';

@@ -1,7 +1,7 @@
 import { app, BrowserWindow } from 'electron';
 import { Server as WebSocketServer } from 'ws';
+import { WebSocketStream } from '@metamask/desktop';
 import EncryptedWebSocketStream from '../encryption/encrypted-web-socket-stream';
-import { WebSocketStream } from '../shared/web-socket-stream';
 import cfg from '../utils/config';
 import {
   PORT_MOCK,
@@ -18,7 +18,7 @@ import { updateCheck } from './update-check';
 import DesktopApp from './desktop-app';
 
 jest.mock('extension-port-stream');
-jest.mock('../shared/web-socket-stream');
+jest.mock('@metamask/desktop');
 jest.mock('../encryption/encrypted-web-socket-stream');
 jest.mock('./extension-connection');
 

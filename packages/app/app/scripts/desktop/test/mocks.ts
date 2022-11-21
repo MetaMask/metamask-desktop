@@ -3,13 +3,13 @@ import ObjectMultiplex from 'obj-multiplex';
 import { WebSocketServer } from 'ws';
 import { ObservableStore } from '@metamask/obs-store';
 import ElectronStore from 'electron-store';
-import NotificationManager from '../../lib/notification-manager';
-import { ConnectionType, RemotePort } from '../types/background';
 import {
   BrowserWebSocket,
   NodeWebSocket,
   WebSocketStream,
-} from '../shared/web-socket-stream';
+} from '@metamask/desktop';
+import NotificationManager from '../../lib/notification-manager';
+import { ConnectionType, RemotePort } from '../types/background';
 import ExtensionConnection from '../app/extension-connection';
 import DesktopConnection from '../extension/desktop-connection';
 import { DesktopPairing, ExtensionPairing } from '../shared/pairing';

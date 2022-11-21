@@ -7,7 +7,7 @@ import {
   CLIENT_ID_STATE,
   CLIENT_ID_DISABLE,
   MESSAGE_ACKNOWLEDGE,
-} from '../../../../shared/constants/desktop';
+} from '@metamask/desktop';
 import {
   REMOTE_PORT_NAME_MOCK,
   REMOTE_PORT_SENDER_MOCK,
