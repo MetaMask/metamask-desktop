@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import { persistReducer } from 'redux-persist';
 
 import createElectronStorage from '../helpers/utils/electron-storage';
+import { persistedUIStoreKey } from '../helpers/constants/storage';
 import appReducer from './app/app';
 import localesReducer from './locale/locale';
 import pairStatusReducer from './pair-status/pair-status';
@@ -27,8 +28,7 @@ const rootReducer = combineReducers({
 const rootPersistConfig = {
   key: 'root',
   storage: createElectronStorage({
-    // Change the number to clear the storage
-    name: 'mmd-desktop-ui-v0.0.0-root',
+    name: persistedUIStoreKey,
   }),
   whitelist: ['app', 'locales'],
 };

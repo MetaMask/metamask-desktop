@@ -13,6 +13,7 @@ import * as RawState from '../utils/raw-state';
 import { MILLISECOND } from '../../../../shared/constants/time';
 import ExtensionConnection from './extension-connection';
 import { updateCheck } from './update-check';
+import { titleBarOverlayOpts } from './ui-constants';
 
 const MAIN_WINDOW_SHOW_DELAY = 750 * MILLISECOND;
 
@@ -70,6 +71,11 @@ class DesktopApp extends EventEmitter {
     ipcMain.handle('reset', async (_event) => {
       await RawState.clear();
       this.status.isDesktopEnabled = false;
+    });
+
+    ipcMain.handle('set-theme', (event, theme) => {
+      const win = BrowserWindow.fromWebContents(event.sender);
+      win?.setTitleBarOverlay(titleBarOverlayOpts[theme]);
     });
 
     if (!cfg().desktop.isTest) {
@@ -213,10 +219,8 @@ class DesktopApp extends EventEmitter {
     const mainWindow = new BrowserWindow({
       width: 800,
       height: 640,
-      vibrancy: 'dark',
       titleBarStyle: 'hidden',
-      visualEffectState: 'active',
-      show: false,
+      titleBarOverlay: titleBarOverlayOpts.light,
       webPreferences: {
         preload: path.resolve(__dirname, './status-preload.js'),
         nodeIntegration: true,
@@ -227,6 +231,9 @@ class DesktopApp extends EventEmitter {
         '../../../../../dist_desktop_ui/images/icon-128.png',
       ),
     });
+
+    // Keep this to prevent "alt" key is not triggering menu in Windows
+    mainWindow?.setMenu(null);
 
     mainWindow.loadFile(
       path.resolve(__dirname, '../../../../../dist_desktop_ui/desktop-ui.html'),
