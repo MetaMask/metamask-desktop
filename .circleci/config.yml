@@ -41,12 +41,37 @@ executors:
     resource_class: large
     environment:
       APP_DIR: << pipeline.parameters.app-dir >>
+      EXTENSION_DIR: << pipeline.parameters.extension-dir >>
+      YARN_EXTENSION: << pipeline.parameters.yarn >>
       NODE_ENV: development
 
 workflows:
   test_and_release:
     jobs:
+      - create_release_pull_request:
+          requires:
+            - prep-deps
+          filters:
+            branches:
+              only:
+                - /^Version-v(\d+)[.](\d+)[.](\d+)/    
       - prep-deps 
+      - test-deps-audit:
+          requires:
+            - prep-deps
+      - test-deps-depcheck:
+          requires:
+            - prep-deps
+      - test-yarn-dedupe:
+          requires:
+            - prep-deps
+      - validate-lavamoat-config:
+          filters:
+            branches:
+              only:
+                - /^Version-v(\d+)[.](\d+)[.](\d+)|master/
+          requires:
+            - prep-deps      
       - validate-lavamoat-config:
           filters:
             branches:
@@ -234,30 +259,6 @@ workflows:
             - common-build
 
 jobs:
-  prep-e2e-test-desktop-deps:
-    executor: node-browsers
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .      
-      - run: 
-          name: Build desktop app for testing
-          command: yarn build:desktop:app:test:ui
-      - run:
-          name: Build desktop UI for testing
-          command: yarn build:desktop:ui
-      - run:
-          name: Build extension (no lavamoat) for testing
-          command: yarn build:test:desktop:ui
-      - run:
-          name: Move test build to 'dist-test' to avoid conflict with production build
-          command: mv ./dist ./dist-test-desktop      
-      - persist_to_workspace:
-          root: .
-          paths:
-            - dist-test-desktop
-            - dist_desktop
-
   create_release_pull_request:
     executor: node-browsers
     steps:
@@ -436,6 +437,30 @@ jobs:
             - << pipeline.parameters.app-dir >>/dist
             - << pipeline.parameters.extension-dir >>/dist-test-desktop
             - << pipeline.parameters.extension-dir >>/builds-test-desktop
+
+  prep-e2e-test-desktop-deps:
+    executor: node-browsers
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .      
+      - run: 
+          name: Build desktop app for testing
+          command: yarn app build:app:test:ui
+      - run:
+          name: Build desktop UI for testing
+          command: ${YARN_EXTENSION} build:desktop:ui
+      - run:
+          name: Build extension (no lavamoat) for testing
+          command: ${YARN_EXTENSION} build:test:desktop:ui
+      - run:
+          name: Move test build to 'dist-test' to avoid conflict with production build
+          command: mv ./${EXTENSION_DIR}/dist ./dist-test-desktop      
+      - persist_to_workspace:
+          root: .
+          paths:
+            - << pipeline.parameters.app-dir >>/dist
+            - << pipeline.parameters.extension-dir >>/dist-test-desktop
 
   prep-build-test-flask:
     executor: node-browsers-medium-plus
