@@ -499,7 +499,8 @@
       "ws>bufferutil": false,
       "ws>utf-8-validate": false,
       "@ledgerhq/hw-transport-node-hid-noevents>node-hid": true,
-      "hdkey>secp256k1": false
+      "hdkey>secp256k1": false,
+      "@metamask/desktop>eciesjs>secp256k1": false
     }
   }
 }
