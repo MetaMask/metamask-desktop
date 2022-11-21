@@ -25,8 +25,6 @@ const UNHANDLED_FUNCTIONS = [
 ];
 
 const PROXY_FUNCTIONS = [
-  'browserAction.setBadgeBackgroundColor',
-  'browserAction.setBadgeText',
   'notifications.create',
   'runtime.getURL',
   'tabs.query',
@@ -35,6 +33,16 @@ const PROXY_FUNCTIONS = [
   'windows.getLastFocused',
   'windows.update',
 ];
+
+// browserAction has been replaced by action in MV3
+if (cfg().desktop.mv3) {
+  PROXY_FUNCTIONS.push('action.setBadgeBackgroundColor', 'action.setBadgeText');
+} else {
+  PROXY_FUNCTIONS.push(
+    'browserAction.setBadgeBackgroundColor',
+    'browserAction.setBadgeText',
+  );
+}
 
 const requestPromises: { [id: string]: (result: any) => void } = {};
 let requestStream: Duplex | undefined;

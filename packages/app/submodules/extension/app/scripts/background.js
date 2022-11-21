@@ -651,7 +651,7 @@ export function setupController(
       label = String(count);
     }
     // browserAction has been replaced by action in MV3
-    if (isManifestV3) {
+    if (isManifestV3 || process.env.ENABLE_MV3 === true) {
       browser.action.setBadgeText({ text: label });
       browser.action.setBadgeBackgroundColor({ color: '#037DD6' });
     } else {
