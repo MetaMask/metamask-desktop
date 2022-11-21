@@ -26,3 +26,4 @@ temp
 # Testing
 packages/**/coverage
 packages/**/playwright/playwright-reports
+.eslintcache
