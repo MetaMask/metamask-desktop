@@ -873,6 +873,9 @@ jobs:
       - store_test_results:
           name: report for pipeline integration
           path: << pipeline.parameters.app-dir >>/playwright/playwright-reports/junit/test-results.xml
+      - store_artifacts:
+          name: screenshots and trace.zip
+          path: ./<< pipeline.parameters.app-dir >>/playwright/test-results/
 
   benchmark:
     executor: node-browsers-medium-plus

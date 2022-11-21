@@ -60,9 +60,9 @@ test.describe('Desktop send', () => {
     const windows = electronApp.windows();
     console.log(`${windows.length} windows created`);
     const main =
-      (await windows[0].title()) === 'MetaMask Desktop'
-        ? windows[0]
-        : windows[1];
+      (await windows[0].title()) === 'TrezorConnect Electron PopUp Page'
+        ? windows[1]
+        : windows[0];
     console.log(`${await main.title()} -> main window`);
     // await expect(main.locator('.mmd-pair-status')).toContainText('Inactive');
     await main.screenshot({
