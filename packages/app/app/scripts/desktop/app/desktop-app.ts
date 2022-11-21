@@ -232,8 +232,10 @@ class DesktopApp extends EventEmitter {
       ),
     });
 
-    // Keep this to prevent "alt" key is not triggering menu in Windows
-    mainWindow?.setMenu(null);
+    if (process.platform === 'win32') {
+      // Keep this to prevent "alt" key is not triggering menu in Windows
+      mainWindow?.setMenu(null);
+    }
 
     mainWindow.loadFile(
       path.resolve(__dirname, '../../../../../dist_desktop_ui/desktop-ui.html'),
