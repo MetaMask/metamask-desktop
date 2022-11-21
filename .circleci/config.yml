@@ -71,12 +71,7 @@ workflows:
               only:
                 - /^Version-v(\d+)[.](\d+)[.](\d+)|master/
           requires:
-            - prep-deps      
-      - validate-lavamoat-config:
-          filters:
-            branches:
-              only:
-                - /^Version-v(\d+)[.](\d+)[.](\d+)|master/      
+            - prep-deps          
       - prep-build:
           requires:
             - prep-deps      
