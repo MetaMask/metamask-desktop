@@ -16,5 +16,5 @@ $password = ConvertTo-SecureString `
 
 Export-PfxCertificate `
     -Cert "Cert:\CurrentUser\My\$($certificate.Thumbprint)" `
-    -FilePath "packages/app/desktop_packaging/windows/test_certificate.pfx" `
+    -FilePath "desktop_packaging/windows/test_certificate.pfx" `
     -Password $password
