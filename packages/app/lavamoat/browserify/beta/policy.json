@@ -5183,16 +5183,16 @@
         "browserify>process": true
       }
     },
-    "external:../common/dist/utils/stream.js": {
+    "external:../common/dist/utils/stream/index.js": {
       "packages": {
         "browserify>stream-browserify": true,
-        "external:../common/dist/constants.js": true
+        "external:../common/dist/constants/index.js": true
       }
     },
     "external:../common/dist/version-check.js": {
       "packages": {
         "external:../common/dist/utils/config/index.js": true,
-        "external:../common/dist/utils/stream.js": true,
+        "external:../common/dist/utils/stream/index.js": true,
         "external:../common/node_modules/loglevel/lib/loglevel.js": true
       }
     },
