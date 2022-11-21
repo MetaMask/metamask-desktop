@@ -68,6 +68,12 @@ test.describe('Desktop send', () => {
     await main.screenshot({
       path: 'test-results/visual/desktop-inactive.main.png',
     });
+    await windows[1].screenshot({
+      path: 'test-results/visual/window1.png',
+    });
+    await windows[0].screenshot({
+      path: 'test-results/visual/window0.png',
+    });
     const initialFlow = await context.newPage();
     const extensionId = await signUpFlow(initialFlow, context);
     await enableDesktopAppFlow(initialFlow);
