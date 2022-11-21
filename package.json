@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "setup": "yarn && yarn app setup",
+    "setup": "yarn && yarn app setup && yarn common build",
     "app": "yarn workspace metamask-crx",
     "common": "yarn workspace @metamask/desktop"
   },
