@@ -6,10 +6,10 @@ parameters:
     default: packages/common
   extension-dir:
     type: string
-    default: packages/app
-  yarn:
+    default: packages/app/submodules/extension
+  yarn-extension:
     type: string
-    default: yarn app
+    default: yarn extension
 
 executors:
   node-browsers:
@@ -17,7 +17,7 @@ executors:
       - image: circleci/node:16-browsers
     environment:
       EXTENSION_DIR: << pipeline.parameters.extension-dir >>
-      YARN: << pipeline.parameters.yarn >>
+      YARN_EXTENSION: << pipeline.parameters.yarn-extension >>
   node-browsers-medium-plus:
     docker:
       - image: circleci/node:16-browsers
@@ -25,13 +25,13 @@ executors:
     environment:
       EXTENSION_DIR: << pipeline.parameters.extension-dir >>
       NODE_OPTIONS: --max_old_space_size=2048
-      YARN: << pipeline.parameters.yarn >>
+      YARN_EXTENSION: << pipeline.parameters.yarn-extension >>
   shellcheck:
     docker:
       - image: koalaman/shellcheck-alpine@sha256:dfaf08fab58c158549d3be64fb101c626abc5f16f341b569092577ae207db199
     environment:
       EXTENSION_DIR: << pipeline.parameters.extension-dir >>
-      YARN: << pipeline.parameters.yarn >>
+      YARN_EXTENSION: << pipeline.parameters.yarn-extension >>
 
 workflows:
   test_and_release:
@@ -233,7 +233,7 @@ jobs:
           command: .circleci/scripts/release-bump-manifest-version.sh
       - run:
           name: Update changelog
-          command: ${YARN} update-changelog --rc
+          command: ${YARN_EXTENSION} update-changelog --rc
       - run:
           name: Commit changes
           command: .circleci/scripts/release-commit-version-bump.sh
@@ -261,7 +261,7 @@ jobs:
       - run:
           name: Postinstall
           command: |
-            ${YARN} setup:postinstall
+            ${YARN_EXTENSION} setup:postinstall
       - persist_to_workspace:
           root: .
           paths:
@@ -300,7 +300,7 @@ jobs:
           steps:
             - run:
                 name: build:dist
-                command: ${YARN} build dist
+                command: ${YARN_EXTENSION} build dist
       - when:
           condition:
             matches:
@@ -309,7 +309,7 @@ jobs:
           steps:
             - run:
                 name: build:prod
-                command: ${YARN} build prod
+                command: ${YARN_EXTENSION} build prod
       - run:
           name: build:debug
           command: find ${EXTENSION_DIR}/dist/ -type f -exec md5sum {} \; | sort -k 2
@@ -327,7 +327,7 @@ jobs:
           at: .
       - run:
           name: build:dist
-          command: ${YARN} build --build-type beta dist
+          command: ${YARN_EXTENSION} build --build-type beta dist
       - run:
           name: build:debug
           command: find ${EXTENSION_DIR}/dist/ -type f -exec md5sum {} \; | sort -k 2
@@ -351,7 +351,7 @@ jobs:
           at: .
       - run:
           name: build:dist
-          command: ${YARN} build --build-type flask dist
+          command: ${YARN_EXTENSION} build --build-type flask dist
       - run:
           name: build:debug
           command: find ${EXTENSION_DIR}/dist/ -type f -exec md5sum {} \; | sort -k 2
@@ -375,13 +375,13 @@ jobs:
           at: .
       - run:
           name: Build desktop app for testing
-          command: ${YARN} build:desktop:app:test
+          command: yarn app build:test
       - run:
           name: Build desktop UI for testing
-          command: ${YARN} dist:desktop:ui
+          command: ${YARN_EXTENSION} dist:desktop:ui
       - run:
           name: Build extension for testing
-          command: ${YARN} build:test:desktop
+          command: ${YARN_EXTENSION} build:test:desktop
       - run:
           name: Move test build to 'dist-test' to avoid conflict with production build
           command: mv ./${EXTENSION_DIR}/dist ./${EXTENSION_DIR}/dist-test-desktop
@@ -404,7 +404,7 @@ jobs:
           at: .
       - run:
           name: Build extension for testing
-          command: ${YARN} build:test:flask
+          command: ${YARN_EXTENSION} build:test:flask
       - run:
           name: Move test build to 'dist-test' to avoid conflict with production build
           command: mv ./${EXTENSION_DIR}/dist ./${EXTENSION_DIR}/dist-test-flask
@@ -425,7 +425,7 @@ jobs:
           at: .
       - run:
           name: Build extension in mv3 for testing
-          command: ${YARN} build:test:mv3
+          command: ${YARN_EXTENSION} build:test:mv3
       - run:
           name: Move test build to 'dist-test' to avoid conflict with production build
           command: mv ./${EXTENSION_DIR}/dist ./${EXTENSION_DIR}/dist-test-mv3
@@ -446,7 +446,7 @@ jobs:
           at: .
       - run:
           name: Build extension for testing
-          command: ${YARN} build:test
+          command: ${YARN_EXTENSION} build:test
       - run:
           name: Move test build to 'dist-test' to avoid conflict with production build
           command: mv ./${EXTENSION_DIR}/dist ./${EXTENSION_DIR}/dist-test
@@ -467,7 +467,7 @@ jobs:
           at: .
       - run:
           name: Build Storybook
-          command: ${YARN} storybook:build
+          command: ${YARN_EXTENSION} storybook:build
       - persist_to_workspace:
           root: .
           paths:
@@ -481,7 +481,7 @@ jobs:
           at: .
       - run:
           name: Build TypeScript migration dashboard
-          command: ${YARN} ts-migration:dashboard:build
+          command: ${YARN_EXTENSION} ts-migration:dashboard:build
       - persist_to_workspace:
           root: .
           paths:
@@ -495,7 +495,7 @@ jobs:
           at: .
       - run:
           name: Test Storybook
-          command: ${YARN} storybook:test
+          command: ${YARN_EXTENSION} storybook:test
 
   test-yarn-dedupe:
     executor: node-browsers
@@ -515,10 +515,10 @@ jobs:
           at: .
       - run:
           name: Lint
-          command: ${YARN} lint
+          command: ${YARN_EXTENSION} lint
       - run:
           name: Verify locales
-          command: ${YARN} verify-locales --quiet
+          command: ${YARN_EXTENSION} verify-locales --quiet
 
   test-lint-shellcheck:
     executor: shellcheck
@@ -537,7 +537,7 @@ jobs:
           at: .
       - run:
           name: lockfile-lint
-          command: ${YARN} lint:lockfile
+          command: ${YARN_EXTENSION} lint:lockfile
 
   test-lint-changelog:
     executor: node-browsers
@@ -554,7 +554,7 @@ jobs:
           steps:
             - run:
                 name: Validate changelog
-                command: ${YARN} lint:changelog
+                command: ${YARN_EXTENSION} lint:changelog
       - when:
           condition:
             matches:
@@ -563,7 +563,7 @@ jobs:
           steps:
             - run:
                 name: Validate release candidate changelog
-                command: ${YARN} lint:changelog:rc
+                command: ${YARN_EXTENSION} lint:changelog:rc
 
   test-deps-audit:
     executor: node-browsers
@@ -572,7 +572,7 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: ${YARN} audit
+          name: ${YARN_EXTENSION} audit
           command: .circleci/scripts/yarn-audit.sh
 
   test-deps-depcheck:
@@ -583,7 +583,7 @@ jobs:
           at: .
       - run:
           name: depcheck
-          command: ${YARN} depcheck
+          command: ${YARN_EXTENSION} depcheck
 
   test-e2e-chrome:
     executor: node-browsers
@@ -606,7 +606,7 @@ jobs:
           command: |
             if .circleci/scripts/test-run-e2e.sh
             then
-              ${YARN} test:e2e:chrome --retries 2
+              ${YARN_EXTENSION} test:e2e:chrome --retries 2
             fi
           no_output_timeout: 20m
       - store_artifacts:
@@ -634,7 +634,7 @@ jobs:
           command: |
             if .circleci/scripts/test-run-e2e.sh
             then
-              ${YARN} test:e2e:chrome --retries 2 || echo "Temporarily suppressing MV3 e2e test failures"
+              ${YARN_EXTENSION} test:e2e:chrome --retries 2 || echo "Temporarily suppressing MV3 e2e test failures"
             fi
           no_output_timeout: 20m
       - store_artifacts:
@@ -662,7 +662,7 @@ jobs:
           command: |
             if .circleci/scripts/test-run-e2e.sh
             then
-              ${YARN} test:e2e:chrome:desktop --retries 2
+              ${YARN_EXTENSION} test:e2e:chrome:desktop --retries 2
             fi
           no_output_timeout: 20m
       - store_artifacts:
@@ -690,7 +690,7 @@ jobs:
           command: |
             if .circleci/scripts/test-run-e2e.sh
             then
-              ${YARN} test:e2e:chrome:desktop:snaps --retries 2
+              ${YARN_EXTENSION} test:e2e:chrome:desktop:snaps --retries 2
             fi
           no_output_timeout: 20m
       - store_artifacts:
@@ -718,7 +718,7 @@ jobs:
           command: |
             if .circleci/scripts/test-run-e2e.sh
             then
-              ${YARN} test:e2e:firefox:snaps --retries 2
+              ${YARN_EXTENSION} test:e2e:firefox:snaps --retries 2
             fi
           no_output_timeout: 20m
       - store_artifacts:
@@ -746,7 +746,7 @@ jobs:
           command: |
             if .circleci/scripts/test-run-e2e.sh
             then
-              ${YARN} test:e2e:chrome:snaps --retries 2
+              ${YARN_EXTENSION} test:e2e:chrome:snaps --retries 2
             fi
           no_output_timeout: 20m
       - store_artifacts:
@@ -774,7 +774,7 @@ jobs:
           command: |
             if .circleci/scripts/test-run-e2e.sh
             then
-              ${YARN} test:e2e:firefox --retries 2
+              ${YARN_EXTENSION} test:e2e:firefox --retries 2
             fi
           no_output_timeout: 20m
       - store_artifacts:
@@ -798,7 +798,7 @@ jobs:
           command: mv ./${EXTENSION_DIR}/builds-test ./${EXTENSION_DIR}/builds
       - run:
           name: Run page load benchmark
-          command: ${YARN} benchmark:chrome --out ../../test-artifacts/chrome/benchmark/pageload.json --retries 2
+          command: ${YARN_EXTENSION} benchmark:chrome --out ../../test-artifacts/chrome/benchmark/pageload.json --retries 2
       - store_artifacts:
           path: test-artifacts
           destination: test-artifacts
@@ -824,7 +824,7 @@ jobs:
           command: mv ./${EXTENSION_DIR}/builds-test ./${EXTENSION_DIR}/builds
       - run:
           name: Run page load benchmark
-          command: ${YARN} user-actions-benchmark:chrome --out ../../test-artifacts/chrome/benchmark/user_actions.json --retries 2
+          command: ${YARN_EXTENSION} user-actions-benchmark:chrome --out ../../test-artifacts/chrome/benchmark/user_actions.json --retries 2
       - store_artifacts:
           path: test-artifacts
           destination: test-artifacts
@@ -858,7 +858,7 @@ jobs:
             cp -R ${EXTENSION_DIR}/development/charts/table test-artifacts/chrome/mv3/load_time
       - run:
           name: Run page load benchmark
-          command: ${YARN} mv3:stats:chrome --out test-artifacts/chrome/mv3
+          command: ${YARN_EXTENSION} mv3:stats:chrome --out test-artifacts/chrome/mv3
       - run:
           name: Install jq
           command: sudo apt install jq -y
@@ -945,10 +945,10 @@ jobs:
           at: .
       - run:
           name: Publish main release to Sentry
-          command: ${YARN} sentry:publish
+          command: ${YARN_EXTENSION} sentry:publish
       - run:
           name: Publish Flask release to Sentry
-          command: ${YARN} sentry:publish --build-type flask
+          command: ${YARN_EXTENSION} sentry:publish --build-type flask
       - run:
           name: Create GitHub release
           command: |
@@ -967,7 +967,7 @@ jobs:
           name: storybook:deploy
           command: |
             git remote add storybook git@github.com:MetaMask/metamask-storybook.git
-            ${YARN} storybook:deploy
+            ${YARN_EXTENSION} storybook:deploy
 
   job-publish-ts-migration-dashboard:
     executor: node-browsers
@@ -984,7 +984,7 @@ jobs:
             git remote add ts-migration-dashboard git@github.com:MetaMask/metamask-extension-ts-migration-dashboard.git
             git config user.name "MetaMask Bot"
             git config user.email metamaskbot@users.noreply.github.com
-            ${YARN} ts-migration:dashboard:deploy
+            ${YARN_EXTENSION} ts-migration:dashboard:deploy
 
   test-unit:
     executor: node-browsers
@@ -994,10 +994,10 @@ jobs:
           at: .
       - run:
           name: test:coverage:mocha
-          command: ${YARN} test:coverage:mocha
+          command: ${YARN_EXTENSION} test:coverage:mocha
       - run:
           name: test:coverage:jest
-          command: ${YARN} test:coverage:jest
+          command: ${YARN_EXTENSION} test:coverage:jest
       - run:
           name: Validate coverage thresholds
           command: |
@@ -1021,7 +1021,7 @@ jobs:
           at: .
       - run:
           name: test:unit:global
-          command: ${YARN} test:unit:global
+          command: ${YARN_EXTENSION} test:unit:global
 
   validate-source-maps:
     executor: node-browsers
@@ -1031,7 +1031,7 @@ jobs:
           at: .
       - run:
           name: Validate source maps
-          command: ${YARN} validate-source-maps
+          command: ${YARN_EXTENSION} validate-source-maps
 
   validate-source-maps-beta:
     executor: node-browsers
@@ -1047,7 +1047,7 @@ jobs:
           command: mv ./<< pipeline.parameters.extension-dir >>/builds-beta ./<< pipeline.parameters.extension-dir >>/builds
       - run:
           name: Validate source maps
-          command: ${YARN} validate-source-maps
+          command: ${YARN_EXTENSION} validate-source-maps
 
   validate-source-maps-flask:
     executor: node-browsers
@@ -1063,7 +1063,7 @@ jobs:
           command: mv ./<< pipeline.parameters.extension-dir >>/builds-flask ./<< pipeline.parameters.extension-dir >>//builds
       - run:
           name: Validate source maps
-          command: ${YARN} validate-source-maps
+          command: ${YARN_EXTENSION} validate-source-maps
 
   test-mozilla-lint:
     executor: node-browsers
@@ -1073,7 +1073,7 @@ jobs:
           at: .
       - run:
           name: test:mozilla-lint
-          command: NODE_OPTIONS=--max_old_space_size=3072 ${YARN} mozilla-lint
+          command: NODE_OPTIONS=--max_old_space_size=3072 ${YARN_EXTENSION} mozilla-lint
 
   test-mozilla-lint-beta:
     executor: node-browsers
@@ -1089,7 +1089,7 @@ jobs:
           command: mv ./<< pipeline.parameters.extension-dir >>/builds-beta ./<< pipeline.parameters.extension-dir >>/builds
       - run:
           name: test:mozilla-lint
-          command: NODE_OPTIONS=--max_old_space_size=3072 ${YARN} mozilla-lint
+          command: NODE_OPTIONS=--max_old_space_size=3072 ${YARN_EXTENSION} mozilla-lint
 
   test-mozilla-lint-flask:
     executor: node-browsers
@@ -1105,7 +1105,7 @@ jobs:
           command: mv ./<< pipeline.parameters.extension-dir >>/builds-flask ./<< pipeline.parameters.extension-dir >>/builds
       - run:
           name: test:mozilla-lint
-          command: NODE_OPTIONS=--max_old_space_size=3072 ${YARN} mozilla-lint
+          command: NODE_OPTIONS=--max_old_space_size=3072 ${YARN_EXTENSION} mozilla-lint
 
   all-tests-pass:
     executor: node-browsers
