@@ -19,3 +19,6 @@ beforeEach(() => {
 
 // Disable the test flag in desktop unit tests as this is only used for E2E tests
 cfg().desktop.isTest = false;
+
+// Electron supplies window.require but it isn't defined when running unit tests with Jest
+window.require = require;

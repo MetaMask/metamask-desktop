@@ -18,7 +18,7 @@ const Routes = ({ theme }) => {
   useEffect(() => {
     // Set theme (html attr) for the first time
     setTheme(theme);
-  }, [theme]);
+  }, []);
 
   return (
     <div id="mmd-app-content">
