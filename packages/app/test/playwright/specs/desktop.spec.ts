@@ -61,15 +61,6 @@ test.describe('Desktop send', () => {
       return await win.innerText('data-testid=main-app');
     });
 
-    const windows = electronApp.windows();
-    console.log(`${windows.length} windows created`);
-
-    const main =
-      (await windows[0].title()) === 'TrezorConnect Electron PopUp Page'
-        ? windows[1]
-        : windows[0];
-    console.log(`${await main.title()} -> main window`);
-
     await mainWindow.screenshot({
       path: 'test/playwright/test-results/visual/desktop-inactive.main.png',
       fullPage: true,
@@ -85,7 +76,9 @@ test.describe('Desktop send', () => {
       path: 'test/playwright/test-results/visual/desktop-active.main.png',
       fullPage: true,
     });
-    await expect(main.locator('.mmd-pair-status')).toContainText('Active');
+    await expect(mainWindow.locator('.mmd-pair-status')).toContainText(
+      'Active',
+    );
 
     const initialPage = new MMDInitialPage(page);
     await initialPage.hasDesktopEnabled();
