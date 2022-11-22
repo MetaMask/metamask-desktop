@@ -3,14 +3,20 @@ import path from 'path';
 import { app, BrowserWindow, ipcMain } from 'electron';
 import { Server as WebSocketServer, WebSocket } from 'ws';
 import log from 'loglevel';
-import { NodeWebSocket, WebSocketStream } from '@metamask/desktop';
-import cfg from '../utils/config';
+import { NewConnectionMessage } from '@metamask/desktop/dist/types';
+import {
+  NodeWebSocket,
+  WebSocketStream,
+} from '@metamask/desktop/dist/web-socket-stream';
+import {
+  clearRawState,
+  getDesktopState,
+} from '@metamask/desktop/dist/utils/state';
+import { StatusMessage } from '../types/message';
 import EncryptedWebSocketStream from '../encryption/encrypted-web-socket-stream';
-import { NewConnectionMessage, StatusMessage } from '../types/message';
-import { DisconnectEventOpts } from '../types/desktop';
 import { forwardEvents } from '../utils/events';
-import * as RawState from '../utils/raw-state';
 import { MILLISECOND } from '../../../../shared/constants/time';
+import cfg from '../utils/config';
 import ExtensionConnection from './extension-connection';
 import { updateCheck } from './update-check';
 import { titleBarOverlayOpts } from './ui-constants';
@@ -48,7 +54,7 @@ class DesktopApp extends EventEmitter {
   }
 
   public async init() {
-    if (cfg().desktop.isTest) {
+    if (cfg().isTest) {
       app.disableHardwareAcceleration();
     }
 
@@ -69,7 +75,7 @@ class DesktopApp extends EventEmitter {
     });
 
     ipcMain.handle('reset', async (_event) => {
-      await RawState.clear();
+      await clearRawState();
       this.status.isDesktopEnabled = false;
     });
 
@@ -78,7 +84,7 @@ class DesktopApp extends EventEmitter {
       win?.setTitleBarOverlay(titleBarOverlayOpts[theme]);
     });
 
-    if (!cfg().desktop.isTest) {
+    if (!cfg().isTest) {
       this.mainWindow = await this.createMainWindow();
     }
 
@@ -89,7 +95,7 @@ class DesktopApp extends EventEmitter {
     server.on('connection', (webSocket) => this.onConnection(webSocket));
 
     this.status.isDesktopEnabled =
-      (await RawState.getDesktopState()).desktopEnabled === true;
+      (await getDesktopState()).desktopEnabled === true;
 
     log.debug('Initialised desktop app');
 
@@ -119,7 +125,7 @@ class DesktopApp extends EventEmitter {
   private async onConnection(webSocket: WebSocket) {
     log.debug('Received web socket connection');
 
-    const webSocketStream = cfg().desktop.webSocket.disableEncryption
+    const webSocketStream = cfg().webSocket.disableEncryption
       ? new WebSocketStream(webSocket)
       : new EncryptedWebSocketStream(webSocket);
 
@@ -168,7 +174,7 @@ class DesktopApp extends EventEmitter {
     webSocket: NodeWebSocket,
     stream: Duplex,
     connection: ExtensionConnection,
-    { isDisconnectedByUser }: DisconnectEventOpts,
+    { isDisconnectedByUser }: { isDisconnectedByUser: boolean },
   ) {
     log.debug('Extension connection disconnected');
 
@@ -196,13 +202,10 @@ class DesktopApp extends EventEmitter {
 
   private async createWebSocketServer(): Promise<WebSocketServer> {
     return new Promise((resolve) => {
-      const server = new WebSocketServer(
-        { port: cfg().desktop.webSocket.port },
-        () => {
-          log.debug('Created web socket server');
-          resolve(server);
-        },
-      );
+      const server = new WebSocketServer({ port: cfg().webSocket.port }, () => {
+        log.debug('Created web socket server');
+        resolve(server);
+      });
     });
   }
 

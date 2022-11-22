@@ -4,7 +4,7 @@ import log from 'loglevel';
 import cfg from '../utils/config';
 
 export const updateCheck = async (): Promise<UpdateCheckResult | null> => {
-  if (!cfg().desktop.enableUpdates || !autoUpdater.isUpdaterActive()) {
+  if (!cfg().enableUpdates || !autoUpdater.isUpdaterActive()) {
     log.debug('Updater not active');
     return null;
   }

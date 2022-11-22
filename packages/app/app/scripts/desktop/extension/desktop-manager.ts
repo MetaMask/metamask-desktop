@@ -2,18 +2,21 @@ import { Duplex } from 'stream';
 import log from 'loglevel';
 import PortStream from 'extension-port-stream';
 import endOfStream from 'end-of-stream';
+import { browser } from '@metamask/desktop/dist/browser';
+import { cfg } from '@metamask/desktop/dist/utils/config';
+import {
+  DesktopState,
+  TestConnectionResult,
+  ConnectionType,
+} from '@metamask/desktop/dist/types';
 import {
   BrowserWebSocket,
   WebSocketStream,
-  DuplexCopy,
-} from '@metamask/desktop';
-import cfg from '../utils/config';
+} from '@metamask/desktop/dist/web-socket-stream';
+import { DuplexCopy } from '@metamask/desktop/dist/utils/stream';
+import * as RawState from '@metamask/desktop/dist/utils/state';
 import EncryptedWebSocketStream from '../encryption/encrypted-web-socket-stream';
 import { timeoutPromise } from '../utils/utils';
-import { DesktopState, TestConnectionResult } from '../types/desktop';
-import * as RawState from '../utils/raw-state';
-import { ConnectionType } from '../types/background';
-import { browser } from '../browser/browser-polyfill';
 import DesktopConnection from './desktop-connection';
 
 const TIMEOUT_CONNECT = 10000;
@@ -31,7 +34,7 @@ class DesktopManager {
     if (state?.DesktopController?.desktopEnabled === true) {
       this.desktopConnection = await this.createConnection();
 
-      if (!cfg().desktop.isTest) {
+      if (!cfg().isTest) {
         await this.desktopConnection.transferState();
       }
     }
@@ -105,7 +108,7 @@ class DesktopManager {
   private async createConnection(): Promise<DesktopConnection> {
     const webSocket = await this.createWebSocket();
 
-    const webSocketStream = cfg().desktop.webSocket.disableEncryption
+    const webSocketStream = cfg().webSocket.disableEncryption
       ? new WebSocketStream(webSocket)
       : new EncryptedWebSocketStream(webSocket);
 
@@ -119,7 +122,7 @@ class DesktopManager {
 
     log.debug('Created web socket connection');
 
-    if (!cfg().desktop.skipOtpPairingFlow && this.isDesktopEnabled()) {
+    if (!cfg().skipOtpPairingFlow && this.isDesktopEnabled()) {
       log.debug('Desktop enabled, checking pairing key');
 
       if (!(await connection.checkPairingKey())) {
@@ -181,7 +184,7 @@ class DesktopManager {
 
   private async createWebSocket(): Promise<WebSocket> {
     const waitForWebSocketOpen = new Promise<BrowserWebSocket>((resolve) => {
-      const webSocket = new WebSocket(`${cfg().desktop.webSocket.url}`);
+      const webSocket = new WebSocket(`${cfg().webSocket.url}`);
 
       webSocket.addEventListener('open', () => {
         resolve(webSocket);

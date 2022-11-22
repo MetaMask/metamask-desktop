@@ -6,6 +6,10 @@
 import './desktop/app/globals';
 ///: END:ONLY_INCLUDE_IN
 
+///: BEGIN:EXCLUDE_IN(desktopapp)
+import './browser-init';
+///: END:EXCLUDE_IN
+
 import endOfStream from 'end-of-stream';
 import pump from 'pump';
 import debounce from 'debounce-stream';
@@ -14,6 +18,13 @@ import { storeAsStream } from '@metamask/obs-store';
 import PortStream from 'extension-port-stream';
 
 import { ethErrors } from 'eth-rpc-errors';
+import { browser } from '@metamask/desktop/dist/browser';
+///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
+import {
+  CONNECTION_TYPE_EXTERNAL,
+  CONNECTION_TYPE_INTERNAL,
+} from '@metamask/desktop/dist/constants';
+///: END:ONLY_INCLUDE_IN
 import {
   ENVIRONMENT_TYPE_POPUP,
   ENVIRONMENT_TYPE_NOTIFICATION,
@@ -30,7 +41,6 @@ import {
 } from '../../shared/constants/metametrics';
 import { isManifestV3 } from '../../shared/modules/mv3.utils';
 import { maskObject } from '../../shared/modules/object.utils';
-import { browser } from './desktop/browser/browser-polyfill';
 import migrations from './migrations';
 import Migrator from './lib/migrator';
 import ExtensionPlatform from './platforms/extension';
@@ -54,16 +64,12 @@ import { getPlatform } from './lib/util';
 /* eslint-disable import/order */
 
 ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
+import desktopAppCfg from './desktop/utils/config';
 import DesktopApp from './desktop/app/desktop-app';
-import cfg from './desktop/utils/config';
 ///: END:ONLY_INCLUDE_IN
 
 ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
 import DesktopManager from './desktop/extension/desktop-manager';
-import {
-  CONNECTION_TYPE_EXTERNAL,
-  CONNECTION_TYPE_INTERNAL,
-} from '@metamask/desktop';
 ///: END:ONLY_INCLUDE_IN
 
 /* eslint-enable import/order */
@@ -126,7 +132,7 @@ const initApp = async (remotePort) => {
 
 ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
 const onDesktopRestart = async (desktopApp) => {
-  if (cfg().desktop.isTest) {
+  if (desktopAppCfg().isTest) {
     return;
   }
 

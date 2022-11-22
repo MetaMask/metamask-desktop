@@ -1,6 +1,7 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { browser } from '@metamask/desktop/dist/browser';
 import Button from '../../ui/button';
 import {
   DESKTOP_ERROR_ROUTE,
@@ -15,7 +16,6 @@ import {
   testDesktopConnection,
   disableDesktop,
 } from '../../../store/actions';
-import { browser } from '../../../../app/scripts/desktop/browser/browser-polyfill';
 import { SECOND } from '../../../../shared/constants/time';
 
 const DESKTOP_ERROR_DESKTOP_OUTDATED_ROUTE = `${DESKTOP_ERROR_ROUTE}/${EXTENSION_ERROR_PAGE_TYPES.DESKTOP_OUTDATED}`;

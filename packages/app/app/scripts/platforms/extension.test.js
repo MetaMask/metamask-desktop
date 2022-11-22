@@ -1,10 +1,12 @@
-import browser from 'webextension-polyfill';
+import { browser } from '@metamask/desktop/dist/browser';
 import ExtensionPlatform from './extension';
 
-jest.mock('webextension-polyfill', () => {
+jest.mock('@metamask/desktop/dist/browser', () => {
   return {
-    runtime: {
-      getManifest: jest.fn(),
+    browser: {
+      runtime: {
+        getManifest: jest.fn(),
+      },
     },
   };
 });

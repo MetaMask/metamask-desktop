@@ -1,8 +1,9 @@
 import { app, BrowserWindow } from 'electron';
 import { Server as WebSocketServer } from 'ws';
-import { WebSocketStream } from '@metamask/desktop';
+import { browser } from '@metamask/desktop/dist/browser';
+import { WebSocketStream } from '@metamask/desktop/dist/web-socket-stream';
+import * as RawStateUtils from '@metamask/desktop/dist/utils/state';
 import EncryptedWebSocketStream from '../encryption/encrypted-web-socket-stream';
-import cfg from '../utils/config';
 import {
   PORT_MOCK,
   createWebSocketNodeMock,
@@ -12,15 +13,26 @@ import {
   createExtensionConnectionMock,
 } from '../test/mocks';
 import { simulateNodeEvent } from '../test/utils';
-import { browser } from '../browser/browser-polyfill';
+import cfg from '../utils/config';
 import ExtensionConnection from './extension-connection';
 import { updateCheck } from './update-check';
 import DesktopApp from './desktop-app';
 
 jest.mock('extension-port-stream');
-jest.mock('@metamask/desktop');
 jest.mock('../encryption/encrypted-web-socket-stream');
 jest.mock('./extension-connection');
+
+jest.mock('@metamask/desktop/dist/browser', () => ({
+  browser: { storage: { local: { get: jest.fn(), set: jest.fn() } } },
+}));
+
+jest.mock('@metamask/desktop/dist/utils/state', () => ({
+  getDesktopState: jest.fn(),
+}));
+
+jest.mock('@metamask/desktop/dist/web-socket-stream', () => ({
+  WebSocketStream: jest.fn(),
+}));
 
 jest.mock(
   './update-check',
@@ -48,22 +60,6 @@ jest.mock(
   { virtual: true },
 );
 
-jest.mock(
-  '../browser/browser-polyfill',
-  () => ({
-    browser: { storage: { local: { get: jest.fn(), set: jest.fn() } } },
-  }),
-  {
-    virtual: true,
-  },
-);
-
-const removeInstance = () => {
-  // eslint-disable-next-line
-  // @ts-ignore
-  DesktopApp.instance = undefined;
-};
-
 describe('Desktop', () => {
   const browserWindowConstructorMock = BrowserWindow as any;
   const webSocketServerConstructorMock = WebSocketServer as any;
@@ -74,6 +70,7 @@ describe('Desktop', () => {
   const extensionConnectionMock = createExtensionConnectionMock();
   const browserMock = browser as any;
   const pairingMock = createEventEmitterMock();
+  const rawStateUtilsMock = RawStateUtils as jest.Mocked<typeof RawStateUtils>;
 
   const webSocketStreamConstructorMock = WebSocketStream as jest.MockedClass<
     typeof WebSocketStream
@@ -124,12 +121,14 @@ describe('Desktop', () => {
 
     browserMock.storage.local.get.mockResolvedValue({});
 
-    removeInstance();
+    rawStateUtilsMock.getDesktopState.mockResolvedValue({
+      desktopEnabled: false,
+    });
   });
 
   describe('init', () => {
     it('creates web socket server', async () => {
-      cfg().desktop.webSocket.port = PORT_MOCK;
+      cfg().webSocket.port = PORT_MOCK;
 
       await DesktopApp.init();
 
@@ -166,7 +165,7 @@ describe('Desktop', () => {
     });
 
     it('creates extension connection with standard web socket stream if encryption disabled', async () => {
-      cfg().desktop.webSocket.disableEncryption = true;
+      cfg().webSocket.disableEncryption = true;
 
       await DesktopApp.init();
 

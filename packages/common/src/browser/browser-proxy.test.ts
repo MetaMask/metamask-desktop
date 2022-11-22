@@ -1,14 +1,14 @@
 import log from 'loglevel';
-import { BrowserProxyRequest } from '../types/browser';
+import { BrowserProxyRequest } from '../types';
 import {
   ARGS_MOCK,
   createStreamMock,
   UUID_MOCK,
   VALUE_MOCK,
-} from '../test/mocks';
-import { simulateStreamMessage } from '../test/utils';
+} from '../../test/mocks';
+import { simulateStreamMessage } from '../../test/utils';
 import { browser } from './browser-polyfill';
-import { registerResponseStream } from './browser-proxy';
+import { registerResponseStream } from '.';
 
 jest.mock('loglevel');
 

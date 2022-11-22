@@ -1,3 +1,5 @@
+import './browser-init';
+
 // polyfills
 import '@formatjs/intl-relativetimeformat/polyfill';
 
@@ -10,6 +12,7 @@ import Eth from 'ethjs';
 import EthQuery from 'eth-query';
 import StreamProvider from 'web3-stream-provider';
 import log from 'loglevel';
+import { browser } from '@metamask/desktop/dist/browser';
 import launchMetaMaskUi, { updateBackgroundConnection } from '../../ui';
 import {
   ENVIRONMENT_TYPE_FULLSCREEN,
@@ -22,7 +25,6 @@ import {
   getErrorHtml,
   registerDesktopErrorActions,
 } from '../../shared/lib/error-utils';
-import { browser } from './desktop/browser/browser-polyfill';
 import ExtensionPlatform from './platforms/extension';
 import { setupMultiplex } from './lib/stream-utils';
 import { getEnvironmentType, getPlatform } from './lib/util';

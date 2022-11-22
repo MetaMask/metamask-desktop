@@ -1,6 +1,13 @@
 import { Duplex } from 'stream';
 import PortStream from 'extension-port-stream';
-import { WebSocketStream } from '@metamask/desktop';
+import { browser } from '@metamask/desktop/dist/browser';
+import {
+  TestConnectionResult,
+  ConnectionType,
+} from '@metamask/desktop/dist/types';
+import { WebSocketStream } from '@metamask/desktop/dist/web-socket-stream';
+import { cfg } from '@metamask/desktop/dist/utils/config';
+import * as RawState from '@metamask/desktop/dist/utils/state';
 import {
   createWebSocketBrowserMock,
   createWebSocketStreamMock,
@@ -16,43 +23,35 @@ import {
   simulateStreamMessage,
 } from '../test/utils';
 import EncryptedWebSocketStream from '../encryption/encrypted-web-socket-stream';
-import cfg from '../utils/config';
-import { TestConnectionResult } from '../types/desktop';
-import * as RawState from '../utils/raw-state';
-import { ConnectionType } from '../types/background';
-import { browser } from '../browser/browser-polyfill';
 import DesktopConnection from './desktop-connection';
 import DesktopManager from './desktop-manager';
 
 jest.mock('extension-port-stream');
 jest.mock('../encryption/encrypted-web-socket-stream');
 jest.mock('./desktop-connection');
-jest.mock('../utils/raw-state');
 
-jest.mock(
-  '@metamask/desktop',
-  () => {
-    const original = jest.requireActual('@metamask/desktop');
-    return { WebSocketStream: jest.fn(), DuplexCopy: original.DuplexCopy };
+jest.mock('@metamask/desktop/dist/browser', () => ({
+  browser: {
+    runtime: { reload: jest.fn() },
   },
-  { virtual: true },
-);
+}));
+
+jest.mock('@metamask/desktop/dist/utils/state', () => ({
+  getDesktopState: jest.fn(),
+  setDesktopState: jest.fn(),
+}));
+
+jest.mock('@metamask/desktop/dist/web-socket-stream', () => ({
+  WebSocketStream: jest.fn(),
+}));
 
 jest.mock('../../../../shared/modules/mv3.utils', () => ({}), {
   virtual: true,
 });
 
-jest.mock(
-  '../browser/browser-polyfill',
-  () => ({
-    browser: {
-      runtime: { reload: jest.fn() },
-    },
-  }),
-  {
-    virtual: true,
-  },
-);
+jest.mock('../browser/browser-polyfill', () => ({}), {
+  virtual: true,
+});
 
 const removeInstance = () => {
   // eslint-disable-next-line
@@ -117,7 +116,7 @@ describe('Desktop Manager', () => {
 
     removeInstance();
 
-    cfg().desktop.webSocket.disableEncryption = false;
+    cfg().webSocket.disableEncryption = false;
   });
 
   describe('init', () => {
@@ -133,7 +132,7 @@ describe('Desktop Manager', () => {
       'with encryption %s',
       (_, streamType, webSocketStreamConstructor, disableEncryption) => {
         beforeEach(async () => {
-          cfg().desktop.webSocket.disableEncryption = disableEncryption;
+          cfg().webSocket.disableEncryption = disableEncryption;
 
           await init({
             DesktopController: {
@@ -257,7 +256,7 @@ describe('Desktop Manager', () => {
       'with encryption %s',
       (_, streamType, webSocketStreamConstructor, disableEncryption) => {
         beforeEach(async () => {
-          cfg().desktop.webSocket.disableEncryption = disableEncryption;
+          cfg().webSocket.disableEncryption = disableEncryption;
         });
 
         it(`creates and inits ${streamType} web socket stream`, async () => {

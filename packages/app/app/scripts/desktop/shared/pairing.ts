@@ -6,23 +6,23 @@ import log from 'loglevel';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import ObjectMultiplex from 'obj-multiplex';
-import {
-  MESSAGE_ACKNOWLEDGE,
-  ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
-  acknowledge,
-  ///: END:ONLY_INCLUDE_IN
-  waitForAcknowledge,
-  waitForMessage,
-} from '@metamask/desktop';
-import TOTP from '../utils/totp';
+import { browser } from '@metamask/desktop/dist/browser';
+import { MESSAGE_ACKNOWLEDGE } from '@metamask/desktop/dist/constants';
 import {
   PairingKeyRequestMessage,
   PairingKeyResponseMessage,
   PairingRequestMessage,
   PairingResultMessage,
-} from '../types/message';
-import * as rawState from '../utils/raw-state';
-import { browser } from '../browser/browser-polyfill';
+} from '@metamask/desktop/dist/types';
+import {
+  ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
+  acknowledge,
+  ///: END:ONLY_INCLUDE_IN
+  waitForAcknowledge,
+  waitForMessage,
+} from '@metamask/desktop/dist/utils/stream';
+import * as rawState from '@metamask/desktop/dist/utils/state';
+import TOTP from '../utils/totp';
 import { createKey } from '../encryption/symmetric-encryption';
 import { hashString } from '../utils/crypto';
 

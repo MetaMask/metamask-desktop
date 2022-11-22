@@ -8,6 +8,10 @@ export const VALUE_2_MOCK = 'value2';
 export const DATA_MOCK = { [PROPERTY_MOCK]: VALUE_MOCK };
 export const DATA_2_MOCK = { [PROPERTY_2_MOCK]: VALUE_2_MOCK };
 export const STRING_DATA_MOCK = 'testStringData';
+export const ARGS_MOCK = ['test123', 123, true];
+export const UUID_MOCK = '6328e6ae-f867-4876-af6f-22a44efbe251';
+export const VERSION_MOCK = '123.456.789.012';
+export const VERSION_2_MOCK = '456.123.789.012';
 
 export const createWebSocketNodeMock = (): jest.Mocked<NodeWebSocket> =>
   ({

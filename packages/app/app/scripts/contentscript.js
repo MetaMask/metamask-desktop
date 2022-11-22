@@ -1,12 +1,13 @@
+import './browser-init';
 import pump from 'pump';
 import { WindowPostMessageStream } from '@metamask/post-message-stream';
 import ObjectMultiplex from 'obj-multiplex';
 import PortStream from 'extension-port-stream';
 import { obj as createThoughStream } from 'through2';
 
+import { browser } from '@metamask/desktop/dist/browser';
 import { isManifestV3 } from '../../shared/modules/mv3.utils';
 import shouldInjectProvider from '../../shared/modules/provider-injection';
-import { browser } from './desktop/browser/browser-polyfill';
 
 // These require calls need to use require to be statically recognized by browserify
 const fs = require('fs');

@@ -1,6 +1,6 @@
 import base32Encode from 'base32-encode';
 import base64 from 'base64-js';
-import { browser } from '../../desktop/browser/browser-polyfill';
+import { browser } from '@metamask/desktop/dist/browser';
 
 import getFetchWithTimeout from '../../../../shared/modules/fetch-with-timeout';
 import resolveEnsToIpfsContentId from './resolver';

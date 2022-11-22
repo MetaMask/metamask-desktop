@@ -3,18 +3,21 @@ import ObjectMultiplex from 'obj-multiplex';
 import { WebSocketServer } from 'ws';
 import { ObservableStore } from '@metamask/obs-store';
 import ElectronStore from 'electron-store';
+import { VersionCheck } from '@metamask/desktop/dist/version-check';
 import {
   BrowserWebSocket,
   NodeWebSocket,
   WebSocketStream,
-} from '@metamask/desktop';
+} from '@metamask/desktop/dist/web-socket-stream';
+import {
+  ConnectionType,
+  RemotePort,
+  TestConnectionResult,
+} from '@metamask/desktop/dist/types';
 import NotificationManager from '../../lib/notification-manager';
-import { ConnectionType, RemotePort } from '../types/background';
 import ExtensionConnection from '../app/extension-connection';
 import DesktopConnection from '../extension/desktop-connection';
 import { DesktopPairing, ExtensionPairing } from '../shared/pairing';
-import { TestConnectionResult } from '../types/desktop';
-import { ExtensionVersionCheck } from '../shared/version-check';
 import ExtensionPlatform from 'app/scripts/platforms/extension';
 
 export const PUBLIC_KEY_MOCK = 'testPublicKey';
@@ -199,8 +202,8 @@ export const createElectronStoreMock = (): jest.Mocked<ElectronStore> =>
     clear: jest.fn(),
   } as any);
 
-export const createExtensionVersionCheckMock =
-  (): jest.Mocked<ExtensionVersionCheck> => ({ check: jest.fn() } as any);
+export const createExtensionVersionCheckMock = (): jest.Mocked<VersionCheck> =>
+  ({ check: jest.fn() } as any);
 
 export const createExtensionPlatformMock = (): jest.Mocked<ExtensionPlatform> =>
   ({ getVersion: jest.fn() } as any);

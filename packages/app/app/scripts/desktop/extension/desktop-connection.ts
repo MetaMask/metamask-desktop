@@ -6,6 +6,10 @@ import endOfStream from 'end-of-stream';
 import ObjectMultiplex from 'obj-multiplex';
 import log from 'loglevel';
 import {
+  browser,
+  registerResponseStream,
+} from '@metamask/desktop/dist/browser';
+import {
   CLIENT_ID_BROWSER_CONTROLLER,
   CLIENT_ID_END_CONNECTION,
   CLIENT_ID_NEW_CONNECTION,
@@ -13,17 +17,30 @@ import {
   CLIENT_ID_DISABLE,
   CLIENT_ID_VERSION,
   CLIENT_ID_PAIRING,
+} from '@metamask/desktop/dist/constants';
+import {
+  ConnectionType,
+  RemotePortData,
+  ClientId,
+  RawState,
+  VersionCheckResult,
+  RemotePort,
+} from '@metamask/desktop/dist/types';
+import {
+  addPairingKeyToRawState,
+  getAndUpdateDesktopState,
+  removePairingKeyFromRawState,
+  setDesktopState,
+  setRawState,
+} from '@metamask/desktop/dist/utils/state';
+import {
   acknowledge,
   waitForAcknowledge,
-} from '@metamask/desktop';
-import { browser } from '../browser/browser-polyfill';
-import { ConnectionType, RemotePortData } from '../types/background';
-import { ClientId, RawState, VersionCheckResult } from '../types/desktop';
-import { registerResponseStream } from '../browser/browser-proxy';
+} from '@metamask/desktop/dist/utils/stream';
+import { VersionCheck } from '@metamask/desktop/dist/version-check';
 import { uuid } from '../utils/utils';
 import { ExtensionPairing } from '../shared/pairing';
-import * as RawStateUtils from '../utils/raw-state';
-import { ExtensionVersionCheck } from '../shared/version-check';
+import ExtensionPlatform from '../../platforms/extension';
 
 export default class DesktopConnection extends EventEmitter {
   private stream: Duplex;
@@ -38,7 +55,7 @@ export default class DesktopConnection extends EventEmitter {
 
   private disableStream: Duplex;
 
-  private versionCheck: ExtensionVersionCheck;
+  private versionCheck: VersionCheck;
 
   private extensionPairing: ExtensionPairing;
 
@@ -70,7 +87,9 @@ export default class DesktopConnection extends EventEmitter {
     ).init();
 
     const versionStream = this.multiplex.createStream(CLIENT_ID_VERSION);
-    this.versionCheck = new ExtensionVersionCheck(versionStream);
+    this.versionCheck = new VersionCheck(versionStream, () =>
+      this.getExtensionVersion(),
+    );
 
     const browserControllerStream = this.multiplex.createStream(
       CLIENT_ID_BROWSER_CONTROLLER,
@@ -89,7 +108,7 @@ export default class DesktopConnection extends EventEmitter {
    * @param uiStream - A paused stream to communicate with the remote port.
    */
   public async createStream(
-    remotePort: any,
+    remotePort: RemotePort,
     connectionType: ConnectionType,
     uiStream: Duplex,
   ) {
@@ -108,11 +127,11 @@ export default class DesktopConnection extends EventEmitter {
   }
 
   public async transferState() {
-    const stateToTransfer = await RawStateUtils.getAndUpdateDesktopState({
+    const stateToTransfer = await getAndUpdateDesktopState({
       desktopEnabled: true,
     });
 
-    const filteredState = RawStateUtils.removePairingKey(stateToTransfer);
+    const filteredState = removePairingKeyFromRawState(stateToTransfer);
 
     this.stateStream.write(filteredState);
 
@@ -133,10 +152,10 @@ export default class DesktopConnection extends EventEmitter {
     log.debug('Received desktop disable message');
 
     if (state) {
-      await RawStateUtils.set(state);
+      await setRawState(state);
       log.debug('Synchronised with final desktop state');
     } else {
-      await RawStateUtils.setDesktopState({
+      await setDesktopState({
         desktopEnabled: false,
         pairingKey: undefined,
       });
@@ -162,9 +181,9 @@ export default class DesktopConnection extends EventEmitter {
   }
 
   private async onDesktopState(rawState: RawState) {
-    const newRawState = await RawStateUtils.addPairingKey(rawState);
+    const newRawState = await addPairingKeyToRawState(rawState);
 
-    await RawStateUtils.set(newRawState);
+    await setRawState(newRawState);
 
     log.debug('Synchronised state with desktop');
   }
@@ -200,5 +219,9 @@ export default class DesktopConnection extends EventEmitter {
 
   private generateClientId(): ClientId {
     return uuid();
+  }
+
+  private getExtensionVersion(): string {
+    return new ExtensionPlatform().getVersion();
   }
 }

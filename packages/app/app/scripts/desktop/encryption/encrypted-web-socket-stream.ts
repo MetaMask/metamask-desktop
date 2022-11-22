@@ -3,11 +3,13 @@ import log from 'loglevel';
 import {
   MESSAGE_HANDSHAKE_FINISH,
   MESSAGE_HANDSHAKE_START,
+} from '@metamask/desktop/dist/constants';
+import {
   BrowserWebSocket,
   NodeWebSocket,
   WebSocketStream,
-  waitForMessage,
-} from '@metamask/desktop';
+} from '@metamask/desktop/dist/web-socket-stream';
+import { waitForMessage } from '@metamask/desktop/dist/utils/stream';
 import { flattenMessage } from '../utils/utils';
 import * as asymmetricEncryption from './asymmetric-encryption';
 import * as symmetricEncryption from './symmetric-encryption';

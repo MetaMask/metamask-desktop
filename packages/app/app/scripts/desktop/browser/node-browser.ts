@@ -1,11 +1,11 @@
 import { Duplex } from 'stream';
 import log from 'loglevel';
-import ObfuscatedStore from '../app/storage';
 import {
   Browser,
   BrowserProxyRequest,
   BrowserProxyResponse,
-} from '../types/browser';
+} from '@metamask/desktop/dist/types';
+import ObfuscatedStore from '../app/storage';
 import { timeoutPromise, uuid } from '../utils/utils';
 
 const TIMEOUT_REQUEST = 5000;

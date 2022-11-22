@@ -1408,7 +1408,7 @@
         "@metamask/eth-token-tracker>deep-equal>is-date-object": true,
         "enzyme>is-regex": true,
         "enzyme>object-is": true,
-        "mocha>object.assign>object-keys": true,
+        "enzyme>object.assign>object-keys": true,
         "string.prototype.matchall>regexp.prototype.flags": true
       }
     },
@@ -3410,7 +3410,7 @@
     },
     "enzyme>has": {
       "packages": {
-        "mocha>object.assign>function-bind": true
+        "enzyme>has>function-bind": true
       }
     },
     "enzyme>is-regex": {
@@ -5887,6 +5887,60 @@
         "browserify>stream-browserify": true
       }
     },
+    "external:../common/dist/browser/browser-proxy.js": {
+      "packages": {
+        "external:../common/dist/browser/browser-polyfill.js": true,
+        "external:../common/node_modules/loglevel/lib/loglevel.js": true
+      }
+    },
+    "external:../common/dist/browser/index.js": {
+      "packages": {
+        "external:../common/dist/browser/browser-polyfill.js": true,
+        "external:../common/dist/browser/browser-proxy.js": true
+      }
+    },
+    "external:../common/dist/utils/config.js": {
+      "packages": {
+        "browserify>process": true
+      }
+    },
+    "external:../common/dist/utils/state.js": {
+      "packages": {
+        "external:../common/dist/browser/index.js": true
+      }
+    },
+    "external:../common/dist/utils/stream.js": {
+      "packages": {
+        "browserify>stream-browserify": true,
+        "external:../common/dist/constants.js": true
+      }
+    },
+    "external:../common/dist/version-check.js": {
+      "packages": {
+        "external:../common/dist/utils/config.js": true,
+        "external:../common/dist/utils/stream.js": true,
+        "external:../common/node_modules/loglevel/lib/loglevel.js": true
+      }
+    },
+    "external:../common/dist/web-socket-stream.js": {
+      "globals": {
+        "setTimeout": true
+      },
+      "packages": {
+        "browserify>stream-browserify": true,
+        "external:../common/node_modules/loglevel/lib/loglevel.js": true
+      }
+    },
+    "external:../common/node_modules/loglevel/lib/loglevel.js": {
+      "globals": {
+        "console": true,
+        "define": true,
+        "document.cookie": true,
+        "localStorage": true,
+        "log": "write",
+        "navigator": true
+      }
+    },
     "fast-json-patch": {
       "globals": {
         "addEventListener": true,
@@ -5921,8 +5975,8 @@
     },
     "globalthis>define-properties": {
       "packages": {
-        "globalthis>define-properties>has-property-descriptors": true,
-        "mocha>object.assign>object-keys": true
+        "enzyme>object.assign>object-keys": true,
+        "globalthis>define-properties>has-property-descriptors": true
       }
     },
     "globalthis>define-properties>has-property-descriptors": {
@@ -6033,8 +6087,8 @@
       "packages": {
         "browserify>process": true,
         "lavamoat>@babel/highlight>chalk>ansi-styles": true,
-        "lavamoat>@babel/highlight>chalk>supports-color": true,
-        "mocha>escape-string-regexp": true
+        "lavamoat>@babel/highlight>chalk>escape-string-regexp": true,
+        "lavamoat>@babel/highlight>chalk>supports-color": true
       }
     },
     "lavamoat>@babel/highlight>chalk>ansi-styles": {
@@ -6758,7 +6812,7 @@
     },
     "string.prototype.matchall>call-bind": {
       "packages": {
-        "mocha>object.assign>function-bind": true,
+        "enzyme>has>function-bind": true,
         "string.prototype.matchall>get-intrinsic": true
       }
     },
@@ -6770,7 +6824,7 @@
       },
       "packages": {
         "enzyme>has": true,
-        "mocha>object.assign>function-bind": true,
+        "enzyme>has>function-bind": true,
         "string.prototype.matchall>has-symbols": true
       }
     },

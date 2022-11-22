@@ -1,5 +1,7 @@
 import ObjectMultiplex from 'obj-multiplex';
-import { MESSAGE_ACKNOWLEDGE } from '@metamask/desktop';
+import { browser } from '@metamask/desktop/dist/browser';
+import { MESSAGE_ACKNOWLEDGE } from '@metamask/desktop/dist/constants';
+import * as RawState from '@metamask/desktop/dist/utils/state';
 import TOTP from '../utils/totp';
 import {
   createMultiplexMock,
@@ -15,14 +17,11 @@ import {
   flushPromises,
   simulateStreamMessage,
 } from '../test/utils';
-import { browser } from '../browser/browser-polyfill';
-import * as RawState from '../utils/raw-state';
 import * as encryption from '../encryption/symmetric-encryption';
 import { hashString } from '../utils/crypto';
 import { DesktopPairing, ExtensionPairing } from './pairing';
 
 jest.mock('../utils/totp');
-jest.mock('../utils/raw-state');
 jest.mock('../encryption/symmetric-encryption');
 jest.mock('obj-multiplex');
 
@@ -31,17 +30,16 @@ jest.mock('../utils/crypto', () => ({
   hashString: jest.fn(),
 }));
 
-jest.mock(
-  '../browser/browser-polyfill',
-  () => ({
-    browser: {
-      runtime: { reload: jest.fn() },
-    },
-  }),
-  {
-    virtual: true,
+jest.mock('@metamask/desktop/dist/browser', () => ({
+  browser: {
+    runtime: { reload: jest.fn() },
   },
-);
+}));
+
+jest.mock('@metamask/desktop/dist/utils/state', () => ({
+  getDesktopState: jest.fn(),
+  setDesktopState: jest.fn(),
+}));
 
 describe('Pairing', () => {
   const streamMock = createStreamMock();

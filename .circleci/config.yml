@@ -62,31 +62,32 @@ workflows:
             - prep-deps
       - prep-build:
           requires:
-            - prep-deps
+            - common-build
       - prep-build-beta:
           requires:
-            - prep-deps
+            - common-build
       - prep-build-flask:
           requires:
-            - prep-deps
+            - common-build
       - prep-build-test:
           requires:
-            - prep-deps
+            - common-build
       - prep-build-test-mv3:
           requires:
-            - prep-deps
+            - common-build
       - prep-build-test-flask:
           requires:
-            - prep-deps
+            - common-build
       - prep-build-test-desktop:
           requires:
             - common-build
       - test-storybook:
           requires:
-            - prep-deps
+            - common-build
       - prep-build-storybook:
           requires:
             - test-storybook
+            - common-build
       - prep-build-ts-migration-dashboard:
           requires:
             - prep-deps
@@ -126,7 +127,7 @@ workflows:
             - common-build
       - test-unit-global:
           requires:
-            - prep-deps
+            - common-build
       - validate-source-maps:
           requires:
             - prep-build

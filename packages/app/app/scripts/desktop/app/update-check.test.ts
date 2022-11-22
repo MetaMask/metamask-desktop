@@ -1,8 +1,8 @@
 import { autoUpdater } from 'electron-updater';
 import { dialog, MessageBoxReturnValue } from 'electron';
 import log from 'loglevel';
-import cfg from '../utils/config';
 import { simulateNodeEvent } from '../test/utils';
+import cfg from '../utils/config';
 import { updateCheck } from './update-check';
 
 jest.mock(
@@ -46,7 +46,7 @@ describe('Update Check', () => {
   beforeEach(() => {
     jest.resetAllMocks();
 
-    cfg().desktop.enableUpdates = true;
+    cfg().enableUpdates = true;
 
     autoUpdaterMock = autoUpdater as any;
     autoUpdaterMock.isUpdaterActive.mockReturnValue(true);
@@ -62,7 +62,7 @@ describe('Update Check', () => {
     });
 
     it('does nothing if updates disabled', async () => {
-      cfg().desktop.enableUpdates = false;
+      cfg().enableUpdates = false;
 
       await updateCheck();
 

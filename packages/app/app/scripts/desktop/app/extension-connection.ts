@@ -12,20 +12,32 @@ import {
   CLIENT_ID_DISABLE,
   CLIENT_ID_VERSION,
   CLIENT_ID_PAIRING,
+} from '@metamask/desktop/dist/constants';
+import {
+  ConnectionType,
+  ClientId,
+  RawState,
+  EndConnectionMessage,
+  NewConnectionMessage,
+} from '@metamask/desktop/dist/types';
+import { cfg } from '@metamask/desktop/dist/utils/config';
+import {
+  addPairingKeyToRawState,
+  clearRawState,
+  getAndUpdateDesktopState,
+  removePairingKeyFromRawState,
+  setRawState,
+} from '@metamask/desktop/dist/utils/state';
+import {
   acknowledge,
   waitForAcknowledge,
-} from '@metamask/desktop';
-import { ConnectionType } from '../types/background';
-import { EndConnectionMessage, NewConnectionMessage } from '../types/message';
-import { ClientId, RawState } from '../types/desktop';
+} from '@metamask/desktop/dist/utils/stream';
 import {
   registerRequestStream,
   unregisterRequestStream,
-} from '../browser/browser-polyfill';
+} from '../browser/node-browser';
 import { DesktopPairing } from '../shared/pairing';
-import * as RawStateUtils from '../utils/raw-state';
 import { DesktopVersionCheck } from '../shared/version-check';
-import cfg from '../utils/config';
 
 export default class ExtensionConnection extends EventEmitter {
   private stream: Duplex;
@@ -111,7 +123,7 @@ export default class ExtensionConnection extends EventEmitter {
       return;
     }
 
-    const filteredState = RawStateUtils.removePairingKey(rawState);
+    const filteredState = removePairingKeyFromRawState(rawState);
 
     this.stateStream.write(filteredState);
 
@@ -126,7 +138,7 @@ export default class ExtensionConnection extends EventEmitter {
     this.hasBeenInitializedWithExtensionState = false;
 
     const message = shouldTransfer
-      ? await RawStateUtils.getAndUpdateDesktopState({ desktopEnabled: false })
+      ? await getAndUpdateDesktopState({ desktopEnabled: false })
       : undefined;
 
     this.disableStream.write(message);
@@ -135,7 +147,7 @@ export default class ExtensionConnection extends EventEmitter {
 
     log.debug('Sent disable request to extension');
 
-    await RawStateUtils.clear();
+    await clearRawState();
 
     log.debug('Removed all desktop state');
 
@@ -206,10 +218,10 @@ export default class ExtensionConnection extends EventEmitter {
   private async onExtensionState(data: RawState) {
     log.debug('Received extension state');
 
-    const newRawState = await RawStateUtils.addPairingKey(data);
+    const newRawState = await addPairingKeyToRawState(data);
 
-    if (!cfg().desktop.isTest) {
-      await RawStateUtils.set(newRawState);
+    if (!cfg().isTest) {
+      await setRawState(newRawState);
     }
 
     acknowledge(this.stateStream);

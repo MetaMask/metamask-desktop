@@ -1,4 +1,5 @@
 import { memoize } from 'lodash';
+import { browser } from '@metamask/desktop/dist/browser';
 import getFirstPreferredLangCode from '../../app/scripts/lib/get-first-preferred-lang-code';
 import {
   fetchLocale,
@@ -6,7 +7,6 @@ import {
 } from '../../ui/helpers/utils/i18n-helper';
 import { renderDesktopError } from '../../ui/pages/desktop-error/render-desktop-error';
 import { EXTENSION_ERROR_PAGE_TYPES } from '../constants/desktop';
-import { browser } from '../../app/scripts/desktop/browser/browser-polyfill';
 import switchDirection from './switch-direction';
 
 const _setupLocale = async (currentLocale) => {

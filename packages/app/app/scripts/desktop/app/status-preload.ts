@@ -1,3 +1,3 @@
-import { getVersion } from '../utils/version';
+import { getDesktopVersion } from '../utils/version';
 
-(window as any)['mmd-version'] = getVersion();
+(window as any)['mmd-version'] = getDesktopVersion();
