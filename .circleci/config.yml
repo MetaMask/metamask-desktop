@@ -42,8 +42,8 @@ executors:
     environment:
       APP_DIR: << pipeline.parameters.app-dir >>
       EXTENSION_DIR: << pipeline.parameters.extension-dir >>
-      YARN_EXTENSION: << pipeline.parameters.yarn >>
       NODE_ENV: development
+      YARN_EXTENSION: << pipeline.parameters.yarn-extension >>
 
 workflows:
   test_and_release:
@@ -54,8 +54,8 @@ workflows:
           filters:
             branches:
               only:
-                - /^Version-v(\d+)[.](\d+)[.](\d+)/    
-      - prep-deps 
+                - /^Version-v(\d+)[.](\d+)[.](\d+)/
+      - prep-deps
       - test-deps-audit:
           requires:
             - prep-deps
@@ -71,10 +71,10 @@ workflows:
               only:
                 - /^Version-v(\d+)[.](\d+)[.](\d+)|master/
           requires:
-            - prep-deps          
+            - prep-deps
       - prep-build:
           requires:
-            - prep-deps      
+            - prep-deps
       - prep-e2e-test-desktop-deps:
           requires:
             - prep-deps
@@ -140,7 +140,7 @@ workflows:
             - prep-build-test-desktop
       - test-e2e-desktop-app:
           requires:
-            - prep-e2e-test-desktop-deps            
+            - prep-e2e-test-desktop-deps
       - test-unit:
           requires:
             - common-build
@@ -439,8 +439,8 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: .      
-      - run: 
+          at: .
+      - run:
           name: Build desktop app for testing
           command: yarn app build:app:test:ui
       - run:
@@ -846,7 +846,7 @@ jobs:
   test-e2e-desktop-app:
     executor: playwright
     steps:
-      - checkout  
+      - checkout
       - attach_workspace:
           at: .
       - run:
@@ -855,18 +855,16 @@ jobs:
       - run: 
           name: Install PW dependencies
           command: |
-            cd ./${APP_DIR}/playwright
-            yarn
+            cd ./${APP_DIR}
             npx playwright install chrome
-            node node_modules/electron/install.js
       - run:
           name: Run e2e desktop command
           command: |
             if .circleci/scripts/test-run-e2e.sh
             then
-              cd ${APP_DIR}/playwright && xvfb-run yarn desktop:e2e
+              xvfb-run yarn app desktop:e2e
             fi
-          no_output_timeout: 20m          
+          no_output_timeout: 20m
       - store_artifacts:
           name: html-report and artifacts
           path: << pipeline.parameters.app-dir >>/playwright/playwright-reports/
@@ -1070,7 +1068,7 @@ jobs:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - '8b:21:e3:20:7c:c9:db:82:74:2d:86:d6:11:a7:2f:49'
+            - "8b:21:e3:20:7c:c9:db:82:74:2d:86:d6:11:a7:2f:49"
       - checkout
       - attach_workspace:
           at: .

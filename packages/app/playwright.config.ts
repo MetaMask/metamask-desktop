@@ -3,8 +3,10 @@ import { PlaywrightTestConfig } from '@playwright/test';
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
 require('dotenv').config();
 
+const PW_ROOT_PATH = './test/playwright';
+
 const config: PlaywrightTestConfig = {
-  testDir: './specs',
+  testDir: `${PW_ROOT_PATH}/specs`,
   maxFailures: 2,
   timeout: 60 * 1000,
 
@@ -24,6 +26,7 @@ const config: PlaywrightTestConfig = {
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on',
+    launchOptions: { args: ['--disable-gpu'] },
   },
 
   reporter: [
@@ -32,10 +35,15 @@ const config: PlaywrightTestConfig = {
       'html',
       {
         open: process.env.CI ? 'never' : 'on-failure',
-        outputFolder: 'playwright-reports/html/',
+        outputFolder: `${PW_ROOT_PATH}/playwright-reports/html/`,
       },
     ],
-    ['junit', { outputFile: 'playwright-reports/junit/test-results.xml' }],
+    [
+      'junit',
+      {
+        outputFile: `${PW_ROOT_PATH}/playwright-reports/junit/test-results.xml`,
+      },
+    ],
   ],
 };
 

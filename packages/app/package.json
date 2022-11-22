@@ -29,7 +29,8 @@
     "start": "electron dist/app/submodules/extension/app/scripts/background.js",
     "start:lavamoat": "electron dist/app/src/app/main.js",
     "start:test": "GLOBAL_AGENT_HTTP_PROXY=http://127.0.0.1:8000 NODE_TLS_REJECT_UNAUTHORIZED=0 yarn start",
-    "test": "jest"
+    "test": "jest",
+    "test:e2e": "npx playwright test"
   },
   "dependencies": {
     "@babel/runtime": "^7.5.5",
@@ -347,7 +348,11 @@
     "watchify": "^4.0.0",
     "webpack": "^4.41.6",
     "yargs": "^17.0.1",
-    "yarn-deduplicate": "^3.1.0"
+    "yarn-deduplicate": "^3.1.0",
+    "@playwright/test": "1.23.1",
+    "dotenv": "^16.0.3",
+    "playwright": "1.23.1",
+    "playwright-core": "1.23.1"
   },
   "engines": {
     "node": "^16.0.0",
@@ -411,7 +416,8 @@
       "ws>utf-8-validate": false,
       "@ledgerhq/hw-transport-node-hid-noevents>node-hid": true,
       "hdkey>secp256k1": false,
-      "@metamask/desktop>eciesjs>secp256k1": false
+      "@metamask/desktop>eciesjs>secp256k1": false,
+      "playwright": false
     }
   }
 }

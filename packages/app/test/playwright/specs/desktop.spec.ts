@@ -1,4 +1,4 @@
-import { Page, BrowserContext } from '@playwright/test';
+import { Page, BrowserContext, expect } from '@playwright/test';
 
 import { _electron as electron } from 'playwright';
 import test from '../helpers/setup';
@@ -57,23 +57,27 @@ test.describe('Desktop send', () => {
           console.log`stderr: ${Buffer.from(error, 'utf-8').toString('utf-8')}`,
       );
 
+    // const mainWindow = electronApp.windows().filter(async (win) => {
+    //   return await win.innerText('data-testid=main-app');
+    // });
+
     const windows = electronApp.windows();
     console.log(`${windows.length} windows created`);
+    // console.log(`${await mainWindow[0].title()} windows created`);
+    // console.log(`${await mainWindow[1].title()} windows created`);
+
     const main =
       (await windows[0].title()) === 'TrezorConnect Electron PopUp Page'
         ? windows[1]
         : windows[0];
     console.log(`${await main.title()} -> main window`);
-    // await expect(main.locator('.mmd-pair-status')).toContainText('Inactive');
+
+    await expect(main.locator('.mmd-pair-status')).toContainText('Inactive');
+    // await main.locator('text=About').click();
     await main.screenshot({
       path: 'test-results/visual/desktop-inactive.main.png',
     });
-    await windows[1].screenshot({
-      path: 'test-results/visual/window1.png',
-    });
-    await windows[0].screenshot({
-      path: 'test-results/visual/window0.png',
-    });
+
     const initialFlow = await context.newPage();
     const extensionId = await signUpFlow(initialFlow, context);
     await enableDesktopAppFlow(initialFlow);
@@ -83,12 +87,10 @@ test.describe('Desktop send', () => {
     await main.screenshot({
       path: 'test-results/visual/desktop-active.main.png',
     });
-    // await expect(main.locator('.mmd-pair-status')).toContainText('Active');
+    await expect(main.locator('.mmd-pair-status')).toContainText('Active');
 
     const initialPage = new MMDInitialPage(page);
     await initialPage.hasDesktopEnabled();
-
-    // await initialPage.closeHelpUsImproveBanner();
 
     await initialPage.hasFunds();
     await initialPage.selectMainAction('Send');

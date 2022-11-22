@@ -4,7 +4,7 @@ import * as path from 'path';
 import { test as base, chromium, firefox, webkit } from '@playwright/test';
 import Ganache from './ganache';
 
-const extensionPath = path.join(__dirname, '../../dist/chrome');
+const extensionPath = path.join(__dirname, '../../../dist/chrome');
 console.log(extensionPath);
 
 const testExtension = base.extend({
@@ -18,9 +18,9 @@ const testExtension = base.extend({
       //     width: 1920,
       //     height: 1080
       //   },
-      recordVideo: {
-        dir: 'playwright/playwright-reports/test-artifacts/videos/',
-      },
+      // recordVideo: {
+      //   dir: 'playwright/playwright-reports/test-artifacts/videos/',
+      // },
     };
     const context = await browserTypes[browserName].launchPersistentContext(
       '',
