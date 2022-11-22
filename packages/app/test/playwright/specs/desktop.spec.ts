@@ -75,7 +75,7 @@ test.describe('Desktop send', () => {
     // await expect(main.locator('.mmd-pair-status')).toContainText('Inactive');
     // await main.locator('text=About').click();
     await main.screenshot({
-      path: 'test-results/visual/desktop-inactive.main.png',
+      path: 'test/playwright/test-results/visual/desktop-inactive.main.png',
     });
 
     const initialFlow = await context.newPage();
@@ -85,7 +85,7 @@ test.describe('Desktop send', () => {
     const signIn = new MMDSignInPage(page, extensionId as string);
     await signIn.signIn();
     await main.screenshot({
-      path: 'test-results/visual/desktop-active.main.png',
+      path: 'test/playwright/test-results/visual/desktop-active.main.png',
     });
     // await expect(main.locator('.mmd-pair-status')).toContainText('Active');
 
