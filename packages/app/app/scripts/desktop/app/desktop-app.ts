@@ -81,7 +81,7 @@ class DesktopApp extends EventEmitter {
 
     ipcMain.handle('set-theme', (event, theme) => {
       const win = BrowserWindow.fromWebContents(event.sender);
-      win?.setTitleBarOverlay(titleBarOverlayOpts[theme]);
+      win?.setTitleBarOverlay?.(titleBarOverlayOpts[theme]);
     });
 
     if (!cfg().isTest) {

@@ -9,9 +9,7 @@ export interface Browser {
   runtime: {
     id: string;
     reload: () => undefined;
-  };
-  extension: {
-    getViews: () => Promise<any[]>;
+    sendMessage: (data: any) => Promise<any>;
   };
 }
 

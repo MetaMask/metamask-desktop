@@ -4,6 +4,10 @@ import React, { Component } from 'react';
 import { matchPath, Route, Switch } from 'react-router-dom';
 import IdleTimer from 'react-idle-timer';
 
+///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
+import { browser as browserAPI } from '@metamask/desktop/dist/browser';
+///: END:ONLY_INCLUDE_IN(desktopextension)
+
 import FirstTimeFlow from '../first-time-flow';
 import SendTransactionScreen from '../send';
 import Swaps from '../swaps';
@@ -23,9 +27,6 @@ import AddCollectiblePage from '../add-collectible';
 import ConfirmImportTokenPage from '../confirm-import-token';
 import ConfirmAddSuggestedTokenPage from '../confirm-add-suggested-token';
 import CreateAccountPage from '../create-account';
-///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
-import DesktopErrorPage from '../desktop-error';
-///: END:ONLY_INCLUDE_IN(desktopextension)
 import Loading from '../../components/ui/loading-screen';
 import LoadingNetwork from '../../components/app/loading-network-screen';
 import NetworkDropdown from '../../components/app/dropdowns/network-dropdown';
@@ -41,6 +42,10 @@ import TokenDetailsPage from '../token-details';
 ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
 import Notifications from '../notifications';
 ///: END:ONLY_INCLUDE_IN
+///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
+import { registerOnDesktopDisconnect } from '../../hooks/desktopHooks';
+import DesktopErrorPage from '../desktop-error';
+///: END:ONLY_INCLUDE_IN(desktopextension)
 
 import {
   IMPORT_TOKEN_ROUTE,
@@ -145,13 +150,9 @@ export default class Routes extends Component {
   ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
   componentDidMount() {
     const { history } = this.props;
-    const connectionLostRoute = `${DESKTOP_ERROR_ROUTE}/${EXTENSION_ERROR_PAGE_TYPES.CONNECTION_LOST}`;
-
-    global.mmdHooks = {
-      onConnectionLost: () => {
-        history.push(connectionLostRoute);
-      },
-    };
+    browserAPI.runtime.onMessage.addListener(
+      registerOnDesktopDisconnect(history),
+    );
   }
   ///: END:ONLY_INCLUDE_IN
 
@@ -166,6 +167,15 @@ export default class Routes extends Component {
       }
     }
   }
+
+  ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
+  componentWillUnmount() {
+    const { history } = this.props;
+    browserAPI.runtime.onMessage.removeListener(
+      registerOnDesktopDisconnect(history),
+    );
+  }
+  ///: END:ONLY_INCLUDE_IN
 
   UNSAFE_componentWillMount() {
     const {
