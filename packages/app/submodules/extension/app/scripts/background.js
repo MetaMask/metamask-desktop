@@ -132,7 +132,7 @@ const initApp = async (remotePort) => {
 
 ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
 const onDesktopRestart = async (desktopApp) => {
-  if (desktopAppCfg().isTest) {
+  if (desktopAppCfg().isExtensionTest) {
     return;
   }
 

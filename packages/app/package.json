@@ -198,6 +198,7 @@
     "@metamask/forwarder": "^1.1.0",
     "@metamask/phishing-warning": "^1.2.1",
     "@metamask/test-dapp": "^5.2.1",
+    "@playwright/test": "1.23.1",
     "@sentry/cli": "^1.58.0",
     "@storybook/addon-a11y": "^6.5.10",
     "@storybook/addon-actions": "^6.5.10",
@@ -255,6 +256,7 @@
     "del": "^3.0.0",
     "depcheck": "^1.4.3",
     "dependency-tree": "^8.1.2",
+    "dotenv": "^16.0.3",
     "duplexify": "^4.1.1",
     "electron": "22.0.0-alpha.1",
     "electron-builder": "^23.3.3",
@@ -312,6 +314,8 @@
     "node-fetch": "^2.6.1",
     "nyc": "^15.0.0",
     "patch-package": "^6.4.7",
+    "playwright": "1.23.1",
+    "playwright-core": "1.23.1",
     "polyfill-crypto.getrandomvalues": "^1.0.0",
     "prettier": "^2.7.1",
     "prettier-plugin-sort-json": "^0.0.1",
@@ -348,11 +352,7 @@
     "watchify": "^4.0.0",
     "webpack": "^4.41.6",
     "yargs": "^17.0.1",
-    "yarn-deduplicate": "^3.1.0",
-    "@playwright/test": "1.23.1",
-    "dotenv": "^16.0.3",
-    "playwright": "1.23.1",
-    "playwright-core": "1.23.1"
+    "yarn-deduplicate": "^3.1.0"
   },
   "engines": {
     "node": "^16.0.0",

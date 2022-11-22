@@ -77,7 +77,6 @@ workflows:
             - prep-deps
       - prep-e2e-test-desktop-deps:
           requires:
-            - prep-deps
             - common-build
       - prep-build-beta:
           requires:
@@ -192,6 +191,8 @@ workflows:
             - common-test
             - app-test
             - test-e2e-desktop-app
+            - test-e2e-chrome-desktop-snaps
+            - test-e2e-chrome-desktop
       - benchmark:
           requires:
             - prep-build-test
@@ -862,7 +863,7 @@ jobs:
           command: |
             if .circleci/scripts/test-run-e2e.sh
             then
-              xvfb-run yarn app desktop:e2e
+              xvfb-run yarn app test:e2e
             fi
           no_output_timeout: 20m
       - store_artifacts:

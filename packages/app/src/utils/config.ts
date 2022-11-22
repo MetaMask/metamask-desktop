@@ -6,8 +6,8 @@ const loadConfig = () => {
 
   return {
     enableUpdates: envBool(process.env.DESKTOP_ENABLE_UPDATES),
-    isTest: envBool(process.env.IN_TEST),
-    isUITest: envBool(process.env.UI_TEST),
+    isExtensionTest: envBool(process.env.IN_TEST),
+    isAppTest: envBool(process.env.UI_TEST),
     mv3: envBool(process.env.ENABLE_MV3),
     skipOtpPairingFlow: envBool(process.env.SKIP_OTP_PAIRING_FLOW),
     compatibilityVersion: {
