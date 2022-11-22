@@ -4,25 +4,29 @@ import {
   createObservableStoreMock,
   OTP_MOCK,
   TEST_CONNECTION_RESULT_MOCK,
-} from '../desktop/test/mocks';
-import { ExtensionPairing } from '../desktop/shared/pairing';
-import DesktopManager from '../desktop/extension/desktop-manager';
-import DesktopApp from '../desktop/app/desktop-app';
+} from '../../../../../src/test/mocks';
+import { ExtensionPairing } from '../../../../../src/shared/pairing';
+import DesktopManager from '../../../../../src/extension/desktop-manager';
+import DesktopApp from '../../../../../src/app/desktop-app';
 import DesktopController from './desktop';
 
 jest.mock('@metamask/obs-store');
 
-jest.mock('../desktop/app/desktop-app', () => ({ getConnection: jest.fn() }), {
-  virtual: true,
-});
+jest.mock(
+  '../../../../../src/app/desktop-app',
+  () => ({ getConnection: jest.fn() }),
+  {
+    virtual: true,
+  },
+);
 
 jest.mock(
-  '../desktop/extension/desktop-manager',
+  '../../../../../src/extension/desktop-manager',
   () => ({ testConnection: jest.fn() }),
   { virtual: true },
 );
 
-jest.mock('../desktop/shared/pairing', () => ({
+jest.mock('../../../../../src/shared/pairing', () => ({
   ExtensionPairing: {
     generateOTP: jest.fn(),
   },

@@ -374,11 +374,11 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Build desktop app for testing
-          command: yarn app build:test
-      - run:
           name: Build desktop UI for testing
           command: ${YARN_EXTENSION} dist:desktop:ui
+      - run:
+          name: Build desktop app for testing
+          command: yarn app build:test
       - run:
           name: Build extension for testing
           command: ${YARN_EXTENSION} build:test:desktop
