@@ -12,7 +12,6 @@ import DesktopController from './desktop';
 
 jest.mock('@metamask/obs-store');
 
-
 jest.mock('../desktop/app/desktop-app', () => ({ getConnection: jest.fn() }), {
   virtual: true,
 });
