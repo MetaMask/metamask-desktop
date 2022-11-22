@@ -1,5 +1,5 @@
-import { DesktopState, RawState } from '../../types';
-import { browser } from '../../browser';
+import { DesktopState, RawState } from '../types';
+import { browser } from '../browser';
 
 export const getRawState = async (): Promise<RawState> => {
   return await browser.storage.local.get();

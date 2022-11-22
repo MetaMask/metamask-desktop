@@ -1,7 +1,7 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { browser } from '@metamask/desktop';
+import { browser } from '@metamask/desktop/dist/browser';
 import Button from '../../ui/button';
 import {
   DESKTOP_ERROR_ROUTE,

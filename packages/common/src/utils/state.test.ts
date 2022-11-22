@@ -1,9 +1,9 @@
-import { browser } from '../../browser';
-import { DATA_MOCK } from '../../../test/mocks';
-import * as RawState from '.';
+import { browser } from '../browser';
+import { DATA_MOCK } from '../../test/mocks';
+import * as RawState from './state';
 
 jest.mock(
-  '../../browser',
+  '../browser',
   () => ({
     browser: {
       storage: { local: { get: jest.fn(), set: jest.fn(), clear: jest.fn() } },

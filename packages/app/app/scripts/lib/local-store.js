@@ -1,6 +1,6 @@
 import log from 'loglevel';
 import { captureException } from '@sentry/browser';
-import { browser } from '@metamask/desktop';
+import { browser } from '@metamask/desktop/dist/browser';
 import { checkForError } from './util';
 
 /**

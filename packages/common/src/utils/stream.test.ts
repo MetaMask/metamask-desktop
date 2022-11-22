@@ -4,9 +4,9 @@ import {
   DATA_MOCK,
   PROPERTY_2_MOCK,
   VALUE_2_MOCK,
-} from '../../../test/mocks';
-import { simulateStreamMessage } from '../../../test/utils';
-import { waitForMessage } from '.';
+} from '../../test/mocks';
+import { simulateStreamMessage } from '../../test/utils';
+import { waitForMessage } from './stream';
 
 describe('Stream Utils', () => {
   beforeEach(() => {

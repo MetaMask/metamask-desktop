@@ -5171,40 +5171,6 @@
         "external:../common/dist/browser/browser-proxy.js": true
       }
     },
-    "external:../common/dist/index.js": {
-      "packages": {
-        "external:../common/dist/browser/index.js": true,
-        "external:../common/dist/version-check.js": true,
-        "external:../common/dist/web-socket-stream.js": true
-      }
-    },
-    "external:../common/dist/utils/config/index.js": {
-      "packages": {
-        "browserify>process": true
-      }
-    },
-    "external:../common/dist/utils/stream/index.js": {
-      "packages": {
-        "browserify>stream-browserify": true,
-        "external:../common/dist/constants/index.js": true
-      }
-    },
-    "external:../common/dist/version-check.js": {
-      "packages": {
-        "external:../common/dist/utils/config/index.js": true,
-        "external:../common/dist/utils/stream/index.js": true,
-        "external:../common/node_modules/loglevel/lib/loglevel.js": true
-      }
-    },
-    "external:../common/dist/web-socket-stream.js": {
-      "globals": {
-        "setTimeout": true
-      },
-      "packages": {
-        "browserify>stream-browserify": true,
-        "external:../common/node_modules/loglevel/lib/loglevel.js": true
-      }
-    },
     "external:../common/node_modules/loglevel/lib/loglevel.js": {
       "globals": {
         "console": true,

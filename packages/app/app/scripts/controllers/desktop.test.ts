@@ -12,17 +12,6 @@ import DesktopController from './desktop';
 
 jest.mock('@metamask/obs-store');
 
-jest.mock(
-  '@metamask/desktop',
-  () => {
-    const original = jest.requireActual('@metamask/desktop');
-    return {
-      ...original,
-      cfg: jest.fn(() => ({ desktop: { isExtension: true, isApp: true } })),
-    };
-  },
-  { virtual: true },
-);
 
 jest.mock('../desktop/app/desktop-app', () => ({ getConnection: jest.fn() }), {
   virtual: true,

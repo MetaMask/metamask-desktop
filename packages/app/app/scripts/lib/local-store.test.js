@@ -1,7 +1,7 @@
-import { browser } from '@metamask/desktop';
+import { browser } from '@metamask/desktop/dist/browser';
 import LocalStore from './local-store';
 
-jest.mock('@metamask/desktop', () => ({
+jest.mock('@metamask/desktop/dist/browser', () => ({
   browser: { storage: { local: true } },
 }));
 

@@ -1,7 +1,7 @@
-import { browser } from '@metamask/desktop';
+import { browser } from '@metamask/desktop/dist/browser';
 import ExtensionPlatform from './extension';
 
-jest.mock('@metamask/desktop', () => {
+jest.mock('@metamask/desktop/dist/browser', () => {
   return {
     browser: {
       runtime: {

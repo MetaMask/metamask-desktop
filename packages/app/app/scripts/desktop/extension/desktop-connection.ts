@@ -37,7 +37,7 @@ import {
   acknowledge,
   waitForAcknowledge,
 } from '@metamask/desktop/dist/utils/stream';
-import { VersionCheck } from '@metamask/desktop';
+import { VersionCheck } from '@metamask/desktop/dist/version-check';
 import { uuid } from '../utils/utils';
 import { ExtensionPairing } from '../shared/pairing';
 import ExtensionPlatform from '../../platforms/extension';

@@ -1,5 +1,5 @@
 import log from 'loglevel';
-import { browser } from '@metamask/desktop';
+import { browser } from '@metamask/desktop/dist/browser';
 
 /**
  * Returns a middleware that intercepts `wallet_registerOnboarding` messages

@@ -3,12 +3,12 @@ import ObjectMultiplex from 'obj-multiplex';
 import { WebSocketServer } from 'ws';
 import { ObservableStore } from '@metamask/obs-store';
 import ElectronStore from 'electron-store';
+import { VersionCheck } from '@metamask/desktop/dist/version-check';
 import {
   BrowserWebSocket,
   NodeWebSocket,
-  VersionCheck,
   WebSocketStream,
-} from '@metamask/desktop';
+} from '@metamask/desktop/dist/web-socket-stream';
 import {
   ConnectionType,
   RemotePort,

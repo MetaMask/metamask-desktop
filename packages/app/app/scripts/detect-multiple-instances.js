@@ -5,7 +5,7 @@
  * versions running simultaneously.
  */
 
-import { browser } from '@metamask/desktop';
+import { browser } from '@metamask/desktop/dist/browser';
 import {
   PLATFORM_CHROME,
   PLATFORM_FIREFOX,

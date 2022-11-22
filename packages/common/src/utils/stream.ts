@@ -1,5 +1,5 @@
 import { Duplex, Readable, Writable } from 'stream';
-import { MESSAGE_ACKNOWLEDGE } from '../../constants';
+import { MESSAGE_ACKNOWLEDGE } from '../constants';
 
 export const waitForMessage = <T>(
   stream: Readable,

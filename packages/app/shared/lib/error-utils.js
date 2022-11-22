@@ -1,5 +1,5 @@
 import { memoize } from 'lodash';
-import { browser } from '@metamask/desktop';
+import { browser } from '@metamask/desktop/dist/browser';
 import getFirstPreferredLangCode from '../../app/scripts/lib/get-first-preferred-lang-code';
 import {
   fetchLocale,

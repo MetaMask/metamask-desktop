@@ -3,7 +3,7 @@ import log from 'loglevel';
 import { clone } from 'lodash';
 import React from 'react';
 import { render } from 'react-dom';
-import { browser } from '@metamask/desktop';
+import { browser } from '@metamask/desktop/dist/browser';
 
 import { getEnvironmentType } from '../app/scripts/lib/util';
 import { ALERT_TYPES } from '../shared/constants/alerts';

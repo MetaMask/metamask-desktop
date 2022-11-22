@@ -1,7 +1,7 @@
 import { createStreamMock, VERSION_2_MOCK, VERSION_MOCK } from '../test/mocks';
 import { simulateStreamMessage } from '../test/utils';
 import { CheckVersionResponseMessage, VersionCheckResult } from './types';
-import { VersionCheck } from '.';
+import { VersionCheck } from './version-check';
 
 describe('Version Check', () => {
   const streamMock = createStreamMock();

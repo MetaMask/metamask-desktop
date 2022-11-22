@@ -1,11 +1,11 @@
 import { Duplex } from 'stream';
 import PortStream from 'extension-port-stream';
-import { WebSocketStream } from '@metamask/desktop';
 import { browser } from '@metamask/desktop/dist/browser';
 import {
   TestConnectionResult,
   ConnectionType,
 } from '@metamask/desktop/dist/types';
+import { WebSocketStream } from '@metamask/desktop/dist/web-socket-stream';
 import { cfg } from '@metamask/desktop/dist/utils/config';
 import * as RawState from '@metamask/desktop/dist/utils/state';
 import {
@@ -30,10 +30,6 @@ jest.mock('extension-port-stream');
 jest.mock('../encryption/encrypted-web-socket-stream');
 jest.mock('./desktop-connection');
 
-jest.mock('@metamask/desktop', () => ({
-  WebSocketStream: jest.fn(),
-}));
-
 jest.mock('@metamask/desktop/dist/browser', () => ({
   browser: {
     runtime: { reload: jest.fn() },
@@ -43,6 +39,10 @@ jest.mock('@metamask/desktop/dist/browser', () => ({
 jest.mock('@metamask/desktop/dist/utils/state', () => ({
   getDesktopState: jest.fn(),
   setDesktopState: jest.fn(),
+}));
+
+jest.mock('@metamask/desktop/dist/web-socket-stream', () => ({
+  WebSocketStream: jest.fn(),
 }));
 
 jest.mock('../../../../shared/modules/mv3.utils', () => ({}), {

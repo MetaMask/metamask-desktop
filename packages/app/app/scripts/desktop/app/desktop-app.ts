@@ -3,8 +3,11 @@ import path from 'path';
 import { app, BrowserWindow, ipcMain } from 'electron';
 import { Server as WebSocketServer, WebSocket } from 'ws';
 import log from 'loglevel';
-import { NodeWebSocket, WebSocketStream } from '@metamask/desktop';
 import { NewConnectionMessage } from '@metamask/desktop/dist/types';
+import {
+  NodeWebSocket,
+  WebSocketStream,
+} from '@metamask/desktop/dist/web-socket-stream';
 import {
   clearRawState,
   getDesktopState,

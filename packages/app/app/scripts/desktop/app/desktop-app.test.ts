@@ -1,6 +1,7 @@
 import { app, BrowserWindow } from 'electron';
 import { Server as WebSocketServer } from 'ws';
-import { WebSocketStream, browser } from '@metamask/desktop';
+import { browser } from '@metamask/desktop/dist/browser';
+import { WebSocketStream } from '@metamask/desktop/dist/web-socket-stream';
 import * as RawStateUtils from '@metamask/desktop/dist/utils/state';
 import EncryptedWebSocketStream from '../encryption/encrypted-web-socket-stream';
 import {
@@ -21,17 +22,16 @@ jest.mock('extension-port-stream');
 jest.mock('../encryption/encrypted-web-socket-stream');
 jest.mock('./extension-connection');
 
-jest.mock('@metamask/desktop', () => {
-  const original = jest.requireActual('@metamask/desktop');
-  return {
-    ...original,
-    browser: { storage: { local: { get: jest.fn(), set: jest.fn() } } },
-    WebSocketStream: jest.fn(),
-  };
-});
+jest.mock('@metamask/desktop/dist/browser', () => ({
+  browser: { storage: { local: { get: jest.fn(), set: jest.fn() } } },
+}));
 
 jest.mock('@metamask/desktop/dist/utils/state', () => ({
   getDesktopState: jest.fn(),
+}));
+
+jest.mock('@metamask/desktop/dist/web-socket-stream', () => ({
+  WebSocketStream: jest.fn(),
 }));
 
 jest.mock(

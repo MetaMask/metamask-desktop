@@ -1,8 +1,11 @@
-import { NodeWebSocket, WebSocketStream } from '@metamask/desktop';
 import {
   MESSAGE_HANDSHAKE_FINISH,
   MESSAGE_HANDSHAKE_START,
 } from '@metamask/desktop/dist/constants';
+import {
+  NodeWebSocket,
+  WebSocketStream,
+} from '@metamask/desktop/dist/web-socket-stream';
 import {
   PUBLIC_KEY_MOCK,
   PRIVATE_KEY_MOCK,
@@ -21,19 +24,9 @@ import EncryptedWebSocketStream from './encrypted-web-socket-stream';
 import * as asymmetricEncryption from './asymmetric-encryption';
 import * as symmetricEncryption from './symmetric-encryption';
 
-jest.mock(
-  '@metamask/desktop',
-  () => {
-    const original = jest.requireActual('@metamask/desktop');
-    return {
-      ...original,
-      WebSocketStream: jest.fn(),
-    };
-  },
-  {
-    virtual: true,
-  },
-);
+jest.mock('@metamask/desktop/dist/web-socket-stream', () => ({
+  WebSocketStream: jest.fn(),
+}));
 
 jest.mock(
   './asymmetric-encryption',

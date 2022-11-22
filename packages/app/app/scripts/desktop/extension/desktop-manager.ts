@@ -2,7 +2,6 @@ import { Duplex } from 'stream';
 import log from 'loglevel';
 import PortStream from 'extension-port-stream';
 import endOfStream from 'end-of-stream';
-import { BrowserWebSocket, WebSocketStream } from '@metamask/desktop';
 import { browser } from '@metamask/desktop/dist/browser';
 import { cfg } from '@metamask/desktop/dist/utils/config';
 import {
@@ -10,6 +9,10 @@ import {
   TestConnectionResult,
   ConnectionType,
 } from '@metamask/desktop/dist/types';
+import {
+  BrowserWebSocket,
+  WebSocketStream,
+} from '@metamask/desktop/dist/web-socket-stream';
 import { DuplexCopy } from '@metamask/desktop/dist/utils/stream';
 import * as RawState from '@metamask/desktop/dist/utils/state';
 import EncryptedWebSocketStream from '../encryption/encrypted-web-socket-stream';
