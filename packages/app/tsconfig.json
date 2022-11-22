@@ -17,17 +17,9 @@
   "exclude": [
     "**/*.test.js",
     "**/*.test.ts",
-    "**/*.test.tsx",
-    ".storybook/**/*",
-    "builds/**/*",
-    "builds_desktop/**/*",
-    "dist/**/*",
     "dist_desktop/**/*",
     "dist_desktop_ui/**/*",
     "node_modules/**"
   ],
-  "extends": "@tsconfig/node16/tsconfig.json",
-  "paths": {
-    "*": ["./types/*"]
-  }
+  "extends": "@tsconfig/node16/tsconfig.json"
 }

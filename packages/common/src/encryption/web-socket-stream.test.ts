@@ -45,15 +45,11 @@ jest.mock(
   { virtual: true },
 );
 
-jest.mock(
-  './symmetric',
-  () => ({
-    createKey: jest.fn(),
-    decrypt: jest.fn(),
-    encrypt: jest.fn(),
-  }),
-  { virtual: true },
-);
+jest.mock('./symmetric', () => ({
+  createKey: jest.fn(),
+  decrypt: jest.fn(),
+  encrypt: jest.fn(),
+}));
 
 describe('Encrypted Web Socket Stream', () => {
   let webSocketStreamConstructorMock: jest.Mocked<any>;

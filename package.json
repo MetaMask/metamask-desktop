@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "setup": "yarn && yarn app setup && yarn common build",
-    "app": "yarn workspace metamask-crx",
-    "common": "yarn workspace @metamask/desktop"
+    "setup": "yarn && yarn extension setup:postinstall && yarn app setup:postinstall && yarn common build",
+    "app": "yarn workspace desktop-app",
+    "common": "yarn workspace @metamask/desktop",
+    "extension": "yarn workspace metamask-crx"
   },
   "devDependencies": {
     "@types/jest": "^29.1.2",
@@ -31,7 +32,8 @@
   },
   "workspaces": {
     "packages": [
-      "packages/*"
+      "packages/*",
+      "packages/app/submodules/extension"
     ],
     "nohoist": [
       "**/*"

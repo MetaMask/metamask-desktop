@@ -1,0 +1,15 @@
+/**
+ * The distribution this build is intended for.
+ *
+ * This should be kept in-sync with the `BuildType` map in `shared/constants/app.js`.
+ */
+const BuildType = {
+  beta: 'beta',
+  flask: 'flask',
+  main: 'main',
+  desktopapp: 'desktopapp',
+  desktopextension: 'desktopextension',
+  desktopui: 'desktopui',
+};
+
+module.exports = { BuildType };

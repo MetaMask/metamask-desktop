@@ -1,0 +1,25 @@
+.import-token {
+  flex-direction: column;
+
+  .actionable-message {
+    margin-top: 0;
+
+    &__message {
+      color: var(--color-text-default);
+      text-align: left;
+    }
+  }
+
+  &__contract-address {
+    border-radius: 8px;
+    background-color: var(--color-background-alternative);
+    padding: 5px 10px;
+  }
+
+  &__token-icon {
+    font-size: $font-size-h2;
+    margin-top: 24px;
+    width: 69px;
+    height: 69px;
+  }
+}

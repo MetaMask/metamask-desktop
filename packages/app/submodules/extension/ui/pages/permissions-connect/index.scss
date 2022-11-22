@@ -1,0 +1,48 @@
+@import 'choose-account/index';
+@import 'flask/snap-install/index';
+@import 'flask/snap-update/index';
+@import 'redirect/index';
+
+.permissions-connect {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background: var(--color-background-default);
+  display: flex;
+  flex-direction: column;
+
+  @include screen-sm-min {
+    .page-container {
+      max-height: none;
+      min-height: auto;
+    }
+  }
+
+  &__top-bar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 16px 16px 0 16px;
+    align-items: center;
+  }
+
+  &__back {
+    @include H7;
+
+    color: var(--color-icon-default);
+    font-weight: bold;
+    cursor: pointer;
+
+    i {
+      margin-right: 10px;
+    }
+  }
+
+  &__page-count {
+    @include H7;
+
+    color: var(--color-text-default);
+    grid-column: 2;
+    justify-self: end;
+    font-weight: bold;
+  }
+}

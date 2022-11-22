@@ -1,0 +1,17 @@
+node_modules/**
+lavamoat/**/policy.json
+dist/**
+dist_desktop/**
+dist_desktop_ui/**
+builds/**
+builds_desktop/**
+test-*/**
+coverage/
+jest-coverage/
+app/vendor/**
+.nyc_output/**
+.vscode/**
+test/e2e/send-eth-with-private-key-test/**
+*.scss
+development/chromereload.js
+development/ts-migration-dashboard/filesToConvert.json

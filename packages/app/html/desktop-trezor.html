@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>TrezorConnect Electron PopUp Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- fix issue with wrong base for electron -->
+    <script>document.write('<base href="' + (navigator.userAgent.toLowerCase().indexOf('electron') > -1 ? '.' : '') + '/" />');</script>
+</head>
+
+<body>
+    <script type="text/javascript" src="scripts/desktop/hw/trezor/renderer/trezor-connect.js"></script>
+    <script type="text/javascript" src="scripts/desktop/hw/trezor/renderer/trezor-renderer.js"></script>
+</body>
+
+</html>

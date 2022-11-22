@@ -1,0 +1,29 @@
+$title-bar-height: 32px;
+
+body {
+  background-color: var(--color-background-default);
+}
+
+#mmd-root {
+  height: 100%;
+  width: 100%;
+  overflow-y: scroll;
+  padding-top: $title-bar-height;
+}
+
+#mmd-app-content {
+  padding: 0 16px;
+  height: 100%;
+}
+
+#mmd-draggable-hidden-bar {
+  height: $title-bar-height;
+  width: 100%;
+  -webkit-app-region: drag;
+  position: fixed;
+  top: 0;
+  background-color: var(--color-background-default);
+}
+
+@import './pages/mmd-pages.scss';
+@import './components/mmd-components.scss';

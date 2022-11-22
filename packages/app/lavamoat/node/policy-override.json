@@ -1,0 +1,162 @@
+{
+  "resources": {
+    "ethjs-query>babel-runtime": {
+      "packages": {
+        "@babel/runtime": true
+      }
+    },
+    "@metamask/controllers>web3-provider-engine>eth-json-rpc-middleware>node-fetch": {
+      "globals": {
+        "fetch": true
+      }
+    },
+    "@metamask/controllers>web3-provider-engine>cross-fetch>node-fetch": {
+      "globals": {
+        "fetch": true
+      }
+    },
+    "lodash": {
+      "globals": {
+        "setTimeout": true,
+        "clearTimeout": true
+      }
+    },
+    "ethers>@ethersproject/random": {
+      "globals": {
+        "crypto.getRandomValues": true
+      }
+    },
+    "eth-keyring-controller>browser-passworder": {
+      "globals": {
+        "crypto": true
+      }
+    },
+    "ethereumjs-wallet>randombytes": {
+      "globals": {
+        "crypto.getRandomValues": true
+      }
+    },
+    "web3": {
+      "globals": {
+        "XMLHttpRequest": true
+      }
+    },
+    "node-fetch": {
+      "globals": {
+        "fetch": true,
+        "Headers": true,
+        "Request": true,
+        "Response": true
+      }
+    },
+    "nanoid": {
+      "builtin": {
+        "crypto.randomFillSync": true
+      },
+      "globals": {
+        "Buffer.allocUnsafe": true
+      }
+    },
+    "@metamask/snap-controllers>nanoid": {
+      "builtin": {
+        "crypto.randomFillSync": true
+      },
+      "globals": {
+        "Buffer.allocUnsafe": true
+      }
+    },
+    "@metamask/controllers>nanoid": {
+      "builtin": {
+        "crypto": true
+      },
+      "globals": {
+        "Buffer.allocUnsafe": true
+      }
+    },
+    "@metamask/smart-transactions-controller>@metamask/controllers>nanoid": {
+      "builtin": {
+        "crypto.randomFillSync": true
+      },
+      "globals": {
+        "Buffer.allocUnsafe": true
+      }
+    },
+    "@metamask/eth-ledger-bridge-keyring": {
+      "globals": {
+        "window.fetch": true,
+        "window.addEventListener": true,
+        "window.removeEventListener": true
+      }
+    },
+    "depcheck>@vue/compiler-sfc>postcss>nanoid": {
+      "builtin": {
+        "crypto.randomFillSync": true
+      },
+      "globals": {
+        "Buffer.allocUnsafe": true
+      }
+    },
+    "electron-updater": {
+      "builtin": {
+        "electron": true,
+        "child_process.spawn": false
+      }
+    },
+    "electron-store": {
+      "builtin": {
+        "electron": true
+      }
+    },
+    "@sentry/electron": {
+      "builtin": {
+        "electron": true
+      }
+    },
+    "@metamask/rpc-methods>@metamask/controllers>nanoid": {
+      "builtin": {
+        "crypto": true
+      },
+      "globals": {
+        "Buffer.allocUnsafe": true
+      }
+    },
+    "@metamask/rpc-methods>nanoid": {
+      "builtin": {
+        "crypto": true
+      },
+      "globals": {
+        "Buffer.allocUnsafe": true
+      }
+    },
+    "@metamask/smart-transactions-controller>@metamask/controllers>eth-method-registry>ethjs>bn.js": {
+      "builtin": {
+        "buffer.Buffer": true
+      }
+    },
+    "@metamask/controllers>eth-method-registry>ethjs>bn.js": {
+      "builtin": {
+        "buffer.Buffer": true
+      }
+    },
+    "@metamask/snap-controllers>@metamask/controllers>eth-method-registry>ethjs>bn.js": {
+      "builtin": {
+        "buffer.Buffer": true
+      }
+    },
+    "@metamask/rpc-methods>@metamask/controllers>eth-method-registry>ethjs>bn.js": {
+      "builtin": {
+        "buffer.Buffer": true
+      }
+    },
+    "ethjs-contract>ethjs-abi>bn.js": {
+      "builtin": {
+        "buffer.Buffer": true
+      }
+    },
+    "ethjs>bn.js": {
+      "builtin": {
+        "buffer.Buffer": true
+      }
+    }
+  }
+}

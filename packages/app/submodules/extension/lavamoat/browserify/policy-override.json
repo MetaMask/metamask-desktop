@@ -1,0 +1,180 @@
+{
+  "resources": {
+    "browserify>browser-resolve": {
+      "packages": {
+        "ethjs-query>babel-runtime>core-js": true
+      }
+    },
+    "ethjs-query>babel-runtime": {
+      "packages": {
+        "@babel/runtime": true
+      }
+    },
+    "@metamask/controllers>web3-provider-engine>eth-json-rpc-middleware>node-fetch": {
+      "globals": {
+        "fetch": true
+      }
+    },
+    "@metamask/controllers>web3-provider-engine>cross-fetch>node-fetch": {
+      "globals": {
+        "fetch": true
+      }
+    },
+    "lodash": {
+      "globals": {
+        "setTimeout": true,
+        "clearTimeout": true
+      }
+    },
+    "react-dnd-html5-backend": {
+      "globals": {
+        "clearTimeout": true,
+        "addEventListener": true,
+        "removeEventListener": true
+      }
+    },
+    "ethers>@ethersproject/random": {
+      "globals": {
+        "crypto.getRandomValues": true
+      }
+    },
+    "eth-keyring-controller>browser-passworder": {
+      "globals": {
+        "crypto": true
+      }
+    },
+    "ethereumjs-wallet>randombytes": {
+      "globals": {
+        "crypto.getRandomValues": true
+      }
+    },
+    "web3": {
+      "globals": {
+        "XMLHttpRequest": true
+      }
+    },
+    "@metamask/controllers>web3": {
+      "globals": {
+        "XMLHttpRequest": true
+      }
+    },
+    "react-dom": {
+      "globals": {
+        "HTMLIFrameElement": true
+      }
+    },
+    "react-devtools": {
+      "packages": {
+        "react-devtools>react-devtools-core": true
+      }
+    },
+    "react-devtools>react-devtools-core": {
+      "globals": {
+        "setTimeout": true,
+        "WebSocket": true
+      }
+    },
+    "node-fetch": {
+      "globals": {
+        "fetch": true,
+        "Headers": true,
+        "Request": true,
+        "Response": true
+      }
+    },
+    "nanoid": {
+      "globals": {
+        "crypto.getRandomValues": true
+      }
+    },
+    "@metamask/snap-controllers>nanoid": {
+      "globals": {
+        "crypto.getRandomValues": true
+      }
+    },
+    "@metamask/rpc-methods>nanoid": {
+      "globals": {
+        "crypto.getRandomValues": true
+      }
+    },
+    "@metamask/controllers>nanoid": {
+      "globals": {
+        "crypto.getRandomValues": true
+      }
+    },
+    "@metamask/smart-transactions-controller>@metamask/controllers>nanoid": {
+      "globals": {
+        "crypto.getRandomValues": true
+      }
+    },
+    "depcheck>@vue/compiler-sfc>postcss>nanoid": {
+      "globals": {
+        "crypto.getRandomValues": true
+      }
+    },
+    "dependency-tree>precinct>detective-postcss>postcss>nanoid": {
+      "globals": {
+        "crypto.getRandomValues": true
+      }
+    },
+    "remote-redux-devtools": {
+      "packages": {
+        "remote-redux-devtools>jsan": true,
+        "remote-redux-devtools>socketcluster-client": true,
+        "remote-redux-devtools>redux-devtools-instrument": true,
+        "remote-redux-devtools>rn-host-detect": true,
+        "remote-redux-devtools>redux-devtools-core": true
+      }
+    },
+    "remote-redux-devtools>socketcluster-client": {
+      "globals": {
+        "setTimeout": true,
+        "clearTimeout": true,
+        "WebSocket": true
+      },
+      "packages": {
+        "remote-redux-devtools>socketcluster-client>component-emitter": true,
+        "remote-redux-devtools>socketcluster-client>sc-channel": true,
+        "remote-redux-devtools>socketcluster-client>sc-errors": true,
+        "remote-redux-devtools>socketcluster-client>sc-formatter": true,
+        "remote-redux-devtools>socketcluster-client>linked-list": true,
+        "remote-redux-devtools>socketcluster-client>clone": true,
+        "remote-redux-devtools>socketcluster-client>uuid": true,
+        "@ngraveio/bc-ur>crc>buffer": true,
+        "browserify>querystring-es3": true
+      }
+    },
+    "remote-redux-devtools>socketcluster-client>sc-channel": {
+      "packages": {
+        "remote-redux-devtools>socketcluster-client>sc-channel>component-emitter": true
+      }
+    },
+    "@ngraveio/bc-ur>crc>buffer": {
+      "packages": {
+        "base64-js": true,
+        "browserify>buffer>ieee754": true
+      }
+    },
+    "remote-redux-devtools>socketcluster-client>clone": {
+      "packages": {
+        "browserify>buffer": true
+      }
+    },
+    "remote-redux-devtools>redux-devtools-instrument": {
+      "packages": {
+        "browserify>process": true,
+        "lodash": true,
+        "remote-redux-devtools>redux-devtools-instrument>symbol-observable": true
+      }
+    },
+    "remote-redux-devtools>redux-devtools-core": {
+      "packages": {
+        "remote-redux-devtools>redux-devtools-core>get-params": true,
+        "remote-redux-devtools>jsan": true,
+        "nanoid": true,
+        "remote-redux-devtools>redux-devtools-core>remotedev-serialize": true,
+        "lodash": true
+      }
+    }
+  }
+}
