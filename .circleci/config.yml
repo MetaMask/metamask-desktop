@@ -451,7 +451,7 @@ jobs:
           command: ${YARN_EXTENSION} build:test:desktop:ui
       - run:
           name: Move test build to 'dist-test' to avoid conflict with production build
-          command: mv ./${EXTENSION_DIR}/dist ./dist-test-desktop      
+          command: mv ./${EXTENSION_DIR}/dist ./${EXTENSION_DIR}/dist-test-desktop
       - persist_to_workspace:
           root: .
           paths:
