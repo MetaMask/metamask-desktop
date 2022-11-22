@@ -867,13 +867,13 @@ jobs:
           no_output_timeout: 20m
       - store_artifacts:
           name: html-report and artifacts
-          path: << pipeline.parameters.app-dir >>/playwright/playwright-reports/
+          path: ./<< pipeline.parameters.app-dir >>/test/playwright/playwright-reports/
       - store_test_results:
           name: report for pipeline integration
-          path: << pipeline.parameters.app-dir >>/playwright/playwright-reports/junit/test-results.xml
+          path: ./<< pipeline.parameters.app-dir >>/test/playwright/playwright-reports/junit/test-results.xml
       - store_artifacts:
           name: screenshots and trace.zip
-          path: ./<< pipeline.parameters.app-dir >>/playwright/test-results/
+          path: ./<< pipeline.parameters.app-dir >>/test/playwright/test-results/
 
   benchmark:
     executor: node-browsers-medium-plus
