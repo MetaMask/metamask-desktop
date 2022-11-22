@@ -57,14 +57,12 @@ test.describe('Desktop send', () => {
           console.log`stderr: ${Buffer.from(error, 'utf-8').toString('utf-8')}`,
       );
 
-    // const mainWindow = electronApp.windows().filter(async (win) => {
-    //   return await win.innerText('data-testid=main-app');
-    // });
+    const mainWindow = electronApp.windows().find(async (win) => {
+      return await win.innerText('data-testid=main-app');
+    });
 
     const windows = electronApp.windows();
     console.log(`${windows.length} windows created`);
-    // console.log(`${await mainWindow[0].title()} windows created`);
-    // console.log(`${await mainWindow[1].title()} windows created`);
 
     const main =
       (await windows[0].title()) === 'TrezorConnect Electron PopUp Page'
@@ -72,10 +70,9 @@ test.describe('Desktop send', () => {
         : windows[0];
     console.log(`${await main.title()} -> main window`);
 
-    // await expect(main.locator('.mmd-pair-status')).toContainText('Inactive');
-    // await main.locator('text=About').click();
-    await main.screenshot({
+    await mainWindow.screenshot({
       path: 'test/playwright/test-results/visual/desktop-inactive.main.png',
+      fullPage: true,
     });
 
     const initialFlow = await context.newPage();
@@ -84,10 +81,11 @@ test.describe('Desktop send', () => {
 
     const signIn = new MMDSignInPage(page, extensionId as string);
     await signIn.signIn();
-    await main.screenshot({
+    await mainWindow.screenshot({
       path: 'test/playwright/test-results/visual/desktop-active.main.png',
+      fullPage: true,
     });
-    // await expect(main.locator('.mmd-pair-status')).toContainText('Active');
+    await expect(main.locator('.mmd-pair-status')).toContainText('Active');
 
     const initialPage = new MMDInitialPage(page);
     await initialPage.hasDesktopEnabled();
