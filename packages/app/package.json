@@ -5,7 +5,7 @@
   "main": "dist_desktop/submodules/extension/app/scripts/desktop/main.js",
   "scripts": {
     "setup": "yarn install && yarn setup:postinstall",
-    "setup:postinstall": "yarn allow-scripts",
+    "setup:postinstall": "yarn patch-package && yarn allow-scripts",
     "build": "./build/build-desktop.sh",
     "build:mv3": "ENABLE_MV3=true yarn build",
     "build:test": "IN_TEST=true SEGMENT_HOST='https://api.segment.io' SEGMENT_WRITE_KEY='FAKE' PHISHING_WARNING_PAGE_URL=http://localhost:9999/ METAMASK_DEBUG=1 yarn build",
