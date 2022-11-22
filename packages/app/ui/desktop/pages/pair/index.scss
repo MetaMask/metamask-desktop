@@ -5,6 +5,11 @@
   align-items: center;
   justify-content: center;
 
+  &__spinner {
+    width: 50px;
+    margin: 80px 0;
+  }
+
   &__otp-input {
     width: 72px !important;
     height: 142px;

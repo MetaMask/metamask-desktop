@@ -6,9 +6,11 @@ import {
   SETTINGS_ROUTE,
   PAIR_ROUTE,
   ERROR_ROUTE,
+  SUCCESSFUL_PAIR_ROUTE,
 } from '../../helpers/constants/routes';
 import setTheme from '../../helpers/utils/theme';
 import Pair from '../pair';
+import SuccessfulPair from '../successful-pair';
 import Settings from '../settings';
 import ErrorPage from '../error';
 
@@ -22,6 +24,7 @@ const Routes = ({ theme }) => {
     <div id="mmd-app-content">
       <Switch>
         <Route path={PAIR_ROUTE} component={Pair} />
+        <Route path={SUCCESSFUL_PAIR_ROUTE} component={SuccessfulPair} />
         <Route path={SETTINGS_ROUTE} component={Settings} />
         <Route path={`${ERROR_ROUTE}/:errorType`} component={ErrorPage} exact />
       </Switch>
