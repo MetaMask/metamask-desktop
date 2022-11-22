@@ -3,7 +3,7 @@ import {
   HASH_BUFFER_MOCK,
   IV_BUFFER_MOCK,
   STRING_DATA_MOCK,
-} from '../test/mocks';
+} from '../../test/mocks';
 import { hashString, randomHex } from './crypto';
 
 describe('Crypto Utils', () => {

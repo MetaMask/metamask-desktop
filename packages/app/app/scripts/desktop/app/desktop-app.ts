@@ -12,8 +12,8 @@ import {
   clearRawState,
   getDesktopState,
 } from '@metamask/desktop/dist/utils/state';
+import EncryptedWebSocketStream from '@metamask/desktop/dist/encryption/web-socket-stream';
 import { StatusMessage } from '../types/message';
-import EncryptedWebSocketStream from '../encryption/encrypted-web-socket-stream';
 import { forwardEvents } from '../utils/events';
 import { MILLISECOND } from '../../../../shared/constants/time';
 import cfg from '../utils/config';

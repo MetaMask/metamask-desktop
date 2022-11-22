@@ -3,7 +3,7 @@ import { Server as WebSocketServer } from 'ws';
 import { browser } from '@metamask/desktop/dist/browser';
 import { WebSocketStream } from '@metamask/desktop/dist/web-socket-stream';
 import * as RawStateUtils from '@metamask/desktop/dist/utils/state';
-import EncryptedWebSocketStream from '../encryption/encrypted-web-socket-stream';
+import EncryptedWebSocketStream from '@metamask/desktop/dist/encryption/web-socket-stream';
 import {
   PORT_MOCK,
   createWebSocketNodeMock,
@@ -19,7 +19,7 @@ import { updateCheck } from './update-check';
 import DesktopApp from './desktop-app';
 
 jest.mock('extension-port-stream');
-jest.mock('../encryption/encrypted-web-socket-stream');
+jest.mock('@metamask/desktop/dist/encryption/web-socket-stream');
 jest.mock('./extension-connection');
 
 jest.mock('@metamask/desktop/dist/browser', () => ({

@@ -1,11 +1,8 @@
 import {
   MESSAGE_HANDSHAKE_FINISH,
   MESSAGE_HANDSHAKE_START,
-} from '@metamask/desktop/dist/constants';
-import {
-  NodeWebSocket,
-  WebSocketStream,
-} from '@metamask/desktop/dist/web-socket-stream';
+} from '../constants';
+import { NodeWebSocket, WebSocketStream } from '../web-socket-stream';
 import {
   PUBLIC_KEY_MOCK,
   PRIVATE_KEY_MOCK,
@@ -18,18 +15,28 @@ import {
   IV_HEX_MOCK,
   DECRYPTED_STRING_MOCK,
   ENCRYPTED_HEX_MOCK,
-} from '../test/mocks';
-import { flushPromises, simulateNodeEvent } from '../test/utils';
-import EncryptedWebSocketStream from './encrypted-web-socket-stream';
-import * as asymmetricEncryption from './asymmetric-encryption';
-import * as symmetricEncryption from './symmetric-encryption';
-
-jest.mock('@metamask/desktop/dist/web-socket-stream', () => ({
-  WebSocketStream: jest.fn(),
-}));
+} from '../../test/mocks';
+import { flushPromises, simulateNodeEvent } from '../../test/utils';
+import EncryptedWebSocketStream from './web-socket-stream';
+import * as asymmetricEncryption from './asymmetric';
+import * as symmetricEncryption from './symmetric';
 
 jest.mock(
-  './asymmetric-encryption',
+  '../web-socket-stream',
+  () => {
+    const original = jest.requireActual('../web-socket-stream');
+    return {
+      ...original,
+      WebSocketStream: jest.fn(),
+    };
+  },
+  {
+    virtual: true,
+  },
+);
+
+jest.mock(
+  './asymmetric',
   () => ({
     createKeyPair: jest.fn(),
     decrypt: jest.fn(),
@@ -39,7 +46,7 @@ jest.mock(
 );
 
 jest.mock(
-  './symmetric-encryption',
+  './symmetric',
   () => ({
     createKey: jest.fn(),
     decrypt: jest.fn(),
@@ -154,16 +161,19 @@ describe('Encrypted Web Socket Stream', () => {
         undefined,
         expect.any(Function),
       );
+
       expect(webSocketStreamMock.write).toHaveBeenCalledWith(
         { publicKey: PUBLIC_KEY_MOCK },
         undefined,
         expect.any(Function),
       );
+
       expect(webSocketStreamMock.write).toHaveBeenCalledWith(
         ENCRYPTED_HEX_MOCK,
         undefined,
         expect.any(Function),
       );
+
       expect(webSocketStreamMock.write).toHaveBeenCalledWith(
         { data: ENCRYPTED_HEX_MOCK, iv: IV_HEX_MOCK },
         undefined,

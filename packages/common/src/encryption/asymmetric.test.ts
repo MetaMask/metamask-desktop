@@ -6,8 +6,8 @@ import {
   PUBLIC_KEY_MOCK,
   STRING_DATA_BUFFER_MOCK,
   STRING_DATA_MOCK,
-} from '../test/mocks';
-import { createKeyPair, encrypt, decrypt } from './asymmetric-encryption';
+} from '../../test/mocks';
+import { createKeyPair, encrypt, decrypt } from './asymmetric';
 
 jest.mock(
   'eciesjs',

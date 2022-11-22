@@ -19,6 +19,7 @@
     "**/*.test.ts",
     "dist/**",
     "node_modules/**",
+    "coverage/**",
     "*.config.js*"
   ],
   "extends": "@tsconfig/node16/tsconfig.json",

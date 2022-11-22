@@ -1,5 +1,5 @@
 import { TOTP as TOTPAuth } from 'otpauth';
-import { OTP_MOCK, WRONG_OTP_MOCK } from '../test/mocks';
+import { OTP_MOCK, WRONG_OTP_MOCK } from '../../test/mocks';
 import TOTP from './totp';
 
 describe('TOTP', () => {
@@ -8,7 +8,7 @@ describe('TOTP', () => {
   let initMock;
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    jest.restoreAllMocks();
     validateMock = jest.spyOn(TOTPAuth, 'validate').mockImplementation(() => 0);
     generateMock = jest
       .spyOn(TOTPAuth, 'generate')

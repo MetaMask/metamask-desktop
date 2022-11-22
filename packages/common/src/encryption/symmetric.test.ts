@@ -10,8 +10,8 @@ import {
   KEY_MOCK,
   STRING_DATA_BUFFER_MOCK,
   STRING_DATA_MOCK,
-} from '../test/mocks';
-import { createKey, decrypt, encrypt } from './symmetric-encryption';
+} from '../../test/mocks';
+import { createKey, decrypt, encrypt } from './symmetric';
 
 describe('Symmetric Encryption', () => {
   let cryptoMock: jest.Mocked<Crypto>;

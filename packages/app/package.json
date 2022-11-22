@@ -177,7 +177,6 @@
     "currency-formatter": "^1.4.2",
     "debounce-stream": "^2.0.0",
     "deep-freeze-strict": "1.1.1",
-    "eciesjs": "^0.3.15",
     "electron-store": "^8.1.0",
     "electron-updater": "^5.2.1",
     "end-of-stream": "^1.4.4",
@@ -222,7 +221,6 @@
     "nanoid": "^2.1.6",
     "nonce-tracker": "^1.0.0",
     "obj-multiplex": "^1.0.0",
-    "otpauth": "^8.0.3",
     "pify": "^5.0.0",
     "polyfill-crypto.getrandomvalues": "^1.0.0",
     "promise-to-callback": "^1.0.0",
@@ -501,7 +499,8 @@
       "ws>bufferutil": false,
       "ws>utf-8-validate": false,
       "@ledgerhq/hw-transport-node-hid-noevents>node-hid": true,
-      "hdkey>secp256k1": false
+      "hdkey>secp256k1": false,
+      "@metamask/desktop>eciesjs>secp256k1": false
     }
   }
 }

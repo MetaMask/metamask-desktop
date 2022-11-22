@@ -8,6 +8,7 @@ import {
 import { WebSocketStream } from '@metamask/desktop/dist/web-socket-stream';
 import { cfg } from '@metamask/desktop/dist/utils/config';
 import * as RawState from '@metamask/desktop/dist/utils/state';
+import EncryptedWebSocketStream from '@metamask/desktop/dist/encryption/web-socket-stream';
 import {
   createWebSocketBrowserMock,
   createWebSocketStreamMock,
@@ -22,12 +23,11 @@ import {
   flushPromises,
   simulateStreamMessage,
 } from '../test/utils';
-import EncryptedWebSocketStream from '../encryption/encrypted-web-socket-stream';
 import DesktopConnection from './desktop-connection';
 import DesktopManager from './desktop-manager';
 
 jest.mock('extension-port-stream');
-jest.mock('../encryption/encrypted-web-socket-stream');
+jest.mock('@metamask/desktop/dist/encryption/web-socket-stream');
 jest.mock('./desktop-connection');
 
 jest.mock('@metamask/desktop/dist/browser', () => ({
