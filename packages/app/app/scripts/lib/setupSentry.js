@@ -141,11 +141,16 @@ export default function setupSentry({ release, getState }) {
     dsn: sentryTarget,
     debug: METAMASK_DEBUG,
     environment,
-    integrations: [
-      new FilterEvents({ getMetaMetricsEnabled }),
-      new Dedupe(),
-      new ExtraErrorData(),
-    ],
+    integrations: (integrations) => {
+      const filteredIntegrations = integrations.filter(integration => integration.name !== 'FunctionToString');
+  
+      return [
+        ...filteredIntegrations,
+        new FilterEvents({ getMetaMetricsEnabled }),
+        new Dedupe(),
+        new ExtraErrorData(),
+      ]
+    },
     release,
     beforeSend: (report) => rewriteReport(report),
     beforeBreadcrumb(breadcrumb) {
