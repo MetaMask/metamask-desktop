@@ -58,13 +58,17 @@ import setupEnsIpfsResolver from './lib/ens-ipfs/setup';
 import { getPlatform } from './lib/util';
 
 /* eslint-disable import/order */
+
+///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
+import DesktopApp from '../../../../src/app/desktop-app';
+///: END:ONLY_INCLUDE_IN
+
 ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
 import DesktopManager from '@metamask/desktop/dist/desktop-manager';
 ///: END:ONLY_INCLUDE_IN
 
-///: BEGIN:ONLY_INCLUDE_IN(desktopextension, desktopapp)
-import cfg from './desktop/utils/config';
-///: END:ONLY_INCLUDE_IN
+// require to not use fencing code to handle browserAction replacement on test in CI
+import desktopAppCfg from '../../../../src/utils/config';
 
 /* eslint-enable import/order */
 
@@ -656,7 +660,7 @@ export function setupController(
       label = String(count);
     }
     // browserAction has been replaced by action in MV3
-    if (isManifestV3 || cfg().desktop.mv3) {
+    if (isManifestV3 || desktopAppCfg().mv3) {
       browser.action.setBadgeText({ text: label });
       browser.action.setBadgeBackgroundColor({ color: '#037DD6' });
     } else {
