@@ -16,6 +16,7 @@ import {
 import Mascot from '../../../components/ui/mascot';
 import Spinner from '../../../components/ui/spinner';
 
+// eslint-disable-next-line node/no-extraneous-require
 const { ipcRenderer } = window.require('electron');
 
 const Pair = ({ isDesktopEnabled, isSuccessfulPairSeen, history }) => {

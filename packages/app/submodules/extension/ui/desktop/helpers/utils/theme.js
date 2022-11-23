@@ -1,5 +1,6 @@
 import { THEME_TYPE } from '../../../pages/settings/settings-tab/settings-tab.constant';
 
+// eslint-disable-next-line node/no-extraneous-require
 const { ipcRenderer } = window.require('electron');
 
 const getOSTheme = () => {

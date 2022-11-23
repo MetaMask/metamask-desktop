@@ -6,6 +6,7 @@ import Root from './pages';
 import registerUpdatePairStatus from './hooks/registerUpdatePairStatus';
 import registerUpdateOSTheme from './hooks/registerUpdateOSTheme';
 
+// eslint-disable-next-line node/no-extraneous-require
 const { ipcRenderer } = window.require('electron');
 
 async function launchDesktopUi() {

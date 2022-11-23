@@ -10,6 +10,7 @@ import localeIndex from '../../../helpers/constants/localeIndex';
 import themeIndex from '../../../helpers/constants/themeIndex';
 import useI18nContext from '../../../hooks/useI18nContext';
 
+// eslint-disable-next-line node/no-extraneous-require
 const { ipcRenderer } = window.require('electron');
 
 const GeneralTab = ({
