@@ -231,10 +231,7 @@ class DesktopApp extends EventEmitter {
         nodeIntegration: true,
         contextIsolation: false,
       },
-      icon: path.resolve(
-        __dirname,
-        '../../../../../dist_desktop_ui/images/icon-128.png',
-      ),
+      icon: path.resolve(__dirname, '../../dist/app/icon.png'),
     });
 
     if (process.platform === 'win32') {
@@ -245,7 +242,7 @@ class DesktopApp extends EventEmitter {
     mainWindow.loadFile(
       path.resolve(
         __dirname,
-        '../../submodules/extension/dist_desktop_ui/desktop-ui.html',
+        `${app.isPackaged ? '../../../' : '../../dist/'}ui/desktop-ui.html`,
       ),
       // Temporary open pair page, it will redirect to settings page if isDesktopEnabled is true
       { hash: 'pair' },

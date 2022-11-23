@@ -400,7 +400,7 @@ jobs:
           command: ${YARN_EXTENSION} dist:desktop:ui
       - run:
           name: Build desktop app for testing
-          command: yarn app build:test
+          command: yarn app build:app:test
       - run:
           name: Build extension for testing
           command: ${YARN_EXTENSION} build:test:desktop
@@ -413,10 +413,9 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - << pipeline.parameters.app-dir >>/dist_desktop
+            - << pipeline.parameters.app-dir >>/dist
             - << pipeline.parameters.extension-dir >>/dist-test-desktop
             - << pipeline.parameters.extension-dir >>/builds-test-desktop
-            - << pipeline.parameters.extension-dir >>/dist_desktop_ui
 
   prep-build-test-flask:
     executor: node-browsers-medium-plus
@@ -1178,7 +1177,7 @@ jobs:
           at: .
       - run:
           name: build
-          command: yarn app build
+          command: yarn app build:app
 
   app-lint:
     executor: node-browsers

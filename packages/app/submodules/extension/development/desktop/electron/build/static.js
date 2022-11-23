@@ -51,16 +51,12 @@ module.exports = function createStaticAssetTasks({
       await copyGlob(
         target.src,
         `${target.src}${target.pattern}`,
-        `./dist_desktop_ui/${target.dest}`,
+        `../../dist/ui/${target.dest}`,
       );
       return;
     }
 
-    await copyGlob(
-      target.src,
-      `${target.src}`,
-      `./dist_desktop_ui/${target.dest}`,
-    );
+    await copyGlob(target.src, `${target.src}`, `../../dist/ui/${target.dest}`);
   }
 
   async function copyGlob(baseDir, srcGlob, dest) {

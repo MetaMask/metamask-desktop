@@ -9,14 +9,13 @@
     "sign": false
   },
   "files": [
-    "dist_desktop/**/*",
-    "dist_desktop_ui/**/*",
-    "lavamoat/desktop/node/**/*",
+    "dist/**/*",
+    "lavamoat/node/**/*",
     "node_modules/**/*",
     "package.json"
   ],
   "linux": {
-    "icon": "app/build-types/desktop/images/icon-512.png",
+    "icon": "build/icon.png",
     "target": "AppImage",
     "category": "Utility",
     "artifactName": "metamask-desktop-${version}.${ext}",
@@ -25,11 +24,11 @@
     }
   },
   "mac": {
-    "icon": "app/build-types/desktop/images/icon.icns",
+    "icon": "build/mac/icon.icns",
     "forceCodeSigning": true,
     "hardenedRuntime": true,
-    "entitlements": "development/desktop/electron/build/entitlements.mac.plist",
-    "entitlementsInherit": "development/desktop/electron/build/entitlements.mac.plist",
+    "entitlements": "build/mac/entitlements.plist",
+    "entitlementsInherit": "build/mac/entitlements.plist",
     "gatekeeperAssess": false,
     "type": "distribution",
     "target": [
@@ -51,7 +50,7 @@
   },
   "productName": "MetaMask Desktop",
   "win": {
-    "icon": "app/build-types/desktop/images/icon-512.png",
+    "icon": "build/icon.png",
     "target": ["nsis", "portable"]
   }
 }

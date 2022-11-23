@@ -3,13 +3,17 @@ import { app } from 'electron';
 import { runLava } from 'lavamoat';
 
 let appPath = process.cwd();
-const policyRelativePath = '/lavamoat/desktop/node/';
+const policyRelativePath = '/lavamoat/node/';
 
 if (app.isPackaged) {
   appPath = app.getAppPath();
 }
 
-const entryPath = path.join(appPath, '/dist_desktop/app/scripts/background.js');
+const entryPath = path.join(
+  appPath,
+  '/dist/app/submodules/extension/app/scripts/background.js',
+);
+
 const policyPath = path.join(appPath, policyRelativePath, 'policy.json');
 const policyOverridePath = path.join(
   appPath,

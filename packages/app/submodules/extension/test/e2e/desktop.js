@@ -86,7 +86,7 @@ const startDesktopApp = async () => {
 
 const stopDesktopApp = () => {
   console.info('Stopping desktop app');
-  killProcessesByCommand(['background.js', 'start:desktop']);
+  killProcessesByCommand(['background.js', 'start:test']);
 };
 
 const setDesktopAppState = async (state) => {
@@ -112,10 +112,9 @@ const beforeDesktopNavigate = async (_driver) => {
 };
 
 const getElectronWindowCount = () => {
-  return getProcessesByCommand(
-    ['electron', 'dist_desktop', '--type=renderer'],
-    { matchAll: true },
-  ).length;
+  return getProcessesByCommand(['electron', 'dist/app', '--type=renderer'], {
+    matchAll: true,
+  }).length;
 };
 
 module.exports = {

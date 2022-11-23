@@ -31,9 +31,6 @@ storybook-build/
 coverage/
 jest-coverage/
 dist
-dist_desktop
-dist_desktop_ui
-builds_desktop
 builds/
 builds.zip
 development/ts-migration-dashboard/build

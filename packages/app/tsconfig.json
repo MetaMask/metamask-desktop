@@ -17,9 +17,9 @@
   "exclude": [
     "**/*.test.js",
     "**/*.test.ts",
-    "dist_desktop/**/*",
-    "dist_desktop_ui/**/*",
-    "node_modules/**"
+    "dist/**/*",
+    "node_modules/**",
+    "packages/**"
   ],
   "extends": "@tsconfig/node16/tsconfig.json",
   "paths": {

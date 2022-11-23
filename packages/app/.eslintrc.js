@@ -40,8 +40,9 @@ module.exports = {
   ignorePatterns: [
     '!.prettierrc.js',
     '**/!.eslintrc.js',
-    'dist_desktop',
+    'dist',
     'lavamoat',
+    'packages',
     'src/hw/ledger/ledger-keyring.*',
     'submodules',
     'types',

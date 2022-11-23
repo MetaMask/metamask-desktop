@@ -6,7 +6,7 @@ module.exports = createEtcTasks;
 
 function createEtcTasks() {
   const clean = createTask(TASKS.CLEAN, async function clean() {
-    await del(['./dist_desktop_ui/*']);
+    await del(['../../dist/ui/*'], { force: true });
   });
 
   return { clean };

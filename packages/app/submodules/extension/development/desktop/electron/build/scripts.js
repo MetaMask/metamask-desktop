@@ -265,7 +265,7 @@ function createFactoredBuild({
         }),
       );
 
-      const dest = `./dist_desktop_ui/`;
+      const dest = `../../dist/ui/`;
       const destination = policyOnly ? noopWriteStream : gulp.dest(dest);
       pipeline.get('dest').push(destination);
     });
@@ -559,7 +559,7 @@ function renderHtmlFile({ htmlName, groupSet, commonSet, applyLavaMoat }) {
   );
   const htmlOutput = Sqrl.render(htmlTemplate, { jsBundles, applyLavaMoat });
 
-  const dest = `./dist_desktop_ui/${htmlName}.html`;
+  const dest = `../../dist/ui/${htmlName}.html`;
   writeFileSync(dest, htmlOutput);
 }
 

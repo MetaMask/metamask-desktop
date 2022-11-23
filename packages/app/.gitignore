@@ -2,7 +2,8 @@
 node_modules
 
 # Output
-dist_desktop
+dist
+packages
 
 # Config
 .metamaskrc

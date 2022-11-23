@@ -1,6 +1,6 @@
 #!/bin/sh
 
-OUTPUT_DIR="dist_desktop"
+OUTPUT_DIR="dist/app"
 OUTPUT_HTML_DIR="$OUTPUT_DIR/html"
 SOURCE_HTML_DIR="html"
 EXTENSION_DIR="submodules/extension"
@@ -21,9 +21,6 @@ cp $SOURCE_HTML_DIR/desktop-lattice.html $OUTPUT_HTML_DIR/desktop-lattice.html
 
 echo "Copying locales"
 cp -r $EXTENSION_APP_DIR/_locales $OUTPUT_APP_DIR/_locales
-
-echo "Copying UI"
-cp -r $EXTENSION_DIR/dist_desktop_ui $OUTPUT_EXTENSION_DIR/dist_desktop_ui
 
 # Export all shell variables
 set -a

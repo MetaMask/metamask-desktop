@@ -21,10 +21,20 @@ Install dependencies for all packages:
 ```
 yarn setup
 ```
+
+Build the app, UI, and extension:
+```
+yarn build
+```
+
+Start the app:
+```
+yarn app start
+```
   
 Run a script for a specific package:
 ```
 yarn [package] [script]
 
-e.g. yarn app build:desktop
+e.g. yarn app package:mac
 ```
