@@ -400,9 +400,9 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
+            - << pipeline.parameters.app-dir >>/dist_desktop
             - << pipeline.parameters.extension-dir >>/dist-test-desktop
             - << pipeline.parameters.extension-dir >>/builds-test-desktop
-            - << pipeline.parameters.extension-dir >>/dist_desktop
             - << pipeline.parameters.extension-dir >>/dist_desktop_ui
 
   prep-build-test-flask:
@@ -807,7 +807,7 @@ jobs:
           command: mv ./${EXTENSION_DIR}/builds-test ./${EXTENSION_DIR}/builds
       - run:
           name: Run page load benchmark
-          command: ${YARN_EXTENSION} benchmark:chrome --out ../../test-artifacts/chrome/benchmark/pageload.json --retries 2
+          command: ${YARN_EXTENSION} benchmark:chrome --out ../../../../test-artifacts/chrome/benchmark/pageload.json --retries 2
       - store_artifacts:
           path: test-artifacts
           destination: test-artifacts
@@ -833,7 +833,7 @@ jobs:
           command: mv ./${EXTENSION_DIR}/builds-test ./${EXTENSION_DIR}/builds
       - run:
           name: Run page load benchmark
-          command: ${YARN_EXTENSION} user-actions-benchmark:chrome --out ../../test-artifacts/chrome/benchmark/user_actions.json --retries 2
+          command: ${YARN_EXTENSION} user-actions-benchmark:chrome --out ../../../../test-artifacts/chrome/benchmark/user_actions.json --retries 2
       - store_artifacts:
           path: test-artifacts
           destination: test-artifacts
