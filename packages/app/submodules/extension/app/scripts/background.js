@@ -61,6 +61,11 @@ import { getPlatform } from './lib/util';
 ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
 import DesktopManager from '@metamask/desktop/dist/desktop-manager';
 ///: END:ONLY_INCLUDE_IN
+
+///: BEGIN:ONLY_INCLUDE_IN(desktopextension, desktopapp)
+import cfg from './desktop/utils/config';
+///: END:ONLY_INCLUDE_IN
+
 /* eslint-enable import/order */
 
 const { sentry } = global;
@@ -651,7 +656,7 @@ export function setupController(
       label = String(count);
     }
     // browserAction has been replaced by action in MV3
-    if (isManifestV3 || process.env.ENABLE_MV3 === true) {
+    if (isManifestV3 || cfg().desktop.mv3) {
       browser.action.setBadgeText({ text: label });
       browser.action.setBadgeBackgroundColor({ color: '#037DD6' });
     } else {
