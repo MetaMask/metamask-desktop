@@ -8,7 +8,11 @@ import {
   CLIENT_ID_DISABLE,
   MESSAGE_ACKNOWLEDGE,
 } from '@metamask/desktop/dist/constants';
-import { ConnectionType, ClientId } from '@metamask/desktop/dist/types';
+import {
+  ConnectionType,
+  ClientId,
+  PairingKeyStatus,
+} from '@metamask/desktop/dist/types';
 import * as RawStateUtils from '@metamask/desktop/dist/utils/state';
 import { VersionCheck } from '@metamask/desktop/dist/version-check';
 import { uuid } from '@metamask/desktop/dist/utils/utils';
@@ -234,11 +238,15 @@ describe('Desktop Connection', () => {
 
   describe('checkPairingKey', () => {
     it('invokes pairing key check instance', async () => {
-      extensionPairingMock.isPairingKeyMatch.mockImplementation(
-        async () => true,
+      extensionPairingMock.checkPairingKeyMatch.mockImplementation(
+        async () => PairingKeyStatus.pairingKeyMatch,
       );
-      expect(await desktopConnection.checkPairingKey()).toBe(true);
-      expect(extensionPairingMock.isPairingKeyMatch).toHaveBeenCalledTimes(1);
+      expect(await desktopConnection.checkPairingKey()).toBe(
+        PairingKeyStatus.pairingKeyMatch,
+      );
+      expect(extensionPairingMock.checkPairingKeyMatch).toHaveBeenCalledTimes(
+        1,
+      );
     });
   });
 

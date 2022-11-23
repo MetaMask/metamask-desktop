@@ -23,6 +23,7 @@ import {
   PairingKeyResponseMessage,
   PairingRequestMessage,
   PairingResultMessage,
+  PairingKeyStatus,
 } from '@metamask/desktop/dist/types';
 import * as rawState from '@metamask/desktop/dist/utils/state';
 
@@ -70,7 +71,7 @@ export class ExtensionPairing {
     return this;
   }
 
-  public async isPairingKeyMatch(): Promise<boolean> {
+  public async checkPairingKeyMatch(): Promise<PairingKeyStatus> {
     log.debug('Validating pairing key');
 
     const requestPairingKey: PairingKeyRequestMessage = {
@@ -88,7 +89,7 @@ export class ExtensionPairing {
 
     if (!desktopPairingKey) {
       log.debug('Desktop has no pairing key');
-      return false;
+      return PairingKeyStatus.pairingKeyUndefined;
     }
 
     const desktopPairingKeyHash = await hashString(desktopPairingKey, {
@@ -102,7 +103,10 @@ export class ExtensionPairing {
 
     log.debug('Completed pairing key check', isMatch);
 
-    return isMatch;
+    if (isMatch) {
+      return PairingKeyStatus.pairingKeyMatch;
+    }
+    return PairingKeyStatus.pairingKeyNotMatch;
   }
 
   private async onRequestMessage(pairingRequest: PairingRequestMessage) {
