@@ -3,9 +3,9 @@ import { OTP_MOCK, WRONG_OTP_MOCK } from '../../test/mocks';
 import TOTP from './totp';
 
 describe('TOTP', () => {
-  let validateMock;
-  let generateMock;
-  let initMock;
+  let validateMock: jest.SpyInstance;
+  let generateMock: jest.SpyInstance;
+  let initMock: jest.SpyInstance;
 
   beforeEach(() => {
     jest.restoreAllMocks();

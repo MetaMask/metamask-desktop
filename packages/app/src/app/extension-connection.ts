@@ -73,6 +73,7 @@ export default class ExtensionConnection extends EventEmitter {
     this.newConnectionStream = this.multiplex.createStream(
       CLIENT_ID_NEW_CONNECTION,
     );
+
     this.newConnectionStream.on('data', (data: NewConnectionMessage) =>
       this.onNewConnectionMessage(data),
     );
@@ -80,6 +81,7 @@ export default class ExtensionConnection extends EventEmitter {
     this.endConnectionStream = this.multiplex.createStream(
       CLIENT_ID_END_CONNECTION,
     );
+
     this.endConnectionStream.on('data', (data: EndConnectionMessage) =>
       this.onEndConnectionMessage(data),
     );

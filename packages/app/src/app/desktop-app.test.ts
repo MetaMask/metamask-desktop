@@ -186,7 +186,7 @@ describe('Desktop', () => {
   });
 
   describe('on disconnect', () => {
-    let restartEventListener;
+    let restartEventListener: jest.Mock;
 
     beforeEach(async () => {
       restartEventListener = jest.fn();

@@ -1,0 +1,4 @@
+{
+  "exclude": ["submodules/**"],
+  "extends": "./tsconfig.json"
+}

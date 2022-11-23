@@ -171,6 +171,10 @@ workflows:
             - test-e2e-firefox
             - test-e2e-chrome-snaps
             - test-e2e-firefox-snaps
+            - test-e2e-chrome-desktop
+            - test-e2e-chrome-desktop-snaps
+            - common-test
+            - app-test
       - benchmark:
           requires:
             - prep-build-test
@@ -223,6 +227,15 @@ workflows:
       - common-test:
           requires:
             - prep-deps
+      - app-build:
+          requires:
+            - common-build
+      - app-lint:
+          requires:
+            - common-build
+      - app-test:
+          requires:
+            - common-build
 
 jobs:
   create_release_pull_request:
@@ -1156,3 +1169,33 @@ jobs:
       - run:
           name: test
           command: yarn common test
+
+  app-build:
+    executor: node-browsers
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: build
+          command: yarn app build
+
+  app-lint:
+    executor: node-browsers
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: lint
+          command: yarn app lint
+
+  app-test:
+    executor: node-browsers
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: test
+          command: yarn app test

@@ -1,9 +1,9 @@
-import "global-agent/bootstrap";
-import "../browser/browser-init";
-import { webcrypto } from "node:crypto";
-import { Headers } from "node-fetch";
-import setupSentry from "../../submodules/extension/app/scripts/lib/setupSentry";
-import { getDesktopVersion } from "../utils/version";
+import 'global-agent/bootstrap';
+import '../browser/browser-init';
+import { webcrypto } from 'node:crypto';
+import { Headers } from 'node-fetch';
+import setupSentry from '../../submodules/extension/app/scripts/lib/setupSentry';
+import { getDesktopVersion } from '../utils/version';
 
 declare const global: typeof globalThis & {
   stateHooks: Record<string, any>;
@@ -14,14 +14,14 @@ global.self = {} as unknown as Window & typeof globalThis;
 global.crypto = webcrypto as any;
 
 global.navigator = {
-  userAgent: "Firefox",
+  userAgent: 'Firefox',
 } as Navigator;
 
 global.window = {
   Headers,
   navigator: global.navigator,
   location: {
-    href: "test.com",
+    href: 'test.com',
   },
   postMessage: () => undefined,
   addEventListener: () => undefined,
@@ -29,7 +29,7 @@ global.window = {
 
 global.document = {
   createElement: () => ({
-    pathname: "/",
+    pathname: '/',
     setAttribute: () => undefined,
   }),
   head: {

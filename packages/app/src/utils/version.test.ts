@@ -9,7 +9,7 @@ describe('Version Utils', () => {
   describe('getDesktopVersion', () => {
     it('returns version from package version', async () => {
       process.env.PACKAGE_VERSION = VERSION_MOCK;
-      expect(getDesktopVersion()).toStrictEqual(`${VERSION_MOCK}-desktop.0`);
+      expect(getDesktopVersion()).toBe(`${VERSION_MOCK}-desktop.0`);
     });
   });
 });

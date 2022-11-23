@@ -1,37 +1,38 @@
-var CodeFencing = require('../submodules/extension/development/build/transforms/remove-fenced-code.js');
+const CodeFencing = require('../submodules/extension/development/build/transforms/remove-fenced-code');
 
 module.exports = function (babel) {
   return {
     visitor: {
-      Program: function (path, state) {
-        var originalConsoleWarn = console.warn;
-        console.warn = function () {};
+      Program: (path, state) => {
+        const originalConsoleWarn = console.warn;
+        // eslint-disable-next-line no-empty-function
+        console.warn = () => {};
 
-        var buildType = state.opts.buildType || '';
-        var filePath = state.file.opts.filename;
-        var fileContent = state.file.code;
+        const buildType = state.opts.buildType || '';
+        const filePath = state.file.opts.filename;
+        const fileContent = state.file.code;
 
-        var fencingResult = CodeFencing.removeFencedCode(
+        const fencingResult = CodeFencing.removeFencedCode(
           filePath,
           buildType,
-          fileContent
+          fileContent,
         );
 
-        var newFileContent = fencingResult[0];
-        var wasModified = fencingResult[1];
+        const newFileContent = fencingResult[0];
+        const wasModified = fencingResult[1];
 
         if (!wasModified) {
           return;
         }
 
-        var newNodes = babel.template.ast(newFileContent, {
+        const newNodes = babel.template.ast(newFileContent, {
           plugins: ['jsx', 'typescript'],
         });
 
-        var body = path.get('body');
+        const body = path.get('body');
 
-        for (var i = body.length - 1; i >= 0; i--) {
-          path.get('body.' + i).remove();
+        for (let i = body.length - 1; i >= 0; i--) {
+          path.get(`body.${i}`).remove();
         }
 
         path.pushContainer('body', newNodes);

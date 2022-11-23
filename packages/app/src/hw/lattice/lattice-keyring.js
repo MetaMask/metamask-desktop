@@ -1,6 +1,8 @@
 /* eslint-disable import/unambiguous */
 const LatticeKeyring = require('eth-lattice-keyring');
+/* eslint-disable node/no-unpublished-require */
 const { ipcMain } = require('electron');
+// eslint-disable-next-line import/no-unresolved
 const Desktop = require('../../app/desktop-app').default;
 
 class LatticeKeyringElectron extends LatticeKeyring {

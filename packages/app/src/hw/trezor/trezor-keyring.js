@@ -1,7 +1,9 @@
 /* eslint-disable import/unambiguous */
+// eslint-disable-next-line node/no-unpublished-require
 const { ipcMain } = require('electron');
 const TrezorKeyring = require('eth-trezor-keyring');
 const { DEVICE_EVENT } = require('eth-trezor-keyring');
+// eslint-disable-next-line import/no-unresolved
 const Desktop = require('../../app/desktop-app').default;
 
 const channelPrefix = 'trezor-connect';
@@ -13,6 +15,7 @@ const buildChannelName = (identifier, isResponse = false) => {
   }`;
 };
 
+// eslint-disable-next-line jsdoc/require-jsdoc
 function promisifyEvent(identifier, payload) {
   return new Promise((resolve, reject) => {
     try {

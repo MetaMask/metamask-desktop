@@ -57,7 +57,7 @@ describe('Encrypted Web Socket Stream', () => {
   let webSocketMock: jest.Mocked<NodeWebSocket>;
   let asymmetricEncryptionMock: jest.Mocked<typeof asymmetricEncryption>;
   let symmetricEncryptionMock: jest.Mocked<typeof symmetricEncryption>;
-  let encryptedWebSocketStream;
+  let encryptedWebSocketStream: EncryptedWebSocketStream;
 
   beforeEach(async () => {
     jest.resetAllMocks();

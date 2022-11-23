@@ -35,15 +35,13 @@ describe('Node Browser', () => {
 
   describe('get', () => {
     it('returns manually defined property', () => {
-      expect(browserMock.runtime.id).toStrictEqual('1234');
+      expect(browserMock.runtime.id).toBe('1234');
     });
   });
 
   describe('call', () => {
     it('invokes manually defined function', () => {
-      expect(browserMock.runtime.getManifest().manifest_version).toStrictEqual(
-        2,
-      );
+      expect(browserMock.runtime.getManifest().manifest_version).toBe(2);
     });
 
     it('logs message if function unhandled', () => {

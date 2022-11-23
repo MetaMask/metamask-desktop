@@ -53,7 +53,9 @@ jest.mock(
 describe('Extension Connection', () => {
   const streamMock = createStreamMock();
   const multiplexMock = createMultiplexMock();
-  const objectMultiplexConstructorMock = ObjectMultiplex;
+  const objectMultiplexConstructorMock = ObjectMultiplex as jest.MockedClass<
+    typeof ObjectMultiplex
+  >;
   const desktopPairingMock = createDesktopPairingMock();
   const rawStateUtilsMock = RawStateUtils as jest.Mocked<typeof RawStateUtils>;
 
@@ -74,7 +76,7 @@ describe('Extension Connection', () => {
   beforeEach(() => {
     jest.resetAllMocks();
 
-    multiplexMock.createStream.mockImplementation((name) => {
+    multiplexMock.createStream.mockImplementation((name: any) => {
       const newStream = createStreamMock();
       multiplexStreamMocks[name] = newStream;
       return newStream as any;
@@ -129,7 +131,7 @@ describe('Extension Connection', () => {
   });
 
   describe('transferState', () => {
-    let stateStreamMock;
+    let stateStreamMock: jest.Mocked<Duplex>;
 
     beforeEach(async () => {
       stateStreamMock = multiplexStreamMocks[CLIENT_ID_STATE];

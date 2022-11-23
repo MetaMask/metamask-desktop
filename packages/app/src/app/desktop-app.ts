@@ -1,6 +1,7 @@
 import { Duplex, EventEmitter } from 'stream';
 import path from 'path';
 import { app, BrowserWindow, ipcMain } from 'electron';
+// eslint-disable-next-line @typescript-eslint/no-shadow
 import { Server as WebSocketServer, WebSocket } from 'ws';
 import log from 'loglevel';
 import { NewConnectionMessage } from '@metamask/desktop/dist/types';

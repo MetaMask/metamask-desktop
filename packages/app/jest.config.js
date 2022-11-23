@@ -1,23 +1,23 @@
 module.exports = {
   reporters: [
-    "default",
+    'default',
     [
-      "jest-junit",
+      'jest-junit',
       {
-        outputDirectory: "test/test-results/",
-        outputName: "junit.xml",
+        outputDirectory: 'test/test-results/',
+        outputName: 'junit.xml',
       },
     ],
   ],
   roots: ['<rootDir>/src'],
   restoreMocks: true,
-  setupFiles: ["<rootDir>/src/test/setup.ts"],
-  testMatch: ["<rootDir>/src/**/*.test.{js,ts}"],
+  setupFiles: ['<rootDir>/src/test/setup.ts'],
+  testMatch: ['<rootDir>/src/**/*.test.{js,ts}'],
   testTimeout: 2500,
-  testEnvironment: "jsdom",
+  testEnvironment: 'jsdom',
   testEnvironmentOptions: {
-    customExportConditions: ["node", "node-addons"],
+    customExportConditions: ['node', 'node-addons'],
   },
-  transformIgnorePatterns: ["node_modules", "__mocks__"],
-  workerIdleMemoryLimit: "500MB",
+  transformIgnorePatterns: ['node_modules', '__mocks__'],
+  workerIdleMemoryLimit: '500MB',
 };

@@ -36,7 +36,12 @@ jest.mock('obj-multiplex', () => jest.fn(), { virtual: true });
 jest.mock('extension-port-stream');
 jest.mock('uuid');
 jest.mock('@metamask/desktop/dist/utils/totp');
-jest.mock('../../submodules/extension/app/scripts/platforms/extension', () => ({}), { virtual: true });
+
+jest.mock(
+  '../../submodules/extension/app/scripts/platforms/extension',
+  () => ({}),
+  { virtual: true },
+);
 
 jest.mock('@metamask/desktop/dist/browser', () => {
   const original = jest.requireActual('@metamask/desktop/dist/browser');
@@ -141,7 +146,7 @@ describe('Desktop Connection', () => {
       Promise.resolve(data),
     );
 
-    multiplexMock.createStream.mockImplementation((name) => {
+    multiplexMock.createStream.mockImplementation((name: any) => {
       const newStream = createStreamMock();
       multiplexStreamMocks[name] = newStream;
       return newStream as any;

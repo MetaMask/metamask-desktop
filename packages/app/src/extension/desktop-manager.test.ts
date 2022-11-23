@@ -29,7 +29,7 @@ import DesktopManager from './desktop-manager';
 jest.mock('extension-port-stream');
 jest.mock('@metamask/desktop/dist/encryption/web-socket-stream');
 jest.mock('./desktop-connection');
-jest.mock('')
+jest.mock('');
 
 jest.mock('@metamask/desktop/dist/browser', () => ({
   browser: {

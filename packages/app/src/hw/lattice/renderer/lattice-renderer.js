@@ -1,6 +1,7 @@
 /* eslint-disable import/unambiguous */
 let listenInterval;
 
+// eslint-disable-next-line jsdoc/require-jsdoc
 function receiveMessage(event) {
   try {
     // Stop the listener

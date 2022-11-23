@@ -21,5 +21,8 @@
     "dist_desktop_ui/**/*",
     "node_modules/**"
   ],
-  "extends": "@tsconfig/node16/tsconfig.json"
+  "extends": "@tsconfig/node16/tsconfig.json",
+  "paths": {
+    "*": ["./types/*"]
+  }
 }

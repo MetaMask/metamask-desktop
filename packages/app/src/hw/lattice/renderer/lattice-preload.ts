@@ -1,9 +1,9 @@
 import { contextBridge, ipcRenderer } from 'electron';
 
-type CredentialsResponse = {
+interface CredentialsResponse {
   result?: Record<string, any>;
   error?: string;
-};
+}
 
 contextBridge.exposeInMainWorld('latticeApi', {
   addCredentialsListener: (callback: any) => {
