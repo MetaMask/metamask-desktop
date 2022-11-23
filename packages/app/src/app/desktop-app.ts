@@ -240,10 +240,7 @@ class DesktopApp extends EventEmitter {
     }
 
     mainWindow.loadFile(
-      path.resolve(
-        __dirname,
-        `${app.isPackaged ? '../../../' : '../../dist/'}ui/desktop-ui.html`,
-      ),
+      path.resolve(__dirname, '../../../ui/desktop-ui.html'),
       // Temporary open pair page, it will redirect to settings page if isDesktopEnabled is true
       { hash: 'pair' },
     );
