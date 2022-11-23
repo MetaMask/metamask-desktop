@@ -1,6 +1,9 @@
 version: 2.1
 
 parameters:
+  app-dir:
+    type: string
+    default: packages/app
   common-dir:
     type: string
     default: packages/common
@@ -256,17 +259,23 @@ jobs:
           paths:
             - node_modules/
             - build-artifacts/yarn-install-har/
+            - << pipeline.parameters.app-dir >>/node_modules/
             - << pipeline.parameters.common-dir >>/node_modules/
             - << pipeline.parameters.extension-dir >>/node_modules/
       - run:
-          name: Postinstall
+          name: Run extension post install
           command: |
             ${YARN_EXTENSION} setup:postinstall
+      - run:
+          name: Run app post install
+          command: |
+            yarn app setup:postinstall
       - persist_to_workspace:
           root: .
           paths:
             - node_modules
             - build-artifacts
+            - << pipeline.parameters.app-dir >>/node_modules
             - << pipeline.parameters.common-dir >>/node_modules
             - << pipeline.parameters.extension-dir >>/node_modules
 

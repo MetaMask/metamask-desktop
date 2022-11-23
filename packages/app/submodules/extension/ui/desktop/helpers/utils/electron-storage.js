@@ -1,3 +1,4 @@
+// eslint-disable-next-line node/no-extraneous-require
 const ElectronStore = window.require('electron-store');
 
 export default function createElectronStorage(electronStoreOpts) {

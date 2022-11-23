@@ -138,6 +138,7 @@ class DesktopApp extends EventEmitter {
         isDisconnectedByUser: false,
       }),
     );
+
     extensionConnection.on('disable', () =>
       this.onDisconnect(webSocket, webSocketStream, extensionConnection, {
         isDisconnectedByUser: true,
@@ -241,7 +242,10 @@ class DesktopApp extends EventEmitter {
     }
 
     mainWindow.loadFile(
-      path.resolve(__dirname, '../../submodules/extension/dist_desktop_ui/desktop-ui.html'),
+      path.resolve(
+        __dirname,
+        '../../submodules/extension/dist_desktop_ui/desktop-ui.html',
+      ),
       // Temporary open pair page, it will redirect to settings page if isDesktopEnabled is true
       { hash: 'pair' },
     );
