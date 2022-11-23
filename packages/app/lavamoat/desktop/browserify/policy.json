@@ -8,9 +8,9 @@
         "setTimeout": true
       },
       "packages": {
+        "@metamask/controllers>fast-deep-equal": true,
         "@metamask/controllers>multiformats": true,
         "browserify>buffer": true,
-        "eslint>fast-deep-equal": true,
         "eth-ens-namehash": true,
         "eth-rpc-errors": true,
         "eth-sig-util": true,
@@ -377,8 +377,8 @@
       "packages": {
         "browserify>buffer": true,
         "ethereumjs-util>ethereum-cryptography>keccak": true,
-        "ethereumjs-wallet>randombytes": true,
-        "hdkey>secp256k1": true
+        "ethereumjs-util>ethereum-cryptography>secp256k1": true,
+        "ethereumjs-wallet>randombytes": true
       }
     },
     "ethereumjs-util>ethereum-cryptography>keccak": {
@@ -396,6 +396,11 @@
         "browserify>process": true,
         "browserify>string_decoder": true,
         "pumpify>inherits": true
+      }
+    },
+    "ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "packages": {
+        "hdkey>secp256k1>elliptic": true
       }
     },
     "ethereumjs-util>rlp": {
@@ -458,11 +463,6 @@
     "hdkey>safe-buffer": {
       "packages": {
         "browserify>buffer": true
-      }
-    },
-    "hdkey>secp256k1": {
-      "packages": {
-        "hdkey>secp256k1>elliptic": true
       }
     },
     "hdkey>secp256k1>elliptic": {
@@ -665,12 +665,12 @@
         "prop-types": true,
         "prop-types>react-is": true,
         "react": true,
-        "react-redux>hoist-non-react-statics": true,
         "react-router-dom>react-router>history": true,
+        "react-router-dom>react-router>hoist-non-react-statics": true,
         "react-router-dom>react-router>mini-create-react-context": true,
+        "react-router-dom>react-router>path-to-regexp": true,
         "react-router-dom>tiny-invariant": true,
-        "react-router-dom>tiny-warning": true,
-        "sinon>nise>path-to-regexp": true
+        "react-router-dom>tiny-warning": true
       }
     },
     "react-router-dom>react-router>history": {
@@ -690,6 +690,11 @@
         "react-router-dom>tiny-warning": true
       }
     },
+    "react-router-dom>react-router>hoist-non-react-statics": {
+      "packages": {
+        "prop-types>react-is": true
+      }
+    },
     "react-router-dom>react-router>mini-create-react-context": {
       "packages": {
         "@babel/runtime": true,
@@ -697,6 +702,11 @@
         "react": true,
         "react-router-dom>react-router>mini-create-react-context>gud": true,
         "react-router-dom>tiny-warning": true
+      }
+    },
+    "react-router-dom>react-router>path-to-regexp": {
+      "packages": {
+        "react-router-dom>react-router>path-to-regexp>isarray": true
       }
     },
     "react-router-dom>tiny-warning": {
@@ -758,11 +768,6 @@
       "packages": {
         "react": true,
         "redux": true
-      }
-    },
-    "sinon>nise>path-to-regexp": {
-      "packages": {
-        "sinon>nise>path-to-regexp>isarray": true
       }
     },
     "web3": {

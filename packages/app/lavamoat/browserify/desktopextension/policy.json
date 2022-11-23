@@ -3383,25 +3383,6 @@
         "crypto.getRandomValues": true
       }
     },
-    "eciesjs": {
-      "packages": {
-        "browserify>buffer": true,
-        "browserify>crypto-browserify": true,
-        "eciesjs>futoin-hkdf": true,
-        "eciesjs>secp256k1": true
-      }
-    },
-    "eciesjs>futoin-hkdf": {
-      "packages": {
-        "browserify>buffer": true,
-        "browserify>crypto-browserify": true
-      }
-    },
-    "eciesjs>secp256k1": {
-      "packages": {
-        "hdkey>secp256k1>elliptic": true
-      }
-    },
     "end-of-stream": {
       "packages": {
         "browserify>process": true,
@@ -5899,9 +5880,49 @@
         "external:../common/dist/browser/browser-proxy.js": true
       }
     },
+    "external:../common/dist/encryption/asymmetric.js": {
+      "packages": {
+        "browserify>buffer": true,
+        "external:../common/node_modules/eciesjs/dist/index.js": true
+      }
+    },
+    "external:../common/dist/encryption/symmetric.js": {
+      "globals": {
+        "crypto.getRandomValues": true,
+        "crypto.subtle.decrypt": true,
+        "crypto.subtle.encrypt": true,
+        "crypto.subtle.exportKey": true,
+        "crypto.subtle.generateKey": true,
+        "crypto.subtle.importKey": true
+      },
+      "packages": {
+        "browserify>buffer": true
+      }
+    },
+    "external:../common/dist/encryption/web-socket-stream.js": {
+      "packages": {
+        "browserify>stream-browserify": true,
+        "external:../common/dist/constants.js": true,
+        "external:../common/dist/encryption/asymmetric.js": true,
+        "external:../common/dist/encryption/symmetric.js": true,
+        "external:../common/dist/utils/stream.js": true,
+        "external:../common/dist/utils/utils.js": true,
+        "external:../common/dist/web-socket-stream.js": true,
+        "external:../common/node_modules/loglevel/lib/loglevel.js": true
+      }
+    },
     "external:../common/dist/utils/config.js": {
       "packages": {
         "browserify>process": true
+      }
+    },
+    "external:../common/dist/utils/crypto.js": {
+      "globals": {
+        "crypto.getRandomValues": true,
+        "crypto.subtle.digest": true
+      },
+      "packages": {
+        "browserify>buffer": true
       }
     },
     "external:../common/dist/utils/state.js": {
@@ -5913,6 +5934,21 @@
       "packages": {
         "browserify>stream-browserify": true,
         "external:../common/dist/constants.js": true
+      }
+    },
+    "external:../common/dist/utils/totp.js": {
+      "packages": {
+        "external:../common/dist/utils/crypto.js": true,
+        "external:../common/node_modules/otpauth/dist/otpauth.umd.js": true
+      }
+    },
+    "external:../common/dist/utils/utils.js": {
+      "globals": {
+        "clearTimeout": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "external:../common/node_modules/uuid/dist/index.js": true
       }
     },
     "external:../common/dist/version-check.js": {
@@ -5931,6 +5967,264 @@
         "external:../common/node_modules/loglevel/lib/loglevel.js": true
       }
     },
+    "external:../common/node_modules/bn.js/lib/bn.js": {
+      "globals": {
+        "Buffer": true
+      },
+      "packages": {
+        "browserify>browser-resolve": true
+      }
+    },
+    "external:../common/node_modules/brorand/index.js": {
+      "globals": {
+        "crypto": true,
+        "msCrypto": true
+      },
+      "packages": {
+        "browserify>browser-resolve": true
+      }
+    },
+    "external:../common/node_modules/eciesjs/dist/index.js": {
+      "packages": {
+        "browserify>buffer": true,
+        "external:../common/node_modules/eciesjs/dist/consts.js": true,
+        "external:../common/node_modules/eciesjs/dist/keys/index.js": true,
+        "external:../common/node_modules/eciesjs/dist/utils.js": true
+      }
+    },
+    "external:../common/node_modules/eciesjs/dist/keys/PrivateKey.js": {
+      "packages": {
+        "browserify>buffer": true,
+        "external:../common/node_modules/eciesjs/dist/keys/PublicKey.js": true,
+        "external:../common/node_modules/eciesjs/dist/utils.js": true,
+        "external:../common/node_modules/futoin-hkdf/hkdf.js": true,
+        "external:../common/node_modules/secp256k1/elliptic.js": true
+      }
+    },
+    "external:../common/node_modules/eciesjs/dist/keys/PublicKey.js": {
+      "packages": {
+        "browserify>buffer": true,
+        "external:../common/node_modules/eciesjs/dist/consts.js": true,
+        "external:../common/node_modules/eciesjs/dist/utils.js": true,
+        "external:../common/node_modules/futoin-hkdf/hkdf.js": true,
+        "external:../common/node_modules/secp256k1/elliptic.js": true
+      }
+    },
+    "external:../common/node_modules/eciesjs/dist/keys/index.js": {
+      "packages": {
+        "external:../common/node_modules/eciesjs/dist/keys/PrivateKey.js": true,
+        "external:../common/node_modules/eciesjs/dist/keys/PublicKey.js": true
+      }
+    },
+    "external:../common/node_modules/eciesjs/dist/utils.js": {
+      "packages": {
+        "browserify>buffer": true,
+        "browserify>crypto-browserify": true,
+        "external:../common/node_modules/eciesjs/dist/consts.js": true,
+        "external:../common/node_modules/secp256k1/elliptic.js": true
+      }
+    },
+    "external:../common/node_modules/elliptic/lib/elliptic.js": {
+      "packages": {
+        "external:../common/node_modules/brorand/index.js": true,
+        "external:../common/node_modules/elliptic/lib/elliptic/curve/index.js": true,
+        "external:../common/node_modules/elliptic/lib/elliptic/curves.js": true,
+        "external:../common/node_modules/elliptic/lib/elliptic/ec/index.js": true,
+        "external:../common/node_modules/elliptic/lib/elliptic/eddsa/index.js": true,
+        "external:../common/node_modules/elliptic/lib/elliptic/utils.js": true,
+        "external:../common/node_modules/elliptic/package.json": true
+      }
+    },
+    "external:../common/node_modules/elliptic/lib/elliptic/curve/base.js": {
+      "packages": {
+        "external:../common/node_modules/bn.js/lib/bn.js": true,
+        "external:../common/node_modules/elliptic/lib/elliptic/utils.js": true
+      }
+    },
+    "external:../common/node_modules/elliptic/lib/elliptic/curve/edwards.js": {
+      "packages": {
+        "external:../common/node_modules/bn.js/lib/bn.js": true,
+        "external:../common/node_modules/elliptic/lib/elliptic/curve/base.js": true,
+        "external:../common/node_modules/elliptic/lib/elliptic/utils.js": true,
+        "external:../common/node_modules/inherits/inherits_browser.js": true
+      }
+    },
+    "external:../common/node_modules/elliptic/lib/elliptic/curve/index.js": {
+      "packages": {
+        "external:../common/node_modules/elliptic/lib/elliptic/curve/base.js": true,
+        "external:../common/node_modules/elliptic/lib/elliptic/curve/edwards.js": true,
+        "external:../common/node_modules/elliptic/lib/elliptic/curve/mont.js": true,
+        "external:../common/node_modules/elliptic/lib/elliptic/curve/short.js": true
+      }
+    },
+    "external:../common/node_modules/elliptic/lib/elliptic/curve/mont.js": {
+      "packages": {
+        "external:../common/node_modules/bn.js/lib/bn.js": true,
+        "external:../common/node_modules/elliptic/lib/elliptic/curve/base.js": true,
+        "external:../common/node_modules/elliptic/lib/elliptic/utils.js": true,
+        "external:../common/node_modules/inherits/inherits_browser.js": true
+      }
+    },
+    "external:../common/node_modules/elliptic/lib/elliptic/curve/short.js": {
+      "packages": {
+        "external:../common/node_modules/bn.js/lib/bn.js": true,
+        "external:../common/node_modules/elliptic/lib/elliptic/curve/base.js": true,
+        "external:../common/node_modules/elliptic/lib/elliptic/utils.js": true,
+        "external:../common/node_modules/inherits/inherits_browser.js": true
+      }
+    },
+    "external:../common/node_modules/elliptic/lib/elliptic/curves.js": {
+      "packages": {
+        "external:../common/node_modules/elliptic/lib/elliptic/curve/index.js": true,
+        "external:../common/node_modules/elliptic/lib/elliptic/precomputed/secp256k1.js": true,
+        "external:../common/node_modules/elliptic/lib/elliptic/utils.js": true,
+        "external:../common/node_modules/hash.js/lib/hash.js": true
+      }
+    },
+    "external:../common/node_modules/elliptic/lib/elliptic/ec/index.js": {
+      "packages": {
+        "external:../common/node_modules/bn.js/lib/bn.js": true,
+        "external:../common/node_modules/brorand/index.js": true,
+        "external:../common/node_modules/elliptic/lib/elliptic/curves.js": true,
+        "external:../common/node_modules/elliptic/lib/elliptic/ec/key.js": true,
+        "external:../common/node_modules/elliptic/lib/elliptic/ec/signature.js": true,
+        "external:../common/node_modules/elliptic/lib/elliptic/utils.js": true,
+        "external:../common/node_modules/hmac-drbg/lib/hmac-drbg.js": true
+      }
+    },
+    "external:../common/node_modules/elliptic/lib/elliptic/ec/key.js": {
+      "packages": {
+        "external:../common/node_modules/bn.js/lib/bn.js": true,
+        "external:../common/node_modules/elliptic/lib/elliptic/utils.js": true
+      }
+    },
+    "external:../common/node_modules/elliptic/lib/elliptic/ec/signature.js": {
+      "packages": {
+        "external:../common/node_modules/bn.js/lib/bn.js": true,
+        "external:../common/node_modules/elliptic/lib/elliptic/utils.js": true
+      }
+    },
+    "external:../common/node_modules/elliptic/lib/elliptic/eddsa/index.js": {
+      "packages": {
+        "external:../common/node_modules/elliptic/lib/elliptic/curves.js": true,
+        "external:../common/node_modules/elliptic/lib/elliptic/eddsa/key.js": true,
+        "external:../common/node_modules/elliptic/lib/elliptic/eddsa/signature.js": true,
+        "external:../common/node_modules/elliptic/lib/elliptic/utils.js": true,
+        "external:../common/node_modules/hash.js/lib/hash.js": true
+      }
+    },
+    "external:../common/node_modules/elliptic/lib/elliptic/eddsa/key.js": {
+      "packages": {
+        "external:../common/node_modules/elliptic/lib/elliptic/utils.js": true
+      }
+    },
+    "external:../common/node_modules/elliptic/lib/elliptic/eddsa/signature.js": {
+      "packages": {
+        "external:../common/node_modules/bn.js/lib/bn.js": true,
+        "external:../common/node_modules/elliptic/lib/elliptic/utils.js": true
+      }
+    },
+    "external:../common/node_modules/elliptic/lib/elliptic/utils.js": {
+      "packages": {
+        "external:../common/node_modules/bn.js/lib/bn.js": true,
+        "external:../common/node_modules/minimalistic-assert/index.js": true,
+        "external:../common/node_modules/minimalistic-crypto-utils/lib/utils.js": true
+      }
+    },
+    "external:../common/node_modules/futoin-hkdf/hkdf.js": {
+      "packages": {
+        "browserify>buffer": true,
+        "browserify>crypto-browserify": true
+      }
+    },
+    "external:../common/node_modules/hash.js/lib/hash.js": {
+      "packages": {
+        "external:../common/node_modules/hash.js/lib/hash/common.js": true,
+        "external:../common/node_modules/hash.js/lib/hash/hmac.js": true,
+        "external:../common/node_modules/hash.js/lib/hash/ripemd.js": true,
+        "external:../common/node_modules/hash.js/lib/hash/sha.js": true,
+        "external:../common/node_modules/hash.js/lib/hash/utils.js": true
+      }
+    },
+    "external:../common/node_modules/hash.js/lib/hash/common.js": {
+      "packages": {
+        "external:../common/node_modules/hash.js/lib/hash/utils.js": true,
+        "external:../common/node_modules/minimalistic-assert/index.js": true
+      }
+    },
+    "external:../common/node_modules/hash.js/lib/hash/hmac.js": {
+      "packages": {
+        "external:../common/node_modules/hash.js/lib/hash/utils.js": true,
+        "external:../common/node_modules/minimalistic-assert/index.js": true
+      }
+    },
+    "external:../common/node_modules/hash.js/lib/hash/ripemd.js": {
+      "packages": {
+        "external:../common/node_modules/hash.js/lib/hash/common.js": true,
+        "external:../common/node_modules/hash.js/lib/hash/utils.js": true
+      }
+    },
+    "external:../common/node_modules/hash.js/lib/hash/sha.js": {
+      "packages": {
+        "external:../common/node_modules/hash.js/lib/hash/sha/1.js": true,
+        "external:../common/node_modules/hash.js/lib/hash/sha/224.js": true,
+        "external:../common/node_modules/hash.js/lib/hash/sha/256.js": true,
+        "external:../common/node_modules/hash.js/lib/hash/sha/384.js": true,
+        "external:../common/node_modules/hash.js/lib/hash/sha/512.js": true
+      }
+    },
+    "external:../common/node_modules/hash.js/lib/hash/sha/1.js": {
+      "packages": {
+        "external:../common/node_modules/hash.js/lib/hash/common.js": true,
+        "external:../common/node_modules/hash.js/lib/hash/sha/common.js": true,
+        "external:../common/node_modules/hash.js/lib/hash/utils.js": true
+      }
+    },
+    "external:../common/node_modules/hash.js/lib/hash/sha/224.js": {
+      "packages": {
+        "external:../common/node_modules/hash.js/lib/hash/sha/256.js": true,
+        "external:../common/node_modules/hash.js/lib/hash/utils.js": true
+      }
+    },
+    "external:../common/node_modules/hash.js/lib/hash/sha/256.js": {
+      "packages": {
+        "external:../common/node_modules/hash.js/lib/hash/common.js": true,
+        "external:../common/node_modules/hash.js/lib/hash/sha/common.js": true,
+        "external:../common/node_modules/hash.js/lib/hash/utils.js": true,
+        "external:../common/node_modules/minimalistic-assert/index.js": true
+      }
+    },
+    "external:../common/node_modules/hash.js/lib/hash/sha/384.js": {
+      "packages": {
+        "external:../common/node_modules/hash.js/lib/hash/sha/512.js": true,
+        "external:../common/node_modules/hash.js/lib/hash/utils.js": true
+      }
+    },
+    "external:../common/node_modules/hash.js/lib/hash/sha/512.js": {
+      "packages": {
+        "external:../common/node_modules/hash.js/lib/hash/common.js": true,
+        "external:../common/node_modules/hash.js/lib/hash/utils.js": true,
+        "external:../common/node_modules/minimalistic-assert/index.js": true
+      }
+    },
+    "external:../common/node_modules/hash.js/lib/hash/sha/common.js": {
+      "packages": {
+        "external:../common/node_modules/hash.js/lib/hash/utils.js": true
+      }
+    },
+    "external:../common/node_modules/hash.js/lib/hash/utils.js": {
+      "packages": {
+        "external:../common/node_modules/inherits/inherits_browser.js": true,
+        "external:../common/node_modules/minimalistic-assert/index.js": true
+      }
+    },
+    "external:../common/node_modules/hmac-drbg/lib/hmac-drbg.js": {
+      "packages": {
+        "external:../common/node_modules/hash.js/lib/hash.js": true,
+        "external:../common/node_modules/minimalistic-assert/index.js": true,
+        "external:../common/node_modules/minimalistic-crypto-utils/lib/utils.js": true
+      }
+    },
     "external:../common/node_modules/loglevel/lib/loglevel.js": {
       "globals": {
         "console": true,
@@ -5939,6 +6233,97 @@
         "localStorage": true,
         "log": "write",
         "navigator": true
+      }
+    },
+    "external:../common/node_modules/otpauth/dist/otpauth.umd.js": {
+      "globals": {
+        "__GLOBALTHIS__": true,
+        "define": true
+      }
+    },
+    "external:../common/node_modules/secp256k1/elliptic.js": {
+      "packages": {
+        "external:../common/node_modules/secp256k1/lib/elliptic.js": true,
+        "external:../common/node_modules/secp256k1/lib/index.js": true
+      }
+    },
+    "external:../common/node_modules/secp256k1/lib/elliptic.js": {
+      "packages": {
+        "external:../common/node_modules/elliptic/lib/elliptic.js": true
+      }
+    },
+    "external:../common/node_modules/uuid/dist/index.js": {
+      "packages": {
+        "external:../common/node_modules/uuid/dist/nil.js": true,
+        "external:../common/node_modules/uuid/dist/parse.js": true,
+        "external:../common/node_modules/uuid/dist/stringify.js": true,
+        "external:../common/node_modules/uuid/dist/v1.js": true,
+        "external:../common/node_modules/uuid/dist/v3.js": true,
+        "external:../common/node_modules/uuid/dist/v4.js": true,
+        "external:../common/node_modules/uuid/dist/v5.js": true,
+        "external:../common/node_modules/uuid/dist/validate.js": true,
+        "external:../common/node_modules/uuid/dist/version.js": true
+      }
+    },
+    "external:../common/node_modules/uuid/dist/native-browser.js": {
+      "globals": {
+        "crypto": true
+      }
+    },
+    "external:../common/node_modules/uuid/dist/parse.js": {
+      "packages": {
+        "external:../common/node_modules/uuid/dist/validate.js": true
+      }
+    },
+    "external:../common/node_modules/uuid/dist/rng-browser.js": {
+      "globals": {
+        "crypto": true
+      }
+    },
+    "external:../common/node_modules/uuid/dist/stringify.js": {
+      "packages": {
+        "external:../common/node_modules/uuid/dist/validate.js": true
+      }
+    },
+    "external:../common/node_modules/uuid/dist/v1.js": {
+      "packages": {
+        "external:../common/node_modules/uuid/dist/rng-browser.js": true,
+        "external:../common/node_modules/uuid/dist/stringify.js": true
+      }
+    },
+    "external:../common/node_modules/uuid/dist/v3.js": {
+      "packages": {
+        "external:../common/node_modules/uuid/dist/md5-browser.js": true,
+        "external:../common/node_modules/uuid/dist/v35.js": true
+      }
+    },
+    "external:../common/node_modules/uuid/dist/v35.js": {
+      "packages": {
+        "external:../common/node_modules/uuid/dist/parse.js": true,
+        "external:../common/node_modules/uuid/dist/stringify.js": true
+      }
+    },
+    "external:../common/node_modules/uuid/dist/v4.js": {
+      "packages": {
+        "external:../common/node_modules/uuid/dist/native-browser.js": true,
+        "external:../common/node_modules/uuid/dist/rng-browser.js": true,
+        "external:../common/node_modules/uuid/dist/stringify.js": true
+      }
+    },
+    "external:../common/node_modules/uuid/dist/v5.js": {
+      "packages": {
+        "external:../common/node_modules/uuid/dist/sha1-browser.js": true,
+        "external:../common/node_modules/uuid/dist/v35.js": true
+      }
+    },
+    "external:../common/node_modules/uuid/dist/validate.js": {
+      "packages": {
+        "external:../common/node_modules/uuid/dist/regex.js": true
+      }
+    },
+    "external:../common/node_modules/uuid/dist/version.js": {
+      "packages": {
+        "external:../common/node_modules/uuid/dist/validate.js": true
       }
     },
     "fast-json-patch": {
@@ -6194,12 +6579,6 @@
         "end-of-stream": true,
         "pump>once": true,
         "readable-stream": true
-      }
-    },
-    "otpauth": {
-      "globals": {
-        "__GLOBALTHIS__": true,
-        "define": true
       }
     },
     "promise-to-callback": {
