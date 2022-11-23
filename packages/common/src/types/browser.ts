@@ -9,6 +9,7 @@ export interface Browser {
   runtime: {
     id: string;
     reload: () => undefined;
+    sendMessage: (data: any) => Promise<any>;
   };
 }
 

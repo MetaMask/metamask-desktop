@@ -4,6 +4,10 @@ import React, { Component } from 'react';
 import { matchPath, Route, Switch } from 'react-router-dom';
 import IdleTimer from 'react-idle-timer';
 
+///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
+import { browser as browserAPI } from '@metamask/desktop/dist/browser';
+///: END:ONLY_INCLUDE_IN(desktopextension)
+
 import FirstTimeFlow from '../first-time-flow';
 import SendTransactionScreen from '../send';
 import Swaps from '../swaps';
@@ -23,9 +27,6 @@ import AddCollectiblePage from '../add-collectible';
 import ConfirmImportTokenPage from '../confirm-import-token';
 import ConfirmAddSuggestedTokenPage from '../confirm-add-suggested-token';
 import CreateAccountPage from '../create-account';
-///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
-import DesktopErrorPage from '../desktop-error';
-///: END:ONLY_INCLUDE_IN(desktopextension)
 import Loading from '../../components/ui/loading-screen';
 import LoadingNetwork from '../../components/app/loading-network-screen';
 import NetworkDropdown from '../../components/app/dropdowns/network-dropdown';
@@ -41,6 +42,10 @@ import TokenDetailsPage from '../token-details';
 ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
 import Notifications from '../notifications';
 ///: END:ONLY_INCLUDE_IN
+///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
+import { registerOnDesktopDisconnect } from '../../hooks/desktopHooks';
+import DesktopErrorPage from '../desktop-error';
+///: END:ONLY_INCLUDE_IN(desktopextension)
 
 import {
   IMPORT_TOKEN_ROUTE,
@@ -74,6 +79,10 @@ import {
   NOTIFICATIONS_ROUTE,
   ///: END:ONLY_INCLUDE_IN
 } from '../../helpers/constants/routes';
+
+///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
+import { EXTENSION_ERROR_PAGE_TYPES } from '../../../shared/constants/desktop';
+///: END:ONLY_INCLUDE_IN
 
 import {
   ENVIRONMENT_TYPE_NOTIFICATION,
@@ -138,6 +147,15 @@ export default class Routes extends Component {
     document.documentElement.setAttribute('data-theme', osTheme);
   }
 
+  ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
+  componentDidMount() {
+    const { history } = this.props;
+    browserAPI.runtime.onMessage.addListener(
+      registerOnDesktopDisconnect(history),
+    );
+  }
+  ///: END:ONLY_INCLUDE_IN
+
   componentDidUpdate(prevProps) {
     const { theme } = this.props;
 
@@ -149,6 +167,15 @@ export default class Routes extends Component {
       }
     }
   }
+
+  ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
+  componentWillUnmount() {
+    const { history } = this.props;
+    browserAPI.runtime.onMessage.removeListener(
+      registerOnDesktopDisconnect(history),
+    );
+  }
+  ///: END:ONLY_INCLUDE_IN
 
   UNSAFE_componentWillMount() {
     const {
@@ -325,6 +352,19 @@ export default class Routes extends Component {
 
   hideAppHeader() {
     const { location } = this.props;
+
+    ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
+    const isDesktopConnectionLostScreen = Boolean(
+      matchPath(location.pathname, {
+        path: `${DESKTOP_ERROR_ROUTE}/${EXTENSION_ERROR_PAGE_TYPES.CONNECTION_LOST}`,
+        exact: true,
+      }),
+    );
+
+    if (isDesktopConnectionLostScreen) {
+      return true;
+    }
+    ///: END:ONLY_INCLUDE_IN
 
     const isInitializing = Boolean(
       matchPath(location.pathname, {

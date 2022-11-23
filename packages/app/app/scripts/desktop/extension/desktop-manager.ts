@@ -17,6 +17,7 @@ import { DuplexCopy } from '@metamask/desktop/dist/utils/stream';
 import * as RawState from '@metamask/desktop/dist/utils/state';
 import EncryptedWebSocketStream from '@metamask/desktop/dist/encryption/web-socket-stream';
 import { timeoutPromise } from '@metamask/desktop/dist/utils/utils';
+import { DESKTOP_HOOK_TYPES } from '../../../../shared/constants/desktop';
 import DesktopConnection from './desktop-connection';
 
 const TIMEOUT_CONNECT = 10000;
@@ -136,7 +137,7 @@ class DesktopManager {
     return connection;
   }
 
-  private onDisconnect(
+  private async onDisconnect(
     webSocket: BrowserWebSocket,
     stream: Duplex,
     connection: DesktopConnection,
@@ -153,6 +154,11 @@ class DesktopManager {
     if (connection === this.desktopConnection) {
       this.desktopConnection = undefined;
     }
+
+    // Emit event to extension UI to show connection lost error
+    await browser?.runtime?.sendMessage?.({
+      type: DESKTOP_HOOK_TYPES.DISCONNECT,
+    });
   }
 
   private async onUIMessage(data: any, stream: Duplex) {
