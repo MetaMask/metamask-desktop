@@ -209,6 +209,9 @@ describe('Desktop Manager', () => {
     it.each([{ desktopEnabled: true }, { desktopEnabled: false }])(
       'returns $desktopEnabled if desktop state contains desktop enabled as $desktopEnabled',
       async ({ desktopEnabled }) => {
+        rawStateMock.getDesktopState.mockResolvedValueOnce({
+          desktopEnabled,
+        });
         DesktopManager.setState({
           DesktopController: { desktopEnabled },
         });

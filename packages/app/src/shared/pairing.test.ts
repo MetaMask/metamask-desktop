@@ -172,7 +172,7 @@ describe('Pairing', () => {
         const pairingKeyStatusPromise = extensionPairing.checkPairingKeyMatch();
         await simulateStreamMessage(keyStreamMock, {});
         expect(await pairingKeyStatusPromise).toBe(
-          PairingKeyStatus.pairingKeyNotMatch,
+          PairingKeyStatus.pairingKeyUndefined,
         );
       });
 
