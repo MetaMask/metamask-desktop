@@ -3,7 +3,7 @@
  */
 
 ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
-import './desktop/browser/browser-init';
+import './desktop/app/globals';
 ///: END:ONLY_INCLUDE_IN
 
 ///: BEGIN:EXCLUDE_IN(desktopapp)

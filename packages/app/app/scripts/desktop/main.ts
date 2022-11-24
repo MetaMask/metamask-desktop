@@ -1,4 +1,4 @@
-import './app/globals';
+import './app/sentry-init';
 import path from 'path';
 import { app } from 'electron';
 import { runLava } from 'lavamoat';
