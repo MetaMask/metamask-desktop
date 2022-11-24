@@ -8,7 +8,7 @@
     "build:app:mv3": "ENABLE_MV3=true yarn build:app",
     "build:app:test": "IN_TEST=true SEGMENT_HOST='https://api.segment.io' SEGMENT_WRITE_KEY='FAKE' PHISHING_WARNING_PAGE_URL=http://localhost:9999/ METAMASK_DEBUG=1 yarn build:app",
     "generate:certificate:win": "@powershell ./build/windows/generate_certificate.ps1",
-    "lavamoat": "CI=true yarn build && lavamoat dist/app/submodules/extension/app/scripts/background.js --autopolicy --policy lavamoat/node/policy.json --policyOverride lavamoat/node/policy-override.json --includeDevDeps=false",
+    "lavamoat": "CI=true yarn build:app && lavamoat dist/app/submodules/extension/app/scripts/background.js --autopolicy --policy lavamoat/node/policy.json --policyOverride lavamoat/node/policy-override.json --includeDevDeps=false",
     "lint": "yarn lint:prettier && yarn lint:eslint && yarn lint:tsc",
     "lint:eslint": "eslint . --ext js,ts --cache",
     "lint:eslint:fix": "yarn lint:eslint --fix",
@@ -26,7 +26,7 @@
     "setup:postinstall": "yarn patch-package && yarn allow-scripts",
     "start": "electron dist/app/submodules/extension/app/scripts/background.js",
     "start:lavamoat": "electron dist/app/src/app/main.js",
-    "start:test": "GLOBAL_AGENT_HTTP_PROXY=http://127.0.0.1:8000 NODE_TLS_REJECT_UNAUTHORIZED=0 yarn start",
+    "start:test": "GLOBAL_AGENT_HTTP_PROXY=http://127.0.0.1:8000 NODE_TLS_REJECT_UNAUTHORIZED=0 yarn start:lavamoat",
     "test": "jest"
   },
   "dependencies": {
@@ -187,6 +187,7 @@
     "@lavamoat/allow-scripts": "^2.0.3",
     "@lavamoat/lavapack": "^3.1.0",
     "@metamask/auto-changelog": "^2.1.0",
+    "@metamask/desktop": "*",
     "@metamask/eslint-config": "^9.0.0",
     "@metamask/eslint-config-jest": "^9.0.0",
     "@metamask/eslint-config-mocha": "^9.0.0",

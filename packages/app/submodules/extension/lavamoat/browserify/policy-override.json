@@ -141,12 +141,15 @@
         "remote-redux-devtools>socketcluster-client>clone": true,
         "remote-redux-devtools>socketcluster-client>uuid": true,
         "@ngraveio/bc-ur>crc>buffer": true,
-        "browserify>querystring-es3": true
+        "browserify>querystring-es3": true,
+        "remote-redux-devtools>socketcluster-client>buffer": true
       }
     },
     "remote-redux-devtools>socketcluster-client>sc-channel": {
       "packages": {
-        "remote-redux-devtools>socketcluster-client>sc-channel>component-emitter": true
+        "remote-redux-devtools>socketcluster-client>sc-channel>component-emitter": true,
+        "remote-redux-devtools>socketcluster-client>component-emitter": true,
+        "base64-js": true
       }
     },
     "@ngraveio/bc-ur>crc>buffer": {
@@ -174,6 +177,17 @@
         "nanoid": true,
         "remote-redux-devtools>redux-devtools-core>remotedev-serialize": true,
         "lodash": true
+      }
+    },
+    "remote-redux-devtools>socketcluster-client>buffer": {
+      "packages": {
+        "base64-js": true,
+        "browserify>buffer>ieee754": true
+      }
+    },
+    "external:../../src/extension/desktop-manager.ts": {
+      "globals": {
+        "WebSocket": true
       }
     }
   }

@@ -1,3 +1,4 @@
+import './globals';
 import path from 'path';
 import { app } from 'electron';
 import { runLava } from 'lavamoat';

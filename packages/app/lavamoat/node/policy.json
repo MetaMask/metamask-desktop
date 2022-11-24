@@ -1216,6 +1216,15 @@
         "stream.Duplex": true
       },
       "globals": {
+        "Buffer.from": true,
+        "clearTimeout": true,
+        "crypto.getRandomValues": true,
+        "crypto.subtle.decrypt": true,
+        "crypto.subtle.digest": true,
+        "crypto.subtle.encrypt": true,
+        "crypto.subtle.exportKey": true,
+        "crypto.subtle.generateKey": true,
+        "crypto.subtle.importKey": true,
         "process.env.COMPATIBILITY_VERSION_EXTENSION": true,
         "process.env.DISABLE_WEB_SOCKET_ENCRYPTION": true,
         "process.env.ENABLE_MV3": true,
@@ -1225,7 +1234,104 @@
         "setTimeout": true
       },
       "packages": {
-        "@metamask/desktop>loglevel": true
+        "@metamask/desktop>eciesjs": true,
+        "@metamask/desktop>loglevel": true,
+        "@metamask/desktop>otpauth": true,
+        "@metamask/desktop>uuid": true
+      }
+    },
+    "@metamask/desktop>eciesjs": {
+      "builtin": {
+        "crypto.createCipheriv": true,
+        "crypto.createDecipheriv": true,
+        "crypto.randomBytes": true
+      },
+      "globals": {
+        "Buffer": true
+      },
+      "packages": {
+        "@metamask/desktop>eciesjs>futoin-hkdf": true,
+        "@metamask/desktop>eciesjs>secp256k1": true
+      }
+    },
+    "@metamask/desktop>eciesjs>futoin-hkdf": {
+      "builtin": {
+        "buffer.Buffer.alloc": true,
+        "buffer.Buffer.from": true,
+        "buffer.Buffer.isBuffer": true,
+        "crypto.createHash": true,
+        "crypto.createHmac": true
+      }
+    },
+    "@metamask/desktop>eciesjs>secp256k1": {
+      "globals": {
+        "__dirname": true
+      },
+      "packages": {
+        "@metamask/desktop>eciesjs>secp256k1>elliptic": true,
+        "@metamask/desktop>eciesjs>secp256k1>node-gyp-build": true
+      }
+    },
+    "@metamask/desktop>eciesjs>secp256k1>elliptic": {
+      "packages": {
+        "@metamask/desktop>eciesjs>secp256k1>elliptic>bn.js": true,
+        "@metamask/desktop>eciesjs>secp256k1>elliptic>brorand": true,
+        "@metamask/desktop>eciesjs>secp256k1>elliptic>hash.js": true,
+        "@metamask/desktop>eciesjs>secp256k1>elliptic>hmac-drbg": true,
+        "@metamask/desktop>eciesjs>secp256k1>elliptic>inherits": true,
+        "@metamask/desktop>eciesjs>secp256k1>elliptic>minimalistic-assert": true,
+        "@metamask/desktop>eciesjs>secp256k1>elliptic>minimalistic-crypto-utils": true
+      }
+    },
+    "@metamask/desktop>eciesjs>secp256k1>elliptic>bn.js": {
+      "builtin": {
+        "buffer.Buffer": true
+      },
+      "globals": {
+        "Buffer": true
+      }
+    },
+    "@metamask/desktop>eciesjs>secp256k1>elliptic>brorand": {
+      "builtin": {
+        "crypto.randomBytes": true
+      },
+      "globals": {
+        "crypto": true,
+        "msCrypto": true
+      }
+    },
+    "@metamask/desktop>eciesjs>secp256k1>elliptic>hash.js": {
+      "packages": {
+        "@metamask/desktop>eciesjs>secp256k1>elliptic>inherits": true,
+        "@metamask/desktop>eciesjs>secp256k1>elliptic>minimalistic-assert": true
+      }
+    },
+    "@metamask/desktop>eciesjs>secp256k1>elliptic>hmac-drbg": {
+      "packages": {
+        "@metamask/desktop>eciesjs>secp256k1>elliptic>hash.js": true,
+        "@metamask/desktop>eciesjs>secp256k1>elliptic>minimalistic-assert": true,
+        "@metamask/desktop>eciesjs>secp256k1>elliptic>minimalistic-crypto-utils": true
+      }
+    },
+    "@metamask/desktop>eciesjs>secp256k1>elliptic>inherits": {
+      "builtin": {
+        "util.inherits": true
+      }
+    },
+    "@metamask/desktop>eciesjs>secp256k1>node-gyp-build": {
+      "builtin": {
+        "fs.existsSync": true,
+        "fs.readdirSync": true,
+        "os.arch": true,
+        "os.platform": true,
+        "path.dirname": true,
+        "path.join": true,
+        "path.resolve": true
+      },
+      "globals": {
+        "__non_webpack_require__": true,
+        "__webpack_require__": true,
+        "process": true
       }
     },
     "@metamask/desktop>loglevel": {
@@ -1236,6 +1342,19 @@
         "localStorage": true,
         "log": "write",
         "navigator": true
+      }
+    },
+    "@metamask/desktop>otpauth": {
+      "globals": {
+        "__GLOBALTHIS__": true
+      }
+    },
+    "@metamask/desktop>uuid": {
+      "builtin": {
+        "crypto": true
+      },
+      "globals": {
+        "Buffer.from": true
       }
     },
     "@metamask/eth-json-rpc-infura": {
@@ -3054,38 +3173,6 @@
         "Buffer.allocUnsafe": true
       }
     },
-    "eciesjs": {
-      "builtin": {
-        "crypto.createCipheriv": true,
-        "crypto.createDecipheriv": true,
-        "crypto.randomBytes": true
-      },
-      "globals": {
-        "Buffer": true
-      },
-      "packages": {
-        "eciesjs>futoin-hkdf": true,
-        "eciesjs>secp256k1": true
-      }
-    },
-    "eciesjs>futoin-hkdf": {
-      "builtin": {
-        "buffer.Buffer.alloc": true,
-        "buffer.Buffer.from": true,
-        "buffer.Buffer.isBuffer": true,
-        "crypto.createHash": true,
-        "crypto.createHmac": true
-      }
-    },
-    "eciesjs>secp256k1": {
-      "globals": {
-        "__dirname": true
-      },
-      "packages": {
-        "hdkey>secp256k1>elliptic": true,
-        "lavamoat>node-gyp-build": true
-      }
-    },
     "electron-store": {
       "builtin": {
         "electron": true,
@@ -4063,7 +4150,6 @@
     },
     "eth-query": {
       "packages": {
-        "@ledgerhq/hw-app-eth>axios>follow-redirects>debug": true,
         "eth-query>json-rpc-random-id": true,
         "eth-query>xtend": true
       }
@@ -6960,11 +7046,6 @@
         "end-of-stream": true,
         "pump>once": true,
         "readable-stream": true
-      }
-    },
-    "otpauth": {
-      "globals": {
-        "__GLOBALTHIS__": true
       }
     },
     "promise-to-callback": {

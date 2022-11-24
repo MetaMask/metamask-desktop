@@ -10,40 +10,42 @@ declare const global: typeof globalThis & {
   sentry: unknown;
 };
 
-global.self = {} as unknown as Window & typeof globalThis;
-global.crypto = webcrypto as any;
+if (!global.self) {
+  global.self = {} as unknown as Window & typeof globalThis;
+  global.crypto = webcrypto as any;
 
-global.navigator = {
-  userAgent: 'Firefox',
-} as Navigator;
+  global.navigator = {
+    userAgent: 'Firefox',
+  } as Navigator;
 
-global.window = {
-  Headers,
-  navigator: global.navigator,
-  location: {
-    href: 'test.com',
-  },
-  postMessage: () => undefined,
-  addEventListener: () => undefined,
-} as unknown as Window & typeof globalThis;
+  global.window = {
+    Headers,
+    navigator: global.navigator,
+    location: {
+      href: 'test.com',
+    },
+    postMessage: () => undefined,
+    addEventListener: () => undefined,
+  } as unknown as Window & typeof globalThis;
 
-global.document = {
-  createElement: () => ({
-    pathname: '/',
-    setAttribute: () => undefined,
-  }),
-  head: {
-    appendChild: () => undefined,
-  },
-} as unknown as Document;
+  global.document = {
+    createElement: () => ({
+      pathname: '/',
+      setAttribute: () => undefined,
+    }),
+    head: {
+      appendChild: () => undefined,
+    },
+  } as unknown as Document;
 
-// The root compartment will populate this with hooks
-global.stateHooks = {};
+  // The root compartment will populate this with hooks
+  global.stateHooks = {};
 
-// setup sentry error reporting
-global.sentry = setupSentry({
-  release: getDesktopVersion(),
-  getState: () => global.stateHooks?.getSentryState?.() || {},
-});
+  // setup sentry error reporting
+  global.sentry = setupSentry({
+    release: getDesktopVersion(),
+    getState: () => global.stateHooks?.getSentryState?.() || {},
+  });
+}
 
 export {};
