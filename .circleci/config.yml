@@ -1168,6 +1168,8 @@ jobs:
       - run:
           name: test
           command: yarn common test
+      - store_test_results:
+          path: << pipeline.parameters.common-dir >>/test/results/junit.xml
 
   app-build:
     executor: node-browsers
