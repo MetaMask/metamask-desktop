@@ -21,19 +21,9 @@ import EncryptedWebSocketStream from './web-socket-stream';
 import * as asymmetricEncryption from './asymmetric';
 import * as symmetricEncryption from './symmetric';
 
-jest.mock(
-  '../web-socket-stream',
-  () => {
-    const original = jest.requireActual('../web-socket-stream');
-    return {
-      ...original,
-      WebSocketStream: jest.fn(),
-    };
-  },
-  {
-    virtual: true,
-  },
-);
+jest.mock('../web-socket-stream', () => ({
+  WebSocketStream: jest.fn(),
+}));
 
 jest.mock(
   './asymmetric',

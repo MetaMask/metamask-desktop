@@ -7,3 +7,6 @@ packages
 
 # Config
 .metamaskrc
+
+# Testing
+test/results

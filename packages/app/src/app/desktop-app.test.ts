@@ -11,8 +11,8 @@ import {
   createWebSocketStreamMock,
   createEventEmitterMock,
   createExtensionConnectionMock,
-} from '../test/mocks';
-import { simulateNodeEvent } from '../test/utils';
+} from '../../test/mocks';
+import { simulateNodeEvent } from '../../test/utils';
 import cfg from '../utils/config';
 import ExtensionConnection from './extension-connection';
 import { updateCheck } from './update-check';

@@ -14,11 +14,11 @@ import {
   RemotePort,
   TestConnectionResult,
 } from '@metamask/desktop/dist/types';
-import ExtensionConnection from '../app/extension-connection';
-import DesktopConnection from '../extension/desktop-connection';
-import { DesktopPairing, ExtensionPairing } from '../shared/pairing';
-import NotificationManager from '../../submodules/extension/app/scripts/lib/notification-manager';
-import ExtensionPlatform from '../../submodules/extension/app/scripts/platforms/extension';
+import ExtensionConnection from '../src/app/extension-connection';
+import DesktopConnection from '../src/extension/desktop-connection';
+import { DesktopPairing, ExtensionPairing } from '../src/shared/pairing';
+import NotificationManager from '../submodules/extension/app/scripts/lib/notification-manager';
+import ExtensionPlatform from '../submodules/extension/app/scripts/platforms/extension';
 
 export const PUBLIC_KEY_MOCK = 'testPublicKey';
 export const PRIVATE_KEY_MOCK = 'testPrivateKey';

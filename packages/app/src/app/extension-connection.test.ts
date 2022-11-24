@@ -18,12 +18,12 @@ import {
   CLIENT_ID_2_MOCK,
   createDesktopPairingMock,
   DATA_2_MOCK,
-} from '../test/mocks';
+} from '../../test/mocks';
 import {
   simulateStreamMessage,
   expectEventToFire,
   flushPromises,
-} from '../test/utils';
+} from '../../test/utils';
 import { unregisterRequestStream } from '../browser/node-browser';
 import { DesktopPairing } from '../shared/pairing';
 import ExtensionConnection from './extension-connection';

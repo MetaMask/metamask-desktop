@@ -17,12 +17,12 @@ import {
   createStreamMock,
   STREAM_MOCK,
   JSON_RPC_ID_MOCK,
-} from '../test/mocks';
+} from '../../test/mocks';
 import {
   simulateBrowserEvent,
   flushPromises,
   simulateStreamMessage,
-} from '../test/utils';
+} from '../../test/utils';
 import DesktopConnection from './desktop-connection';
 import DesktopManager from './desktop-manager';
 

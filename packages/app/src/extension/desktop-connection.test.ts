@@ -23,12 +23,12 @@ import {
   createExtensionVersionCheckMock,
   createExtensionPairingMock,
   DATA_2_MOCK,
-} from '../test/mocks';
+} from '../../test/mocks';
 import {
   simulateStreamMessage,
   simulateNodeEvent,
   flushPromises,
-} from '../test/utils';
+} from '../../test/utils';
 import { ExtensionPairing } from '../shared/pairing';
 import DesktopConnection from './desktop-connection';
 

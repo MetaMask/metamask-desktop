@@ -10,11 +10,12 @@ import {
   PASSWORD_MOCK,
   ENCRYPTED_CYPHER_MOCK,
   ENCRYPTED_CYPHER_FILE_MOCK,
-} from '../test/mocks';
+} from '../../test/mocks';
 import ObfuscatedStore from './storage';
 
 jest.mock('electron-store', () => jest.fn(), { virtual: true });
 jest.mock('crypto', () => ({ randomBytes: jest.fn() }), { virtual: true });
+jest.mock('loglevel');
 
 jest.mock('path', () => ({ join: jest.fn() }), { virtual: true });
 jest.mock(

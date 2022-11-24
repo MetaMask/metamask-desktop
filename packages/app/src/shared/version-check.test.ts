@@ -1,5 +1,9 @@
-import { createStreamMock, VERSION_2_MOCK, VERSION_MOCK } from '../test/mocks';
-import { simulateStreamMessage } from '../test/utils';
+import {
+  createStreamMock,
+  VERSION_2_MOCK,
+  VERSION_MOCK,
+} from '../../test/mocks';
+import { simulateStreamMessage } from '../../test/utils';
 import { getDesktopVersion } from '../utils/version';
 import { DesktopVersionCheck } from './version-check';
 

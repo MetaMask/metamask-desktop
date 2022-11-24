@@ -1,6 +1,6 @@
 import { EventEmitter } from 'stream';
-import { DATA_2_MOCK, DATA_MOCK } from '../test/mocks';
-import { expectEventToFire } from '../test/utils';
+import { DATA_2_MOCK, DATA_MOCK } from '../../test/mocks';
+import { expectEventToFire } from '../../test/utils';
 import { forwardEvents, onceAny } from './events';
 
 describe('Events Utils', () => {

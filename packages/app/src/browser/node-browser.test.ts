@@ -5,8 +5,8 @@ import {
   createStreamMock,
   UUID_MOCK,
   VALUE_2_MOCK,
-} from '../test/mocks';
-import { simulateNodeEvent } from '../test/utils';
+} from '../../test/mocks';
+import { simulateNodeEvent } from '../../test/utils';
 import { browser, registerRequestStream } from './node-browser';
 
 jest.mock('loglevel');

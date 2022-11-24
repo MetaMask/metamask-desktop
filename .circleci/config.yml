@@ -1198,3 +1198,5 @@ jobs:
       - run:
           name: test
           command: yarn app test
+      - store_test_results:
+          path: << pipeline.parameters.app-dir >>/test/results/junit.xml

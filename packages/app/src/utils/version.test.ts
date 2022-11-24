@@ -1,4 +1,4 @@
-import { VERSION_MOCK } from '../test/mocks';
+import { VERSION_MOCK } from '../../test/mocks';
 import { getDesktopVersion } from './version';
 
 describe('Version Utils', () => {

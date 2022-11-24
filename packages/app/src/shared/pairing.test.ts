@@ -13,12 +13,12 @@ import {
   HASH_BUFFER_HEX_MOCK,
   OTP_MOCK,
   STRING_DATA_MOCK,
-} from '../test/mocks';
+} from '../../test/mocks';
 import {
   expectEventToFire,
   flushPromises,
   simulateStreamMessage,
-} from '../test/utils';
+} from '../../test/utils';
 import { DesktopPairing, ExtensionPairing } from './pairing';
 
 jest.mock('@metamask/desktop/dist/utils/totp');
