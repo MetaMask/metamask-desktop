@@ -69,7 +69,7 @@ async function main() {
     throw error;
   }
 
-  let testTimeoutInMilliseconds = 120 * 1000;
+  let testTimeoutInMilliseconds = 60 * 1000;
   let exit = '--exit';
 
   if (leaveRunning) {

@@ -18,7 +18,7 @@ const {
   setDesktopAppState,
 } = require('./desktop');
 
-const tinyDelayMs = 1000;
+const tinyDelayMs = 200;
 const regularDelayMs = tinyDelayMs * 2;
 const largeDelayMs = regularDelayMs * 2;
 const veryLargeDelayMs = largeDelayMs * 2;

@@ -26,7 +26,7 @@
     "setup:postinstall": "yarn patch-package && yarn allow-scripts",
     "start": "electron dist/app/submodules/extension/app/scripts/background.js",
     "start:lavamoat": "electron dist/app/src/app/main.js",
-    "start:test": "GLOBAL_AGENT_HTTP_PROXY=http://127.0.0.1:8000 NODE_TLS_REJECT_UNAUTHORIZED=0 yarn start:lavamoat",
+    "start:test": "GLOBAL_AGENT_HTTP_PROXY=http://127.0.0.1:8000 NODE_TLS_REJECT_UNAUTHORIZED=0 yarn start",
     "test": "jest"
   },
   "dependencies": {

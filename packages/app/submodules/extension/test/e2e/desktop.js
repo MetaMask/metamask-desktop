@@ -1,7 +1,7 @@
 const cp = require('child_process');
 const { promises: fs } = require('fs');
 
-const APP_START_TIMEOUT = 120000;
+const APP_START_TIMEOUT = 30000;
 const BEFORE_NAVIGATE_DELAY = 3000;
 
 const sleep = async (milliseconds) => {
@@ -86,7 +86,7 @@ const startDesktopApp = async () => {
 
 const stopDesktopApp = () => {
   console.info('Stopping desktop app');
-  killProcessesByCommand(['main.js', 'start:test']);
+  killProcessesByCommand(['background.js', 'start:test']);
 };
 
 const setDesktopAppState = async (state) => {
