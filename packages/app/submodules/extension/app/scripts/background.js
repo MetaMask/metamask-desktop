@@ -2,14 +2,10 @@
  * @file The entry point for the web extension singleton process.
  */
 
-///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
-import '../../../../src/app/globals';
-///: END:ONLY_INCLUDE_IN
-
 ///: BEGIN:EXCLUDE_IN(desktopapp)
 import './browser-init';
 ///: END:EXCLUDE_IN
-
+import EventEmitter from 'events';
 import endOfStream from 'end-of-stream';
 import pump from 'pump';
 import debounce from 'debounce-stream';
@@ -62,16 +58,9 @@ import setupEnsIpfsResolver from './lib/ens-ipfs/setup';
 import { getPlatform } from './lib/util';
 
 /* eslint-disable import/order */
-
-///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
-import desktopAppCfg from '../../../../src/utils/config';
-import DesktopApp from '../../../../src/app/desktop-app';
-///: END:ONLY_INCLUDE_IN
-
 ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
 import DesktopManager from '../../../../src/extension/desktop-manager';
 ///: END:ONLY_INCLUDE_IN
-
 /* eslint-enable import/order */
 
 const { sentry } = global;
@@ -119,6 +108,13 @@ const PHISHING_WARNING_PAGE_TIMEOUT = ONE_SECOND_IN_MILLISECONDS;
 const ACK_KEEP_ALIVE_MESSAGE = 'ACK_KEEP_ALIVE_MESSAGE';
 const WORKER_KEEP_ALIVE_MESSAGE = 'WORKER_KEEP_ALIVE_MESSAGE';
 
+///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
+const overrideCallbacksValidOrigins = {
+  EXTENSION: 'EXTENSION',
+  DESKTOP: 'DESKTOP_APP',
+};
+///: END:ONLY_INCLUDE_IN
+
 /**
  * In case of MV3 we attach a "onConnect" event listener as soon as the application is initialised.
  * Reason is that in case of MV3 a delay in doing this was resulting in missing first connect event after service worker is re-activated.
@@ -129,39 +125,6 @@ const initApp = async (remotePort) => {
   await initialize(remotePort);
   log.info('MetaMask initialization complete.');
 };
-
-///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
-const onDesktopRestart = async (desktopApp) => {
-  if (desktopAppCfg().isExtensionTest) {
-    return;
-  }
-
-  desktopApp.removeAllListeners();
-  desktopApp.on('restart', () => onDesktopRestart(desktopApp));
-
-  log.debug('Re-initializing background script');
-  await initialize();
-};
-
-const initDesktopApp = async () => {
-  await DesktopApp.init();
-  DesktopApp.on('restart', () => onDesktopRestart(DesktopApp));
-};
-///: END:ONLY_INCLUDE_IN
-
-if (isManifestV3) {
-  ///: BEGIN:EXCLUDE_IN(desktopapp)
-  browser.runtime.onConnect.addListener(initApp);
-  ///: END:EXCLUDE_IN
-} else {
-  let initPromise = Promise.resolve();
-
-  ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
-  initPromise = initDesktopApp();
-  ///: END:ONLY_INCLUDE_IN
-
-  initPromise.then(initialize).catch(log.error);
-}
 
 /**
  * @typedef {import('../../shared/constants/transaction').TransactionMeta} TransactionMeta
@@ -234,11 +197,9 @@ async function initialize(remotePort) {
 
   await setupController(initState, initLangCode, remotePort);
 
-  ///: BEGIN:EXCLUDE_IN(desktopapp)
   if (!isManifestV3) {
     await loadPhishingWarningPage();
   }
-  ///: END:EXCLUDE_IN
 
   log.info('MetaMask initialization complete.');
 }
@@ -320,7 +281,7 @@ async function loadPhishingWarningPage() {
  *
  * @returns {Promise<MetaMaskState>} Last data emitted from previous instance of MetaMask.
  */
-async function loadStateFromPersistence() {
+export async function loadStateFromPersistence() {
   // migrations
   const migrator = new Migrator({ migrations });
   migrator.on('error', console.warn);
@@ -374,8 +335,14 @@ async function loadStateFromPersistence() {
  * @param {object} initState - The initial state to start the controller with, matches the state that is emitted from the controller.
  * @param {string} initLangCode - The region code for the language preferred by the current user.
  * @param {string} remoteSourcePort - remote application port connecting to extension.
+ * @param {object} overrides - object with callbacks that are allowed to override the setup controller logic (usefull for desktop app)
  */
-function setupController(initState, initLangCode, remoteSourcePort) {
+export function setupController(
+  initState,
+  initLangCode,
+  remoteSourcePort,
+  overrides,
+) {
   //
   // MetaMask Controller
   //
@@ -419,9 +386,7 @@ function setupController(initState, initLangCode, remoteSourcePort) {
     createStreamSink(async (state) => {
       await localStore.set(state);
 
-      ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
-      DesktopApp.getConnection()?.transferState({ data: state });
-      ///: END:ONLY_INCLUDE_IN
+      overrides?.transferStateCb?.(state);
     }),
     (error) => {
       log.error('MetaMask - Persistence pipeline failed', error);
@@ -433,11 +398,9 @@ function setupController(initState, initLangCode, remoteSourcePort) {
   //
   // connect to other contexts
   //
-  ///: BEGIN:EXCLUDE_IN(desktopapp)
   if (isManifestV3 && remoteSourcePort) {
     connectRemote(remoteSourcePort);
   }
-  ///: END:EXCLUDE_IN
 
   browser.runtime.onConnect.addListener(connectRemote);
   browser.runtime.onConnectExternal.addListener(connectExternal);
@@ -484,7 +447,10 @@ function setupController(initState, initLangCode, remoteSourcePort) {
    */
   function connectRemote(remotePort) {
     ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
-    if (DesktopManager.isDesktopEnabled()) {
+    if (
+      DesktopManager.isDesktopEnabled() &&
+      overrideCallbacksValidOrigins.DESKTOP !== overrides?.getOrigin?.()
+    ) {
       DesktopManager.createStream(remotePort, CONNECTION_TYPE_INTERNAL).then(
         () => {
           // When in Desktop Mode the responsibility to send CONNECTION_READY is on the desktop app side
@@ -521,21 +487,14 @@ function setupController(initState, initLangCode, remoteSourcePort) {
       : null;
 
     if (isMetaMaskInternalProcess) {
-      let portStream;
-
-      ///: BEGIN:EXCLUDE_IN(desktopapp)
-      portStream = new PortStream(remotePort);
-      ///: END:EXCLUDE_IN
-
-      ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
-      portStream = remotePort.stream;
-      ///: END:ONLY_INCLUDE_IN
+      const portStream =
+        overrides?.getPortStream?.(remotePort) ||
+        new PortStream(remotePort);
 
       // communication with popup
       controller.isClientOpen = true;
       controller.setupTrustedCommunication(portStream, remotePort.sender);
 
-      ///: BEGIN:EXCLUDE_IN(desktopapp)
       if (isManifestV3) {
         // Message below if captured by UI code in app/scripts/ui.js which will trigger UI initialisation
         // This ensures that UI is initialised only after background is ready
@@ -550,7 +509,6 @@ function setupController(initState, initLangCode, remoteSourcePort) {
           }
         });
       }
-      ///: END:EXCLUDE_IN
 
       if (processName === ENVIRONMENT_TYPE_POPUP) {
         popupIsOpen = true;
@@ -595,15 +553,9 @@ function setupController(initState, initLangCode, remoteSourcePort) {
       senderUrl.origin === phishingPageUrl.origin &&
       senderUrl.pathname === phishingPageUrl.pathname
     ) {
-      let portStream;
-
-      ///: BEGIN:EXCLUDE_IN(desktopapp)
-      portStream = new PortStream(remotePort);
-      ///: END:EXCLUDE_IN
-
-      ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
-      portStream = remotePort.stream;
-      ///: END:ONLY_INCLUDE_IN
+      const portStream =
+        overrides?.getPortStream?.(remotePort) ||
+        new PortStream(remotePort);
 
       controller.setupPhishingCommunication({
         connectionStream: portStream,
@@ -627,21 +579,18 @@ function setupController(initState, initLangCode, remoteSourcePort) {
   // communication with page or other extension
   function connectExternal(remotePort) {
     ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
-    if (DesktopManager.isDesktopEnabled()) {
+    if (
+      DesktopManager.isDesktopEnabled() &&
+      overrideCallbacksValidOrigins.DESKTOP !== overrides?.getOrigin?.()
+    ) {
       DesktopManager.createStream(remotePort, CONNECTION_TYPE_EXTERNAL);
       return;
     }
     ///: END:ONLY_INCLUDE_IN
 
-    let portStream;
-
-    ///: BEGIN:EXCLUDE_IN(desktopapp)
-    portStream = new PortStream(remotePort);
-    ///: END:EXCLUDE_IN
-
-    ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
-    portStream = remotePort.stream;
-    ///: END:ONLY_INCLUDE_IN
+    const portStream =
+      overrides?.getPortStream?.(remotePort) ||
+      new PortStream(remotePort);
 
     controller.setupUntrustedCommunication({
       connectionStream: portStream,
@@ -799,20 +748,14 @@ function setupController(initState, initLangCode, remoteSourcePort) {
   }
 
   ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
-  controller.store.subscribe((state) => {
-    DesktopManager.setState(state);
-  });
+  if (overrideCallbacksValidOrigins.DESKTOP !== overrides?.getOrigin?.()) {
+    controller.store.subscribe((state) => {
+      DesktopManager.setState(state);
+    });
+  }
   ///: END:ONLY_INCLUDE_IN
 
-  ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
-  DesktopApp.on('connect-remote', (connectRequest) => {
-    connectRemote(connectRequest);
-  });
-
-  DesktopApp.on('connect-external', (connectRequest) => {
-    connectExternal(connectRequest);
-  });
-  ///: END:ONLY_INCLUDE_IN
+  overrides?.registerConnectListeners?.(connectRemote, connectExternal);
 
   return Promise.resolve();
 }
@@ -884,16 +827,24 @@ const addAppInstalledEvent = () => {
   }, 1000);
 };
 
-// On first install, open a new tab with MetaMask
-browser.runtime.onInstalled.addListener(({ reason }) => {
-  if (
-    reason === 'install' &&
-    !(process.env.METAMASK_DEBUG || process.env.IN_TEST)
-  ) {
-    addAppInstalledEvent();
-    platform.openExtensionInBrowser();
+export default function initBackground() {
+  if (isManifestV3) {
+    browser.runtime.onConnect.addListener(initApp);
+  } else {
+    initialize().catch(log.error);
   }
-});
+
+  // On first install, open a new tab with MetaMask
+  browser.runtime.onInstalled.addListener(({ reason }) => {
+    if (
+      reason === 'install' &&
+      !(process.env.METAMASK_DEBUG || process.env.IN_TEST)
+    ) {
+      addAppInstalledEvent();
+      platform.openExtensionInBrowser();
+    }
+  });
+}
 
 function setupSentryGetStateGlobal(store) {
   global.stateHooks.getSentryState = function () {
