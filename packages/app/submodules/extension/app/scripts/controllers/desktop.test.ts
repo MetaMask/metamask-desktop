@@ -4,7 +4,7 @@ import {
   createObservableStoreMock,
   OTP_MOCK,
   TEST_CONNECTION_RESULT_MOCK,
-} from '../../../../../src/test/mocks';
+} from '../../../../../test/mocks';
 import { ExtensionPairing } from '../../../../../src/shared/pairing';
 import DesktopManager from '../../../../../src/extension/desktop-manager';
 import DesktopApp from '../../../../../src/app/desktop-app';
