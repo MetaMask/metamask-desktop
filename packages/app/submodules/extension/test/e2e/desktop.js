@@ -86,7 +86,7 @@ const startDesktopApp = async () => {
 
 const stopDesktopApp = () => {
   console.info('Stopping desktop app');
-  killProcessesByCommand(['background.js', 'start:test']);
+  killProcessesByCommand(['main.js', 'start:test']);
 };
 
 const setDesktopAppState = async (state) => {

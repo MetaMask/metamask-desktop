@@ -43,7 +43,7 @@ async function profilePageLoad() {
             // log string continues
             logString += log;
           } else if (
-            log.search(/"name": ".*app\/scripts\/background.js",/u) >= 0
+            log.search(/"name": ".*app\/scripts\/background-init.js",/u) >= 0
           ) {
             // background log starts
             logString += log;

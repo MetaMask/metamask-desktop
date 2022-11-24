@@ -225,7 +225,7 @@ function createScriptTasks({
    * each defined task.
    */
   function createTasksForScriptBundles({ buildTarget, taskPrefix }) {
-    const standardEntryPoints = ['background', 'ui', 'content-script'];
+    const standardEntryPoints = ['background-init', 'ui', 'content-script'];
     const standardSubtask = createTask(
       `${taskPrefix}:standardEntryPoints`,
       createFactoredBuild({
@@ -647,7 +647,7 @@ function createFactoredBuild({
             });
             break;
           }
-          case 'background': {
+          case 'background-init': {
             renderHtmlFile({
               htmlName: 'background',
               groupSet,

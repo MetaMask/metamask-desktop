@@ -35,7 +35,7 @@ async function measurePage() {
           } else if (inObject) {
             logString += log;
           } else if (
-            log.search(/"name": ".*app\/scripts\/background.js",/u) >= 0 ||
+            log.search(/"name": ".*app\/scripts\/background-init.js",/u) >= 0 ||
             log.search(/"name": ".*app\/scripts\/ui.js",/u) >= 0
           ) {
             logString += log;
@@ -56,7 +56,7 @@ async function profilePageLoad() {
   const results = await measurePage();
   const metrics = {};
 
-  metrics['background.js'] = results[0];
+  metrics['background-init.js'] = results[0];
   metrics['ui.js'] = results[1];
 
   return metrics;
@@ -126,8 +126,8 @@ async function main() {
     }
 
     await fs.writeFile(
-      path.join(out, 'background.json'),
-      JSON.stringify(results['background.js'], null, 2),
+      path.join(out, 'background-init.json'),
+      JSON.stringify(results['background-init.js'], null, 2),
     );
 
     await fs.writeFile(

@@ -2,7 +2,7 @@
   "name": "desktop-app",
   "version": "10.22.0",
   "private": true,
-  "main": "dist/app/src/app/main.js",
+  "main": "dist/app/src/app/lavamoat.js",
   "repository": "https://github.com/MetaMask/desktop",
   "scripts": {
     "build:app": "./build/build.sh",
@@ -10,7 +10,7 @@
     "build:app:test": "IN_TEST=true SEGMENT_HOST='https://api.segment.io' SEGMENT_WRITE_KEY='FAKE' PHISHING_WARNING_PAGE_URL=http://localhost:9999/ METAMASK_DEBUG=1 yarn build:app",
     "build:app:test:ui": "UI_TEST=true METAMASK_DEBUG=1 yarn build:app",
     "generate:certificate:win": "@powershell ./build/windows/generate_certificate.ps1",
-    "lavamoat": "CI=true yarn build:app && lavamoat dist/app/submodules/extension/app/scripts/background.js --autopolicy --policy lavamoat/node/policy.json --policyOverride lavamoat/node/policy-override.json --includeDevDeps=false",
+    "lavamoat": "CI=true yarn build:app && lavamoat dist/app/src/app/main.js --autopolicy --policy lavamoat/node/policy.json --policyOverride lavamoat/node/policy-override.json --includeDevDeps=false",
     "lint": "yarn lint:prettier && yarn lint:eslint && yarn lint:tsc",
     "lint:eslint": "eslint . --ext js,ts --cache",
     "lint:eslint:fix": "yarn lint:eslint --fix",
@@ -26,8 +26,8 @@
     "release:linux": "electron-builder -l -p 'onTagOrDraft'",
     "setup": "yarn install && yarn setup:postinstall",
     "setup:postinstall": "yarn patch-package && yarn allow-scripts",
-    "start": "electron dist/app/submodules/extension/app/scripts/background.js",
-    "start:lavamoat": "electron dist/app/src/app/main.js",
+    "start": "electron dist/app/src/app/main.js",
+    "start:lavamoat": "electron dist/app/src/app/lavamoat.js",
     "start:test": "GLOBAL_AGENT_HTTP_PROXY=http://127.0.0.1:8000 NODE_TLS_REJECT_UNAUTHORIZED=0 yarn start",
     "test": "jest",
     "test:e2e": "npx playwright test"
