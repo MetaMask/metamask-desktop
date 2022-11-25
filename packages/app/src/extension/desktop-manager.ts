@@ -35,7 +35,7 @@ class DesktopManager {
     if (state?.DesktopController?.desktopEnabled === true) {
       this.desktopConnection = await this.createConnection();
 
-      if (!cfg().isTest) {
+      if (!cfg().isExtensionTest) {
         await this.desktopConnection.transferState();
       }
     }

@@ -222,7 +222,7 @@ export default class ExtensionConnection extends EventEmitter {
 
     const newRawState = await addPairingKeyToRawState(data);
 
-    if (!cfg().isTest) {
+    if (!cfg().isExtensionTest) {
       await setRawState(newRawState);
     }
 
