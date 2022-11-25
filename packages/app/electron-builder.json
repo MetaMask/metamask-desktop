@@ -47,7 +47,7 @@
   "productName": "MetaMask Desktop",
   "win": {
     "icon": "build/icon.png",
-    "forceCodeSigning": true,
+    "forceCodeSigning": false,
     "signAndEditExecutable": true,
     "target": ["nsis", "portable"]
   }

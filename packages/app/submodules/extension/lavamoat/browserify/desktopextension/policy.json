@@ -5958,6 +5958,10 @@
       }
     },
     "external:../../../common/dist/encryption/web-socket-stream.js": {
+      "globals": {
+        "clearInterval": true,
+        "setInterval": true
+      },
       "packages": {
         "browserify>stream-browserify": true,
         "external:../../../common/dist/constants.js": true,
