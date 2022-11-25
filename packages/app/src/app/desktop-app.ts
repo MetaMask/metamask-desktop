@@ -90,7 +90,7 @@ class DesktopApp extends EventEmitter {
     }
     this.trezorWindow = await this.createTrezorWindow();
     this.latticeWindow = await this.createLatticeWindow();
-    
+
     const server = await this.createWebSocketServer();
     server.on('connection', (webSocket) => this.onConnection(webSocket));
 
