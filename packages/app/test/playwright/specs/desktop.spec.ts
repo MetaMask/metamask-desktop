@@ -1,4 +1,3 @@
-import { unlink } from 'fs';
 import { Page, BrowserContext, expect } from '@playwright/test';
 
 import { _electron as electron } from 'playwright';
