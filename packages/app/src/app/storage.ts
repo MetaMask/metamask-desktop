@@ -8,7 +8,7 @@ import cfg from '../utils/config';
 
 let safeStorage: Electron.SafeStorage;
 
-if (!cfg().isExtensionTest && !cfg().isAppTest) {
+if (!cfg().isExtensionTest || !cfg().isAppTest) {
   // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
   safeStorage = require('electron').safeStorage;
 }

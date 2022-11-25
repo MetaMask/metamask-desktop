@@ -1,19 +1,8 @@
 # Desktop e2e tests
 
-
-          name: Build desktop app for testing
-          command: yarn build:desktop:app
-      - run:
-          name: Build desktop UI for testing
-          command: yarn build:desktop:ui
-      - run:
-          name: Build extension for testing
-          command: yarn build:test:desktop:ui   
-      - run:
-          name: Move test build to 'dist-test' to avoid conflict with production build
-          command: mv ./dist ./dist-test-desktop 
-
 ## Requirements
+
+0. Have chrome installed.
 
 1. Have generated a desktop app built with env param 
 ```
@@ -21,23 +10,15 @@ yarn app build:app:test:ui
 ```
 2. Have generated a desktop UI 
 ```
-yarn extension build:desktop:ui
+yarn extension build:desktop:ui:ci
 ```
 3. Have generated a MM extension built with env param 
 ```
 yarn extension build:test:desktop:ui
 ```
 
-## Installation
-On `playwright` folder:
-```
-yarn install
-node node_modules/electron/install.js
-npx playwright install chrome
-```
-
 ## Run e2e
 On `playwright` folder:
 ```
-yarn test:e2e:desktop-app
+yarn test:e2e
 ```

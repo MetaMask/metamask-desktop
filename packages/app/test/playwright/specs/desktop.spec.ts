@@ -1,3 +1,4 @@
+import { unlink } from 'fs';
 import { Page, BrowserContext, expect } from '@playwright/test';
 
 import { _electron as electron } from 'playwright';
@@ -39,6 +40,14 @@ test.describe('Desktop send', () => {
     page,
     context,
   }) => {
+    // Delete config.json to have the same initial setup every run
+    unlink(process.env.ELECTRON_CONFIG_PATH as string, (err) => {
+      if (err) {
+        throw err;
+      }
+      console.log(`${process.env.ELECTRON_CONFIG_PATH} was deleted`);
+    });
+
     const electronApp = await electron.launch({
       args: [process.env.ELECTRON_APP_PATH as string],
     });
@@ -57,21 +66,32 @@ test.describe('Desktop send', () => {
           console.log`stderr: ${Buffer.from(error, 'utf-8').toString('utf-8')}`,
       );
 
-    const mainWindow = electronApp.windows().find(async (win) => {
-      return await win.innerText('data-testid=main-app');
-    });
+    // Finding the window like this as innerText seems not working as expected.
+    const windows = electronApp.windows();
+    const windowTitles = await Promise.all(windows.map((x) => x.title()));
+    const windowIndex = windowTitles.findIndex((x) => x === 'MetaMask Desktop');
+    const mainWindow = windows[windowIndex];
 
     await mainWindow.screenshot({
       path: 'test/playwright/test-results/visual/desktop-inactive.main.png',
       fullPage: true,
     });
 
+    console.log(`Main window title: ${await mainWindow.title()}`);
+
     const initialFlow = await context.newPage();
     const extensionId = await signUpFlow(initialFlow, context);
     await enableDesktopAppFlow(initialFlow);
 
+    await mainWindow.screenshot({
+      path: 'test/playwright/test-results/visual/desktop-all-set.main.png',
+      fullPage: true,
+    });
+
     const signIn = new MMDSignInPage(page, extensionId as string);
     await signIn.signIn();
+
+    await mainWindow.locator('text=Go to Settings').click();
     await mainWindow.screenshot({
       path: 'test/playwright/test-results/visual/desktop-active.main.png',
       fullPage: true,

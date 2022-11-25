@@ -11,16 +11,8 @@ const testExtension = base.extend({
   context: async ({ browserName }, use) => {
     const browserTypes = { chromium, firefox, webkit };
     const launchOptions = {
-      //   devtools: true,
       headless: false,
       args: [`--disable-extensions-except=${extensionPath}`],
-      //   viewport: {
-      //     width: 1920,
-      //     height: 1080
-      //   },
-      // recordVideo: {
-      //   dir: 'playwright/playwright-reports/test-artifacts/videos/',
-      // },
     };
     const context = await browserTypes[browserName].launchPersistentContext(
       '',
@@ -36,7 +28,6 @@ type GanacheWorkerFixtures = {
 };
 
 const test = testExtension.extend<{}, GanacheWorkerFixtures>({
-  // "express" fixture starts automatically for every worker - we pass "auto" for that.
   ganache: [
     async ({}, use) => {
       const ganacheOptions = {};
