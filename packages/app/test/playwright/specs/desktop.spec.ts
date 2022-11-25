@@ -41,12 +41,12 @@ test.describe('Desktop send', () => {
     context,
   }) => {
     // Delete config.json to have the same initial setup every run
-    unlink(process.env.ELECTRON_CONFIG_PATH as string, (err) => {
-      if (err) {
-        throw err;
-      }
-      console.log(`${process.env.ELECTRON_CONFIG_PATH} was deleted`);
-    });
+    // unlink(process.env.ELECTRON_CONFIG_PATH as string, (err) => {
+    //   if (err) {
+    //     throw err;
+    //   }
+    //   console.log(`${process.env.ELECTRON_CONFIG_PATH} was deleted`);
+    // });
 
     const electronApp = await electron.launch({
       args: [process.env.ELECTRON_APP_PATH as string],

@@ -74,7 +74,7 @@ workflows:
             - prep-deps
       - prep-build:
           requires:
-            - prep-deps
+            - common-build
       - prep-e2e-test-desktop-deps:
           requires:
             - common-build
