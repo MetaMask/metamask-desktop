@@ -1,67 +1,12 @@
-npm-debug.log
-yarn-error.log
+# Package Managers
 node_modules
-package-lock.json
 
-audit.json
-
-app/bower_components
-test/bower_components
-package
-.eslintcache
-
-# IDEs
-.idea
-.vscode
-.sublime-project
-
-*.bak
-
-# VIM
-*.swp
-*.swo
-
-temp
-.tmp
-.sass-cache
-.DS_Store
-app/.DS_Store
-
-storybook-build/
-coverage/
-jest-coverage/
+# Output
 dist
-dist_desktop
-dist_desktop_ui
-builds_desktop
-builds/
-builds.zip
-development/ts-migration-dashboard/build
-development/ts-migration-dashboard/intermediate
+packages
 
-test-artifacts
-test-builds
-build-artifacts
-
-#ignore css output and sourcemaps
-ui/css/output/
-
-notes.txt
-
-.nyc_output
-
-# MetaMask configuration
+# Config
 .metamaskrc
-.metamaskprodrc
 
-# TypeScript
-tsout/
-
-# Test results
-test-results/
-
-# Metamask Desktop packaging configuration
-.apprc
-
-# Test Windows signing certificate for desktop app
-desktop_packaging/windows/test_certificate.pfx
+# Testing
+test/results

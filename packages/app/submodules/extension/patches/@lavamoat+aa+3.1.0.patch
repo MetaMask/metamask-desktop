@@ -1,0 +1,12 @@
+diff --git a/node_modules/@lavamoat/aa/src/index.js b/node_modules/@lavamoat/aa/src/index.js
+index 070b772..95d29ac 100644
+--- a/node_modules/@lavamoat/aa/src/index.js
++++ b/node_modules/@lavamoat/aa/src/index.js
+@@ -76,6 +76,7 @@ function getDependencies(packageDir, includeDevDeps) {
+     ...Object.keys(packageJson.dependencies || {}),
+     ...Object.keys(packageJson.optionalDependencies || {}),
+     ...Object.keys(packageJson.peerDependencies || {}),
++    ...Object.keys(packageJson.peerDependenciesMeta || {}),
+     ...Object.keys(includeDevDeps ? packageJson.devDependencies || {} : {}),
+   ].sort(comparePreferredPackageName)
+   return depsToWalk

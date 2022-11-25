@@ -7,7 +7,16 @@ module.exports = {
       statements: 80,
     },
   },
-  reporters: ['default'],
+  reporters: [
+    'default',
+    [
+      'jest-junit',
+      {
+        outputDirectory: 'test/results/',
+        outputName: 'junit.xml',
+      },
+    ],
+  ],
   setupFiles: ['<rootDir>/test/setup.ts'],
   testEnvironment: 'jsdom',
 };
