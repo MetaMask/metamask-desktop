@@ -3,6 +3,7 @@
   "version": "10.22.0",
   "private": true,
   "main": "dist/app/src/app/main.js",
+  "repository": "https://github.com/MetaMask/desktop",
   "scripts": {
     "build:app": "./build/build.sh",
     "build:app:mv3": "ENABLE_MV3=true yarn build:app",
