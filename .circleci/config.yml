@@ -19,6 +19,7 @@ executors:
     docker:
       - image: circleci/node:16-browsers
     environment:
+      APP_DIR: << pipeline.parameters.app-dir >>
       EXTENSION_DIR: << pipeline.parameters.extension-dir >>
       YARN_EXTENSION: << pipeline.parameters.yarn-extension >>
   node-browsers-medium-plus:
@@ -26,6 +27,7 @@ executors:
       - image: circleci/node:16-browsers
     resource_class: medium+
     environment:
+      APP_DIR: << pipeline.parameters.app-dir >>
       EXTENSION_DIR: << pipeline.parameters.extension-dir >>
       NODE_OPTIONS: --max_old_space_size=2048
       YARN_EXTENSION: << pipeline.parameters.yarn-extension >>
@@ -33,6 +35,7 @@ executors:
     docker:
       - image: koalaman/shellcheck-alpine@sha256:dfaf08fab58c158549d3be64fb101c626abc5f16f341b569092577ae207db199
     environment:
+      APP_DIR: << pipeline.parameters.app-dir >>
       EXTENSION_DIR: << pipeline.parameters.extension-dir >>
       YARN_EXTENSION: << pipeline.parameters.yarn-extension >>
   playwright:
@@ -451,11 +454,13 @@ jobs:
           name: Build extension (no lavamoat) for testing
           command: ${YARN_EXTENSION} build:test:desktop:ui
       - run:
-          name: Move test build to 'dist-test' to avoid conflict with production build
-          command: mv ./${EXTENSION_DIR}/dist ./${APP_DIR}/desktop-test/dist-test-desktop
+          name: Move extension build to avoid conflict with other builds
+          command: |
+            mkdir -p ./${APP_DIR}/desktop-test
+            mv ./${EXTENSION_DIR}/dist ./${APP_DIR}/desktop-test/extension
       - run:
-          name: Move test build to 'dist-test' to avoid conflict with production build
-          command: mv ./${APP_DIR}/dist ./${APP_DIR}/desktop-test/dist
+          name: Move app build to avoid conflict with other builds
+          command: mv ./${APP_DIR}/dist ./${APP_DIR}/desktop-test/app
 
       - persist_to_workspace:
           root: .
@@ -854,11 +859,11 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Move test build to dist
-          command: mv ./${APP_DIR}/desktop-test/dist-test-desktop ./${EXTENSION_DIR}/dist    
+          name: Move extension build
+          command: mv ./${APP_DIR}/desktop-test/extension ./${EXTENSION_DIR}/dist    
       - run:
-          name: Move test build to dist
-          command: mv ./${APP_DIR}/desktop-test/dist ./${APP_DIR}/dist
+          name: Move app build
+          command: mv ./${APP_DIR}/desktop-test/app ./${APP_DIR}/dist
       - run:
           name: Install PW dependencies
           command: |
