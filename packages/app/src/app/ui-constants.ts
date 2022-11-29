@@ -12,3 +12,8 @@ export const titleBarOverlayOpts = {
     height: 32,
   },
 };
+
+// TODO: Update this link to the correct one
+export const metamaskDesktopAboutWebsite = 'https://metamask.io/desktop';
+
+export const protocolKey = 'metamask-desktop';

@@ -27,6 +27,36 @@ function disableDesktop(backgroundConnection) {
   backgroundConnection.disableDesktopError();
 }
 
+function checkCustomProtocol(inProtocol, inInstalLink, inTimeOut) {
+  // Check if Microsoft Edge
+  if (window.navigator.msLaunchUri) {
+    window.navigator.msLaunchUri(
+      inProtocol,
+      function () {
+        // It is launched, no op here
+      },
+      function () {
+        window.location = inInstalLink; // Launch alternative, typically app download.
+      },
+    );
+  } else {
+    let timeout = inTimeOut;
+    // Set up a listener to see if it navigates away from the page.
+    // If so we assume the app is installed already & launched.
+    window.addEventListener('blur', function () {
+      window.clearTimeout(timeout);
+    });
+    // Set a timeout so that if the application does not launch within the timeout we
+    // assume the protocol does not exist
+    timeout = window.setTimeout(function () {
+      console.log('timeout');
+      window.open(inInstalLink, '_blank').focus();
+    }, inTimeOut);
+
+    window.location = inProtocol; // Launch alternative, redirect app download.
+  }
+}
+
 export function downloadDesktopApp() {
   global.platform.openTab({ url: 'https://metamask.io/' });
 }
@@ -37,6 +67,15 @@ export function downloadExtension() {
 
 export function restartExtension() {
   browser.runtime.reload();
+}
+
+export function openOrDownloadMMD() {
+  checkCustomProtocol(
+    'metamask-desktop://pair',
+    // TODO: update this link
+    'https://metamask.io/download.html',
+    500,
+  );
 }
 
 export const setupLocale = memoize(_setupLocale);
@@ -133,6 +172,10 @@ export function registerDesktopErrorActions(backgroundConnection) {
     'desktop-error-button-download-mmd',
   );
 
+  const openOrDownloadMMDButton = document.getElementById(
+    'desktop-error-button-open-or-download-mmd',
+  );
+
   disableDesktopButton?.addEventListener('click', (_) => {
     disableDesktop(backgroundConnection);
   });
@@ -143,5 +186,9 @@ export function registerDesktopErrorActions(backgroundConnection) {
 
   downloadMMDButton?.addEventListener('click', (_) => {
     downloadDesktopApp();
+  });
+
+  openOrDownloadMMDButton?.addEventListener('click', (_) => {
+    openOrDownloadMMD();
   });
 }

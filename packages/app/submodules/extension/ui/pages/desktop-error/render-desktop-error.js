@@ -25,6 +25,7 @@ export function renderDesktopError({
   downloadExtension,
   downloadDesktopApp,
   restartExtension,
+  openOrDownloadDesktopApp,
 }) {
   let content;
 
@@ -84,6 +85,11 @@ export function renderDesktopError({
         <>
           {renderHeader(t('desktopConnectionLostErrorTitle'))}
           {renderDescription(t('desktopConnectionLostErrorDescription'))}
+          {renderCTA(
+            'desktop-error-button-open-or-download-mmd',
+            t('desktopOpenOrDownloadCTA'),
+            openOrDownloadDesktopApp,
+          )}
           {renderCTA(
             'desktop-error-button-disable-mmd',
             t('desktopDisableErrorCTA'),

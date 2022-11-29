@@ -1,6 +1,14 @@
 import { Duplex, EventEmitter } from 'stream';
 import path from 'path';
-import { app, BrowserWindow, ipcMain } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  ipcMain,
+  Tray,
+  Menu,
+  shell,
+  globalShortcut,
+} from 'electron';
 // eslint-disable-next-line @typescript-eslint/no-shadow
 import { Server as WebSocketServer, WebSocket } from 'ws';
 import log from 'loglevel';
@@ -20,9 +28,26 @@ import { MILLISECOND } from '../../submodules/extension/shared/constants/time';
 import cfg from '../utils/config';
 import ExtensionConnection from './extension-connection';
 import { updateCheck } from './update-check';
-import { titleBarOverlayOpts } from './ui-constants';
+import {
+  titleBarOverlayOpts,
+  metamaskDesktopAboutWebsite,
+  protocolKey,
+} from './ui-constants';
 
 const MAIN_WINDOW_SHOW_DELAY = 750 * MILLISECOND;
+
+// Set protocol for deeplinking
+if (!cfg().isTest) {
+  if (process.defaultApp) {
+    if (process.argv.length >= 2) {
+      app?.setAsDefaultProtocolClient(protocolKey, process.execPath, [
+        path.resolve(process.argv[1]),
+      ]);
+    }
+  } else {
+    app?.setAsDefaultProtocolClient(protocolKey);
+  }
+}
 
 class DesktopApp extends EventEmitter {
   private mainWindow?: BrowserWindow;
@@ -35,9 +60,11 @@ class DesktopApp extends EventEmitter {
 
   private status: StatusMessage;
 
+  private forceQuit: boolean;
+
   constructor() {
     super();
-
+    this.forceQuit = false;
     this.status = new Proxy(
       { isWebSocketConnected: false, connections: [] },
       {
@@ -97,6 +124,68 @@ class DesktopApp extends EventEmitter {
 
     this.status.isDesktopEnabled =
       (await getDesktopState()).desktopEnabled === true;
+
+    if (!cfg().isTest) {
+      const gotTheLock = app.requestSingleInstanceLock();
+      if (gotTheLock) {
+        // We wanted to show and focus if the second instance is opened
+        app.on('second-instance', () => {
+          this.showAndFocusMainWindow();
+        });
+
+        // On macOS: when the dock icon is clicked and there are no other windows open
+        app.on('activate', () => {
+          this.showAndFocusMainWindow();
+        });
+
+        // Handle the protocol. In this case, we choose to show an Error Box.
+        app.on('open-url', (_, url) => {
+          if (this.mainWindow) {
+            this.showAndFocusMainWindow();
+            this.mainWindow.webContents.send('url-request', url);
+          }
+        });
+
+        // 'before-quit' is emitted when Electron receives the signal to exit and wants to start closing windows.
+        // This is for "dock right click -> quit" to work
+        app.on('before-quit', () => {
+          this.forceQuit = true;
+        });
+
+        // Handle CMD + Q for MacOS
+        if (process.platform === 'darwin') {
+          globalShortcut.register('Command+Q', () => {
+            this.forceQuit = true;
+            app.quit();
+          });
+        }
+      } else {
+        // This is the second instance, we should quit
+        app.quit();
+      }
+
+      // Do not close the app when the window is closed
+      this.mainWindow?.on('close', (event) => {
+        if (!process.env.DESKTOP_UI_FORCE_CLOSE) {
+          // Check if close emitted from menu
+          if (this.forceQuit) {
+            app.exit(0);
+          } else {
+            event.preventDefault();
+            this.mainWindow?.hide();
+          }
+        }
+      });
+
+      // Create top-left menu for MacOS
+      this.createMenu();
+
+      // Create MacOS dock menu
+      this.createDockMenu();
+
+      // Create Tray icon
+      this.createTray();
+    }
 
     log.debug('Initialised desktop app');
 
@@ -310,6 +399,76 @@ class DesktopApp extends EventEmitter {
     log.debug('Created lattice window');
 
     return latticeWindow;
+  }
+
+  private showAndFocusMainWindow() {
+    if (this.mainWindow) {
+      this.mainWindow.show();
+      this.mainWindow.focus();
+    }
+  }
+
+  private createShowMenuItem() {
+    return {
+      label: 'Show',
+      click: () => {
+        this.showAndFocusMainWindow();
+      },
+    };
+  }
+
+  private createAboutMenuItem() {
+    return {
+      label: 'About MetaMask Desktop',
+      click: async () => {
+        await shell.openExternal(metamaskDesktopAboutWebsite);
+      },
+    };
+  }
+
+  private createQuitMenuItem() {
+    return {
+      label: 'Quit',
+      click: () => {
+        this.forceQuit = true;
+        app.quit();
+      },
+    };
+  }
+
+  private createMenu() {
+    const menuTemplate = [
+      {
+        label: app.name,
+        submenu: [this.createAboutMenuItem(), this.createQuitMenuItem()],
+      },
+    ];
+    const menu = Menu.buildFromTemplate(menuTemplate);
+    Menu.setApplicationMenu(menu);
+  }
+
+  private createDockMenu() {
+    if (process.platform === 'darwin') {
+      const dockMenuTemplate = [this.createAboutMenuItem()];
+      const dockMenu = Menu.buildFromTemplate(dockMenuTemplate);
+      app.dock.setMenu(dockMenu);
+    }
+  }
+
+  private createTray() {
+    const tray = new Tray(
+      path.resolve(__dirname, '../../../ui/icons/icon.png'),
+    );
+    const trayMenuTemplate = [
+      this.createShowMenuItem(),
+      this.createQuitMenuItem(),
+    ];
+    const contextMenu = Menu.buildFromTemplate(trayMenuTemplate);
+    tray.setToolTip('MetaMask Desktop');
+    tray.setContextMenu(contextMenu);
+    tray.on('double-click', () => {
+      this.showAndFocusMainWindow();
+    });
   }
 }
 
