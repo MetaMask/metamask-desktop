@@ -176,6 +176,12 @@ import { SNAP_BLOCKLIST } from './flask/snaps-blocklist';
 import DesktopController from './controllers/desktop';
 ///: END:ONLY_INCLUDE_IN
 
+///: BEGIN:ONLY_INCLUDE_IN(desktopapp,desktopextension)
+import LightNodeController, {
+  LIGHT_NODE_EVENTS,
+} from './controllers/light-node';
+///: END:ONLY_INCLUDE_IN
+
 ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
 import { LedgerBridgeKeyring as LedgerBridgeKeyringDesktop } from '../../../../src/hw/ledger/ledger-keyring';
 import TrezorKeyringDesktop from '../../../../src/hw/trezor/trezor-keyring';
@@ -828,6 +834,12 @@ export default class MetamaskController extends EventEmitter {
     });
     ///: END:ONLY_INCLUDE_IN
 
+    ///: BEGIN:ONLY_INCLUDE_IN(desktopextension,desktopapp)
+    this.lightNodeController = new LightNodeController({
+      initState: initState.LightNodeController,
+    });
+    ///: END:ONLY_INCLUDE_IN
+
     this.detectTokensController = new DetectTokensController({
       preferences: this.preferencesController,
       tokensController: this.tokensController,
@@ -1088,6 +1100,33 @@ export default class MetamaskController extends EventEmitter {
       this.messageManager.clearUnapproved();
     });
 
+    ///: BEGIN:ONLY_INCLUDE_IN(desktopapp,desktopextension)
+    this.lightNodeController.on(
+      LIGHT_NODE_EVENTS.startedSuccessfully,
+      (rpcData) => {
+        this.networkController.setRpcTarget(
+          rpcData.rpcUrl,
+          rpcData.chainId,
+          rpcData.ticker,
+          rpcData.nickname,
+          rpcData.rpcPrefs,
+        );
+        this.preferencesController.updateRpc({
+          rpcUrl: rpcData.rpcUrl,
+          chainId: rpcData.chainId,
+          ticker: rpcData.ticker,
+          nickname: rpcData.nickname,
+          rpcPrefs: rpcData.rpcPrefs,
+        });
+      },
+    );
+
+    this.lightNodeController.on(
+      LIGHT_NODE_EVENTS.stopped,
+      () => { this.networkController.rollbackToPreviousProvider() },
+    );
+    ///: END:ONLY_INCLUDE_IN
+
     // ensure isClientOpenAndUnlocked is updated when memState updates
     this.on('update', (memState) => this._onStateUpdate(memState));
 
@@ -1121,6 +1160,9 @@ export default class MetamaskController extends EventEmitter {
       ///: END:ONLY_INCLUDE_IN
       ///: BEGIN:ONLY_INCLUDE_IN(desktopextension,desktopapp)
       DesktopController: this.desktopController.store,
+      ///: END:ONLY_INCLUDE_IN
+      ///: BEGIN:ONLY_INCLUDE_IN(desktopapp,desktopextension)
+      LightNodeController: this.lightNodeController.store,
       ///: END:ONLY_INCLUDE_IN
     });
 
@@ -1166,6 +1208,9 @@ export default class MetamaskController extends EventEmitter {
         ///: END:ONLY_INCLUDE_IN
         ///: BEGIN:ONLY_INCLUDE_IN(desktopextension,desktopapp)
         DesktopController: this.desktopController.store,
+        ///: END:ONLY_INCLUDE_IN
+        ///: BEGIN:ONLY_INCLUDE_IN(desktopapp,desktopextension)
+        LightNodeController: this.lightNodeController.store,
         ///: END:ONLY_INCLUDE_IN
       },
       controllerMessenger: this.controllerMessenger,
@@ -2060,6 +2105,15 @@ export default class MetamaskController extends EventEmitter {
       ),
       disableDesktop: this.desktopController.disableDesktop.bind(
         this.desktopController,
+      ),
+      ///: END:ONLY_INCLUDE_IN
+
+      ///: BEGIN:ONLY_INCLUDE_IN(desktopapp,desktopextension)
+      startLightNode: this.lightNodeController.start.bind(
+        this.lightNodeController,
+      ),
+      stopLightNode: this.lightNodeController.stop.bind(
+        this.lightNodeController,
       ),
       ///: END:ONLY_INCLUDE_IN
     };

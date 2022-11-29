@@ -1266,6 +1266,16 @@ export function getIsDesktopEnabled(state) {
 }
 
 /**
+ * To get the `lightNodeEnabled` value which determines whether we use the desktop app
+ *
+ * @param {*} state
+ * @returns Boolean
+ */
+ export function getIsLightNodeEnabled(state) {
+  return state.metamask.ligthNodeEnabled;
+}
+
+/**
  * To get the `improvedTokenAllowanceEnabled` value which determines whether we use the improved token allowance
  *
  * @param {*} state

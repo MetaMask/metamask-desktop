@@ -3897,4 +3897,24 @@ export async function disableDesktop() {
   return await submitRequestToBackground('disableDesktop');
 }
 
+export function startLightNode() {
+  return async () => {
+    try {
+      await submitRequestToBackground('startLightNode', ['goerli']);
+    } catch (error) {
+      log.error(error);
+    }
+  };
+}
+
+export function stopLightNode() {
+  return async () => {
+    try {
+      await submitRequestToBackground('stopLightNode');
+    } catch (error) {
+      log.error(error);
+    }
+  };
+}
+
 ///: END:ONLY_INCLUDE_IN

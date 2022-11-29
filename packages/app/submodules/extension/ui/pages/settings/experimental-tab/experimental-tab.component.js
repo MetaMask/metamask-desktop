@@ -8,6 +8,7 @@ import {
 import { EVENT } from '../../../../shared/constants/metametrics';
 ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
 import DesktopEnableButton from '../../../components/app/desktop-enable-button';
+import LightNodeEnableButton from '../../../components/app/light-node-enable-button';
 ///: END:ONLY_INCLUDE_IN
 
 export default class ExperimentalTab extends PureComponent {
@@ -216,6 +217,28 @@ export default class ExperimentalTab extends PureComponent {
   }
   ///: END:ONLY_INCLUDE_IN
 
+
+  ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
+  renderLightNodeEnableButton() {
+    return (
+      <div
+        ref={this.settingsRefs[7]}
+        className="settings-page__content-row"
+        data-testid="advanced-setting-light-node"
+      >
+        <div className="settings-page__content-item">
+          <span>Click to enable light node.</span>
+        </div>
+        <div className="settings-page__content-item">
+          <div className="settings-page__content-item-col">
+            <LightNodeEnableButton />
+          </div>
+        </div>
+      </div>
+    );
+  }
+  ///: END:ONLY_INCLUDE_IN
+
   renderImprovedTokenAllowanceToggle() {
     const { t } = this.context;
     const { improvedTokenAllowanceEnabled, setImprovedTokenAllowanceEnabled } =
@@ -263,6 +286,11 @@ export default class ExperimentalTab extends PureComponent {
         {
           ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
           this.renderDesktopEnableButton()
+          ///: END:ONLY_INCLUDE_IN
+        }
+        {
+          ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
+          this.renderLightNodeEnableButton()
           ///: END:ONLY_INCLUDE_IN
         }
       </div>
