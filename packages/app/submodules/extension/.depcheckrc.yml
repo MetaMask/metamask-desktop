@@ -48,6 +48,8 @@ ignores:
   - 'jest-environment-jsdom'
   - '@babel/cli'
   - 'babel-plugin-transform-inline-environment-variables'
+  # electron
+  - 'electron'
 
 # files depcheck should not parse
 ignorePatterns:
