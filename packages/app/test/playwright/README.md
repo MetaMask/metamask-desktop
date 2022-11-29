@@ -1,24 +1,38 @@
-# Desktop e2e tests
+# Desktop App E2E Tests
 
-## Requirements
+## Setup
 
-0. Have chrome installed.
+1. Install Google Chrome
 
-1. Have generated a desktop app built with env param 
+2. Build the desktop app
 ```
 yarn app build:app:test:ui
 ```
-2. Have generated a desktop UI 
+
+3. Build the desktop app UI 
 ```
 yarn extension build:desktop:ui:ci
 ```
-3. Have generated a MM extension built with env param 
+
+4. Build the extension
 ```
 yarn extension build:test:desktop:ui
 ```
 
-## Run e2e
-On `playwright` folder:
+5. Initialise Playwright
 ```
-yarn test:e2e
+yarn app playwright install
+```
+
+6. Specify the following environment variables in the CLI or in a [.env](../../.env.example) file
+
+| Name | Description
+| --- | --- |
+| `ELECTRON_APP_PATH` | Path to the transpiled Electron app being tested
+| `MMD_PASSWORD` | Password used to secure the extension within the tests
+| `SEED_PHRASE` | Seed phrase used to generate predictable wallet addresses within the tests
+
+## Run
+```
+yarn app test:e2e
 ```

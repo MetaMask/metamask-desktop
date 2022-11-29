@@ -95,6 +95,7 @@ test.describe('Desktop send', () => {
       path: 'test/playwright/test-results/visual/desktop-active.main.png',
       fullPage: true,
     });
+
     await expect(mainWindow.locator('.mmd-pair-status')).toContainText(
       'Active',
     );

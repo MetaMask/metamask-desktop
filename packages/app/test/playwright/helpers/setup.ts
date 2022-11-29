@@ -4,7 +4,11 @@ import * as path from 'path';
 import { test as base, chromium, firefox, webkit } from '@playwright/test';
 import Ganache from './ganache';
 
-const extensionPath = path.join(__dirname, '../../../dist/chrome');
+const extensionPath = path.join(
+  __dirname,
+  '../../../submodules/extension/dist/chrome',
+);
+
 console.log(extensionPath);
 
 const testExtension = base.extend({
@@ -23,9 +27,9 @@ const testExtension = base.extend({
   },
 });
 
-type GanacheWorkerFixtures = {
+interface GanacheWorkerFixtures {
   ganache: Ganache;
-};
+}
 
 const test = testExtension.extend<{}, GanacheWorkerFixtures>({
   ganache: [
