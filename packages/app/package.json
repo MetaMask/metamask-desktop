@@ -8,6 +8,7 @@
     "build:app": "./build/build.sh",
     "build:app:mv3": "ENABLE_MV3=true yarn build:app",
     "build:app:test": "IN_TEST=true SEGMENT_HOST='https://api.segment.io' SEGMENT_WRITE_KEY='FAKE' PHISHING_WARNING_PAGE_URL=http://localhost:9999/ METAMASK_DEBUG=1 yarn build:app",
+    "build:app:test:ui": "UI_TEST=true METAMASK_DEBUG=1 yarn build:app",
     "generate:certificate:win": "@powershell ./build/windows/generate_certificate.ps1",
     "lavamoat": "CI=true yarn build:app && lavamoat dist/app/submodules/extension/app/scripts/background.js --autopolicy --policy lavamoat/node/policy.json --policyOverride lavamoat/node/policy-override.json --includeDevDeps=false",
     "lint": "yarn lint:prettier && yarn lint:eslint && yarn lint:tsc",
@@ -28,7 +29,8 @@
     "start": "electron dist/app/submodules/extension/app/scripts/background.js",
     "start:lavamoat": "electron dist/app/src/app/main.js",
     "start:test": "GLOBAL_AGENT_HTTP_PROXY=http://127.0.0.1:8000 NODE_TLS_REJECT_UNAUTHORIZED=0 yarn start",
-    "test": "jest"
+    "test": "jest",
+    "test:e2e": "npx playwright test"
   },
   "dependencies": {
     "@babel/runtime": "^7.5.5",
@@ -196,6 +198,7 @@
     "@metamask/forwarder": "^1.1.0",
     "@metamask/phishing-warning": "^1.2.1",
     "@metamask/test-dapp": "^5.2.1",
+    "@playwright/test": "1.23.1",
     "@sentry/cli": "^1.58.0",
     "@storybook/addon-a11y": "^6.5.10",
     "@storybook/addon-actions": "^6.5.10",
@@ -253,6 +256,7 @@
     "del": "^3.0.0",
     "depcheck": "^1.4.3",
     "dependency-tree": "^8.1.2",
+    "dotenv": "^16.0.3",
     "duplexify": "^4.1.1",
     "electron": "22.0.0-alpha.1",
     "electron-builder": "^23.3.3",
@@ -310,6 +314,8 @@
     "node-fetch": "^2.6.1",
     "nyc": "^15.0.0",
     "patch-package": "^6.4.7",
+    "playwright": "1.23.1",
+    "playwright-core": "1.23.1",
     "polyfill-crypto.getrandomvalues": "^1.0.0",
     "prettier": "^2.7.1",
     "prettier-plugin-sort-json": "^0.0.1",
@@ -410,7 +416,8 @@
       "ws>utf-8-validate": false,
       "@ledgerhq/hw-transport-node-hid-noevents>node-hid": true,
       "hdkey>secp256k1": false,
-      "@metamask/desktop>eciesjs>secp256k1": false
+      "@metamask/desktop>eciesjs>secp256k1": false,
+      "playwright": false
     }
   }
 }
