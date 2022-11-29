@@ -452,12 +452,15 @@ jobs:
           command: ${YARN_EXTENSION} build:test:desktop:ui
       - run:
           name: Move test build to 'dist-test' to avoid conflict with production build
-          command: mv ./${EXTENSION_DIR}/dist ./${EXTENSION_DIR}/dist-test-desktop
+          command: mv ./${EXTENSION_DIR}/dist ./${APP_DIR}/desktop-test/dist-test-desktop
+      - run:
+          name: Move test build to 'dist-test' to avoid conflict with production build
+          command: mv ./${APP_DIR}/dist ./${APP_DIR}/desktop-test/dist
+
       - persist_to_workspace:
           root: .
           paths:
-            - << pipeline.parameters.app-dir >>/dist
-            - << pipeline.parameters.extension-dir >>/dist-test-desktop
+            - << pipeline.parameters.app-dir >>/desktop-test
 
   prep-build-test-flask:
     executor: node-browsers-medium-plus
@@ -852,8 +855,11 @@ jobs:
           at: .
       - run:
           name: Move test build to dist
-          command: mv ./${EXTENSION_DIR}/dist-test-desktop ./${EXTENSION_DIR}/dist    
-      - run: 
+          command: mv ./${APP_DIR}/desktop-test/dist-test-desktop ./${EXTENSION_DIR}/dist    
+      - run:
+          name: Move test build to dist
+          command: mv ./${APP_DIR}/desktop-test/dist ./${APP_DIR}/dist
+      - run:
           name: Install PW dependencies
           command: |
             cd ./${APP_DIR}
