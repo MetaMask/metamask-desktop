@@ -1049,6 +1049,7 @@ async function getEnvironmentVariables({ buildTarget, buildType, version }) {
     COMPATIBILITY_VERSION_EXTENSION: config.COMPATIBILITY_VERSION_EXTENSION,
     DISABLE_WEB_SOCKET_ENCRYPTION: config.DISABLE_WEB_SOCKET_ENCRYPTION === '1',
     SKIP_OTP_PAIRING_FLOW: config.SKIP_OTP_PAIRING_FLOW === '1',
+    UI_TEST: config.UI_TEST === 'true',
   };
 }
 

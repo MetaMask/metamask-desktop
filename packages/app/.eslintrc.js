@@ -20,6 +20,7 @@ module.exports = {
       rules: {
         '@typescript-eslint/no-shadow': 'off',
         'import/no-unassigned-import': 'off',
+        'jsdoc/require-jsdoc': 'off',
         'spaced-comment': 'off',
       },
     },
@@ -44,6 +45,8 @@ module.exports = {
     'lavamoat',
     'packages',
     'src/hw/ledger/ledger-keyring.*',
+    'test/playwright/chrome/**/*',
+    'test/playwright/playwright-reports/**/*',
     'submodules',
     'types',
   ],

@@ -19,7 +19,8 @@
     "**/*.test.ts",
     "dist/**/*",
     "node_modules/**",
-    "packages/**"
+    "packages/**",
+    "test/playwright/**"
   ],
   "extends": "@tsconfig/node16/tsconfig.json",
   "paths": {

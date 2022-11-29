@@ -55,7 +55,7 @@ class DesktopApp extends EventEmitter {
   }
 
   public async init() {
-    if (cfg().isTest) {
+    if (cfg().isExtensionTest || cfg().isAppTest) {
       app.disableHardwareAcceleration();
     }
 
@@ -85,10 +85,9 @@ class DesktopApp extends EventEmitter {
       win?.setTitleBarOverlay?.(titleBarOverlayOpts[theme]);
     });
 
-    if (!cfg().isTest) {
+    if (!cfg().isExtensionTest) {
       this.mainWindow = await this.createMainWindow();
     }
-
     this.trezorWindow = await this.createTrezorWindow();
     this.latticeWindow = await this.createLatticeWindow();
 

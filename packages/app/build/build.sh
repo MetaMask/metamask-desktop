@@ -39,7 +39,6 @@ if [ -f ".metamaskrc" ]; then
 fi
 
 echo "Transpiling JavaScript"
-
 if [ "$CI" = "true" ]; then
     babel ./ \
         -d ./$OUTPUT_DIR \

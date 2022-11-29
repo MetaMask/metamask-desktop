@@ -30,7 +30,7 @@ const env = process.env.METAMASK_ENV;
 const fetchWithTimeout = getFetchWithTimeout();
 
 let defaultProviderConfigOpts;
-if (process.env.IN_TEST) {
+if (process.env.IN_TEST || process.env.UI_TEST) {
   defaultProviderConfigOpts = {
     type: NETWORK_TYPES.RPC,
     rpcUrl: 'http://localhost:8545',

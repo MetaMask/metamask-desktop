@@ -41,7 +41,7 @@ const loadConfig = () => {
   const port = envInt(process.env.WEB_SOCKET_PORT, 7071);
 
   return {
-    isTest: envBool(process.env.IN_TEST),
+    isExtensionTest: envBool(process.env.IN_TEST),
     mv3: envBool(process.env.ENABLE_MV3),
     skipOtpPairingFlow: envBool(process.env.SKIP_OTP_PAIRING_FLOW),
     compatibilityVersion: {

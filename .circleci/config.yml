@@ -19,6 +19,7 @@ executors:
     docker:
       - image: circleci/node:16-browsers
     environment:
+      APP_DIR: << pipeline.parameters.app-dir >>
       EXTENSION_DIR: << pipeline.parameters.extension-dir >>
       YARN_EXTENSION: << pipeline.parameters.yarn-extension >>
   node-browsers-medium-plus:
@@ -26,6 +27,7 @@ executors:
       - image: circleci/node:16-browsers
     resource_class: medium+
     environment:
+      APP_DIR: << pipeline.parameters.app-dir >>
       EXTENSION_DIR: << pipeline.parameters.extension-dir >>
       NODE_OPTIONS: --max_old_space_size=2048
       YARN_EXTENSION: << pipeline.parameters.yarn-extension >>
@@ -33,7 +35,17 @@ executors:
     docker:
       - image: koalaman/shellcheck-alpine@sha256:dfaf08fab58c158549d3be64fb101c626abc5f16f341b569092577ae207db199
     environment:
+      APP_DIR: << pipeline.parameters.app-dir >>
       EXTENSION_DIR: << pipeline.parameters.extension-dir >>
+      YARN_EXTENSION: << pipeline.parameters.yarn-extension >>
+  playwright:
+    docker:
+      - image: mcr.microsoft.com/playwright:v1.23.1-focal
+    resource_class: large
+    environment:
+      APP_DIR: << pipeline.parameters.app-dir >>
+      EXTENSION_DIR: << pipeline.parameters.extension-dir >>
+      NODE_ENV: development
       YARN_EXTENSION: << pipeline.parameters.yarn-extension >>
 
 workflows:
@@ -64,6 +76,9 @@ workflows:
           requires:
             - prep-deps
       - prep-build:
+          requires:
+            - common-build
+      - prep-e2e-test-desktop-deps:
           requires:
             - common-build
       - prep-build-beta:
@@ -125,6 +140,9 @@ workflows:
       - test-e2e-chrome-desktop-snaps:
           requires:
             - prep-build-test-desktop
+      - test-e2e-desktop-app:
+          requires:
+            - prep-e2e-test-desktop-deps
       - test-unit:
           requires:
             - common-build
@@ -175,6 +193,9 @@ workflows:
             - test-e2e-chrome-desktop-snaps
             - common-test
             - app-test
+            - test-e2e-desktop-app
+            - test-e2e-chrome-desktop-snaps
+            - test-e2e-chrome-desktop
       - benchmark:
           requires:
             - prep-build-test
@@ -416,6 +437,35 @@ jobs:
             - << pipeline.parameters.app-dir >>/dist
             - << pipeline.parameters.extension-dir >>/dist-test-desktop
             - << pipeline.parameters.extension-dir >>/builds-test-desktop
+
+  prep-e2e-test-desktop-deps:
+    executor: node-browsers
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Build desktop app for testing
+          command: yarn app build:app:test:ui
+      - run:
+          name: Build desktop UI for testing
+          command: ${YARN_EXTENSION} build:desktop:ui:ci
+      - run:
+          name: Build extension (no lavamoat) for testing
+          command: ${YARN_EXTENSION} build:test:desktop:ui
+      - run:
+          name: Move extension build to avoid conflict with other builds
+          command: |
+            mkdir -p ./${APP_DIR}/desktop-test
+            mv ./${EXTENSION_DIR}/dist ./${APP_DIR}/desktop-test/extension
+      - run:
+          name: Move app build to avoid conflict with other builds
+          command: mv ./${APP_DIR}/dist ./${APP_DIR}/desktop-test/app
+
+      - persist_to_workspace:
+          root: .
+          paths:
+            - << pipeline.parameters.app-dir >>/desktop-test
 
   prep-build-test-flask:
     executor: node-browsers-medium-plus
@@ -801,6 +851,41 @@ jobs:
       - store_artifacts:
           path: test-artifacts
           destination: test-artifacts
+
+  test-e2e-desktop-app:
+    executor: playwright
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Move extension build
+          command: mv ./${APP_DIR}/desktop-test/extension ./${EXTENSION_DIR}/dist    
+      - run:
+          name: Move app build
+          command: mv ./${APP_DIR}/desktop-test/app ./${APP_DIR}/dist
+      - run:
+          name: Install PW dependencies
+          command: |
+            cd ./${APP_DIR}
+            npx playwright install chrome
+      - run:
+          name: Run e2e desktop command
+          command: |
+            if .circleci/scripts/test-run-e2e.sh
+            then
+              xvfb-run yarn app test:e2e
+            fi
+          no_output_timeout: 20m
+      - store_artifacts:
+          name: html-report and artifacts
+          path: ./<< pipeline.parameters.app-dir >>/test/playwright/playwright-reports/
+      - store_test_results:
+          name: report for pipeline integration
+          path: ./<< pipeline.parameters.app-dir >>/test/playwright/playwright-reports/junit/test-results.xml
+      - store_artifacts:
+          name: screenshots and trace.zip
+          path: ./<< pipeline.parameters.app-dir >>/test/playwright/test-results/
 
   benchmark:
     executor: node-browsers-medium-plus
