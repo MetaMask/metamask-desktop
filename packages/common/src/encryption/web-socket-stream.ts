@@ -14,6 +14,8 @@ import { flattenMessage } from '../utils/utils';
 import * as asymmetricEncryption from './asymmetric';
 import * as symmetricEncryption from './symmetric';
 
+const HANDSHAKE_RESEND_INTERVAL = 5000;
+
 enum HandshakeMode {
   START,
   WAIT,
@@ -156,10 +158,22 @@ export default class EncryptedWebSocketStream extends Duplex {
     let data;
 
     if (!writeOnly) {
+      let resendInterval;
+
+      if (sendFirst) {
+        resendInterval = setInterval(() => {
+          send();
+        }, HANDSHAKE_RESEND_INTERVAL);
+      }
+
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       data = await waitForMessage(this.webSocketStream!, responseFilter, {
         returnFilterOutput: true,
       });
+
+      if (sendFirst && resendInterval) {
+        clearInterval(resendInterval);
+      }
     }
 
     if (!sendFirst) {
