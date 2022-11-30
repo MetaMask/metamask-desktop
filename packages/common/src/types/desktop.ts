@@ -34,5 +34,5 @@ export interface VersionData {
 export enum PairingKeyStatus {
   pairingKeyMatch,
   pairingKeyNotMatch,
-  pairingKeyUndefined
+  pairingKeyUndefined,
 }

@@ -8,7 +8,6 @@ import {
   DesktopState,
   TestConnectionResult,
   ConnectionType,
-  PairingKeyStatus,
 } from '@metamask/desktop/dist/types';
 import {
   BrowserWebSocket,
@@ -60,11 +59,8 @@ class DesktopManager {
     return this.desktopConnection;
   }
 
-  public async isDesktopEnabled(): Promise<boolean> {
-    return (
-      this.desktopState.desktopEnabled === true ||
-      (await RawState.getDesktopState())?.desktopEnabled === true
-    );
+  public isDesktopEnabled(): boolean {
+    return this.desktopState.desktopEnabled === true;
   }
 
   public async createStream(remotePort: any, connectionType: ConnectionType) {
@@ -127,13 +123,10 @@ class DesktopManager {
 
     log.debug('Created web socket connection');
 
-    if (!cfg().skipOtpPairingFlow && (await this.isDesktopEnabled())) {
+    if (!cfg().skipOtpPairingFlow && this.isDesktopEnabled()) {
       log.debug('Desktop enabled, checking pairing key');
 
-      if (
-        (await connection.checkPairingKey()) !==
-        PairingKeyStatus.pairingKeyMatch
-      ) {
+      if (await connection.checkPairingKey()) {
         log.error('Desktop app not recognized');
         webSocket.close();
         throw new Error('Desktop app not recognized');
