@@ -1,3 +1,5 @@
+$otp-height: 142px;
+
 .mmd-pair-page {
   height: 100%;
   display: flex;
@@ -8,11 +10,12 @@
   &__spinner {
     width: 50px;
     margin: 80px 0;
+    height: $otp-height;
   }
 
   &__otp-input {
     width: 72px !important;
-    height: 142px;
+    height: $otp-height;
     background: var(--color-background-default);
     color: var(--color-text-default);
     border: 1px solid var(--color-border-muted);
@@ -36,6 +39,15 @@
 
     &__container {
       margin: 80px 0;
+      position: relative;
+    }
+
+    &__error-message {
+      position: absolute;
+      bottom: -50px;
+      left: 0;
+      right: 0;
+      text-align: center;
     }
   }
 }
