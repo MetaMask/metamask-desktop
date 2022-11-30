@@ -14,11 +14,7 @@ $password = ConvertTo-SecureString `
     -String $password `
     -Force -AsPlainText
 
-New-Item -ItemType Directory `
-    -Path "desktop_packaging/windows" `
-    -Force
-
 Export-PfxCertificate `
     -Cert "Cert:\CurrentUser\My\$($certificate.Thumbprint)" `
-    -FilePath "desktop_packaging/windows/test_certificate.pfx" `
+    -FilePath "build/windows/test_certificate.pfx" `
     -Password $password

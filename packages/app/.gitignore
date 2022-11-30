@@ -5,7 +5,7 @@ node_modules
 # Output
 dist
 packages
-desktop_packaging
+build/windows/*.pfx
 
 # Config
 .metamaskrc
