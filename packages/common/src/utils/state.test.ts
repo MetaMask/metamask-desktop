@@ -51,6 +51,15 @@ describe('Raw State Utils', () => {
           .DesktopController,
       ).toStrictEqual({ desktopEnabled: true });
     });
+
+    it('should set initial desktop state even if browser local storage state does not exists', async () => {
+      browserMock.storage.local.get.mockResolvedValueOnce({});
+
+      expect(
+        (await RawState.getAndUpdateDesktopState({ desktopEnabled: false }))
+          .data.DesktopController,
+      ).toStrictEqual({ desktopEnabled: false });
+    });
   });
 
   describe('setRawState', () => {
