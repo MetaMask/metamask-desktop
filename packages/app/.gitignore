@@ -5,6 +5,7 @@ node_modules
 # Output
 dist
 packages
+build/windows/test_certificate.pfx
 
 # Config
 .metamaskrc
