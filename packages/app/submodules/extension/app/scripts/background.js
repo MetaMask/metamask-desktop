@@ -115,6 +115,9 @@ const overrideCallbacksValidOrigins = {
 };
 ///: END:ONLY_INCLUDE_IN
 
+// Event emitter for state persistence
+export const statePersistenceEvents = new EventEmitter();
+
 /**
  * In case of MV3 we attach a "onConnect" event listener as soon as the application is initialised.
  * Reason is that in case of MV3 a delay in doing this was resulting in missing first connect event after service worker is re-activated.
@@ -385,8 +388,7 @@ export function setupController(
     debounce(1000),
     createStreamSink(async (state) => {
       await localStore.set(state);
-
-      overrides?.transferStateCb?.(state);
+      statePersistenceEvents.emit('state-persisted', state);
     }),
     (error) => {
       log.error('MetaMask - Persistence pipeline failed', error);

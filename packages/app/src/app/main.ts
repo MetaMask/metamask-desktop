@@ -1,9 +1,10 @@
 import './globals';
 import log from 'loglevel';
-import { DesktopState, RemotePort } from '@metamask/desktop/dist/types';
+import { RawState, RemotePort } from '@metamask/desktop/dist/types';
 import {
   loadStateFromPersistence,
   setupController,
+  statePersistenceEvents,
 } from '../../submodules/extension/app/scripts/background';
 import cfg from '../utils/config';
 import DesktopApp from './desktop-app';
@@ -19,16 +20,12 @@ const getFirstPreferredLangCode = () => {
 };
 
 /**
- * Transfers desktop state to the extension.
- *
- * @param state - App state.
- * @param state.DesktopController - Specific desktop controller state.
+ * Register listener that will transfer desktop state to the extension whenever state gets persisted.
  */
-const transferStateCb = (state: {
-  DesktopController: DesktopState;
-  [otherOptions: string]: unknown;
-}) => {
-  DesktopApp.getConnection()?.transferState({ data: state });
+const registerStatePersistenceListener = () => {
+  statePersistenceEvents.on('state-persisted', (state: RawState['data']) => {
+    DesktopApp.getConnection()?.transferState({ data: state });
+  });
 };
 
 const getPortStream = (remotePort: RemotePort) => {
@@ -64,9 +61,9 @@ const registerConnectListeners = (
 const initialize = async () => {
   const initState = await loadStateFromPersistence();
   const initLangCode = await getFirstPreferredLangCode();
+  registerStatePersistenceListener();
 
   await setupController(initState, initLangCode, '', {
-    transferStateCb,
     registerConnectListeners,
     getPortStream,
     getOrigin,
