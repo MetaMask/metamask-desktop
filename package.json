@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "concurrently -n extension,ui,app  \"yarn extension build:desktop:extension\" \"yarn extension build:desktop:ui\"  \"yarn app build:app\"",
-    "build:lavamoat": "concurrently -n extension,ui,app  \"yarn extension build:desktop:extension:lavamoat\" \"yarn extension build:desktop:ui:lavamoat\"  \"yarn app lavamoat\"",
+    "build:lavamoat": "concurrently -n extension,ui,app  \"yarn extension build:desktop:extension:lavamoat\" \"yarn extension build:desktop:ui:lavamoat\"  \"yarn app build:app\"",
     "setup": "yarn && yarn extension setup:postinstall && yarn app setup:postinstall && yarn common build",
     "app": "yarn workspace desktop-app",
     "common": "yarn workspace @metamask/desktop",
