@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import { Server as WebSocketServer } from 'ws';
 import { browser } from '@metamask/desktop/dist/browser';
 import { WebSocketStream } from '@metamask/desktop/dist/web-socket-stream';
@@ -28,6 +28,7 @@ jest.mock('@metamask/desktop/dist/browser', () => ({
 
 jest.mock('@metamask/desktop/dist/utils/state', () => ({
   getDesktopState: jest.fn(),
+  clearRawState: jest.fn(),
 }));
 
 jest.mock('@metamask/desktop/dist/web-socket-stream', () => ({
@@ -71,6 +72,7 @@ describe('Desktop', () => {
   const browserMock = browser as any;
   const pairingMock = createEventEmitterMock();
   const rawStateUtilsMock = RawStateUtils as jest.Mocked<typeof RawStateUtils>;
+  const IPCMainMock = ipcMain as jest.Mocked<any>;
 
   const webSocketStreamConstructorMock = WebSocketStream as jest.MockedClass<
     typeof WebSocketStream
@@ -225,6 +227,26 @@ describe('Desktop', () => {
 
     it('emits restart event', async () => {
       expect(restartEventListener).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('should handle ipcMain', () => {
+    it('reset event', async () => {
+      const restartEventListener = jest.fn();
+      DesktopApp.on('restart', restartEventListener);
+
+      IPCMainMock.handle.mockImplementation(
+        (eventName: string, callback: any) => {
+          if (eventName === 'reset') {
+            callback();
+          }
+        },
+      );
+
+      await DesktopApp.init();
+
+      expect(restartEventListener).toHaveBeenCalledTimes(1);
+      expect(rawStateUtilsMock.clearRawState).toHaveBeenCalledTimes(1);
     });
   });
 });

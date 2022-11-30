@@ -13,16 +13,10 @@ export const getDesktopState = async (): Promise<DesktopState> => {
 export const getAndUpdateDesktopState = async (
   desktopState: DesktopState,
 ): Promise<RawState> => {
-  let state = await getRawState();
-  const currentDesktopState = state?.data?.DesktopController;
+  const state = await getRawState();
+  const currentDesktopState = state.data.DesktopController;
 
-  state = {
-    ...state,
-    data: {
-      ...state?.data,
-      DesktopController: { ...currentDesktopState, ...desktopState },
-    },
-  };
+  state.data.DesktopController = { ...currentDesktopState, ...desktopState };
 
   return state;
 };
