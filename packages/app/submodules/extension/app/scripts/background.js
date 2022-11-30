@@ -402,8 +402,12 @@ export function setupController(
     connectRemote(remoteSourcePort);
   }
 
-  browser.runtime.onConnect.addListener(connectRemote);
-  browser.runtime.onConnectExternal.addListener(connectExternal);
+  if (overrides?.registerConnectListeners) {
+    overrides.registerConnectListeners(connectRemote, connectExternal);
+  } else {
+    browser.runtime.onConnect.addListener(connectRemote);
+    browser.runtime.onConnectExternal.addListener(connectExternal);
+  }
 
   const isClientOpenStatus = () => {
     return (
@@ -488,8 +492,7 @@ export function setupController(
 
     if (isMetaMaskInternalProcess) {
       const portStream =
-        overrides?.getPortStream?.(remotePort) ||
-        new PortStream(remotePort);
+        overrides?.getPortStream?.(remotePort) || new PortStream(remotePort);
 
       // communication with popup
       controller.isClientOpen = true;
@@ -554,8 +557,7 @@ export function setupController(
       senderUrl.pathname === phishingPageUrl.pathname
     ) {
       const portStream =
-        overrides?.getPortStream?.(remotePort) ||
-        new PortStream(remotePort);
+        overrides?.getPortStream?.(remotePort) || new PortStream(remotePort);
 
       controller.setupPhishingCommunication({
         connectionStream: portStream,
@@ -589,8 +591,7 @@ export function setupController(
     ///: END:ONLY_INCLUDE_IN
 
     const portStream =
-      overrides?.getPortStream?.(remotePort) ||
-      new PortStream(remotePort);
+      overrides?.getPortStream?.(remotePort) || new PortStream(remotePort);
 
     controller.setupUntrustedCommunication({
       connectionStream: portStream,
@@ -754,8 +755,6 @@ export function setupController(
     });
   }
   ///: END:ONLY_INCLUDE_IN
-
-  overrides?.registerConnectListeners?.(connectRemote, connectExternal);
 
   return Promise.resolve();
 }
