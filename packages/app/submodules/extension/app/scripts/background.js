@@ -828,7 +828,7 @@ const addAppInstalledEvent = () => {
   }, 1000);
 };
 
-export default function initBackground() {
+function initBackground() {
   if (isManifestV3) {
     browser.runtime.onConnect.addListener(initApp);
   } else {
@@ -857,4 +857,8 @@ function setupSentryGetStateGlobal(store) {
       version: platform.getVersion(),
     };
   };
+}
+
+if (!process.env.SKIP_BACKGROUND_INITIALIZATION) {
+  initBackground();
 }
