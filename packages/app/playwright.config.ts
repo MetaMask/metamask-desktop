@@ -1,7 +1,11 @@
+import path from 'path';
 import { PlaywrightTestConfig } from '@playwright/test';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
-require('dotenv').config();
+require('dotenv').config({
+  path: path.join(process.cwd(), '.env.test.e2e'),
+  override: true,
+});
 
 const PW_ROOT_PATH = './test/playwright';
 
