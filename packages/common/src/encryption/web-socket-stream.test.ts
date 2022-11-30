@@ -25,15 +25,11 @@ jest.mock('../web-socket-stream', () => ({
   WebSocketStream: jest.fn(),
 }));
 
-jest.mock(
-  './asymmetric',
-  () => ({
-    createKeyPair: jest.fn(),
-    decrypt: jest.fn(),
-    encrypt: jest.fn(),
-  }),
-  { virtual: true },
-);
+jest.mock('./asymmetric', () => ({
+  createKeyPair: jest.fn(),
+  decrypt: jest.fn(),
+  encrypt: jest.fn(),
+}));
 
 jest.mock('./symmetric', () => ({
   createKey: jest.fn(),

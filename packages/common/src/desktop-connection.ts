@@ -5,19 +5,17 @@ import endOfStream from 'end-of-stream';
 // @ts-ignore
 import ObjectMultiplex from 'obj-multiplex';
 import log from 'loglevel';
+import { Pairing } from './pairing';
+import { VersionCheck } from './version-check';
+import { uuid } from './utils/utils';
+import { acknowledge, waitForAcknowledge } from './utils/stream';
 import {
-  browser,
-  registerResponseStream,
-} from '@metamask/desktop/dist/browser';
-import {
-  CLIENT_ID_BROWSER_CONTROLLER,
-  CLIENT_ID_END_CONNECTION,
-  CLIENT_ID_NEW_CONNECTION,
-  CLIENT_ID_STATE,
-  CLIENT_ID_DISABLE,
-  CLIENT_ID_VERSION,
-  CLIENT_ID_PAIRING,
-} from '@metamask/desktop/dist/constants';
+  addPairingKeyToRawState,
+  getAndUpdateDesktopState,
+  removePairingKeyFromRawState,
+  setDesktopState,
+  setRawState,
+} from './utils/state';
 import {
   ConnectionType,
   RemotePortData,
@@ -26,22 +24,17 @@ import {
   VersionCheckResult,
   RemotePort,
   PairingKeyStatus,
-} from '@metamask/desktop/dist/types';
+} from './types';
 import {
-  addPairingKeyToRawState,
-  getAndUpdateDesktopState,
-  removePairingKeyFromRawState,
-  setDesktopState,
-  setRawState,
-} from '@metamask/desktop/dist/utils/state';
-import {
-  acknowledge,
-  waitForAcknowledge,
-} from '@metamask/desktop/dist/utils/stream';
-import { VersionCheck } from '@metamask/desktop/dist/version-check';
-import { uuid } from '@metamask/desktop/dist/utils/utils';
-import { ExtensionPairing } from '../shared/pairing';
-import ExtensionPlatform from '../../submodules/extension/app/scripts/platforms/extension';
+  CLIENT_ID_BROWSER_CONTROLLER,
+  CLIENT_ID_END_CONNECTION,
+  CLIENT_ID_NEW_CONNECTION,
+  CLIENT_ID_STATE,
+  CLIENT_ID_DISABLE,
+  CLIENT_ID_VERSION,
+  CLIENT_ID_PAIRING,
+} from './constants';
+import { browser, registerResponseStream } from './browser';
 
 export default class DesktopConnection extends EventEmitter {
   private stream: Duplex;
@@ -58,7 +51,7 @@ export default class DesktopConnection extends EventEmitter {
 
   private versionCheck: VersionCheck;
 
-  private extensionPairing: ExtensionPairing;
+  private extensionPairing: Pairing;
 
   public constructor(stream: Duplex) {
     super();
@@ -83,7 +76,7 @@ export default class DesktopConnection extends EventEmitter {
     this.disableStream.on('data', (data: RawState) => this.onDisable(data));
 
     const pairingStream = this.multiplex.createStream(CLIENT_ID_PAIRING);
-    this.extensionPairing = new ExtensionPairing(pairingStream, () =>
+    this.extensionPairing = new Pairing(pairingStream, () =>
       this.transferState(),
     ).init();
 
@@ -224,6 +217,6 @@ export default class DesktopConnection extends EventEmitter {
   }
 
   private getExtensionVersion(): string {
-    return new ExtensionPlatform().getVersion();
+    return '1.0.0';
   }
 }

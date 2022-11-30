@@ -1,9 +1,15 @@
 import { Duplex } from 'stream';
+import ObjectMultiplex from 'obj-multiplex';
+import { ObservableStore } from '@metamask/obs-store';
 import {
   BrowserWebSocket,
   NodeWebSocket,
   WebSocketStream,
 } from '../src/web-socket-stream';
+import { RemotePort, TestConnectionResult } from '../src/types';
+import { VersionCheck } from '../src/version-check';
+import { Pairing } from '../src/pairing';
+import DesktopConnection from '../src/desktop-connection';
 
 export const PROPERTY_MOCK = 'test';
 export const PROPERTY_2_MOCK = 'test2';
@@ -38,8 +44,23 @@ export const STREAM_MOCK = 'testStream';
 export const TYPE_MOCK = 'testType';
 export const HASH_BUFFER_MOCK = Buffer.from([10, 11, 12]);
 export const HASH_BUFFER_HEX_MOCK = HASH_BUFFER_MOCK.toString('hex');
+export const HASH_BUFFER_2_MOCK = Buffer.from([10, 11, 13]);
+export const HASH_BUFFER_2_HEX_MOCK = HASH_BUFFER_2_MOCK.toString('hex');
 export const OTP_MOCK = '123456';
 export const WRONG_OTP_MOCK = '654321';
+export const REMOTE_PORT_NAME_MOCK = 'testPort';
+export const REMOTE_PORT_SENDER_MOCK = { test2: 'value2' };
+export const JSON_RPC_ID_MOCK = 123456;
+
+export const TEST_CONNECTION_RESULT_MOCK: TestConnectionResult = {
+  isConnected: true,
+  versionCheck: {
+    extensionVersion: '123',
+    desktopVersion: '456',
+    isDesktopVersionValid: true,
+    isExtensionVersionValid: false,
+  },
+};
 
 export const createWebSocketNodeMock = (): jest.Mocked<NodeWebSocket> =>
   ({
@@ -80,3 +101,48 @@ export const createWebSocketStreamMock = (): jest.Mocked<WebSocketStream> =>
     init: jest.fn(),
     removeListener: jest.fn(),
   } as unknown as jest.Mocked<WebSocketStream>);
+
+export const createMultiplexMock = (): jest.Mocked<ObjectMultiplex & Duplex> =>
+  ({
+    ...createStreamMock(),
+    createStream: jest.fn(),
+  } as any);
+
+export const createRemotePortMock = (): jest.Mocked<RemotePort> =>
+  ({
+    name: REMOTE_PORT_NAME_MOCK,
+    sender: REMOTE_PORT_SENDER_MOCK,
+    onMessage: {
+      addListener: jest.fn(),
+    },
+    onDisconnect: {
+      addListener: jest.fn(),
+    },
+  } as unknown as jest.Mocked<RemotePort>);
+
+export const createExtensionVersionCheckMock = (): jest.Mocked<VersionCheck> =>
+  ({ check: jest.fn() } as any);
+
+export const createExtensionPairingMock = (): jest.Mocked<Pairing> =>
+  ({
+    generateOTP: jest.fn(),
+    checkPairingKeyMatch: jest.fn(),
+    init: jest.fn(),
+  } as any);
+
+export const createDesktopConnectionMock = (): jest.Mocked<DesktopConnection> =>
+  ({
+    transferState: jest.fn(),
+    on: jest.fn(),
+    disconnect: jest.fn(),
+    getDesktopVersion: jest.fn(),
+    createStream: jest.fn(),
+    removeAllListeners: jest.fn(),
+    checkPairingKey: jest.fn(),
+  } as any);
+
+export const createObservableStoreMock = (): jest.Mocked<ObservableStore> =>
+  ({
+    getState: jest.fn(),
+    updateState: jest.fn(),
+  } as any);

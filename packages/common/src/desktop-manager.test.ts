@@ -1,15 +1,5 @@
 import { Duplex } from 'stream';
 import PortStream from 'extension-port-stream';
-import { browser } from '@metamask/desktop/dist/browser';
-import {
-  TestConnectionResult,
-  ConnectionType,
-  PairingKeyStatus,
-} from '@metamask/desktop/dist/types';
-import { WebSocketStream } from '@metamask/desktop/dist/web-socket-stream';
-import { cfg } from '@metamask/desktop/dist/utils/config';
-import * as RawState from '@metamask/desktop/dist/utils/state';
-import EncryptedWebSocketStream from '@metamask/desktop/dist/encryption/web-socket-stream';
 import {
   createWebSocketBrowserMock,
   createWebSocketStreamMock,
@@ -18,32 +8,43 @@ import {
   createStreamMock,
   STREAM_MOCK,
   JSON_RPC_ID_MOCK,
-} from '../../test/mocks';
+} from '../test/mocks';
 import {
   simulateBrowserEvent,
   flushPromises,
   simulateStreamMessage,
-} from '../../test/utils';
+} from '../test/utils';
+import { browser } from './browser';
+import {
+  TestConnectionResult,
+  ConnectionType,
+  PairingKeyStatus,
+} from './types';
+import { WebSocketStream } from './web-socket-stream';
+import { cfg } from './utils/config';
+import * as RawState from './utils/state';
+import EncryptedWebSocketStream from './encryption/web-socket-stream';
 import DesktopConnection from './desktop-connection';
 import DesktopManager from './desktop-manager';
 
 jest.mock('extension-port-stream');
-jest.mock('@metamask/desktop/dist/encryption/web-socket-stream');
+jest.mock('./encryption/web-socket-stream');
 jest.mock('./desktop-connection');
 jest.mock('');
+jest.mock('loglevel');
 
-jest.mock('@metamask/desktop/dist/browser', () => ({
+jest.mock('./browser', () => ({
   browser: {
     runtime: { reload: jest.fn() },
   },
 }));
 
-jest.mock('@metamask/desktop/dist/utils/state', () => ({
+jest.mock('./utils/state', () => ({
   getDesktopState: jest.fn(),
   setDesktopState: jest.fn(),
 }));
 
-jest.mock('@metamask/desktop/dist/web-socket-stream', () => ({
+jest.mock('./web-socket-stream', () => ({
   WebSocketStream: jest.fn(),
 }));
 

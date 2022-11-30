@@ -1,21 +1,5 @@
 import { Duplex } from 'stream';
 import ObjectMultiplex from 'obj-multiplex';
-import { browser } from '@metamask/desktop/dist/browser';
-import {
-  CLIENT_ID_END_CONNECTION,
-  CLIENT_ID_NEW_CONNECTION,
-  CLIENT_ID_STATE,
-  CLIENT_ID_DISABLE,
-  MESSAGE_ACKNOWLEDGE,
-} from '@metamask/desktop/dist/constants';
-import {
-  ConnectionType,
-  ClientId,
-  PairingKeyStatus,
-} from '@metamask/desktop/dist/types';
-import * as RawStateUtils from '@metamask/desktop/dist/utils/state';
-import { VersionCheck } from '@metamask/desktop/dist/version-check';
-import { uuid } from '@metamask/desktop/dist/utils/utils';
 import {
   REMOTE_PORT_NAME_MOCK,
   REMOTE_PORT_SENDER_MOCK,
@@ -27,28 +11,33 @@ import {
   createExtensionVersionCheckMock,
   createExtensionPairingMock,
   DATA_2_MOCK,
-} from '../../test/mocks';
+} from '../test/mocks';
 import {
   simulateStreamMessage,
   simulateNodeEvent,
   flushPromises,
-} from '../../test/utils';
-import { ExtensionPairing } from '../shared/pairing';
+} from '../test/utils';
+import { Pairing } from './pairing';
+import { browser } from './browser';
+import {
+  CLIENT_ID_END_CONNECTION,
+  CLIENT_ID_NEW_CONNECTION,
+  CLIENT_ID_STATE,
+  CLIENT_ID_DISABLE,
+  MESSAGE_ACKNOWLEDGE,
+} from './constants';
+import { ConnectionType, ClientId, PairingKeyStatus } from './types';
+import * as RawStateUtils from './utils/state';
+import { VersionCheck } from './version-check';
+import { uuid } from './utils/utils';
 import DesktopConnection from './desktop-connection';
 
-jest.mock('obj-multiplex', () => jest.fn(), { virtual: true });
-jest.mock('extension-port-stream');
+jest.mock('obj-multiplex', () => jest.fn());
 jest.mock('uuid');
-jest.mock('@metamask/desktop/dist/utils/totp');
+jest.mock('./utils/totp');
 
-jest.mock(
-  '../../submodules/extension/app/scripts/platforms/extension',
-  () => ({}),
-  { virtual: true },
-);
-
-jest.mock('@metamask/desktop/dist/browser', () => {
-  const original = jest.requireActual('@metamask/desktop/dist/browser');
+jest.mock('./browser', () => {
+  const original = jest.requireActual('./browser');
   return {
     ...original,
     browser: {
@@ -57,7 +46,7 @@ jest.mock('@metamask/desktop/dist/browser', () => {
   };
 });
 
-jest.mock('@metamask/desktop/dist/utils/state', () => ({
+jest.mock('./utils/state', () => ({
   addPairingKeyToRawState: jest.fn(),
   getAndUpdateDesktopState: jest.fn(),
   removePairingKeyFromRawState: jest.fn(),
@@ -65,36 +54,20 @@ jest.mock('@metamask/desktop/dist/utils/state', () => ({
   setDesktopState: jest.fn(),
 }));
 
-jest.mock(
-  '@metamask/desktop/dist/utils/utils',
-  () => {
-    const original = jest.requireActual('@metamask/desktop/dist/utils/utils');
-    return {
-      uuid: jest.fn(),
-      timeoutPromise: original.timeoutPromise,
-      flattenMessage: original.flattenMessage,
-    };
-  },
-  { virtual: true },
-);
-
-jest.mock(
-  '@metamask/desktop/dist/version-check',
-  () => ({ VersionCheck: jest.fn() }),
-  {
-    virtual: true,
-  },
-);
-
-jest.mock(
-  '../shared/pairing',
-  () => ({ ExtensionPairing: jest.fn(), DesktopPairing: jest.fn() }),
-  { virtual: true },
-);
-
-jest.mock('stream', () => ({ Duplex: jest.fn(), PassThrough: jest.fn() }), {
-  virtual: true,
+jest.mock('./utils/utils', () => {
+  const original = jest.requireActual('./utils/utils');
+  return {
+    uuid: jest.fn(),
+    timeoutPromise: original.timeoutPromise,
+    flattenMessage: original.flattenMessage,
+  };
 });
+
+jest.mock('./version-check', () => ({ VersionCheck: jest.fn() }));
+
+jest.mock('./pairing', () => ({ Pairing: jest.fn() }));
+
+jest.mock('stream', () => ({ Duplex: jest.fn(), PassThrough: jest.fn() }));
 
 describe('Desktop Connection', () => {
   const streamMock = createStreamMock();
@@ -115,8 +88,8 @@ describe('Desktop Connection', () => {
     typeof VersionCheck
   >;
 
-  const extensionPairingConstructorMock = ExtensionPairing as jest.MockedClass<
-    typeof ExtensionPairing
+  const extensionPairingConstructorMock = Pairing as jest.MockedClass<
+    typeof Pairing
   >;
 
   const multiplexStreamMocks: { [clientId: ClientId]: jest.Mocked<Duplex> } =

@@ -10931,6 +10931,15 @@ electron-updater@^5.2.1:
     semver "^7.3.5"
     typed-emitter "^2.1.0"
 
+electron@22.0.0-alpha.1:
+  version "22.0.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-22.0.0-alpha.1.tgz#b6cc0b725ebb09486cd22afaac29ee76d139b518"
+  integrity sha512-UvtzFnILEFwQAmtvZLUtGJnYwqnIjpq2NA8P2yWXzBl729MBOdlntXPUhTzT5hASkwqOS52z4VJ6t/OGNICgvg==
+  dependencies:
+    "@electron/get" "^2.0.0"
+    "@types/node" "^16.11.26"
+    extract-zip "^2.0.1"
+
 electron@^11.1.0:
   version "11.5.0"
   resolved "https://registry.yarnpkg.com/electron/-/electron-11.5.0.tgz#f1650543b9d8f2047d3807755bdb120153ed210f"

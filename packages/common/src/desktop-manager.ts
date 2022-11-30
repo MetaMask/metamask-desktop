@@ -2,26 +2,25 @@ import { Duplex } from 'stream';
 import log from 'loglevel';
 import PortStream from 'extension-port-stream';
 import endOfStream from 'end-of-stream';
-import { browser } from '@metamask/desktop/dist/browser';
-import { cfg } from '@metamask/desktop/dist/utils/config';
+import { browser } from './browser';
+import { cfg } from './utils/config';
 import {
   DesktopState,
   TestConnectionResult,
   ConnectionType,
   PairingKeyStatus,
-} from '@metamask/desktop/dist/types';
-import {
-  BrowserWebSocket,
-  WebSocketStream,
-} from '@metamask/desktop/dist/web-socket-stream';
-import { DuplexCopy } from '@metamask/desktop/dist/utils/stream';
-import * as RawState from '@metamask/desktop/dist/utils/state';
-import EncryptedWebSocketStream from '@metamask/desktop/dist/encryption/web-socket-stream';
-import { timeoutPromise } from '@metamask/desktop/dist/utils/utils';
-import { DESKTOP_HOOK_TYPES } from '../../submodules/extension/shared/constants/desktop';
+} from './types';
+import { BrowserWebSocket, WebSocketStream } from './web-socket-stream';
+import { DuplexCopy } from './utils/stream';
+import * as RawState from './utils/state';
+import EncryptedWebSocketStream from './encryption/web-socket-stream';
+import { timeoutPromise } from './utils/utils';
+import { DESKTOP_HOOK_TYPES } from './constants';
 import DesktopConnection from './desktop-connection';
 
 const TIMEOUT_CONNECT = 10000;
+
+log.setDefaultLevel('debug');
 
 class DesktopManager {
   private desktopConnection?: DesktopConnection;
@@ -101,8 +100,8 @@ class DesktopManager {
       log.debug('Connection test completed');
 
       return { isConnected: true, versionCheck: versionCheckResult };
-    } catch {
-      log.debug('Connection test failed');
+    } catch (error) {
+      log.debug('Connection test failed', error);
       return { isConnected: false };
     }
   }

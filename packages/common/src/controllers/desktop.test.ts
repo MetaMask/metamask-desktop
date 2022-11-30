@@ -1,49 +1,28 @@
 import { ObservableStore } from '@metamask/obs-store';
 import {
-  createExtensionConnectionMock,
   createObservableStoreMock,
   OTP_MOCK,
   TEST_CONNECTION_RESULT_MOCK,
-} from '../../../../../test/mocks';
-import { ExtensionPairing } from '../../../../../src/shared/pairing';
-import DesktopManager from '../../../../../src/extension/desktop-manager';
-import DesktopApp from '../../../../../src/app/desktop-app';
-import DesktopController from './desktop';
+} from '../../test/mocks';
+import {
+  AppLogic,
+  DesktopController,
+  ExtensionLogic,
+  initDesktopControllerAppLogic,
+  initDesktopControllerExtensionLogic,
+} from './desktop';
 
 jest.mock('@metamask/obs-store');
 
-jest.mock(
-  '../../../../../src/app/desktop-app',
-  () => ({ getConnection: jest.fn() }),
-  {
-    virtual: true,
-  },
-);
-
-jest.mock(
-  '../../../../../src/extension/desktop-manager',
-  () => ({ testConnection: jest.fn() }),
-  { virtual: true },
-);
-
-jest.mock('../../../../../src/shared/pairing', () => ({
-  ExtensionPairing: {
-    generateOTP: jest.fn(),
-  },
-}));
-
 describe('Desktop Controller', () => {
   const storeMock = createObservableStoreMock();
-  const extensionPairingMock = ExtensionPairing as any;
-  const extensionConnectionMock = createExtensionConnectionMock();
 
-  // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
-  const desktopAppMock = DesktopApp as jest.Mocked<typeof DesktopApp>;
+  const extensionLogicMock = {
+    generateOTP: jest.fn(),
+    testConnection: jest.fn(),
+  } as jest.Mocked<ExtensionLogic>;
 
-  // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
-  const desktopManagerMock = DesktopManager as jest.Mocked<
-    typeof DesktopManager
-  >;
+  const appLogicMock = { disableDesktop: jest.fn() } as jest.Mocked<AppLogic>;
 
   const observableStoreConstructorMock = ObservableStore as jest.MockedClass<
     typeof ObservableStore
@@ -55,6 +34,9 @@ describe('Desktop Controller', () => {
     jest.resetAllMocks();
 
     observableStoreConstructorMock.mockReturnValue(storeMock);
+
+    initDesktopControllerAppLogic(appLogicMock);
+    initDesktopControllerExtensionLogic(extensionLogicMock);
 
     desktopController = new DesktopController({ initState: {} });
   });
@@ -79,7 +61,7 @@ describe('Desktop Controller', () => {
 
   describe('generateOTP', () => {
     it('returns OTP generated using extension pairing', () => {
-      extensionPairingMock.generateOTP.mockReturnValue(OTP_MOCK);
+      extensionLogicMock.generateOTP.mockReturnValue(OTP_MOCK);
 
       const result = desktopController.generateOtp();
 
@@ -89,7 +71,7 @@ describe('Desktop Controller', () => {
 
   describe('testDesktopConnection', () => {
     it('returns result from desktop manager', async () => {
-      desktopManagerMock.testConnection.mockResolvedValueOnce(
+      extensionLogicMock.testConnection.mockResolvedValueOnce(
         TEST_CONNECTION_RESULT_MOCK,
       );
 
@@ -100,12 +82,9 @@ describe('Desktop Controller', () => {
   });
 
   describe('disableDesktop', () => {
-    it('invokes disable on desktop app connection', async () => {
-      desktopAppMock.getConnection.mockReturnValueOnce(extensionConnectionMock);
-
+    it('invokes method on app logic', async () => {
       await desktopController.disableDesktop();
-
-      expect(extensionConnectionMock.disable).toHaveBeenCalledTimes(1);
+      expect(appLogicMock.disableDesktop).toHaveBeenCalledTimes(1);
     });
   });
 });

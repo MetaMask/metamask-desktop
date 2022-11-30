@@ -11,3 +11,7 @@ export const CONNECTION_TYPE_EXTERNAL = 'EXTERNAL';
 export const MESSAGE_HANDSHAKE_START = 'HSK';
 export const MESSAGE_HANDSHAKE_FINISH = 'DNE';
 export const MESSAGE_ACKNOWLEDGE = 'ACK';
+
+export const DESKTOP_HOOK_TYPES = {
+  DISCONNECT: 'disconnect',
+};
