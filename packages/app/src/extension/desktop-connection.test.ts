@@ -241,9 +241,11 @@ describe('Desktop Connection', () => {
       extensionPairingMock.checkPairingKeyMatch.mockImplementation(
         async () => PairingKeyStatus.pairingKeyMatch,
       );
+
       expect(await desktopConnection.checkPairingKey()).toBe(
         PairingKeyStatus.pairingKeyMatch,
       );
+
       expect(extensionPairingMock.checkPairingKeyMatch).toHaveBeenCalledTimes(
         1,
       );

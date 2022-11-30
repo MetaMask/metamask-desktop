@@ -212,6 +212,7 @@ describe('Desktop Manager', () => {
         rawStateMock.getDesktopState.mockResolvedValueOnce({
           desktopEnabled,
         });
+
         DesktopManager.setState({
           DesktopController: { desktopEnabled },
         });
@@ -299,6 +300,7 @@ describe('Desktop Manager', () => {
       desktopConnectionMock.checkPairingKey.mockResolvedValue(
         PairingKeyStatus.pairingKeyMatch,
       );
+
       rawStateMock.getDesktopState.mockResolvedValueOnce({
         desktopEnabled: true,
       });
