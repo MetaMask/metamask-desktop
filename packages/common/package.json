@@ -6,7 +6,7 @@
   "scripts": {
     "build": "rimraf dist && tsc --build",
     "lint": "yarn lint:prettier && yarn lint:eslint && yarn lint:tsc",
-    "lint:fix": "yarn lint:prettier:fix && yarn lint:eslint:fix && yarn lint:styles:fix",
+    "lint:fix": "yarn lint:prettier:fix && yarn lint:eslint:fix",
     "lint:prettier": "prettier '**/*.json' --check",
     "lint:prettier:fix": "prettier '**/*.json' --write",
     "lint:eslint": "eslint . --ext js,ts --cache",

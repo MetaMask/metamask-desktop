@@ -77,6 +77,7 @@ class DesktopApp extends EventEmitter {
 
     ipcMain.handle('reset', async (_event) => {
       await clearRawState();
+      this.emit('restart');
       this.status.isDesktopEnabled = false;
     });
 
