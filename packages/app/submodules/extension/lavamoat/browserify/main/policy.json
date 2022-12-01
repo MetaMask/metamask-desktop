@@ -5220,13 +5220,24 @@
     "external:../../../common/dist/browser/browser-proxy.js": {
       "packages": {
         "external:../../../common/dist/browser/browser-polyfill.js": true,
-        "external:../../../common/node_modules/loglevel/lib/loglevel.js": true
+        "external:../../../common/dist/utils/log.js": true
       }
     },
     "external:../../../common/dist/browser/index.js": {
       "packages": {
         "external:../../../common/dist/browser/browser-polyfill.js": true,
         "external:../../../common/dist/browser/browser-proxy.js": true
+      }
+    },
+    "external:../../../common/dist/utils/config.js": {
+      "packages": {
+        "browserify>process": true
+      }
+    },
+    "external:../../../common/dist/utils/log.js": {
+      "packages": {
+        "external:../../../common/dist/utils/config.js": true,
+        "external:../../../common/node_modules/loglevel/lib/loglevel.js": true
       }
     },
     "external:../../../common/node_modules/loglevel/lib/loglevel.js": {

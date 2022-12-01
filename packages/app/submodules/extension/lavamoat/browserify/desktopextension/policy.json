@@ -5929,13 +5929,62 @@
     "external:../../../common/dist/browser/browser-proxy.js": {
       "packages": {
         "external:../../../common/dist/browser/browser-polyfill.js": true,
-        "external:../../../common/node_modules/loglevel/lib/loglevel.js": true
+        "external:../../../common/dist/utils/log.js": true
       }
     },
     "external:../../../common/dist/browser/index.js": {
       "packages": {
         "external:../../../common/dist/browser/browser-polyfill.js": true,
         "external:../../../common/dist/browser/browser-proxy.js": true
+      }
+    },
+    "external:../../../common/dist/controllers/desktop.js": {
+      "globals": {
+        "isDesktopApp": true
+      },
+      "packages": {
+        "external:../../../common/dist/controllers/init.js": true,
+        "external:../../../common/node_modules/@metamask/obs-store/dist/index.js": true
+      }
+    },
+    "external:../../../common/dist/controllers/init.js": {
+      "packages": {
+        "external:../../../common/dist/desktop-manager.js": true,
+        "external:../../../common/dist/pairing.js": true
+      }
+    },
+    "external:../../../common/dist/desktop-connection.js": {
+      "packages": {
+        "browserify>events": true,
+        "external:../../../common/dist/browser/index.js": true,
+        "external:../../../common/dist/constants.js": true,
+        "external:../../../common/dist/pairing.js": true,
+        "external:../../../common/dist/utils/log.js": true,
+        "external:../../../common/dist/utils/state.js": true,
+        "external:../../../common/dist/utils/stream.js": true,
+        "external:../../../common/dist/utils/utils.js": true,
+        "external:../../../common/dist/version-check.js": true,
+        "external:../../../common/node_modules/end-of-stream/index.js": true,
+        "external:../../../common/node_modules/obj-multiplex/index.js": true
+      }
+    },
+    "external:../../../common/dist/desktop-manager.js": {
+      "globals": {
+        "WebSocket": true
+      },
+      "packages": {
+        "external:../../../common/dist/browser/index.js": true,
+        "external:../../../common/dist/constants.js": true,
+        "external:../../../common/dist/desktop-connection.js": true,
+        "external:../../../common/dist/encryption/web-socket-stream.js": true,
+        "external:../../../common/dist/utils/config.js": true,
+        "external:../../../common/dist/utils/log.js": true,
+        "external:../../../common/dist/utils/state.js": true,
+        "external:../../../common/dist/utils/stream.js": true,
+        "external:../../../common/dist/utils/utils.js": true,
+        "external:../../../common/dist/web-socket-stream.js": true,
+        "external:../../../common/node_modules/end-of-stream/index.js": true,
+        "external:../../../common/node_modules/extension-port-stream/dist/index.js": true
       }
     },
     "external:../../../common/dist/encryption/asymmetric.js": {
@@ -5967,10 +6016,23 @@
         "external:../../../common/dist/constants.js": true,
         "external:../../../common/dist/encryption/asymmetric.js": true,
         "external:../../../common/dist/encryption/symmetric.js": true,
+        "external:../../../common/dist/utils/log.js": true,
         "external:../../../common/dist/utils/stream.js": true,
         "external:../../../common/dist/utils/utils.js": true,
-        "external:../../../common/dist/web-socket-stream.js": true,
-        "external:../../../common/node_modules/loglevel/lib/loglevel.js": true
+        "external:../../../common/dist/web-socket-stream.js": true
+      }
+    },
+    "external:../../../common/dist/pairing.js": {
+      "packages": {
+        "external:../../../common/dist/browser/index.js": true,
+        "external:../../../common/dist/constants.js": true,
+        "external:../../../common/dist/encryption/symmetric.js": true,
+        "external:../../../common/dist/utils/crypto.js": true,
+        "external:../../../common/dist/utils/log.js": true,
+        "external:../../../common/dist/utils/state.js": true,
+        "external:../../../common/dist/utils/stream.js": true,
+        "external:../../../common/dist/utils/totp.js": true,
+        "external:../../../common/node_modules/obj-multiplex/index.js": true
       }
     },
     "external:../../../common/dist/utils/config.js": {
@@ -5985,6 +6047,12 @@
       },
       "packages": {
         "browserify>buffer": true
+      }
+    },
+    "external:../../../common/dist/utils/log.js": {
+      "packages": {
+        "external:../../../common/dist/utils/config.js": true,
+        "external:../../../common/node_modules/loglevel/lib/loglevel.js": true
       }
     },
     "external:../../../common/dist/utils/state.js": {
@@ -6016,8 +6084,8 @@
     "external:../../../common/dist/version-check.js": {
       "packages": {
         "external:../../../common/dist/utils/config.js": true,
-        "external:../../../common/dist/utils/stream.js": true,
-        "external:../../../common/node_modules/loglevel/lib/loglevel.js": true
+        "external:../../../common/dist/utils/log.js": true,
+        "external:../../../common/dist/utils/stream.js": true
       }
     },
     "external:../../../common/dist/web-socket-stream.js": {
@@ -6026,7 +6094,58 @@
       },
       "packages": {
         "browserify>stream-browserify": true,
-        "external:../../../common/node_modules/loglevel/lib/loglevel.js": true
+        "external:../../../common/dist/utils/log.js": true
+      }
+    },
+    "external:../../../common/node_modules/@metamask/obs-store/dist/ComposedStore.js": {
+      "packages": {
+        "external:../../../common/node_modules/@metamask/obs-store/dist/ObservableStore.js": true
+      }
+    },
+    "external:../../../common/node_modules/@metamask/obs-store/dist/LocalStorageStore.js": {
+      "globals": {
+        "localStorage": true
+      },
+      "packages": {
+        "external:../../../common/node_modules/@metamask/obs-store/dist/ObservableStore.js": true
+      }
+    },
+    "external:../../../common/node_modules/@metamask/obs-store/dist/MergedStore.js": {
+      "packages": {
+        "external:../../../common/node_modules/@metamask/obs-store/dist/ObservableStore.js": true
+      }
+    },
+    "external:../../../common/node_modules/@metamask/obs-store/dist/ObservableStore.js": {
+      "packages": {
+        "external:../../../common/node_modules/@metamask/safe-event-emitter/index.js": true
+      }
+    },
+    "external:../../../common/node_modules/@metamask/obs-store/dist/asStream.js": {
+      "packages": {
+        "browserify>stream-browserify": true
+      }
+    },
+    "external:../../../common/node_modules/@metamask/obs-store/dist/index.js": {
+      "packages": {
+        "external:../../../common/node_modules/@metamask/obs-store/dist/ComposedStore.js": true,
+        "external:../../../common/node_modules/@metamask/obs-store/dist/LocalStorageStore.js": true,
+        "external:../../../common/node_modules/@metamask/obs-store/dist/MergedStore.js": true,
+        "external:../../../common/node_modules/@metamask/obs-store/dist/ObservableStore.js": true,
+        "external:../../../common/node_modules/@metamask/obs-store/dist/asStream.js": true,
+        "external:../../../common/node_modules/@metamask/obs-store/dist/transform.js": true
+      }
+    },
+    "external:../../../common/node_modules/@metamask/obs-store/dist/transform.js": {
+      "packages": {
+        "external:../../../common/node_modules/through2/through2.js": true
+      }
+    },
+    "external:../../../common/node_modules/@metamask/safe-event-emitter/index.js": {
+      "globals": {
+        "setTimeout": true
+      },
+      "packages": {
+        "browserify>events": true
       }
     },
     "external:../../../common/node_modules/bn.js/lib/bn.js": {
@@ -6044,6 +6163,11 @@
       },
       "packages": {
         "browserify>browser-resolve": true
+      }
+    },
+    "external:../../../common/node_modules/core-util-is/lib/util.js": {
+      "packages": {
+        "browserify>insert-module-globals>is-buffer": true
       }
     },
     "external:../../../common/node_modules/eciesjs/dist/index.js": {
@@ -6193,6 +6317,18 @@
         "external:../../../common/node_modules/minimalistic-crypto-utils/lib/utils.js": true
       }
     },
+    "external:../../../common/node_modules/end-of-stream/index.js": {
+      "packages": {
+        "browserify>process": true,
+        "external:../../../common/node_modules/once/once.js": true
+      }
+    },
+    "external:../../../common/node_modules/extension-port-stream/dist/index.js": {
+      "packages": {
+        "browserify>buffer": true,
+        "browserify>stream-browserify": true
+      }
+    },
     "external:../../../common/node_modules/futoin-hkdf/hkdf.js": {
       "packages": {
         "browserify>buffer": true,
@@ -6297,10 +6433,114 @@
         "navigator": true
       }
     },
+    "external:../../../common/node_modules/obj-multiplex/index.js": {
+      "globals": {
+        "console.warn": true
+      },
+      "packages": {
+        "external:../../../common/node_modules/end-of-stream/index.js": true,
+        "external:../../../common/node_modules/once/once.js": true,
+        "external:../../../common/node_modules/readable-stream/readable-browser.js": true
+      }
+    },
+    "external:../../../common/node_modules/once/once.js": {
+      "packages": {
+        "external:../../../common/node_modules/wrappy/wrappy.js": true
+      }
+    },
     "external:../../../common/node_modules/otpauth/dist/otpauth.umd.js": {
       "globals": {
         "__GLOBALTHIS__": true,
         "define": true
+      }
+    },
+    "external:../../../common/node_modules/process-nextick-args/index.js": {
+      "packages": {
+        "browserify>process": true
+      }
+    },
+    "external:../../../common/node_modules/readable-stream/lib/_stream_duplex.js": {
+      "packages": {
+        "external:../../../common/node_modules/core-util-is/lib/util.js": true,
+        "external:../../../common/node_modules/inherits/inherits_browser.js": true,
+        "external:../../../common/node_modules/process-nextick-args/index.js": true,
+        "external:../../../common/node_modules/readable-stream/lib/_stream_readable.js": true,
+        "external:../../../common/node_modules/readable-stream/lib/_stream_writable.js": true
+      }
+    },
+    "external:../../../common/node_modules/readable-stream/lib/_stream_passthrough.js": {
+      "packages": {
+        "external:../../../common/node_modules/core-util-is/lib/util.js": true,
+        "external:../../../common/node_modules/inherits/inherits_browser.js": true,
+        "external:../../../common/node_modules/readable-stream/lib/_stream_transform.js": true
+      }
+    },
+    "external:../../../common/node_modules/readable-stream/lib/_stream_readable.js": {
+      "packages": {
+        "browserify>browser-resolve": true,
+        "browserify>events": true,
+        "browserify>process": true,
+        "external:../../../common/node_modules/core-util-is/lib/util.js": true,
+        "external:../../../common/node_modules/inherits/inherits_browser.js": true,
+        "external:../../../common/node_modules/isarray/index.js": true,
+        "external:../../../common/node_modules/process-nextick-args/index.js": true,
+        "external:../../../common/node_modules/readable-stream/lib/_stream_duplex.js": true,
+        "external:../../../common/node_modules/readable-stream/lib/internal/streams/BufferList.js": true,
+        "external:../../../common/node_modules/readable-stream/lib/internal/streams/destroy.js": true,
+        "external:../../../common/node_modules/readable-stream/lib/internal/streams/stream-browser.js": true,
+        "external:../../../common/node_modules/safe-buffer/index.js": true,
+        "external:../../../common/node_modules/string_decoder/lib/string_decoder.js": true
+      }
+    },
+    "external:../../../common/node_modules/readable-stream/lib/_stream_transform.js": {
+      "packages": {
+        "external:../../../common/node_modules/core-util-is/lib/util.js": true,
+        "external:../../../common/node_modules/inherits/inherits_browser.js": true,
+        "external:../../../common/node_modules/readable-stream/lib/_stream_duplex.js": true
+      }
+    },
+    "external:../../../common/node_modules/readable-stream/lib/_stream_writable.js": {
+      "packages": {
+        "browserify>process": true,
+        "browserify>timers-browserify": true,
+        "external:../../../common/node_modules/core-util-is/lib/util.js": true,
+        "external:../../../common/node_modules/inherits/inherits_browser.js": true,
+        "external:../../../common/node_modules/process-nextick-args/index.js": true,
+        "external:../../../common/node_modules/readable-stream/lib/_stream_duplex.js": true,
+        "external:../../../common/node_modules/readable-stream/lib/internal/streams/destroy.js": true,
+        "external:../../../common/node_modules/readable-stream/lib/internal/streams/stream-browser.js": true,
+        "external:../../../common/node_modules/safe-buffer/index.js": true,
+        "external:../../../common/node_modules/util-deprecate/browser.js": true
+      }
+    },
+    "external:../../../common/node_modules/readable-stream/lib/internal/streams/BufferList.js": {
+      "packages": {
+        "browserify>browser-resolve": true,
+        "external:../../../common/node_modules/safe-buffer/index.js": true
+      }
+    },
+    "external:../../../common/node_modules/readable-stream/lib/internal/streams/destroy.js": {
+      "packages": {
+        "external:../../../common/node_modules/process-nextick-args/index.js": true
+      }
+    },
+    "external:../../../common/node_modules/readable-stream/lib/internal/streams/stream-browser.js": {
+      "packages": {
+        "browserify>events": true
+      }
+    },
+    "external:../../../common/node_modules/readable-stream/readable-browser.js": {
+      "packages": {
+        "external:../../../common/node_modules/readable-stream/lib/_stream_duplex.js": true,
+        "external:../../../common/node_modules/readable-stream/lib/_stream_passthrough.js": true,
+        "external:../../../common/node_modules/readable-stream/lib/_stream_readable.js": true,
+        "external:../../../common/node_modules/readable-stream/lib/_stream_transform.js": true,
+        "external:../../../common/node_modules/readable-stream/lib/_stream_writable.js": true
+      }
+    },
+    "external:../../../common/node_modules/safe-buffer/index.js": {
+      "packages": {
+        "browserify>buffer": true
       }
     },
     "external:../../../common/node_modules/secp256k1/elliptic.js": {
@@ -6312,6 +6552,26 @@
     "external:../../../common/node_modules/secp256k1/lib/elliptic.js": {
       "packages": {
         "external:../../../common/node_modules/elliptic/lib/elliptic.js": true
+      }
+    },
+    "external:../../../common/node_modules/string_decoder/lib/string_decoder.js": {
+      "packages": {
+        "external:../../../common/node_modules/safe-buffer/index.js": true
+      }
+    },
+    "external:../../../common/node_modules/through2/through2.js": {
+      "packages": {
+        "browserify>process": true,
+        "browserify>util": true,
+        "external:../../../common/node_modules/readable-stream/readable-browser.js": true,
+        "external:../../../common/node_modules/xtend/immutable.js": true
+      }
+    },
+    "external:../../../common/node_modules/util-deprecate/browser.js": {
+      "globals": {
+        "console.trace": true,
+        "console.warn": true,
+        "localStorage": true
       }
     },
     "external:../../../common/node_modules/uuid/dist/index.js": {
@@ -6388,195 +6648,9 @@
         "external:../../../common/node_modules/uuid/dist/validate.js": true
       }
     },
-    "external:../../node_modules/core-util-is/lib/util.js": {
-      "packages": {
-        "browserify>insert-module-globals>is-buffer": true
-      }
-    },
-    "external:../../node_modules/end-of-stream/index.js": {
-      "packages": {
-        "browserify>process": true,
-        "external:../../node_modules/once/once.js": true
-      }
-    },
-    "external:../../node_modules/extension-port-stream/dist/index.js": {
-      "packages": {
-        "browserify>buffer": true,
-        "browserify>stream-browserify": true
-      }
-    },
-    "external:../../node_modules/loglevel/lib/loglevel.js": {
-      "globals": {
-        "console": true,
-        "define": true,
-        "document.cookie": true,
-        "localStorage": true,
-        "log": "write",
-        "navigator": true
-      }
-    },
-    "external:../../node_modules/obj-multiplex/index.js": {
-      "globals": {
-        "console.warn": true
-      },
-      "packages": {
-        "external:../../node_modules/end-of-stream/index.js": true,
-        "external:../../node_modules/once/once.js": true,
-        "external:../../node_modules/readable-stream/readable-browser.js": true
-      }
-    },
-    "external:../../node_modules/once/once.js": {
-      "packages": {
-        "external:../../node_modules/wrappy/wrappy.js": true
-      }
-    },
-    "external:../../node_modules/process-nextick-args/index.js": {
-      "packages": {
-        "browserify>process": true
-      }
-    },
-    "external:../../node_modules/readable-stream/lib/_stream_duplex.js": {
-      "packages": {
-        "external:../../node_modules/core-util-is/lib/util.js": true,
-        "external:../../node_modules/inherits/inherits_browser.js": true,
-        "external:../../node_modules/process-nextick-args/index.js": true,
-        "external:../../node_modules/readable-stream/lib/_stream_readable.js": true,
-        "external:../../node_modules/readable-stream/lib/_stream_writable.js": true
-      }
-    },
-    "external:../../node_modules/readable-stream/lib/_stream_passthrough.js": {
-      "packages": {
-        "external:../../node_modules/core-util-is/lib/util.js": true,
-        "external:../../node_modules/inherits/inherits_browser.js": true,
-        "external:../../node_modules/readable-stream/lib/_stream_transform.js": true
-      }
-    },
-    "external:../../node_modules/readable-stream/lib/_stream_readable.js": {
-      "packages": {
-        "browserify>browser-resolve": true,
-        "browserify>events": true,
-        "browserify>process": true,
-        "external:../../node_modules/core-util-is/lib/util.js": true,
-        "external:../../node_modules/inherits/inherits_browser.js": true,
-        "external:../../node_modules/isarray/index.js": true,
-        "external:../../node_modules/process-nextick-args/index.js": true,
-        "external:../../node_modules/readable-stream/lib/_stream_duplex.js": true,
-        "external:../../node_modules/readable-stream/lib/internal/streams/BufferList.js": true,
-        "external:../../node_modules/readable-stream/lib/internal/streams/destroy.js": true,
-        "external:../../node_modules/readable-stream/lib/internal/streams/stream-browser.js": true,
-        "external:../../node_modules/readable-stream/node_modules/safe-buffer/index.js": true,
-        "external:../../node_modules/readable-stream/node_modules/string_decoder/lib/string_decoder.js": true
-      }
-    },
-    "external:../../node_modules/readable-stream/lib/_stream_transform.js": {
-      "packages": {
-        "external:../../node_modules/core-util-is/lib/util.js": true,
-        "external:../../node_modules/inherits/inherits_browser.js": true,
-        "external:../../node_modules/readable-stream/lib/_stream_duplex.js": true
-      }
-    },
-    "external:../../node_modules/readable-stream/lib/_stream_writable.js": {
-      "packages": {
-        "browserify>process": true,
-        "browserify>timers-browserify": true,
-        "external:../../node_modules/core-util-is/lib/util.js": true,
-        "external:../../node_modules/inherits/inherits_browser.js": true,
-        "external:../../node_modules/process-nextick-args/index.js": true,
-        "external:../../node_modules/readable-stream/lib/_stream_duplex.js": true,
-        "external:../../node_modules/readable-stream/lib/internal/streams/destroy.js": true,
-        "external:../../node_modules/readable-stream/lib/internal/streams/stream-browser.js": true,
-        "external:../../node_modules/readable-stream/node_modules/safe-buffer/index.js": true,
-        "external:../../node_modules/util-deprecate/browser.js": true
-      }
-    },
-    "external:../../node_modules/readable-stream/lib/internal/streams/BufferList.js": {
-      "packages": {
-        "browserify>browser-resolve": true,
-        "external:../../node_modules/readable-stream/node_modules/safe-buffer/index.js": true
-      }
-    },
-    "external:../../node_modules/readable-stream/lib/internal/streams/destroy.js": {
-      "packages": {
-        "external:../../node_modules/process-nextick-args/index.js": true
-      }
-    },
-    "external:../../node_modules/readable-stream/lib/internal/streams/stream-browser.js": {
-      "packages": {
-        "browserify>events": true
-      }
-    },
-    "external:../../node_modules/readable-stream/node_modules/safe-buffer/index.js": {
-      "packages": {
-        "browserify>buffer": true
-      }
-    },
-    "external:../../node_modules/readable-stream/node_modules/string_decoder/lib/string_decoder.js": {
-      "packages": {
-        "external:../../node_modules/readable-stream/node_modules/safe-buffer/index.js": true
-      }
-    },
-    "external:../../node_modules/readable-stream/readable-browser.js": {
-      "packages": {
-        "external:../../node_modules/readable-stream/lib/_stream_duplex.js": true,
-        "external:../../node_modules/readable-stream/lib/_stream_passthrough.js": true,
-        "external:../../node_modules/readable-stream/lib/_stream_readable.js": true,
-        "external:../../node_modules/readable-stream/lib/_stream_transform.js": true,
-        "external:../../node_modules/readable-stream/lib/_stream_writable.js": true
-      }
-    },
-    "external:../../node_modules/util-deprecate/browser.js": {
-      "globals": {
-        "console.trace": true,
-        "console.warn": true,
-        "localStorage": true
-      }
-    },
-    "external:../../src/extension/desktop-connection.ts": {
-      "packages": {
-        "$root$": true,
-        "browserify>events": true,
-        "external:../../../common/dist/browser/index.js": true,
-        "external:../../../common/dist/constants.js": true,
-        "external:../../../common/dist/utils/state.js": true,
-        "external:../../../common/dist/utils/stream.js": true,
-        "external:../../../common/dist/utils/utils.js": true,
-        "external:../../../common/dist/version-check.js": true,
-        "external:../../node_modules/end-of-stream/index.js": true,
-        "external:../../node_modules/loglevel/lib/loglevel.js": true,
-        "external:../../node_modules/obj-multiplex/index.js": true,
-        "external:../../src/shared/pairing.ts": true
-      }
-    },
     "external:../../src/extension/desktop-manager.ts": {
       "globals": {
         "WebSocket": true
-      },
-      "packages": {
-        "$root$": true,
-        "external:../../../common/dist/browser/index.js": true,
-        "external:../../../common/dist/encryption/web-socket-stream.js": true,
-        "external:../../../common/dist/utils/config.js": true,
-        "external:../../../common/dist/utils/state.js": true,
-        "external:../../../common/dist/utils/stream.js": true,
-        "external:../../../common/dist/utils/utils.js": true,
-        "external:../../../common/dist/web-socket-stream.js": true,
-        "external:../../node_modules/end-of-stream/index.js": true,
-        "external:../../node_modules/extension-port-stream/dist/index.js": true,
-        "external:../../node_modules/loglevel/lib/loglevel.js": true,
-        "external:../../src/extension/desktop-connection.ts": true
-      }
-    },
-    "external:../../src/shared/pairing.ts": {
-      "packages": {
-        "external:../../../common/dist/browser/index.js": true,
-        "external:../../../common/dist/constants.js": true,
-        "external:../../../common/dist/encryption/symmetric.js": true,
-        "external:../../../common/dist/utils/crypto.js": true,
-        "external:../../../common/dist/utils/state.js": true,
-        "external:../../../common/dist/utils/stream.js": true,
-        "external:../../../common/dist/utils/totp.js": true,
-        "external:../../node_modules/loglevel/lib/loglevel.js": true,
-        "external:../../node_modules/obj-multiplex/index.js": true
       }
     },
     "fast-json-patch": {

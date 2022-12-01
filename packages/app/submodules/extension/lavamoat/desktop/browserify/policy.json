@@ -770,11 +770,6 @@
         "redux": true
       }
     },
-    "remote-redux-devtools>socketcluster-client>sc-channel": {
-      "packages": {
-        "remote-redux-devtools>socketcluster-client>component-emitter": true
-      }
-    },
     "web3": {
       "globals": {
         "XMLHttpRequest": true

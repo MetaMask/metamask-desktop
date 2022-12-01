@@ -1213,10 +1213,12 @@
     },
     "@metamask/desktop": {
       "builtin": {
+        "events": true,
         "stream.Duplex": true
       },
       "globals": {
         "Buffer.from": true,
+        "WebSocket": true,
         "clearInterval": true,
         "clearTimeout": true,
         "crypto.getRandomValues": true,
@@ -1226,20 +1228,58 @@
         "crypto.subtle.exportKey": true,
         "crypto.subtle.generateKey": true,
         "crypto.subtle.importKey": true,
+        "isDesktopApp": true,
         "process.env.COMPATIBILITY_VERSION_EXTENSION": true,
         "process.env.DISABLE_WEB_SOCKET_ENCRYPTION": true,
         "process.env.ENABLE_MV3": true,
         "process.env.IN_TEST": true,
+        "process.env.METAMASK_DEBUG": true,
         "process.env.SKIP_OTP_PAIRING_FLOW": true,
         "process.env.WEB_SOCKET_PORT": true,
         "setInterval": true,
         "setTimeout": true
       },
       "packages": {
+        "@metamask/desktop>@metamask/obs-store": true,
         "@metamask/desktop>eciesjs": true,
+        "@metamask/desktop>end-of-stream": true,
+        "@metamask/desktop>extension-port-stream": true,
         "@metamask/desktop>loglevel": true,
+        "@metamask/desktop>obj-multiplex": true,
         "@metamask/desktop>otpauth": true,
         "@metamask/desktop>uuid": true
+      }
+    },
+    "@metamask/desktop>@metamask/obs-store": {
+      "builtin": {
+        "stream.Duplex": true
+      },
+      "globals": {
+        "localStorage": true
+      },
+      "packages": {
+        "@metamask/desktop>@metamask/obs-store>@metamask/safe-event-emitter": true,
+        "@metamask/desktop>@metamask/obs-store>through2": true
+      }
+    },
+    "@metamask/desktop>@metamask/obs-store>@metamask/safe-event-emitter": {
+      "builtin": {
+        "events.EventEmitter": true
+      },
+      "globals": {
+        "setTimeout": true
+      }
+    },
+    "@metamask/desktop>@metamask/obs-store>through2": {
+      "builtin": {
+        "util.inherits": true
+      },
+      "globals": {
+        "process.nextTick": true
+      },
+      "packages": {
+        "@metamask/desktop>@metamask/obs-store>through2>xtend": true,
+        "@metamask/desktop>obj-multiplex>readable-stream": true
       }
     },
     "@metamask/desktop>eciesjs": {
@@ -1281,9 +1321,9 @@
         "@metamask/desktop>eciesjs>secp256k1>elliptic>brorand": true,
         "@metamask/desktop>eciesjs>secp256k1>elliptic>hash.js": true,
         "@metamask/desktop>eciesjs>secp256k1>elliptic>hmac-drbg": true,
-        "@metamask/desktop>eciesjs>secp256k1>elliptic>inherits": true,
         "@metamask/desktop>eciesjs>secp256k1>elliptic>minimalistic-assert": true,
-        "@metamask/desktop>eciesjs>secp256k1>elliptic>minimalistic-crypto-utils": true
+        "@metamask/desktop>eciesjs>secp256k1>elliptic>minimalistic-crypto-utils": true,
+        "@metamask/desktop>obj-multiplex>readable-stream>inherits": true
       }
     },
     "@metamask/desktop>eciesjs>secp256k1>elliptic>bn.js": {
@@ -1305,8 +1345,8 @@
     },
     "@metamask/desktop>eciesjs>secp256k1>elliptic>hash.js": {
       "packages": {
-        "@metamask/desktop>eciesjs>secp256k1>elliptic>inherits": true,
-        "@metamask/desktop>eciesjs>secp256k1>elliptic>minimalistic-assert": true
+        "@metamask/desktop>eciesjs>secp256k1>elliptic>minimalistic-assert": true,
+        "@metamask/desktop>obj-multiplex>readable-stream>inherits": true
       }
     },
     "@metamask/desktop>eciesjs>secp256k1>elliptic>hmac-drbg": {
@@ -1314,11 +1354,6 @@
         "@metamask/desktop>eciesjs>secp256k1>elliptic>hash.js": true,
         "@metamask/desktop>eciesjs>secp256k1>elliptic>minimalistic-assert": true,
         "@metamask/desktop>eciesjs>secp256k1>elliptic>minimalistic-crypto-utils": true
-      }
-    },
-    "@metamask/desktop>eciesjs>secp256k1>elliptic>inherits": {
-      "builtin": {
-        "util.inherits": true
       }
     },
     "@metamask/desktop>eciesjs>secp256k1>node-gyp-build": {
@@ -1337,6 +1372,23 @@
         "process": true
       }
     },
+    "@metamask/desktop>end-of-stream": {
+      "globals": {
+        "process.nextTick": true
+      },
+      "packages": {
+        "@metamask/desktop>obj-multiplex>once": true
+      }
+    },
+    "@metamask/desktop>extension-port-stream": {
+      "builtin": {
+        "stream.Duplex": true
+      },
+      "globals": {
+        "Buffer.from": true,
+        "Buffer.isBuffer": true
+      }
+    },
     "@metamask/desktop>loglevel": {
       "globals": {
         "console": true,
@@ -1345,6 +1397,75 @@
         "localStorage": true,
         "log": "write",
         "navigator": true
+      }
+    },
+    "@metamask/desktop>obj-multiplex": {
+      "globals": {
+        "console.warn": true
+      },
+      "packages": {
+        "@metamask/desktop>end-of-stream": true,
+        "@metamask/desktop>obj-multiplex>once": true,
+        "@metamask/desktop>obj-multiplex>readable-stream": true
+      }
+    },
+    "@metamask/desktop>obj-multiplex>once": {
+      "packages": {
+        "@metamask/desktop>obj-multiplex>once>wrappy": true
+      }
+    },
+    "@metamask/desktop>obj-multiplex>readable-stream": {
+      "builtin": {
+        "events.EventEmitter": true,
+        "stream": true,
+        "util": true
+      },
+      "globals": {
+        "process.browser": true,
+        "process.env.READABLE_STREAM": true,
+        "process.stderr": true,
+        "process.stdout": true,
+        "process.version.slice": true,
+        "setImmediate": true
+      },
+      "packages": {
+        "@metamask/desktop>obj-multiplex>readable-stream>core-util-is": true,
+        "@metamask/desktop>obj-multiplex>readable-stream>inherits": true,
+        "@metamask/desktop>obj-multiplex>readable-stream>isarray": true,
+        "@metamask/desktop>obj-multiplex>readable-stream>process-nextick-args": true,
+        "@metamask/desktop>obj-multiplex>readable-stream>safe-buffer": true,
+        "@metamask/desktop>obj-multiplex>readable-stream>string_decoder": true,
+        "@metamask/desktop>obj-multiplex>readable-stream>util-deprecate": true
+      }
+    },
+    "@metamask/desktop>obj-multiplex>readable-stream>core-util-is": {
+      "globals": {
+        "Buffer.isBuffer": true
+      }
+    },
+    "@metamask/desktop>obj-multiplex>readable-stream>inherits": {
+      "builtin": {
+        "util.inherits": true
+      }
+    },
+    "@metamask/desktop>obj-multiplex>readable-stream>process-nextick-args": {
+      "globals": {
+        "process": true
+      }
+    },
+    "@metamask/desktop>obj-multiplex>readable-stream>safe-buffer": {
+      "builtin": {
+        "buffer": true
+      }
+    },
+    "@metamask/desktop>obj-multiplex>readable-stream>string_decoder": {
+      "packages": {
+        "@metamask/desktop>obj-multiplex>readable-stream>safe-buffer": true
+      }
+    },
+    "@metamask/desktop>obj-multiplex>readable-stream>util-deprecate": {
+      "builtin": {
+        "util.deprecate": true
       }
     },
     "@metamask/desktop>otpauth": {
