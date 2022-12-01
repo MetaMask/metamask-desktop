@@ -8,6 +8,7 @@ import {
   createStreamMock,
   STREAM_MOCK,
   JSON_RPC_ID_MOCK,
+  VERSION_MOCK,
 } from '../test/mocks';
 import {
   simulateBrowserEvent,
@@ -96,7 +97,7 @@ describe('Desktop Manager', () => {
   const initDesktopManager = async <T>(
     promise?: Promise<T>,
   ): Promise<T | void> => {
-    const initPromise = promise || DesktopManager.init(undefined);
+    const initPromise = promise || DesktopManager.init(undefined, VERSION_MOCK);
 
     await flushPromises();
     await simulateBrowserEvent(webSocketMock, 'open');
@@ -124,7 +125,7 @@ describe('Desktop Manager', () => {
 
   describe('init', () => {
     const init = async (state: any) => {
-      const promise = DesktopManager.init(state);
+      const promise = DesktopManager.init(state, VERSION_MOCK);
       await initDesktopManager(promise);
     };
 
@@ -158,6 +159,7 @@ describe('Desktop Manager', () => {
           expect(desktopConnectionConstructorMock).toHaveBeenCalledTimes(1);
           expect(desktopConnectionConstructorMock).toHaveBeenCalledWith(
             webSocketStreamMock,
+            VERSION_MOCK,
           );
         });
 
@@ -249,7 +251,7 @@ describe('Desktop Manager', () => {
 
   describe('testConnection', () => {
     beforeEach(async () => {
-      await DesktopManager.init(undefined);
+      await DesktopManager.init(undefined, VERSION_MOCK);
     });
 
     const testConnection = async (): Promise<TestConnectionResult> => {
@@ -285,6 +287,7 @@ describe('Desktop Manager', () => {
           expect(desktopConnectionConstructorMock).toHaveBeenCalledTimes(1);
           expect(desktopConnectionConstructorMock).toHaveBeenCalledWith(
             webSocketStreamMock,
+            VERSION_MOCK,
           );
         });
 

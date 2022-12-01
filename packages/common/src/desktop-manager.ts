@@ -1,7 +1,7 @@
 import { Duplex } from 'stream';
-import log from 'loglevel';
 import PortStream from 'extension-port-stream';
 import endOfStream from 'end-of-stream';
+import log from './utils/log';
 import { browser } from './browser';
 import { cfg } from './utils/config';
 import {
@@ -20,18 +20,18 @@ import DesktopConnection from './desktop-connection';
 
 const TIMEOUT_CONNECT = 10000;
 
-log.setDefaultLevel('debug');
-
 class DesktopManager {
   private desktopConnection?: DesktopConnection;
 
   private desktopState: DesktopState;
 
+  private extensionVersion?: string;
+
   public constructor() {
     this.desktopState = {};
   }
 
-  public async init(state: any) {
+  public async init(state: any, extensionVersion: string) {
     if (state?.DesktopController?.desktopEnabled === true) {
       this.desktopConnection = await this.createConnection();
 
@@ -39,6 +39,8 @@ class DesktopManager {
         await this.desktopConnection.transferState();
       }
     }
+
+    this.extensionVersion = extensionVersion;
 
     log.debug('Initialised desktop manager');
   }
@@ -115,7 +117,10 @@ class DesktopManager {
 
     await webSocketStream.init({ startHandshake: true });
 
-    const connection = new DesktopConnection(webSocketStream);
+    const connection = new DesktopConnection(
+      webSocketStream,
+      this.extensionVersion as string,
+    );
 
     webSocket.addEventListener('close', () =>
       this.onDisconnect(webSocket, webSocketStream, connection),

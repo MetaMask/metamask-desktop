@@ -1,4 +1,4 @@
-import log from 'loglevel';
+import log from '../utils/log';
 import { BrowserProxyRequest } from '../types';
 import {
   ARGS_MOCK,

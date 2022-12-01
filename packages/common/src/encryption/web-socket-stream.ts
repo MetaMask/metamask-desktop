@@ -1,5 +1,5 @@
 import { Duplex } from 'stream';
-import log from 'loglevel';
+import log from '../utils/log';
 import {
   MESSAGE_HANDSHAKE_FINISH,
   MESSAGE_HANDSHAKE_START,

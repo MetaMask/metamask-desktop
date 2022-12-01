@@ -195,7 +195,7 @@ async function initialize(remotePort) {
   const initLangCode = await getFirstPreferredLangCode();
 
   ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
-  await DesktopManager.init(initState);
+  await DesktopManager.init(initState, platform.getVersion());
   ///: END:ONLY_INCLUDE_IN
 
   await setupController(initState, initLangCode, remotePort);

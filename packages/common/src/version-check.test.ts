@@ -5,13 +5,12 @@ import { VersionCheck } from './version-check';
 
 describe('Version Check', () => {
   const streamMock = createStreamMock();
-  const getVersionMock = jest.fn();
   let extensionVersionCheck: VersionCheck;
 
   beforeEach(() => {
     jest.resetAllMocks();
 
-    extensionVersionCheck = new VersionCheck(streamMock, getVersionMock);
+    extensionVersionCheck = new VersionCheck(streamMock, VERSION_MOCK);
   });
 
   describe('check', () => {
@@ -38,8 +37,6 @@ describe('Version Check', () => {
     };
 
     it('writes extension version to stream', async () => {
-      getVersionMock.mockReturnValueOnce(VERSION_MOCK);
-
       await check();
 
       expect(streamMock.write).toHaveBeenCalledTimes(1);
@@ -57,8 +54,6 @@ describe('Version Check', () => {
     ])(
       'returns result with extension version %s if %s in response',
       async (_: string, __: string, isExtensionSupported: boolean) => {
-        getVersionMock.mockReturnValueOnce(VERSION_MOCK);
-
         const result = await check({ isExtensionSupported });
 
         expect(result).toStrictEqual({
@@ -82,8 +77,6 @@ describe('Version Check', () => {
         desktopCompatibilityVersion: number,
         isDesktopValid: boolean,
       ) => {
-        getVersionMock.mockReturnValueOnce(VERSION_MOCK);
-
         const result = await check({ desktopCompatibilityVersion });
 
         expect(result).toStrictEqual({

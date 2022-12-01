@@ -1,8 +1,8 @@
 import { Duplex } from 'stream';
-import log from 'loglevel';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import ObjectMultiplex from 'obj-multiplex';
+import log from './utils/log';
 import { MESSAGE_ACKNOWLEDGE } from './constants';
 import { waitForAcknowledge, waitForMessage } from './utils/stream';
 import TOTP from './utils/totp';

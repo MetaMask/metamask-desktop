@@ -4,7 +4,7 @@ import endOfStream from 'end-of-stream';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import ObjectMultiplex from 'obj-multiplex';
-import log from 'loglevel';
+import log from './utils/log';
 import { Pairing } from './pairing';
 import { VersionCheck } from './version-check';
 import { uuid } from './utils/utils';
@@ -53,10 +53,13 @@ export default class DesktopConnection extends EventEmitter {
 
   private extensionPairing: Pairing;
 
-  public constructor(stream: Duplex) {
+  private extensionVersion: string;
+
+  public constructor(stream: Duplex, extensionVersion: string) {
     super();
 
     this.stream = stream;
+    this.extensionVersion = extensionVersion;
     this.multiplex = new ObjectMultiplex();
 
     this.newConnectionStream = this.multiplex.createStream(
@@ -81,9 +84,7 @@ export default class DesktopConnection extends EventEmitter {
     ).init();
 
     const versionStream = this.multiplex.createStream(CLIENT_ID_VERSION);
-    this.versionCheck = new VersionCheck(versionStream, () =>
-      this.getExtensionVersion(),
-    );
+    this.versionCheck = new VersionCheck(versionStream, this.extensionVersion);
 
     const browserControllerStream = this.multiplex.createStream(
       CLIENT_ID_BROWSER_CONTROLLER,
@@ -214,9 +215,5 @@ export default class DesktopConnection extends EventEmitter {
 
   private generateClientId(): ClientId {
     return uuid();
-  }
-
-  private getExtensionVersion(): string {
-    return '1.0.0';
   }
 }

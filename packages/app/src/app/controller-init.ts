@@ -2,7 +2,13 @@ import { initDesktopControllerAppLogic } from '@metamask/desktop/dist/controller
 import DesktopApp from './desktop-app';
 
 const disableDesktop = async () => {
-  DesktopApp.getConnection()?.disable() || Promise.resolve();
+  const connection = DesktopApp.getConnection();
+
+  if (!connection) {
+    return;
+  }
+
+  await connection.disable();
 };
 
 initDesktopControllerAppLogic({

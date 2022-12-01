@@ -1,5 +1,5 @@
 import { Duplex } from 'stream';
-import log from 'loglevel';
+import log from '../utils/log';
 import { BrowserProxyRequest, BrowserProxyResponse } from '../types/browser';
 import { browser } from './browser-polyfill';
 
