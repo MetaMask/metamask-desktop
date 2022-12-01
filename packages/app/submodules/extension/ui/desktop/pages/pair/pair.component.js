@@ -12,6 +12,8 @@ import Typography from '../../../components/ui/typography';
 import {
   FONT_WEIGHT,
   TYPOGRAPHY,
+  COLORS,
+  TEXT_ALIGN,
 } from '../../../helpers/constants/design-system';
 import Mascot from '../../../components/ui/mascot';
 import Spinner from '../../../components/ui/spinner';
@@ -23,7 +25,7 @@ const Pair = ({ isDesktopEnabled, isSuccessfulPairSeen, history }) => {
   const t = useI18nContext();
   const [otp, setOtp] = React.useState('');
   const [isOtpValidating, setOtpValidating] = React.useState(false);
-  const [otpError, setOtpError] = React.useState();
+  const [otpError, setOtpError] = React.useState(false);
   const [isOtpDisabled, setOtpDisabled] = React.useState(false);
   const animationEventEmitter = new EventEmitter();
 
@@ -79,18 +81,30 @@ const Pair = ({ isDesktopEnabled, isSuccessfulPairSeen, history }) => {
           color="var(--color-secondary-default)"
         />
       ) : (
-        <OtpInput
-          isInputNum
-          isDisabled={isOtpDisabled}
-          hasErrored={Boolean(otpError)}
-          value={otp}
-          onChange={handleOTPChange}
-          numInputs={6}
-          inputStyle="mmd-pair-page__otp-input"
-          containerStyle="mmd-pair-page__otp-input__container"
-          disabledStyle="mmd-pair-page__otp-input__disabled"
-          errorStyle="mmd-pair-page__otp-input__error"
-        />
+        <div className="mmd-pair-page__otp-input__container">
+          <OtpInput
+            isInputNum
+            isDisabled={isOtpDisabled}
+            hasErrored={otpError}
+            value={otp}
+            onChange={handleOTPChange}
+            numInputs={6}
+            inputStyle="mmd-pair-page__otp-input"
+            disabledStyle="mmd-pair-page__otp-input__disabled"
+            errorStyle="mmd-pair-page__otp-input__error"
+          />
+          {otpError && (
+            <Typography
+              variant={TYPOGRAPHY.Paragraph}
+              fontSize={14}
+              color={COLORS.ERROR_DEFAULT}
+              align={TEXT_ALIGN.CENTER}
+              className="mmd-pair-page__otp-input__error-message"
+            >
+              {t('invalidOtpCode')}
+            </Typography>
+          )}
+        </div>
       )}
     </div>
   );

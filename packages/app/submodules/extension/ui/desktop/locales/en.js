@@ -143,6 +143,9 @@ const enLocales = {
   allSetFox: {
     message: 'All set, fox',
   },
+  invalidOtpCode: {
+    message: 'Invalid OTP code',
+  },
 };
 
 export default enLocales;
