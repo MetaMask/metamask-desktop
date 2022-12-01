@@ -26,7 +26,10 @@ export const flattenMessage = (data: any) => {
 export const timeoutPromise = <T>(
   promise: Promise<T>,
   timeout: number,
-  errorMessage?: string,
+  options: {
+    errorMessage?: string;
+    cleanUp?: () => void;
+  } = {},
 ): Promise<T> => {
   return new Promise<T>((resolve, reject) => {
     let complete = false;
@@ -34,7 +37,11 @@ export const timeoutPromise = <T>(
     const timeoutInstance = setTimeout(() => {
       complete = true;
 
-      reject(new Error(errorMessage || `Promise timeout after ${timeout}ms`));
+      options.cleanUp?.();
+
+      reject(
+        new Error(options.errorMessage || `Promise timeout after ${timeout}ms`),
+      );
     }, timeout);
 
     promise

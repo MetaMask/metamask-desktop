@@ -16,15 +16,8 @@ import ObfuscatedStore from './storage';
 jest.mock('electron-store', () => jest.fn(), { virtual: true });
 jest.mock('crypto', () => ({ randomBytes: jest.fn() }), { virtual: true });
 jest.mock('loglevel');
-
 jest.mock('path', () => ({ join: jest.fn() }), { virtual: true });
-jest.mock(
-  'fs/promises',
-  () => ({ readFile: jest.fn(), writeFile: jest.fn() }),
-  {
-    virtual: true,
-  },
-);
+jest.mock('fs/promises', () => ({ readFile: jest.fn(), writeFile: jest.fn() }));
 
 jest.mock(
   'electron',

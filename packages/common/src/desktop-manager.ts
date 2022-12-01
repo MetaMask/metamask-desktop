@@ -27,22 +27,14 @@ class DesktopManager {
 
   private extensionVersion?: string;
 
+  private transferredState = false;
+
   public constructor() {
     this.desktopState = {};
   }
 
-  public async init(state: any, extensionVersion: string) {
-    if (state?.DesktopController?.desktopEnabled === true) {
-      this.desktopConnection = await this.createConnection();
-
-      if (!cfg().isExtensionTest) {
-        await this.desktopConnection.transferState();
-      }
-    }
-
+  public async init(extensionVersion: string) {
     this.extensionVersion = extensionVersion;
-
-    log.debug('Initialised desktop manager');
   }
 
   public setState(state: any) {
@@ -115,7 +107,13 @@ class DesktopManager {
       ? new WebSocketStream(webSocket)
       : new EncryptedWebSocketStream(webSocket);
 
-    await webSocketStream.init({ startHandshake: true });
+    try {
+      await webSocketStream.init({ startHandshake: true });
+    } catch (error) {
+      log.error('Failed to initialise web socket stream', error);
+      webSocket.close();
+      throw error;
+    }
 
     const connection = new DesktopConnection(
       webSocketStream,
@@ -132,12 +130,16 @@ class DesktopManager {
       log.debug('Desktop enabled, checking pairing key');
 
       const pairingKeyStatus = await connection.checkPairingKey();
-      if (
-        [PairingKeyStatus.NO_MATCH, PairingKeyStatus.MISSING].includes(
-          pairingKeyStatus,
-        )
-      ) {
-        log.error('Desktop app not recognized');
+
+      if (pairingKeyStatus === PairingKeyStatus.MATCH) {
+        log.debug('Desktop app recognised');
+        connection.setPaired(true);
+
+        if (!this.transferredState) {
+          await connection.transferState();
+          this.transferredState = true;
+        }
+      } else {
         webSocket.close();
         throw new Error('Desktop app not recognized');
       }
@@ -209,11 +211,9 @@ class DesktopManager {
       });
     });
 
-    return timeoutPromise(
-      waitForWebSocketOpen,
-      TIMEOUT_CONNECT,
-      'Timeout connecting to web socket server',
-    );
+    return timeoutPromise(waitForWebSocketOpen, TIMEOUT_CONNECT, {
+      errorMessage: 'Timeout connecting to web socket server',
+    });
   }
 }
 

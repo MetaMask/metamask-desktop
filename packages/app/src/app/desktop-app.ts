@@ -130,7 +130,13 @@ class DesktopApp extends EventEmitter {
       ? new WebSocketStream(webSocket)
       : new EncryptedWebSocketStream(webSocket);
 
-    await webSocketStream.init({ startHandshake: false });
+    try {
+      await webSocketStream.init({ startHandshake: false });
+    } catch (error) {
+      log.error('Failed to initialise web socket stream', error);
+      webSocket.close();
+      return;
+    }
 
     const extensionConnection = new ExtensionConnection(webSocketStream);
 

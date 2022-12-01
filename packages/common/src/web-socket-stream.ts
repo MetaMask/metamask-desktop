@@ -1,6 +1,10 @@
 import { Duplex } from 'stream';
 import { WebSocket as WSWebSocket } from 'ws';
 import log from './utils/log';
+import { timeoutPromise } from './utils/utils';
+
+const INTERVAL_WAIT_FOR_CONNECTED = 500;
+const TIMEOUT_WAIT_FOR_CONNECTED = 3000;
 
 export type BrowserWebSocket = WebSocket;
 export type NodeWebSocket = WSWebSocket;
@@ -41,10 +45,16 @@ export class WebSocketStream extends Duplex {
 
     const rawData = typeof msg === 'string' ? msg : JSON.stringify(msg);
 
-    this.waitForSocketConnection(this.webSocket, () => {
-      this.webSocket.send(rawData);
+    try {
+      await this.waitForSocketConnected(this.webSocket);
+    } catch (error) {
+      log.error('Timeout waiting for web socket to be writable');
       cb();
-    });
+      return;
+    }
+
+    this.webSocket.send(rawData);
+    cb();
   }
 
   private async onMessage(rawData: any) {
@@ -61,17 +71,35 @@ export class WebSocketStream extends Duplex {
     this.push(data);
   }
 
-  private waitForSocketConnection(
+  private async waitForSocketConnected(
     socket: BrowserWebSocket | NodeWebSocket,
-    callback: () => void,
-  ) {
-    if (socket.readyState === 1) {
-      callback();
-      return;
-    }
+  ): Promise<void> {
+    let interval: any;
 
-    setTimeout(() => {
-      this.waitForSocketConnection(socket, callback);
-    }, 500);
+    return timeoutPromise(
+      new Promise<void>((resolve) => {
+        const isReady = () => socket.readyState === 1;
+
+        if (isReady()) {
+          resolve();
+          return;
+        }
+
+        interval = setInterval(() => {
+          if (isReady()) {
+            clearInterval(interval);
+            resolve();
+          }
+        }, INTERVAL_WAIT_FOR_CONNECTED);
+      }),
+      TIMEOUT_WAIT_FOR_CONNECTED,
+      {
+        cleanUp: () => {
+          if (interval) {
+            clearInterval(interval);
+          }
+        },
+      },
+    );
   }
 }

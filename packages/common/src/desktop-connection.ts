@@ -1,4 +1,4 @@
-import { Duplex } from 'stream';
+import { Duplex, Readable } from 'stream';
 import EventEmitter from 'events';
 import endOfStream from 'end-of-stream';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -8,7 +8,11 @@ import log from './utils/log';
 import { Pairing } from './pairing';
 import { VersionCheck } from './version-check';
 import { uuid } from './utils/utils';
-import { acknowledge, waitForAcknowledge } from './utils/stream';
+import {
+  acknowledge,
+  addDataListener,
+  waitForAcknowledge,
+} from './utils/stream';
 import {
   addPairingKeyToRawState,
   getAndUpdateDesktopState,
@@ -55,6 +59,8 @@ export default class DesktopConnection extends EventEmitter {
 
   private extensionVersion: string;
 
+  private paired = false;
+
   public constructor(stream: Duplex, extensionVersion: string) {
     super();
 
@@ -71,12 +77,14 @@ export default class DesktopConnection extends EventEmitter {
     );
 
     this.stateStream = this.multiplex.createStream(CLIENT_ID_STATE);
-    this.stateStream.on('data', (rawState: RawState) =>
-      this.onDesktopState(rawState),
-    );
+    this.addPairedOnlyDataListener(this.stateStream, (data: RawState) => {
+      this.onDesktopState(data);
+    });
 
     this.disableStream = this.multiplex.createStream(CLIENT_ID_DISABLE);
-    this.disableStream.on('data', (data: RawState) => this.onDisable(data));
+    this.addPairedOnlyDataListener(this.disableStream, (data: RawState) =>
+      this.onDisable(data),
+    );
 
     const pairingStream = this.multiplex.createStream(CLIENT_ID_PAIRING);
     this.extensionPairing = new Pairing(pairingStream, () =>
@@ -89,10 +97,13 @@ export default class DesktopConnection extends EventEmitter {
     const browserControllerStream = this.multiplex.createStream(
       CLIENT_ID_BROWSER_CONTROLLER,
     );
-
     registerResponseStream(browserControllerStream);
 
     this.stream.pipe(this.multiplex).pipe(this.stream);
+  }
+
+  public setPaired(isPaired: boolean) {
+    this.paired = isPaired;
   }
 
   /**
@@ -206,6 +217,20 @@ export default class DesktopConnection extends EventEmitter {
     log.debug('Sending new connection message', newConnectionMessage);
 
     this.newConnectionStream.write(newConnectionMessage);
+  }
+
+  private addPairedOnlyDataListener(
+    stream: Readable,
+    listener: (data: any) => void,
+  ) {
+    addDataListener(stream, (data: any) => {
+      if (!this.paired) {
+        log.debug('Ignoring message as not paired');
+        return;
+      }
+
+      listener(data);
+    });
   }
 
   private async restart() {

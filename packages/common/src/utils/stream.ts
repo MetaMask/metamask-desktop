@@ -30,6 +30,19 @@ export const acknowledge = (stream: Writable) => {
   stream.write(MESSAGE_ACKNOWLEDGE);
 };
 
+export const addDataListener = (
+  stream: Readable,
+  listener: (data: any) => void,
+) => {
+  stream.on('data', (data: any) => {
+    if (data === MESSAGE_ACKNOWLEDGE) {
+      return;
+    }
+
+    listener(data);
+  });
+};
+
 export class DuplexCopy extends Duplex {
   private stream: Duplex;
 

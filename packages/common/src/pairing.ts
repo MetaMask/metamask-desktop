@@ -3,8 +3,11 @@ import { Duplex } from 'stream';
 // @ts-ignore
 import ObjectMultiplex from 'obj-multiplex';
 import log from './utils/log';
-import { MESSAGE_ACKNOWLEDGE } from './constants';
-import { waitForAcknowledge, waitForMessage } from './utils/stream';
+import {
+  addDataListener,
+  waitForAcknowledge,
+  waitForMessage,
+} from './utils/stream';
 import TOTP from './utils/totp';
 import { createKey } from './encryption/symmetric';
 import { hashString } from './utils/crypto';
@@ -40,12 +43,8 @@ export class Pairing {
   }
 
   public init() {
-    this.requestStream.on('data', (data: PairingRequestMessage | string) => {
-      if (data === MESSAGE_ACKNOWLEDGE) {
-        return;
-      }
-
-      this.onRequestMessage(data as PairingRequestMessage);
+    addDataListener(this.requestStream, (data: any) => {
+      this.onRequestMessage(data);
     });
 
     return this;
