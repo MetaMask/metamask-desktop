@@ -59,6 +59,3 @@ test-results/
 
 # Metamask Desktop packaging configuration
 .apprc
-
-# Test Windows signing certificate for desktop app
-desktop_packaging/windows/test_certificate.pfx

@@ -135,7 +135,7 @@ export default class AppHeader extends PureComponent {
 
           {
             ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
-            desktopEnabled && (
+            desktopEnabled && process.env.METAMASK_DEBUG && (
               <MetaFoxLogo unsetIconHeight src="./images/logo/desktop.svg" />
             )
             ///: END:ONLY_INCLUDE_IN

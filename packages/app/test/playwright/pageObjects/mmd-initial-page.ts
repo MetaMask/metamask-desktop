@@ -52,10 +52,20 @@ export class MMDInitialPage {
   }
 
   async hasDesktopEnabled() {
-    // NOTE: Assumes that transaction is the first one on the activity list
-    await expect(this.page.locator('.app-header__logo-container')).toHaveCount(
-      2,
+    await this.openExperimentalTab();
+    await expect(this.page.locator('text="Disable Desktop App"')).toHaveCount(
+      1,
     );
+    this.page.locator('text="Disable Desktop App"').click();
+    await this.page
+      .locator('.settings-page__header__title-container__close-button')
+      .click();
+  }
+
+  async openExperimentalTab() {
+    await this.page.locator('data-testid=account-menu-icon').click();
+    await this.page.locator('text="Settings"').click();
+    await this.page.locator('text="Experimental"').click();
   }
 
   async getCustodianTXId() {
