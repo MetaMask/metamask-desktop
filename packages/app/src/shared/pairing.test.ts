@@ -163,17 +163,13 @@ describe('Pairing', () => {
           pairingKey: STRING_DATA_MOCK,
         });
 
-        expect(await pairingKeyStatusPromise).toBe(
-          PairingKeyStatus.pairingKeyMatch,
-        );
+        expect(await pairingKeyStatusPromise).toBe(PairingKeyStatus.MATCH);
       });
 
       it('returns pairingKeyNotMatch is desktop responds with no pairing key', async () => {
         const pairingKeyStatusPromise = extensionPairing.checkPairingKeyMatch();
         await simulateStreamMessage(keyStreamMock, {});
-        expect(await pairingKeyStatusPromise).toBe(
-          PairingKeyStatus.pairingKeyUndefined,
-        );
+        expect(await pairingKeyStatusPromise).toBe(PairingKeyStatus.MISSING);
       });
 
       it('returns pairingKeyNotMatch is desktop responds with pairing key not matching extension hash', async () => {
@@ -189,9 +185,7 @@ describe('Pairing', () => {
           pairingKey: STRING_DATA_MOCK,
         });
 
-        expect(await pairingKeyStatusPromise).toBe(
-          PairingKeyStatus.pairingKeyNotMatch,
-        );
+        expect(await pairingKeyStatusPromise).toBe(PairingKeyStatus.NO_MATCH);
       });
     });
   });

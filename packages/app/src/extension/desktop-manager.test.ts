@@ -187,7 +187,7 @@ describe('Desktop Manager', () => {
 
     it('creates connection if desktop state enabled and no existing connection', async () => {
       desktopConnectionMock.checkPairingKey.mockResolvedValue(
-        PairingKeyStatus.pairingKeyMatch,
+        PairingKeyStatus.MATCH,
       );
       DesktopManager.setState({ DesktopController: { desktopEnabled: true } });
 
@@ -298,7 +298,7 @@ describe('Desktop Manager', () => {
   describe('on disconnect', () => {
     beforeEach(async () => {
       desktopConnectionMock.checkPairingKey.mockResolvedValue(
-        PairingKeyStatus.pairingKeyMatch,
+        PairingKeyStatus.MATCH,
       );
 
       rawStateMock.getDesktopState.mockResolvedValueOnce({

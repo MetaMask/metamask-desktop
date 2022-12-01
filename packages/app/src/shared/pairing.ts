@@ -89,7 +89,7 @@ export class ExtensionPairing {
 
     if (!desktopPairingKey) {
       log.debug('Desktop has no pairing key');
-      return PairingKeyStatus.pairingKeyUndefined;
+      return PairingKeyStatus.MISSING;
     }
 
     const desktopPairingKeyHash = await hashString(desktopPairingKey, {
@@ -104,9 +104,9 @@ export class ExtensionPairing {
     log.debug('Completed pairing key check', isMatch);
 
     if (isMatch) {
-      return PairingKeyStatus.pairingKeyMatch;
+      return PairingKeyStatus.MATCH;
     }
-    return PairingKeyStatus.pairingKeyNotMatch;
+    return PairingKeyStatus.NO_MATCH;
   }
 
   private async onRequestMessage(pairingRequest: PairingRequestMessage) {

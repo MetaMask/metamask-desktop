@@ -32,7 +32,7 @@ export interface VersionData {
 }
 
 export enum PairingKeyStatus {
-  pairingKeyMatch,
-  pairingKeyNotMatch,
-  pairingKeyUndefined,
+  MATCH = 'MATCH',
+  NO_MATCH = 'NO_MATCH',
+  MISSING = 'MISSING',
 }
