@@ -126,22 +126,23 @@ class DesktopManager {
 
     log.debug('Created web socket connection');
 
-    if (!cfg().skipOtpPairingFlow && this.isDesktopEnabled()) {
-      log.debug('Desktop enabled, checking pairing key');
-
-      const pairingKeyStatus = await connection.checkPairingKey();
-
-      if (pairingKeyStatus === PairingKeyStatus.MATCH) {
-        log.debug('Desktop app recognised');
-        connection.setPaired(true);
-
-        if (!this.transferredState) {
-          await connection.transferState();
-          this.transferredState = true;
-        }
+    if (this.isDesktopEnabled()) {
+      if (cfg().skipOtpPairingFlow) {
+        await this.transferState(connection);
       } else {
-        webSocket.close();
-        throw new Error('Desktop app not recognized');
+        log.debug('Desktop enabled, checking pairing key');
+
+        const pairingKeyStatus = await connection.checkPairingKey();
+
+        if (pairingKeyStatus === PairingKeyStatus.MATCH) {
+          log.debug('Desktop app recognised');
+
+          connection.setPaired(true);
+          await this.transferState(connection);
+        } else {
+          webSocket.close();
+          throw new Error('Desktop app not recognized');
+        }
       }
     }
 
@@ -188,6 +189,16 @@ class DesktopManager {
         data: { jsonrpc: '2.0', result: true, id },
       });
     }
+  }
+
+  private async transferState(connection: DesktopConnection) {
+    if (this.transferredState) {
+      return;
+    }
+
+    await connection.transferState();
+
+    this.transferredState = true;
   }
 
   private async disable() {
