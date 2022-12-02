@@ -20,6 +20,9 @@ import DesktopConnection from './desktop-connection';
 
 const TIMEOUT_CONNECT = 10000;
 
+const PAIRING_KEY_NOT_MATCH_ERROR_REASON = 'Desktop app is not recognized';
+const PAIRING_KEY_NOT_MATCH_ERROR_CODE = 4000;
+
 class DesktopManager {
   private desktopConnection?: DesktopConnection;
 
@@ -94,9 +97,16 @@ class DesktopManager {
       log.debug('Connection test completed');
 
       return { isConnected: true, versionCheck: versionCheckResult };
-    } catch (error) {
+    } catch (error: any) {
+      let testConnectionResult: TestConnectionResult = { isConnected: false };
+      if (error?.message === PAIRING_KEY_NOT_MATCH_ERROR_REASON) {
+        testConnectionResult = {
+          ...testConnectionResult,
+          pairingKeyCheck: PairingKeyStatus.NO_MATCH,
+        };
+      }
       log.debug('Connection test failed', error);
-      return { isConnected: false };
+      return testConnectionResult;
     }
   }
 
@@ -120,9 +130,9 @@ class DesktopManager {
       this.extensionVersion as string,
     );
 
-    webSocket.addEventListener('close', () =>
-      this.onDisconnect(webSocket, webSocketStream, connection),
-    );
+    webSocket.addEventListener('close', (event: CloseEvent) => {
+      this.onDisconnect(webSocket, webSocketStream, connection, event.code);
+    });
 
     log.debug('Created web socket connection');
 
@@ -135,14 +145,16 @@ class DesktopManager {
       log.debug('Desktop enabled, checking pairing key');
 
       const pairingKeyStatus = await connection.checkPairingKey();
+      if ([PairingKeyStatus.NO_MATCH].includes(pairingKeyStatus)) {
+        log.error(
+          'The pairing key does not match, desktop app is not recognized',
+        );
 
-      if (
-        [PairingKeyStatus.NO_MATCH, PairingKeyStatus.MISSING].includes(
-          pairingKeyStatus,
-        )
-      ) {
-        webSocket.close();
-        throw new Error('Desktop app not recognized');
+        webSocket.close(
+          PAIRING_KEY_NOT_MATCH_ERROR_CODE,
+          PAIRING_KEY_NOT_MATCH_ERROR_REASON,
+        );
+        throw new Error(PAIRING_KEY_NOT_MATCH_ERROR_REASON);
       }
 
       log.debug('Desktop app recognised');
@@ -160,6 +172,7 @@ class DesktopManager {
     webSocket: BrowserWebSocket,
     stream: Duplex,
     connection: DesktopConnection,
+    closeEventCode: number,
   ) {
     log.debug('Desktop connection disconnected');
 
@@ -175,9 +188,12 @@ class DesktopManager {
     }
 
     // Emit event to extension UI to show connection lost error
-    await browser?.runtime?.sendMessage?.({
-      type: DESKTOP_HOOK_TYPES.DISCONNECT,
-    });
+    // if close reason is not due "Desktop app is not recognized"
+    if (closeEventCode !== PAIRING_KEY_NOT_MATCH_ERROR_CODE) {
+      await browser?.runtime?.sendMessage?.({
+        type: DESKTOP_HOOK_TYPES.DISCONNECT,
+      });
+    }
   }
 
   private async onUIMessage(data: any, stream: Duplex) {

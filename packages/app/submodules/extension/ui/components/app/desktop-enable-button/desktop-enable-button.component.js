@@ -32,6 +32,10 @@ export default function DesktopEnableButton() {
   const setDesktopEnabled = (val) => dispatch(setDesktopEnabledAction(val));
   const restart = () => dispatch(browser.runtime.reload());
 
+  const isPairingKeyPresent = (result) => {
+    return Boolean(result.pairingKeyCheck);
+  };
+
   const onClick = async () => {
     if (desktopEnabled) {
       await disableDesktop();
@@ -43,17 +47,23 @@ export default function DesktopEnableButton() {
     const testResult = await testDesktopConnection();
     hideLoader();
 
-    if (!testResult.isConnected) {
+    if (!testResult.isConnected && !isPairingKeyPresent(testResult)) {
       history.push(DESKTOP_ERROR_NOT_FOUND_ROUTE);
       return;
     }
 
-    if (!testResult.versionCheck.isExtensionVersionValid) {
+    if (
+      !testResult.versionCheck?.isExtensionVersionValid &&
+      !isPairingKeyPresent(testResult)
+    ) {
       history.push(DESKTOP_ERROR_EXTENSION_OUTDATED_ROUTE);
       return;
     }
 
-    if (!testResult.versionCheck.isDesktopVersionValid) {
+    if (
+      !testResult.versionCheck?.isDesktopVersionValid &&
+      !isPairingKeyPresent(testResult)
+    ) {
       history.push(DESKTOP_ERROR_DESKTOP_OUTDATED_ROUTE);
       return;
     }
