@@ -27,33 +27,23 @@ function disableDesktop(backgroundConnection) {
   backgroundConnection.disableDesktopError();
 }
 
-function checkCustomProtocol(protocolLink, installLink, timeout) {
-  // Check if Microsoft Edge
-  if (window.navigator.msLaunchUri) {
-    window.navigator.msLaunchUri(
-      protocolLink,
-      function () {
-        // It is launched, no op here
-      },
-      function () {
-        window.location = installLink; // Launch alternative, typically app download.
-      },
-    );
-  } else {
-    let timeoutId = timeout;
-    // Set up a listener to see if it navigates away from the page.
-    // If so we assume the app is installed already & launched.
-    window.addEventListener('blur', function () {
-      window.clearTimeout(timeoutId);
-    });
-    // Set a timeout so that if the application does not launch within the timeout we
-    // assume the protocol does not exist
-    timeoutId = window.setTimeout(function () {
-      window.open(installLink, '_blank').focus();
-    }, timeout);
-
-    window.location = protocolLink; // Launch alternative, redirect app download.
-  }
+function openCustomProtocol(protocolLink) {
+  return new Promise((resolve, reject) => {
+    if (window.navigator.msLaunchUri) {
+      window.navigator.msLaunchUri(protocolLink, resolve, () => {
+        reject(new Error('Failed to open custom protocol link'));
+      });
+    } else {
+      const timeoutId = window.setTimeout(function () {
+        reject(new Error('Timeout opening custom protocol link'));
+      }, 500);
+      window.addEventListener('blur', function () {
+        window.clearTimeout(timeoutId);
+        resolve();
+      });
+      window.location = protocolLink;
+    }
+  });
 }
 
 export function downloadDesktopApp() {
@@ -69,12 +59,9 @@ export function restartExtension() {
 }
 
 export function openOrDownloadMMD() {
-  checkCustomProtocol(
-    'metamask-desktop://pair',
-    // TODO: update this link
-    'https://metamask.io/download.html',
-    500,
-  );
+  openCustomProtocol('metamask-desktop://pair').catch(() => {
+    window.open('https://metamask.io/download.html', '_blank').focus();
+  });
 }
 
 export const setupLocale = memoize(_setupLocale);
