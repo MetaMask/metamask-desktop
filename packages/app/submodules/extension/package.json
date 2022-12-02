@@ -320,6 +320,7 @@
     "depcheck": "^1.4.3",
     "dependency-tree": "^8.1.2",
     "duplexify": "^4.1.1",
+    "electron": "22.0.0-alpha.1",
     "electron-notarize": "^1.2.1",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.15.1",

@@ -1,36 +1,101 @@
 import './globals';
-import path from 'path';
-import { app } from 'electron';
-import { runLava } from 'lavamoat';
+import log from 'loglevel';
+import { RawState, RemotePort } from '@metamask/desktop/dist/types';
+import {
+  loadStateFromPersistence,
+  setupController,
+  statePersistenceEvents,
+} from '../../submodules/extension/app/scripts/background';
+import cfg from '../utils/config';
+import DesktopApp from './desktop-app';
 
-let appPath = process.cwd();
-const policyRelativePath = '/lavamoat/node/';
+/**
+ * TODO
+ * Gets user the preferred language code.
+ *
+ * @returns The laguange code to be used for the app localisation. Defaults to 'en'.
+ */
+const getFirstPreferredLangCode = () => {
+  return 'en';
+};
 
-if (app.isPackaged) {
-  appPath = app.getAppPath();
-}
+/**
+ * Register listener that will transfer desktop state to the extension whenever state gets persisted.
+ */
+const registerStatePersistenceListener = () => {
+  statePersistenceEvents.on('state-persisted', (state: RawState['data']) => {
+    DesktopApp.getConnection()?.transferState({ data: state });
+  });
+};
 
-const entryPath = path.join(
-  appPath,
-  '/dist/app/submodules/extension/app/scripts/background.js',
-);
+const getPortStream = (remotePort: RemotePort) => {
+  return remotePort.stream;
+};
 
-const policyPath = path.join(appPath, policyRelativePath, 'policy.json');
-const policyOverridePath = path.join(
-  appPath,
-  policyRelativePath,
-  'policy-override.json',
-);
+const getOrigin = () => {
+  return 'DESKTOP_APP';
+};
 
-runLava({
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  entryPath,
-  policyPath,
-  policyOverridePath,
-  projectRoot: appPath,
-  includeDevDeps: false,
-}).catch((err: Error) => {
-  // explicity log stack to workaround https://github.com/endojs/endo/issues/944
-  console.error(err.stack || err);
-  process.exit(1);
-});
+/**
+ * Register Desktop App specific extension connect listeners.
+ *
+ * @param connectRemote - A remotePort object for internal connections.
+ * @param connectExternal - A remotePort object for external connections.
+ */
+const registerConnectListeners = (
+  connectRemote: (remotePort: RemotePort) => void,
+  connectExternal: (remotePort: RemotePort) => void,
+) => {
+  DesktopApp.on('connect-remote', (connectRequest) => {
+    connectRemote(connectRequest);
+  });
+
+  DesktopApp.on('connect-external', (connectRequest) => {
+    connectExternal(connectRequest);
+  });
+};
+
+/**
+ * Initialize the wallet logic.
+ */
+const initialize = async () => {
+  const initState = await loadStateFromPersistence();
+  const initLangCode = await getFirstPreferredLangCode();
+  registerStatePersistenceListener();
+
+  await setupController(initState, initLangCode, '', {
+    registerConnectListeners,
+    getPortStream,
+    getOrigin,
+  });
+
+  log.info('MetaMask initialization complete.');
+};
+
+/**
+ * Sets desktop listeners to re initialize the wallet logic
+ * whenever the desktop app is restarted.
+ *
+ * @param desktopApp - Desktop app singleton.
+ */
+const onDesktopRestart = async (desktopApp: typeof DesktopApp) => {
+  if (cfg().isExtensionTest) {
+    return;
+  }
+
+  desktopApp.removeAllListeners();
+  desktopApp.on('restart', () => onDesktopRestart(desktopApp));
+
+  log.debug('Re-initializing background script');
+  await initialize();
+};
+
+/**
+ * Initialize desktop app.
+ */
+const initDesktopApp = async () => {
+  await DesktopApp.init();
+  DesktopApp.on('restart', () => onDesktopRestart(DesktopApp));
+};
+
+initDesktopApp().then(initialize).catch(log.error);

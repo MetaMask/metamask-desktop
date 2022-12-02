@@ -31,6 +31,9 @@ echo "Phishing Warning Page URL: $PHISHING_WARNING_PAGE_URL"
 PACKAGE_VERSION=$(npm pkg get version | grep -Eo "[0-9.]+")
 echo "Package Version: ${PACKAGE_VERSION}"
 
+SKIP_BACKGROUND_INITIALIZATION='true'
+echo "Skipping background.js initialization: ${SKIP_BACKGROUND_INITIALIZATION}"
+
 # Add variables from .metamaskrc
 # shellcheck disable=SC2046
 if [ -f ".metamaskrc" ]; then
