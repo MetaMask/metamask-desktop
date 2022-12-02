@@ -37,7 +37,7 @@ import {
 const MAIN_WINDOW_SHOW_DELAY = 750 * MILLISECOND;
 
 // Set protocol for deeplinking
-if (!cfg().isTest) {
+if (!cfg().isUnitTest) {
   if (process.defaultApp) {
     if (process.argv.length >= 2) {
       app?.setAsDefaultProtocolClient(protocolKey, process.execPath, [
@@ -125,7 +125,7 @@ class DesktopApp extends EventEmitter {
     this.status.isDesktopEnabled =
       (await getDesktopState()).desktopEnabled === true;
 
-    if (!cfg().isTest) {
+    if (!cfg().isUnitTest) {
       const gotTheLock = app.requestSingleInstanceLock();
       if (gotTheLock) {
         // We wanted to show and focus if the second instance is opened
