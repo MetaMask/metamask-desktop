@@ -196,7 +196,9 @@ class DesktopManager {
       return;
     }
 
-    await connection.transferState();
+    if (!cfg().isExtensionTest) {
+      await connection.transferState();
+    }
 
     this.transferredState = true;
   }
