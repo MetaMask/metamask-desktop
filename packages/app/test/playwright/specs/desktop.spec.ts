@@ -1,5 +1,5 @@
+import fs from 'fs';
 import { Page, BrowserContext, expect } from '@playwright/test';
-
 import { _electron as electron } from 'playwright';
 import test from '../helpers/setup';
 import { ChromeExtensionPage } from '../pageObjects/mmd-extension-page';
@@ -24,14 +24,14 @@ async function signUpFlow(page: Page, context: BrowserContext) {
   return extensionId;
 }
 
-const enableDesktopAppFlow = async (page: Page) => {
+const enableDesktopAppFlow = async (page: Page): Promise<string> => {
   // Setup testnetwork in settings
   const mainMenuPage = new MMDMainMenuPage(page);
   await mainMenuPage.selectSettings();
   await mainMenuPage.selectSettingsAdvance();
   await mainMenuPage.showTestNetworkOn();
   await mainMenuPage.showIncomingTransactionsOff();
-  await mainMenuPage.enableDesktopApp();
+  return await mainMenuPage.enableDesktopApp();
 };
 
 test.describe('Desktop send', () => {
@@ -40,12 +40,13 @@ test.describe('Desktop send', () => {
     context,
   }) => {
     // Delete config.json to have the same initial setup every run
-    // unlink(process.env.ELECTRON_CONFIG_PATH as string, (err) => {
-    //   if (err) {
-    //     throw err;
-    //   }
-    //   console.log(`${process.env.ELECTRON_CONFIG_PATH} was deleted`);
-    // });
+    await fs.unlink(process.env.ELECTRON_CONFIG_PATH as string, (err) => {
+      if (err) {
+        console.error('there was an error:', err.message);
+      } else {
+        console.log(`${process.env.ELECTRON_CONFIG_PATH} was deleted`);
+      }
+    });
 
     const electronApp = await electron.launch({
       args: [process.env.ELECTRON_APP_PATH as string],
@@ -80,7 +81,23 @@ test.describe('Desktop send', () => {
 
     const initialFlow = await context.newPage();
     const extensionId = await signUpFlow(initialFlow, context);
-    await enableDesktopAppFlow(initialFlow);
+    const optPairingKey = await enableDesktopAppFlow(initialFlow);
+
+    // Input the opt pairing key
+    for (const [index, element] of optPairingKey.split('').entries()) {
+      if (index === 0) {
+        await mainWindow
+          .locator('[aria-label="Please enter verification code. Digit 1"]')
+          .type(element);
+      } else {
+        await mainWindow
+          .locator(`[aria-label="Digit ${index + 1}"]`)
+          .type(element);
+      }
+    }
+
+    //
+    await new Promise((resolve) => setTimeout(resolve, 5000));
 
     await mainWindow.screenshot({
       path: 'test/playwright/test-results/visual/desktop-all-set.main.png',
@@ -117,5 +134,9 @@ test.describe('Desktop send', () => {
     await initialPage.checkLastTransactionStatus(date);
 
     await electronApp.close();
+    await page.screenshot({
+      path: 'test/playwright/test-results/visual/extension-error-desktop-disconnected.main.png',
+      fullPage: true,
+    });
   });
 });
