@@ -1269,6 +1269,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/desktop>eciesjs>secp256k1>elliptic": true,
         "@metamask/desktop>eciesjs>secp256k1>node-gyp-build": true
@@ -4135,6 +4136,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "hdkey>secp256k1>elliptic": true,
         "lavamoat>node-gyp-build": true
@@ -4644,6 +4646,7 @@
         "Buffer.isBuffer": true,
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>blake-hash>readable-stream": true,
         "lavamoat>node-gyp-build": true
@@ -4838,6 +4841,7 @@
         "Buffer.isBuffer": true,
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "ethereumjs-util>ethereum-cryptography>keccak>readable-stream": true,
         "lavamoat>node-gyp-build": true
@@ -4883,6 +4887,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "hdkey>secp256k1>elliptic": true,
         "lavamoat>node-gyp-build": true
@@ -6729,6 +6734,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "hdkey>secp256k1>elliptic": true,
         "lavamoat>node-gyp-build": true
