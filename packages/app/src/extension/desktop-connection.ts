@@ -25,6 +25,7 @@ import {
   RawState,
   VersionCheckResult,
   RemotePort,
+  PairingKeyStatus,
 } from '@metamask/desktop/dist/types';
 import {
   addPairingKeyToRawState,
@@ -144,8 +145,8 @@ export default class DesktopConnection extends EventEmitter {
     return await this.versionCheck.check();
   }
 
-  public async checkPairingKey(): Promise<boolean> {
-    return await this.extensionPairing.isPairingKeyMatch();
+  public async checkPairingKey(): Promise<PairingKeyStatus> {
+    return await this.extensionPairing.checkPairingKeyMatch();
   }
 
   private async onDisable(state: RawState) {
@@ -158,6 +159,7 @@ export default class DesktopConnection extends EventEmitter {
       await setDesktopState({
         desktopEnabled: false,
         pairingKey: undefined,
+        pairingKeyHash: undefined,
       });
       log.debug('Disabled desktop mode');
     }

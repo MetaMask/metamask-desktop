@@ -4,6 +4,7 @@ import { browser } from '@metamask/desktop/dist/browser';
 import {
   TestConnectionResult,
   ConnectionType,
+  PairingKeyStatus,
 } from '@metamask/desktop/dist/types';
 import { WebSocketStream } from '@metamask/desktop/dist/web-socket-stream';
 import { cfg } from '@metamask/desktop/dist/utils/config';
@@ -185,7 +186,9 @@ describe('Desktop Manager', () => {
     });
 
     it('creates connection if desktop state enabled and no existing connection', async () => {
-      desktopConnectionMock.checkPairingKey.mockResolvedValue(true);
+      desktopConnectionMock.checkPairingKey.mockResolvedValue(
+        PairingKeyStatus.MATCH,
+      );
       DesktopManager.setState({ DesktopController: { desktopEnabled: true } });
 
       expect(await initDesktopManager(DesktopManager.getConnection())).toBe(
@@ -206,6 +209,10 @@ describe('Desktop Manager', () => {
     it.each([{ desktopEnabled: true }, { desktopEnabled: false }])(
       'returns $desktopEnabled if desktop state contains desktop enabled as $desktopEnabled',
       async ({ desktopEnabled }) => {
+        rawStateMock.getDesktopState.mockResolvedValueOnce({
+          desktopEnabled,
+        });
+
         DesktopManager.setState({
           DesktopController: { desktopEnabled },
         });
@@ -290,7 +297,10 @@ describe('Desktop Manager', () => {
 
   describe('on disconnect', () => {
     beforeEach(async () => {
-      desktopConnectionMock.checkPairingKey.mockResolvedValue(true);
+      desktopConnectionMock.checkPairingKey.mockResolvedValue(
+        PairingKeyStatus.MATCH,
+      );
+
       rawStateMock.getDesktopState.mockResolvedValueOnce({
         desktopEnabled: true,
       });

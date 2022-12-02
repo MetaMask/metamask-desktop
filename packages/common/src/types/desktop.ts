@@ -23,9 +23,16 @@ export interface VersionCheckResult {
 export interface TestConnectionResult {
   isConnected: boolean;
   versionCheck?: VersionCheckResult;
+  pairingKeyCheck?: PairingKeyStatus;
 }
 
 export interface VersionData {
   version: string;
   compatibilityVersion: number;
+}
+
+export enum PairingKeyStatus {
+  MATCH = 'MATCH',
+  NO_MATCH = 'NO_MATCH',
+  MISSING = 'MISSING',
 }

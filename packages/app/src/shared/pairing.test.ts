@@ -5,6 +5,7 @@ import * as RawState from '@metamask/desktop/dist/utils/state';
 import TOTP from '@metamask/desktop/dist/utils/totp';
 import * as encryption from '@metamask/desktop/dist/encryption/symmetric';
 import { hashString } from '@metamask/desktop/dist/utils/crypto';
+import { PairingKeyStatus } from '@metamask/desktop/dist/types';
 import {
   createMultiplexMock,
   createStreamMock,
@@ -138,9 +139,9 @@ describe('Pairing', () => {
       });
     });
 
-    describe('isPairingKeyMatch', () => {
+    describe('checkPairingKeyMatch', () => {
       it('sends request message to desktop', async () => {
-        extensionPairing.isPairingKeyMatch();
+        extensionPairing.checkPairingKeyMatch();
         await simulateStreamMessage(keyStreamMock, {});
 
         expect(keyStreamMock.write).toHaveBeenCalledTimes(1);
@@ -149,8 +150,8 @@ describe('Pairing', () => {
         });
       });
 
-      it('returns true is desktop responds with pairing key matching extension hash', async () => {
-        const isMatchPromise = extensionPairing.isPairingKeyMatch();
+      it('returns pairingKeyMatch is desktop responds with pairing key matching extension hash', async () => {
+        const pairingKeyStatusPromise = extensionPairing.checkPairingKeyMatch();
 
         hashStringMock.mockResolvedValueOnce(HASH_BUFFER_HEX_MOCK);
 
@@ -162,17 +163,17 @@ describe('Pairing', () => {
           pairingKey: STRING_DATA_MOCK,
         });
 
-        expect(await isMatchPromise).toBe(true);
+        expect(await pairingKeyStatusPromise).toBe(PairingKeyStatus.MATCH);
       });
 
-      it('returns false is desktop responds with no pairing key', async () => {
-        const isMatchPromise = extensionPairing.isPairingKeyMatch();
+      it('returns pairingKeyNotMatch is desktop responds with no pairing key', async () => {
+        const pairingKeyStatusPromise = extensionPairing.checkPairingKeyMatch();
         await simulateStreamMessage(keyStreamMock, {});
-        expect(await isMatchPromise).toBe(false);
+        expect(await pairingKeyStatusPromise).toBe(PairingKeyStatus.MISSING);
       });
 
-      it('returns false is desktop responds with pairing key not matching extension hash', async () => {
-        const isMatchPromise = extensionPairing.isPairingKeyMatch();
+      it('returns pairingKeyNotMatch is desktop responds with pairing key not matching extension hash', async () => {
+        const pairingKeyStatusPromise = extensionPairing.checkPairingKeyMatch();
 
         hashStringMock.mockResolvedValueOnce(HASH_BUFFER_HEX_MOCK);
 
@@ -184,7 +185,7 @@ describe('Pairing', () => {
           pairingKey: STRING_DATA_MOCK,
         });
 
-        expect(await isMatchPromise).toBe(false);
+        expect(await pairingKeyStatusPromise).toBe(PairingKeyStatus.NO_MATCH);
       });
     });
   });

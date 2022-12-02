@@ -8,6 +8,7 @@ import {
   DesktopState,
   TestConnectionResult,
   ConnectionType,
+  PairingKeyStatus,
 } from '@metamask/desktop/dist/types';
 import {
   BrowserWebSocket,
@@ -126,7 +127,13 @@ class DesktopManager {
     if (!cfg().skipOtpPairingFlow && this.isDesktopEnabled()) {
       log.debug('Desktop enabled, checking pairing key');
 
-      if (!(await connection.checkPairingKey())) {
+      const pairingKeyStatus = await connection.checkPairingKey();
+      if (
+        [PairingKeyStatus.NO_MATCH, PairingKeyStatus.MISSING].includes(
+          pairingKeyStatus,
+        )
+      ) {
+        log.error('Desktop app not recognized');
         webSocket.close();
         throw new Error('Desktop app not recognized');
       }
@@ -183,6 +190,7 @@ class DesktopManager {
     await RawState.setDesktopState({
       desktopEnabled: false,
       pairingKey: undefined,
+      pairingKeyHash: undefined,
     });
 
     browser.runtime.reload();
