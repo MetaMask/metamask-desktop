@@ -13,7 +13,6 @@ const loadConfig = () => {
     isExtensionTest: envBool(process.env.IN_TEST),
     isAppTest: envBool(process.env.UI_TEST),
     isUnitTest: envStringMatch(process.env.NODE_ENV, 'test'),
-    mv3: envBool(process.env.ENABLE_MV3),
     skipOtpPairingFlow: envBool(process.env.SKIP_OTP_PAIRING_FLOW),
     compatibilityVersion: {
       desktop: envInt(process.env.COMPATIBILITY_VERSION_DESKTOP, 1),

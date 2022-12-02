@@ -658,16 +658,12 @@ export function setupController(
       label = String(count);
     }
     // browserAction has been replaced by action in MV3
-    if (isManifestV3) {
+    if (isManifestV3 || process.env.ENABLE_MV3) {
       browser.action.setBadgeText({ text: label });
       browser.action.setBadgeBackgroundColor({ color: '#037DD6' });
     } else {
       browser.browserAction.setBadgeText({ text: label });
       browser.browserAction.setBadgeBackgroundColor({ color: '#037DD6' });
-      ///: BEGIN:EXCLUDE_IN(desktopapp)
-      browser.action.setBadgeText({ text: label });
-      browser.action.setBadgeBackgroundColor({ color: '#037DD6' });
-      ///: END:EXCLUDE_IN
     }
   }
 

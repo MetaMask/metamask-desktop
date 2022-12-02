@@ -43,7 +43,6 @@ const loadConfig = () => {
   return {
     isDebug: envBool(process.env.METAMASK_DEBUG),
     isExtensionTest: envBool(process.env.IN_TEST),
-    mv3: envBool(process.env.ENABLE_MV3),
     skipOtpPairingFlow: envBool(process.env.SKIP_OTP_PAIRING_FLOW),
     compatibilityVersion: {
       extension: envInt(process.env.COMPATIBILITY_VERSION_EXTENSION, 1),
