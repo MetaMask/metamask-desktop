@@ -27,33 +27,32 @@ function disableDesktop(backgroundConnection) {
   backgroundConnection.disableDesktopError();
 }
 
-function checkCustomProtocol(inProtocol, inInstalLink, inTimeOut) {
+function checkCustomProtocol(protocolLink, installLink, timeout) {
   // Check if Microsoft Edge
   if (window.navigator.msLaunchUri) {
     window.navigator.msLaunchUri(
-      inProtocol,
+      protocolLink,
       function () {
         // It is launched, no op here
       },
       function () {
-        window.location = inInstalLink; // Launch alternative, typically app download.
+        window.location = installLink; // Launch alternative, typically app download.
       },
     );
   } else {
-    let timeout = inTimeOut;
+    let timeoutId = timeout;
     // Set up a listener to see if it navigates away from the page.
     // If so we assume the app is installed already & launched.
     window.addEventListener('blur', function () {
-      window.clearTimeout(timeout);
+      window.clearTimeout(timeoutId);
     });
     // Set a timeout so that if the application does not launch within the timeout we
     // assume the protocol does not exist
-    timeout = window.setTimeout(function () {
-      console.log('timeout');
-      window.open(inInstalLink, '_blank').focus();
-    }, inTimeOut);
+    timeoutId = window.setTimeout(function () {
+      window.open(installLink, '_blank').focus();
+    }, timeout);
 
-    window.location = inProtocol; // Launch alternative, redirect app download.
+    window.location = protocolLink; // Launch alternative, redirect app download.
   }
 }
 
