@@ -126,25 +126,30 @@ class DesktopManager {
 
     log.debug('Created web socket connection');
 
-    if (this.isDesktopEnabled()) {
-      if (cfg().skipOtpPairingFlow) {
-        await this.transferState(connection);
-      } else {
-        log.debug('Desktop enabled, checking pairing key');
-
-        const pairingKeyStatus = await connection.checkPairingKey();
-
-        if (pairingKeyStatus === PairingKeyStatus.MATCH) {
-          log.debug('Desktop app recognised');
-
-          connection.setPaired(true);
-          await this.transferState(connection);
-        } else {
-          webSocket.close();
-          throw new Error('Desktop app not recognized');
-        }
-      }
+    if (!this.isDesktopEnabled()) {
+      this.desktopConnection = connection;
+      return connection;
     }
+
+    if (!cfg().skipOtpPairingFlow) {
+      log.debug('Desktop enabled, checking pairing key');
+
+      const pairingKeyStatus = await connection.checkPairingKey();
+
+      if (
+        [PairingKeyStatus.NO_MATCH, PairingKeyStatus.MISSING].includes(
+          pairingKeyStatus,
+        )
+      ) {
+        webSocket.close();
+        throw new Error('Desktop app not recognized');
+      }
+
+      log.debug('Desktop app recognised');
+    }
+
+    connection.setPaired();
+    await this.transferState(connection);
 
     this.desktopConnection = connection;
 

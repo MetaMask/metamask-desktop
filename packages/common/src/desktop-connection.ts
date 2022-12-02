@@ -53,6 +53,8 @@ export default class DesktopConnection extends EventEmitter {
 
   private disableStream: Duplex;
 
+  private browserControllerStream: Duplex;
+
   private versionCheck: VersionCheck;
 
   private extensionPairing: Pairing;
@@ -94,16 +96,16 @@ export default class DesktopConnection extends EventEmitter {
     const versionStream = this.multiplex.createStream(CLIENT_ID_VERSION);
     this.versionCheck = new VersionCheck(versionStream, this.extensionVersion);
 
-    const browserControllerStream = this.multiplex.createStream(
+    this.browserControllerStream = this.multiplex.createStream(
       CLIENT_ID_BROWSER_CONTROLLER,
     );
-    registerResponseStream(browserControllerStream);
 
     this.stream.pipe(this.multiplex).pipe(this.stream);
   }
 
-  public setPaired(isPaired: boolean) {
-    this.paired = isPaired;
+  public setPaired() {
+    this.paired = true;
+    registerResponseStream(this.browserControllerStream);
   }
 
   /**
