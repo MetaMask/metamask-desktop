@@ -1,4 +1,4 @@
-import { THEME_TYPE } from '../../submodules/extension/ui/desktop/helpers/constants/themeIndex';
+import { THEME_TYPE } from '../../ui/helpers/constants/themeIndex';
 
 export const titleBarOverlayOpts = {
   [THEME_TYPE.DARK]: {

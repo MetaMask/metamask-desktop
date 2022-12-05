@@ -418,7 +418,7 @@ jobs:
           at: .
       - run:
           name: Build desktop UI for testing
-          command: ${YARN_EXTENSION} dist:desktop:ui
+          command: yarn app dist:desktop:ui
       - run:
           name: Build desktop app for testing
           command: yarn app build:app:test
@@ -449,7 +449,7 @@ jobs:
           command: yarn app build:app:test:ui
       - run:
           name: Build desktop UI for testing
-          command: ${YARN_EXTENSION} build:desktop:ui:ci
+          command: yarn app build:desktop:ui:ci
       - run:
           name: Build extension (no lavamoat) for testing
           command: ${YARN_EXTENSION} build:test:desktop:ui
@@ -860,7 +860,7 @@ jobs:
           at: .
       - run:
           name: Move extension build
-          command: mv ./${APP_DIR}/desktop-test/extension ./${EXTENSION_DIR}/dist    
+          command: mv ./${APP_DIR}/desktop-test/extension ./${EXTENSION_DIR}/dist
       - run:
           name: Move app build
           command: mv ./${APP_DIR}/desktop-test/app ./${APP_DIR}/dist
