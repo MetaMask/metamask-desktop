@@ -8,7 +8,7 @@ import createEngineStream from 'json-rpc-middleware-stream/engineStream';
 import createFilterMiddleware from 'eth-json-rpc-filters';
 import createSubscriptionManager from 'eth-json-rpc-filters/subscriptionManager';
 import { providerAsMiddleware } from 'eth-json-rpc-middleware';
-import KeyringController from 'eth-keyring-controller';
+import KeyringController, { keyringBuilderFactory } from 'eth-keyring-controller';
 import {
   errorCodes as rpcErrorCodes,
   EthereumRpcError,
@@ -160,9 +160,9 @@ import {
 } from './controllers/permissions';
 import createRPCMethodTrackingMiddleware from './lib/createRPCMethodTrackingMiddleware';
 
-let LedgerBridgeKeyring;
-let TrezorKeyring;
-let LatticeKeyring;
+let ledgerKeyringBuilder;
+let trezorKeyringBuilder;
+let latticeKeyringBuilder;
 
 /* eslint-disable import/first */
 /* eslint-disable import/order */
@@ -176,24 +176,26 @@ import { SNAP_BLOCKLIST } from './flask/snaps-blocklist';
 import DesktopController from './controllers/desktop';
 ///: END:ONLY_INCLUDE_IN
 
+import { TrezorKeyring } from 'eth-trezor-keyring';
+
 ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
 import { LedgerKeyringDesktop } from '../../../../src/hw/ledger/ledger-keyring-desktop';
-import { TrezorKeyringDesktop } from '../../../../src/hw/trezor/trezor-keyring-desktop';
+import { TrezorBridgeDesktop } from '../../../../src/hw/trezor/trezor-bridge-desktop';
 import LatticeKeyringDesktop from '../../../../src/hw/lattice/lattice-keyring';
 
-LedgerBridgeKeyring = LedgerKeyringDesktop;
-TrezorKeyring = TrezorKeyringDesktop;
-LatticeKeyring = LatticeKeyringDesktop;
+ledgerKeyringBuilder = keyringBuilderFactory(LedgerKeyringDesktop);
+trezorKeyringBuilder = keyringBuilderFactory(TrezorKeyring, TrezorBridgeDesktop);
+latticeKeyringBuilder = keyringBuilderFactory(LatticeKeyringDesktop);
 ///: END:ONLY_INCLUDE_IN
 
 ///: BEGIN:EXCLUDE_IN(desktopapp)
 import { LedgerKeyringMv2 } from '@metamask/eth-ledger-bridge-keyring';
-import { TrezorKeyringMv2 } from 'eth-trezor-keyring';
+import { TrezorBridgeMv2 } from 'eth-trezor-keyring';
 import LatticeKeyringPackage from 'eth-lattice-keyring';
 
-LedgerBridgeKeyring = LedgerKeyringMv2;
-TrezorKeyring = TrezorKeyringMv2;
-LatticeKeyring = LatticeKeyringPackage;
+ledgerKeyringBuilder = keyringBuilderFactory(LedgerKeyringMv2);
+trezorKeyringBuilder = keyringBuilderFactory(TrezorKeyring, TrezorBridgeMv2);
+latticeKeyringBuilder = keyringBuilderFactory(LatticeKeyringPackage);
 ///: END:EXCLUDE_IN
 
 /* eslint-enable import/first */
@@ -618,13 +620,13 @@ export default class MetamaskController extends EventEmitter {
     });
 
     const additionalKeyrings = [
-      TrezorKeyring,
-      LedgerBridgeKeyring,
-      LatticeKeyring,
-      QRHardwareKeyring,
+      trezorKeyringBuilder,
+      ledgerKeyringBuilder,
+      latticeKeyringBuilder,
+      keyringBuilderFactory(QRHardwareKeyring),
     ];
     this.keyringController = new KeyringController({
-      keyringTypes: additionalKeyrings,
+      keyringBuilders: additionalKeyrings,
       initState: initState.KeyringController,
       encryptor: opts.encryptor || undefined,
     });
@@ -2473,13 +2475,13 @@ export default class MetamaskController extends EventEmitter {
         keyringName = TrezorKeyring.type;
         break;
       case DEVICE_NAMES.LEDGER:
-        keyringName = LedgerBridgeKeyring.type;
+        keyringName = ledgerKeyringBuilder.type;
         break;
       case DEVICE_NAMES.QR:
         keyringName = QRHardwareKeyring.type;
         break;
       case DEVICE_NAMES.LATTICE:
-        keyringName = LatticeKeyring.type;
+        keyringName = latticeKeyringBuilder.type;
         break;
       default:
         throw new Error(

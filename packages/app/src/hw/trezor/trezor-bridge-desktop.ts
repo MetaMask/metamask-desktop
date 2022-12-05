@@ -1,6 +1,6 @@
 import { ipcMain } from 'electron';
 import {
-  BaseTrezorKeyring,
+  TrezorBridge,
   TREZOR_CONNECT_MANIFEST,
   GetPublicKeyPayload,
   GetPublicKeyResponse,
@@ -13,8 +13,8 @@ import {
 } from 'eth-trezor-keyring';
 import DesktopApp from '../../app/desktop-app';
 
-class TrezorKeyringDesktop extends BaseTrezorKeyring {
-  protected model: string | undefined;
+export class TrezorBridgeDesktop implements TrezorBridge {
+  public model: string | undefined;
 
   public init() {
     ipcMain.on(this._buildChannelName('on-device-event', true), (_, event) => {
@@ -38,25 +38,25 @@ class TrezorKeyringDesktop extends BaseTrezorKeyring {
     return Promise.resolve();
   }
 
-  protected _getPublicKey(payload: GetPublicKeyPayload) {
+  public getPublicKey(payload: GetPublicKeyPayload) {
     return this._promisifyEvent<GetPublicKeyResponse>('getPublicKey', payload);
   }
 
-  protected _ethereumSignTransaction(payload: EthereumSignTransactionPayload) {
+  public ethereumSignTransaction(payload: EthereumSignTransactionPayload) {
     return this._promisifyEvent<EthereumSignTransactionResponse>(
       'ethereumSignTransaction',
       payload,
     );
   }
 
-  protected _ethereumSignMessage(payload: EthereumSignMessagePayload) {
+  public ethereumSignMessage(payload: EthereumSignMessagePayload) {
     return this._promisifyEvent<EthereumSignMessageResponse>(
       'ethereumSignMessage',
       payload,
     );
   }
 
-  protected _ethereumSignTypedData(payload: EthereumSignTypedDataPayload) {
+  public ethereumSignTypedData(payload: EthereumSignTypedDataPayload) {
     return this._promisifyEvent<EthereumSignTypedDataResponse>(
       'ethereumSignTypedData',
       payload,
@@ -84,5 +84,3 @@ class TrezorKeyringDesktop extends BaseTrezorKeyring {
     return `trezor-connect-${identifier}${isResponse ? '-response' : ''}`;
   }
 }
-
-export { TrezorKeyringDesktop };

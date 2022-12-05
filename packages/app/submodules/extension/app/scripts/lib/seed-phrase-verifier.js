@@ -20,13 +20,14 @@ const seedPhraseVerifier = {
     }
 
     const keyringController = new KeyringController({});
-    const Keyring = keyringController.getKeyringClassForType('HD Key Tree');
+    const keyringBuilder = keyringController.getKeyringBuilderForType('HD Key Tree');
     const opts = {
       mnemonic: seedPhrase,
       numberOfAccounts: createdAccounts.length,
     };
 
-    const keyring = new Keyring(opts);
+    const keyring = keyringBuilder();
+    await keyring.deserialize(opts);
     const restoredAccounts = await keyring.getAccounts();
     log.debug(`Created accounts: ${JSON.stringify(createdAccounts)}`);
     log.debug(`Restored accounts: ${JSON.stringify(restoredAccounts)}`);
