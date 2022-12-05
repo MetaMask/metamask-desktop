@@ -4,7 +4,7 @@ import { PropTypes } from 'prop-types';
 import PairStatus from '../../../components/pair-status';
 import Typography from '../../../../submodules/extension/ui/components/ui/typography';
 import Button from '../../../../submodules/extension/ui/components/ui/button';
-import Dropdown from '../../../../submodules/extension/ui/components/ui/dropdown';
+import Dropdown from '../../../components/dropdown';
 import { TYPOGRAPHY } from '../../../../submodules/extension/ui/helpers/constants/design-system';
 import localeIndex from '../../../helpers/constants/localeIndex';
 import themeIndex from '../../../helpers/constants/themeIndex';
