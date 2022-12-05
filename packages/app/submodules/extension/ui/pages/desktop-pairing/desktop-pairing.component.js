@@ -6,20 +6,25 @@ import { SECOND } from '../../../shared/constants/time';
 import Typography from '../../components/ui/typography';
 import { I18nContext } from '../../contexts/i18n';
 import IconDesktopPairing from '../../components/ui/icon/icon-desktop-pairing';
+import { Icon } from '../../components/component-library/icon/icon';
 import {
   TEXT_ALIGN,
   TYPOGRAPHY,
   DISPLAY,
   ALIGN_ITEMS,
   FLEX_DIRECTION,
+  COLORS,
 } from '../../helpers/constants/design-system';
 import Box from '../../components/ui/box/box';
+import ActionableMessage from '../../components/ui/actionable-message/actionable-message';
 
 export default function DesktopPairingPage({
   generateOtp,
   mostRecentOverviewPage,
   showLoadingIndication,
   hideLoadingIndication,
+  shouldShowWarning,
+  hideWarning,
 }) {
   const t = useContext(I18nContext);
   const history = useHistory();
@@ -79,7 +84,7 @@ export default function DesktopPairingPage({
           flexDirection={FLEX_DIRECTION.COLUMN}
           marginLeft={6}
           marginRight={6}
-          marginTop={12}
+          marginTop={shouldShowWarning ? 0 : 12}
         >
           <IconDesktopPairing size={64} />
         </Box>
@@ -151,8 +156,44 @@ export default function DesktopPairingPage({
     );
   };
 
+  const renderWarning = () => {
+    return (
+      shouldShowWarning && (
+        <ActionableMessage
+          type="warning"
+          message={
+            <div className="desktop-pairing-warning__warning-container">
+              <Box
+                className="desktop-pairing-warning__close-button__close"
+                marginLeft={2}
+                marginTop={0}
+                color={COLORS.ICON_ALTERNATIVE}
+                onClick={() => hideWarning()}
+              />
+              <div className="desktop-pairing-warning__title">
+                {t('desktopPairedWarningTitle')}
+              </div>
+              <div>
+                {t('desktopPairedWarningDescription')}{' '}
+                <span className="desktop-pairing-warning__link">
+                  {t('desktopPairedWarningDeepLink')}
+                </span>
+              </div>
+            </div>
+          }
+          useIcon
+          iconFillColor="var(--color-warning-default)"
+          className="desktop-pairing-warning__warning-content"
+          withRightButton
+          icon={<Icon name="danger-filled" color={COLORS.WARNING_DEFAULT} />}
+        />
+      )
+    );
+  };
+
   return (
     <div className="page-container__content">
+      {renderWarning()}
       <div className="desktop-pairing">
         {renderIcon()}
         <div className="desktop-pairing__title">{t('desktopPageTitle')}</div>
@@ -171,4 +212,6 @@ DesktopPairingPage.propTypes = {
   showLoadingIndication: PropTypes.func,
   hideLoadingIndication: PropTypes.func,
   generateOtp: PropTypes.func,
+  shouldShowWarning: PropTypes.string,
+  hideWarning: PropTypes.func,
 };

@@ -1028,6 +1028,15 @@
   "desktopPageTitle": {
     "message": "Sync with Desktop"
   },
+  "desktopPairedWarningDeepLink": {
+    "message": "Go to Settings in MetaMask Desktop"
+  },
+  "desktopPairedWarningDescription": {
+    "message": "If you want to start a new pairing, please Remove the current connection."
+  },
+  "desktopPairedWarningTitle": {
+    "message": "MM Desktop is already paired"
+  },
   "desktopUnexpectedErrorCTA": {
     "message": "Return MetaMask Home"
   },

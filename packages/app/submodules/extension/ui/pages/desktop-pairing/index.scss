@@ -61,3 +61,49 @@
     margin: auto;
   }
 }
+
+.desktop-pairing-warning {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+
+  &__close-button {
+    z-index: 1050;
+    font-size: 24px;
+    cursor: pointer;
+
+    &__close::after {
+      content: '\00D7';
+      font-size: 24px;
+      cursor: pointer;
+      position: relative;
+      float: right;
+      margin-top: -8px;
+    }
+  }
+
+  &__title {
+    font-weight: bold;
+    font-size: 16px;
+  }
+
+  &__link {
+    color: var(--color-primary-default);
+    display: block;
+    cursor: pointer;
+  }
+
+  &__warning-content {
+    border-left: 5px solid var(--color-warning-default);
+    border-right: 0;
+    border-bottom: 0;
+    border-top: 0;
+    margin: 4px;
+
+    .icon {
+      position: absolute;
+      left: 5px;
+      top: 10px;
+    }
+  }
+}
