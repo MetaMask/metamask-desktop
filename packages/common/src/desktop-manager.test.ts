@@ -239,6 +239,21 @@ describe('Desktop Manager', () => {
           await testConnection();
           expect(desktopConnectionMock.transferState).toHaveBeenCalledTimes(0);
         });
+
+        it('does not create desktop connection, pairing key does not match', async () => {
+          desktopConnectionMock.checkPairingKey.mockResolvedValue(
+            PairingKeyStatus.NO_MATCH,
+          );
+
+          await testConnection();
+
+          expect(desktopConnectionConstructorMock).toHaveBeenCalledTimes(1);
+          expect(desktopConnectionConstructorMock).toHaveBeenCalledWith(
+            webSocketStreamMock,
+          );
+          expect(webSocketMock.close).toHaveBeenCalledTimes(1);
+          expect(desktopConnectionMock.checkVersions).toHaveBeenCalledTimes(0);
+        });
       },
     );
   });
