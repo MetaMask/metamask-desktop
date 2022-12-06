@@ -95,9 +95,9 @@ describe('Desktop Manager', () => {
   >;
 
   const initDesktopManager = async <T>(
-    promise?: Promise<T>,
+    promise: Promise<T>,
   ): Promise<T | void> => {
-    const initPromise = promise || DesktopManager.init(undefined, VERSION_MOCK);
+    const initPromise = promise || DesktopManager.init(VERSION_MOCK);
 
     await flushPromises();
     await simulateBrowserEvent(webSocketMock, 'open');
@@ -121,62 +121,6 @@ describe('Desktop Manager', () => {
     removeInstance();
 
     cfg().webSocket.disableEncryption = false;
-  });
-
-  describe('init', () => {
-    const init = async (state: any) => {
-      const promise = DesktopManager.init(state, VERSION_MOCK);
-      await initDesktopManager(promise);
-    };
-
-    describe.each([
-      ['enabled', 'encrypted', EncryptedWebSocketStream, false],
-      ['disabled', 'standard', WebSocketStream, true],
-    ])(
-      'with encryption %s',
-      (_, streamType, webSocketStreamConstructor, disableEncryption) => {
-        beforeEach(async () => {
-          cfg().webSocket.disableEncryption = disableEncryption;
-
-          await init({
-            DesktopController: {
-              desktopEnabled: true,
-              pairingKey: 'mockedKey',
-            },
-          });
-        });
-
-        it(`creates and inits ${streamType} web socket stream`, async () => {
-          expect(webSocketStreamConstructor).toHaveBeenCalledTimes(1);
-          expect(webSocketStreamConstructor).toHaveBeenCalledWith(
-            webSocketMock,
-          );
-
-          expect(webSocketStreamMock.init).toHaveBeenCalledTimes(1);
-        });
-
-        it('creates desktop connection', async () => {
-          expect(desktopConnectionConstructorMock).toHaveBeenCalledTimes(1);
-          expect(desktopConnectionConstructorMock).toHaveBeenCalledWith(
-            webSocketStreamMock,
-            VERSION_MOCK,
-          );
-        });
-
-        it('transfers state', async () => {
-          expect(desktopConnectionMock.transferState).toHaveBeenCalledTimes(1);
-        });
-      },
-    );
-
-    it('does nothing if state has desktop disabled', async () => {
-      await init({ DesktopController: { desktopEnabled: false } });
-
-      expect(WebSocketStream).toHaveBeenCalledTimes(0);
-      expect(EncryptedWebSocketStream).toHaveBeenCalledTimes(0);
-      expect(webSocketStreamMock.init).toHaveBeenCalledTimes(0);
-      expect(desktopConnectionConstructorMock).toHaveBeenCalledTimes(0);
-    });
   });
 
   describe('getConnection', () => {
@@ -251,7 +195,7 @@ describe('Desktop Manager', () => {
 
   describe('testConnection', () => {
     beforeEach(async () => {
-      await DesktopManager.init(undefined, VERSION_MOCK);
+      await DesktopManager.init(VERSION_MOCK);
     });
 
     const testConnection = async (): Promise<TestConnectionResult> => {

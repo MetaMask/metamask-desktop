@@ -80,11 +80,9 @@ const proxy = (key: string[], args: any[]) => {
     requestPromises[requestId] = resolve;
   });
 
-  return timeoutPromise(
-    waitForResultMessage,
-    TIMEOUT_REQUEST,
-    `Timeout waiting for browser response - ${key.join('.')}`,
-  ).catch((error) => {
+  return timeoutPromise(waitForResultMessage, TIMEOUT_REQUEST, {
+    errorMessage: `Timeout waiting for browser response - ${key.join('.')}`,
+  }).catch((error) => {
     log.debug(error.message);
     delete requestPromises[requestId];
   });

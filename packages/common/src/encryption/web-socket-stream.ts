@@ -10,11 +10,12 @@ import {
   WebSocketStream,
 } from '../web-socket-stream';
 import { waitForMessage } from '../utils/stream';
-import { flattenMessage } from '../utils/utils';
+import { flattenMessage, timeoutPromise } from '../utils/utils';
 import * as asymmetricEncryption from './asymmetric';
 import * as symmetricEncryption from './symmetric';
 
-const HANDSHAKE_RESEND_INTERVAL = 5000;
+const HANDSHAKE_RESEND_INTERVAL = 1000;
+const HANDSHAKE_TIMEOUT = 5000;
 
 enum HandshakeMode {
   START,
@@ -37,6 +38,8 @@ export default class EncryptedWebSocketStream extends Duplex {
 
   private performingHandshake: boolean;
 
+  private resendInterval: any;
+
   constructor(webSocket: BrowserWebSocket | NodeWebSocket) {
     super({ objectMode: true });
 
@@ -51,8 +54,17 @@ export default class EncryptedWebSocketStream extends Duplex {
     this.asymmetricKeyPair = asymmetricEncryption.createKeyPair();
     this.symmetricKey = await symmetricEncryption.createKey();
 
-    await this.handshake(
-      startHandshake ? HandshakeMode.START : HandshakeMode.WAIT,
+    await timeoutPromise(
+      this.handshake(startHandshake ? HandshakeMode.START : HandshakeMode.WAIT),
+      HANDSHAKE_TIMEOUT,
+      {
+        errorMessage: 'Encryption handshake timed out',
+        cleanUp: () => {
+          if (this.resendInterval) {
+            clearInterval(this.resendInterval);
+          }
+        },
+      },
     );
   }
 
@@ -66,7 +78,6 @@ export default class EncryptedWebSocketStream extends Duplex {
 
   private async onMessage(data: any) {
     if (this.performingHandshake) {
-      log.debug('Ignoring message as pending handshake');
       return;
     }
 
@@ -145,6 +156,8 @@ export default class EncryptedWebSocketStream extends Duplex {
     this.performingHandshake = false;
   }
 
+  private previousSendSecond: (() => void) | undefined;
+
   private async handshakeStep(
     send: () => void,
     responseFilter: (data: any) => Promise<any>,
@@ -158,25 +171,25 @@ export default class EncryptedWebSocketStream extends Duplex {
     let data;
 
     if (!writeOnly) {
-      let resendInterval;
-
-      if (sendFirst) {
-        resendInterval = setInterval(() => {
+      this.resendInterval = setInterval(() => {
+        if (sendFirst) {
           send();
-        }, HANDSHAKE_RESEND_INTERVAL);
-      }
+        } else {
+          this.previousSendSecond?.();
+        }
+      }, HANDSHAKE_RESEND_INTERVAL);
 
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       data = await waitForMessage(this.webSocketStream!, responseFilter, {
         returnFilterOutput: true,
       });
 
-      if (sendFirst && resendInterval) {
-        clearInterval(resendInterval);
-      }
+      clearInterval(this.resendInterval);
+      this.resendInterval = undefined;
     }
 
     if (!sendFirst) {
+      this.previousSendSecond = send;
       send();
     }
 
