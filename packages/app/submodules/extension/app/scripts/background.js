@@ -58,16 +58,9 @@ import setupEnsIpfsResolver from './lib/ens-ipfs/setup';
 import { getPlatform } from './lib/util';
 
 /* eslint-disable import/order */
-
-///: BEGIN:ONLY_INCLUDE_IN(desktopapp)
-import desktopAppCfg from '../../../../src/utils/config';
-import DesktopApp from '../../../../src/app/desktop-app';
-///: END:ONLY_INCLUDE_IN
-
 ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
 import DesktopManager from '@metamask/desktop/dist/desktop-manager';
 ///: END:ONLY_INCLUDE_IN
-
 /* eslint-enable import/order */
 
 const { sentry } = global;
@@ -658,12 +651,17 @@ export function setupController(
       label = String(count);
     }
     // browserAction has been replaced by action in MV3
-    if (isManifestV3 || process.env.ENABLE_MV3) {
+    if (isManifestV3) {
       browser.action.setBadgeText({ text: label });
       browser.action.setBadgeBackgroundColor({ color: '#037DD6' });
     } else {
-      browser.browserAction.setBadgeText({ text: label });
-      browser.browserAction.setBadgeBackgroundColor({ color: '#037DD6' });
+      browser?.browserAction.setBadgeText({ text: label });
+      browser?.browserAction.setBadgeBackgroundColor({ color: '#037DD6' });
+      ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
+      // Including action to support MV3 and MV2 in desktop mode
+      browser?.action.setBadgeText({ text: label });
+      browser?.action.setBadgeBackgroundColor({ color: '#037DD6' });
+      ///: END:ONLY_INCLUDE_IN
     }
   }
 
