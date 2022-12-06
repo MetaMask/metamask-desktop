@@ -8,6 +8,7 @@ import {
 import { renderDesktopError } from '../../ui/pages/desktop-error/render-desktop-error';
 import { EXTENSION_ERROR_PAGE_TYPES } from '../constants/desktop';
 import switchDirection from './switch-direction';
+import { openCustomProtocol } from './deep-linking';
 
 const _setupLocale = async (currentLocale) => {
   const currentLocaleMessages = currentLocale
@@ -25,25 +26,6 @@ const _setupLocale = async (currentLocale) => {
 
 function disableDesktop(backgroundConnection) {
   backgroundConnection.disableDesktopError();
-}
-
-function openCustomProtocol(protocolLink) {
-  return new Promise((resolve, reject) => {
-    if (window.navigator.msLaunchUri) {
-      window.navigator.msLaunchUri(protocolLink, resolve, () => {
-        reject(new Error('Failed to open custom protocol link'));
-      });
-    } else {
-      const timeoutId = window.setTimeout(function () {
-        reject(new Error('Timeout opening custom protocol link'));
-      }, 500);
-      window.addEventListener('blur', function () {
-        window.clearTimeout(timeoutId);
-        resolve();
-      });
-      window.location = protocolLink;
-    }
-  });
 }
 
 export function downloadDesktopApp() {
