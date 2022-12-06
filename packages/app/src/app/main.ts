@@ -1,4 +1,5 @@
 import './globals';
+import './controller-init';
 import log from 'loglevel';
 import { RawState, RemotePort } from '@metamask/desktop/dist/types';
 import {

@@ -173,7 +173,7 @@ import { SNAP_BLOCKLIST } from './flask/snaps-blocklist';
 ///: END:ONLY_INCLUDE_IN
 
 ///: BEGIN:ONLY_INCLUDE_IN(desktopextension,desktopapp)
-import DesktopController from './controllers/desktop';
+import { DesktopController } from '@metamask/desktop/dist/controllers/desktop';
 ///: END:ONLY_INCLUDE_IN
 
 ///: BEGIN:ONLY_INCLUDE_IN(desktopapp)

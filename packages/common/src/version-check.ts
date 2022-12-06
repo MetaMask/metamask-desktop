@@ -1,5 +1,5 @@
 import { Duplex } from 'stream';
-import log from 'loglevel';
+import log from './utils/log';
 import {
   CheckVersionRequestMessage,
   CheckVersionResponseMessage,
@@ -12,18 +12,18 @@ import { waitForMessage } from './utils/stream';
 export class VersionCheck {
   private stream: Duplex;
 
-  private getVersion: () => string;
+  private extensionVersion: string;
 
-  constructor(stream: Duplex, getVersion: () => string) {
+  constructor(stream: Duplex, extensionVersion: string) {
     this.stream = stream;
-    this.getVersion = getVersion;
+    this.extensionVersion = extensionVersion;
   }
 
   public async check(): Promise<VersionCheckResult> {
     log.debug('Checking versions');
 
     const extensionVersionData = {
-      version: this.getVersion(),
+      version: this.extensionVersion,
       compatibilityVersion: cfg().compatibilityVersion.extension,
     };
 

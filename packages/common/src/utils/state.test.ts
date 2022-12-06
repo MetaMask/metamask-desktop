@@ -2,17 +2,11 @@ import { browser } from '../browser';
 import { DATA_MOCK } from '../../test/mocks';
 import * as RawState from './state';
 
-jest.mock(
-  '../browser',
-  () => ({
-    browser: {
-      storage: { local: { get: jest.fn(), set: jest.fn(), clear: jest.fn() } },
-    },
-  }),
-  {
-    virtual: true,
+jest.mock('../browser', () => ({
+  browser: {
+    storage: { local: { get: jest.fn(), set: jest.fn(), clear: jest.fn() } },
   },
-);
+}));
 
 describe('Raw State Utils', () => {
   const browserMock = browser as any;
