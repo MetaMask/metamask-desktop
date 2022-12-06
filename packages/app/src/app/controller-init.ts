@@ -1,16 +1,17 @@
-import { initDesktopControllerAppLogic } from '@metamask/desktop/dist/controllers/desktop';
+import { initDesktopController } from '@metamask/desktop/dist/controllers/desktop';
+import { DesktopController as BaseDesktopController } from '@metamask/desktop/dist/controllers/desktop-base';
 import DesktopApp from './desktop-app';
 
-const disableDesktop = async () => {
-  const connection = DesktopApp.getConnection();
+export class AppDesktopController extends BaseDesktopController {
+  public override async disableDesktop() {
+    const connection = DesktopApp.getConnection();
 
-  if (!connection) {
-    return;
+    if (!connection) {
+      return;
+    }
+
+    await connection.disable();
   }
+}
 
-  await connection.disable();
-};
-
-initDesktopControllerAppLogic({
-  disableDesktop,
-});
+initDesktopController(AppDesktopController);

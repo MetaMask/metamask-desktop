@@ -1,6 +1,5 @@
 import 'global-agent/bootstrap';
 import '../browser/browser-init';
-import './controller-init';
 import { webcrypto } from 'node:crypto';
 import { Headers } from 'node-fetch';
 import setupSentry from '../../submodules/extension/app/scripts/lib/setupSentry';
