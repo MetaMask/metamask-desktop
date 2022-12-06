@@ -5,7 +5,3 @@ export const EXTENSION_ERROR_PAGE_TYPES = {
   EXTENSION_OUTDATED: 'extension-outdated',
   CRITICAL_ERROR: 'critical-error',
 };
-
-export const DESKTOP_HOOK_TYPES = {
-  DISCONNECT: 'disconnect',
-};

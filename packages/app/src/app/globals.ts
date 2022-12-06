@@ -6,6 +6,7 @@ import setupSentry from '../../submodules/extension/app/scripts/lib/setupSentry'
 import { getDesktopVersion } from '../utils/version';
 
 declare const global: typeof globalThis & {
+  isDesktopApp: boolean;
   stateHooks: Record<string, any>;
   sentry: unknown;
 };
@@ -13,6 +14,7 @@ declare const global: typeof globalThis & {
 if (!global.self) {
   global.self = {} as unknown as Window & typeof globalThis;
   global.crypto = webcrypto as any;
+  global.isDesktopApp = true;
 
   global.navigator = {
     userAgent: 'Firefox',

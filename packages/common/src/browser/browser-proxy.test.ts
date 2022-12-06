@@ -1,4 +1,4 @@
-import log from 'loglevel';
+import log from '../utils/log';
 import { BrowserProxyRequest } from '../types';
 import {
   ARGS_MOCK,
@@ -12,17 +12,13 @@ import { registerResponseStream } from '.';
 
 jest.mock('loglevel');
 
-jest.mock(
-  './browser-polyfill',
-  () => ({
-    browser: {
-      browserAction: {
-        setBadgeText: jest.fn(),
-      },
+jest.mock('./browser-polyfill', () => ({
+  browser: {
+    browserAction: {
+      setBadgeText: jest.fn(),
     },
-  }),
-  { virtual: true },
-);
+  },
+}));
 
 describe('Browser Proxy', () => {
   const browserMock = browser as any;

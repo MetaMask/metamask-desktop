@@ -59,7 +59,7 @@ import { getPlatform } from './lib/util';
 
 /* eslint-disable import/order */
 ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
-import DesktopManager from '../../../../src/extension/desktop-manager';
+import DesktopManager from '@metamask/desktop/dist/desktop-manager';
 ///: END:ONLY_INCLUDE_IN
 /* eslint-enable import/order */
 
@@ -195,7 +195,7 @@ async function initialize(remotePort) {
   const initLangCode = await getFirstPreferredLangCode();
 
   ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
-  await DesktopManager.init(initState);
+  await DesktopManager.init(initState, platform.getVersion());
   ///: END:ONLY_INCLUDE_IN
 
   await setupController(initState, initLangCode, remotePort);

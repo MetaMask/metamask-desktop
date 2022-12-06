@@ -1,6 +1,6 @@
 import { Duplex } from 'stream';
-import log from 'loglevel';
 import { WebSocket as WSWebSocket } from 'ws';
+import log from './utils/log';
 
 export type BrowserWebSocket = WebSocket;
 export type NodeWebSocket = WSWebSocket;

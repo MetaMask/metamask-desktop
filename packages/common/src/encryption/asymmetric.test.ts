@@ -1,4 +1,4 @@
-import eciesjs, { PrivateKey } from 'eciesjs';
+import eciesjs from 'eciesjs';
 import {
   ENCRYPTED_BUFFER_MOCK,
   ENCRYPTED_HEX_MOCK,
@@ -9,15 +9,11 @@ import {
 } from '../../test/mocks';
 import { createKeyPair, encrypt, decrypt } from './asymmetric';
 
-jest.mock(
-  'eciesjs',
-  () => ({
-    encrypt: jest.fn(),
-    decrypt: jest.fn(),
-    PrivateKey: jest.fn(),
-  }),
-  { virtual: true },
-);
+jest.mock('eciesjs', () => ({
+  encrypt: jest.fn(),
+  decrypt: jest.fn(),
+  PrivateKey: jest.fn(),
+}));
 
 describe('Asymmetric Encryption', () => {
   let eciesjsMock: jest.Mocked<typeof eciesjs>;
@@ -33,7 +29,7 @@ describe('Asymmetric Encryption', () => {
       eciesjsMock.PrivateKey.mockReturnValue({
         toHex: () => PRIVATE_KEY_MOCK,
         publicKey: { toHex: () => PUBLIC_KEY_MOCK },
-      } as PrivateKey);
+      } as eciesjs.PrivateKey);
 
       const result = createKeyPair();
 
