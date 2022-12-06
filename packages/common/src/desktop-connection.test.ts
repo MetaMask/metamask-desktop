@@ -130,6 +130,7 @@ describe('Desktop Connection', () => {
     });
 
     desktopConnection = new DesktopConnection(streamMock);
+    desktopConnection.setPaired(true);
   });
 
   describe.each([
