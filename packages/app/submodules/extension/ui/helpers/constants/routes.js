@@ -22,7 +22,6 @@ const CONTACT_ADD_ROUTE = '/settings/contact-list/add-contact';
 const CONTACT_VIEW_ROUTE = '/settings/contact-list/view-contact';
 const REVEAL_SEED_ROUTE = '/seed';
 const MOBILE_SYNC_ROUTE = '/mobile-sync';
-const DESKTOP_PAIRING_ROUTE = '/desktop-sync';
 const RESTORE_VAULT_ROUTE = '/restore-vault';
 const IMPORT_TOKEN_ROUTE = '/import-token';
 const CONFIRM_IMPORT_TOKEN_ROUTE = '/confirm-import-token';
@@ -102,6 +101,7 @@ const ENCRYPTION_PUBLIC_KEY_REQUEST_PATH = '/encryption-public-key-request';
 const CONFIRMATION_V_NEXT_ROUTE = '/confirmation';
 ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
 const DESKTOP_ERROR_ROUTE = '/desktop/error';
+const DESKTOP_PAIRING_ROUTE = '/desktop-pairing';
 ///: END:ONLY_INCLUDE_IN
 
 // Used to pull a convenient name for analytics tracking events. The key must
@@ -203,7 +203,6 @@ export {
   SETTINGS_ROUTE,
   REVEAL_SEED_ROUTE,
   MOBILE_SYNC_ROUTE,
-  DESKTOP_PAIRING_ROUTE,
   RESTORE_VAULT_ROUTE,
   IMPORT_TOKEN_ROUTE,
   CONFIRM_IMPORT_TOKEN_ROUTE,
@@ -293,5 +292,6 @@ export {
   ///: END:ONLY_INCLUDE_IN
   ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
   DESKTOP_ERROR_ROUTE,
+  DESKTOP_PAIRING_ROUTE,
   ///: END:ONLY_INCLUDE_IN
 };
