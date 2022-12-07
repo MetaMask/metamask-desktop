@@ -18,6 +18,9 @@ module.exports = {
   testEnvironmentOptions: {
     customExportConditions: ['node', 'node-addons'],
   },
+  transform: {
+    '\\.[jt]s$': ['babel-jest', { configFile: './babel-test.config.js' }],
+  },
   transformIgnorePatterns: ['node_modules', '__mocks__'],
   workerIdleMemoryLimit: '500MB',
 };
