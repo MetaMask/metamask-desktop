@@ -24,7 +24,10 @@ const UNHANDLED_FUNCTIONS = [
   'windows.onRemoved.addListener',
 ];
 
+// browserAction has been replaced by action in MV3
 const PROXY_FUNCTIONS = [
+  'action.setBadgeBackgroundColor',
+  'action.setBadgeText',
   'browserAction.setBadgeBackgroundColor',
   'browserAction.setBadgeText',
   'notifications.create',
