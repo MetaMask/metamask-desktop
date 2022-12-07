@@ -6,7 +6,7 @@ module.exports = function (api) {
       strictMode: true,
     },
     targets: {
-      electron: '20',
+      electron: '22',
     },
     presets: [
       '@babel/preset-typescript',
@@ -25,7 +25,9 @@ module.exports = function (api) {
       '**/node_modules',
       'build/code-fencing-babel.js',
       'dist',
+      'build',
       'packages',
+      'test',
       'playwright',
       'submodules/extension/.storybook',
       'submodules/extension/.yarn',

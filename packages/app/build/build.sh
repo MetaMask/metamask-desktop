@@ -46,11 +46,11 @@ if [ "$CI" = "true" ]; then
     babel ./ \
         -d ./$OUTPUT_DIR \
         --extensions ".ts,.js" \
-        --config-file "./babel.config.js"
+        --config-file "./babel-app.config.js"
 else
      babel ./ \
         -d ./$OUTPUT_DIR \
         --extensions ".ts,.js" \
-        --config-file "./babel.config.js" \
+        --config-file "./babel-app.config.js" \
         --watch
 fi

@@ -43,6 +43,7 @@ module.exports = {
         ecmaFeatures: {
           jsx: true,
         },
+        babelOptions: { configFile: './babel-ui.config.js' },
       },
       plugins: ['@babel', 'react'],
       rules: {
