@@ -13,8 +13,10 @@ import Pair from '../pair';
 import SuccessfulPair from '../successful-pair';
 import Settings from '../settings';
 import ErrorPage from '../error';
+import useDeeplinkRegister from '../../hooks/useDeeplinkRegister';
 
 const Routes = ({ theme }) => {
+  useDeeplinkRegister();
   useEffect(() => {
     // Set theme (html attr) for the first time
     setTheme(theme);

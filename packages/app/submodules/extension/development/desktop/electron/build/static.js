@@ -132,6 +132,11 @@ function getCopyTargets(shouldIncludeLockdown) {
       src: require.resolve('@lavamoat/lavapack/src/runtime.js'),
       dest: `runtime-lavamoat.js`,
     },
+    {
+      src: `./app/images/desktop-icons/`,
+      pattern: `*.png`,
+      dest: `icons/`,
+    },
   ];
 
   const copyTargetsDev = [

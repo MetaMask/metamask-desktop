@@ -8,6 +8,7 @@ import {
 import { renderDesktopError } from '../../ui/pages/desktop-error/render-desktop-error';
 import { EXTENSION_ERROR_PAGE_TYPES } from '../constants/desktop';
 import switchDirection from './switch-direction';
+import { openCustomProtocol } from './deep-linking';
 
 const _setupLocale = async (currentLocale) => {
   const currentLocaleMessages = currentLocale
@@ -37,6 +38,12 @@ export function downloadExtension() {
 
 export function restartExtension() {
   browser.runtime.reload();
+}
+
+export function openOrDownloadMMD() {
+  openCustomProtocol('metamask-desktop://pair').catch(() => {
+    window.open('https://metamask.io/download.html', '_blank').focus();
+  });
 }
 
 export const setupLocale = memoize(_setupLocale);
@@ -133,6 +140,10 @@ export function registerDesktopErrorActions(backgroundConnection) {
     'desktop-error-button-download-mmd',
   );
 
+  const openOrDownloadMMDButton = document.getElementById(
+    'desktop-error-button-open-or-download-mmd',
+  );
+
   disableDesktopButton?.addEventListener('click', (_) => {
     disableDesktop(backgroundConnection);
   });
@@ -143,5 +154,9 @@ export function registerDesktopErrorActions(backgroundConnection) {
 
   downloadMMDButton?.addEventListener('click', (_) => {
     downloadDesktopApp();
+  });
+
+  openOrDownloadMMDButton?.addEventListener('click', (_) => {
+    openOrDownloadMMD();
   });
 }

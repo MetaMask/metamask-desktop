@@ -16,28 +16,47 @@ import {
 import EncryptedWebSocketStream from '@metamask/desktop/dist/encryption/web-socket-stream';
 import { StatusMessage } from '../types/message';
 import { forwardEvents } from '../utils/events';
-import { MILLISECOND } from '../../submodules/extension/shared/constants/time';
 import cfg from '../utils/config';
 import ExtensionConnection from './extension-connection';
 import { updateCheck } from './update-check';
-import { titleBarOverlayOpts } from './ui-constants';
+import { titleBarOverlayOpts, protocolKey } from './ui-constants';
+import AppNavigation from './app-navigation';
+import AppEvents from './app-events';
+import WindowService from './window-service';
+import UIState from './ui-state';
 
-const MAIN_WINDOW_SHOW_DELAY = 750 * MILLISECOND;
+// Set protocol for deeplinking
+if (!cfg().isUnitTest) {
+  if (process.defaultApp) {
+    if (process.argv.length >= 2) {
+      app?.setAsDefaultProtocolClient(protocolKey, process.execPath, [
+        path.resolve(process.argv[1]),
+      ]);
+    }
+  } else {
+    app?.setAsDefaultProtocolClient(protocolKey);
+  }
+}
 
 class DesktopApp extends EventEmitter {
-  private mainWindow?: BrowserWindow;
-
-  private trezorWindow?: BrowserWindow;
-
-  private latticeWindow?: BrowserWindow;
-
   private extensionConnection?: ExtensionConnection;
 
   private status: StatusMessage;
 
+  private appNavigation: AppNavigation;
+
+  private appEvents: AppEvents;
+
+  private windowService: WindowService;
+
+  private UIState: typeof UIState;
+
   constructor() {
     super();
-
+    this.UIState = UIState;
+    this.appNavigation = new AppNavigation();
+    this.appEvents = new AppEvents();
+    this.windowService = new WindowService();
     this.status = new Proxy(
       { isWebSocketConnected: false, connections: [] },
       {
@@ -69,7 +88,7 @@ class DesktopApp extends EventEmitter {
       log.debug('Show popup not implemented');
     });
 
-    ipcMain.handle('minimize', (_event) => this.mainWindow?.minimize());
+    ipcMain.handle('minimize', (_event) => this.UIState.mainWindow?.minimize());
 
     ipcMain.handle('unpair', async (_event) => {
       await this.extensionConnection?.disable();
@@ -87,16 +106,19 @@ class DesktopApp extends EventEmitter {
     });
 
     if (!cfg().isExtensionTest) {
-      this.mainWindow = await this.createMainWindow();
+      await this.windowService.createMainWindow();
     }
-    this.trezorWindow = await this.createTrezorWindow();
-    this.latticeWindow = await this.createLatticeWindow();
+    await this.windowService.createTrezorWindow();
+    await this.windowService.createLatticeWindow();
 
     const server = await this.createWebSocketServer();
     server.on('connection', (webSocket) => this.onConnection(webSocket));
 
     this.status.isDesktopEnabled =
       (await getDesktopState()).desktopEnabled === true;
+
+    this.appEvents.register();
+    this.appNavigation.create();
 
     log.debug('Initialised desktop app');
 
@@ -108,19 +130,30 @@ class DesktopApp extends EventEmitter {
   }
 
   public submitMessageToTrezorWindow(channel: string, ...args: any[]) {
-    if (!this.trezorWindow) {
+    if (!this.UIState.trezorWindow) {
       throw new Error('No Trezor Window');
     }
 
-    this.trezorWindow.webContents.send(channel, ...args);
+    this.UIState.trezorWindow.webContents.send(channel, ...args);
   }
 
   public submitMessageToLatticeWindow(channel: string, ...args: any[]) {
-    if (!this.latticeWindow) {
+    if (!this.UIState.latticeWindow) {
       throw new Error('No Lattice Window');
     }
 
-    this.latticeWindow.webContents.send(channel, ...args);
+    this.UIState.latticeWindow.webContents.send(channel, ...args);
+  }
+
+  private updateMainWindow() {
+    if (!this.UIState.mainWindow) {
+      if (!cfg().isUnitTest) {
+        log.error('Main window not created');
+      }
+      return;
+    }
+
+    this.UIState.mainWindow.webContents.send('status', { ...this.status });
   }
 
   private async onConnection(webSocket: WebSocket) {
@@ -164,7 +197,7 @@ class DesktopApp extends EventEmitter {
     });
 
     extensionConnection.getPairing().on('invalid-otp', () => {
-      this.mainWindow?.webContents.send('invalid-otp', false);
+      this.UIState.mainWindow?.webContents.send('invalid-otp', false);
     });
 
     forwardEvents(extensionConnection, this, [
@@ -215,107 +248,6 @@ class DesktopApp extends EventEmitter {
         resolve(server);
       });
     });
-  }
-
-  private updateMainWindow() {
-    if (!this.mainWindow) {
-      log.error('Status window not created');
-      return;
-    }
-
-    this.mainWindow.webContents.send('status', { ...this.status });
-  }
-
-  private async createMainWindow() {
-    const mainWindow = new BrowserWindow({
-      width: 800,
-      height: 640,
-      titleBarStyle: 'hidden',
-      titleBarOverlay: titleBarOverlayOpts.light,
-      webPreferences: {
-        preload: path.resolve(__dirname, './status-preload.js'),
-        nodeIntegration: true,
-        contextIsolation: false,
-      },
-      icon: path.resolve(__dirname, '../../dist/app/icon.png'),
-    });
-
-    if (process.platform === 'win32') {
-      // Keep this to prevent "alt" key is not triggering menu in Windows
-      mainWindow?.setMenu(null);
-    }
-
-    mainWindow.loadFile(
-      path.resolve(__dirname, '../../../ui/desktop-ui.html'),
-      // Temporary open pair page, it will redirect to settings page if isDesktopEnabled is true
-      { hash: 'pair' },
-    );
-
-    setTimeout(() => {
-      mainWindow.show();
-    }, MAIN_WINDOW_SHOW_DELAY);
-
-    log.debug('Created status window');
-
-    if (process.env.DESKTOP_UI_DEBUG) {
-      await mainWindow.webContents.openDevTools();
-    }
-
-    return mainWindow;
-  }
-
-  private async createTrezorWindow() {
-    const trezorWindow = new BrowserWindow({
-      show: false,
-      parent: this.mainWindow,
-      webPreferences: {
-        preload: path.resolve(
-          __dirname,
-          '../hw/trezor/renderer/trezor-preload.js',
-        ),
-      },
-    });
-
-    await trezorWindow.loadFile(
-      path.resolve(__dirname, '../../html/desktop-trezor.html'),
-    );
-
-    trezorWindow.webContents.setWindowOpenHandler((details) => ({
-      action: details.url.startsWith('https://connect.trezor.io/')
-        ? 'allow'
-        : 'deny',
-    }));
-
-    log.debug('Created trezor window');
-
-    return trezorWindow;
-  }
-
-  private async createLatticeWindow() {
-    const latticeWindow = new BrowserWindow({
-      show: false,
-      parent: this.mainWindow,
-      webPreferences: {
-        preload: path.resolve(
-          __dirname,
-          '../hw/lattice/renderer/lattice-preload.js',
-        ),
-      },
-    });
-
-    await latticeWindow.loadFile(
-      path.resolve(__dirname, '../../html/desktop-lattice.html'),
-    );
-
-    latticeWindow.webContents.setWindowOpenHandler((details) => ({
-      action: details.url.startsWith('https://lattice.gridplus.io/')
-        ? 'allow'
-        : 'deny',
-    }));
-
-    log.debug('Created lattice window');
-
-    return latticeWindow;
   }
 }
 

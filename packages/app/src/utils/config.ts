@@ -1,4 +1,8 @@
-import { envBool, envInt } from '@metamask/desktop/dist/utils/config';
+import {
+  envBool,
+  envInt,
+  envStringMatch,
+} from '@metamask/desktop/dist/utils/config';
 
 const loadConfig = () => {
   // Cannot use dynamic references to envs as build system does find and replace
@@ -8,6 +12,7 @@ const loadConfig = () => {
     enableUpdates: envBool(process.env.DESKTOP_ENABLE_UPDATES),
     isExtensionTest: envBool(process.env.IN_TEST),
     isAppTest: envBool(process.env.UI_TEST),
+    isUnitTest: envStringMatch(process.env.NODE_ENV, 'test'),
     mv3: envBool(process.env.ENABLE_MV3),
     skipOtpPairingFlow: envBool(process.env.SKIP_OTP_PAIRING_FLOW),
     compatibilityVersion: {

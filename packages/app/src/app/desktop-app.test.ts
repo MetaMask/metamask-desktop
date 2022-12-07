@@ -21,6 +21,10 @@ import DesktopApp from './desktop-app';
 jest.mock('extension-port-stream');
 jest.mock('@metamask/desktop/dist/encryption/web-socket-stream');
 jest.mock('./extension-connection');
+jest.mock('./app-navigation');
+jest.mock('./app-events');
+jest.mock('./window-service');
+jest.mock('./ui-state');
 
 jest.mock('@metamask/desktop/dist/browser', () => ({
   browser: { storage: { local: { get: jest.fn(), set: jest.fn() } } },

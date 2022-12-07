@@ -69,6 +69,18 @@ export const simulateWebSocketMessage = async (
   }
 };
 
+export const mockFilteredNodeEvent = (
+  mockObj: jest.Mocked<any>,
+  method: string,
+  event: string,
+) => {
+  mockObj[method].mockImplementation((eventName: string, callback: any) => {
+    if (eventName === event) {
+      callback();
+    }
+  });
+};
+
 export const expectEventToFire = async (
   target: EventEmitter,
   event: string,

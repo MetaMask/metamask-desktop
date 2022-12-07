@@ -998,6 +998,9 @@
   "desktopNotFoundErrorTitle": {
     "message": "MetaMask Desktop was not found"
   },
+  "desktopOpenOrDownloadCTA": {
+    "message": "Open MetaMask Desktop"
+  },
   "desktopOutdatedErrorCTA": {
     "message": "Update MetaMask Desktop"
   },
