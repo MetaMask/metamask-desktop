@@ -655,13 +655,8 @@ export function setupController(
       browser.action.setBadgeText({ text: label });
       browser.action.setBadgeBackgroundColor({ color: '#037DD6' });
     } else {
-      browser?.browserAction.setBadgeText({ text: label });
-      browser?.browserAction.setBadgeBackgroundColor({ color: '#037DD6' });
-      ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
-      // Including action to support MV3 and MV2 in desktop mode
-      browser?.action.setBadgeText({ text: label });
-      browser?.action.setBadgeBackgroundColor({ color: '#037DD6' });
-      ///: END:ONLY_INCLUDE_IN
+      browser.browserAction.setBadgeText({ text: label });
+      browser.browserAction.setBadgeBackgroundColor({ color: '#037DD6' });
     }
   }
 

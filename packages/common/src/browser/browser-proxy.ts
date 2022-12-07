@@ -5,12 +5,18 @@ import { browser } from './browser-polyfill';
 
 let responseStream: Duplex;
 
-const getBrowserMethod = (
+const getBrowserMethod = async (
   key: string[],
-): ((...args: any[]) => any) | undefined => {
+): Promise<((...args: any[]) => any) | undefined> => {
   let method = browser as any;
+  const isManifestV3 =
+    (await browser?.runtime?.getManifest())?.manifest_version === 3;
 
-  for (const keyPart of key) {
+  for (let keyPart of key) {
+    // replace browserAction to action to support MV3
+    if (isManifestV3) {
+      keyPart = keyPart.replace('browserAction', 'action');
+    }
     method = method[keyPart];
 
     if (!method) {
@@ -24,7 +30,7 @@ const getBrowserMethod = (
 const onBrowserRequest = async (data: BrowserProxyRequest) => {
   log.debug('Received browser request', data);
 
-  const method = getBrowserMethod(data.key);
+  const method = await getBrowserMethod(data.key);
 
   if (!method) {
     log.error(`Cannot find browser method - ${data.key.join('.')}`);
