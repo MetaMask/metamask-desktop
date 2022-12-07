@@ -21,7 +21,6 @@ import PermissionsConnect from '../permissions-connect';
 import RestoreVaultPage from '../keychains/restore-vault';
 import RevealSeedConfirmation from '../keychains/reveal-seed';
 import MobileSyncPage from '../mobile-sync';
-import DesktopPairingPage from '../desktop-pairing';
 import ImportTokenPage from '../import-token';
 import AddCollectiblePage from '../add-collectible';
 import ConfirmImportTokenPage from '../confirm-import-token';
@@ -45,6 +44,7 @@ import Notifications from '../notifications';
 ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
 import { registerOnDesktopDisconnect } from '../../hooks/desktopHooks';
 import DesktopErrorPage from '../desktop-error';
+import DesktopPairingPage from '../desktop-pairing';
 ///: END:ONLY_INCLUDE_IN(desktopextension)
 
 import {
@@ -71,8 +71,8 @@ import {
   ONBOARDING_ROUTE,
   ADD_COLLECTIBLE_ROUTE,
   TOKEN_DETAILS,
-  DESKTOP_PAIRING_ROUTE,
   ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
+  DESKTOP_PAIRING_ROUTE,
   DESKTOP_ERROR_ROUTE,
   ///: END:ONLY_INCLUDE_IN
   ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)
@@ -238,11 +238,15 @@ export default class Routes extends Component {
           component={MobileSyncPage}
           exact
         />
-        <Authenticated
-          path={DESKTOP_PAIRING_ROUTE}
-          component={DesktopPairingPage}
-          exact
-        />
+        {
+          ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
+          <Authenticated
+            path={DESKTOP_PAIRING_ROUTE}
+            component={DesktopPairingPage}
+            exact
+          />
+          ///: END:ONLY_INCLUDE_IN
+        }
         <Authenticated path={SETTINGS_ROUTE} component={Settings} />
         {
           ///: BEGIN:ONLY_INCLUDE_IN(flask,desktopextension,desktopapp)

@@ -17,6 +17,9 @@ import {
 } from '../../helpers/constants/design-system';
 import Box from '../../components/ui/box/box';
 import ActionableMessage from '../../components/ui/actionable-message/actionable-message';
+import { openCustomProtocol } from '../../../shared/lib/deep-linking';
+import { useCopyToClipboard } from '../../hooks/useCopyToClipboard';
+import Tooltip from '../../components/ui/tooltip';
 
 export default function DesktopPairingPage({
   generateOtp,
@@ -35,6 +38,7 @@ export default function DesktopPairingPage({
   const [otp, setOtp] = useState();
   const [lastOtpTime, setLastOtpTime] = useState(time);
   const [currentTime, setCurrentTime] = useState(time);
+  const [copied, handleCopy] = useCopyToClipboard();
   const generateIntervalRef = useRef();
   const refreshIntervalRef = useRef();
 
@@ -56,6 +60,12 @@ export default function DesktopPairingPage({
     );
 
     return expireDurationSeconds;
+  };
+
+  const openSettingsOrDownloadMMD = () => {
+    openCustomProtocol('metamask-desktop://pair').catch(() => {
+      window.open('https://metamask.io/download.html', '_blank').focus();
+    });
   };
 
   useEffect(() => {
@@ -105,7 +115,12 @@ export default function DesktopPairingPage({
     hideLoadingIndication();
 
     return (
-      <div>
+      <div
+        className="desktop-pairing__clickable"
+        onClick={() => {
+          handleCopy(otp);
+        }}
+      >
         <Box
           display={DISPLAY.FLEX}
           alignItems={ALIGN_ITEMS.CENTER}
@@ -114,12 +129,18 @@ export default function DesktopPairingPage({
           marginLeft={6}
           marginRight={6}
         >
-          <Typography
-            align={TEXT_ALIGN.CENTER}
-            className="desktop-pairing__otp"
+          <Tooltip
+            wrapperClassName="desktop-pairing__tooltip-wrapper"
+            position="top"
+            title={copied ? t('copiedExclamation') : t('copyToClipboard')}
           >
-            {otp}
-          </Typography>
+            <Typography
+              align={TEXT_ALIGN.CENTER}
+              className="desktop-pairing__otp"
+            >
+              {otp}
+            </Typography>
+          </Tooltip>
         </Box>
 
         <Typography
@@ -173,11 +194,17 @@ export default function DesktopPairingPage({
               <div className="desktop-pairing-warning__title">
                 {t('desktopPairedWarningTitle')}
               </div>
-              <div>
-                {t('desktopPairedWarningDescription')}{' '}
-                <span className="desktop-pairing-warning__link">
+              <div className="desktop-pairing-warning__text">
+                {t('desktopPairedWarningDescription')}
+                <Button
+                  type="link"
+                  onClick={() => {
+                    openSettingsOrDownloadMMD();
+                  }}
+                  className="desktop-pairing-warning__link"
+                >
                   {t('desktopPairedWarningDeepLink')}
-                </span>
+                </Button>
               </div>
             </div>
           }

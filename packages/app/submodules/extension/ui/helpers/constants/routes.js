@@ -129,7 +129,9 @@ const PATH_NAME_MAP = {
   [`${CONTACT_VIEW_ROUTE}/:address`]: 'View Contact Settings Page',
   [REVEAL_SEED_ROUTE]: 'Reveal Secret Recovery Phrase Page',
   [MOBILE_SYNC_ROUTE]: 'Sync With Mobile Page',
+  ///: BEGIN:ONLY_INCLUDE_IN(desktopextension)
   [DESKTOP_PAIRING_ROUTE]: 'Enable Desktop App',
+  ///: END:ONLY_INCLUDE_IN
   [RESTORE_VAULT_ROUTE]: 'Restore Vault Page',
   [IMPORT_TOKEN_ROUTE]: 'Import Token Page',
   [CONFIRM_IMPORT_TOKEN_ROUTE]: 'Confirm Import Token Page',

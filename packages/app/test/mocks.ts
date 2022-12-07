@@ -98,31 +98,6 @@ export const createExtensionConnectionMock =
       disable: jest.fn(),
     } as any);
 
-export const createDesktopConnectionMock = (): jest.Mocked<DesktopConnection> =>
-  ({
-    transferState: jest.fn(),
-    on: jest.fn(),
-    disconnect: jest.fn(),
-    getDesktopVersion: jest.fn(),
-    createStream: jest.fn(),
-    removeAllListeners: jest.fn(),
-    checkPairingKey: jest.fn(),
-    checkVersions: jest.fn(),
-  } as any);
-
-export const createObservableStoreMock = (): jest.Mocked<ObservableStore> =>
-  ({
-    getState: jest.fn(),
-    updateState: jest.fn(),
-  } as any);
-
-export const createExtensionPairingMock = (): jest.Mocked<ExtensionPairing> =>
-  ({
-    generateOTP: jest.fn(),
-    checkPairingKeyMatch: jest.fn(),
-    init: jest.fn(),
-  } as any);
-
 export const createElectronStoreMock = (): jest.Mocked<ElectronStore> =>
   ({
     clear: jest.fn(),

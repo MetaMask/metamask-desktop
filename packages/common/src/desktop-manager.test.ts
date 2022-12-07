@@ -250,6 +250,7 @@ describe('Desktop Manager', () => {
           expect(desktopConnectionConstructorMock).toHaveBeenCalledTimes(1);
           expect(desktopConnectionConstructorMock).toHaveBeenCalledWith(
             webSocketStreamMock,
+            VERSION_MOCK,
           );
           expect(webSocketMock.close).toHaveBeenCalledTimes(1);
           expect(desktopConnectionMock.checkVersions).toHaveBeenCalledTimes(0);

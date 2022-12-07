@@ -52,25 +52,21 @@ export default function DesktopEnableButton() {
     const testResult = await testDesktopConnection();
     hideLoader();
 
-    if (!testResult.isConnected && !isPairingKeyPresent(testResult)) {
-      history.push(DESKTOP_ERROR_NOT_FOUND_ROUTE);
-      return;
-    }
+    if (!isPairingKeyPresent(testResult)) {
+      if (!testResult.isConnected) {
+        history.push(DESKTOP_ERROR_NOT_FOUND_ROUTE);
+        return;
+      }
 
-    if (
-      !testResult.versionCheck?.isExtensionVersionValid &&
-      !isPairingKeyPresent(testResult)
-    ) {
-      history.push(DESKTOP_ERROR_EXTENSION_OUTDATED_ROUTE);
-      return;
-    }
+      if (!testResult.versionCheck?.isExtensionVersionValid) {
+        history.push(DESKTOP_ERROR_EXTENSION_OUTDATED_ROUTE);
+        return;
+      }
 
-    if (
-      !testResult.versionCheck?.isDesktopVersionValid &&
-      !isPairingKeyPresent(testResult)
-    ) {
-      history.push(DESKTOP_ERROR_DESKTOP_OUTDATED_ROUTE);
-      return;
+      if (!testResult.versionCheck?.isDesktopVersionValid) {
+        history.push(DESKTOP_ERROR_DESKTOP_OUTDATED_ROUTE);
+        return;
+      }
     }
 
     if (process.env.SKIP_OTP_PAIRING_FLOW) {

@@ -136,11 +136,6 @@ class DesktopManager {
 
     log.debug('Created web socket connection');
 
-    if (!this.isDesktopEnabled()) {
-      this.desktopConnection = connection;
-      return connection;
-    }
-
     if (!cfg().skipOtpPairingFlow) {
       log.debug('Desktop enabled, checking pairing key');
 
@@ -158,6 +153,11 @@ class DesktopManager {
       }
 
       log.debug('Desktop app recognised');
+    }
+
+    if (!this.isDesktopEnabled()) {
+      this.desktopConnection = connection;
+      return connection;
     }
 
     connection.setPaired();
