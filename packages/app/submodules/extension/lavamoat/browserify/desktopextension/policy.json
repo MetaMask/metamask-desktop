@@ -5938,19 +5938,24 @@
         "external:../../../common/dist/browser/browser-proxy.js": true
       }
     },
+    "external:../../../common/dist/controllers/desktop-base.js": {
+      "packages": {
+        "external:../../../common/node_modules/@metamask/obs-store/dist/index.js": true
+      }
+    },
+    "external:../../../common/dist/controllers/desktop-extension.js": {
+      "packages": {
+        "external:../../../common/dist/controllers/desktop-base.js": true,
+        "external:../../../common/dist/desktop-manager.js": true,
+        "external:../../../common/dist/pairing.js": true
+      }
+    },
     "external:../../../common/dist/controllers/desktop.js": {
       "globals": {
         "isDesktopApp": true
       },
       "packages": {
-        "external:../../../common/dist/controllers/init.js": true,
-        "external:../../../common/node_modules/@metamask/obs-store/dist/index.js": true
-      }
-    },
-    "external:../../../common/dist/controllers/init.js": {
-      "packages": {
-        "external:../../../common/dist/desktop-manager.js": true,
-        "external:../../../common/dist/pairing.js": true
+        "external:../../../common/dist/controllers/desktop-extension.js": true
       }
     },
     "external:../../../common/dist/desktop-connection.js": {
@@ -5977,6 +5982,7 @@
         "external:../../../common/dist/constants.js": true,
         "external:../../../common/dist/desktop-connection.js": true,
         "external:../../../common/dist/encryption/web-socket-stream.js": true,
+        "external:../../../common/dist/types/index.js": true,
         "external:../../../common/dist/utils/config.js": true,
         "external:../../../common/dist/utils/log.js": true,
         "external:../../../common/dist/utils/state.js": true,
@@ -6025,14 +6031,22 @@
     "external:../../../common/dist/pairing.js": {
       "packages": {
         "external:../../../common/dist/browser/index.js": true,
-        "external:../../../common/dist/constants.js": true,
         "external:../../../common/dist/encryption/symmetric.js": true,
+        "external:../../../common/dist/types/index.js": true,
         "external:../../../common/dist/utils/crypto.js": true,
         "external:../../../common/dist/utils/log.js": true,
         "external:../../../common/dist/utils/state.js": true,
         "external:../../../common/dist/utils/stream.js": true,
         "external:../../../common/dist/utils/totp.js": true,
         "external:../../../common/node_modules/obj-multiplex/index.js": true
+      }
+    },
+    "external:../../../common/dist/types/index.js": {
+      "packages": {
+        "external:../../../common/dist/types/background.js": true,
+        "external:../../../common/dist/types/browser.js": true,
+        "external:../../../common/dist/types/desktop.js": true,
+        "external:../../../common/dist/types/message.js": true
       }
     },
     "external:../../../common/dist/utils/config.js": {
@@ -6090,11 +6104,13 @@
     },
     "external:../../../common/dist/web-socket-stream.js": {
       "globals": {
-        "setTimeout": true
+        "clearInterval": true,
+        "setInterval": true
       },
       "packages": {
         "browserify>stream-browserify": true,
-        "external:../../../common/dist/utils/log.js": true
+        "external:../../../common/dist/utils/log.js": true,
+        "external:../../../common/dist/utils/utils.js": true
       }
     },
     "external:../../../common/node_modules/@metamask/obs-store/dist/ComposedStore.js": {
