@@ -1,3 +1,6 @@
+/* eslint-disable node/no-sync */
+/* eslint-disable node/no-process-env */
+
 const cp = require('child_process');
 const { promises: fs } = require('fs');
 
@@ -48,10 +51,6 @@ const waitForEvent = async (emitter, eventName, timeout, validator) => {
       }
     });
   });
-};
-
-const isUsingDesktopApp = () => {
-  return process.env.RUN_WITH_DESKTOP === 'true';
 };
 
 const isInCI = () => {
@@ -105,6 +104,7 @@ const setDesktopAppState = async (state) => {
 
 const addDesktopState = (state) => {
   state.data.DesktopController = { desktopEnabled: true };
+  return state;
 };
 
 const beforeDesktopNavigate = async (_driver) => {
@@ -118,7 +118,6 @@ const getElectronWindowCount = () => {
 };
 
 module.exports = {
-  isUsingDesktopApp,
   startDesktopApp,
   stopDesktopApp,
   setDesktopAppState,

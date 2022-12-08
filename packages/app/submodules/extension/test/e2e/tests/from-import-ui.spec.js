@@ -9,7 +9,6 @@ const {
   completeImportSRPOnboardingFlowWordByWord,
 } = require('../helpers');
 const FixtureBuilder = require('../fixture-builder');
-const { isUsingDesktopApp } = require('../desktop');
 
 describe('MetaMask Import UI', function () {
   it('Importing wallet using Secret Recovery Phrase', async function () {
@@ -438,17 +437,10 @@ describe('MetaMask Import UI', function () {
         await driver.clickElement('.hw-connect__btn:nth-of-type(2)');
         await driver.delay(largeDelayMs * 2);
         await driver.clickElement({ text: 'Continue', tag: 'button' });
+        await driver.waitUntilXWindowHandles(2);
 
-        const electron = isUsingDesktopApp();
-        const expectedWindowCount = electron ? 3 : 2;
-
-        await driver.waitUntilXWindowHandles(expectedWindowCount, 1000, 5000, {
-          electron,
-        });
-
-        const allWindows = await driver.getAllWindowHandles({ electron });
-
-        assert.equal(allWindows.length, expectedWindowCount);
+        const allWindows = await driver.getAllWindowHandles();
+        assert.equal(allWindows.length, 2);
       },
     );
   });

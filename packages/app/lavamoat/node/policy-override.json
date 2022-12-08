@@ -73,6 +73,18 @@
         "Buffer.allocUnsafe": true
       }
     },
+    "@metamask/desktop": {
+      "globals": {
+        "isDesktopApp": true,
+        "process.env.COMPATIBILITY_VERSION_EXTENSION": true,
+        "process.env.DISABLE_WEB_SOCKET_ENCRYPTION": true,
+        "process.env.ENABLE_MV3": true,
+        "process.env.IN_TEST": true,
+        "process.env.METAMASK_DEBUG": true,
+        "process.env.SKIP_OTP_PAIRING_FLOW": true,
+        "process.env.WEB_SOCKET_PORT": true
+      }
+    },
     "@metamask/smart-transactions-controller>@metamask/controllers>nanoid": {
       "builtin": {
         "crypto.randomFillSync": true
