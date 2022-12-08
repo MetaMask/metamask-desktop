@@ -128,6 +128,9 @@ export default function DesktopPairingPage({
           </span>{' '}
           seconds
         </Typography>
+        <div className="desktop-pairing__description">
+          {t('desktopPageDescription')}
+        </div>
       </div>
     );
   };

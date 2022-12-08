@@ -1019,6 +1019,9 @@
   "desktopOutdatedExtensionErrorTitle": {
     "message": "MetaMask Extension is outdated"
   },
+  "desktopPageDescription": {
+    "message": "If the pairing is successful, extension will restart and you'll have to re-enter your password."
+  },
   "desktopPageSubTitle": {
     "message": "Open your MetaMask Desktop and type this code"
   },
