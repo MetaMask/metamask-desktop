@@ -1,0 +1,49 @@
+name: "Build and Package"
+
+on: workflow_dispatch
+
+jobs:
+  package:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - name: Checkout Git Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        run: yarn setup
+
+      - name: Build @metamask/desktop package
+        run: yarn common build
+
+      - name: Build desktop ui
+        run: yarn extension build:desktop:ui:lavamoat:ci
+
+      - name: Build desktop app
+        run: yarn app build:app
+
+      - name: Package app for ${{ matrix.os }}
+        shell: bash
+        run:  |
+              if [ "$RUNNER_OS" == "Linux" ]; then
+                yarn app package:linux:ci
+                echo "PACKAGED LINUX"
+              elif [ "$RUNNER_OS" == "Windows" ]; then
+                yarn app package:win:ci
+                echo "PACKAGED WINDOWS"
+              else
+                echo "$RUNNER_OS not supported"
+                exit 1
+              fi
+        env:
+          WIN_CSC_LINK: ${{ secrets.WIN_CERT_BASE64 }}
+          WIN_CSC_KEY_PASSWORD: ${{ secrets.WIN_CERT_PASSWORD }}
