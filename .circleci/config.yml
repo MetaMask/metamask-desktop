@@ -109,12 +109,12 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: dependency-cache-matt-test4-{{ checksum "yarn.lock" }}
+          key: dependency-cache-v2-{{ checksum "yarn.lock" }}
       - run:
           name: Install deps
           command: YARN_CACHE_FOLDER=.yarn_cache yarn install --frozen-lockfile
       - save_cache:
-          key: dependency-cache-matt-test4-{{ checksum "yarn.lock" }}
+          key: dependency-cache-v2-{{ checksum "yarn.lock" }}
           paths:
             - .yarn_cache
             - node_modules/
