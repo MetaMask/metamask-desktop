@@ -4032,8 +4032,8 @@
     },
     "gulp-sourcemaps>@gulp-sourcemaps/identity-map": {
       "packages": {
-        "chokidar>normalize-path": true,
         "gulp-sourcemaps>@gulp-sourcemaps/identity-map>acorn": true,
+        "gulp-sourcemaps>@gulp-sourcemaps/identity-map>normalize-path": true,
         "gulp-sourcemaps>@gulp-sourcemaps/identity-map>postcss": true,
         "gulp-sourcemaps>@gulp-sourcemaps/identity-map>source-map": true,
         "gulp-sourcemaps>@gulp-sourcemaps/identity-map>through2": true
@@ -4093,13 +4093,8 @@
     },
     "gulp-sourcemaps>@gulp-sourcemaps/map-sources": {
       "packages": {
-        "gulp-sourcemaps>@gulp-sourcemaps/map-sources>normalize-path": true,
-        "gulp-sourcemaps>@gulp-sourcemaps/map-sources>through2": true
-      }
-    },
-    "gulp-sourcemaps>@gulp-sourcemaps/map-sources>normalize-path": {
-      "packages": {
-        "vinyl>remove-trailing-separator": true
+        "gulp-sourcemaps>@gulp-sourcemaps/map-sources>through2": true,
+        "mock-require>normalize-path": true
       }
     },
     "gulp-sourcemaps>@gulp-sourcemaps/map-sources>through2": {
@@ -4278,7 +4273,7 @@
       },
       "packages": {
         "gulp-watch>anymatch>micromatch": true,
-        "gulp-watch>anymatch>normalize-path": true
+        "mock-require>normalize-path": true
       }
     },
     "gulp-watch>anymatch>micromatch": {
@@ -4301,7 +4296,7 @@
         "gulp-watch>anymatch>micromatch>object.omit": true,
         "gulp-watch>anymatch>micromatch>parse-glob": true,
         "gulp-watch>anymatch>micromatch>regex-cache": true,
-        "gulp-watch>anymatch>normalize-path": true
+        "mock-require>normalize-path": true
       }
     },
     "gulp-watch>anymatch>micromatch>arr-diff": {
@@ -4433,11 +4428,6 @@
         "gulp-watch>anymatch>micromatch>regex-cache>is-equal-shallow>is-primitive": true
       }
     },
-    "gulp-watch>anymatch>normalize-path": {
-      "packages": {
-        "vinyl>remove-trailing-separator": true
-      }
-    },
     "gulp-watch>chokidar": {
       "builtin": {
         "events.EventEmitter": true,
@@ -4461,13 +4451,13 @@
         "setTimeout": true
       },
       "packages": {
-        "chokidar>normalize-path": true,
         "eslint>is-glob": true,
         "gulp-watch>chokidar>anymatch": true,
         "gulp-watch>chokidar>async-each": true,
         "gulp-watch>chokidar>braces": true,
         "gulp-watch>chokidar>fsevents": true,
         "gulp-watch>chokidar>is-binary-path": true,
+        "gulp-watch>chokidar>normalize-path": true,
         "gulp-watch>chokidar>readdirp": true,
         "gulp-watch>chokidar>upath": true,
         "gulp-watch>glob-parent": true,
@@ -5089,13 +5079,8 @@
         "path.sep": true
       },
       "packages": {
-        "gulp>glob-watcher>anymatch>normalize-path": true,
+        "mock-require>normalize-path": true,
         "webpack>micromatch": true
-      }
-    },
-    "gulp>glob-watcher>anymatch>normalize-path": {
-      "packages": {
-        "vinyl>remove-trailing-separator": true
       }
     },
     "gulp>glob-watcher>async-done": {
@@ -6060,8 +6045,8 @@
         "gulp>vinyl-fs>remove-bom-buffer": true,
         "gulp>vinyl-fs>vinyl-sourcemap>append-buffer": true,
         "gulp>vinyl-fs>vinyl-sourcemap>convert-source-map": true,
-        "gulp>vinyl-fs>vinyl-sourcemap>normalize-path": true,
         "gulp>vinyl-fs>vinyl-sourcemap>now-and-later": true,
+        "mock-require>normalize-path": true,
         "vinyl": true
       }
     },
@@ -6091,11 +6076,6 @@
         "atob": true,
         "btoa": true,
         "value": true
-      }
-    },
-    "gulp>vinyl-fs>vinyl-sourcemap>normalize-path": {
-      "packages": {
-        "vinyl>remove-trailing-separator": true
       }
     },
     "gulp>vinyl-fs>vinyl-sourcemap>now-and-later": {
@@ -6444,6 +6424,11 @@
         "process.getgid": true,
         "process.getuid": true,
         "process.platform": true
+      }
+    },
+    "mock-require>normalize-path": {
+      "packages": {
+        "vinyl>remove-trailing-separator": true
       }
     },
     "node-sass": {
@@ -7072,8 +7057,8 @@
     },
     "watchify>anymatch": {
       "packages": {
-        "chokidar>normalize-path": true,
-        "depcheck>readdirp>picomatch": true
+        "depcheck>readdirp>picomatch": true,
+        "watchify>anymatch>normalize-path": true
       }
     },
     "watchify>browserify>shasum-object": {
