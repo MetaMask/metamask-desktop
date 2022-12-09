@@ -17,6 +17,11 @@ ignores:
   # Electron
   - electron-notarize
 
+  # eslint
+  - eslint-config-*.js
+  - '@metamask/eslint-config-jest'
+  - '@metamask/eslint-config-typescript'
+
   # Extension Runtime
   - '@babel/runtime'
   - '@download/blockies'

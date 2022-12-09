@@ -211,7 +211,7 @@ jobs:
           command: SCRIPT='app lavamoat' .circleci/scripts/validate-lavamoat-policy.sh
       - run:
           name: Validate UI LavaMoat policy
-          command: SCRIPT='extension lavamoat:desktop:ui' .circleci/scripts/validate-lavamoat-policy.sh
+          command: SCRIPT='app lavamoat:ui' .circleci/scripts/validate-lavamoat-policy.sh
 
   build-common:
     executor: node-browsers
