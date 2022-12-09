@@ -5,30 +5,41 @@ module.exports = {
 
   overrides: [
     {
-      files: ['**/*.js'],
-      extends: ['@metamask/eslint-config-nodejs'],
-      rules: {
-        'no-shadow': 'off',
-      },
+      files: ['src/**/*'],
+      excludedFiles: ['src/**/*.{test,spec}.{js,ts}'],
+      extends: ['.eslintrc.app.js'],
+    },
+    {
+      files: ['ui/**/*.{js,ts,jsx,tsx}'],
+      excludedFiles: ['ui/**/*.{test,spec}.{js,ts,jsx,tsx}'],
+      extends: ['.eslintrc.ui.js'],
+    },
+    {
+      files: ['**/*.{test,spec}.ts', '**/*.{test,spec}.js', 'test/**/*'],
+      extends: ['.eslintrc.test.js'],
+    },
+    {
+      files: ['playwright.config.ts'],
+      extends: ['.eslintrc.typescript.js'],
       parserOptions: {
         ecmaVersion: 11,
       },
     },
     {
-      files: ['**/*.ts'],
-      extends: ['@metamask/eslint-config-typescript'],
-      rules: {
-        '@typescript-eslint/no-shadow': 'off',
-        'import/no-unassigned-import': 'off',
-        'jsdoc/require-jsdoc': 'off',
-        'spaced-comment': 'off',
+      files: ['.eslintrc.js', '.eslintrc.*.js', '*.config.js', 'build/**/*.js'],
+      extends: ['@metamask/eslint-config-nodejs'],
+      parserOptions: {
+        ecmaVersion: 11,
       },
-    },
-    {
-      files: ['**/*.test.ts', '**/*.test.js'],
-      extends: ['@metamask/eslint-config-jest'],
       rules: {
-        'jest/lowercase-name': 'off',
+        'jsdoc/require-jsdoc': 'off',
+        'jsdoc/valid-types': 'off',
+        'node/no-unpublished-require': 'off',
+        'node/no-sync': 'off',
+        'node/no-process-exit': 'off',
+        'node/no-process-env': 'off',
+        'import/no-unassigned-import': 'off',
+        'require-atomic-updates': 'off',
       },
     },
   ],
