@@ -300,7 +300,7 @@ jobs:
           at: .
       - run:
           name: build
-          command: yarn app build:ui:ci
+          command: yarn app build:ui:lavamoat:ci
       - run:
           name: Move dist to avoid conflicts
           command: mv ./${APP_DIR}/dist/ui ./${APP_DIR}/dist-ui
