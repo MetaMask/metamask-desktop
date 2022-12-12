@@ -11,7 +11,7 @@ yarn app build:app:test:ui
 
 3. Build the desktop app UI 
 ```
-yarn extension build:desktop:ui:ci
+yarn app build:ui:ci
 ```
 
 4. Build the extension

@@ -1,12 +1,12 @@
-import fs from 'fs';
 import { Page, BrowserContext, expect } from '@playwright/test';
-import { _electron as electron } from 'playwright';
 import test from '../helpers/setup';
 import { ChromeExtensionPage } from '../pageObjects/mmd-extension-page';
 import { MMDMainMenuPage } from '../pageObjects/mmd-mainMenu-page';
 import { MMDSignUpPage } from '../pageObjects/mmd-signup-page';
 import { MMDSignInPage } from '../pageObjects/mmd-signin-page';
 import { MMDInitialPage } from '../pageObjects/mmd-initial-page';
+
+import { electronStartup } from '../helpers/electron';
 
 async function signUpFlow(page: Page, context: BrowserContext) {
   // Getting extension id of MMD
@@ -34,37 +34,9 @@ const enableDesktopAppFlow = async (page: Page): Promise<string> => {
   return await mainMenuPage.enableDesktopApp();
 };
 
-test.describe('Desktop send', () => {
-  test('Desktop: Send a transaction from one account to another', async ({
-    page,
-    context,
-  }) => {
-    // Delete config.json to have the same initial setup every run
-    await fs.unlink(process.env.ELECTRON_CONFIG_PATH as string, (err) => {
-      if (err) {
-        console.error('there was an error:', err.message);
-      } else {
-        console.log(`${process.env.ELECTRON_CONFIG_PATH} was deleted`);
-      }
-    });
-
-    const electronApp = await electron.launch({
-      args: [process.env.ELECTRON_APP_PATH as string],
-    });
-
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    electronApp
-      .process()
-      .stdout!.on('data', (data) => console.log(`stdout: ${data}`));
-
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    electronApp
-      .process()
-      .stderr!.on(
-        'data',
-        (error) =>
-          console.log`stderr: ${Buffer.from(error, 'utf-8').toString('utf-8')}`,
-      );
+test.describe('Desktop OTP pairing', () => {
+  test('Desktop: successfull OTP pairing', async ({ page, context }) => {
+    const electronApp = await electronStartup();
 
     // Finding the window like this as innerText seems not working as expected.
     const windows = electronApp.windows();
