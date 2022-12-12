@@ -2741,9 +2741,9 @@
         "process.env": true
       },
       "packages": {
+        "dotenv-cli>minimist": true,
         "eslint-plugin-import>tsconfig-paths>json5": true,
-        "eslint-plugin-import>tsconfig-paths>strip-bom": true,
-        "patch-package>minimist": true
+        "eslint-plugin-import>tsconfig-paths>strip-bom": true
       }
     },
     "eslint-plugin-import>tsconfig-paths>json5": {
