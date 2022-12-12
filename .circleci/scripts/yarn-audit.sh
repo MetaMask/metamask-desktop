@@ -7,7 +7,7 @@ set -o pipefail
 
 # use `improved-yarn-audit` since that allows for exclude
 # exclusions are in .iyarc now
-${YARN_EXTENSION} run improved-yarn-audit \
+yarn run improved-yarn-audit \
     --ignore-dev-deps \
     --min-severity moderate \
     --fail-on-missing-exclusions

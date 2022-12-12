@@ -1,0 +1,13 @@
+ignores:
+  # All type packages are imported implicitly by TypeScript
+  - '@types/*'
+
+  # Babel config
+  - "@babel/preset-env"
+  - "@babel/preset-typescript"
+
+  # tsconfig
+  - "@tsconfig/node16"
+
+  # Jest config
+  - 'jest-environment-jsdom'

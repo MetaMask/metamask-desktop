@@ -10,9 +10,6 @@ parameters:
   extension-dir:
     type: string
     default: packages/app/submodules/extension
-  yarn-extension:
-    type: string
-    default: yarn extension
 
 executors:
   node-browsers:
@@ -20,286 +17,122 @@ executors:
       - image: circleci/node:16-browsers
     environment:
       APP_DIR: << pipeline.parameters.app-dir >>
+      COMMON_DIR: << pipeline.parameters.common-dir >>
       EXTENSION_DIR: << pipeline.parameters.extension-dir >>
-      YARN_EXTENSION: << pipeline.parameters.yarn-extension >>
-  node-browsers-medium-plus:
-    docker:
-      - image: circleci/node:16-browsers
-    resource_class: medium+
-    environment:
-      APP_DIR: << pipeline.parameters.app-dir >>
-      EXTENSION_DIR: << pipeline.parameters.extension-dir >>
-      NODE_OPTIONS: --max_old_space_size=2048
-      YARN_EXTENSION: << pipeline.parameters.yarn-extension >>
-  shellcheck:
-    docker:
-      - image: koalaman/shellcheck-alpine@sha256:dfaf08fab58c158549d3be64fb101c626abc5f16f341b569092577ae207db199
-    environment:
-      APP_DIR: << pipeline.parameters.app-dir >>
-      EXTENSION_DIR: << pipeline.parameters.extension-dir >>
-      YARN_EXTENSION: << pipeline.parameters.yarn-extension >>
   playwright:
     docker:
       - image: mcr.microsoft.com/playwright:v1.23.1-focal
     resource_class: large
     environment:
       APP_DIR: << pipeline.parameters.app-dir >>
+      COMMON_DIR: << pipeline.parameters.common-dir >>
       EXTENSION_DIR: << pipeline.parameters.extension-dir >>
       NODE_ENV: development
-      YARN_EXTENSION: << pipeline.parameters.yarn-extension >>
 
 workflows:
   test_and_release:
     jobs:
-      - create_release_pull_request:
+      - install-deps
+      - validate-deps:
           requires:
-            - prep-deps
-          filters:
-            branches:
-              only:
-                - /^Version-v(\d+)[.](\d+)[.](\d+)/
-      - prep-deps
-      - test-deps-audit:
+            - install-deps
+      - validate-lock-duplicates:
           requires:
-            - prep-deps
-      - test-deps-depcheck:
+            - install-deps
+      - lint-lockfile:
           requires:
-            - prep-deps
-      - test-yarn-dedupe:
-          requires:
-            - prep-deps
+            - install-deps
       - validate-lavamoat-config:
-          filters:
-            branches:
-              only:
-                - /^Version-v(\d+)[.](\d+)[.](\d+)|master/
           requires:
-            - prep-deps
-      - prep-build:
+            - build-common
+      - audit:
           requires:
-            - common-build
-      - prep-e2e-test-desktop-deps:
+            - install-deps
+      - build-common:
           requires:
-            - common-build
-      - prep-build-beta:
+            - install-deps
+      - build-app:
           requires:
-            - common-build
-      - prep-build-flask:
+            - build-common
+      - build-app-test-extension:
           requires:
-            - common-build
-      - prep-build-test:
+            - build-common
+      - build-app-test-app:
           requires:
-            - common-build
-      - prep-build-test-mv3:
+            - build-common
+      - build-ui:
           requires:
-            - common-build
-      - prep-build-test-flask:
+            - install-deps
+      - build-ui-test-extension:
           requires:
-            - common-build
-      - prep-build-test-desktop:
+            - install-deps
+      - build-ui-test-app:
           requires:
-            - common-build
-      - test-storybook:
+            - install-deps
+      - build-extension-test-extension:
           requires:
-            - common-build
-      - prep-build-storybook:
+            - build-common
+      - build-extension-test-app:
           requires:
-            - test-storybook
-            - common-build
-      - prep-build-ts-migration-dashboard:
+            - build-common
+      - lint-common:
           requires:
-            - prep-deps
-      - test-lint:
+            - install-deps
+      - lint-app:
           requires:
-            - common-build
-      - test-lint-shellcheck
-      - test-lint-lockfile:
+            - build-common
+      - test-unit-common:
           requires:
-            - prep-deps
-      - test-lint-changelog:
+            - install-deps
+      - test-unit-app:
           requires:
-            - prep-deps
-      - test-e2e-chrome:
+            - build-common
+      - test-e2e-extension:
           requires:
-            - prep-build-test
-      - test-e2e-firefox:
+            - build-app-test-extension
+            - build-ui-test-extension
+            - build-extension-test-extension
+      - test-e2e-extension-snaps:
           requires:
-            - prep-build-test
-      - test-e2e-chrome-snaps:
+            - build-app-test-extension
+            - build-ui-test-extension
+            - build-extension-test-extension
+      - test-e2e-app:
           requires:
-            - prep-build-test-flask
-      - test-e2e-firefox-snaps:
-          requires:
-            - prep-build-test-flask
-      - test-e2e-chrome-mv3:
-          requires:
-            - prep-build-test-mv3
-      - test-e2e-chrome-desktop:
-          requires:
-            - prep-build-test-desktop
-      - test-e2e-chrome-desktop-snaps:
-          requires:
-            - prep-build-test-desktop
-      - test-e2e-desktop-app:
-          requires:
-            - prep-e2e-test-desktop-deps
-      - test-unit:
-          requires:
-            - common-build
-      - test-unit-global:
-          requires:
-            - common-build
-      - validate-source-maps:
-          requires:
-            - prep-build
-      - validate-source-maps-beta:
-          requires:
-            - prep-build-beta
-      - validate-source-maps-flask:
-          requires:
-            - prep-build-flask
-      - test-mozilla-lint:
-          requires:
-            - prep-deps
-            - prep-build
-      - test-mozilla-lint-beta:
-          requires:
-            - prep-deps
-            - prep-build-beta
-      - test-mozilla-lint-flask:
-          requires:
-            - prep-deps
-            - prep-build-flask
-      - all-tests-pass:
-          requires:
-            - validate-lavamoat-config
-            - test-lint
-            - test-lint-shellcheck
-            - test-lint-lockfile
-            - test-lint-changelog
-            - test-unit
-            - test-unit-global
-            - validate-source-maps
-            - validate-source-maps-beta
-            - validate-source-maps-flask
-            - test-mozilla-lint
-            - test-mozilla-lint-beta
-            - test-mozilla-lint-flask
-            - test-e2e-chrome
-            - test-e2e-firefox
-            - test-e2e-chrome-snaps
-            - test-e2e-firefox-snaps
-            - test-e2e-chrome-desktop
-            - test-e2e-chrome-desktop-snaps
-            - common-test
-            - app-test
-            - test-e2e-desktop-app
-            - test-e2e-chrome-desktop-snaps
-            - test-e2e-chrome-desktop
-      - benchmark:
-          requires:
-            - prep-build-test
-      - user-actions-benchmark:
-          requires:
-            - prep-build-test
-      - stats-module-load-init:
-          requires:
-            - prep-build-test-mv3
-      - job-publish-prerelease:
-          requires:
-            - prep-deps
-            - prep-build
-            - prep-build-beta
-            - prep-build-flask
-            - prep-build-storybook
-            - prep-build-ts-migration-dashboard
-            - prep-build-test-mv3
-            - benchmark
-            - user-actions-benchmark
-            - stats-module-load-init
-            - all-tests-pass
-      - job-publish-release:
-          filters:
-            branches:
-              only: master
-          requires:
-            - prep-deps
-            - prep-build
-            - prep-build-flask
-            - all-tests-pass
-      - job-publish-storybook:
-          filters:
-            branches:
-              only: develop
-          requires:
-            - prep-build-storybook
-      - job-publish-ts-migration-dashboard:
-          filters:
-            branches:
-              only: develop
-          requires:
-            - prep-build-ts-migration-dashboard
-      - common-build:
-          requires:
-            - prep-deps
-      - common-lint:
-          requires:
-            - prep-deps
-      - common-test:
-          requires:
-            - prep-deps
-      - app-build:
-          requires:
-            - common-build
-      - app-lint:
-          requires:
-            - common-build
-      - app-test:
-          requires:
-            - common-build
+            - build-app-test-app
+            - build-ui-test-app
+            - build-extension-test-app
 
 jobs:
-  create_release_pull_request:
-    executor: node-browsers
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: Bump manifest version
-          command: .circleci/scripts/release-bump-manifest-version.sh
-      - run:
-          name: Update changelog
-          command: ${YARN_EXTENSION} update-changelog --rc
-      - run:
-          name: Commit changes
-          command: .circleci/scripts/release-commit-version-bump.sh
-      - run:
-          name: Create GitHub Pull Request for version
-          command: .circleci/scripts/release-create-release-pr.sh
-
-  prep-deps:
+  install-deps:
     executor: node-browsers
     steps:
       - checkout
       - restore_cache:
-          key: dependency-cache-v1-{{ checksum "yarn.lock" }}
+          key: dependency-cache-v2-{{ checksum "yarn.lock" }}
       - run:
           name: Install deps
-          command: |
-            .circleci/scripts/deps-install.sh
+          command: YARN_CACHE_FOLDER=.yarn_cache yarn install --frozen-lockfile
       - save_cache:
-          key: dependency-cache-v1-{{ checksum "yarn.lock" }}
+          key: dependency-cache-v2-{{ checksum "yarn.lock" }}
           paths:
+            - .yarn_cache
             - node_modules/
-            - build-artifacts/yarn-install-har/
-            - << pipeline.parameters.app-dir >>/node_modules/
             - << pipeline.parameters.common-dir >>/node_modules/
+            - << pipeline.parameters.app-dir >>/node_modules/
             - << pipeline.parameters.extension-dir >>/node_modules/
+      - run:
+          name: Run root post install
+          command: |
+            yarn setup:postinstall
+      - run:
+          name: Run common post install
+          command: |
+            yarn common setup:postinstall
       - run:
           name: Run extension post install
           command: |
-            ${YARN_EXTENSION} setup:postinstall
+            yarn extension setup:postinstall
       - run:
           name: Run app post install
           command: |
@@ -308,267 +141,27 @@ jobs:
           root: .
           paths:
             - node_modules
-            - build-artifacts
             - << pipeline.parameters.app-dir >>/node_modules
             - << pipeline.parameters.common-dir >>/node_modules
             - << pipeline.parameters.extension-dir >>/node_modules
 
-  validate-lavamoat-config:
-    executor: node-browsers-medium-plus
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: Validate allow-scripts config
-          command: |
-            .circleci/scripts/validate-allow-scripts.sh
-      - run:
-          name: Validate LavaMoat policy
-          command: |
-            .circleci/scripts/validate-lavamoat-policy.sh
-
-  prep-build:
-    executor: node-browsers-medium-plus
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - when:
-          condition:
-            not:
-              matches:
-                pattern: /^master$/
-                value: << pipeline.git.branch >>
-          steps:
-            - run:
-                name: build:dist
-                command: ${YARN_EXTENSION} build dist
-      - when:
-          condition:
-            matches:
-              pattern: /^master$/
-              value: << pipeline.git.branch >>
-          steps:
-            - run:
-                name: build:prod
-                command: ${YARN_EXTENSION} build prod
-      - run:
-          name: build:debug
-          command: find ${EXTENSION_DIR}/dist/ -type f -exec md5sum {} \; | sort -k 2
-      - persist_to_workspace:
-          root: .
-          paths:
-            - << pipeline.parameters.extension-dir >>/dist
-            - << pipeline.parameters.extension-dir >>/builds
-
-  prep-build-beta:
-    executor: node-browsers-medium-plus
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: build:dist
-          command: ${YARN_EXTENSION} build --build-type beta dist
-      - run:
-          name: build:debug
-          command: find ${EXTENSION_DIR}/dist/ -type f -exec md5sum {} \; | sort -k 2
-      - run:
-          name: Move beta build to 'dist-beta' to avoid conflict with production build
-          command: mv ./${EXTENSION_DIR}/dist ./${EXTENSION_DIR}/dist-beta
-      - run:
-          name: Move beta zips to 'builds-beta' to avoid conflict with production build
-          command: mv ./${EXTENSION_DIR}/builds ./${EXTENSION_DIR}/builds-beta
-      - persist_to_workspace:
-          root: .
-          paths:
-            - << pipeline.parameters.extension-dir >>/dist-beta
-            - << pipeline.parameters.extension-dir >>/builds-beta
-
-  prep-build-flask:
-    executor: node-browsers-medium-plus
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: build:dist
-          command: ${YARN_EXTENSION} build --build-type flask dist
-      - run:
-          name: build:debug
-          command: find ${EXTENSION_DIR}/dist/ -type f -exec md5sum {} \; | sort -k 2
-      - run:
-          name: Move flask build to 'dist-flask' to avoid conflict with production build
-          command: mv ./${EXTENSION_DIR}/dist ./${EXTENSION_DIR}/dist-flask
-      - run:
-          name: Move flask zips to 'builds-flask' to avoid conflict with production build
-          command: mv ./${EXTENSION_DIR}/builds ./${EXTENSION_DIR}/builds-flask
-      - persist_to_workspace:
-          root: .
-          paths:
-            - << pipeline.parameters.extension-dir >>/dist-flask
-            - << pipeline.parameters.extension-dir >>/builds-flask
-
-  prep-build-test-desktop:
-    executor: node-browsers-medium-plus
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: Build desktop UI for testing
-          command: yarn app dist:desktop:ui
-      - run:
-          name: Build desktop app for testing
-          command: yarn app build:app:test
-      - run:
-          name: Build extension for testing
-          command: ${YARN_EXTENSION} build:test:desktop
-      - run:
-          name: Move test build to 'dist-test' to avoid conflict with production build
-          command: mv ./${EXTENSION_DIR}/dist ./${EXTENSION_DIR}/dist-test-desktop
-      - run:
-          name: Move test zips to 'builds-test' to avoid conflict with production build
-          command: mv ./${EXTENSION_DIR}/builds ./${EXTENSION_DIR}/builds-test-desktop
-      - persist_to_workspace:
-          root: .
-          paths:
-            - << pipeline.parameters.app-dir >>/dist
-            - << pipeline.parameters.extension-dir >>/dist-test-desktop
-            - << pipeline.parameters.extension-dir >>/builds-test-desktop
-
-  prep-e2e-test-desktop-deps:
+  validate-deps:
     executor: node-browsers
     steps:
       - checkout
       - attach_workspace:
           at: .
       - run:
-          name: Build desktop app for testing
-          command: yarn app build:app:test:ui
+          name: root depcheck
+          command: yarn depcheck
       - run:
-          name: Build desktop UI for testing
-          command: yarn app build:ui:ci
+          name: common depcheck
+          command: yarn depcheck ${COMMON_DIR}
       - run:
-          name: Build extension (no lavamoat) for testing
-          command: ${YARN_EXTENSION} build:test:desktop:ui
-      - run:
-          name: Move extension build to avoid conflict with other builds
-          command: |
-            mkdir -p ./${APP_DIR}/desktop-test
-            mv ./${EXTENSION_DIR}/dist ./${APP_DIR}/desktop-test/extension
-      - run:
-          name: Move app build to avoid conflict with other builds
-          command: mv ./${APP_DIR}/dist ./${APP_DIR}/desktop-test/app
+          name: app depcheck
+          command: yarn depcheck ${APP_DIR}
 
-      - persist_to_workspace:
-          root: .
-          paths:
-            - << pipeline.parameters.app-dir >>/desktop-test
-
-  prep-build-test-flask:
-    executor: node-browsers-medium-plus
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: Build extension for testing
-          command: ${YARN_EXTENSION} build:test:flask
-      - run:
-          name: Move test build to 'dist-test' to avoid conflict with production build
-          command: mv ./${EXTENSION_DIR}/dist ./${EXTENSION_DIR}/dist-test-flask
-      - run:
-          name: Move test zips to 'builds-test' to avoid conflict with production build
-          command: mv ./${EXTENSION_DIR}/builds ./${EXTENSION_DIR}/builds-test-flask
-      - persist_to_workspace:
-          root: .
-          paths:
-            - << pipeline.parameters.extension-dir >>/dist-test-flask
-            - << pipeline.parameters.extension-dir >>/builds-test-flask
-
-  prep-build-test-mv3:
-    executor: node-browsers-medium-plus
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: Build extension in mv3 for testing
-          command: ${YARN_EXTENSION} build:test:mv3
-      - run:
-          name: Move test build to 'dist-test' to avoid conflict with production build
-          command: mv ./${EXTENSION_DIR}/dist ./${EXTENSION_DIR}/dist-test-mv3
-      - run:
-          name: Move test zips to 'builds-test' to avoid conflict with production build
-          command: mv ./${EXTENSION_DIR}/builds ./${EXTENSION_DIR}/builds-test-mv3
-      - persist_to_workspace:
-          root: .
-          paths:
-            - << pipeline.parameters.extension-dir >>/dist-test-mv3
-            - << pipeline.parameters.extension-dir >>/builds-test-mv3
-
-  prep-build-test:
-    executor: node-browsers-medium-plus
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: Build extension for testing
-          command: ${YARN_EXTENSION} build:test
-      - run:
-          name: Move test build to 'dist-test' to avoid conflict with production build
-          command: mv ./${EXTENSION_DIR}/dist ./${EXTENSION_DIR}/dist-test
-      - run:
-          name: Move test zips to 'builds-test' to avoid conflict with production build
-          command: mv ./${EXTENSION_DIR}/builds ./${EXTENSION_DIR}/builds-test
-      - persist_to_workspace:
-          root: .
-          paths:
-            - << pipeline.parameters.extension-dir >>/dist-test
-            - << pipeline.parameters.extension-dir >>/builds-test
-
-  prep-build-storybook:
-    executor: node-browsers-medium-plus
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: Build Storybook
-          command: ${YARN_EXTENSION} storybook:build
-      - persist_to_workspace:
-          root: .
-          paths:
-            - << pipeline.parameters.extension-dir >>/storybook-build
-
-  prep-build-ts-migration-dashboard:
-    executor: node-browsers
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: Build TypeScript migration dashboard
-          command: ${YARN_EXTENSION} ts-migration:dashboard:build
-      - persist_to_workspace:
-          root: .
-          paths:
-            - << pipeline.parameters.extension-dir >>/development/ts-migration-dashboard/build
-
-  test-storybook:
-    executor: node-browsers
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: Test Storybook
-          command: ${YARN_EXTENSION} storybook:test
-
-  test-yarn-dedupe:
+  validate-lock-duplicates:
     executor: node-browsers
     steps:
       - checkout
@@ -578,29 +171,7 @@ jobs:
           name: Detect yarn lock deduplications
           command: yarn yarn-deduplicate && git diff --exit-code yarn.lock
 
-  test-lint:
-    executor: node-browsers
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: Lint
-          command: ${YARN_EXTENSION} lint
-      - run:
-          name: Verify locales
-          command: ${YARN_EXTENSION} verify-locales --quiet
-
-  test-lint-shellcheck:
-    executor: shellcheck
-    steps:
-      - checkout
-      - run: apk add --no-cache bash jq yarn
-      - run:
-          name: ShellCheck Lint
-          command: ./<< pipeline.parameters.extension-dir >>/development/shellcheck.sh
-
-  test-lint-lockfile:
+  lint-lockfile:
     executor: node-browsers
     steps:
       - checkout
@@ -608,619 +179,41 @@ jobs:
           at: .
       - run:
           name: lockfile-lint
-          command: ${YARN_EXTENSION} lint:lockfile
+          command: yarn lint:lockfile
 
-  test-lint-changelog:
-    executor: node-browsers
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - when:
-          condition:
-            not:
-              matches:
-                pattern: /^Version-v(\d+)[.](\d+)[.](\d+)$/
-                value: << pipeline.git.branch >>
-          steps:
-            - run:
-                name: Validate changelog
-                command: ${YARN_EXTENSION} lint:changelog
-      - when:
-          condition:
-            matches:
-              pattern: /^Version-v(\d+)[.](\d+)[.](\d+)$/
-              value: << pipeline.git.branch >>
-          steps:
-            - run:
-                name: Validate release candidate changelog
-                command: ${YARN_EXTENSION} lint:changelog:rc
-
-  test-deps-audit:
+  audit:
     executor: node-browsers
     steps:
       - checkout
       - attach_workspace:
           at: .
       - run:
-          name: ${YARN_EXTENSION} audit
+          name: yarn audit
           command: .circleci/scripts/yarn-audit.sh
 
-  test-deps-depcheck:
+  validate-lavamoat-config:
     executor: node-browsers
     steps:
       - checkout
       - attach_workspace:
           at: .
       - run:
-          name: depcheck
-          command: ${YARN_EXTENSION} depcheck
+          name: Validate root allow-scripts config
+          command: SCRIPT='allow-scripts' .circleci/scripts/validate-allow-scripts.sh
+      - run:
+          name: Validate common allow-scripts config
+          command: SCRIPT='common allow-scripts' .circleci/scripts/validate-allow-scripts.sh
+      - run:
+          name: Validate app allow-scripts config
+          command: SCRIPT='app allow-scripts' .circleci/scripts/validate-allow-scripts.sh
+      - run:
+          name: Validate app LavaMoat policy
+          command: SCRIPT='app lavamoat' .circleci/scripts/validate-lavamoat-policy.sh
+      - run:
+          name: Validate UI LavaMoat policy
+          command: SCRIPT='app lavamoat:ui' .circleci/scripts/validate-lavamoat-policy.sh
 
-  test-e2e-chrome:
-    executor: node-browsers
-    parallelism: 8
-    steps:
-      - checkout
-      - run:
-          name: Re-Install Chrome
-          command: ./.circleci/scripts/chrome-install.sh
-      - attach_workspace:
-          at: .
-      - run:
-          name: Move test build to dist
-          command: mv ./${EXTENSION_DIR}/dist-test ./${EXTENSION_DIR}/dist
-      - run:
-          name: Move test zips to builds
-          command: mv ./${EXTENSION_DIR}/builds-test ./${EXTENSION_DIR}/builds
-      - run:
-          name: test:e2e:chrome
-          command: |
-            if .circleci/scripts/test-run-e2e.sh
-            then
-              ${YARN_EXTENSION} test:e2e:chrome --retries 2
-            fi
-          no_output_timeout: 20m
-      - store_artifacts:
-          path: test-artifacts
-          destination: test-artifacts
-
-  test-e2e-chrome-mv3:
-    executor: node-browsers
-    parallelism: 8
-    steps:
-      - checkout
-      - run:
-          name: Re-Install Chrome
-          command: ./.circleci/scripts/chrome-install.sh
-      - attach_workspace:
-          at: .
-      - run:
-          name: Move test build to dist
-          command: mv ./${EXTENSION_DIR}/dist-test-mv3 ./${EXTENSION_DIR}/dist
-      - run:
-          name: Move test zips to builds
-          command: mv ./${EXTENSION_DIR}/builds-test-mv3 ./${EXTENSION_DIR}/builds
-      - run:
-          name: test:e2e:chrome
-          command: |
-            if .circleci/scripts/test-run-e2e.sh
-            then
-              ${YARN_EXTENSION} test:e2e:chrome --retries 2 || echo "Temporarily suppressing MV3 e2e test failures"
-            fi
-          no_output_timeout: 20m
-      - store_artifacts:
-          path: test-artifacts
-          destination: test-artifacts
-
-  test-e2e-chrome-desktop:
-    executor: node-browsers
-    parallelism: 8
-    steps:
-      - checkout
-      - run:
-          name: Re-Install Chrome
-          command: ./.circleci/scripts/chrome-install.sh
-      - attach_workspace:
-          at: .
-      - run:
-          name: Move test build to dist
-          command: mv ./${EXTENSION_DIR}/dist-test-desktop ./${EXTENSION_DIR}/dist
-      - run:
-          name: Move test zips to builds
-          command: mv ./${EXTENSION_DIR}/builds-test-desktop ./${EXTENSION_DIR}/builds
-      - run:
-          name: test:e2e:chrome:desktop
-          command: |
-            if .circleci/scripts/test-run-e2e.sh
-            then
-              ${YARN_EXTENSION} test:e2e:chrome:desktop --retries 2
-            fi
-          no_output_timeout: 20m
-      - store_artifacts:
-          path: test-artifacts
-          destination: test-artifacts
-
-  test-e2e-chrome-desktop-snaps:
-    executor: node-browsers
-    parallelism: 2
-    steps:
-      - checkout
-      - run:
-          name: Re-Install Chrome
-          command: ./.circleci/scripts/chrome-install.sh
-      - attach_workspace:
-          at: .
-      - run:
-          name: Move test build to dist
-          command: mv ./${EXTENSION_DIR}/dist-test-desktop ./${EXTENSION_DIR}/dist
-      - run:
-          name: Move test zips to builds
-          command: mv ./${EXTENSION_DIR}/builds-test-desktop ./${EXTENSION_DIR}/builds
-      - run:
-          name: test:e2e:chrome:desktop:snaps
-          command: |
-            if .circleci/scripts/test-run-e2e.sh
-            then
-              ${YARN_EXTENSION} test:e2e:chrome:desktop:snaps --retries 2
-            fi
-          no_output_timeout: 20m
-      - store_artifacts:
-          path: test-artifacts
-          destination: test-artifacts
-
-  test-e2e-firefox-snaps:
-    executor: node-browsers
-    parallelism: 2
-    steps:
-      - checkout
-      - run:
-          name: Install Firefox
-          command: ./.circleci/scripts/firefox-install.sh
-      - attach_workspace:
-          at: .
-      - run:
-          name: Move test build to dist
-          command: mv ./${EXTENSION_DIR}/dist-test-flask ./${EXTENSION_DIR}/dist
-      - run:
-          name: Move test zips to builds
-          command: mv ./${EXTENSION_DIR}/builds-test-flask ./${EXTENSION_DIR}/builds
-      - run:
-          name: test:e2e:firefox:snaps
-          command: |
-            if .circleci/scripts/test-run-e2e.sh
-            then
-              ${YARN_EXTENSION} test:e2e:firefox:snaps --retries 2
-            fi
-          no_output_timeout: 20m
-      - store_artifacts:
-          path: test-artifacts
-          destination: test-artifacts
-
-  test-e2e-chrome-snaps:
-    executor: node-browsers
-    parallelism: 2
-    steps:
-      - checkout
-      - run:
-          name: Re-Install Chrome
-          command: ./.circleci/scripts/chrome-install.sh
-      - attach_workspace:
-          at: .
-      - run:
-          name: Move test build to dist
-          command: mv ./${EXTENSION_DIR}/dist-test-flask ./${EXTENSION_DIR}/dist
-      - run:
-          name: Move test zips to builds
-          command: mv ./${EXTENSION_DIR}/builds-test-flask ./${EXTENSION_DIR}/builds
-      - run:
-          name: test:e2e:chrome:snaps
-          command: |
-            if .circleci/scripts/test-run-e2e.sh
-            then
-              ${YARN_EXTENSION} test:e2e:chrome:snaps --retries 2
-            fi
-          no_output_timeout: 20m
-      - store_artifacts:
-          path: test-artifacts
-          destination: test-artifacts
-
-  test-e2e-firefox:
-    executor: node-browsers-medium-plus
-    parallelism: 8
-    steps:
-      - checkout
-      - run:
-          name: Install Firefox
-          command: ./.circleci/scripts/firefox-install.sh
-      - attach_workspace:
-          at: .
-      - run:
-          name: Move test build to dist
-          command: mv ./${EXTENSION_DIR}/dist-test ./${EXTENSION_DIR}/dist
-      - run:
-          name: Move test zips to builds
-          command: mv ./${EXTENSION_DIR}/builds-test ./${EXTENSION_DIR}/builds
-      - run:
-          name: test:e2e:firefox
-          command: |
-            if .circleci/scripts/test-run-e2e.sh
-            then
-              ${YARN_EXTENSION} test:e2e:firefox --retries 2
-            fi
-          no_output_timeout: 20m
-      - store_artifacts:
-          path: test-artifacts
-          destination: test-artifacts
-
-  test-e2e-desktop-app:
-    executor: playwright
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: Move extension build
-          command: mv ./${APP_DIR}/desktop-test/extension ./${EXTENSION_DIR}/dist
-      - run:
-          name: Move app build
-          command: mv ./${APP_DIR}/desktop-test/app ./${APP_DIR}/dist
-      - run:
-          name: Install PW dependencies
-          command: |
-            cd ./${APP_DIR}
-            npx playwright install chrome
-      - run:
-          name: Run e2e desktop command
-          command: |
-            if .circleci/scripts/test-run-e2e.sh
-            then
-              xvfb-run yarn app test:e2e
-            fi
-          no_output_timeout: 20m
-      - store_artifacts:
-          name: html-report and artifacts
-          path: ./<< pipeline.parameters.app-dir >>/test/playwright/playwright-reports/
-      - store_test_results:
-          name: report for pipeline integration
-          path: ./<< pipeline.parameters.app-dir >>/test/playwright/playwright-reports/junit/test-results.xml
-      - store_artifacts:
-          name: screenshots and trace.zip
-          path: ./<< pipeline.parameters.app-dir >>/test/playwright/test-results/
-
-  benchmark:
-    executor: node-browsers-medium-plus
-    steps:
-      - checkout
-      - run:
-          name: Re-Install Chrome
-          command: ./.circleci/scripts/chrome-install.sh
-      - attach_workspace:
-          at: .
-      - run:
-          name: Move test build to dist
-          command: mv ./${EXTENSION_DIR}/dist-test ./${EXTENSION_DIR}/dist
-      - run:
-          name: Move test zips to builds
-          command: mv ./${EXTENSION_DIR}/builds-test ./${EXTENSION_DIR}/builds
-      - run:
-          name: Run page load benchmark
-          command: ${YARN_EXTENSION} benchmark:chrome --out ../../../../test-artifacts/chrome/benchmark/pageload.json --retries 2
-      - store_artifacts:
-          path: test-artifacts
-          destination: test-artifacts
-      - persist_to_workspace:
-          root: .
-          paths:
-            - test-artifacts
-
-  user-actions-benchmark:
-    executor: node-browsers-medium-plus
-    steps:
-      - checkout
-      - run:
-          name: Re-Install Chrome
-          command: ./.circleci/scripts/chrome-install.sh
-      - attach_workspace:
-          at: .
-      - run:
-          name: Move test build to dist
-          command: mv ./${EXTENSION_DIR}/dist-test ./${EXTENSION_DIR}/dist
-      - run:
-          name: Move test zips to builds
-          command: mv ./${EXTENSION_DIR}/builds-test ./${EXTENSION_DIR}/builds
-      - run:
-          name: Run page load benchmark
-          command: ${YARN_EXTENSION} user-actions-benchmark:chrome --out ../../../../test-artifacts/chrome/benchmark/user_actions.json --retries 2
-      - store_artifacts:
-          path: test-artifacts
-          destination: test-artifacts
-      - persist_to_workspace:
-          root: .
-          paths:
-            - test-artifacts
-
-  stats-module-load-init:
-    executor: node-browsers-medium-plus
-    steps:
-      - checkout
-      - run:
-          name: Re-Install Chrome
-          command: ./.circleci/scripts/chrome-install.sh
-      - attach_workspace:
-          at: .
-      - run:
-          name: Move test build to dist
-          command: mv ./${EXTENSION_DIR}/dist-test-mv3 ./${EXTENSION_DIR}/dist
-      - run:
-          name: Move test zips to builds
-          command: mv ./${EXTENSION_DIR}/builds-test-mv3 ./${EXTENSION_DIR}/builds
-      - run:
-          name: Run page load benchmark
-          command: |
-            mkdir -p test-artifacts/chrome/mv3
-            cp -R ${EXTENSION_DIR}/development/charts/flamegraph test-artifacts/chrome/mv3/initialisation
-            cp -R ${EXTENSION_DIR}/development/charts/flamegraph/chart test-artifacts/chrome/mv3/initialisation/background
-            cp -R ${EXTENSION_DIR}/development/charts/flamegraph/chart test-artifacts/chrome/mv3/initialisation/ui
-            cp -R ${EXTENSION_DIR}/development/charts/table test-artifacts/chrome/mv3/load_time
-      - run:
-          name: Run page load benchmark
-          command: ${YARN_EXTENSION} mv3:stats:chrome --out test-artifacts/chrome/mv3
-      - run:
-          name: Install jq
-          command: sudo apt install jq -y
-      - run:
-          name: Record bundle size at commit
-          command: ./.circleci/scripts/bundle-stats-commit.sh
-      - store_artifacts:
-          path: test-artifacts
-          destination: test-artifacts
-      - persist_to_workspace:
-          root: .
-          paths:
-            - test-artifacts
-
-  job-publish-prerelease:
-    executor: node-browsers
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: build:source-map-explorer
-          command: |
-            cd ${EXTENSION_DIR}
-            ./development/source-map-explorer.sh
-      - store_artifacts:
-          path: << pipeline.parameters.extension-dir >>/dist/sourcemaps
-          destination: builds/sourcemaps
-      - store_artifacts:
-          path: << pipeline.parameters.extension-dir >>/dist-beta/sourcemaps
-          destination: builds-beta/sourcemaps
-      - store_artifacts:
-          path: << pipeline.parameters.extension-dir >>/dist-flask/sourcemaps
-          destination: builds-flask/sourcemaps
-      - store_artifacts:
-          path: << pipeline.parameters.extension-dir >>/builds
-          destination: builds
-      - store_artifacts:
-          path: << pipeline.parameters.extension-dir >>/builds-beta
-          destination: builds-beta
-      - store_artifacts:
-          path: << pipeline.parameters.extension-dir >>/builds-flask
-          destination: builds-flask
-      - store_artifacts:
-          path: << pipeline.parameters.extension-dir >>/coverage
-          destination: coverage
-      - store_artifacts:
-          path: << pipeline.parameters.extension-dir >>/jest-coverage
-          destination: jest-coverage
-      - store_artifacts:
-          path: test-artifacts
-          destination: test-artifacts
-      # important: generate lavamoat viz AFTER uploading builds as artifacts
-      # Temporarily disabled until we can update to a version of `sesify` with
-      # this fix included: https://github.com/LavaMoat/LavaMoat/pull/121
-      - run:
-          name: build:lavamoat-viz
-          command: ./.circleci/scripts/create-lavamoat-viz.sh
-      - store_artifacts:
-          path: build-artifacts
-          destination: build-artifacts
-      - store_artifacts:
-          path: << pipeline.parameters.extension-dir >>/storybook-build
-          destination: storybook
-      - store_artifacts:
-          path: << pipeline.parameters.extension-dir >>/development/ts-migration-dashboard/build
-          destination: ts-migration-dashboard
-      - run:
-          name: Set branch parent commit env var
-          command: |
-            echo "export PARENT_COMMIT=$(git rev-parse "$(git rev-list --topo-order --reverse HEAD ^origin/develop | head -1)"^)" >> $BASH_ENV
-            source $BASH_ENV
-      - run:
-          name: build:announce
-          command: |
-            cd ${EXTENSION_DIR}
-            ./development/metamaskbot-build-announce.js
-
-  job-publish-release:
-    executor: node-browsers
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: Publish main release to Sentry
-          command: ${YARN_EXTENSION} sentry:publish
-      - run:
-          name: Publish Flask release to Sentry
-          command: ${YARN_EXTENSION} sentry:publish --build-type flask
-      - run:
-          name: Create GitHub release
-          command: |
-            .circleci/scripts/release-create-gh-release.sh
-
-  job-publish-storybook:
-    executor: node-browsers
-    steps:
-      - add_ssh_keys:
-          fingerprints:
-            - "3d:49:29:f4:b2:e8:ea:af:d1:32:eb:2a:fc:15:85:d8"
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: storybook:deploy
-          command: |
-            git remote add storybook git@github.com:MetaMask/metamask-storybook.git
-            ${YARN_EXTENSION} storybook:deploy
-
-  job-publish-ts-migration-dashboard:
-    executor: node-browsers
-    steps:
-      - add_ssh_keys:
-          fingerprints:
-            - "8b:21:e3:20:7c:c9:db:82:74:2d:86:d6:11:a7:2f:49"
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: ts-migration-dashboard:deploy
-          command: |
-            git remote add ts-migration-dashboard git@github.com:MetaMask/metamask-extension-ts-migration-dashboard.git
-            git config user.name "MetaMask Bot"
-            git config user.email metamaskbot@users.noreply.github.com
-            ${YARN_EXTENSION} ts-migration:dashboard:deploy
-
-  test-unit:
-    executor: node-browsers
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: test:coverage:mocha
-          command: ${YARN_EXTENSION} test:coverage:mocha
-      - run:
-          name: test:coverage:jest
-          command: ${YARN_EXTENSION} test:coverage:jest
-      - run:
-          name: Validate coverage thresholds
-          command: |
-            if ! git diff --exit-code << pipeline.parameters.extension-dir >>/jest.config.js << pipeline.parameters.extension-dir >>/development/jest.config.js; then
-              echo "Detected changes in coverage thresholds"
-              exit 1
-            fi
-      - persist_to_workspace:
-          root: .
-          paths:
-            - << pipeline.parameters.extension-dir >>/.nyc_output
-            - << pipeline.parameters.extension-dir >>/coverage
-            - << pipeline.parameters.extension-dir >>/jest-coverage
-      - store_test_results:
-          path: << pipeline.parameters.extension-dir >>/test/test-results/junit.xml
-  test-unit-global:
-    executor: node-browsers
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: test:unit:global
-          command: ${YARN_EXTENSION} test:unit:global
-
-  validate-source-maps:
-    executor: node-browsers
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: Validate source maps
-          command: ${YARN_EXTENSION} validate-source-maps
-
-  validate-source-maps-beta:
-    executor: node-browsers
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: Move beta build to dist
-          command: mv ./<< pipeline.parameters.extension-dir >>/dist-beta ./<< pipeline.parameters.extension-dir >>/dist
-      - run:
-          name: Move beta zips to builds
-          command: mv ./<< pipeline.parameters.extension-dir >>/builds-beta ./<< pipeline.parameters.extension-dir >>/builds
-      - run:
-          name: Validate source maps
-          command: ${YARN_EXTENSION} validate-source-maps
-
-  validate-source-maps-flask:
-    executor: node-browsers
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: Move flask build to dist
-          command: mv ./<< pipeline.parameters.extension-dir >>/dist-flask ./<< pipeline.parameters.extension-dir >>/dist
-      - run:
-          name: Move flask zips to builds
-          command: mv ./<< pipeline.parameters.extension-dir >>/builds-flask ./<< pipeline.parameters.extension-dir >>//builds
-      - run:
-          name: Validate source maps
-          command: ${YARN_EXTENSION} validate-source-maps
-
-  test-mozilla-lint:
-    executor: node-browsers
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: test:mozilla-lint
-          command: NODE_OPTIONS=--max_old_space_size=3072 ${YARN_EXTENSION} mozilla-lint
-
-  test-mozilla-lint-beta:
-    executor: node-browsers
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: Move beta build to dist
-          command: mv ./<< pipeline.parameters.extension-dir >>/dist-beta ./<< pipeline.parameters.extension-dir >>/dist
-      - run:
-          name: Move beta zips to builds
-          command: mv ./<< pipeline.parameters.extension-dir >>/builds-beta ./<< pipeline.parameters.extension-dir >>/builds
-      - run:
-          name: test:mozilla-lint
-          command: NODE_OPTIONS=--max_old_space_size=3072 ${YARN_EXTENSION} mozilla-lint
-
-  test-mozilla-lint-flask:
-    executor: node-browsers
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: Move flask build to dist
-          command: mv ./<< pipeline.parameters.extension-dir >>/dist-flask ./<< pipeline.parameters.extension-dir >>/dist
-      - run:
-          name: Move flask zips to builds
-          command: mv ./<< pipeline.parameters.extension-dir >>/builds-flask ./<< pipeline.parameters.extension-dir >>/builds
-      - run:
-          name: test:mozilla-lint
-          command: NODE_OPTIONS=--max_old_space_size=3072 ${YARN_EXTENSION} mozilla-lint
-
-  all-tests-pass:
-    executor: node-browsers
-    steps:
-      - run:
-          name: All Tests Passed
-          command: echo 'weew - everything passed!'
-
-  common-build:
+  build-common:
     executor: node-browsers
     steps:
       - checkout
@@ -1234,7 +227,143 @@ jobs:
           paths:
             - << pipeline.parameters.common-dir >>/dist
 
-  common-lint:
+  build-app:
+    executor: node-browsers
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: build
+          command: yarn app build:app
+      - run:
+          name: Move dist to avoid conflicts
+          command: mv ./${APP_DIR}/dist/app ./${APP_DIR}/dist-app
+      - persist_to_workspace:
+          root: .
+          paths:
+            - << pipeline.parameters.app-dir >>/dist-app
+
+  build-app-test-extension:
+    executor: node-browsers
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: build
+          command: yarn app build:app:test
+      - run:
+          name: Move dist to avoid conflicts
+          command: mv ./${APP_DIR}/dist/app ./${APP_DIR}/dist-app-test-extension
+      - persist_to_workspace:
+          root: .
+          paths:
+            - << pipeline.parameters.app-dir >>/dist-app-test-extension
+
+  build-app-test-app:
+    executor: node-browsers
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: build
+          command: yarn app build:app:test:ui
+      - run:
+          name: Move dist to avoid conflicts
+          command: mv ./${APP_DIR}/dist/app ./${APP_DIR}/dist-app-test-app
+      - persist_to_workspace:
+          root: .
+          paths:
+            - << pipeline.parameters.app-dir >>/dist-app-test-app
+
+  build-ui:
+    executor: node-browsers
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: build
+          command: yarn app build:ui:ci
+      - run:
+          name: Move dist to avoid conflicts
+          command: mv ./${APP_DIR}/dist/ui ./${APP_DIR}/dist-ui
+      - persist_to_workspace:
+          root: .
+          paths:
+            - << pipeline.parameters.app-dir >>/dist-ui
+
+  build-ui-test-extension:
+    executor: node-browsers
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: build
+          command: yarn app dist:desktop:ui
+      - run:
+          name: Move dist to avoid conflicts
+          command: mv ./${APP_DIR}/dist/ui ./${APP_DIR}/dist-ui-test-extension
+      - persist_to_workspace:
+          root: .
+          paths:
+            - << pipeline.parameters.app-dir >>/dist-ui-test-extension
+
+  build-ui-test-app:
+    executor: node-browsers
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: build
+          command: yarn app build:ui:ci
+      - run:
+          name: Move dist to avoid conflicts
+          command: mv ./${APP_DIR}/dist/ui ./${APP_DIR}/dist-ui-test-app
+      - persist_to_workspace:
+          root: .
+          paths:
+            - << pipeline.parameters.app-dir >>/dist-ui-test-app
+
+  build-extension-test-extension:
+    executor: node-browsers
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: build
+          command: yarn extension build:test:desktop
+      - run:
+          name: Move dist to avoid conflicts
+          command: mv ./${EXTENSION_DIR}/dist ./${EXTENSION_DIR}/dist-extension-test
+      - persist_to_workspace:
+          root: .
+          paths:
+            - << pipeline.parameters.extension-dir >>/dist-extension-test
+
+  build-extension-test-app:
+    executor: node-browsers
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: build
+          command: yarn extension build:test:desktop:ui
+      - run:
+          name: Move dist to avoid conflicts
+          command: mv ./${EXTENSION_DIR}/dist ./${EXTENSION_DIR}/dist-extension-test-app
+      - persist_to_workspace:
+          root: .
+          paths:
+            - << pipeline.parameters.extension-dir >>/dist-extension-test-app
+
+  lint-common:
     executor: node-browsers
     steps:
       - checkout
@@ -1244,7 +373,17 @@ jobs:
           name: lint
           command: yarn common lint
 
-  common-test:
+  lint-app:
+    executor: node-browsers
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: lint
+          command: yarn app lint
+
+  test-unit-common:
     executor: node-browsers
     steps:
       - checkout
@@ -1256,27 +395,7 @@ jobs:
       - store_test_results:
           path: << pipeline.parameters.common-dir >>/test/results/junit.xml
 
-  app-build:
-    executor: node-browsers
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: build
-          command: yarn app build:app
-
-  app-lint:
-    executor: node-browsers
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: lint
-          command: yarn app lint
-
-  app-test:
+  test-unit-app:
     executor: node-browsers
     steps:
       - checkout
@@ -1287,3 +406,109 @@ jobs:
           command: yarn app test
       - store_test_results:
           path: << pipeline.parameters.app-dir >>/test/results/junit.xml
+
+  test-e2e-extension:
+    executor: node-browsers
+    parallelism: 8
+    steps:
+      - checkout
+      - run:
+          name: Re-Install Chrome
+          command: ./.circleci/scripts/chrome-install.sh
+      - attach_workspace:
+          at: .
+      - run:
+          name: Move app build
+          command: |
+            mkdir -p ./${APP_DIR}/dist
+            mv ./${APP_DIR}/dist-app-test-extension ./${APP_DIR}/dist/app
+      - run:
+          name: Move UI build
+          command: |
+            mv ./${APP_DIR}/dist-ui-test-extension ./${APP_DIR}/dist/ui
+      - run:
+          name: Move extension build
+          command: |
+            mv ./${EXTENSION_DIR}/dist-extension-test ./${EXTENSION_DIR}/dist
+      - run:
+          name: test:e2e:chrome:desktop
+          command: |
+            if .circleci/scripts/test-run-e2e.sh
+            then
+              yarn app test:e2e:extension --retries 2
+            fi
+          no_output_timeout: 20m
+
+  test-e2e-extension-snaps:
+    executor: node-browsers
+    parallelism: 2
+    steps:
+      - checkout
+      - run:
+          name: Re-Install Chrome
+          command: ./.circleci/scripts/chrome-install.sh
+      - attach_workspace:
+          at: .
+      - run:
+          name: Move app build
+          command: |
+            mkdir -p ./${APP_DIR}/dist
+            mv ./${APP_DIR}/dist-app-test-extension ./${APP_DIR}/dist/app
+      - run:
+          name: Move UI build
+          command: |
+            mv ./${APP_DIR}/dist-ui-test-extension ./${APP_DIR}/dist/ui
+      - run:
+          name: Move extension build
+          command: |
+            mv ./${EXTENSION_DIR}/dist-extension-test ./${EXTENSION_DIR}/dist
+      - run:
+          name: test:e2e:chrome:desktop:snaps
+          command: |
+            if .circleci/scripts/test-run-e2e.sh
+            then
+              yarn app test:e2e:extension:snaps --retries 2
+            fi
+          no_output_timeout: 20m
+
+  test-e2e-app:
+    executor: playwright
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Move app build
+          command: |
+            mkdir -p ./${APP_DIR}/dist
+            mv ./${APP_DIR}/dist-app-test-app ./${APP_DIR}/dist/app
+      - run:
+          name: Move UI build
+          command: |
+            mv ./${APP_DIR}/dist-ui-test-app ./${APP_DIR}/dist/ui
+      - run:
+          name: Move extension build
+          command: |
+            mv ./${EXTENSION_DIR}/dist-extension-test-app ./${EXTENSION_DIR}/dist
+      - run:
+          name: Install PW dependencies
+          command: |
+            cd ./${APP_DIR}
+            npx playwright install chrome
+      - run:
+          name: Run e2e desktop command
+          command: |
+            if .circleci/scripts/test-run-e2e.sh
+            then
+              xvfb-run yarn app test:e2e:app
+            fi
+          no_output_timeout: 20m
+      - store_artifacts:
+          name: html-report and artifacts
+          path: ./<< pipeline.parameters.app-dir >>/test/playwright/playwright-reports/
+      - store_test_results:
+          name: report for pipeline integration
+          path: ./<< pipeline.parameters.app-dir >>/test/playwright/playwright-reports/junit/test-results.xml
+      - store_artifacts:
+          name: screenshots and trace.zip
+          path: ./<< pipeline.parameters.app-dir >>/test/playwright/test-results/

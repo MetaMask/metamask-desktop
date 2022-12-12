@@ -33,13 +33,15 @@
     "package:win": "electron-builder -w",
     "package:win:dev": "set CSC_LINK=build/windows/test_certificate.pfx && set CSC_KEY_PASSWORD=test123* && electron-builder -w",
     "release:linux": "electron-builder -l -p 'onTagOrDraft'",
-    "setup": "yarn install && yarn setup:postinstall",
     "setup:postinstall": "yarn patch-package && yarn allow-scripts",
     "start": "electron dist/app/src/app/main.js",
     "start:lavamoat": "electron dist/app/src/app/lavamoat.js",
     "start:test": "GLOBAL_AGENT_HTTP_PROXY=http://127.0.0.1:8000 NODE_TLS_REJECT_UNAUTHORIZED=0 yarn start",
     "test": "jest",
-    "test:e2e": "npx playwright test"
+    "test:e2e:app": "npx playwright test",
+    "test:e2e:extension": "E2E_ARGS='--file ../../test/e2e/hook.js' yarn workspace metamask-crx test:e2e:chrome",
+    "test:e2e:extension:single": "E2E_ARGS='--file ../../test/e2e/hook.js' yarn workspace metamask-crx test:e2e:single",
+    "test:e2e:extension:snaps": "E2E_ARGS='--file ../../test/e2e/hook.js' yarn workspace metamask-crx test:e2e:chrome:snaps"
   },
   "dependencies": {
     "@babel/runtime": "^7.5.5",
@@ -318,6 +320,7 @@
     "loose-envify": "^1.4.0",
     "madge": "^5.0.1",
     "mocha": "^8.0.0",
+    "mock-require": "^3.0.3",
     "mockttp": "^2.6.0",
     "nock": "^13.2.9",
     "node-fetch": "^2.6.1",

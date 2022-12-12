@@ -13485,10 +13485,10 @@ get-assigned-identifiers@^1.1.0, get-assigned-identifiers@^1.2.0:
   resolved "https://registry.yarnpkg.com/get-assigned-identifiers/-/get-assigned-identifiers-1.2.0.tgz#6dbf411de648cbaf8d9169ebb0d2d576191e2ff1"
   integrity sha512-mBBwmeGTrxEMO4pMaaf/uUEFHnYtwr8FTe8Y/mer4rcV/bye0qGm6pw1bGZFGStxC5O76c5ZAVBGnqHmOaJpdQ==
 
-get-caller-file@^1.0.1:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/get-caller-file/-/get-caller-file-1.0.2.tgz#f702e63127e7e231c160a80c1554acb70d5047e5"
-  integrity sha1-9wLmMSfn4jHBYKgMFVSstw1QR+U=
+get-caller-file@^1.0.1, get-caller-file@^1.0.2:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/get-caller-file/-/get-caller-file-1.0.3.tgz#f978fa4c90d1dfe7ff2d6beda2a515e713bdcf4a"
+  integrity sha512-3t6rVToeoZfYSGd8YoLFR2DJkiQrIiUrGcjvFX2mDw3bn6k2OtwHN0TNCLbBO+w8qTvimhDkv+LSscbJY1vE6w==
 
 get-caller-file@^2.0.1, get-caller-file@^2.0.5:
   version "2.0.5"
@@ -18288,6 +18288,14 @@ mocha@^8.0.0:
     yargs "16.2.0"
     yargs-parser "20.2.4"
     yargs-unparser "2.0.0"
+
+mock-require@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/mock-require/-/mock-require-3.0.3.tgz#ccd544d9eae81dd576b3f219f69ec867318a1946"
+  integrity sha512-lLzfLHcyc10MKQnNUCv7dMcoY/2Qxd6wJfbqCcVk3LDb8An4hF6ohk5AztrvgKhJCqj36uyzi/p5se+tvyD+Wg==
+  dependencies:
+    get-caller-file "^1.0.2"
+    normalize-path "^2.1.1"
 
 mockttp@^2.6.0:
   version "2.6.0"

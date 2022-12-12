@@ -78,12 +78,15 @@ async function main() {
     exit = '--no-exit';
   }
 
+  const extraArgs = process.env.E2E_ARGS?.split(' ') || [];
+
   await retry({ retries }, async () => {
     await runInShell('yarn', [
       'mocha',
       '--no-config',
       '--timeout',
       testTimeoutInMilliseconds,
+      ...extraArgs,
       e2eTestPath,
       exit,
     ]);

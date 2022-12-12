@@ -4,7 +4,7 @@ set -e
 set -u
 set -o pipefail
 
-yarn lavamoat:auto:ci
+yarn ${SCRIPT}
 
 if git diff --exit-code
 then

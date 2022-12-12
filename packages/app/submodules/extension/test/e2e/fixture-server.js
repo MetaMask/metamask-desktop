@@ -92,10 +92,6 @@ class FixtureServer {
   }
 
   loadJsonState(rawState) {
-    if (process.env.RUN_WITH_DESKTOP === 'true') {
-      rawState.data.PreferencesController.desktopEnabled = true;
-    }
-
     const state = performStateSubstitutions(rawState);
     this._stateMap.set(CURRENT_STATE_KEY, state);
 

@@ -11,12 +11,6 @@ const PhishingWarningPageServer = require('./phishing-warning-page-server');
 const { buildWebDriver } = require('./webdriver');
 const { ensureXServerIsRunning } = require('./x-server');
 const GanacheSeeder = require('./seeder/ganache-seeder');
-const {
-  isUsingDesktopApp,
-  stopDesktopApp,
-  startDesktopApp,
-  setDesktopAppState,
-} = require('./desktop');
 
 const tinyDelayMs = 200;
 const regularDelayMs = tinyDelayMs * 2;
@@ -82,19 +76,10 @@ async function withFixtures(options, testSuite) {
     }
     await fixtureServer.start();
 
-    if (isUsingDesktopApp()) {
-      stopDesktopApp();
-    }
-
-    const state = fixtureServer.loadJsonState(fixtures);
+    fixtureServer.loadJsonState(fixtures);
 
     await setupMocking(mockServer, testSpecificMock);
     await mockServer.start(8000);
-
-    if (isUsingDesktopApp()) {
-      await setDesktopAppState(state);
-      await startDesktopApp();
-    }
 
     await phishingPageServer.start();
     if (dapp) {
@@ -146,7 +131,7 @@ async function withFixtures(options, testSuite) {
 
     // MMD
 
-    if (!isUsingDesktopApp() && process.env.SELENIUM_BROWSER === 'chrome') {
+    if (process.env.SELENIUM_BROWSER === 'chrome') {
       errors.concat(await driver.checkBrowserForConsoleErrors(driver));
       if (errors.length) {
         const errorReports = errors.map((err) => err.message);
@@ -183,11 +168,6 @@ async function withFixtures(options, testSuite) {
   } finally {
     if (!failed || process.env.E2E_LEAVE_RUNNING !== 'true') {
       await fixtureServer.stop();
-
-      if (isUsingDesktopApp()) {
-        stopDesktopApp();
-      }
-
       await ganacheServer.quit();
       if (ganacheOptions?.concurrent) {
         await secondaryGanacheServer.quit();

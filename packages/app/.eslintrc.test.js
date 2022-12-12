@@ -21,6 +21,12 @@ module.exports = {
         sourceType: 'module',
       },
     },
+    {
+      files: ['test/e2e/**/*.js'],
+      parserOptions: {
+        sourceType: 'script',
+      },
+    },
   ],
   rules: {
     'jest/lowercase-name': 'off',

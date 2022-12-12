@@ -1,0 +1,8 @@
+ignores:
+  # All type packages are imported implicitly by TypeScript
+  - '@types/*'
+
+  # Circle CI
+  - depcheck
+  - improved-yarn-audit
+  - yarn-deduplicate

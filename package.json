@@ -5,14 +5,21 @@
   "scripts": {
     "build": "yarn common build && concurrently -n extension,ui,app  \"yarn extension build:desktop:extension\" \"yarn app build:ui\"  \"yarn app build:app\"",
     "build:lavamoat": "yarn common build && concurrently -n extension,ui,app  \"yarn extension build:desktop:extension:lavamoat\" \"yarn app build:ui:lavamoat\"  \"yarn app build:app\"",
-    "setup": "yarn && yarn extension setup:postinstall && yarn app setup:postinstall && yarn common build",
+    "build:test:extension": "yarn common build && concurrently -n extension,ui,app  \"yarn extension build:test:desktop\" \"yarn app build:ui\"  \"yarn app build:app:test\"",
+    "lint:lockfile": "lockfile-lint --path yarn.lock --allowed-hosts npm yarn github.com codeload.github.com --empty-hostname false --allowed-schemes \"https:\" \"git+https:\"",
+    "setup": "yarn && yarn setup:postinstall && yarn common setup:postinstall && yarn extension setup:postinstall && yarn app setup:postinstall && yarn common build",
+    "setup:postinstall": "yarn allow-scripts",
     "app": "yarn workspace desktop-app",
     "common": "yarn workspace @metamask/desktop",
     "extension": "yarn workspace metamask-crx"
   },
   "devDependencies": {
+    "@lavamoat/allow-scripts": "^2.0.3",
     "@types/jest": "^29.1.2",
     "concurrently": "^5.2.0",
+    "depcheck": "^1.4.3",
+    "improved-yarn-audit": "^3.0.0",
+    "lockfile-lint": "^4.0.0",
     "yarn-deduplicate": "^3.1.0"
   },
   "resolutions": {
@@ -41,5 +48,8 @@
     "nohoist": [
       "**/*"
     ]
+  },
+  "lavamoat": {
+    "allowScripts": {}
   }
 }
