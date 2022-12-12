@@ -28,6 +28,12 @@ executors:
       COMMON_DIR: << pipeline.parameters.common-dir >>
       EXTENSION_DIR: << pipeline.parameters.extension-dir >>
       NODE_ENV: development
+  electron-builder:
+    docker:
+      - image: electronuserland/builder:16-wine
+    environment:
+      APP_DIR: << pipeline.parameters.app-dir >>
+      EXTENSION_DIR: << pipeline.parameters.extension-dir >>
 
 workflows:
   test_and_release:
@@ -102,6 +108,14 @@ workflows:
             - build-app-test-app
             - build-ui-test-app
             - build-extension-test-app
+      - package-windows:
+          requires:
+            - build-app
+            - build-ui
+      - package-linux:
+          requires:
+            - build-app
+            - build-ui
 
 jobs:
   install-deps:
@@ -512,3 +526,55 @@ jobs:
       - store_artifacts:
           name: screenshots and trace.zip
           path: ./<< pipeline.parameters.app-dir >>/test/playwright/test-results/
+
+  package-windows:
+    executor: electron-builder
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Move app build
+          command: |
+            mkdir -p ./${APP_DIR}/dist
+            mv ./${APP_DIR}/dist-app ./${APP_DIR}/dist/app
+      - run:
+          name: Move UI build
+          command: |
+            mv ./${APP_DIR}/dist-ui ./${APP_DIR}/dist/ui
+      - run:
+          name: Package Windows nsis installer
+          command: yarn app package:win:ci
+      - run:
+          name: Move executable to its own folder
+          command: |
+            mkdir -p ./${APP_DIR}/packages/artifacts
+            mv ./${APP_DIR}/packages/metamask-desktop-*-setup.exe ./${APP_DIR}/packages/artifacts/
+      - store_artifacts:
+          path: /root/project/packages/app/packages/artifacts
+
+  package-linux:
+    executor: electron-builder
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Move app build
+          command: |
+            mkdir -p ./${APP_DIR}/dist
+            mv ./${APP_DIR}/dist-app ./${APP_DIR}/dist/app
+      - run:
+          name: Move UI build
+          command: |
+            mv ./${APP_DIR}/dist-ui ./${APP_DIR}/dist/ui
+      - run:
+          name: Package Linux AppImage
+          command: yarn app package:linux:ci
+      - run:
+          name: Move executable to its own folder
+          command: |
+            mkdir -p ./${APP_DIR}/packages/artifacts
+            mv ./${APP_DIR}/packages/metamask-desktop-*.AppImage ./${APP_DIR}/packages/artifacts/
+      - store_artifacts:
+          path: /root/project/packages/app/packages/artifacts
