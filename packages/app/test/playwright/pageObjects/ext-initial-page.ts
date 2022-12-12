@@ -66,10 +66,11 @@ export class ExtensionInitialPage {
     await expect(this.page.locator('text="Disable Desktop App"')).toHaveCount(
       1,
     );
-    this.page.locator('text="Disable Desktop App"').click();
-    await this.page
-      .locator('.settings-page__header__title-container__close-button')
-      .click();
+  }
+
+  async disableDesktop() {
+    await this.hasDesktopEnabled();
+    await this.page.locator('text="Disable Desktop App"').click();
   }
 
   async openExperimentalTab() {

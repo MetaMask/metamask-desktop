@@ -60,5 +60,37 @@ test.describe('Desktop OTP pairing', () => {
     otpWindow.checkIsActive();
     const initialPage = new ExtensionInitialPage(connectedFlow);
     await initialPage.hasDesktopEnabled();
+
+    electronApp.close();
+  });
+
+  test('Desktop: successfull OTP un-pairing', async ({ page, context }) => {
+    const electronApp = await electronStartup();
+
+    const mainWindow = await getDesktopWindowByName(
+      electronApp,
+      'MetaMask Desktop',
+    );
+    const otpWindow = new DesktopOTPPage(mainWindow);
+
+    const extensionId = await signUpFlow(page, context);
+    const optPairingKey = await enableDesktopAppFlow(page);
+
+    await otpWindow.setOtpPairingKey(optPairingKey);
+
+    const connectedFlow = await context.newPage();
+    const signIn = new ExtensionSignInPage(
+      connectedFlow,
+      extensionId as string,
+    );
+    await signIn.signIn();
+
+    otpWindow.checkIsActive();
+    const initialPage = new ExtensionInitialPage(connectedFlow);
+    await initialPage.disableDesktop();
+
+    otpWindow.checkIsInactive();
+
+    electronApp.close();
   });
 });

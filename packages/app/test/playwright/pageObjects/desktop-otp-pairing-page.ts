@@ -9,7 +9,7 @@ export class DesktopOTPPage {
 
   async setOtpPairingKey(optPairingKey: string) {
     await this.window.screenshot({
-      path: 'test/playwright/test-results/visual/desktop-inactive.main.png',
+      path: 'test/playwright/test-results/visual/desktop-otp-pairing.main.png',
       fullPage: true,
     });
 
@@ -36,6 +36,17 @@ export class DesktopOTPPage {
 
     await expect(this.window.locator('.mmd-pair-status')).toContainText(
       'Active',
+    );
+  }
+
+  async checkIsInactive() {
+    await this.window.screenshot({
+      path: 'test/playwright/test-results/visual/desktop-inactive.main.png',
+      fullPage: true,
+    });
+
+    await expect(this.window.locator('.mmd-pair-status')).toContainText(
+      'Inactive',
     );
   }
 }
