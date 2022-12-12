@@ -1,3 +1,4 @@
+/* eslint-disable node/no-process-env, node/no-unpublished-require, jsdoc/require-jsdoc */
 const path = require('path');
 const { readFile } = require('fs/promises');
 const ini = require('ini');
