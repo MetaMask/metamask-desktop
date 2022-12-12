@@ -1,3 +1,4 @@
+/* eslint-disable jest/no-standalone-expect */
 import { expect, Locator, Page } from '@playwright/test';
 
 export class ExtensionInitialPage {
@@ -5,10 +6,13 @@ export class ExtensionInitialPage {
 
   readonly activityTab: Locator;
 
+  readonly mainMenu: Locator;
+
   constructor(page: Page) {
     this.page = page;
 
     this.activityTab = page.locator('button:has-text("Activity")');
+    this.mainMenu = page.locator('data-testid=account-menu-icon');
   }
 
   async closeWhatsNewBanner() {
@@ -17,6 +21,10 @@ export class ExtensionInitialPage {
 
   async closeHelpUsImproveBanner() {
     await this.page.locator('button:has-text("I agree")').click();
+  }
+
+  async openMainMenu() {
+    await this.mainMenu.click();
   }
 
   async bringToFront() {
@@ -29,6 +37,7 @@ export class ExtensionInitialPage {
 
   async checkLastTransactionAction(status: string) {
     // NOTE: Assumes that transaction is the first one on the activity list
+    // eslint-disable-next-line jest/no-standalone-expect
     await expect(
       this.page.locator('.transaction-list-item >> nth=0 >> .list-item__title'),
     ).toHaveText(status);
@@ -36,6 +45,7 @@ export class ExtensionInitialPage {
 
   async checkLastTransactionCSS(status: string) {
     // NOTE: Assumes that transaction is the first one on the activity list
+    // eslint-disable-next-line jest/no-standalone-expect
     expect(
       this.page.locator(
         `.transaction-list-item >> nth=0 >> transaction-status--${status}`,
@@ -63,7 +73,7 @@ export class ExtensionInitialPage {
   }
 
   async openExperimentalTab() {
-    await this.page.locator('data-testid=account-menu-icon').click();
+    await this.openMainMenu();
     await this.page.locator('text="Settings"').click();
     await this.page.locator('text="Experimental"').click();
   }
@@ -88,6 +98,7 @@ export class ExtensionInitialPage {
 
   async hasFunds() {
     const funds = await this.page.locator('.currency-display-component__text');
+    // eslint-disable-next-line jest/prefer-strict-equal
     expect(funds).not.toEqual('0');
   }
 

@@ -13,7 +13,7 @@ const config: PlaywrightTestConfig = {
   testDir: `${PW_ROOT_PATH}/specs`,
   maxFailures: 2,
   timeout: 60 * 1000,
-  workers: process.env.CI ? 1 : 1,
+  workers: 1,
 
   expect: {
     /**

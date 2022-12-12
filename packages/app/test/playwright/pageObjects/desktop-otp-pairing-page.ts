@@ -8,13 +8,18 @@ export class DesktopOTPPage {
   }
 
   async setOtpPairingKey(optPairingKey: string) {
+    await this.window.screenshot({
+      path: 'test/playwright/test-results/visual/desktop-inactive.main.png',
+      fullPage: true,
+    });
+
     for (const [index, element] of optPairingKey.split('').entries()) {
       await this.window
-        .locator(`[data-testid="pair-otp-input${index}"]`)
+        .locator(`[data-testid="pair-otp-input-${index}"]`)
         .type(element);
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 5000));
+    await new Promise((resolve) => setTimeout(resolve, 3000));
 
     await this.window.screenshot({
       path: 'test/playwright/test-results/visual/desktop-all-set.main.png',
