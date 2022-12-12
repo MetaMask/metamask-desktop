@@ -544,7 +544,7 @@ jobs:
             mv ./${APP_DIR}/dist-ui ./${APP_DIR}/dist/ui
       - run:
           name: Package Windows nsis installer
-          command: yarn app package:win:ci
+          command: yarn app package:win:ci -p "never"
       - run:
           name: Move executable to its own folder
           command: |
@@ -570,7 +570,7 @@ jobs:
             mv ./${APP_DIR}/dist-ui ./${APP_DIR}/dist/ui
       - run:
           name: Package Linux AppImage
-          command: yarn app package:linux:ci
+          command: yarn app package:linux:ci -p "never"
       - run:
           name: Move executable to its own folder
           command: |

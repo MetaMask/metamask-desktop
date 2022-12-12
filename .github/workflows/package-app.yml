@@ -55,7 +55,7 @@ jobs:
               if [ "$RUNNER_OS" == "Linux" ]; then
                 yarn app package:linux:ci -p "never"
               elif [ "$RUNNER_OS" == "Windows" ]; then
-                yarn app package:win:ci
+                yarn app package:win:ci -p "never"
               else
                 echo "$RUNNER_OS not supported"
                 exit 1
