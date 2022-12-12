@@ -1,6 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 
-export class MMDMainMenuPage {
+export class ExtensionMainMenuPage {
   readonly page: Page;
 
   readonly mainMenuBtn: Locator;

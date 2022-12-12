@@ -1,22 +1,23 @@
-import { Page, BrowserContext, expect } from '@playwright/test';
+import { Page, BrowserContext } from '@playwright/test';
 import test from '../helpers/setup';
-import { ChromeExtensionPage } from '../pageObjects/mmd-extension-page';
-import { MMDMainMenuPage } from '../pageObjects/mmd-mainMenu-page';
-import { MMDSignUpPage } from '../pageObjects/mmd-signup-page';
-import { MMDSignInPage } from '../pageObjects/mmd-signin-page';
-import { MMDInitialPage } from '../pageObjects/mmd-initial-page';
+import { ChromeExtensionPage } from '../pageObjects/ext-chrome-extension-page';
+import { ExtensionMainMenuPage } from '../pageObjects/ext-mainMenu-page';
+import { ExtensionSignUpPage } from '../pageObjects/ext-signup-page';
+import { ExtensionSignInPage } from '../pageObjects/ext-signin-page';
+import { ExtensionInitialPage } from '../pageObjects/ext-initial-page';
 
-import { electronStartup } from '../helpers/electron';
+import { electronStartup, getDesktopWindowByName } from '../helpers/electron';
+import { DesktopOTPPage } from '../pageObjects/desktop-otp-pairing-page';
 
 async function signUpFlow(page: Page, context: BrowserContext) {
-  // Getting extension id of MMD
+  // Getting extension id of Extension
   const extensions = new ChromeExtensionPage(await context.newPage());
   await extensions.goto();
   await extensions.setDevMode();
   const extensionId = await extensions.getExtensionId();
   await extensions.close();
 
-  const signUp = new MMDSignUpPage(page, extensionId as string);
+  const signUp = new ExtensionSignUpPage(page, extensionId as string);
   await signUp.goto();
   await signUp.start();
   await signUp.authentication();
@@ -26,7 +27,7 @@ async function signUpFlow(page: Page, context: BrowserContext) {
 
 const enableDesktopAppFlow = async (page: Page): Promise<string> => {
   // Setup testnetwork in settings
-  const mainMenuPage = new MMDMainMenuPage(page);
+  const mainMenuPage = new ExtensionMainMenuPage(page);
   await mainMenuPage.selectSettings();
   await mainMenuPage.selectSettingsAdvance();
   await mainMenuPage.showTestNetworkOn();
@@ -38,58 +39,29 @@ test.describe('Desktop OTP pairing', () => {
   test('Desktop: successfull OTP pairing', async ({ page, context }) => {
     const electronApp = await electronStartup();
 
-    // Finding the window like this as innerText seems not working as expected.
-    const windows = electronApp.windows();
-    const windowTitles = await Promise.all(windows.map((x) => x.title()));
-    const windowIndex = windowTitles.findIndex((x) => x === 'MetaMask Desktop');
-    const mainWindow = windows[windowIndex];
+    const mainWindow = await getDesktopWindowByName(
+      electronApp,
+      'MetaMask Desktop',
+    );
+    const otpWindow = new DesktopOTPPage(mainWindow);
 
-    await mainWindow.screenshot({
+    await otpWindow.window.screenshot({
       path: 'test/playwright/test-results/visual/desktop-inactive.main.png',
       fullPage: true,
     });
-
-    console.log(`Main window title: ${await mainWindow.title()}`);
 
     const initialFlow = await context.newPage();
     const extensionId = await signUpFlow(initialFlow, context);
     const optPairingKey = await enableDesktopAppFlow(initialFlow);
 
-    // Input the opt pairing key
-    for (const [index, element] of optPairingKey.split('').entries()) {
-      if (index === 0) {
-        await mainWindow
-          .locator('[aria-label="Please enter verification code. Digit 1"]')
-          .type(element);
-      } else {
-        await mainWindow
-          .locator(`[aria-label="Digit ${index + 1}"]`)
-          .type(element);
-      }
-    }
+    otpWindow.setOtpPairingKey(optPairingKey);
 
-    //
-    await new Promise((resolve) => setTimeout(resolve, 5000));
-
-    await mainWindow.screenshot({
-      path: 'test/playwright/test-results/visual/desktop-all-set.main.png',
-      fullPage: true,
-    });
-
-    const signIn = new MMDSignInPage(page, extensionId as string);
+    const signIn = new ExtensionSignInPage(page, extensionId as string);
     await signIn.signIn();
 
-    await mainWindow.locator('text=Go to Settings').click();
-    await mainWindow.screenshot({
-      path: 'test/playwright/test-results/visual/desktop-active.main.png',
-      fullPage: true,
-    });
+    otpWindow.checkIsActive();
 
-    await expect(mainWindow.locator('.mmd-pair-status')).toContainText(
-      'Active',
-    );
-
-    const initialPage = new MMDInitialPage(page);
+    const initialPage = new ExtensionInitialPage(page);
     await initialPage.hasDesktopEnabled();
 
     await initialPage.hasFunds();

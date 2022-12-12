@@ -1,6 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 
-export class MMDNetworkPage {
+export class ExtensionNetworkPage {
   readonly page: Page;
 
   readonly networkBtn: Locator;

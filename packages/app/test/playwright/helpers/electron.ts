@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { ElectronApplication, _electron as electron } from 'playwright';
+import { ElectronApplication, Page, _electron as electron } from 'playwright';
 
 export async function electronStartup(): Promise<ElectronApplication> {
   // Delete config.json to have the same initial setup every run
@@ -36,4 +36,17 @@ export function setupLogs(electronApp: ElectronApplication) {
       (error) =>
         console.log`stderr: ${Buffer.from(error, 'utf-8').toString('utf-8')}`,
     );
+}
+
+export async function getDesktopWindowByName(
+  electronApp: ElectronApplication,
+  windowName: string,
+): Promise<Page> {
+  // Finding the window like this as innerText seems not working as expected.
+  const windows = electronApp.windows();
+  const windowTitles = await Promise.all(windows.map((x) => x.title()));
+  const windowIndex = windowTitles.findIndex((x) => x === windowName);
+  const matchWindow = windows[windowIndex];
+  console.log(`${windowName} title: ${await matchWindow.title()}`);
+  return matchWindow;
 }

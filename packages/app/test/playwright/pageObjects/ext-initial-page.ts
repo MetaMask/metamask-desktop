@@ -1,6 +1,6 @@
 import { expect, Locator, Page } from '@playwright/test';
 
-export class MMDInitialPage {
+export class ExtensionInitialPage {
   readonly page: Page;
 
   readonly activityTab: Locator;
