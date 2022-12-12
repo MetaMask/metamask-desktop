@@ -140,6 +140,7 @@ export const createDesktopConnectionMock = (): jest.Mocked<DesktopConnection> =>
     removeAllListeners: jest.fn(),
     checkPairingKey: jest.fn(),
     setPaired: jest.fn(),
+    checkVersions: jest.fn(),
   } as any);
 
 export const createObservableStoreMock = (): jest.Mocked<ObservableStore> =>

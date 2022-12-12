@@ -6,20 +6,28 @@ import { SECOND } from '../../../shared/constants/time';
 import Typography from '../../components/ui/typography';
 import { I18nContext } from '../../contexts/i18n';
 import IconDesktopPairing from '../../components/ui/icon/icon-desktop-pairing';
+import { Icon } from '../../components/component-library/icon/icon';
 import {
   TEXT_ALIGN,
   TYPOGRAPHY,
   DISPLAY,
   ALIGN_ITEMS,
   FLEX_DIRECTION,
+  COLORS,
 } from '../../helpers/constants/design-system';
 import Box from '../../components/ui/box/box';
+import ActionableMessage from '../../components/ui/actionable-message/actionable-message';
+import { openCustomProtocol } from '../../../shared/lib/deep-linking';
+import { useCopyToClipboard } from '../../hooks/useCopyToClipboard';
+import Tooltip from '../../components/ui/tooltip';
 
 export default function DesktopPairingPage({
   generateOtp,
   mostRecentOverviewPage,
   showLoadingIndication,
   hideLoadingIndication,
+  shouldShowWarning,
+  hideWarning,
 }) {
   const t = useContext(I18nContext);
   const history = useHistory();
@@ -30,6 +38,7 @@ export default function DesktopPairingPage({
   const [otp, setOtp] = useState();
   const [lastOtpTime, setLastOtpTime] = useState(time);
   const [currentTime, setCurrentTime] = useState(time);
+  const [copied, handleCopy] = useCopyToClipboard();
   const generateIntervalRef = useRef();
   const refreshIntervalRef = useRef();
 
@@ -51,6 +60,12 @@ export default function DesktopPairingPage({
     );
 
     return expireDurationSeconds;
+  };
+
+  const openSettingsOrDownloadMMD = () => {
+    openCustomProtocol('metamask-desktop://pair').catch(() => {
+      window.open('https://metamask.io/download.html', '_blank').focus();
+    });
   };
 
   useEffect(() => {
@@ -79,7 +94,7 @@ export default function DesktopPairingPage({
           flexDirection={FLEX_DIRECTION.COLUMN}
           marginLeft={6}
           marginRight={6}
-          marginTop={12}
+          marginTop={shouldShowWarning ? 0 : 12}
         >
           <IconDesktopPairing size={64} />
         </Box>
@@ -100,7 +115,12 @@ export default function DesktopPairingPage({
     hideLoadingIndication();
 
     return (
-      <div>
+      <div
+        className="desktop-pairing__clickable"
+        onClick={() => {
+          handleCopy(otp);
+        }}
+      >
         <Box
           display={DISPLAY.FLEX}
           alignItems={ALIGN_ITEMS.CENTER}
@@ -109,12 +129,18 @@ export default function DesktopPairingPage({
           marginLeft={6}
           marginRight={6}
         >
-          <Typography
-            align={TEXT_ALIGN.CENTER}
-            className="desktop-pairing__otp"
+          <Tooltip
+            wrapperClassName="desktop-pairing__tooltip-wrapper"
+            position="top"
+            title={copied ? t('copiedExclamation') : t('copyToClipboard')}
           >
-            {otp}
-          </Typography>
+            <Typography
+              align={TEXT_ALIGN.CENTER}
+              className="desktop-pairing__otp"
+            >
+              {otp}
+            </Typography>
+          </Tooltip>
         </Box>
 
         <Typography
@@ -151,8 +177,50 @@ export default function DesktopPairingPage({
     );
   };
 
+  const renderWarning = () => {
+    return (
+      shouldShowWarning && (
+        <ActionableMessage
+          type="warning"
+          message={
+            <div className="desktop-pairing-warning__warning-container">
+              <Box
+                className="desktop-pairing-warning__close-button__close"
+                marginLeft={2}
+                marginTop={0}
+                color={COLORS.ICON_ALTERNATIVE}
+                onClick={() => hideWarning()}
+              />
+              <div className="desktop-pairing-warning__title">
+                {t('desktopPairedWarningTitle')}
+              </div>
+              <div className="desktop-pairing-warning__text">
+                {t('desktopPairedWarningDescription')}
+                <Button
+                  type="link"
+                  onClick={() => {
+                    openSettingsOrDownloadMMD();
+                  }}
+                  className="desktop-pairing-warning__link"
+                >
+                  {t('desktopPairedWarningDeepLink')}
+                </Button>
+              </div>
+            </div>
+          }
+          useIcon
+          iconFillColor="var(--color-warning-default)"
+          className="desktop-pairing-warning__warning-content"
+          withRightButton
+          icon={<Icon name="danger-filled" color={COLORS.WARNING_DEFAULT} />}
+        />
+      )
+    );
+  };
+
   return (
     <div className="page-container__content">
+      {renderWarning()}
       <div className="desktop-pairing">
         {renderIcon()}
         <div className="desktop-pairing__title">{t('desktopPageTitle')}</div>
@@ -171,4 +239,6 @@ DesktopPairingPage.propTypes = {
   showLoadingIndication: PropTypes.func,
   hideLoadingIndication: PropTypes.func,
   generateOtp: PropTypes.func,
+  shouldShowWarning: PropTypes.string,
+  hideWarning: PropTypes.func,
 };

@@ -43,7 +43,7 @@
   }
 
   &__description {
-    margin: 24px 0;
+    margin: 18px 0;
   }
 
   &__otp {
@@ -59,5 +59,70 @@
     width: 70%;
     justify-content: space-between;
     margin: auto;
+  }
+
+  &__tooltip-wrapper {
+    width: 100%;
+  }
+
+  &__clickable {
+    width: 100%;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+.desktop-pairing-warning {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+
+  &__close-button {
+    z-index: 1050;
+    font-size: 24px;
+    cursor: pointer;
+
+    &__close::after {
+      content: '\00D7';
+      font-size: 24px;
+      cursor: pointer;
+      position: relative;
+      float: right;
+      margin-top: -8px;
+    }
+  }
+
+  &__title {
+    font-weight: bold;
+    font-size: 16px;
+  }
+
+  &__text {
+    font-size: 0.875rem;
+  }
+
+  &__link {
+    color: var(--color-primary-default);
+    display: block;
+    cursor: pointer;
+    line-height: 100%;
+    font-size: 0.875rem;
+    padding: 0 0;
+  }
+
+  &__warning-content {
+    border-left: 5px solid var(--color-warning-default);
+    border-right: 0;
+    border-bottom: 0;
+    border-top: 0;
+    margin: 4px;
+
+    .icon {
+      position: absolute;
+      left: 5px;
+      top: 10px;
+    }
   }
 }

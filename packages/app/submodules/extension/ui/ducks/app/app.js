@@ -442,6 +442,10 @@ export function getQrCodeData(state) {
   return state.appState.qrCodeData;
 }
 
+export function getWarningState(state) {
+  return state.appState.warning;
+}
+
 export function getGasLoadingAnimationIsShowing(state) {
   return state.appState.gasLoadingAnimationIsShowing;
 }

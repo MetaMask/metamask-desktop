@@ -3,8 +3,10 @@ import {
   generateOtp,
   hideLoadingIndication,
   showLoadingIndication,
+  hideWarning,
 } from '../../store/actions';
 import { getMostRecentOverviewPage } from '../../ducks/history/history';
+import { getWarningState } from '../../ducks/app/app';
 import DesktopPairingPage from './desktop-pairing.component';
 
 const mapDispatchToProps = (dispatch) => {
@@ -12,12 +14,14 @@ const mapDispatchToProps = (dispatch) => {
     generateOtp: () => generateOtp(),
     showLoadingIndication: () => dispatch(showLoadingIndication()),
     hideLoadingIndication: () => dispatch(hideLoadingIndication()),
+    hideWarning: () => dispatch(hideWarning()),
   };
 };
 
 const mapStateToProps = (state) => {
   return {
     mostRecentOverviewPage: getMostRecentOverviewPage(state),
+    shouldShowWarning: getWarningState(state),
   };
 };
 
