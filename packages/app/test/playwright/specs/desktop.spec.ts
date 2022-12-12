@@ -57,11 +57,11 @@ test.describe('Desktop OTP pairing', () => {
     );
     await signIn.signIn();
 
-    otpWindow.checkIsActive();
+    await otpWindow.checkIsActive();
     const initialPage = new ExtensionInitialPage(connectedFlow);
     await initialPage.hasDesktopEnabled();
 
-    electronApp.close();
+    await electronApp.close();
   });
 
   test('Desktop: successfull OTP un-pairing', async ({ page, context }) => {
@@ -84,13 +84,22 @@ test.describe('Desktop OTP pairing', () => {
       extensionId as string,
     );
     await signIn.signIn();
-
-    otpWindow.checkIsActive();
+    await otpWindow.checkIsActive();
     const initialPage = new ExtensionInitialPage(connectedFlow);
+    await initialPage.desktopAppIs('enabled');
+    // Disasble desktop
     await initialPage.disableDesktop();
+    await otpWindow.checkIsInactive();
 
-    otpWindow.checkIsInactive();
-
-    electronApp.close();
+    const disconnectedFlow = await context.newPage();
+    const signIn2 = new ExtensionSignInPage(
+      disconnectedFlow,
+      extensionId as string,
+    );
+    await signIn2.signIn();
+    const initialPage2 = new ExtensionInitialPage(disconnectedFlow);
+    await initialPage2.desktopAppIs('disabled');
+    await otpWindow.checkIsInactive();
+    await electronApp.close();
   });
 });

@@ -68,6 +68,27 @@ export class ExtensionInitialPage {
     );
   }
 
+  async desktopAppIs(status: 'enabled' | 'disabled') {
+    await this.openExperimentalTab();
+    if (status === 'enabled') {
+      await expect(this.page.locator('text="Disable Desktop App"')).toHaveCount(
+        1,
+      );
+    } else {
+      await expect(this.page.locator('text="Enable Desktop App"')).toHaveCount(
+        1,
+      );
+    }
+    // Close settings
+    await this.closeSettings();
+  }
+
+  async closeSettings() {
+    await this.page
+      .locator('.settings-page__header__title-container__close-button')
+      .click();
+  }
+
   async disableDesktop() {
     await this.hasDesktopEnabled();
     await this.page.locator('text="Disable Desktop App"').click();

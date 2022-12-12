@@ -45,8 +45,6 @@ export class DesktopOTPPage {
       fullPage: true,
     });
 
-    await expect(this.window.locator('.mmd-pair-status')).toContainText(
-      'Inactive',
-    );
+    await expect(this.window.locator('text=Sync with Extension')).toBeVisible();
   }
 }
