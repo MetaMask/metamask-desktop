@@ -30,3 +30,7 @@ DISABLE_WEB_SOCKET_ENCRYPTION=
 
 ; Set this to '1' to skip the pairing process when enabling desktop mode.
 SKIP_OTP_PAIRING_FLOW=
+
+; Environment variables to sign Windows nsis installer
+WIN_CSC_LINK=
+WIN_CSC_KEY_PASSWORD=

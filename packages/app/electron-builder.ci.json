@@ -1,9 +1,9 @@
 {
-  "afterSign": "development/desktop/electron/scripts/notarize.js",
+  "afterSign": "build/mac/notarize.js",
   "appId": "consensys.metamask.desktop",
   "asar": false,
   "directories": {
-    "output": "builds_desktop"
+    "output": "packages"
   },
   "dmg": {
     "sign": false
@@ -45,12 +45,11 @@
     "deleteAppDataOnUninstall": true,
     "artifactName": "metamask-desktop-${version}-setup.${ext}"
   },
-  "portable": {
-    "artifactName": "metamask-desktop-${version}-portable.${ext}"
-  },
   "productName": "MetaMask Desktop",
   "win": {
     "icon": "build/icon.png",
-    "target": ["nsis", "portable"]
+    "forceCodeSigning": true,
+    "signAndEditExecutable": true,
+    "target": "nsis"
   }
 }

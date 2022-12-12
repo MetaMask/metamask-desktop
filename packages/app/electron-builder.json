@@ -41,14 +41,11 @@
     "deleteAppDataOnUninstall": true,
     "artifactName": "metamask-desktop-${version}-setup.${ext}"
   },
-  "portable": {
-    "artifactName": "metamask-desktop-${version}-portable.${ext}"
-  },
   "productName": "MetaMask Desktop",
   "win": {
     "icon": "build/icon.png",
     "forceCodeSigning": false,
     "signAndEditExecutable": true,
-    "target": ["nsis", "portable"]
+    "target": "nsis"
   }
 }
