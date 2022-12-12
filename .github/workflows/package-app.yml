@@ -19,9 +19,25 @@ jobs:
         with:
           node-version: '16.x'
 
-      - name: Install dependencies
+      - name: Install deps
         shell: bash
-        run: yarn setup
+        run: yarn install --frozen-lockfile
+
+      - name: Run root post install
+        shell: bash
+        run: yarn setup:postinstall
+
+      - name: Run common post install
+        shell: bash
+        run: yarn common setup:postinstall
+
+      - name: Run extension post install
+        shell: bash
+        run: yarn extension setup:postinstall
+
+      - name: Run app post install
+        shell: bash
+        run: yarn app setup:postinstall
 
       - name: Build desktop ui
         shell: bash
