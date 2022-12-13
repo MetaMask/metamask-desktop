@@ -1,9 +1,12 @@
 import { ipcMain } from 'electron';
 import Store from 'electron-store';
 
-type versionType = `${number}.${number}.${number}`;
+export interface UiStorageSettings {
+  key: string;
+  version: `${number}.${number}.${number}`;
+}
 
-export const setUiStorage = (key: string, version: versionType = '0.0.0') => {
+export const setUiStorage = ({ key, version }: UiStorageSettings) => {
   const pairStatusStore = new Store({
     name: `mmd-desktop-ui-v${version}-${key}`,
   });

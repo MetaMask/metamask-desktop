@@ -20,7 +20,12 @@ import cfg from '../utils/config';
 import { getDesktopVersion } from '../utils/version';
 import ExtensionConnection from './extension-connection';
 import { updateCheck } from './update-check';
-import { titleBarOverlayOpts, protocolKey } from './ui-constants';
+import {
+  titleBarOverlayOpts,
+  protocolKey,
+  uiRootStorage,
+  uiPairStatusStorage,
+} from './ui-constants';
 import AppNavigation from './app-navigation';
 import AppEvents from './app-events';
 import WindowService from './window-service';
@@ -111,8 +116,8 @@ class DesktopApp extends EventEmitter {
       return getDesktopVersion();
     });
 
-    setUiStorage('root');
-    setUiStorage('pair-status');
+    setUiStorage(uiRootStorage);
+    setUiStorage(uiPairStatusStorage);
 
     if (!cfg().isExtensionTest) {
       await this.windowService.createMainWindow();

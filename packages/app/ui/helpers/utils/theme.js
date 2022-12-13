@@ -19,7 +19,7 @@ const setTheme = (theme) => {
   } else {
     document.documentElement.setAttribute('data-theme', theme);
   }
-  window.electronBridge.setTheme(themeCode)
+  window.electronBridge.setTheme(themeCode);
 };
 
 export default setTheme;
