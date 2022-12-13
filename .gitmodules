@@ -1,0 +1,3 @@
+[submodule "extension"]
+	path = packages/app/submodules/extension
+	url = git@github.com:MetaMask/desktop-extension.git
