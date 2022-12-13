@@ -11,6 +11,17 @@ parameters:
     type: string
     default: packages/app/submodules/extension
 
+commands:
+  checkout_with_submodule:
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "07:35:fd:e0:5b:fc:30:43:1c:dc:73:75:92:03:53:59"
+      - run:
+          name: Setup submodule
+          command: yarn setup:submodule 
+
 executors:
   node-browsers:
     docker:
@@ -107,20 +118,14 @@ jobs:
   install-deps:
     executor: node-browsers
     steps:
-      - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - "07:35:fd:e0:5b:fc:30:43:1c:dc:73:75:92:03:53:59"
-      - run:
-          name: Setup submodule
-          command: yarn setup:submodule
+      - checkout_with_submodule
       - restore_cache:
-          key: dependency-cache-v2-{{ checksum "yarn.lock" }}
+          key: dependency-cache-v3-{{ checksum "yarn.lock" }}
       - run:
           name: Install deps
           command: YARN_CACHE_FOLDER=.yarn_cache yarn install --frozen-lockfile
       - save_cache:
-          key: dependency-cache-v2-{{ checksum "yarn.lock" }}
+          key: dependency-cache-v3-{{ checksum "yarn.lock" }}
           paths:
             - .yarn_cache
             - node_modules/
@@ -149,12 +154,12 @@ jobs:
             - node_modules
             - << pipeline.parameters.app-dir >>/node_modules
             - << pipeline.parameters.common-dir >>/node_modules
-            - << pipeline.parameters.extension-dir >>
+            - << pipeline.parameters.extension-dir >>/node_modules
 
   validate-deps:
     executor: node-browsers
     steps:
-      - checkout
+      - checkout_with_submodule
       - attach_workspace:
           at: .
       - run:
@@ -170,7 +175,7 @@ jobs:
   validate-lock-duplicates:
     executor: node-browsers
     steps:
-      - checkout
+      - checkout_with_submodule
       - attach_workspace:
           at: .
       - run:
@@ -180,7 +185,7 @@ jobs:
   lint-lockfile:
     executor: node-browsers
     steps:
-      - checkout
+      - checkout_with_submodule
       - attach_workspace:
           at: .
       - run:
@@ -190,7 +195,7 @@ jobs:
   audit:
     executor: node-browsers
     steps:
-      - checkout
+      - checkout_with_submodule
       - attach_workspace:
           at: .
       - run:
@@ -200,7 +205,7 @@ jobs:
   validate-lavamoat-config:
     executor: node-browsers
     steps:
-      - checkout
+      - checkout_with_submodule
       - attach_workspace:
           at: .
       - run:
@@ -222,7 +227,7 @@ jobs:
   build-common:
     executor: node-browsers
     steps:
-      - checkout
+      - checkout_with_submodule
       - attach_workspace:
           at: .
       - run:
@@ -236,7 +241,7 @@ jobs:
   build-app:
     executor: node-browsers
     steps:
-      - checkout
+      - checkout_with_submodule
       - attach_workspace:
           at: .
       - run:
@@ -253,7 +258,7 @@ jobs:
   build-app-test-extension:
     executor: node-browsers
     steps:
-      - checkout
+      - checkout_with_submodule
       - attach_workspace:
           at: .
       - run:
@@ -270,7 +275,7 @@ jobs:
   build-app-test-app:
     executor: node-browsers
     steps:
-      - checkout
+      - checkout_with_submodule
       - attach_workspace:
           at: .
       - run:
@@ -287,7 +292,7 @@ jobs:
   build-ui:
     executor: node-browsers
     steps:
-      - checkout
+      - checkout_with_submodule
       - attach_workspace:
           at: .
       - run:
@@ -304,7 +309,7 @@ jobs:
   build-ui-test-extension:
     executor: node-browsers
     steps:
-      - checkout
+      - checkout_with_submodule
       - attach_workspace:
           at: .
       - run:
@@ -321,7 +326,7 @@ jobs:
   build-ui-test-app:
     executor: node-browsers
     steps:
-      - checkout
+      - checkout_with_submodule
       - attach_workspace:
           at: .
       - run:
@@ -338,7 +343,7 @@ jobs:
   build-extension-test-extension:
     executor: node-browsers
     steps:
-      - checkout
+      - checkout_with_submodule
       - attach_workspace:
           at: .
       - run:
@@ -355,7 +360,7 @@ jobs:
   build-extension-test-app:
     executor: node-browsers
     steps:
-      - checkout
+      - checkout_with_submodule
       - attach_workspace:
           at: .
       - run:
@@ -372,7 +377,7 @@ jobs:
   lint-common:
     executor: node-browsers
     steps:
-      - checkout
+      - checkout_with_submodule
       - attach_workspace:
           at: .
       - run:
@@ -382,7 +387,7 @@ jobs:
   lint-app:
     executor: node-browsers
     steps:
-      - checkout
+      - checkout_with_submodule
       - attach_workspace:
           at: .
       - run:
@@ -392,7 +397,7 @@ jobs:
   test-unit-common:
     executor: node-browsers
     steps:
-      - checkout
+      - checkout_with_submodule
       - attach_workspace:
           at: .
       - run:
@@ -404,7 +409,7 @@ jobs:
   test-unit-app:
     executor: node-browsers
     steps:
-      - checkout
+      - checkout_with_submodule
       - attach_workspace:
           at: .
       - run:
@@ -417,7 +422,7 @@ jobs:
     executor: node-browsers
     parallelism: 8
     steps:
-      - checkout
+      - checkout_with_submodule
       - run:
           name: Re-Install Chrome
           command: ./.circleci/scripts/chrome-install.sh
@@ -449,7 +454,7 @@ jobs:
     executor: node-browsers
     parallelism: 2
     steps:
-      - checkout
+      - checkout_with_submodule
       - run:
           name: Re-Install Chrome
           command: ./.circleci/scripts/chrome-install.sh
@@ -480,7 +485,7 @@ jobs:
   test-e2e-app:
     executor: playwright
     steps:
-      - checkout
+      - checkout_with_submodule
       - attach_workspace:
           at: .
       - run:

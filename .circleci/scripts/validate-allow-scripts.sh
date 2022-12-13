@@ -6,9 +6,6 @@ set -o pipefail
 
 yarn ${SCRIPT}
 
-git submodule init
-git submodule update
-
 if git diff --exit-code
 then
   echo "allow-scripts configuration is up-to-date"
