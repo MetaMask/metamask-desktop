@@ -1,7 +1,6 @@
 import { Duplex, EventEmitter } from 'stream';
 import path from 'path';
 import { app, BrowserWindow, ipcMain } from 'electron';
-import Store from 'electron-store';
 // eslint-disable-next-line @typescript-eslint/no-shadow
 import { Server as WebSocketServer, WebSocket } from 'ws';
 import log from 'loglevel';
@@ -18,6 +17,7 @@ import EncryptedWebSocketStream from '@metamask/desktop/dist/encryption/web-sock
 import { StatusMessage } from '../types/message';
 import { forwardEvents } from '../utils/events';
 import cfg from '../utils/config';
+import { getDesktopVersion } from '../utils/version';
 import ExtensionConnection from './extension-connection';
 import { updateCheck } from './update-check';
 import { titleBarOverlayOpts, protocolKey } from './ui-constants';
@@ -25,6 +25,7 @@ import AppNavigation from './app-navigation';
 import AppEvents from './app-events';
 import WindowService from './window-service';
 import UIState from './ui-state';
+import { setUiStorage } from './ui-storage';
 
 // Set protocol for deeplinking
 if (!cfg().isUnitTest) {
@@ -106,35 +107,12 @@ class DesktopApp extends EventEmitter {
       win?.setTitleBarOverlay?.(titleBarOverlayOpts[theme]);
     });
 
-    const pairStatusStore = new Store({
-      name: 'mmd-desktop-ui-v0.0.0-pair-status',
-    });
-    ipcMain.on('pair-status-store-get', async (event, val) => {
-      event.returnValue = pairStatusStore.get(val);
+    ipcMain.handle('get-desktop-version', () => {
+      return getDesktopVersion();
     });
 
-    ipcMain.on('pair-status-store-set', async (_, key, val) => {
-      pairStatusStore.set(key, val);
-    });
-
-    ipcMain.on('pair-status-store-delete', async (_, key) => {
-      pairStatusStore.delete(key);
-    });
-
-    const rootStore = new Store({
-      name: 'mmd-desktop-ui-v0.0.0-root',
-    });
-    ipcMain.on('root-store-get', async (event, val) => {
-      event.returnValue = rootStore.get(val);
-    });
-
-    ipcMain.on('root-store-set', async (_, key, val) => {
-      rootStore.set(key, val);
-    });
-
-    ipcMain.on('root-store-delete', async (_, key) => {
-      rootStore.delete(key);
-    });
+    setUiStorage('root');
+    setUiStorage('pair-status');
 
     if (!cfg().isExtensionTest) {
       await this.windowService.createMainWindow();

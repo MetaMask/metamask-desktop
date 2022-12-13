@@ -14,6 +14,7 @@ async function launchDesktopUi() {
     .matchMedia('(prefers-color-scheme: dark)')
     .addEventListener('change', registerUpdateOSTheme(store));
 
+  // Register listeners from the main process to the renderer process
   window.electron.onStatusChange(registerUpdatePairStatus(store));
 
   render(

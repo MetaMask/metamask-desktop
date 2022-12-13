@@ -27,14 +27,14 @@ const Pair = ({ isDesktopEnabled, isSuccessfulPairSeen, history }) => {
   const animationEventEmitter = new EventEmitter();
 
   useEffect(() => {
-    window.electron.otp.invalidOtp(() => {
+    window.electron.onInvalidOtp(() => {
       setOtpDisabled(false);
       setOtpError(true);
       setOtpValidating(false);
     });
 
     return () => {
-      window.electron.otp.removeAllListeners();
+      window.electron.removeInvalidOtpListeners();
     };
   }, []);
 
@@ -55,7 +55,7 @@ const Pair = ({ isDesktopEnabled, isSuccessfulPairSeen, history }) => {
       setOtpDisabled(true);
       setOtpValidating(true);
       setTimeout(() => {
-        window.electron.otp.sendOtp(otpValue);
+        window.electron.sendOtp(otpValue);
       }, 1000);
     }
   };
