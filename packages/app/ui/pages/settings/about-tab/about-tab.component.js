@@ -5,8 +5,6 @@ import { SUPPORT_REQUEST_LINK } from '../../../../submodules/extension/ui/helper
 import { SUPPORT_LINK } from '../../../../submodules/extension/shared/lib/ui-utils';
 import useI18nContext from '../../../hooks/useI18nContext';
 
-const { shell } = window.require('electron');
-
 const AboutTab = () => {
   const t = useI18nContext();
   const [desktopVersion, setDesktopVersion] = useState('');
@@ -19,7 +17,7 @@ const AboutTab = () => {
 
   const handleLinkClick = (link) => (event) => {
     event.preventDefault();
-    shell.openExternal(link);
+    window.electronBridge.openExternalShell(link);
   };
 
   return (
