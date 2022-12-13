@@ -1,6 +1,7 @@
 import { Duplex, EventEmitter } from 'stream';
 import path from 'path';
 import { app, BrowserWindow, ipcMain } from 'electron';
+import Store from 'electron-store';
 // eslint-disable-next-line @typescript-eslint/no-shadow
 import { Server as WebSocketServer, WebSocket } from 'ws';
 import log from 'loglevel';
@@ -103,6 +104,36 @@ class DesktopApp extends EventEmitter {
     ipcMain.handle('set-theme', (event, theme) => {
       const win = BrowserWindow.fromWebContents(event.sender);
       win?.setTitleBarOverlay?.(titleBarOverlayOpts[theme]);
+    });
+
+    const pairStatusStore = new Store({
+      name: 'mmd-desktop-ui-v0.0.0-pair-status',
+    });
+    ipcMain.on('pair-status-store-get', async (event, val) => {
+      event.returnValue = pairStatusStore.get(val);
+    });
+
+    ipcMain.on('pair-status-store-set', async (_, key, val) => {
+      pairStatusStore.set(key, val);
+    });
+
+    ipcMain.on('pair-status-store-delete', async (_, key) => {
+      pairStatusStore.delete(key);
+    });
+
+    const rootStore = new Store({
+      name: 'mmd-desktop-ui-v0.0.0-root',
+    });
+    ipcMain.on('root-store-get', async (event, val) => {
+      event.returnValue = rootStore.get(val);
+    });
+
+    ipcMain.on('root-store-set', async (_, key, val) => {
+      rootStore.set(key, val);
+    });
+
+    ipcMain.on('root-store-delete', async (_, key) => {
+      rootStore.delete(key);
     });
 
     if (!cfg().isExtensionTest) {

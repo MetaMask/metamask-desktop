@@ -1,8 +1,5 @@
 import { THEME_TYPE } from '../../../submodules/extension/ui/pages/settings/settings-tab/settings-tab.constant';
 
-// eslint-disable-next-line node/no-extraneous-require
-const { ipcRenderer } = window.require('electron');
-
 const getOSTheme = () => {
   return window?.matchMedia('(prefers-color-scheme: dark)')?.matches
     ? THEME_TYPE.DARK
@@ -22,7 +19,7 @@ const setTheme = (theme) => {
   } else {
     document.documentElement.setAttribute('data-theme', theme);
   }
-  ipcRenderer.invoke('set-theme', themeCode);
+  window.electron.setTheme(themeCode)
 };
 
 export default setTheme;

@@ -18,9 +18,6 @@ import {
 import Mascot from '../../../submodules/extension/ui/components/ui/mascot';
 import Spinner from '../../../submodules/extension/ui/components/ui/spinner';
 
-// eslint-disable-next-line node/no-extraneous-require
-const { ipcRenderer } = window.require('electron');
-
 const Pair = ({ isDesktopEnabled, isSuccessfulPairSeen, history }) => {
   const t = useI18nContext();
   const [otp, setOtp] = React.useState('');
@@ -30,14 +27,14 @@ const Pair = ({ isDesktopEnabled, isSuccessfulPairSeen, history }) => {
   const animationEventEmitter = new EventEmitter();
 
   useEffect(() => {
-    ipcRenderer.on('invalid-otp', () => {
+    window.electron.otp.invalidOtp(() => {
       setOtpDisabled(false);
       setOtpError(true);
       setOtpValidating(false);
     });
 
     return () => {
-      ipcRenderer.removeAllListeners('invalid-otp');
+      window.electron.otp.removeAllListeners();
     };
   }, []);
 
@@ -58,7 +55,7 @@ const Pair = ({ isDesktopEnabled, isSuccessfulPairSeen, history }) => {
       setOtpDisabled(true);
       setOtpValidating(true);
       setTimeout(() => {
-        ipcRenderer.invoke('otp', otpValue);
+        window.electron.otp.sendOtp(otpValue);
       }, 1000);
     }
   };
