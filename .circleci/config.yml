@@ -120,34 +120,39 @@ jobs:
     steps:
       - checkout_with_submodule
       - restore_cache:
-          key: dependency-cache-v3-{{ checksum "yarn.lock" }}
+          key: dependency-cache-v4-{{ checksum "yarn.lock" }}
+      - restore_cache:
+          key: dependency-cache-extension-v1-{{ checksum ".submodule_commit" }}
       - run:
           name: Install deps
           command: YARN_CACHE_FOLDER=.yarn_cache yarn install --frozen-lockfile
+      - run:
+          name: Install extension deps
+          command: YARN_CACHE_FOLDER=.yarn_cache_extension yarn extension install --frozen-lockfile
       - save_cache:
-          key: dependency-cache-v3-{{ checksum "yarn.lock" }}
+          key: dependency-cache-v4-{{ checksum "yarn.lock" }}
           paths:
             - .yarn_cache
             - node_modules/
             - << pipeline.parameters.common-dir >>/node_modules/
             - << pipeline.parameters.app-dir >>/node_modules/
+      - save_cache:
+          key: dependency-cache-extension-v1-{{ checksum ".submodule_commit" }}
+          paths:
+            - .yarn_cache_extension
             - << pipeline.parameters.extension-dir >>/node_modules/
       - run:
           name: Run root post install
-          command: |
-            yarn setup:postinstall
+          command: yarn setup:postinstall
       - run:
           name: Run common post install
-          command: |
-            yarn common setup:postinstall
+          command: yarn common setup:postinstall
       - run:
           name: Run extension post install
-          command: |
-            yarn extension setup:postinstall
+          command: yarn extension setup:postinstall
       - run:
           name: Run app post install
-          command: |
-            yarn app setup:postinstall
+          command: yarn app setup:postinstall
       - persist_to_workspace:
           root: .
           paths:
