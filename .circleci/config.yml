@@ -108,6 +108,9 @@ jobs:
     executor: node-browsers
     steps:
       - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "07:35:fd:e0:5b:fc:30:43:1c:dc:73:75:92:03:53:59"
       - run:
           name: Setup submodule
           command: yarn setup:submodule
