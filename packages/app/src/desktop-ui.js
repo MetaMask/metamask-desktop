@@ -4,6 +4,7 @@
 /* eslint-disable import/namespace */
 /* eslint-disable jsdoc/require-returns */
 /* eslint-disable jsdoc/match-description */
+/* eslint-disable jsdoc/require-description */
 import launchDesktopUi from '../ui';
 
 start().catch((error) => {
