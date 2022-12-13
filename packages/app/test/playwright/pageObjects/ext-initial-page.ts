@@ -129,4 +129,46 @@ export class ExtensionInitialPage {
     await this.page.locator('text="Next"').click();
     await this.page.locator('text="Confirm"').click();
   }
+
+  async createAccount(accountName: string) {
+    await this.openMainMenu();
+    await this.page.locator('text="Create account"').click();
+    await this.page
+      .locator('.new-account-create-form__input')
+      .fill(accountName);
+    await this.page.locator('text=Create').click();
+  }
+
+  async checkAccountName(accountName: string) {
+    await expect(this.page.locator('.selected-account__name')).toContainText(
+      accountName,
+    );
+
+    await this.page.screenshot({
+      path: `test/playwright/test-results/visual/extension-account-name.main.png`,
+      fullPage: true,
+    });
+  }
+
+  async errorClickButton(buttonText: string) {
+    await this.page
+      .locator(`button[role="button"]:has-text("${buttonText}")`)
+      .click();
+  }
+
+  async checkErrorMessages(errorMessage: string[]) {
+    await expect(this.page.locator('.box >> h4')).toBeVisible();
+    await this.page.screenshot({
+      path: `test/playwright/test-results/visual/extension-error-${errorMessage[0].replace(
+        // eslint-disable-next-line require-unicode-regexp
+        / /g,
+        '-',
+      )}.main.png`,
+      fullPage: true,
+    });
+
+    for (const message of errorMessage) {
+      await expect(this.page.locator(`text="${message}"`)).toBeVisible();
+    }
+  }
 }
