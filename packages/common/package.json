@@ -64,5 +64,9 @@
     "allowScripts": {
       "eciesjs>secp256k1": false
     }
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   }
 }
