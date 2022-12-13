@@ -149,7 +149,7 @@ jobs:
             - node_modules
             - << pipeline.parameters.app-dir >>/node_modules
             - << pipeline.parameters.common-dir >>/node_modules
-            - << pipeline.parameters.extension-dir >>/node_modules
+            - << pipeline.parameters.extension-dir >>
 
   validate-deps:
     executor: node-browsers
