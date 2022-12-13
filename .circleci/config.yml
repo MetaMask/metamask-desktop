@@ -108,6 +108,9 @@ jobs:
     executor: node-browsers
     steps:
       - checkout
+      - run:
+          name: Setup submodule
+          command: yarn setup:submodule
       - restore_cache:
           key: dependency-cache-v2-{{ checksum "yarn.lock" }}
       - run:
