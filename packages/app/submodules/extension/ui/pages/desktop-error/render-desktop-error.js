@@ -11,7 +11,7 @@ import {
   TEXT_ALIGN,
   FONT_WEIGHT,
 } from '../../helpers/constants/design-system';
-import { DEFAULT_ROUTE } from '../../helpers/constants/routes';
+import { DEFAULT_ROUTE, SETTINGS_ROUTE } from '../../helpers/constants/routes';
 import Typography from '../../components/ui/typography';
 import Button from '../../components/ui/button';
 import Box from '../../components/ui/box';
@@ -35,6 +35,10 @@ export function renderDesktopError({
 
   const returnExtensionHome = () => {
     history?.push(DEFAULT_ROUTE);
+  };
+
+  const navigateSettings = () => {
+    history?.push(SETTINGS_ROUTE);
   };
 
   const renderHeader = (text) => {
@@ -145,6 +149,20 @@ export function renderDesktopError({
         </>
       );
       break;
+    
+      case EXTENSION_ERROR_PAGE_TYPES.ROUTE_NOT_FOUND:
+        content = (
+          <>
+            {renderHeader(t('desktopRouteNotFoundErrorTitle'))}
+            {renderDescription(t('desktopRouteNotFoundErrorDescription'))}
+            {renderCTA(
+              'desktop-error-button-navigate-settings',
+              t('desktopErrorNavigateSettingsCTA'),
+              navigateSettings,
+            )}
+          </>
+        );
+        break;
 
     default:
       content = (
