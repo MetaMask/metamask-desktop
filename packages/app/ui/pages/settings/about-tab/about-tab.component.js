@@ -5,8 +5,15 @@ import { SUPPORT_REQUEST_LINK } from '../../../../submodules/extension/ui/helper
 import { SUPPORT_LINK } from '../../../../submodules/extension/shared/lib/ui-utils';
 import useI18nContext from '../../../hooks/useI18nContext';
 
+const { shell } = window.require('electron');
+
 const AboutTab = () => {
   const t = useI18nContext();
+
+  const handleLinkClick = (link) => (event) => {
+    event.preventDefault();
+    shell.openExternal(link);
+  };
 
   return (
     <>
@@ -19,10 +26,10 @@ const AboutTab = () => {
       <div className="about-tab__link-item">
         <Button
           type="link"
-          href="https://metamask.io/privacy.html"
           target="_blank"
           rel="noopener noreferrer"
           className="about-tab__link-text"
+          onClick={handleLinkClick('https://metamask.io/privacy.html')}
         >
           {t('privacyMsg')}
         </Button>
@@ -30,10 +37,10 @@ const AboutTab = () => {
       <div className="about-tab__link-item">
         <Button
           type="link"
-          href="https://metamask.io/terms.html"
           target="_blank"
           rel="noopener noreferrer"
           className="about-tab__link-text"
+          onClick={handleLinkClick('https://metamask.io/terms.html')}
         >
           {t('terms')}
         </Button>
@@ -41,10 +48,10 @@ const AboutTab = () => {
       <div className="about-tab__link-item">
         <Button
           type="link"
-          href="https://metamask.io/attributions.html"
           target="_blank"
           rel="noopener noreferrer"
           className="about-tab__link-text"
+          onClick={handleLinkClick('https://metamask.io/attributions.html')}
         >
           {t('attributions')}
         </Button>
@@ -53,10 +60,10 @@ const AboutTab = () => {
       <div className="about-tab__link-item">
         <Button
           type="link"
-          href={SUPPORT_LINK}
           target="_blank"
           rel="noopener noreferrer"
           className="about-tab__link-text"
+          onClick={handleLinkClick(SUPPORT_LINK)}
         >
           {t('supportCenter')}
         </Button>
@@ -64,10 +71,10 @@ const AboutTab = () => {
       <div className="about-tab__link-item">
         <Button
           type="link"
-          href="https://metamask.io/"
           target="_blank"
           rel="noopener noreferrer"
           className="about-tab__link-text"
+          onClick={handleLinkClick('https://metamask.io/')}
         >
           {t('visitWebSite')}
         </Button>
@@ -75,10 +82,10 @@ const AboutTab = () => {
       <div className="about-tab__link-item">
         <Button
           type="link"
-          href={SUPPORT_REQUEST_LINK}
           target="_blank"
           rel="noopener noreferrer"
           className="about-tab__link-text"
+          onClick={handleLinkClick(SUPPORT_REQUEST_LINK)}
         >
           {t('contactUs')}
         </Button>

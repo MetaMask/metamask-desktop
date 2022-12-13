@@ -18,6 +18,8 @@ export default class WindowService {
     const mainWindow = new BrowserWindow({
       width: 800,
       height: 640,
+      minWidth: 800,
+      minHeight: 640,
       titleBarStyle: 'hidden',
       titleBarOverlay: titleBarOverlayOpts.light,
       webPreferences: {
@@ -44,10 +46,6 @@ export default class WindowService {
     }, MAIN_WINDOW_SHOW_DELAY);
 
     log.debug('Created status window');
-
-    if (process.env.DESKTOP_UI_DEBUG) {
-      await mainWindow.webContents.openDevTools();
-    }
 
     this.UIState.mainWindow = mainWindow;
   }

@@ -41,6 +41,13 @@ export default class AppEvents {
       globalShortcut.register('Command+Q', () => this.onCmdQPressed());
     }
 
+    // Be able to open dev tools with CMD + SHIFT + I in dev mode
+    if (process.env.DESKTOP_UI_DEBUG) {
+      globalShortcut.register('CommandOrControl+Shift+I', () => {
+        this.UIState.mainWindow?.webContents.openDevTools();
+      });
+    }
+
     // Do not close the app when the window is closed
     this.UIState.mainWindow?.on('close', (event: any) =>
       this.onWindowClose(event),
