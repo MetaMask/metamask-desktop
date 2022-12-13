@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '../../../../submodules/extension/ui/components/ui/button';
 
 import { SUPPORT_REQUEST_LINK } from '../../../../submodules/extension/ui/helpers/constants/common';
@@ -9,6 +9,13 @@ const { shell } = window.require('electron');
 
 const AboutTab = () => {
   const t = useI18nContext();
+  const [desktopVersion, setDesktopVersion] = useState('');
+
+  useEffect(() => {
+    window.electronBridge.desktopVersion().then((value) => {
+      setDesktopVersion(value);
+    });
+  }, []);
 
   const handleLinkClick = (link) => (event) => {
     event.preventDefault();
@@ -19,7 +26,7 @@ const AboutTab = () => {
     <>
       <div className="about-tab__item">
         <div className="about-tab__link-header">MetaMask Desktop</div>
-        <div className="about-tab__version-number">{window.electron.desktopVersion()}</div>
+        <div className="about-tab__version-number">{desktopVersion}</div>
       </div>
       <hr className="about-tab__separator" />
       <div className="about-tab__link-header">{t('links')}</div>

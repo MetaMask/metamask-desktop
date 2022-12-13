@@ -87,7 +87,7 @@ const GeneralTab = ({
             <Button
               type="danger"
               onClick={() => {
-                window.electron.unpair();
+                window.electronBridge.unpair();
               }}
             >
               {t('removeConnection')}
@@ -106,7 +106,7 @@ const GeneralTab = ({
             <Button
               type="danger"
               onClick={() => {
-                window.electron.reset();
+                window.electronBridge.reset();
               }}
             >
               {t('resetConnection')}

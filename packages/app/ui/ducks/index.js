@@ -7,7 +7,7 @@ import pairStatusReducer from './pair-status/pair-status';
 
 const pairStatusPersistConfig = {
   key: 'pairStatus',
-  storage: window.electron.pairStatusStore,
+  storage: window.electronBridge.pairStatusStore,
   blacklist: ['connections', 'isWebSocketConnected'],
   whitelist: ['isDesktopEnabled', 'isSuccessfulPairSeen', 'lastActivation'],
 };
@@ -24,7 +24,7 @@ const rootReducer = combineReducers({
 
 const rootPersistConfig = {
   key: 'root',
-  storage: window.electron.rootStore,
+  storage: window.electronBridge.rootStore,
   whitelist: ['app', 'locales'],
 };
 const persistedRootReducer = persistReducer(rootPersistConfig, rootReducer);

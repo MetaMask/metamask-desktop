@@ -15,7 +15,7 @@ async function launchDesktopUi() {
     .addEventListener('change', registerUpdateOSTheme(store));
 
   // Register listeners from the main process to the renderer process
-  window.electron.onStatusChange(registerUpdatePairStatus(store));
+  window.electronBridge.onStatusChange(registerUpdatePairStatus(store));
 
   render(
     <Root store={store} persistor={persistor} />,
