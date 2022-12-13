@@ -6,5 +6,6 @@ set -e
 git submodule init
 git submodule update
 
-# Update submodule to use common package from monorepo instead of local directory
-sed -i='' 's/link:.\/.desktop/*/' packages/app/submodules/extension/package.json
+# Copy common package to submodule
+# Not required when package is published
+cp -r packages/common packages/app/submodules/extension/.desktop
