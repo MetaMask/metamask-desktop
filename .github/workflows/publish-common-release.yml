@@ -7,7 +7,21 @@ on:
     paths:
       - packages/common/**
     branches: [main-desktop]
+
 jobs:
+  check-workflows:
+    name: Lints workflow
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download actionlint
+        id: download-actionlint
+        run: bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/7fdc9630cc360ea1a469eed64ac6d78caeda1234/scripts/download-actionlint.bash) 1.6.22
+        shell: bash
+      - name: Check workflow files
+        run: ${{ steps.download-actionlint.outputs.executable }} -color .github/workflows/publish-common-release.yml
+        shell: bash
+
   is-release:
     name: Determine whether this is a release merge commit
     runs-on: ubuntu-latest
