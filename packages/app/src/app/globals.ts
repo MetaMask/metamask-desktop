@@ -35,15 +35,10 @@ if (!global.self) {
     // supports fetchWithCache
     Headers,
     navigator: global.navigator,
-    // requires by trezor connect utils and deep link
+    // required by axios, trezor connect, utils and deep link
     location: {
       href: 'test.com',
     },
-    /* posts a message to the given window.
-      required by trezor connect */
-    postMessage: () => undefined,
-    // add listeners required by lattice, trezor connect and deep link
-    addEventListener: () => undefined,
   } as unknown as Window & typeof globalThis;
 
   // required by `dom-helpers` and various other libraries
@@ -53,7 +48,7 @@ if (!global.self) {
       pathname: '/',
       setAttribute: () => undefined,
     }),
-    // trezor connect (EI css fix)
+    // required by trezor connect (EI css fix)
     head: {
       appendChild: () => undefined,
     },
