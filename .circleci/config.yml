@@ -64,7 +64,7 @@ workflows:
             - install-deps-extension
       - build-common:
           requires:
-            - install-deps-extension
+            - install-deps
       - build-app:
           requires:
             - build-common
