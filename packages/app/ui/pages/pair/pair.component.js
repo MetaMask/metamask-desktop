@@ -22,7 +22,6 @@ import Spinner from '../../../submodules/extension/ui/components/ui/spinner';
 const ANIMATION_COMPLETE_DEFER_IN_MS = 1000;
 const OTP_VALIDATION_TIMEOUT_IN_MS = 5000;
 
-
 const Pair = ({ isDesktopEnabled, isSuccessfulPairSeen, history }) => {
   const t = useI18nContext();
   const [otp, setOtp] = React.useState('');
@@ -68,7 +67,7 @@ const Pair = ({ isDesktopEnabled, isSuccessfulPairSeen, history }) => {
       setTimeout(() => {
         window.electronBridge.sendOtp(otpValue);
       }, ANIMATION_COMPLETE_DEFER_IN_MS);
-      
+
       // Show timeout error after 5 seconds of no response when validating
       const timeoutId = setTimeout(() => {
         setOtpTimeoutError(true);

@@ -51,9 +51,8 @@ export const getIsWebSocketConnected = (state) =>
 export const getIsSuccessfulPairSeen = (state) =>
   state.pairStatus.isSuccessfulPairSeen;
 export const getIsPairingEverCompleted = (state) => {
-  const { isDesktopEnabled, isWebSocketConnected, isSuccessfulPairSeen } =
-    state.pairStatus;
-  return isDesktopEnabled || isWebSocketConnected || isSuccessfulPairSeen;
+  const { isDesktopEnabled, isSuccessfulPairSeen } = state.pairStatus;
+  return isDesktopEnabled || isSuccessfulPairSeen;
 };
 
 // Action Creators
