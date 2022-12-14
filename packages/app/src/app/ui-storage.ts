@@ -3,23 +3,23 @@ import Store from 'electron-store';
 
 export interface UiStorageSettings {
   key: string;
-  version: `${number}.${number}.${number}`;
+  schemaVersion: `${number}.${number}.${number}`;
 }
 
-export const setUiStorage = ({ key, version }: UiStorageSettings) => {
-  const pairStatusStore = new Store({
-    name: `mmd-desktop-ui-v${version}-${key}`,
+export const setUiStorage = ({ key, schemaVersion }: UiStorageSettings) => {
+  const uiStore = new Store({
+    name: `mmd-desktop-ui-v${schemaVersion}-${key}`,
   });
 
   ipcMain.handle(`${key}-store-get`, (_event, key: string) => {
-    return pairStatusStore.get(key);
+    return uiStore.get(key);
   });
 
   ipcMain.handle(`${key}-store-set`, (_event, key: string, value) => {
-    pairStatusStore.set(key, value);
+    uiStore.set(key, value);
   });
 
   ipcMain.handle(`${key}-store-delete`, (_event, key: string) => {
-    pairStatusStore.delete(key);
+    uiStore.delete(key);
   });
 };

@@ -21,10 +21,10 @@ export const protocolKey = 'metamask-desktop';
 
 export const uiRootStorage: UiStorageSettings = {
   key: 'root',
-  version: '0.0.0',
+  schemaVersion: '0.0.0',
 };
 
 export const uiPairStatusStorage: UiStorageSettings = {
   key: 'pair-status',
-  version: '0.0.0',
+  schemaVersion: '0.0.0',
 };
