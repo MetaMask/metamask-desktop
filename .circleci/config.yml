@@ -46,7 +46,7 @@ workflows:
       - install-deps
       - install-deps-extension:
           requires:
-            - build-common
+            - install-deps-extension
       - validate-deps:
           requires:
             - install-deps-extension
@@ -58,7 +58,7 @@ workflows:
             - install-deps-extension
       - validate-lavamoat-config:
           requires:
-            - build-common
+            - install-deps-extension
       - audit:
           requires:
             - install-deps-extension
@@ -67,13 +67,13 @@ workflows:
             - install-deps
       - build-app:
           requires:
-            - build-common
+            - install-deps-extension
       - build-app-test-extension:
           requires:
-            - build-common
+            - install-deps-extension
       - build-app-test-app:
           requires:
-            - build-common
+            - install-deps-extension
       - build-ui:
           requires:
             - install-deps-extension
@@ -94,13 +94,13 @@ workflows:
             - install-deps-extension
       - lint-app:
           requires:
-            - build-common
+            - install-deps-extension
       - test-unit-common:
           requires:
             - install-deps-extension
       - test-unit-app:
           requires:
-            - build-common
+            - install-deps-extension
       - test-e2e-extension:
           requires:
             - build-app-test-extension
