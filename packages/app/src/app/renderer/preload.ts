@@ -5,7 +5,7 @@ const uiStoreBridge = (name: string) => {
     getItem: (key: string) => {
       return ipcRenderer.invoke(`${name}-store-get`, key);
     },
-    setItem: async (key: string, value: any) => {
+    setItem: async (key: string, value: unknown) => {
       await ipcRenderer.invoke(`${name}-store-set`, key, value);
     },
     removeItem: async (key: string) => {
@@ -20,8 +20,8 @@ const electronBridge = {
   desktopVersion: () => {
     return ipcRenderer.invoke('get-desktop-version') as Promise<string>;
   },
-  onStatusChange: (callback: (statusData: any) => void) => {
-    ipcRenderer.on('status', (_, statusData: any) => {
+  onStatusChange: (callback: (statusData: unknown) => void) => {
+    ipcRenderer.on('status', (_, statusData) => {
       callback(statusData);
     });
   },
