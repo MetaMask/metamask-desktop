@@ -9,8 +9,4 @@ git submodule update
 
 # Write submodule commit hash to file for use by pipeline
 SUBMODULE_COMMIT=$(cd packages/app/submodules/extension && git rev-parse HEAD)
-echo $SUBMODULE_COMMIT > .submodule_commit 
-
-# Copy common package to submodule
-# Not required when package is published
-cp -r packages/common packages/app/submodules/extension/.desktop
+echo $SUBMODULE_COMMIT > .submodule_commit
