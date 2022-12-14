@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  builder:
+    image: electronuserland/builder:16-wine
+    env_file:
+      - ../../.metamaskrc
+    environment:
+      - ELECTRON_CACHE=/root/.cache/electron
+      - ELECTRON_BUILDER_CACHE=/root/.cache/electron-builder
+    volumes:
+      - ./../../../../:/project
+      - ~/.cache/electron:/root/.cache/electron
+      - ~/.cache/electron-builder:/root/.cache/electron-builder
+    command: yarn app package:win

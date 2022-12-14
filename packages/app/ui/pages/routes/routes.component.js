@@ -29,6 +29,10 @@ const Routes = ({ theme }) => {
         <Route path={SUCCESSFUL_PAIR_ROUTE} component={SuccessfulPair} />
         <Route path={SETTINGS_ROUTE} component={Settings} />
         <Route path={`${ERROR_ROUTE}/:errorType`} component={ErrorPage} exact />
+        <Route
+          path="*"
+          render={() => <ErrorPage errorType="route-not-found" />}
+        />
       </Switch>
     </div>
   );
