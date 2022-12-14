@@ -46,7 +46,7 @@ workflows:
       - install-deps
       - install-deps-extension:
           requires:
-            - install-deps-extension
+            - build-common
       - validate-deps:
           requires:
             - install-deps-extension
