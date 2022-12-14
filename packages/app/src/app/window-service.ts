@@ -23,9 +23,7 @@ export default class WindowService {
       titleBarStyle: 'hidden',
       titleBarOverlay: titleBarOverlayOpts.light,
       webPreferences: {
-        preload: path.resolve(__dirname, './status-preload.js'),
-        nodeIntegration: true,
-        contextIsolation: false,
+        preload: path.resolve(__dirname, './renderer/preload.js'),
       },
       icon: path.resolve(__dirname, '../../dist/app/icon.png'),
     });

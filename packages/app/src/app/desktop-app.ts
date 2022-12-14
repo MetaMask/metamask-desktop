@@ -17,13 +17,20 @@ import EncryptedWebSocketStream from '@metamask/desktop/dist/encryption/web-sock
 import { StatusMessage } from '../types/message';
 import { forwardEvents } from '../utils/events';
 import cfg from '../utils/config';
+import { getDesktopVersion } from '../utils/version';
 import ExtensionConnection from './extension-connection';
 import { updateCheck } from './update-check';
-import { titleBarOverlayOpts, protocolKey } from './ui-constants';
+import {
+  titleBarOverlayOpts,
+  protocolKey,
+  uiRootStorage,
+  uiPairStatusStorage,
+} from './ui-constants';
 import AppNavigation from './app-navigation';
 import AppEvents from './app-events';
 import WindowService from './window-service';
 import UIState from './ui-state';
+import { setUiStorage } from './ui-storage';
 
 // Set protocol for deeplinking
 if (!cfg().isUnitTest) {
@@ -104,6 +111,13 @@ class DesktopApp extends EventEmitter {
       const win = BrowserWindow.fromWebContents(event.sender);
       win?.setTitleBarOverlay?.(titleBarOverlayOpts[theme]);
     });
+
+    ipcMain.handle('get-desktop-version', () => {
+      return getDesktopVersion();
+    });
+
+    setUiStorage(uiRootStorage);
+    setUiStorage(uiPairStatusStorage);
 
     if (!cfg().isExtensionTest) {
       await this.windowService.createMainWindow();

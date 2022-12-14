@@ -6,9 +6,6 @@ import Root from './pages';
 import registerUpdatePairStatus from './hooks/registerUpdatePairStatus';
 import registerUpdateOSTheme from './hooks/registerUpdateOSTheme';
 
-// eslint-disable-next-line node/no-extraneous-require
-const { ipcRenderer } = window.require('electron');
-
 async function launchDesktopUi() {
   const { store, persistor } = configureStore();
 
@@ -18,7 +15,7 @@ async function launchDesktopUi() {
     .addEventListener('change', registerUpdateOSTheme(store));
 
   // Register listeners from the main process to the renderer process
-  ipcRenderer.on('status', registerUpdatePairStatus(store));
+  window.electronBridge.onStatusChange(registerUpdatePairStatus(store));
 
   render(
     <Root store={store} persistor={persistor} />,

@@ -4,6 +4,13 @@ import { webcrypto } from 'node:crypto';
 import { Headers } from 'node-fetch';
 import setupSentry from '../../submodules/extension/app/scripts/lib/setupSentry';
 import { getDesktopVersion } from '../utils/version';
+import { ElectronBridge } from './renderer/preload';
+
+declare global {
+  interface Window {
+    electronBridge: ElectronBridge;
+  }
+}
 
 declare const global: typeof globalThis & {
   isDesktopApp: boolean;
