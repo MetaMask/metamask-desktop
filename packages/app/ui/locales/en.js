@@ -146,6 +146,15 @@ const enLocales = {
   invalidOtpCode: {
     message: 'Invalid OTP code',
   },
+  desktopRouteNotFoundErrorTitle: {
+    message: 'Page not found',
+  },
+  desktopRouteNotFoundErrorDescription: {
+    message: 'The page you are looking for does not exist.',
+  },
+  desktopErrorNavigateSettingsCTA: {
+    message: 'Return to Settings Page',
+  },
 };
 
 export default enLocales;

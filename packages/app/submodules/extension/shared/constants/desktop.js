@@ -4,4 +4,5 @@ export const EXTENSION_ERROR_PAGE_TYPES = {
   DESKTOP_OUTDATED: 'desktop-outdated',
   EXTENSION_OUTDATED: 'extension-outdated',
   CRITICAL_ERROR: 'critical-error',
+  ROUTE_NOT_FOUND: 'route-not-found',
 };
