@@ -1,7 +1,7 @@
 {
   "afterSign": "build/mac/notarize.js",
   "appId": "consensys.metamask.desktop",
-  "asar": false,
+  "asar": true,
   "directories": {
     "output": "packages"
   },
