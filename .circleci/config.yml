@@ -49,19 +49,19 @@ workflows:
             - build-common
       - validate-deps:
           requires:
-            - install-deps-extension
+            - install-deps
       - validate-lock-duplicates:
           requires:
-            - install-deps-extension
+            - install-deps
       - lint-lockfile:
           requires:
-            - install-deps-extension
+            - install-deps
       - validate-lavamoat-config:
           requires:
-            - install-deps-extension
+            - install-deps
       - audit:
           requires:
-            - install-deps-extension
+            - install-deps
       - build-common:
           requires:
             - install-deps
@@ -91,16 +91,16 @@ workflows:
             - install-deps-extension
       - lint-common:
           requires:
-            - install-deps-extension
+            - install-deps
       - lint-app:
           requires:
-            - install-deps-extension
+            - build-common
       - test-unit-common:
           requires:
-            - install-deps-extension
+            - install-deps
       - test-unit-app:
           requires:
-            - install-deps-extension
+            - build-common
       - test-e2e-extension:
           requires:
             - build-app-test-extension
