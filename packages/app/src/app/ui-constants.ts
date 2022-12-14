@@ -20,11 +20,11 @@ export const metamaskDesktopAboutWebsite = 'https://metamask.io/desktop';
 export const protocolKey = 'metamask-desktop';
 
 export const uiRootStorage: UiStorageSettings = {
-  key: 'root',
+  name: 'root',
   schemaVersion: '0.0.0',
 };
 
 export const uiPairStatusStorage: UiStorageSettings = {
-  key: 'pair-status',
+  name: 'pair-status',
   schemaVersion: '0.0.0',
 };

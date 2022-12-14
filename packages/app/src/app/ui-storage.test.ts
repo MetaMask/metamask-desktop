@@ -17,31 +17,31 @@ jest.mock(
 describe('setUiStorage', () => {
   it('test', () => {
     const storeSettings: UiStorageSettings = {
-      key: 'test',
-      version: '0.0.0',
+      name: 'test',
+      schemaVersion: '0.0.0',
     };
 
     setUiStorage(storeSettings);
 
     expect(Store).toHaveBeenCalledTimes(1);
     expect(Store).toHaveBeenCalledWith({
-      name: `mmd-desktop-ui-v${storeSettings.version}-${storeSettings.key}`,
+      name: `mmd-desktop-ui-v${storeSettings.schemaVersion}-${storeSettings.name}`,
     });
 
     expect(ipcMain.handle).toHaveBeenCalledTimes(3);
 
     expect(ipcMain.handle).toHaveBeenCalledWith(
-      `${storeSettings.key}-store-get`,
+      `${storeSettings.name}-store-get`,
       expect.any(Function),
     );
 
     expect(ipcMain.handle).toHaveBeenCalledWith(
-      `${storeSettings.key}-store-set`,
+      `${storeSettings.name}-store-set`,
       expect.any(Function),
     );
 
     expect(ipcMain.handle).toHaveBeenCalledWith(
-      `${storeSettings.key}-store-delete`,
+      `${storeSettings.name}-store-delete`,
       expect.any(Function),
     );
   });
