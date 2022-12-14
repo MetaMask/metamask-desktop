@@ -67,7 +67,7 @@ const startDesktopApp = async () => {
 
   const command = `${
     isInCI() ? 'xvfb-run -a ' : ''
-  }cd ../../../.. && yarn start:test`;
+  }yarn --cwd ../.. start:test`;
 
   const desktopApp = cp.spawn(command, { shell: true });
 
