@@ -245,6 +245,245 @@
         "readable-stream": true
       }
     },
+    "@ledgerhq/hw-app-eth": {
+      "globals": {
+        "Buffer.alloc": true,
+        "Buffer.concat": true,
+        "Buffer.from": true,
+        "console.warn": true
+      },
+      "packages": {
+        "@ledgerhq/hw-app-eth>@ethersproject/abi": true,
+        "@ledgerhq/hw-app-eth>@ethersproject/rlp": true,
+        "@ledgerhq/hw-app-eth>@ledgerhq/cryptoassets": true,
+        "@ledgerhq/hw-app-eth>@ledgerhq/errors": true,
+        "@ledgerhq/hw-app-eth>@ledgerhq/logs": true,
+        "@ledgerhq/hw-app-eth>axios": true,
+        "@ledgerhq/hw-app-eth>bignumber.js": true
+      }
+    },
+    "@ledgerhq/hw-app-eth>@ethersproject/abi": {
+      "globals": {
+        "console.log": true
+      },
+      "packages": {
+        "@ledgerhq/hw-app-eth>@ethersproject/abi>@ethersproject/address": true,
+        "@ledgerhq/hw-app-eth>@ethersproject/abi>@ethersproject/constants": true,
+        "@ledgerhq/hw-app-eth>@ethersproject/abi>@ethersproject/hash": true,
+        "@ledgerhq/hw-app-eth>@ethersproject/abi>@ethersproject/keccak256": true,
+        "@ledgerhq/hw-app-eth>@ethersproject/abi>@ethersproject/properties": true,
+        "@ledgerhq/hw-app-eth>@ethersproject/abi>@ethersproject/strings": true,
+        "@ledgerhq/hw-app-eth>@ethersproject/rlp>@ethersproject/bytes": true,
+        "@ledgerhq/hw-app-eth>@ethersproject/rlp>@ethersproject/logger": true,
+        "@metamask/smart-transactions-controller>@ethersproject/bignumber": true
+      }
+    },
+    "@ledgerhq/hw-app-eth>@ethersproject/abi>@ethersproject/address": {
+      "packages": {
+        "@ledgerhq/hw-app-eth>@ethersproject/abi>@ethersproject/keccak256": true,
+        "@ledgerhq/hw-app-eth>@ethersproject/rlp": true,
+        "@ledgerhq/hw-app-eth>@ethersproject/rlp>@ethersproject/bytes": true,
+        "@ledgerhq/hw-app-eth>@ethersproject/rlp>@ethersproject/logger": true,
+        "@metamask/smart-transactions-controller>@ethersproject/bignumber": true
+      }
+    },
+    "@ledgerhq/hw-app-eth>@ethersproject/abi>@ethersproject/constants": {
+      "packages": {
+        "@metamask/smart-transactions-controller>@ethersproject/bignumber": true
+      }
+    },
+    "@ledgerhq/hw-app-eth>@ethersproject/abi>@ethersproject/hash": {
+      "packages": {
+        "@ledgerhq/hw-app-eth>@ethersproject/abi>@ethersproject/address": true,
+        "@ledgerhq/hw-app-eth>@ethersproject/abi>@ethersproject/hash>@ethersproject/base64": true,
+        "@ledgerhq/hw-app-eth>@ethersproject/abi>@ethersproject/keccak256": true,
+        "@ledgerhq/hw-app-eth>@ethersproject/abi>@ethersproject/properties": true,
+        "@ledgerhq/hw-app-eth>@ethersproject/abi>@ethersproject/strings": true,
+        "@ledgerhq/hw-app-eth>@ethersproject/rlp>@ethersproject/bytes": true,
+        "@ledgerhq/hw-app-eth>@ethersproject/rlp>@ethersproject/logger": true,
+        "@metamask/smart-transactions-controller>@ethersproject/bignumber": true
+      }
+    },
+    "@ledgerhq/hw-app-eth>@ethersproject/abi>@ethersproject/hash>@ethersproject/base64": {
+      "globals": {
+        "Buffer.from": true
+      },
+      "packages": {
+        "@ledgerhq/hw-app-eth>@ethersproject/rlp>@ethersproject/bytes": true
+      }
+    },
+    "@ledgerhq/hw-app-eth>@ethersproject/abi>@ethersproject/keccak256": {
+      "packages": {
+        "@ledgerhq/hw-app-eth>@ethersproject/abi>@ethersproject/keccak256>js-sha3": true,
+        "@ledgerhq/hw-app-eth>@ethersproject/rlp>@ethersproject/bytes": true
+      }
+    },
+    "@ledgerhq/hw-app-eth>@ethersproject/abi>@ethersproject/keccak256>js-sha3": {
+      "globals": {
+        "define": true,
+        "process": true
+      }
+    },
+    "@ledgerhq/hw-app-eth>@ethersproject/abi>@ethersproject/properties": {
+      "packages": {
+        "@ledgerhq/hw-app-eth>@ethersproject/rlp>@ethersproject/logger": true
+      }
+    },
+    "@ledgerhq/hw-app-eth>@ethersproject/abi>@ethersproject/strings": {
+      "packages": {
+        "@ledgerhq/hw-app-eth>@ethersproject/abi>@ethersproject/constants": true,
+        "@ledgerhq/hw-app-eth>@ethersproject/rlp>@ethersproject/bytes": true,
+        "@ledgerhq/hw-app-eth>@ethersproject/rlp>@ethersproject/logger": true
+      }
+    },
+    "@ledgerhq/hw-app-eth>@ethersproject/rlp": {
+      "packages": {
+        "@ledgerhq/hw-app-eth>@ethersproject/rlp>@ethersproject/bytes": true,
+        "@ledgerhq/hw-app-eth>@ethersproject/rlp>@ethersproject/logger": true
+      }
+    },
+    "@ledgerhq/hw-app-eth>@ethersproject/rlp>@ethersproject/bytes": {
+      "packages": {
+        "@ledgerhq/hw-app-eth>@ethersproject/rlp>@ethersproject/logger": true
+      }
+    },
+    "@ledgerhq/hw-app-eth>@ethersproject/rlp>@ethersproject/logger": {
+      "globals": {
+        "console": true
+      }
+    },
+    "@ledgerhq/hw-app-eth>@ledgerhq/errors": {
+      "globals": {
+        "console.warn": true
+      }
+    },
+    "@ledgerhq/hw-app-eth>@ledgerhq/hw-transport": {
+      "builtin": {
+        "events": true
+      },
+      "globals": {
+        "Buffer.alloc": true,
+        "Buffer.concat": true,
+        "Buffer.from": true,
+        "clearTimeout": true,
+        "console.warn": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "@ledgerhq/hw-app-eth>@ledgerhq/errors": true
+      }
+    },
+    "@ledgerhq/hw-app-eth>@ledgerhq/logs": {
+      "globals": {
+        "__ledgerLogsListen": "write",
+        "console.error": true
+      }
+    },
+    "@ledgerhq/hw-app-eth>axios": {
+      "builtin": {
+        "http": true,
+        "https": true,
+        "url.parse": true,
+        "zlib.createUnzip": true
+      },
+      "globals": {
+        "Buffer.concat": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true,
+        "XMLHttpRequest": true,
+        "btoa": true,
+        "console.warn": true,
+        "document": true,
+        "location.href": true,
+        "navigator": true,
+        "process": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "@ledgerhq/hw-app-eth>axios>follow-redirects": true
+      }
+    },
+    "@ledgerhq/hw-app-eth>axios>follow-redirects": {
+      "builtin": {
+        "assert": true,
+        "http": true,
+        "https": true,
+        "stream.Writable.call": true,
+        "stream.Writable.prototype": true,
+        "url.URL": true,
+        "url.format": true,
+        "url.parse": true,
+        "url.resolve": true
+      },
+      "globals": {
+        "clearTimeout": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "@ledgerhq/hw-app-eth>axios>follow-redirects>debug": true
+      }
+    },
+    "@ledgerhq/hw-app-eth>axios>follow-redirects>debug": {
+      "builtin": {
+        "tty.isatty": true,
+        "util.deprecate": true,
+        "util.format": true,
+        "util.inspect": true
+      },
+      "globals": {
+        "console": true,
+        "document": true,
+        "localStorage": true,
+        "navigator": true,
+        "process": true
+      },
+      "packages": {
+        "@ledgerhq/hw-app-eth>axios>follow-redirects>debug>ms": true,
+        "@truffle/codec>debug>supports-color": true
+      }
+    },
+    "@ledgerhq/hw-app-eth>bignumber.js": {
+      "globals": {
+        "crypto": true,
+        "define": true
+      }
+    },
+    "@ledgerhq/hw-transport-node-hid-noevents": {
+      "globals": {
+        "Buffer.from": true,
+        "process.platform": true
+      },
+      "packages": {
+        "@ledgerhq/hw-app-eth>@ledgerhq/errors": true,
+        "@ledgerhq/hw-app-eth>@ledgerhq/hw-transport": true,
+        "@ledgerhq/hw-app-eth>@ledgerhq/logs": true,
+        "@ledgerhq/hw-transport-node-hid-noevents>@ledgerhq/devices": true,
+        "@ledgerhq/hw-transport-node-hid-noevents>node-hid": true
+      }
+    },
+    "@ledgerhq/hw-transport-node-hid-noevents>@ledgerhq/devices": {
+      "globals": {
+        "Buffer.alloc": true,
+        "Buffer.concat": true
+      },
+      "packages": {
+        "@ledgerhq/hw-app-eth>@ledgerhq/errors": true,
+        "global-agent>semver": true
+      }
+    },
+    "@ledgerhq/hw-transport-node-hid-noevents>node-hid": {
+      "builtin": {
+        "events.EventEmitter": true,
+        "os.platform": true,
+        "util.inherits": true
+      },
+      "globals": {
+        "process.nextTick": true
+      },
+      "packages": {
+        "lavamoat>bindings": true
+      }
+    },
     "@metamask/controllers": {
       "builtin": {
         "events.EventEmitter": true
