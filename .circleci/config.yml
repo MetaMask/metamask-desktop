@@ -58,7 +58,7 @@ workflows:
             - install-deps
       - validate-lavamoat-config:
           requires:
-            - install-deps
+            - build-common
       - audit:
           requires:
             - install-deps
