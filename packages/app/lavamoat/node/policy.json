@@ -1070,6 +1070,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/desktop>eciesjs>secp256k1>elliptic": true,
         "@metamask/desktop>eciesjs>secp256k1>node-gyp-build": true

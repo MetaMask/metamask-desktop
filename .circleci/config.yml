@@ -157,12 +157,12 @@ jobs:
       - attach_workspace:
           at: .
       - restore_cache:
-          key: dependency-cache-extension-v1-{{ checksum ".submodule_commit" }}
+          key: dependency-cache-extension-v1-{{ checksum "<< pipeline.parameters.extension-dir >>/yarn.lock" }}
       - run:
           name: Install extension deps
           command: YARN_CACHE_FOLDER=.yarn_cache_extension yarn extension install --frozen-lockfile
       - save_cache:
-          key: dependency-cache-extension-v1-{{ checksum ".submodule_commit" }}
+          key: dependency-cache-extension-v1-{{ checksum "<< pipeline.parameters.extension-dir >>/yarn.lock" }}
           paths:
             - .yarn_cache_extension
             - << pipeline.parameters.extension-dir >>/node_modules/

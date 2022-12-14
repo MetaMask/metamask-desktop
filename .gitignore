@@ -27,6 +27,3 @@ temp
 packages/**/coverage
 packages/**/playwright/playwright-reports
 .eslintcache
-
-# Submodule
-.submodule_commit
