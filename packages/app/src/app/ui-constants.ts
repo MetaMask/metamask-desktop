@@ -1,4 +1,5 @@
 import { THEME_TYPE } from '../../ui/helpers/constants/themeIndex';
+import { UiStorageSettings } from './ui-storage';
 
 export const titleBarOverlayOpts = {
   [THEME_TYPE.DARK]: {
@@ -17,3 +18,13 @@ export const titleBarOverlayOpts = {
 export const metamaskDesktopAboutWebsite = 'https://metamask.io/desktop';
 
 export const protocolKey = 'metamask-desktop';
+
+export const uiRootStorage: UiStorageSettings = {
+  name: 'root',
+  schemaVersion: '0.0.0',
+};
+
+export const uiPairStatusStorage: UiStorageSettings = {
+  name: 'pair-status',
+  schemaVersion: '0.0.0',
+};

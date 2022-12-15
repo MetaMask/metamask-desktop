@@ -10,9 +10,6 @@ import localeIndex from '../../../helpers/constants/localeIndex';
 import themeIndex from '../../../helpers/constants/themeIndex';
 import useI18nContext from '../../../hooks/useI18nContext';
 
-// eslint-disable-next-line node/no-extraneous-require
-const { ipcRenderer } = window.require('electron');
-
 const GeneralTab = ({
   isWebSocketConnected,
   lastActivation,
@@ -20,6 +17,7 @@ const GeneralTab = ({
   updateCurrentLanguage,
   theme,
   updateTheme,
+  isPairingEverCompleted,
 }) => {
   const t = useI18nContext();
 
@@ -90,7 +88,7 @@ const GeneralTab = ({
             <Button
               type="danger"
               onClick={() => {
-                ipcRenderer.invoke('unpair');
+                window.electronBridge.unpair();
               }}
             >
               {t('removeConnection')}
@@ -109,7 +107,7 @@ const GeneralTab = ({
             <Button
               type="danger"
               onClick={() => {
-                ipcRenderer.invoke('reset');
+                window.electronBridge.reset();
               }}
             >
               {t('resetConnection')}
@@ -125,10 +123,12 @@ const GeneralTab = ({
       <PairStatus
         isWebSocketConnected={isWebSocketConnected}
         lastActivation={lastActivation}
+        isPairingEverCompleted={isPairingEverCompleted}
       />
       {renderLanguageSettings()}
       {renderThemeSettings()}
-      {isWebSocketConnected ? renderUnpairButton() : renderResetButton()}
+      {isPairingEverCompleted &&
+        (isWebSocketConnected ? renderUnpairButton() : renderResetButton())}
     </>
   );
 };
@@ -158,6 +158,10 @@ GeneralTab.propTypes = {
    * Updates the current theme
    */
   updateTheme: PropTypes.func,
+  /**
+   * Whether the desktop app has ever been paired with the extension
+   */
+  isPairingEverCompleted: PropTypes.bool,
 };
 
 export default GeneralTab;
