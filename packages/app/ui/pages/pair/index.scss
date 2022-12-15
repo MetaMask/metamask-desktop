@@ -7,6 +7,14 @@ $otp-height: 142px;
   align-items: center;
   justify-content: center;
 
+  &__settings-icon {
+    position: absolute;
+    top: 0;
+    right: 16px;
+    color: var(--color-text-muted);
+    cursor: pointer;
+  }
+
   &__spinner {
     width: 50px;
     margin: 80px 0;

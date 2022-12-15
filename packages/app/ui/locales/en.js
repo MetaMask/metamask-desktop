@@ -155,6 +155,12 @@ const enLocales = {
   desktopErrorNavigateSettingsCTA: {
     message: 'Return to Settings Page',
   },
+  otpTimeoutError: {
+    message: 'Timeout in OTP check, please try again',
+  },
+  pairNow: {
+    message: 'Pair with your MetaMask extension',
+  },
 };
 
 export default enLocales;

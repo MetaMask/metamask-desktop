@@ -17,6 +17,7 @@ const GeneralTab = ({
   updateCurrentLanguage,
   theme,
   updateTheme,
+  isPairingEverCompleted,
 }) => {
   const t = useI18nContext();
 
@@ -122,10 +123,12 @@ const GeneralTab = ({
       <PairStatus
         isWebSocketConnected={isWebSocketConnected}
         lastActivation={lastActivation}
+        isPairingEverCompleted={isPairingEverCompleted}
       />
       {renderLanguageSettings()}
       {renderThemeSettings()}
-      {isWebSocketConnected ? renderUnpairButton() : renderResetButton()}
+      {isPairingEverCompleted &&
+        (isWebSocketConnected ? renderUnpairButton() : renderResetButton())}
     </>
   );
 };
@@ -155,6 +158,10 @@ GeneralTab.propTypes = {
    * Updates the current theme
    */
   updateTheme: PropTypes.func,
+  /**
+   * Whether the desktop app has ever been paired with the extension
+   */
+  isPairingEverCompleted: PropTypes.bool,
 };
 
 export default GeneralTab;
