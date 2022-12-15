@@ -45,6 +45,12 @@ export class DesktopOTPPage {
       fullPage: true,
     });
 
-    await expect(this.window.locator('text=Sync with Extension')).toBeVisible();
+    await expect(
+      this.window.locator('text=Pair with your Metamask extension'),
+    ).toBeVisible();
+  }
+
+  async resetConnection() {
+    await this.window.locator('text=Reset Connection').click();
   }
 }

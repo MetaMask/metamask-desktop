@@ -3,13 +3,23 @@ import { ElectronApplication, Page, _electron as electron } from 'playwright';
 
 export async function electronStartup(): Promise<ElectronApplication> {
   // Delete config.json to have the same initial setup every run
-  fs.unlink(process.env.ELECTRON_CONFIG_PATH as string, (err) => {
+  const path = process.env.ELECTRON_CONFIG_PATH as string;
+  fs.unlink(`${path}/config.json`, (err) => {
     if (err) {
       console.error('there was an error:', err.message);
     } else {
       console.log(`${process.env.ELECTRON_CONFIG_PATH} was deleted`);
     }
   });
+  const regex = /mmd-desktop-ui.*/u;
+  try {
+    fs.readdirSync(path)
+      .filter((f) => regex.test(f))
+      .map((f) => fs.unlinkSync(path + f));
+  } catch (e: any) {
+    console.log(e.message);
+  }
+
   const electronApp = await createElectronApp();
   setupLogs(electronApp);
   return electronApp;
