@@ -16,7 +16,7 @@ yarn app build:ui:ci
 
 4. Build the extension
 ```
-yarn extension build:test:desktop:ui
+yarn extension build:test:desktop:app
 ```
 
 5. Initialise Playwright
