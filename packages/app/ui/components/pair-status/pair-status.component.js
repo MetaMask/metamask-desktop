@@ -1,18 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 
 import useI18nContext from '../../hooks/useI18nContext';
 import Chip from '../../../submodules/extension/ui/components/ui/chip';
 import Typography from '../../../submodules/extension/ui/components/ui/typography';
+import Button from '../../../submodules/extension/ui/components/ui/button';
 import {
   COLORS,
   TYPOGRAPHY,
   FONT_WEIGHT,
 } from '../../../submodules/extension/ui/helpers/constants/design-system';
 import { formatDate } from '../../../submodules/extension/ui/helpers/utils/util';
+import { PAIR_ROUTE } from '../../helpers/constants/routes';
 
-const PairStatus = ({ isWebSocketConnected, lastActivation }) => {
+const PairStatus = ({
+  isWebSocketConnected,
+  lastActivation,
+  isPairingEverCompleted,
+}) => {
   const t = useI18nContext();
+  const history = useHistory();
 
   const renderChip = () => {
     const color = isWebSocketConnected
@@ -40,9 +48,29 @@ const PairStatus = ({ isWebSocketConnected, lastActivation }) => {
     );
   };
 
+  const renderPairNowButton = () => {
+    return (
+      <div className="mmd-pair-status__pair-now">
+        <Button
+          className="mmd-pair-status__pair-now-button"
+          type="secondary"
+          onClick={() => {
+            history.push(PAIR_ROUTE);
+          }}
+        >
+          {t('pairNow')}
+        </Button>
+      </div>
+    );
+  };
+
   const renderlastActivation = () => {
     return formatDate(lastActivation);
   };
+
+  if (!isPairingEverCompleted) {
+    return renderPairNowButton();
+  }
 
   return (
     <div className="mmd-pair-status">
@@ -67,6 +95,10 @@ PairStatus.propTypes = {
    * The last time the desktop app was activated
    */
   lastActivation: PropTypes.number,
+  /**
+   * Whether the desktop app has ever been paired with the extension
+   */
+  isPairingEverCompleted: PropTypes.bool,
 };
 
 export default PairStatus;
