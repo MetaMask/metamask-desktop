@@ -1,6 +1,6 @@
-import { Locator, Page, expect } from '@playwright/test';
+import { Locator, Page } from '@playwright/test';
 
-export class MMDMainMenuPage {
+export class ExtensionMainMenuPage {
   readonly page: Page;
 
   readonly mainMenuBtn: Locator;
@@ -121,20 +121,11 @@ export class MMDMainMenuPage {
   async enableDesktopApp() {
     await this.page.locator('text=Experimental').click();
     await this.page.locator('text=Enable desktop app').click();
-    await expect
-      .poll(
-        async () => {
-          return this.page.isClosed();
-        },
-        {
-          // Custom error message, optional.
-          message: 'MMD was not closed after enabling Desktop app', // custom error message
-          // Poll for 10 seconds; defaults to 5 seconds. Pass 0 to disable timeout.
-          timeout: 10000,
-        },
-      )
-      .toBe(true);
-    await new Promise((resolve) => setTimeout(resolve, 5000));
+    const optKey = await this.page
+      .locator(':nth-match(.desktop-pairing, 2) >> :nth-match(p, 1)')
+      .innerText();
+    await this.page.locator('text=Done').click();
+    return optKey;
   }
 
   async closeSettings() {
