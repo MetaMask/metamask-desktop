@@ -1576,10 +1576,93 @@
       }
     },
     "@metamask/eth-ledger-bridge-keyring": {
+      "builtin": {
+        "events.EventEmitter": true
+      },
       "globals": {
+        "Buffer.from": true,
+        "Buffer.isBuffer": true,
+        "addEventListener": true,
+        "console.log": true,
+        "document.createElement": true,
+        "document.head.appendChild": true,
+        "fetch": true,
+        "removeEventListener": true,
         "window.addEventListener": true,
         "window.fetch": true,
         "window.removeEventListener": true
+      },
+      "packages": {
+        "@ethereumjs/tx": true,
+        "@metamask/eth-ledger-bridge-keyring>eth-sig-util": true,
+        "@metamask/eth-ledger-bridge-keyring>hdkey": true,
+        "ethereumjs-util": true
+      }
+    },
+    "@metamask/eth-ledger-bridge-keyring>eth-sig-util": {
+      "builtin": {
+        "buffer.Buffer.byteLength": true,
+        "buffer.Buffer.concat": true,
+        "buffer.Buffer.from": true
+      },
+      "packages": {
+        "@metamask/eth-ledger-bridge-keyring>eth-sig-util>ethereumjs-util": true,
+        "eth-sig-util>tweetnacl": true,
+        "eth-sig-util>tweetnacl-util": true,
+        "ethereumjs-abi": true
+      }
+    },
+    "@metamask/eth-ledger-bridge-keyring>eth-sig-util>ethereumjs-util": {
+      "builtin": {
+        "assert": true
+      },
+      "globals": {
+        "Buffer": true
+      },
+      "packages": {
+        "@metamask/eth-ledger-bridge-keyring>eth-sig-util>ethereumjs-util>ethjs-util": true,
+        "bn.js": true,
+        "ethereumjs-util>create-hash": true,
+        "ethereumjs-util>ethereum-cryptography": true,
+        "ethereumjs-util>rlp": true,
+        "hdkey>safe-buffer": true,
+        "hdkey>secp256k1>elliptic": true
+      }
+    },
+    "@metamask/eth-ledger-bridge-keyring>eth-sig-util>ethereumjs-util>ethjs-util": {
+      "globals": {
+        "Buffer": true
+      },
+      "packages": {
+        "ethjs>ethjs-util>is-hex-prefixed": true,
+        "ethjs>ethjs-util>strip-hex-prefix": true
+      }
+    },
+    "@metamask/eth-ledger-bridge-keyring>hdkey": {
+      "builtin": {
+        "assert": true,
+        "crypto.createHash": true,
+        "crypto.createHmac": true
+      },
+      "packages": {
+        "@metamask/eth-ledger-bridge-keyring>hdkey>secp256k1": true,
+        "eth-trezor-keyring>hdkey>coinstring": true,
+        "hdkey>safe-buffer": true
+      }
+    },
+    "@metamask/eth-ledger-bridge-keyring>hdkey>secp256k1": {
+      "globals": {
+        "Buffer.isBuffer": true,
+        "console.error": true,
+        "process.env.DEBUG": true
+      },
+      "packages": {
+        "bn.js": true,
+        "eth-trezor-keyring>hdkey>secp256k1>bip66": true,
+        "ethereumjs-util>create-hash": true,
+        "hdkey>safe-buffer": true,
+        "hdkey>secp256k1>elliptic": true,
+        "lavamoat>bindings": true
       }
     },
     "@metamask/etherscan-link": {
