@@ -9,6 +9,7 @@ import {
   TestConnectionResult,
   ConnectionType,
   PairingKeyStatus,
+  ConnectionOptions,
 } from './types';
 import { BrowserWebSocket, WebSocketStream } from './web-socket-stream';
 import { DuplexCopy } from './utils/stream';
@@ -90,7 +91,8 @@ class DesktopManager {
 
     try {
       const connection =
-        this.desktopConnection || (await this.createConnection());
+        this.desktopConnection ||
+        (await this.createConnection({ isTestConnection: true }));
 
       const versionCheckResult = await connection.checkVersions();
 
@@ -110,7 +112,9 @@ class DesktopManager {
     }
   }
 
-  private async createConnection(): Promise<DesktopConnection> {
+  private async createConnection(
+    opts?: ConnectionOptions,
+  ): Promise<DesktopConnection> {
     const webSocket = await this.createWebSocket();
 
     const webSocketStream = cfg().webSocket.disableEncryption
@@ -145,10 +149,12 @@ class DesktopManager {
           'The pairing key does not match, desktop app is not recognized',
         );
 
-        webSocket.close(
-          PAIRING_KEY_NOT_MATCH_ERROR_CODE,
-          PAIRING_KEY_NOT_MATCH_ERROR_REASON,
-        );
+        if (!opts?.isTestConnection) {
+          webSocket.close(
+            PAIRING_KEY_NOT_MATCH_ERROR_CODE,
+            PAIRING_KEY_NOT_MATCH_ERROR_REASON,
+          );
+        }
         throw new Error(PAIRING_KEY_NOT_MATCH_ERROR_REASON);
       }
 
