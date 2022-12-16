@@ -1,0 +1,90 @@
+diff --git a/node_modules/@metamask/create-release-branch/dist/command-line-arguments.js b/node_modules/@metamask/create-release-branch/dist/command-line-arguments.js
+index b3df9ed..d1cdabf 100644
+--- a/node_modules/@metamask/create-release-branch/dist/command-line-arguments.js
++++ b/node_modules/@metamask/create-release-branch/dist/command-line-arguments.js
+@@ -34,6 +34,11 @@ async function readCommandLineArguments(argv) {
+         describe: 'Instructs the tool to bump the second part of the version rather than the first for a backport release.',
+         type: 'boolean',
+         default: false,
++    })
++        .option('workspace-package', {
++        describe: 'Instructs the tool to bump the second part of the version rather than the first for a backport release.',
++        type: 'string',
++        default: '',
+     })
+         .help()
+         .strict()
+diff --git a/node_modules/@metamask/create-release-branch/dist/initial-parameters.js b/node_modules/@metamask/create-release-branch/dist/initial-parameters.js
+index 65562cd..dccda9e 100644
+--- a/node_modules/@metamask/create-release-branch/dist/initial-parameters.js
++++ b/node_modules/@metamask/create-release-branch/dist/initial-parameters.js
+@@ -21,15 +21,18 @@ const project_1 = require("./project");
+ async function determineInitialParameters({ argv, cwd, stderr, }) {
+     const args = await (0, command_line_arguments_1.readCommandLineArguments)(argv);
+     const projectDirectoryPath = path_1.default.resolve(cwd, args.projectDirectory);
+-    const project = await (0, project_1.readProject)(projectDirectoryPath, { stderr });
++    const workspacePackage = args.workspacePackage;
++    const project = await (0, project_1.readProject)(projectDirectoryPath, { stderr }, workspacePackage);
+     const tempDirectoryPath = args.tempDirectory === undefined
+         ? path_1.default.join(os_1.default.tmpdir(), 'create-release-branch', project.rootPackage.validatedManifest.name.replace('/', '__'))
+         : path_1.default.resolve(cwd, args.tempDirectory);
++
+     return {
+         project,
+         tempDirectoryPath,
+         reset: args.reset,
+         releaseType: args.backport ? 'backport' : 'ordinary',
++        workspacePackage
+     };
+ }
+ exports.determineInitialParameters = determineInitialParameters;
+diff --git a/node_modules/@metamask/create-release-branch/dist/package-manifest.js b/node_modules/@metamask/create-release-branch/dist/package-manifest.js
+index d7060dc..603fb41 100644
+--- a/node_modules/@metamask/create-release-branch/dist/package-manifest.js
++++ b/node_modules/@metamask/create-release-branch/dist/package-manifest.js
+@@ -132,8 +132,13 @@ function isValidPackageManifestWorkspacesField(workspaces) {
+  */
+ function readPackageManifestWorkspacesField(manifest, parentDirectory) {
+     const fieldName = action_utils_1.ManifestFieldNames.Workspaces;
+-    const value = manifest[fieldName];
++    let value = manifest[fieldName];
+     const schema = schemata[fieldName];
++
++    if(value && value.packages && Array.isArray(value.packages)){
++      value = value.packages;
++    }
++
+     if (!schema.validate(value)) {
+         throw new Error(buildPackageManifestFieldValidationErrorMessage({
+             manifest,
+diff --git a/node_modules/@metamask/create-release-branch/dist/project.js b/node_modules/@metamask/create-release-branch/dist/project.js
+index 6a114e6..7e6c679 100644
+--- a/node_modules/@metamask/create-release-branch/dist/project.js
++++ b/node_modules/@metamask/create-release-branch/dist/project.js
+@@ -40,7 +40,7 @@ function examineReleaseVersion(packageVersion) {
+  * monorepo) or if any of the workspaces specified in the root `package.json` do
+  * not have `package.json`s (monorepo only).
+  */
+-async function readProject(projectDirectoryPath, { stderr }) {
++async function readProject(projectDirectoryPath, { stderr }, workspacePackage) {
+     const repositoryUrl = await (0, repo_1.getRepositoryHttpsUrl)(projectDirectoryPath);
+     const tagNames = await (0, repo_1.getTagNames)(projectDirectoryPath);
+     const rootPackage = await (0, package_1.readMonorepoRootPackage)({
+@@ -49,12 +49,16 @@ async function readProject(projectDirectoryPath, { stderr }) {
+         projectTagNames: tagNames,
+     });
+     const releaseVersion = examineReleaseVersion(rootPackage.validatedManifest.version);
+-    const workspaceDirectories = (await Promise.all(rootPackage.validatedManifest[package_manifest_1.PackageManifestFieldNames.Workspaces].map(async (workspacePattern) => {
++    let workspaceDirectories = (await Promise.all(rootPackage.validatedManifest[package_manifest_1.PackageManifestFieldNames.Workspaces].map(async (workspacePattern) => {
+         return await promisifiedGlob(workspacePattern, {
+             cwd: projectDirectoryPath,
+             absolute: true,
+         });
+     }))).flat();
++
++    if (workspacePackage) {
++      workspaceDirectories = workspaceDirectories.filter(dir => dir.endsWith(workspacePackage))
++    }
+     const workspacePackages = (await Promise.all(workspaceDirectories.map(async (directory) => {
+         return await (0, package_1.readMonorepoWorkspacePackage)({
+             packageDirectoryPath: directory,

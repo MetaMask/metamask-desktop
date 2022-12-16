@@ -6,3 +6,8 @@ ignores:
   - depcheck
   - improved-yarn-audit
   - yarn-deduplicate
+
+ # Release process
+  - '@metamask/auto-changelog'
+  - '@metamask/create-release-branch'
+  - patch-package
