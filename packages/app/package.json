@@ -15,6 +15,7 @@
     "build:ui:lavamoat": "node build/ui/desktop-ui.js dev --apply-lavamoat=true",
     "build:ui:lavamoat:ci": "node build/ui/desktop-ui.js dist --apply-lavamoat=true",
     "dist:desktop:ui": "node build/ui/desktop-ui.js dist",
+    "extension": "cd submodules/extension && yarn",
     "generate:certificate:win": "@powershell ./build/windows/generate_certificate.ps1",
     "lavamoat": "CI=true yarn build:app && lavamoat dist/app/src/app/main.js --autopolicy --policy lavamoat/node/policy.json --policyOverride lavamoat/node/policy-override.json --includeDevDeps=false",
     "lavamoat:ui": "yarn lavamoat:ui:build:auto && yarn lavamoat:ui:webapp",
@@ -42,9 +43,10 @@
     "start:test": "GLOBAL_AGENT_HTTP_PROXY=http://127.0.0.1:8000 NODE_TLS_REJECT_UNAUTHORIZED=0 yarn start",
     "test": "jest",
     "test:e2e:app": "npx playwright test",
-    "test:e2e:extension": "E2E_ARGS='--file ../../test/e2e/hook.js' yarn workspace metamask-crx test:e2e:chrome",
-    "test:e2e:extension:single": "E2E_ARGS='--file ../../test/e2e/hook.js' yarn workspace metamask-crx test:e2e:single",
-    "test:e2e:extension:snaps": "E2E_ARGS='--file ../../test/e2e/hook.js' yarn workspace metamask-crx test:e2e:chrome:snaps"
+    "test:e2e:extension": "yarn test:e2e:extension:base test:e2e:chrome",
+    "test:e2e:extension:base": "E2E_ARGS='--file ../../test/e2e/hook.js' yarn extension",
+    "test:e2e:extension:single": "yarn test:e2e:extension:base test:e2e:single",
+    "test:e2e:extension:snaps": "yarn test:e2e:extension:base test:e2e:chrome:snaps"
   },
   "dependencies": {
     "@babel/runtime": "^7.5.5",

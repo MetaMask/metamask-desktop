@@ -7,11 +7,13 @@
     "build:lavamoat": "yarn common build && concurrently -n extension,ui,app  \"yarn extension build:desktop:extension:lavamoat\" \"yarn app build:ui:lavamoat\"  \"yarn app build:app\"",
     "build:test:extension": "yarn common build && concurrently -n extension,ui,app  \"yarn extension build:test:desktop:extension\" \"yarn app build:ui\"  \"yarn app build:app:test\"",
     "lint:lockfile": "lockfile-lint --path yarn.lock --allowed-hosts npm yarn github.com codeload.github.com --empty-hostname false --allowed-schemes \"https:\" \"git+https:\"",
-    "setup": "yarn && yarn setup:postinstall && yarn common setup:postinstall && yarn extension setup:postinstall && yarn app setup:postinstall && yarn common build",
+    "setup": "yarn setup:submodule && yarn && yarn setup:postinstall && yarn common setup:postinstall && yarn app setup:postinstall && yarn common build && yarn setup:extension && yarn extension setup",
+    "setup:extension": "sh scripts/init-extension.sh",
     "setup:postinstall": "yarn allow-scripts",
+    "setup:submodule": "sh scripts/init-submodule.sh",
     "app": "yarn workspace desktop-app",
     "common": "yarn workspace @metamask/desktop",
-    "extension": "yarn workspace metamask-crx"
+    "extension": "cd packages/app/submodules/extension && yarn"
   },
   "devDependencies": {
     "@lavamoat/allow-scripts": "^2.0.3",
@@ -42,8 +44,7 @@
   },
   "workspaces": {
     "packages": [
-      "packages/*",
-      "packages/app/submodules/extension"
+      "packages/*"
     ],
     "nohoist": [
       "**/*"
