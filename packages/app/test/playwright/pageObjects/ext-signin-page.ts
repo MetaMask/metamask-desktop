@@ -1,6 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 
-export class MMDSignInPage {
+export class ExtensionSignInPage {
   readonly page: Page;
 
   readonly extensionId: string;

@@ -110,6 +110,7 @@ const Pair = ({ isDesktopEnabled, isSuccessfulPairSeen, history }) => {
         ) : (
           <div className="mmd-pair-page__otp-input__container">
             <OtpInput
+              data-testid="pair-otp-input"
               isInputNum
               isDisabled={isOtpDisabled}
               hasErrored={isInvalidOtpError || isOtpTimeoutError}
