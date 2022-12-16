@@ -17,7 +17,10 @@ module.exports = function (api) {
       ? []
       : [
           ['./build/code-fencing-babel', { buildType: 'desktopapp' }],
-          'transform-inline-environment-variables',
+          [
+            'transform-inline-environment-variables',
+            { exclude: ['COMPATIBILITY_VERSION_DESKTOP_TEST'] },
+          ],
         ],
     ignore: [
       '**/*.config.js',
