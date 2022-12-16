@@ -252,7 +252,7 @@ describe('Desktop Manager', () => {
             webSocketStreamMock,
             VERSION_MOCK,
           );
-          expect(webSocketMock.close).toHaveBeenCalledTimes(1);
+          expect(webSocketMock.close).toHaveBeenCalledTimes(0);
           expect(desktopConnectionMock.checkVersions).toHaveBeenCalledTimes(0);
         });
       },
