@@ -15,6 +15,7 @@ const loadConfig = () => {
 
   const compatibilityVersionDesktop = envInt(
     process.env.COMPATIBILITY_VERSION_DESKTOP,
+    1,
   );
 
   const compatibilityVersionDesktopFinal =
