@@ -299,7 +299,7 @@ jobs:
           at: .
       - run:
           name: build
-          command: yarn app build:app:test
+          command: yarn app build:app:test:extension
       - run:
           name: Move dist to avoid conflicts
           command: mv ./${APP_DIR}/dist/app ./${APP_DIR}/dist-app-test-extension
@@ -316,7 +316,7 @@ jobs:
           at: .
       - run:
           name: build
-          command: yarn app build:app:test:ui
+          command: yarn app build:app:test:app
       - run:
           name: Move dist to avoid conflicts
           command: mv ./${APP_DIR}/dist/app ./${APP_DIR}/dist-app-test-app

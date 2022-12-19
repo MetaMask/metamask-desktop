@@ -7,15 +7,30 @@ import {
 const loadConfig = () => {
   // Cannot use dynamic references to envs as build system does find and replace
   const port = envInt(process.env.WEB_SOCKET_PORT, 7071);
+  const isAppTest = envBool(process.env.UI_TEST);
+
+  const compatibilityVersionDesktopTest = envInt(
+    process.env.COMPATIBILITY_VERSION_DESKTOP_TEST,
+  );
+
+  const compatibilityVersionDesktop = envInt(
+    process.env.COMPATIBILITY_VERSION_DESKTOP,
+    1,
+  );
+
+  const compatibilityVersionDesktopFinal =
+    isAppTest && compatibilityVersionDesktopTest !== undefined
+      ? compatibilityVersionDesktopTest
+      : compatibilityVersionDesktop;
 
   return {
     enableUpdates: envBool(process.env.DESKTOP_ENABLE_UPDATES),
     isExtensionTest: envBool(process.env.IN_TEST),
-    isAppTest: envBool(process.env.UI_TEST),
+    isAppTest,
     isUnitTest: envStringMatch(process.env.NODE_ENV, 'test'),
     skipOtpPairingFlow: envBool(process.env.SKIP_OTP_PAIRING_FLOW),
     compatibilityVersion: {
-      desktop: envInt(process.env.COMPATIBILITY_VERSION_DESKTOP, 1),
+      desktop: compatibilityVersionDesktopFinal,
     },
     webSocket: {
       disableEncryption: envBool(process.env.DISABLE_WEB_SOCKET_ENCRYPTION),

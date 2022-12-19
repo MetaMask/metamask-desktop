@@ -11,15 +11,17 @@ export const envStringMatch = (
     : false;
 };
 
-export const envInt = (
+export function envInt(value: string | undefined): number | undefined;
+export function envInt(value: string | undefined, defaultValue: number): number;
+export function envInt(
   value: string | undefined,
-  defaultValue: number,
-): number => {
+  defaultValue?: number,
+): number | undefined {
   if (!value) {
     return defaultValue;
   }
   return parseInt(value, 10);
-};
+}
 
 export const envBool = (
   value: string | boolean | undefined,

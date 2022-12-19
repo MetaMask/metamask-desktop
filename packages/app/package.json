@@ -6,8 +6,8 @@
   "repository": "https://github.com/MetaMask/desktop",
   "scripts": {
     "build:app": "./build/build.sh",
-    "build:app:test": "IN_TEST=true SEGMENT_HOST='https://api.segment.io' SEGMENT_WRITE_KEY='FAKE' PHISHING_WARNING_PAGE_URL=http://localhost:9999/ METAMASK_DEBUG=1 yarn build:app",
-    "build:app:test:ui": "UI_TEST=true METAMASK_DEBUG=1 yarn build:app",
+    "build:app:test:extension": "IN_TEST=true SEGMENT_HOST='https://api.segment.io' SEGMENT_WRITE_KEY='FAKE' PHISHING_WARNING_PAGE_URL=http://localhost:9999/ METAMASK_DEBUG=1 yarn build:app",
+    "build:app:test:app": "UI_TEST=true METAMASK_DEBUG=1 yarn build:app",
     "build:ui": "node build/ui/desktop-ui.js dev --apply-lavamoat=false",
     "build:ui:ci": "node build/ui/desktop-ui.js dist --apply-lavamoat=false",
     "build:ui:subtask": "node build/ui/desktop-ui.js",

@@ -11,6 +11,9 @@ module.exports = {
     {
       files: ['**/*.ts'],
       extends: ['@metamask/eslint-config-typescript'],
+      rules: {
+        'jsdoc/require-jsdoc': 'off',
+      },
     },
     {
       files: ['**/*.test.ts', '**/*.test.js'],
