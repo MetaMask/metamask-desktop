@@ -98,13 +98,10 @@ class DesktopApp extends EventEmitter {
     ipcMain.handle('minimize', (_event) => this.UIState.mainWindow?.minimize());
 
     ipcMain.handle('unpair', async (_event) => {
-      await this.extensionConnection?.disable();
-    });
-
-    ipcMain.handle('reset', async (_event) => {
       await clearRawState();
       this.emit('restart');
       this.status.isDesktopEnabled = false;
+      await this.extensionConnection?.disable();
     });
 
     ipcMain.handle('set-theme', (event, theme) => {

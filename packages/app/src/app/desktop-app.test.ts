@@ -238,13 +238,13 @@ describe('Desktop', () => {
   });
 
   describe('should handle ipcMain', () => {
-    it('reset event', async () => {
+    it('unpair event', async () => {
       const restartEventListener = jest.fn();
       DesktopApp.on('restart', restartEventListener);
 
       IPCMainMock.handle.mockImplementation(
         (eventName: string, callback: any) => {
-          if (eventName === 'reset') {
+          if (eventName === 'unpair') {
             callback();
           }
         },

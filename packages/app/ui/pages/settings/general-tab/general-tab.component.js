@@ -100,25 +100,6 @@ const GeneralTab = ({
     );
   };
 
-  const renderResetButton = () => {
-    return (
-      <div className="mmd-settings-page__setting-row">
-        <div className="mmd-settings-page__setting-item">
-          <div className="mmd-settings-page__setting-col">
-            <Button
-              type="danger"
-              onClick={() => {
-                window.electronBridge.reset();
-              }}
-            >
-              {t('resetConnection')}
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   return (
     <>
       <PairStatus
@@ -129,8 +110,7 @@ const GeneralTab = ({
       />
       {renderLanguageSettings()}
       {renderThemeSettings()}
-      {isSuccessfulPairSeen &&
-        (isDesktopEnabled ? renderUnpairButton() : renderResetButton())}
+      {isSuccessfulPairSeen && renderUnpairButton()}
     </>
   );
 };

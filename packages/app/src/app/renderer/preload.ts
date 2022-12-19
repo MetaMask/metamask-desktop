@@ -44,9 +44,6 @@ const electronBridge = {
   unpair: async () => {
     await ipcRenderer.invoke('unpair');
   },
-  reset: async () => {
-    await ipcRenderer.invoke('reset');
-  },
   setTheme: async (themeCode: string) => {
     await ipcRenderer.invoke('set-theme', themeCode);
   },
