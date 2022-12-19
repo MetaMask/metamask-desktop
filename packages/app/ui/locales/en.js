@@ -161,6 +161,9 @@ const enLocales = {
   pairNow: {
     message: 'Pair with your MetaMask extension',
   },
+  pairInProgress: {
+    message: 'Pair in progress, show pairing page',
+  },
 };
 
 export default enLocales;
