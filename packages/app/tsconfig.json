@@ -17,10 +17,12 @@
   "exclude": [
     "**/*.test.js",
     "**/*.test.ts",
-    "dist/**/*",
-    "node_modules/**",
-    "packages/**",
-    "test/playwright/**"
+    "dist",
+    "node_modules",
+    "packages",
+    "submodules/**/dist",
+    "submodules/**/node_modules",
+    "test/playwright"
   ],
   "extends": "@tsconfig/node16/tsconfig.json",
   "paths": {
