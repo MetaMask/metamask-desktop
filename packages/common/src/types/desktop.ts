@@ -31,10 +31,6 @@ export interface VersionData {
   compatibilityVersion: number;
 }
 
-export interface ConnectionOptions {
-  isTestConnection: boolean;
-}
-
 export enum PairingKeyStatus {
   MATCH = 'MATCH',
   NO_MATCH = 'NO_MATCH',

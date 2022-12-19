@@ -9,7 +9,6 @@ import {
   TestConnectionResult,
   ConnectionType,
   PairingKeyStatus,
-  ConnectionOptions,
 } from './types';
 import { BrowserWebSocket, WebSocketStream } from './web-socket-stream';
 import { DuplexCopy } from './utils/stream';
@@ -91,30 +90,26 @@ class DesktopManager {
 
     try {
       const connection =
-        this.desktopConnection ||
-        (await this.createConnection({ isTestConnection: true }));
+        this.desktopConnection || (await this.createConnection());
 
       const versionCheckResult = await connection.checkVersions();
 
+      const pairingKeyResult = await connection.checkPairingKey();
+
       log.debug('Connection test completed');
 
-      return { isConnected: true, versionCheck: versionCheckResult };
+      return {
+        isConnected: true,
+        versionCheck: versionCheckResult,
+        pairingKeyCheck: pairingKeyResult,
+      };
     } catch (error: any) {
-      let testConnectionResult: TestConnectionResult = { isConnected: false };
-      if (error?.message === PAIRING_KEY_NOT_MATCH_ERROR_REASON) {
-        testConnectionResult = {
-          ...testConnectionResult,
-          pairingKeyCheck: PairingKeyStatus.NO_MATCH,
-        };
-      }
       log.debug('Connection test failed', error);
-      return testConnectionResult;
+      return { isConnected: false };
     }
   }
 
-  private async createConnection(
-    opts?: ConnectionOptions,
-  ): Promise<DesktopConnection> {
+  private async createConnection(): Promise<DesktopConnection> {
     const webSocket = await this.createWebSocket();
 
     const webSocketStream = cfg().webSocket.disableEncryption
@@ -140,6 +135,12 @@ class DesktopManager {
 
     log.debug('Created web socket connection');
 
+    // returns connection if called by testConnection()
+    if (!this.isDesktopEnabled()) {
+      this.desktopConnection = connection;
+      return connection;
+    }
+
     if (!cfg().skipOtpPairingFlow) {
       log.debug('Desktop enabled, checking pairing key');
 
@@ -149,21 +150,14 @@ class DesktopManager {
           'The pairing key does not match, desktop app is not recognized',
         );
 
-        if (!opts?.isTestConnection) {
-          webSocket.close(
-            PAIRING_KEY_NOT_MATCH_ERROR_CODE,
-            PAIRING_KEY_NOT_MATCH_ERROR_REASON,
-          );
-        }
+        webSocket.close(
+          PAIRING_KEY_NOT_MATCH_ERROR_CODE,
+          PAIRING_KEY_NOT_MATCH_ERROR_REASON,
+        );
         throw new Error(PAIRING_KEY_NOT_MATCH_ERROR_REASON);
       }
 
       log.debug('Desktop app recognised');
-    }
-
-    if (!this.isDesktopEnabled()) {
-      this.desktopConnection = connection;
-      return connection;
     }
 
     connection.setPaired();
