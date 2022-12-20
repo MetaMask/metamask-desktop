@@ -5,8 +5,11 @@ export async function electronStartup(env?: {
   [key: string]: string;
 }): Promise<ElectronApplication> {
   // Delete config.json to have the same initial setup every run
+  console.log('resetConfigFiles');
   await resetConfigFiles();
+  console.log('createElectronApp');
   const electronApp = await createElectronApp(env);
+  console.log('setupLogs');
   setupLogs(electronApp);
   return electronApp;
 }
@@ -15,7 +18,7 @@ export async function resetConfigFiles() {
   const path = process.env.ELECTRON_CONFIG_PATH as string;
   fs.unlink(`${path}/config.json`, (err) => {
     if (err) {
-      console.error('there was an error:', err.message);
+      console.log('File not found:', err.message);
     } else {
       console.log(`${process.env.ELECTRON_CONFIG_PATH} was deleted`);
     }
@@ -31,10 +34,13 @@ export async function resetConfigFiles() {
 }
 
 export async function createElectronApp(env?: { [key: string]: string }) {
+  console.log(env);
+  console.log('electron.launch start');
   const electronApp = await electron.launch({
     args: [process.env.ELECTRON_APP_PATH as string],
     env,
   });
+  console.log('electron.launch finish');
   return electronApp;
 }
 

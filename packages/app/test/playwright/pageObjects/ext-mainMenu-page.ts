@@ -1,4 +1,4 @@
-import { Locator, Page } from '@playwright/test';
+import { Locator, Page, expect } from '@playwright/test';
 
 export class ExtensionMainMenuPage {
   readonly page: Page;
@@ -118,13 +118,17 @@ export class ExtensionMainMenuPage {
       .click();
   }
 
-  async enableDesktopApp() {
+  async enableDesktopApp(messages?: string[]) {
     await this.page.locator('text=Experimental').click();
     await this.page.locator('text=Enable desktop app').click();
     const optKey = await this.page
       .locator(':nth-match(.desktop-pairing, 2) >> :nth-match(p, 1)')
       .innerText();
+    if (messages) {
+      await this.checkWarningActionableMessage(messages);
+    }
     await this.page.locator('text=Done').click();
+    console.log(`${new Date().toUTCString()} optKey: ${optKey}`);
     return optKey;
   }
 
@@ -140,4 +144,20 @@ export class ExtensionMainMenuPage {
     await this.open();
     await this.lockBtn.click();
   }
+
+  async checkWarningActionableMessage(messages: string[]) {
+    for (const message of messages) {
+      await expect(this.page.locator(`text="${message}"`)).toBeVisible();
+    }
+  }
 }
+
+export const enableDesktopAppFlow = async (page: Page): Promise<string> => {
+  // Setup testnetwork in settings
+  const mainMenuPage = new ExtensionMainMenuPage(page);
+  await mainMenuPage.selectSettings();
+  await mainMenuPage.selectSettingsAdvance();
+  await mainMenuPage.showTestNetworkOn();
+  await mainMenuPage.showIncomingTransactionsOff();
+  return await mainMenuPage.enableDesktopApp();
+};
