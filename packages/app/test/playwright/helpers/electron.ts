@@ -1,8 +1,17 @@
 import fs from 'fs';
 import { ElectronApplication, Page, _electron as electron } from 'playwright';
 
-export async function electronStartup(): Promise<ElectronApplication> {
+export async function electronStartup(env?: {
+  [key: string]: string;
+}): Promise<ElectronApplication> {
   // Delete config.json to have the same initial setup every run
+  await resetConfigFiles();
+  const electronApp = await createElectronApp(env);
+  setupLogs(electronApp);
+  return electronApp;
+}
+
+export async function resetConfigFiles() {
   const path = process.env.ELECTRON_CONFIG_PATH as string;
   fs.unlink(`${path}/config.json`, (err) => {
     if (err) {
@@ -19,15 +28,12 @@ export async function electronStartup(): Promise<ElectronApplication> {
   } catch (e: any) {
     console.log(e.message);
   }
-
-  const electronApp = await createElectronApp();
-  setupLogs(electronApp);
-  return electronApp;
 }
 
-export async function createElectronApp() {
+export async function createElectronApp(env?: { [key: string]: string }) {
   const electronApp = await electron.launch({
     args: [process.env.ELECTRON_APP_PATH as string],
+    env,
   });
   return electronApp;
 }
