@@ -48,6 +48,8 @@ if (!cfg().isUnitTest) {
 class DesktopApp extends EventEmitter {
   private extensionConnection?: ExtensionConnection;
 
+  private onHoldExtensionConnection?: ExtensionConnection;
+
   private status: StatusMessage;
 
   private appNavigation: AppNavigation;
@@ -99,12 +101,14 @@ class DesktopApp extends EventEmitter {
 
     ipcMain.handle('unpair', async (_event) => {
       await this.extensionConnection?.disable();
+      this.promoteOnHoldExtensionConnection();
     });
 
     ipcMain.handle('reset', async (_event) => {
       await clearRawState();
       this.emit('restart');
       this.status.isDesktopEnabled = false;
+      this.promoteOnHoldExtensionConnection();
     });
 
     ipcMain.handle('set-theme', (event, theme) => {
@@ -157,6 +161,13 @@ class DesktopApp extends EventEmitter {
     }
 
     this.UIState.latticeWindow.webContents.send(channel, ...args);
+  }
+
+  private promoteOnHoldExtensionConnection() {
+    if (this.onHoldExtensionConnection) {
+      this.extensionConnection = this.onHoldExtensionConnection;
+      this.onHoldExtensionConnection = undefined;
+    }
   }
 
   private updateMainWindow() {
@@ -220,7 +231,9 @@ class DesktopApp extends EventEmitter {
       'connect-external',
     ]);
 
-    this.extensionConnection = extensionConnection;
+    this.extensionConnection
+      ? (this.onHoldExtensionConnection = extensionConnection)
+      : (this.extensionConnection = extensionConnection);
 
     this.status.isWebSocketConnected = true;
   }
