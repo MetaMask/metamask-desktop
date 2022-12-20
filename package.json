@@ -1,6 +1,6 @@
 {
   "name": "desktop",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "build": "yarn common build && concurrently -n extension,ui,app  \"yarn extension build:desktop:extension\" \"yarn app build:ui\"  \"yarn app build:app\"",
