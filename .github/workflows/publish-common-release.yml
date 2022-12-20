@@ -75,8 +75,8 @@ jobs:
         run: |
           PACKAGE_JSON="./packages/common/package.json"
           RELEASE_VERSION="$(jq --raw-output .version $PACKAGE_JSON)"
-          echo "commmon@$RELEASE_VERSION"
-          gh release create "commmon@$RELEASE_VERSION" -F packages/common/CHANGELOG.md
+          echo "@metamask/desktop@$RELEASE_VERSION"
+          gh release create "@metamask/desktop@$RELEASE_VERSION" -F packages/common/CHANGELOG.md
 
   # Optionally perform a dry-run publish to review
   publish-common-npm-dry-run:
