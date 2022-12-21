@@ -1,7 +1,6 @@
 {
   "name": "@metamask/desktop",
   "version": "0.0.1",
-  "private": true,
   "main": "dist/index.js",
   "repository": {
     "type": "git",
