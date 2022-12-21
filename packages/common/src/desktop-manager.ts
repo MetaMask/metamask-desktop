@@ -94,18 +94,19 @@ class DesktopManager {
 
       const versionCheckResult = await connection.checkVersions();
 
-      const pairingKeyResult = await connection.checkPairingKey();
-
       log.debug('Connection test completed');
 
-      return {
-        isConnected: true,
-        versionCheck: versionCheckResult,
-        pairingKeyCheck: pairingKeyResult,
-      };
+      return { isConnected: true, versionCheck: versionCheckResult };
     } catch (error: any) {
+      let testConnectionResult: TestConnectionResult = { isConnected: false };
+      if (error?.message === PAIRING_KEY_NOT_MATCH_ERROR_REASON) {
+        testConnectionResult = {
+          ...testConnectionResult,
+          pairingKeyCheck: PairingKeyStatus.NO_MATCH,
+        };
+      }
       log.debug('Connection test failed', error);
-      return { isConnected: false };
+      return testConnectionResult;
     }
   }
 
@@ -135,11 +136,6 @@ class DesktopManager {
 
     log.debug('Created web socket connection');
 
-    if (!this.isDesktopEnabled()) {
-      this.desktopConnection = connection;
-      return connection;
-    }
-
     if (!cfg().skipOtpPairingFlow) {
       log.debug('Desktop enabled, checking pairing key');
 
@@ -157,6 +153,11 @@ class DesktopManager {
       }
 
       log.debug('Desktop app recognised');
+    }
+
+    if (!this.isDesktopEnabled()) {
+      this.desktopConnection = connection;
+      return connection;
     }
 
     connection.setPaired();

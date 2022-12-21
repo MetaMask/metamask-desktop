@@ -101,14 +101,12 @@ class DesktopApp extends EventEmitter {
 
     ipcMain.handle('unpair', async (_event) => {
       await this.extensionConnection?.disable();
-      this.promoteOnHoldExtensionConnection();
     });
 
     ipcMain.handle('reset', async (_event) => {
       await clearRawState();
       this.emit('restart');
       this.status.isDesktopEnabled = false;
-      this.promoteOnHoldExtensionConnection();
     });
 
     ipcMain.handle('set-theme', (event, theme) => {
@@ -161,13 +159,6 @@ class DesktopApp extends EventEmitter {
     }
 
     this.UIState.latticeWindow.webContents.send(channel, ...args);
-  }
-
-  private promoteOnHoldExtensionConnection() {
-    if (this.onHoldExtensionConnection) {
-      this.extensionConnection = this.onHoldExtensionConnection;
-      this.onHoldExtensionConnection = undefined;
-    }
   }
 
   private updateMainWindow() {
@@ -231,9 +222,13 @@ class DesktopApp extends EventEmitter {
       'connect-external',
     ]);
 
-    this.extensionConnection
-      ? (this.onHoldExtensionConnection = extensionConnection)
-      : (this.extensionConnection = extensionConnection);
+    // if a connection is active it should set new connection as on hold
+    // so the user unpair properly before establishing a new connection
+    if (this.extensionConnection) {
+      this.onHoldExtensionConnection = extensionConnection;
+      return;
+    }
+    this.extensionConnection = extensionConnection;
 
     this.status.isWebSocketConnected = true;
   }
@@ -257,9 +252,9 @@ class DesktopApp extends EventEmitter {
 
     if (connection === this.extensionConnection) {
       this.extensionConnection = undefined;
+      this.status.isWebSocketConnected = false;
     }
 
-    this.status.isWebSocketConnected = false;
     this.status.connections = [];
     if (isDisconnectedByUser) {
       this.status.isDesktopEnabled = false;
