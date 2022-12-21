@@ -1,6 +1,6 @@
 {
   "name": "desktop",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "build": "yarn common build && concurrently -n extension,ui,app  \"yarn extension build:desktop:extension\" \"yarn app build:ui\"  \"yarn app build:app\"",
@@ -10,7 +10,7 @@
     "lint:lockfile": "lockfile-lint --path yarn.lock --allowed-hosts npm yarn github.com codeload.github.com --empty-hostname false --allowed-schemes \"https:\" \"git+https:\"",
     "setup": "yarn setup:submodule && yarn && yarn setup:postinstall && yarn common setup:postinstall && yarn app setup:postinstall && yarn common build && yarn setup:extension && yarn extension setup",
     "setup:extension": "sh scripts/init-extension.sh",
-    "setup:postinstall": "yarn allow-scripts",
+    "setup:postinstall": "yarn patch-package && yarn allow-scripts",
     "setup:submodule": "sh scripts/init-submodule.sh",
     "app": "yarn workspace desktop-app",
     "common": "yarn workspace @metamask/desktop",
