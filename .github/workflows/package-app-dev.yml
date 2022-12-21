@@ -1,0 +1,29 @@
+name: "Package Desktop App - Dev"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  check-app-dev-workflows:
+    name: Lints workflow
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download actionlint
+        id: download-actionlint
+        run: bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/7fdc9630cc360ea1a469eed64ac6d78caeda1234/scripts/download-actionlint.bash) 1.6.22
+        shell: bash
+      - name: Check workflow files
+        run: ${{ steps.download-actionlint.outputs.executable }} -color .github/workflows/publish-common-release.yml
+        shell: bash
+
+  package-dev:
+    environment: development
+    uses: ./.github/workflows/package-app.yml
+    secrets:
+      INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
+      MMD_WIN_CERT_BASE64: ${{ secrets.MMD_WIN_CERT_BASE64_DEV }}
+      MMD_WIN_CERT_PASSWORD: ${{ secrets.MMD_WIN_CERT_PASSWORD_DEV }}
+      MMD_MAC_CSC_BASE64: ${{ secrets.MMD_MAC_CSC_BASE64_DEV }}
+      MMD_MAC_CSC_KEY_PASSWORD: ${{ secrets.MMD_MAC_CSC_KEY_PASSWORD_DEV }}
+      PUBLISH: "false"

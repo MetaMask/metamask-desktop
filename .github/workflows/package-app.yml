@@ -67,15 +67,19 @@ jobs:
         shell: bash
         run:  |
               PUBLISH_PACKAGE="never"
+              # Mac package script to avoid notarization as it can only be done with the prod certificate.
+              MAC_PACKAGE_SCRIPT="package:mac"
               if [ "${{ secrets.PUBLISH }}" == "true" ]; then
                 PUBLISH_PACKAGE = "always"
+                # Mac package script to include notarization.
+                MAC_PACKAGE_SCRIPT="package:mac:ci"
               fi
               if [ "$RUNNER_OS" == "Linux" ]; then
-                yarn app package:linux:ci -p "${{ secrets.PUBLISH_PACKAGE }}"
+                yarn app package:linux:ci -p "$PUBLISH_PACKAGE"
               elif [ "$RUNNER_OS" == "Windows" ]; then
-                yarn app package:win:ci -p "${{ secrets.PUBLISH_PACKAGE }}"
+                yarn app package:win:ci -p "$PUBLISH_PACKAGE"
               elif [ "$RUNNER_OS" == "macOS" ]; then
-                yarn app package:mac:ci -p "${{ secrets.PUBLISH_PACKAGE }}"
+                yarn app "$MAC_PACKAGE_SCRIPT" -p "$PUBLISH_PACKAGE"
               else
                 echo "$RUNNER_OS not supported"
                 exit 1
