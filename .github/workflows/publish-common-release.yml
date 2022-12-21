@@ -96,8 +96,9 @@ jobs:
         with:
           node-version-file: '.nvmrc'
       - name: Dry Run Publish
-        # omit npm-token token to perform dry run publish
-        uses: MetaMask/action-npm-publish@v2
+        id: dry-run-publish
+        shell: bash
+        run: yarn common pack --dry-run
 
   publish-common-npm:
     runs-on: ubuntu-latest
@@ -113,9 +114,11 @@ jobs:
           path: ./packages/common/dist
           key: ${{ github.sha }}
       - name: Publish
-        uses: MetaMask/action-npm-publish@v2
-        with:
-          npm-token: ${{ secrets.NPM_TOKEN }}
+        id: publish
+        shell: bash
+        run: yarn common npm publish
+        env:
+          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
 
 
