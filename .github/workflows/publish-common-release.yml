@@ -3,6 +3,12 @@ name: Publish common package
 
 on:
   workflow_dispatch:
+    inputs:
+      bypass_is_release:
+        type: boolean
+        required: false
+        description: Bypass is release job
+        default: false
   push:
     paths:
       - packages/common/**
@@ -29,13 +35,14 @@ jobs:
       IS_RELEASE: ${{ steps.is-release.outputs.IS_RELEASE }}
     steps:
       - id: is-release
+        if:  ${{ !github.event.inputs.bypass_is_release }}
         uses: MetaMask/action-is-release@v1
         with:
           commit-starts-with: 'Release [version]'
 
   build:
     needs: is-release
-    if: needs.is-release.outputs.IS_RELEASE == 'true'
+    if: ${{ needs.is-release.outputs.IS_RELEASE == 'true' || github.event.inputs.bypass_is_release }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
