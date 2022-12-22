@@ -224,7 +224,7 @@ class DesktopApp extends EventEmitter {
 
     // if a connection is active it should set new connection as on hold
     // so the user unpair properly before establishing a new connection
-    if (this.extensionConnection) {
+    if (this.extensionConnection && this.status.isDesktopEnabled) {
       this.onHoldExtensionConnection = extensionConnection;
       return;
     }
@@ -253,6 +253,8 @@ class DesktopApp extends EventEmitter {
     if (connection === this.extensionConnection) {
       this.extensionConnection = undefined;
       this.status.isWebSocketConnected = false;
+    } else if (connection === this.onHoldExtensionConnection) {
+      this.onHoldExtensionConnection = undefined;
     }
 
     this.status.connections = [];
