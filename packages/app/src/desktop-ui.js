@@ -10,6 +10,9 @@ start().catch((error) => {
   console.log('Error starting desktop app', error);
 });
 
+/**
+ * Starts the desktop app
+ */
 function start() {
   return launchDesktopUi();
 }

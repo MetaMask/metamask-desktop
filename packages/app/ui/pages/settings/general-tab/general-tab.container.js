@@ -11,13 +11,15 @@ import {
 import {
   getLastActivation,
   getIsWebSocketConnected,
-  getIsPairingEverCompleted,
+  getIsDesktopEnabled,
+  getIsSuccessfulPairSeen,
 } from '../../../ducks/pair-status/pair-status';
 import GeneralTab from './general-tab.component';
 
 function mapStateToProps(state) {
   return {
-    isPairingEverCompleted: getIsPairingEverCompleted(state),
+    isDesktopEnabled: getIsDesktopEnabled(state),
+    isSuccessfulPairSeen: getIsSuccessfulPairSeen(state),
     isWebSocketConnected: getIsWebSocketConnected(state),
     lastActivation: getLastActivation(state),
     language: getLanguage(state),
