@@ -48,7 +48,7 @@ if (!cfg().isUnitTest) {
 class DesktopApp extends EventEmitter {
   private extensionConnection?: ExtensionConnection;
 
-  private onHoldExtensionConnection?: ExtensionConnection;
+  private additionalExtensionConnection?: ExtensionConnection;
 
   private status: StatusMessage;
 
@@ -225,7 +225,13 @@ class DesktopApp extends EventEmitter {
     // if a connection is active it should set new connection as on hold
     // so the user unpair properly before establishing a new connection
     if (this.extensionConnection && this.status.isDesktopEnabled) {
-      this.onHoldExtensionConnection = extensionConnection;
+      if (this.additionalExtensionConnection) {
+        this.additionalExtensionConnection.disconnect();
+        this.additionalExtensionConnection.removeAllListeners();
+        this.additionalExtensionConnection = undefined;
+      }
+
+      this.additionalExtensionConnection = extensionConnection;
       return;
     }
     this.extensionConnection = extensionConnection;
@@ -253,8 +259,8 @@ class DesktopApp extends EventEmitter {
     if (connection === this.extensionConnection) {
       this.extensionConnection = undefined;
       this.status.isWebSocketConnected = false;
-    } else if (connection === this.onHoldExtensionConnection) {
-      this.onHoldExtensionConnection = undefined;
+    } else if (connection === this.additionalExtensionConnection) {
+      this.additionalExtensionConnection = undefined;
     }
 
     this.status.connections = [];
