@@ -17,7 +17,8 @@
     "lint:tsc": "tsc --project tsconfig.json --noEmit",
     "setup:postinstall": "yarn allow-scripts",
     "test": "jest",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "publish": "yarn npm publish"
   },
   "dependencies": {
     "@metamask/obs-store": "^5.0.0",
