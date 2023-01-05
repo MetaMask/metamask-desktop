@@ -2948,7 +2948,7 @@
     glob "^7.1.7"
     semver "^7.3.5"
 
-"@metamask/auto-changelog@^2.1.0", "@metamask/auto-changelog@^2.6.1":
+"@metamask/auto-changelog@^2.1.0":
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/@metamask/auto-changelog/-/auto-changelog-2.6.1.tgz#5a6291df6c1592f010bd54f1a97814a4570b1eaf"
   integrity sha512-7VI4lftbQQHbZcxl1W+qFTWHxoeDGybL22Q70SNyYUVIBLlK5PirJHPh1zVYL4jEFmW0rItLLAXd/OZDuVG1Jg==

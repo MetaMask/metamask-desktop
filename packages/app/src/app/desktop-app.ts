@@ -48,6 +48,8 @@ if (!cfg().isUnitTest) {
 class DesktopApp extends EventEmitter {
   private extensionConnection?: ExtensionConnection;
 
+  private additionalExtensionConnection?: ExtensionConnection;
+
   private status: StatusMessage;
 
   private appNavigation: AppNavigation;
@@ -220,6 +222,18 @@ class DesktopApp extends EventEmitter {
       'connect-external',
     ]);
 
+    // if a connection is active it should set new connection as on hold
+    // so the user unpair properly before establishing a new connection
+    if (this.extensionConnection && this.status.isDesktopEnabled) {
+      if (this.additionalExtensionConnection) {
+        this.additionalExtensionConnection.disconnect();
+        this.additionalExtensionConnection.removeAllListeners();
+        this.additionalExtensionConnection = undefined;
+      }
+
+      this.additionalExtensionConnection = extensionConnection;
+      return;
+    }
     this.extensionConnection = extensionConnection;
 
     this.status.isWebSocketConnected = true;
@@ -244,9 +258,11 @@ class DesktopApp extends EventEmitter {
 
     if (connection === this.extensionConnection) {
       this.extensionConnection = undefined;
+      this.status.isWebSocketConnected = false;
+    } else if (connection === this.additionalExtensionConnection) {
+      this.additionalExtensionConnection = undefined;
     }
 
-    this.status.isWebSocketConnected = false;
     this.status.connections = [];
     if (isDisconnectedByUser) {
       this.status.isDesktopEnabled = false;
