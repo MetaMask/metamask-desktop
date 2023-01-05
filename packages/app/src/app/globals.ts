@@ -24,7 +24,7 @@ if (!global.self) {
   global.crypto = webcrypto as any;
   global.isDesktopApp = true;
 
-  // represents the state and the identity of the user agent.
+  // represents the state and the identity of the user agent
   global.navigator = {
     // determines the current browser, used for sentry setup and metrics on the background
     userAgent: 'Firefox',
@@ -35,10 +35,14 @@ if (!global.self) {
     // supports fetchWithCache
     Headers,
     navigator: global.navigator,
-    // required by axios, trezor connect, utils and deep link
+    // required by axios, utils and deep link
     location: {
       href: 'test.com',
     },
+    // required by the background to send CONNECTION_READY (mv3) and contentscript
+    postMessage: () => undefined,
+    // add listeners required by deep link, phishing warning page on the background
+    addEventListener: () => undefined,
   } as unknown as Window & typeof globalThis;
 
   // required by `dom-helpers` and various other libraries
