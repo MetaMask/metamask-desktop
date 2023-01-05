@@ -129,7 +129,7 @@ jobs:
       - name: Publish
         id: publish
         shell: bash
-        run: yarn common npm publish
+        run: yarn common publish
         env:
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
