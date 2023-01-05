@@ -9,7 +9,7 @@ IT CAN ONLY BE USED WITH [FLASK](https://metamask.io/flask/), THE CANARY DISTRIB
 ⚠️⚠️⚠️
 <br><br>
 
-The [MetaMask Browser Extension](https://github.com/MetaMask/metamask-extension) is a crypto wallet & gateway to blockchain apps.
+The [MetaMask browser extension](https://github.com/MetaMask/metamask-extension) is a crypto wallet & gateway to blockchain apps.
 
 The [MetaMask desktop app](https://github.com/MetaMask/desktop) is a companion app which allows to speed up the [MetaMask browser extension](https://github.com/MetaMask/metamask-extension).
 
