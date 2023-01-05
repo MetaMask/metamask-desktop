@@ -6,6 +6,9 @@
     "type": "git",
     "url": "https://github.com/MetaMask/desktop.git"
   },
+  "files": [
+    "dist/"
+  ],
   "scripts": {
     "build": "rimraf dist && tsc --build",
     "lint": "yarn lint:prettier && yarn lint:eslint && yarn lint:tsc",
