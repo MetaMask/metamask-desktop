@@ -16,20 +16,17 @@ import { PAIR_ROUTE } from '../../helpers/constants/routes';
 
 const PairStatus = ({
   isWebSocketConnected,
+  isDesktopEnabled,
   lastActivation,
-  isPairingEverCompleted,
+  isSuccessfulPairSeen,
 }) => {
   const t = useI18nContext();
   const history = useHistory();
 
-  const renderChip = () => {
-    const color = isWebSocketConnected
-      ? COLORS.SUCCESS_DEFAULT
-      : COLORS.ERROR_DEFAULT;
-    const bgColor = isWebSocketConnected
-      ? COLORS.SUCCESS_MUTED
-      : COLORS.ERROR_MUTED;
-    const label = isWebSocketConnected ? t('active') : t('inactive');
+  const renderChip = ({ isActive }) => {
+    const color = isActive ? COLORS.SUCCESS_DEFAULT : COLORS.ERROR_DEFAULT;
+    const bgColor = isActive ? COLORS.SUCCESS_MUTED : COLORS.ERROR_MUTED;
+    const label = isActive ? t('active') : t('inactive');
 
     return (
       <Chip
@@ -48,7 +45,7 @@ const PairStatus = ({
     );
   };
 
-  const renderPairNowButton = () => {
+  const renderPairNowButton = ({ inProgress }) => {
     return (
       <div className="mmd-pair-status__pair-now">
         <Button
@@ -58,7 +55,7 @@ const PairStatus = ({
             history.push(PAIR_ROUTE);
           }}
         >
-          {t('pairNow')}
+          {inProgress ? t('pairInProgress') : t('pairNow')}
         </Button>
       </div>
     );
@@ -68,22 +65,41 @@ const PairStatus = ({
     return formatDate(lastActivation);
   };
 
-  if (!isPairingEverCompleted) {
-    return renderPairNowButton();
+  const renderStatus = ({ isActive }) => {
+    return (
+      <div className="mmd-pair-status">
+        <div className="mmd-pair-status__status">
+          {t('status')} {renderChip({ isActive })}
+        </div>
+        {isWebSocketConnected && (
+          <div className="mmd-pair-status__last-active">
+            {t('lastTimeActive')} {renderlastActivation()}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  if (!isDesktopEnabled && !isSuccessfulPairSeen) {
+    if (isWebSocketConnected) {
+      // Pairing, In Progress
+      return renderPairNowButton({ inProgress: true });
+    }
+    // Never paired show pair now button
+    return renderPairNowButton({ inProgress: false });
   }
 
-  return (
-    <div className="mmd-pair-status">
-      <div className="mmd-pair-status__status">
-        {t('status')} {renderChip()}
-      </div>
-      {isWebSocketConnected && (
-        <div className="mmd-pair-status__last-active">
-          {t('lastTimeActive')} {renderlastActivation()}
-        </div>
-      )}
-    </div>
-  );
+  if (isDesktopEnabled && isWebSocketConnected) {
+    // Paired and connected
+    return renderStatus({ isActive: true });
+  }
+
+  if (isSuccessfulPairSeen && !isWebSocketConnected) {
+    // Paired before but not connected
+    return renderStatus({ isActive: false });
+  }
+
+  return null;
 };
 
 PairStatus.propTypes = {
@@ -96,9 +112,13 @@ PairStatus.propTypes = {
    */
   lastActivation: PropTypes.number,
   /**
-   * Whether the desktop app has ever been paired with the extension
+   * Whether a successful pair has been seen
    */
-  isPairingEverCompleted: PropTypes.bool,
+  isSuccessfulPairSeen: PropTypes.bool,
+  /**
+   * Whether the desktop app is enabled
+   */
+  isDesktopEnabled: PropTypes.bool,
 };
 
 export default PairStatus;
