@@ -8,7 +8,7 @@ import pairStatusReducer from './pair-status/pair-status';
 const pairStatusPersistConfig = {
   key: 'pairStatus',
   storage: window.electronBridge.pairStatusStore,
-  blacklist: ['connections', 'isWebSocketConnected', 'isDesktopEnabled'],
+  blacklist: ['connections', 'isWebSocketConnected', 'isDesktopPaired'],
   whitelist: ['isSuccessfulPairSeen', 'lastActivation'],
 };
 const persistedPairStatusReducer = persistReducer(

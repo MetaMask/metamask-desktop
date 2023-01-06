@@ -16,7 +16,7 @@ import { PAIR_ROUTE } from '../../helpers/constants/routes';
 
 const PairStatus = ({
   isWebSocketConnected,
-  isDesktopEnabled,
+  isDesktopPaired,
   lastActivation,
   isSuccessfulPairSeen,
 }) => {
@@ -80,7 +80,7 @@ const PairStatus = ({
     );
   };
 
-  if (!isDesktopEnabled && !isSuccessfulPairSeen) {
+  if (!isDesktopPaired && !isSuccessfulPairSeen) {
     if (isWebSocketConnected) {
       // Pairing, In Progress
       return renderPairNowButton({ inProgress: true });
@@ -89,7 +89,7 @@ const PairStatus = ({
     return renderPairNowButton({ inProgress: false });
   }
 
-  if (isDesktopEnabled && isWebSocketConnected) {
+  if (isDesktopPaired && isWebSocketConnected) {
     // Paired and connected
     return renderStatus({ isActive: true });
   }
@@ -116,9 +116,9 @@ PairStatus.propTypes = {
    */
   isSuccessfulPairSeen: PropTypes.bool,
   /**
-   * Whether the desktop app is enabled
+   * Whether the app is paired with the extension
    */
-  isDesktopEnabled: PropTypes.bool,
+  isDesktopPaired: PropTypes.bool,
 };
 
 export default PairStatus;

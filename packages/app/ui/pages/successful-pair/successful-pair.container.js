@@ -3,14 +3,14 @@ import { withRouter } from 'react-router-dom';
 import { compose } from 'redux';
 
 import {
-  getIsDesktopEnabled,
+  getIsDesktopPaired,
   updateSuccessfulPairSeen,
 } from '../../ducks/pair-status/pair-status';
 import SuccessfulPair from './successful-pair.component';
 
 function mapStateToProps(state) {
   return {
-    isDesktopEnabled: getIsDesktopEnabled(state),
+    isDesktopPaired: getIsDesktopPaired(state),
   };
 }
 
