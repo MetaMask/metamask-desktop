@@ -20,6 +20,20 @@
         "fetch": true
       }
     },
+    "@metamask/logo": {
+      "globals": {
+        "addEventListener": true,
+        "document.body.appendChild": true,
+        "document.createElementNS": true,
+        "innerHeight": true,
+        "innerWidth": true,
+        "requestAnimationFrame": true
+      },
+      "packages": {
+        "@metamask/logo>gl-mat4": true,
+        "@metamask/logo>gl-vec3": true
+      }
+    },
     "@metamask/rpc-methods>nanoid": {
       "globals": {
         "crypto.getRandomValues": true
@@ -166,6 +180,7 @@
     "lodash": {
       "globals": {
         "clearTimeout": true,
+        "define": true,
         "setTimeout": true
       }
     },

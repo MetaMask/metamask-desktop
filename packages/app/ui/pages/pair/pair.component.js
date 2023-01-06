@@ -16,7 +16,7 @@ import {
   COLORS,
   TEXT_ALIGN,
 } from '../../../submodules/extension/ui/helpers/constants/design-system';
-import Mascot from '../../../submodules/extension/ui/components/ui/mascot';
+import Mascot from '../../components/mascot';
 import Spinner from '../../../submodules/extension/ui/components/ui/spinner';
 
 const ANIMATION_COMPLETE_DEFER_IN_MS = 1000;
