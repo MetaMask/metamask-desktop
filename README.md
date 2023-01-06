@@ -56,14 +56,14 @@ yarn app start
 ```
 
 8. Add the MetaMask browser extension to your browser:
-   - Select the build in the `packages/app/submodules/extension/dist` folder
-   - Follow the following intrustions for [Chrome](https://github.com/MetaMask/metamask-extension/blob/develop/docs/add-to-chrome.md) or the following instructions for [Firefox](https://github.com/MetaMask/metamask-extension/blob/develop/docs/add-to-firefox.md)
+   - Select the build in the `packages/app/submodules/extension/dist` folder.
+   - Follow the following intrustions for [Chrome](https://github.com/MetaMask/metamask-extension/blob/develop/docs/add-to-chrome.md) or the following instructions for [Firefox](https://github.com/MetaMask/metamask-extension/blob/develop/docs/add-to-firefox.md).
 
 9. Pair the desktop app with the extension:
-   - Open the extension
-   - Go to `Settings > Experimental`
-   - Click `Enable Desktop app`
-   - Enter the 6-digit code, visible in the extension, in the desktop app
+   - Open the extension.
+   - Go to `Settings > Experimental`.
+   - Click `Enable Desktop app`.
+   - Enter the 6-digit code, visible in the extension, in the desktop app.
 
 If you see "All set Fox" message displayed in your desktop app, it means you're good to go! 🚀🚀🚀
 
