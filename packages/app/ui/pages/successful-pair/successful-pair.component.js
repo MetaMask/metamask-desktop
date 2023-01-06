@@ -2,7 +2,7 @@ import EventEmitter from 'events';
 import React, { useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 
-import Mascot from '../../../submodules/extension/ui/components/ui/mascot';
+import Mascot from '../../components/mascot';
 import useI18nContext from '../../hooks/useI18nContext';
 import Typography from '../../../submodules/extension/ui/components/ui/typography';
 import Box from '../../../submodules/extension/ui/components/ui/box';
