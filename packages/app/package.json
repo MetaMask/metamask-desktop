@@ -2,7 +2,7 @@
   "name": "desktop-app",
   "version": "0.0.1",
   "private": true,
-  "main": "dist/app/src/app/main.js",
+  "main": "dist/app/src/app/lavamoat.js",
   "repository": "https://github.com/MetaMask/desktop",
   "scripts": {
     "build:app": "./build/build.sh",
