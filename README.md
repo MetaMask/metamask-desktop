@@ -1,15 +1,15 @@
-# MetaMask Desktop app
+# MetaMask Desktop
 
 ⚠️⚠️⚠️
 
-METAMASK DESKTOP APP IS AN EXPERIMENTAL FEATURE.
+METAMASK DESKTOP IS AN EXPERIMENTAL FEATURE.
 
 IT CAN ONLY BE USED WITH [FLASK](https://metamask.io/flask/), THE CANARY DISTRIBUTION OF THE METAMASK EXTENSION, INTENDED FOR DEVELOPERS.
 
 ⚠️⚠️⚠️
 <br><br>
 
-The MetaMask desktop app is a companion app which allows to speed up the [MetaMask browser extension](https://github.com/MetaMask/metamask-extension).
+The MetaMask desktop app is a companion app which speeds up the [MetaMask browser extension](https://github.com/MetaMask/metamask-extension).
 
 You can find the latest version of MetaMask desktop app on [our releases page](https://github.com/MetaMask/desktop/releases). For help using MetaMask, visit our [User Support Site](https://metamask.zendesk.com/hc/en-us).
 
@@ -23,56 +23,51 @@ This repo is a monorepo organised in workspaces:
 | app | The MetaMask desktop app, built with [Electron](https://www.electronjs.org/docs/latest), which can be paired with the [MetaMask browser extension](https://github.com/MetaMask/metamask-extension) to speed it up by executing the background logic. |
 | common | The JavaScript library used by the [MetaMask browser extension](https://github.com/MetaMask/metamask-extension) to connect to the desktop app. |
 
-## Prerequisites
+## Getting Started
 
-- Install [Node.js](https://nodejs.org) version 16
-    - If you are using [nvm](https://github.com/nvm-sh/nvm#installing-and-updating) (recommended) running `nvm use` will automatically choose the right node version for you.
-- Install [Yarn v3](https://yarnpkg.com/getting-started/install)
-- Go in [packages/app/submodules/extension](packages/app/submodules/extension), copy the `.metamaskrc.dist` file to `.metamaskrc`
-    - Replace the `INFURA_PROJECT_ID` value with your own personal [Infura Project ID](https://infura.io/docs).
-    - Optionally, replace the `PASSWORD` value with your development wallet password to avoid entering it each time you open the app.
-- Copy the `.metamaskrc` file and add it to [packages/app](packages/app) as well.
+1. Install [Node.js](https://nodejs.org) version 16
+   - If you are using [nvm](https://github.com/nvm-sh/nvm#installing-and-updating) (recommended) running `nvm use` will automatically choose the right node version for you.
 
-## Get started
 
-Install dependencies for all packages:
+2. Install [Yarn](https://yarnpkg.com/en/docs/install).
+
+
+3. Go in [packages/app/submodules/extension](packages/app/submodules/extension), copy the `.metamaskrc.dist` file to `.metamaskrc`.
+   - Replace the `INFURA_PROJECT_ID` value with your own personal [Infura Project ID](https://infura.io/docs).
+   - Optionally, replace the `PASSWORD` value with your development wallet password to avoid entering it each time you open the app.
+
+
+4. Copy the `.metamaskrc` file and add it to [packages/app](packages/app) as well.
+
+
+5. Install dependencies for all packages:
 ```
 yarn setup
 ```
 
-Build both the MetaMask desktop app and the MetaMask browser extension:
+6. Build both the MetaMask desktop app and the MetaMask browser extension (wait until you see "The watcher is ready." logged in the console):
 ```
 yarn build
 ```
 
-Once you see "The watcher is ready." logged in the console, it means your MetaMask browser extension is ready to be added to your browser and used.
-
-If you use [Firefox](https://www.mozilla.org/) browser:
-- Type "about:debugging" in the navigation bar
-- Click on "This Firefox"
-- Click on "Load Temporary Add-on..."
-- Select `packages/app/submodules/extension/dist/firefox/manifest.json` and click on "Open"
-
-MetaMask browser extension can now be used.
-
-Start the MetaMask desktop app:
+7. Start the MetaMask desktop app:
 ```
 yarn app start
 ```
-MetaMask desktop app can now be used as well.
 
-Pair the desktop app with the extension:
-- Open the extension
-- Go in "Settings/Experimental"
-- Scroll to the bottom and click on the blue button "Enable Desktop app"
-- A 6-digit code appears, copy it
-- Go to the desktop app and paste it there
+8. Add the MetaMask browser extension to your browser:
+   - Select the build in the `packages/app/submodules/extension/dist` folder
+   - Follow the following intrustions for [Chrome](https://github.com/MetaMask/metamask-extension/blob/develop/docs/add-to-chrome.md) or the following instructions for [Firefox](https://github.com/MetaMask/metamask-extension/blob/develop/docs/add-to-firefox.md)
+
+9. Pair the desktop app with the extension:
+   - Open the extension
+   - Go to `Settings > Experimental`
+   - Click `Enable Desktop app`
+   - Enter the 6-digit code, visible in the extension, in the desktop app
 
 If you see "All set Fox" message displayed in your desktop app, it means you're good to go! 🚀🚀🚀
 
-Your MetaMask desktop app now acts as a companion app for your MetaMask browser extension.
-
-This means the background script of the extension now runs in the desktop app which shall speed up the extension.
+Your MetaMask desktop app now acts as a companion app for your MetaMask browser extension which shall speed it up.
 
 ## Other scripts
 

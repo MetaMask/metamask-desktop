@@ -2,7 +2,7 @@
 
 ⚠️⚠️⚠️
 
-METAMASK DESKTOP APP IS AN EXPERIMENTAL FEATURE.
+METAMASK DESKTOP IS AN EXPERIMENTAL FEATURE.
 
 IT CAN ONLY BE USED WITH [FLASK](https://metamask.io/flask/), THE CANARY DISTRIBUTION OF THE METAMASK EXTENSION, INTENDED FOR DEVELOPERS.
 
@@ -11,6 +11,6 @@ IT CAN ONLY BE USED WITH [FLASK](https://metamask.io/flask/), THE CANARY DISTRIB
 
 The [MetaMask browser extension](https://github.com/MetaMask/metamask-extension) is a crypto wallet & gateway to blockchain apps.
 
-The [MetaMask desktop app](https://github.com/MetaMask/desktop) is a companion app which allows to speed up the [MetaMask browser extension](https://github.com/MetaMask/metamask-extension).
+The [MetaMask desktop app](https://github.com/MetaMask/desktop) is a companion app which speeds up the [MetaMask browser extension](https://github.com/MetaMask/metamask-extension).
 
-This npm package is a set of utils and functionalities needed to pair the MetaMask browser extension with the MetaMask desktop app.
+This package contains the functions and classes needed to pair the MetaMask browser extension with the MetaMask desktop app.
