@@ -17194,17 +17194,7 @@ lavamoat-core@^10.0.1:
     merge-deep "^3.0.2"
     resolve "^1.15.1"
 
-lavamoat-core@^12.2.0:
-  version "12.3.0"
-  resolved "https://registry.yarnpkg.com/lavamoat-core/-/lavamoat-core-12.3.0.tgz#a0e94ef6849e2f1df72c587d1a6f75eb6976a9bc"
-  integrity sha512-4F912Y5v83CTFQPoiWLd3bv5MmogiyTehV6W2GgE/qsxff13Aaj3HgVI3Y7XuzgkuZ8ctEAdDpMtcPZDetfyCA==
-  dependencies:
-    fromentries "^1.2.0"
-    json-stable-stringify "^1.0.1"
-    lavamoat-tofu "^6.0.2"
-    merge-deep "^3.0.2"
-
-lavamoat-core@^12.3.0:
+lavamoat-core@^12.2.0, lavamoat-core@^12.3.0:
   version "12.4.0"
   resolved "https://registry.yarnpkg.com/lavamoat-core/-/lavamoat-core-12.4.0.tgz#64207ce3a5395d04beb9c70adcdb1c22a31617af"
   integrity sha512-VZOeB3Ok97wZV5LIvVMXaMg2JGfrcom5rn7AllZ5aJ8OECvL/UXPWBA0YcaHqcjHHdDnfQLn1uyjFqcALhqnBQ==
