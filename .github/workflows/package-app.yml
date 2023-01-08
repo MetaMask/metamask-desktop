@@ -24,6 +24,9 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
 
+    permissions:
+      contents: write
+
     steps:
       - name: Checkout Git Repository
         uses: actions/checkout@v3
@@ -89,3 +92,4 @@ jobs:
           WIN_CSC_KEY_PASSWORD: ${{ secrets.MMD_WIN_CERT_PASSWORD }}
           CSC_LINK: ${{ secrets.MMD_MAC_CSC_BASE64 }}
           CSC_KEY_PASSWORD: ${{ secrets.MMD_MAC_CSC_KEY_PASSWORD }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
