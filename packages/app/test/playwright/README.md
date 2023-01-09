@@ -17,9 +17,9 @@ yarn build:test:app
 ```
 
 ### Initialise playwright in case is your first time
-3. Initialise Playwright
+3. Install browsers to test with Playwright (only chrome needed for now)
 ```
-yarn app playwright install
+yarn app playwright install chromium
 ```
 
 4. Specify the following environment variables in the CLI or in a [.env](../../.env.example) file

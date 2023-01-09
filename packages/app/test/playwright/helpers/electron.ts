@@ -1,12 +1,12 @@
 import fs from 'fs';
 import { ElectronApplication, Page, _electron as electron } from 'playwright';
 
-export async function electronStartup(env?: any): Promise<ElectronApplication> {
+export async function electronStartup(): Promise<ElectronApplication> {
   // Delete config.json to have the same initial setup every run
   console.log('resetConfigFiles');
   await resetConfigFiles();
   console.log('createElectronApp');
-  const electronApp = await createElectronApp(env);
+  const electronApp = await createElectronApp();
   console.log('setupLogs');
   setupLogs(electronApp);
   return electronApp;
@@ -31,14 +31,10 @@ export async function resetConfigFiles() {
   }
 }
 
-export async function createElectronApp(env?: any) {
-  console.log(env);
-  console.log('************');
-  console.log(process.env);
+export async function createElectronApp() {
   console.log('electron.launch start');
   const electronApp = await electron.launch({
     args: [process.env.ELECTRON_APP_PATH as string],
-    env,
   });
   console.log('electron.launch finish');
   return electronApp;
