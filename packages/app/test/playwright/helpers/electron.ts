@@ -22,6 +22,15 @@ export async function electronStartup(): Promise<ElectronApplication> {
 
   const electronApp = await createElectronApp();
   setupLogs(electronApp);
+
+  await new Promise<void>((resolve) => {
+    electronApp.process().stdout?.on('data', (data) => {
+      if (data.includes('MetaMask initialization complete.')) {
+        resolve();
+      }
+    });
+  });
+
   return electronApp;
 }
 

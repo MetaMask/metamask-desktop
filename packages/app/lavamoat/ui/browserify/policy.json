@@ -116,12 +116,6 @@
         "browserify>process": true
       }
     },
-    "browserify>url": {
-      "packages": {
-        "browserify>punycode": true,
-        "browserify>querystring-es3": true
-      }
-    },
     "classnames": {
       "globals": {
         "classNames": "write",

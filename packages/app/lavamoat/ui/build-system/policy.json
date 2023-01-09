@@ -1201,7 +1201,8 @@
         "@typescript-eslint/parser>@typescript-eslint/types": true,
         "@typescript-eslint/utils": true,
         "eslint": true,
-        "eslint>eslint-utils": true
+        "eslint>eslint-utils": true,
+        "webpack>eslint-scope": true
       }
     },
     "@typescript-eslint/eslint-plugin>@typescript-eslint/utils>eslint-scope": {
@@ -2765,7 +2766,8 @@
         "eslint-plugin-jest>@typescript-eslint/utils>eslint-scope": true,
         "eslint-plugin-jest>@typescript-eslint/utils>eslint-utils": true,
         "eslint>eslint-scope": true,
-        "eslint>eslint-utils": true
+        "eslint>eslint-utils": true,
+        "webpack>eslint-scope": true
       }
     },
     "eslint-plugin-jest>@typescript-eslint/utils>@typescript-eslint/scope-manager": {
@@ -5620,10 +5622,10 @@
       }
     },
     "gulp>glob-watcher>async-done": {
-      "builtin": {
-        "domain.create": true
-      },
       "globals": {
+        "d.add": true,
+        "d.exit": true,
+        "d.removeListener": true,
         "process.nextTick": true
       },
       "packages": {
