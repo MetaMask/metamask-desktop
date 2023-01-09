@@ -57,14 +57,12 @@ test.describe('Extension / Desktop connectivity issues', () => {
       'If you have no desktop app installed, please download it on the MetaMask website.',
     ]);
 
-    await initialPage.errorClickButton('Download MetaMask Desktop');
+    const [newPage] = await Promise.all([
+      context.waitForEvent('page'),
+      initialPage.errorClickButton('Download MetaMask Desktop'),
+    ]);
 
-    // Latest tab opened should be metamask
-    await context.on('page', async (page) => {
-      console.log('Page Title', page.title());
-      await page.waitForLoadState('networkidle');
-      await expect(page).toHaveURL('https://metamask.io/');
-    });
+    expect(newPage.url()).toStrictEqual('https://metamask.io/');
   });
 
   test('Extension error when desktop close unexpectedly', async ({
