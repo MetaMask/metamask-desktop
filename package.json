@@ -20,7 +20,7 @@
     "common": "yarn workspace @metamask/desktop",
     "extension": "cd packages/app/submodules/extension && yarn",
     "release:common": "yarn create-release-branch --workspace-package='common'",
-    "release:app": "yarn create-release-branch --workspace-package='app'"
+    "release:app": "yarn create-release-branch --workspace-package='app' --tag-name='metamask-desktop-app'"
   },
   "devDependencies": {
     "@lavamoat/allow-scripts": "^2.0.3",
