@@ -65,7 +65,7 @@ const onDesktopAppLog = (messageBuffer) => {
 const startDesktopApp = async () => {
   console.log('Starting desktop app');
 
-  const command = `${isInCI() ? 'xvfb-run -a ' : ''}sh test/e2e/start.sh`;
+  const command = `${isInCI() ? 'xvfb-run -a ' : ''}sh test/e2e/start-app.sh`;
 
   const desktopApp = cp.spawn(command, {
     shell: true,

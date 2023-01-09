@@ -40,7 +40,7 @@
     "setup:postinstall": "yarn patch-package && yarn allow-scripts",
     "start": "electron dist/app/src/app/main.js",
     "start:lavamoat": "electron dist/app/src/app/lavamoat.js",
-    "start:test": "GLOBAL_AGENT_HTTP_PROXY=http://127.0.0.1:8000 NODE_TLS_REJECT_UNAUTHORIZED=0 yarn start",
+    "start:test": "./test/e2e/start-app.sh",
     "test": "jest",
     "test:e2e:app": "npx playwright test",
     "test:e2e:extension": "yarn test:e2e:extension:base test:e2e:chrome",
