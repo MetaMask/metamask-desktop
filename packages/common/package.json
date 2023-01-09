@@ -6,6 +6,9 @@
     "type": "git",
     "url": "https://github.com/MetaMask/desktop.git"
   },
+  "files": [
+    "dist/"
+  ],
   "scripts": {
     "build": "rimraf dist && tsc --build",
     "lint": "yarn lint:prettier && yarn lint:eslint && yarn lint:tsc",
@@ -17,7 +20,8 @@
     "lint:tsc": "tsc --project tsconfig.json --noEmit",
     "setup:postinstall": "yarn allow-scripts",
     "test": "jest",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "publish": "yarn npm publish"
   },
   "dependencies": {
     "@metamask/obs-store": "^5.0.0",

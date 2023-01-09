@@ -1,6 +1,6 @@
 {
   "name": "desktop-app",
-  "version": "10.22.0",
+  "version": "0.0.1",
   "private": true,
   "main": "dist/app/src/app/main.js",
   "repository": "https://github.com/MetaMask/desktop",

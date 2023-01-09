@@ -2,6 +2,10 @@
   "name": "desktop",
   "version": "2.0.0",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MetaMask/desktop.git"
+  },
   "scripts": {
     "build": "yarn common build && concurrently -n extension,ui,app  \"yarn extension build:desktop:extension\" \"yarn app build:ui\"  \"yarn app build:app\"",
     "build:lavamoat": "yarn common build && concurrently -n extension,ui,app  \"yarn extension build:desktop:extension:lavamoat\" \"yarn app build:ui:lavamoat\"  \"yarn app build:app\"",

@@ -1,6 +1,20 @@
 name: "Build and Package"
 
-on: workflow_dispatch
+on:
+  workflow_call:
+    secrets:
+      MMD_WIN_CERT_BASE64:
+        required: true
+      MMD_WIN_CERT_PASSWORD:
+        required: true
+      MMD_MAC_CSC_BASE64:
+        required: true
+      MMD_MAC_CSC_KEY_PASSWORD:
+        required: true
+      INFURA_PROJECT_ID:
+        required: true
+      PUBLISH:
+        required: true
 
 jobs:
   package:
@@ -8,7 +22,10 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout Git Repository
@@ -52,10 +69,20 @@ jobs:
       - name: Package app for ${{ matrix.os }}
         shell: bash
         run:  |
+              PUBLISH_PACKAGE="never"
+              # Mac package script to avoid notarization as it can only be done with the prod certificate.
+              MAC_PACKAGE_SCRIPT="package:mac"
+              if [ "${{ secrets.PUBLISH }}" == "true" ]; then
+                PUBLISH_PACKAGE = "always"
+                # Mac package script to include notarization.
+                MAC_PACKAGE_SCRIPT="package:mac:ci"
+              fi
               if [ "$RUNNER_OS" == "Linux" ]; then
-                yarn app package:linux:ci -p "never"
+                yarn app package:linux:ci -p "$PUBLISH_PACKAGE"
               elif [ "$RUNNER_OS" == "Windows" ]; then
-                yarn app package:win:ci -p "never"
+                yarn app package:win:ci -p "$PUBLISH_PACKAGE"
+              elif [ "$RUNNER_OS" == "macOS" ]; then
+                yarn app "$MAC_PACKAGE_SCRIPT" -p "$PUBLISH_PACKAGE"
               else
                 echo "$RUNNER_OS not supported"
                 exit 1
@@ -63,3 +90,6 @@ jobs:
         env:
           WIN_CSC_LINK: ${{ secrets.MMD_WIN_CERT_BASE64 }}
           WIN_CSC_KEY_PASSWORD: ${{ secrets.MMD_WIN_CERT_PASSWORD }}
+          CSC_LINK: ${{ secrets.MMD_MAC_CSC_BASE64 }}
+          CSC_KEY_PASSWORD: ${{ secrets.MMD_MAC_CSC_KEY_PASSWORD }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
