@@ -16,7 +16,8 @@ const enableDesktopAppErrorFlow = async (page: Page) => {
 
 test.describe('Desktop Compatibility Version', () => {
   test('Desktop app upgrade required', async ({ page, context }) => {
-    const env = { COMPATIBILITY_VERSION_DESKTOP_TEST: '0' };
+    const { env } = process;
+    env.COMPATIBILITY_VERSION_DESKTOP_TEST = '0';
     console.log(electronStartup);
     const electronApp = await electronStartup(env);
 
@@ -33,7 +34,8 @@ test.describe('Desktop Compatibility Version', () => {
   });
 
   test('Extension upgrade required', async ({ page, context }) => {
-    const env = { COMPATIBILITY_VERSION_DESKTOP_TEST: '100' };
+    const { env } = process;
+    env.COMPATIBILITY_VERSION_DESKTOP_TEST = '100';
     const electronApp = await electronStartup(env);
 
     await signUpFlow(page, context);
