@@ -5623,9 +5623,6 @@
     },
     "gulp>glob-watcher>async-done": {
       "globals": {
-        "d.add": true,
-        "d.exit": true,
-        "d.removeListener": true,
         "process.nextTick": true
       },
       "packages": {

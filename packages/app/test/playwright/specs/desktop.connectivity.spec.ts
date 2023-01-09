@@ -58,9 +58,11 @@ test.describe('Extension / Desktop connectivity issues', () => {
     ]);
 
     await initialPage.errorClickButton('Download MetaMask Desktop');
+
     // Latest tab opened should be metamask
     await context.on('page', async (page) => {
-      await page.waitForLoadState('domcontentloaded');
+      console.log('Page Title', page.title());
+      await page.waitForLoadState('networkidle');
       await expect(page).toHaveURL('https://metamask.io/');
     });
   });
