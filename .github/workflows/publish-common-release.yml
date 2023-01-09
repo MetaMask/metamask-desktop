@@ -15,7 +15,7 @@ on:
     branches: [main-desktop]
 
 jobs:
-  check-workflows:
+  check-common-workflows:
     name: Lints workflow
     runs-on: ubuntu-latest
     steps:
@@ -132,6 +132,3 @@ jobs:
         run: yarn common publish
         env:
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-
-
