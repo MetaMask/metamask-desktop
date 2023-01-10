@@ -16,7 +16,7 @@ export const initBrowser = ({
 };
 
 export const isBrowserInitialised = () => {
-  return !!browser;
-}
+  return Boolean(browser);
+};
 
 export { browser };

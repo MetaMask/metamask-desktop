@@ -3,7 +3,6 @@ import './controller-init';
 import log from 'loglevel';
 import { RawState, RemotePort } from '@metamask/desktop/dist/types';
 import { NodeThreadExecutionService } from '@metamask/snaps-controllers';
-import { DesktopController } from '@metamask/desktop/dist/controllers/desktop';
 import {
   loadStateFromPersistence,
   setupController,
@@ -42,9 +41,9 @@ const getOrigin = () => {
   return 'DESKTOP_APP';
 };
 
-const createSnapExecutionService = (args) => {
+const createSnapExecutionService = (args: any) => {
   return new NodeThreadExecutionService(args);
-}
+};
 
 /**
  * Register Desktop App specific extension connect listeners.
@@ -73,21 +72,17 @@ const initialize = async () => {
   const initLangCode = await getFirstPreferredLangCode();
   registerStatePersistenceListener();
 
-  await setupController(
-    initState,
-    initLangCode,
-    {
-      registerConnectListeners,
-      getPortStream,
-      getOrigin,
-      createSnapExecutionService,
-      keyrings: {
-        trezor: TrezorKeyring,
-        ledger: LedgerKeyring,
-        lattice: LatticeKeyring,
-      },
-    }
-  );
+  await setupController(initState, initLangCode, {
+    registerConnectListeners,
+    getPortStream,
+    getOrigin,
+    createSnapExecutionService,
+    keyrings: {
+      trezor: TrezorKeyring,
+      ledger: LedgerKeyring,
+      lattice: LatticeKeyring,
+    },
+  });
 
   log.info('MetaMask initialization complete.');
 };
