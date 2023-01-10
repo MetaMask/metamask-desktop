@@ -130,3 +130,32 @@ jobs:
           CSC_LINK: ${{ secrets.MMD_MAC_CSC_BASE64 }}
           CSC_KEY_PASSWORD: ${{ secrets.MMD_MAC_CSC_KEY_PASSWORD }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: packaged-apps
+          path: |
+            packages/app/packages/*.dmg
+            packages/app/packages/*.AppImage
+            packages/app/packages/*.exe
+
+  checksum:
+    name: Checksum packaged apps
+    runs-on: ubuntu-latest
+    needs: package-prod
+    steps:
+      - name: Checkout Git Repository
+        uses: actions/checkout@v3
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: packaged-apps
+          path: artifacts
+
+      - name: Get checksums (SHA512) from artifacts
+        run: find ./artifacts -type f -exec sha512sum {} \; | sed -e 's/ .*[/ ]/ /' > ./checksums.txt
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: checksums
+          path: ./checksums.txt
