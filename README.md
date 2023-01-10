@@ -13,7 +13,8 @@ The MetaMask desktop app is a companion app which speeds up the [MetaMask browse
 
 You can find the latest version of MetaMask desktop app on [our releases page](https://github.com/MetaMask/desktop/releases).
 
-For help using MetaMask desktop app, for general questions, for feature requests, or developer questions, visit our [Discussions tab](https://github.com/MetaMask/desktop/discussions) on this repository.
+For help using MetaMask Desktop, or for general questions, feature requests, and developer questions, see the [Discussions tab](https://github.com/MetaMask/desktop/discussions).
+
 
 ## Monorepo
 
