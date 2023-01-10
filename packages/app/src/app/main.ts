@@ -3,6 +3,7 @@ import './controller-init';
 import log from 'loglevel';
 import { RawState, RemotePort } from '@metamask/desktop/dist/types';
 import { NodeThreadExecutionService } from '@metamask/snaps-controllers';
+import { DesktopController } from '@metamask/desktop/dist/controllers/desktop';
 import {
   loadStateFromPersistence,
   setupController,
@@ -76,6 +77,7 @@ const initialize = async () => {
       getPortStream,
       getOrigin,
       NodeThreadExecutionService,
+      DesktopController,
       keyrings: {
         trezor: TrezorKeyring,
         ledger: LedgerKeyring,
