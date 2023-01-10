@@ -1,4 +1,5 @@
-import { Locator, Page } from '@playwright/test';
+import { Locator, Page, BrowserContext } from '@playwright/test';
+import { ChromeExtensionPage } from './ext-chrome-extension-page';
 
 export class ExtensionSignUpPage {
   readonly page: Page;
@@ -69,4 +70,20 @@ export class ExtensionSignUpPage {
     await this.importBtn.click();
     await this.doneBtn.click();
   }
+}
+
+export async function signUpFlow(page: Page, context: BrowserContext) {
+  // Getting extension id of Extension
+  const extensions = new ChromeExtensionPage(await context.newPage());
+  await extensions.goto();
+  await extensions.setDevMode();
+  const extensionId = await extensions.getExtensionId();
+  await extensions.close();
+
+  const signUp = new ExtensionSignUpPage(page, extensionId as string);
+  await signUp.goto();
+  await signUp.start();
+  await signUp.authentication();
+  await signUp.termsAndConditions();
+  return extensionId;
 }
