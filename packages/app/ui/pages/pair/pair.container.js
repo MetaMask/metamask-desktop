@@ -4,13 +4,13 @@ import { compose } from 'redux';
 
 import {
   getIsSuccessfulPairSeen,
-  getIsDesktopEnabled,
+  getIsDesktopPaired,
 } from '../../ducks/pair-status/pair-status';
 import Pair from './pair.component';
 
 function mapStateToProps(state) {
   return {
-    isDesktopEnabled: getIsDesktopEnabled(state),
+    isDesktopPaired: getIsDesktopPaired(state),
     isSuccessfulPairSeen: getIsSuccessfulPairSeen(state),
   };
 }

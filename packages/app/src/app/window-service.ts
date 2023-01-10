@@ -35,7 +35,7 @@ export default class WindowService {
 
     mainWindow.loadFile(
       path.resolve(__dirname, '../../../ui/desktop-ui.html'),
-      // Temporary open pair page, it will redirect to settings page if isDesktopEnabled is true
+      // Temporary open pair page, it will redirect to settings page if isDesktopPaired is true
       { hash: 'pair' },
     );
 
