@@ -22,6 +22,10 @@ cp $SOURCE_HTML_DIR/desktop-lattice.html $OUTPUT_HTML_DIR/desktop-lattice.html
 echo "Copying locales"
 cp -r $EXTENSION_APP_DIR/_locales $OUTPUT_APP_DIR/_locales
 
+echo "Copying assets"
+mkdir -p $OUTPUT_APP_DIR/build-types/flask/images
+cp $EXTENSION_APP_DIR/build-types/flask/images/flask-mascot.json $OUTPUT_APP_DIR/build-types/flask/images/
+
 # Export all shell variables
 set -a
 
