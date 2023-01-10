@@ -153,9 +153,9 @@ jobs:
           path: artifacts
 
       - name: Get checksums (SHA512) from artifacts
-        run: find ./artifacts -type f -exec sha512sum {} \; | sed -e 's/ .*[/ ]/ /' > ./checksums.txt
+        run: find ./artifacts -type f -exec sha512sum {} \; | sed -e 's/ .*[/ ]/ /' > ./checksums-sha512.txt
 
       - uses: actions/upload-artifact@v3
         with:
           name: checksums
-          path: ./checksums.txt
+          path: ./checksums-sha512.txt
