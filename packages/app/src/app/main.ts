@@ -42,6 +42,10 @@ const getOrigin = () => {
   return 'DESKTOP_APP';
 };
 
+const createSnapExecutionService = (args) => {
+  return new NodeThreadExecutionService(args);
+}
+
 /**
  * Register Desktop App specific extension connect listeners.
  *
@@ -76,17 +80,13 @@ const initialize = async () => {
       registerConnectListeners,
       getPortStream,
       getOrigin,
-      NodeThreadExecutionService,
-      DesktopController,
+      createSnapExecutionService,
       keyrings: {
         trezor: TrezorKeyring,
         ledger: LedgerKeyring,
         lattice: LatticeKeyring,
       },
-    },
-    {
-      isDesktopApp: true,
-    },
+    }
   );
 
   log.info('MetaMask initialization complete.');

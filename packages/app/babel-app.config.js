@@ -16,7 +16,7 @@ module.exports = function (api) {
     plugins: isUnitTest
       ? []
       : [
-          ['./build/code-fencing-babel', { buildType: 'desktopapp' }],
+          ['./build/code-fencing-babel', { buildType: 'desktopextension' }],
           [
             'transform-inline-environment-variables',
             { exclude: ['COMPATIBILITY_VERSION_DESKTOP_TEST'] },
