@@ -35,7 +35,7 @@
     "package:mac:ci": "electron-builder --config electron-builder.ci.json -m",
     "package:win": "dotenv -e .metamaskrc -- electron-builder -w",
     "package:win:ci": "electron-builder --config electron-builder.ci.json -w",
-    "package:win:docker": "docker compose -f build/windows/docker-compose.yml up",
+    "package:win:docker": "docker-compose -f build/windows/docker-compose.yml up",
     "release:linux": "electron-builder -l -p 'onTagOrDraft'",
     "setup:postinstall": "yarn patch-package && yarn allow-scripts",
     "start": "electron dist/app/src/app/main.js",
