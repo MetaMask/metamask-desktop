@@ -50,7 +50,11 @@ export class DesktopOTPPage {
     ).toBeVisible();
   }
 
-  async resetConnection() {
-    await this.window.locator('text=Reset Connection').click();
+  async removeConnection() {
+    await this.window.locator('text=Remove Connection').click();
+  }
+
+  async pairWithMetamask() {
+    await this.window.locator('text=Pair with your Metamask extension').click();
   }
 }

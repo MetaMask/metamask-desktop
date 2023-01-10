@@ -4,7 +4,7 @@ import * as path from 'path';
 import { test as base, chromium, firefox, webkit } from '@playwright/test';
 import Ganache from './ganache';
 
-const extensionPath = path.join(
+export const extensionPath = path.join(
   __dirname,
   '../../../submodules/extension/dist/chrome',
 );
