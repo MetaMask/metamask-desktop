@@ -2,6 +2,7 @@ import './globals';
 import './controller-init';
 import log from 'loglevel';
 import { RawState, RemotePort } from '@metamask/desktop/dist/types';
+import { NodeThreadExecutionService } from '@metamask/snaps-controllers';
 import {
   loadStateFromPersistence,
   setupController,
@@ -67,16 +68,24 @@ const initialize = async () => {
   const initLangCode = await getFirstPreferredLangCode();
   registerStatePersistenceListener();
 
-  await setupController(initState, initLangCode, {
-    registerConnectListeners,
-    getPortStream,
-    getOrigin,
-    keyrings: {
-      trezor: TrezorKeyring,
-      ledger: LedgerKeyring,
-      lattice: LatticeKeyring,
+  await setupController(
+    initState,
+    initLangCode,
+    {
+      registerConnectListeners,
+      getPortStream,
+      getOrigin,
+      NodeThreadExecutionService,
+      keyrings: {
+        trezor: TrezorKeyring,
+        ledger: LedgerKeyring,
+        lattice: LatticeKeyring,
+      },
     },
-  });
+    {
+      isDesktopApp: true,
+    },
+  );
 
   log.info('MetaMask initialization complete.');
 };
