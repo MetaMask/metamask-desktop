@@ -1,4 +1,5 @@
 import 'global-agent/bootstrap';
+import './logger-init';
 import '../browser/browser-init';
 import { webcrypto } from 'node:crypto';
 import { Headers } from 'node-fetch';
