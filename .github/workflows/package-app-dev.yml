@@ -30,6 +30,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
+      - name: Setup submodule
+        shell: bash
+        run: yarn setup:submodule
       - name: Install deps
         shell: bash
         run: yarn install --frozen-lockfile
@@ -39,12 +42,18 @@ jobs:
       - name: Run common post install
         shell: bash
         run: yarn common setup:postinstall
-      - name: Run extension post install
-        shell: bash
-        run: yarn extension setup:postinstall
       - name: Run app post install
         shell: bash
         run: yarn app setup:postinstall
+      - name: Run common build
+        shell: bash
+        run: yarn common build
+      - name: Run setup extension
+        shell: bash
+        run: yarn setup:extension
+      - name: Run extension install deps
+        shell: bash
+        run: yarn extension
       - name: Build desktop ui
         shell: bash
         run: yarn app build:ui:lavamoat:ci
