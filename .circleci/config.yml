@@ -140,23 +140,14 @@ jobs:
           key: dependency-cache-v2-{{ checksum "yarn.lock" }}
       - run:
           name: Install deps
-          command: YARN_CACHE_FOLDER=.yarn_cache yarn install --frozen-lockfile
+          command: yarn install --frozen-lockfile
       - save_cache:
           key: dependency-cache-v2-{{ checksum "yarn.lock" }}
           paths:
-            - .yarn_cache
+            - .yarn/cache
             - node_modules/
             - << pipeline.parameters.common-dir >>/node_modules/
             - << pipeline.parameters.app-dir >>/node_modules/
-      - run:
-          name: Run root post install
-          command: yarn setup:postinstall
-      - run:
-          name: Run common post install
-          command: yarn common setup:postinstall
-      - run:
-          name: Run app post install
-          command: yarn app setup:postinstall
       - persist_to_workspace:
           root: .
           paths:
@@ -174,11 +165,11 @@ jobs:
           key: dependency-cache-extension-v1-{{ checksum "<< pipeline.parameters.extension-dir >>/yarn.lock" }}
       - run:
           name: Install extension deps
-          command: YARN_CACHE_FOLDER=.yarn_cache_extension yarn extension --frozen-lockfile
+          command: yarn extension --frozen-lockfile
       - save_cache:
           key: dependency-cache-extension-v1-{{ checksum "<< pipeline.parameters.extension-dir >>/yarn.lock" }}
           paths:
-            - .yarn_cache_extension
+            - << pipeline.parameters.extension-dir >>/.yarn/cache/
             - << pipeline.parameters.extension-dir >>/node_modules/
       - run:
           name: Copy common package

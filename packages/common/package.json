@@ -18,7 +18,6 @@
     "lint:eslint": "eslint . --ext js,ts --cache",
     "lint:eslint:fix": "yarn lint:eslint --fix",
     "lint:tsc": "tsc --project tsconfig.json --noEmit",
-    "setup:postinstall": "yarn allow-scripts",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "publish": "yarn npm publish"
