@@ -9,9 +9,11 @@ IT CAN ONLY BE USED WITH [FLASK](https://metamask.io/flask/), THE CANARY DISTRIB
 ⚠️⚠️⚠️
 <br><br>
 
-The MetaMask desktop app is a companion app which speeds up the [MetaMask browser extension](https://github.com/MetaMask/metamask-extension).
+The MetaMask Desktop app is one of many experiments we are exploring to improve our extension-driven experiences. The Desktop app improves the overall performance of the extension when using the Flask build.
 
-You can find the latest version of MetaMask desktop app on [our releases page](https://github.com/MetaMask/desktop/releases).
+This is useful for use cases like the execution of complex Snaps (e.g. zk-related Snaps), which are very demanding in terms of processing power.
+
+You can find the latest version of MetaMask Desktop app on [our releases page](https://github.com/MetaMask/desktop/releases).
 
 For help using MetaMask Desktop, or for general questions, feature requests, and developer questions, see the [Discussions tab](https://github.com/MetaMask/desktop/discussions).
 
@@ -21,8 +23,8 @@ For help using MetaMask Desktop, or for general questions, feature requests, and
 This repo is a monorepo organised in workspaces:
 | Name | Description
 | --- | --- |
-| app | The MetaMask desktop app, built with [Electron](https://www.electronjs.org/docs/latest), which can be paired with the [MetaMask browser extension](https://github.com/MetaMask/metamask-extension) to speed it up by executing the background logic. |
-| common | The JavaScript library used by the [MetaMask browser extension](https://github.com/MetaMask/metamask-extension) to connect to the desktop app. |
+| app | The MetaMask Desktop app, built with [Electron](https://www.electronjs.org/docs/latest), which can be paired with the Flask extension to improve its overall performance. |
+| common | The JavaScript library used by the Flask extension to connect to the Desktop app. |
 
 ## Getting Started
 
@@ -46,29 +48,29 @@ This repo is a monorepo organised in workspaces:
 yarn setup
 ```
 
-6. Build both the MetaMask desktop app and the MetaMask browser extension (wait until you see "The watcher is ready." logged in the console):
+6. Build both the MetaMask Desktop app and the Flask extension (wait until you see "The watcher is ready." logged in the console):
 ```
 yarn build
 ```
 
-7. Start the MetaMask desktop app:
+7. Start the MetaMask Desktop app:
 ```
 yarn app start
 ```
 
-8. Add the MetaMask browser extension to your browser:
+8. Add the Flask extension to your browser:
    - Select the build in the `packages/app/submodules/extension/dist` folder.
    - Follow the following intrustions for [Chrome](https://github.com/MetaMask/metamask-extension/blob/develop/docs/add-to-chrome.md) or the following instructions for [Firefox](https://github.com/MetaMask/metamask-extension/blob/develop/docs/add-to-firefox.md).
 
-9. Pair the desktop app with the extension:
-   - Open the extension.
+9. Pair the Desktop app with the Flask extension:
+   - Open the Flask extension.
    - Go to `Settings > Experimental`.
    - Click `Enable Desktop app`.
-   - Enter the 6-digit code, visible in the extension, in the desktop app.
+   - Enter the 6-digit code, visible in the Flask extension, in the Desktop app.
 
-If you see "All set Fox" message displayed in your desktop app, it means you're good to go! 🚀🚀🚀
+If you see "All set Fox" message displayed in your Desktop app, it means you're good to go! 🚀🚀🚀
 
-Your MetaMask desktop app now acts as a companion app for your MetaMask browser extension which shall speed it up.
+Your MetaMask Desktop app now acts as a companion app for your Flask extension which shall improve its overall performance.
 
 ## Other scripts
 
