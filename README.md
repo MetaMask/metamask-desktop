@@ -9,11 +9,10 @@ IT CAN ONLY BE USED WITH [FLASK](https://metamask.io/flask/), THE CANARY DISTRIB
 ⚠️⚠️⚠️
 <br><br>
 
-The MetaMask desktop app is one of many experiments we are exploring to improve our extension-driven experiences.
-It allows to improve Flask extension's overall performance.
+The MetaMask Desktop app is one of many experiments we are exploring to improve our extension-driven experiences. The Desktop app improves the overall performance of the extension when using the Flask build.
 This is useful for use cases like the execution of complex Snaps (e.g. zk-related Snaps), which are very demanding in terms of processing power.
 
-You can find the latest version of MetaMask desktop app on [our releases page](https://github.com/MetaMask/desktop/releases).
+You can find the latest version of MetaMask Desktop app on [our releases page](https://github.com/MetaMask/desktop/releases).
 
 For help using MetaMask Desktop, or for general questions, feature requests, and developer questions, see the [Discussions tab](https://github.com/MetaMask/desktop/discussions).
 
@@ -23,7 +22,7 @@ For help using MetaMask Desktop, or for general questions, feature requests, and
 This repo is a monorepo organised in workspaces:
 | Name | Description
 | --- | --- |
-| app | The MetaMask desktop app, built with [Electron](https://www.electronjs.org/docs/latest), which can be paired with the Flask extension to improve its overall performance. |
+| app | The MetaMask Desktop app, built with [Electron](https://www.electronjs.org/docs/latest), which can be paired with the Flask extension to improve its overall performance. |
 | common | The JavaScript library used by the Flask extension to connect to the desktop app. |
 
 ## Getting Started
