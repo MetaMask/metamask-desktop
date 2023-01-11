@@ -1164,6 +1164,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/desktop>eciesjs>secp256k1>elliptic": true,
         "@metamask/desktop>eciesjs>secp256k1>node-gyp-build": true
@@ -1746,6 +1747,13 @@
         "@metamask/jazzicon>color>color-convert>color-name": true
       }
     },
+    "@metamask/notification-controller": {
+      "packages": {
+        "@metamask/base-controller": true,
+        "@metamask/controller-utils": true,
+        "@metamask/notification-controller>nanoid": true
+      }
+    },
     "@metamask/obs-store": {
       "builtin": {
         "stream.Duplex": true
@@ -1881,6 +1889,15 @@
         "end-of-stream": true,
         "pump>once": true,
         "readable-stream": true
+      }
+    },
+    "@metamask/rate-limit-controller": {
+      "globals": {
+        "setTimeout": true
+      },
+      "packages": {
+        "@metamask/base-controller": true,
+        "eth-rpc-errors": true
       }
     },
     "@metamask/rpc-methods": {
@@ -4521,6 +4538,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "hdkey>secp256k1>elliptic": true,
         "lavamoat>node-gyp-build": true
@@ -5030,6 +5048,7 @@
         "Buffer.isBuffer": true,
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>blake-hash>readable-stream": true,
         "lavamoat>node-gyp-build": true
@@ -5224,6 +5243,7 @@
         "Buffer.isBuffer": true,
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "ethereumjs-util>ethereum-cryptography>keccak>readable-stream": true,
         "lavamoat>node-gyp-build": true
@@ -5269,6 +5289,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "hdkey>secp256k1>elliptic": true,
         "lavamoat>node-gyp-build": true
@@ -7139,6 +7160,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "hdkey>secp256k1>elliptic": true,
         "lavamoat>node-gyp-build": true
@@ -7611,11 +7633,11 @@
     },
     "webextension-polyfill": {
       "globals": {
-        "browser": true,
-        "chrome": true,
-        "console.error": true,
-        "console.warn": true,
-        "define": true
+        "browser": false,
+        "chrome": false,
+        "console.error": false,
+        "console.warn": false,
+        "define": false
       }
     },
     "ws": {
