@@ -18,7 +18,7 @@ export const getMessage = (localeCode, localeMessages, key, substitutions) => {
           `Unable to find value of key "${key}" for locale "${localeCode}"`,
         );
         // Sentry.captureException(missingMessageErrors[key]);
-        console.error(missingMessageErrors[key]);
+        electronLog.error(missingMessageErrors[key]);
         if (process.env.IN_TEST) {
           throw missingMessageErrors[key];
         }
@@ -28,7 +28,7 @@ export const getMessage = (localeCode, localeMessages, key, substitutions) => {
         warned[localeCode] = {};
       }
       warned[localeCode][key] = true;
-      console.warn(
+      electronLog.warn(
         `Translator - Unable to find value of key "${key}" for locale "${localeCode}"`,
       );
     }
@@ -68,7 +68,7 @@ export const getMessage = (localeCode, localeMessages, key, substitutions) => {
         const error = new Error(
           `Insufficient number of substitutions for key "${key}" with locale "${localeCode}"`,
         );
-        console.error(error);
+        electronLog.error(error);
         // Sentry.captureException(error);
       }
       return substitutions[substituteIndex];
