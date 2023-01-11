@@ -10,4 +10,4 @@ index 0ac28b4..d048c0a 100644
 +Object.defineProperty(exports, "hasOwnProperty", { value: hasOwnProperty });
  function _objectKeys(obj) {
      if (Array.isArray(obj)) {
-         var keys = new Array(obj.length);
+         var keys_1 = new Array(obj.length);

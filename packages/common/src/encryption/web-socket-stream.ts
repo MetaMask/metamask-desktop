@@ -15,7 +15,7 @@ import * as asymmetricEncryption from './asymmetric';
 import * as symmetricEncryption from './symmetric';
 
 const HANDSHAKE_RESEND_INTERVAL = 1000;
-const HANDSHAKE_TIMEOUT = 5000;
+const HANDSHAKE_TIMEOUT = 10000;
 
 enum HandshakeMode {
   START,

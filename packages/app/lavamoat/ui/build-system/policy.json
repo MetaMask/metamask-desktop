@@ -120,38 +120,10 @@
         "process.versions.node": true
       },
       "packages": {
-        "@babel/core>@babel/helper-compilation-targets>browserslist": true,
         "@babel/core>@babel/helper-compilation-targets>semver": true,
         "@babel/preset-env>@babel/compat-data": true,
-        "@babel/preset-env>@babel/helper-validator-option": true
-      }
-    },
-    "@babel/core>@babel/helper-compilation-targets>browserslist": {
-      "builtin": {
-        "fs.existsSync": true,
-        "fs.readFileSync": true,
-        "fs.statSync": true,
-        "path.basename": true,
-        "path.dirname": true,
-        "path.join": true,
-        "path.resolve": true
-      },
-      "globals": {
-        "console.warn": true,
-        "process.env.BROWSERSLIST": true,
-        "process.env.BROWSERSLIST_CONFIG": true,
-        "process.env.BROWSERSLIST_DANGEROUS_EXTEND": true,
-        "process.env.BROWSERSLIST_DISABLE_CACHE": true,
-        "process.env.BROWSERSLIST_ENV": true,
-        "process.env.BROWSERSLIST_IGNORE_OLD_DATA": true,
-        "process.env.BROWSERSLIST_STATS": true,
-        "process.env.NODE_ENV": true,
-        "process.versions.node": true
-      },
-      "packages": {
-        "stylelint>autoprefixer>browserslist>electron-to-chromium": true,
-        "stylelint>autoprefixer>browserslist>node-releases": true,
-        "stylelint>autoprefixer>caniuse-lite": true
+        "@babel/preset-env>@babel/helper-validator-option": true,
+        "webpack>browserslist": true
       }
     },
     "@babel/core>@babel/helper-compilation-targets>semver": {
@@ -268,16 +240,8 @@
         "@babel/parser": true,
         "depcheck>@babel/parser": true,
         "eslint": true,
-        "lavamoat>lavamoat-tofu>@babel/parser": true
-      }
-    },
-    "@babel/eslint-parser>eslint-scope": {
-      "builtin": {
-        "assert": true
-      },
-      "packages": {
-        "@babel/eslint-parser>eslint-scope>estraverse": true,
-        "eslint>eslint-scope>esrecurse": true
+        "lavamoat>lavamoat-tofu>@babel/parser": true,
+        "webpack>eslint-scope": true
       }
     },
     "@babel/eslint-parser>semver": {
@@ -1237,7 +1201,8 @@
         "@typescript-eslint/parser>@typescript-eslint/types": true,
         "@typescript-eslint/utils": true,
         "eslint": true,
-        "eslint>eslint-utils": true
+        "eslint>eslint-utils": true,
+        "webpack>eslint-scope": true
       }
     },
     "@typescript-eslint/eslint-plugin>@typescript-eslint/utils>eslint-scope": {
@@ -2032,11 +1997,6 @@
         "chokidar>is-binary-path>binary-extensions": true
       }
     },
-    "concurrently>supports-color>has-flag": {
-      "globals": {
-        "process.argv": true
-      }
-    },
     "cross-spawn": {
       "builtin": {
         "child_process.spawn": true,
@@ -2058,7 +2018,7 @@
       "packages": {
         "cross-spawn>path-key": true,
         "cross-spawn>shebang-command": true,
-        "mocha>which": true
+        "cross-spawn>which": true
       }
     },
     "cross-spawn>path-key": {
@@ -2070,6 +2030,21 @@
     "cross-spawn>shebang-command": {
       "packages": {
         "cross-spawn>shebang-command>shebang-regex": true
+      }
+    },
+    "cross-spawn>which": {
+      "builtin": {
+        "path.join": true
+      },
+      "globals": {
+        "process.cwd": true,
+        "process.env.OSTYPE": true,
+        "process.env.PATH": true,
+        "process.env.PATHEXT": true,
+        "process.platform": true
+      },
+      "packages": {
+        "mocha>which>isexe": true
       }
     },
     "debounce-stream>through": {
@@ -2376,7 +2351,7 @@
     },
     "enzyme>has": {
       "packages": {
-        "enzyme>has>function-bind": true
+        "mocha>object.assign>function-bind": true
       }
     },
     "enzyme>is-callable": {
@@ -2402,14 +2377,6 @@
       "globals": {
         "HTMLElement": true,
         "WeakRef": true
-      }
-    },
-    "enzyme>object.assign": {
-      "packages": {
-        "enzyme>object.assign>object-keys": true,
-        "globalthis>define-properties": true,
-        "string.prototype.matchall>call-bind": true,
-        "string.prototype.matchall>has-symbols": true
       }
     },
     "enzyme>object.entries": {
@@ -2454,6 +2421,7 @@
         "eslint>ajv": true,
         "eslint>debug": true,
         "eslint>doctrine": true,
+        "eslint>escape-string-regexp": true,
         "eslint>eslint-scope": true,
         "eslint>eslint-utils": true,
         "eslint>eslint-visitor-keys": true,
@@ -2473,8 +2441,7 @@
         "eslint>minimatch": true,
         "eslint>natural-compare": true,
         "eslint>regexpp": true,
-        "globby>ignore": true,
-        "mocha>escape-string-regexp": true
+        "globby>ignore": true
       }
     },
     "eslint-config-prettier": {
@@ -2506,7 +2473,7 @@
         "process": true
       },
       "packages": {
-        "mocha>ms": true,
+        "eslint-import-resolver-node>debug>ms": true,
         "mocha>supports-color": true
       }
     },
@@ -2665,7 +2632,7 @@
         "process": true
       },
       "packages": {
-        "mocha>ms": true,
+        "eslint-plugin-import>eslint-module-utils>debug>ms": true,
         "mocha>supports-color": true
       }
     },
@@ -2799,7 +2766,8 @@
         "eslint-plugin-jest>@typescript-eslint/utils>eslint-scope": true,
         "eslint-plugin-jest>@typescript-eslint/utils>eslint-utils": true,
         "eslint>eslint-scope": true,
-        "eslint>eslint-utils": true
+        "eslint>eslint-utils": true,
+        "webpack>eslint-scope": true
       }
     },
     "eslint-plugin-jest>@typescript-eslint/utils>@typescript-eslint/scope-manager": {
@@ -2836,9 +2804,9 @@
         "eslint-plugin-jsdoc>@es-joy/jsdoccomment": true,
         "eslint-plugin-jsdoc>comment-parser": true,
         "eslint-plugin-jsdoc>debug": true,
+        "eslint-plugin-jsdoc>escape-string-regexp": true,
         "eslint-plugin-jsdoc>spdx-expression-parse": true,
         "eslint>esquery": true,
-        "mocha>escape-string-regexp": true,
         "semver": true
       }
     },
@@ -3009,7 +2977,15 @@
         "console.error": true
       },
       "packages": {
-        "enzyme>object.assign": true
+        "eslint-plugin-react>jsx-ast-utils>object.assign": true
+      }
+    },
+    "eslint-plugin-react>jsx-ast-utils>object.assign": {
+      "packages": {
+        "globalthis>define-properties": true,
+        "mocha>object.assign>object-keys": true,
+        "string.prototype.matchall>call-bind": true,
+        "string.prototype.matchall>has-symbols": true
       }
     },
     "eslint-plugin-react>minimatch": {
@@ -3099,9 +3075,9 @@
         "eslint>@eslint/eslintrc>ajv": true,
         "eslint>@eslint/eslintrc>debug": true,
         "eslint>@eslint/eslintrc>minimatch": true,
+        "eslint>@eslint/eslintrc>strip-json-comments": true,
         "eslint>globals": true,
-        "globby>ignore": true,
-        "mocha>strip-json-comments": true
+        "globby>ignore": true
       }
     },
     "eslint>@eslint/eslintrc>ajv": {
@@ -3446,8 +3422,8 @@
         "fast-glob>@nodelib/fs.stat": true,
         "fast-glob>@nodelib/fs.walk": true,
         "fast-glob>glob-parent": true,
-        "fast-glob>micromatch": true,
-        "globby>merge2": true
+        "globby>merge2": true,
+        "stylelint>micromatch": true
       }
     },
     "fast-glob>@nodelib/fs.stat": {
@@ -3509,15 +3485,6 @@
         "eslint>is-glob": true
       }
     },
-    "fast-glob>micromatch": {
-      "builtin": {
-        "util.inspect": true
-      },
-      "packages": {
-        "chokidar>braces": true,
-        "depcheck>readdirp>picomatch": true
-      }
-    },
     "fs-extra": {
       "builtin": {
         "assert": true,
@@ -3543,26 +3510,9 @@
         "setTimeout": true
       },
       "packages": {
-        "fs-extra>graceful-fs": true,
         "fs-extra>jsonfile": true,
-        "fs-extra>universalify": true
-      }
-    },
-    "fs-extra>graceful-fs": {
-      "builtin": {
-        "assert.equal": true,
-        "constants.O_SYMLINK": true,
-        "constants.O_WRONLY": true,
-        "constants.hasOwnProperty": true,
-        "fs": true,
-        "stream.Stream.call": true,
-        "util": true
-      },
-      "globals": {
-        "clearTimeout": true,
-        "console.error": true,
-        "process": true,
-        "setTimeout": true
+        "fs-extra>universalify": true,
+        "webpack>graceful-fs": true
       }
     },
     "fs-extra>jsonfile": {
@@ -3573,7 +3523,7 @@
         "Buffer.isBuffer": true
       },
       "packages": {
-        "fs-extra>graceful-fs": true
+        "webpack>graceful-fs": true
       }
     },
     "globalthis": {
@@ -3583,8 +3533,8 @@
     },
     "globalthis>define-properties": {
       "packages": {
-        "enzyme>object.assign>object-keys": true,
-        "globalthis>define-properties>has-property-descriptors": true
+        "globalthis>define-properties>has-property-descriptors": true,
+        "mocha>object.assign>object-keys": true
       }
     },
     "globalthis>define-properties>has-property-descriptors": {
@@ -3670,154 +3620,68 @@
         "fancy-log": true,
         "gulp-autoprefixer>autoprefixer": true,
         "gulp-autoprefixer>postcss": true,
-        "gulp-autoprefixer>through2": true,
         "gulp-zip>plugin-error": true,
+        "through2": true,
         "vinyl-sourcemaps-apply": true
       }
     },
     "gulp-autoprefixer>autoprefixer": {
       "globals": {
-        "process.cwd": true
+        "console": true,
+        "process.cwd": true,
+        "process.env.AUTOPREFIXER_GRID": true
       },
       "packages": {
-        "css-loader>postcss-value-parser": true,
-        "gulp-autoprefixer>autoprefixer>browserslist": true,
-        "gulp-autoprefixer>autoprefixer>postcss": true,
-        "stylelint>autoprefixer>caniuse-lite": true,
+        "gulp-autoprefixer>autoprefixer>fraction.js": true,
+        "gulp-autoprefixer>autoprefixer>postcss-value-parser": true,
+        "gulp-autoprefixer>postcss": true,
+        "gulp-autoprefixer>postcss>picocolors": true,
         "stylelint>autoprefixer>normalize-range": true,
-        "stylelint>autoprefixer>num2fraction": true
+        "webpack>browserslist": true,
+        "webpack>browserslist>caniuse-lite": true
       }
     },
-    "gulp-autoprefixer>autoprefixer>browserslist": {
-      "builtin": {
-        "fs.existsSync": true,
-        "fs.readFileSync": true,
-        "fs.statSync": true,
-        "path.basename": true,
-        "path.dirname": true,
-        "path.join": true,
-        "path.resolve": true
-      },
+    "gulp-autoprefixer>autoprefixer>fraction.js": {
       "globals": {
-        "console.warn": true,
-        "process.env.BROWSERSLIST": true,
-        "process.env.BROWSERSLIST_CONFIG": true,
-        "process.env.BROWSERSLIST_DISABLE_CACHE": true,
-        "process.env.BROWSERSLIST_ENV": true,
-        "process.env.BROWSERSLIST_STATS": true,
-        "process.env.NODE_ENV": true
-      },
-      "packages": {
-        "stylelint>autoprefixer>browserslist>electron-to-chromium": true,
-        "stylelint>autoprefixer>caniuse-lite": true
-      }
-    },
-    "gulp-autoprefixer>autoprefixer>postcss": {
-      "builtin": {
-        "fs": true,
-        "path": true
-      },
-      "globals": {
-        "Buffer": true,
-        "atob": true,
-        "btoa": true,
-        "console": true
-      },
-      "packages": {
-        "gulp-autoprefixer>autoprefixer>postcss>chalk": true,
-        "gulp-autoprefixer>autoprefixer>postcss>source-map": true,
-        "gulp-autoprefixer>autoprefixer>postcss>supports-color": true
-      }
-    },
-    "gulp-autoprefixer>autoprefixer>postcss>chalk": {
-      "globals": {
-        "process.env.TERM": true,
-        "process.platform": true
-      },
-      "packages": {
-        "gulp-autoprefixer>autoprefixer>postcss>chalk>ansi-styles": true,
-        "gulp-autoprefixer>autoprefixer>postcss>chalk>escape-string-regexp": true,
-        "gulp-autoprefixer>autoprefixer>postcss>supports-color": true
-      }
-    },
-    "gulp-autoprefixer>autoprefixer>postcss>chalk>ansi-styles": {
-      "packages": {
-        "@metamask/jazzicon>color>color-convert": true
-      }
-    },
-    "gulp-autoprefixer>autoprefixer>postcss>supports-color": {
-      "builtin": {
-        "os.release": true
-      },
-      "globals": {
-        "process.env": true,
-        "process.platform": true,
-        "process.stderr": true,
-        "process.stdout": true,
-        "process.versions.node.split": true
-      },
-      "packages": {
-        "concurrently>supports-color>has-flag": true
+        "define": true
       }
     },
     "gulp-autoprefixer>postcss": {
       "builtin": {
-        "fs": true,
-        "path": true
+        "fs.existsSync": true,
+        "fs.readFileSync": true,
+        "path.dirname": true,
+        "path.isAbsolute": true,
+        "path.join": true,
+        "path.relative": true,
+        "path.resolve": true,
+        "path.sep": true,
+        "url.fileURLToPath": true,
+        "url.pathToFileURL": true
       },
       "globals": {
         "Buffer": true,
+        "URL": true,
         "atob": true,
         "btoa": true,
-        "console": true
+        "console": true,
+        "process.env.LANG": true,
+        "process.env.NODE_ENV": true
       },
       "packages": {
-        "gulp-autoprefixer>postcss>chalk": true,
-        "gulp-autoprefixer>postcss>source-map": true,
-        "gulp-autoprefixer>postcss>supports-color": true
+        "addons-linter>postcss>source-map-js": true,
+        "gulp-autoprefixer>postcss>nanoid": true,
+        "gulp-autoprefixer>postcss>picocolors": true
       }
     },
-    "gulp-autoprefixer>postcss>chalk": {
-      "globals": {
-        "process.env.TERM": true,
-        "process.platform": true
-      },
-      "packages": {
-        "gulp-autoprefixer>postcss>chalk>ansi-styles": true,
-        "gulp-autoprefixer>postcss>chalk>escape-string-regexp": true,
-        "gulp-autoprefixer>postcss>supports-color": true
-      }
-    },
-    "gulp-autoprefixer>postcss>chalk>ansi-styles": {
-      "packages": {
-        "@metamask/jazzicon>color>color-convert": true
-      }
-    },
-    "gulp-autoprefixer>postcss>supports-color": {
+    "gulp-autoprefixer>postcss>picocolors": {
       "builtin": {
-        "os.release": true
+        "tty.isatty": true
       },
       "globals": {
+        "process.argv.includes": true,
         "process.env": true,
-        "process.platform": true,
-        "process.stderr": true,
-        "process.stdout": true,
-        "process.versions.node.split": true
-      },
-      "packages": {
-        "concurrently>supports-color>has-flag": true
-      }
-    },
-    "gulp-autoprefixer>through2": {
-      "builtin": {
-        "util.inherits": true
-      },
-      "globals": {
-        "process.nextTick": true
-      },
-      "packages": {
-        "readable-stream": true,
-        "watchify>xtend": true
+        "process.platform": true
       }
     },
     "gulp-dart-sass": {
@@ -3850,8 +3714,8 @@
       },
       "packages": {
         "gulp-dart-sass>chalk>ansi-styles": true,
-        "gulp-dart-sass>chalk>escape-string-regexp": true,
-        "gulp-dart-sass>chalk>supports-color": true
+        "gulp-dart-sass>chalk>supports-color": true,
+        "mocha>escape-string-regexp": true
       }
     },
     "gulp-dart-sass>chalk>ansi-styles": {
@@ -3871,7 +3735,7 @@
         "process.versions.node.split": true
       },
       "packages": {
-        "concurrently>supports-color>has-flag": true
+        "mocha>supports-color>has-flag": true
       }
     },
     "gulp-dart-sass>strip-ansi": {
@@ -3926,7 +3790,7 @@
       "packages": {
         "gulp-rtlcss>rtlcss>@choojs/findup": true,
         "gulp-rtlcss>rtlcss>postcss": true,
-        "gulp-rtlcss>rtlcss>strip-json-comments": true
+        "mocha>strip-json-comments": true
       }
     },
     "gulp-rtlcss>rtlcss>@choojs/findup": {
@@ -3950,8 +3814,8 @@
       },
       "packages": {
         "gulp-rtlcss>rtlcss>chalk>ansi-styles": true,
-        "gulp-rtlcss>rtlcss>chalk>escape-string-regexp": true,
-        "gulp-rtlcss>rtlcss>chalk>supports-color": true
+        "gulp-rtlcss>rtlcss>chalk>supports-color": true,
+        "mocha>escape-string-regexp": true
       }
     },
     "gulp-rtlcss>rtlcss>chalk>ansi-styles": {
@@ -3971,7 +3835,7 @@
         "process.versions.node.split": true
       },
       "packages": {
-        "concurrently>supports-color>has-flag": true
+        "mocha>supports-color>has-flag": true
       }
     },
     "gulp-rtlcss>rtlcss>postcss": {
@@ -4017,7 +3881,6 @@
         "Buffer.from": true
       },
       "packages": {
-        "fs-extra>graceful-fs": true,
         "gulp-sourcemaps>@gulp-sourcemaps/identity-map": true,
         "gulp-sourcemaps>@gulp-sourcemaps/map-sources": true,
         "gulp-sourcemaps>acorn": true,
@@ -4027,7 +3890,8 @@
         "gulp-sourcemaps>detect-newline": true,
         "gulp-sourcemaps>source-map": true,
         "gulp-sourcemaps>strip-bom-string": true,
-        "gulp-sourcemaps>through2": true
+        "gulp-sourcemaps>through2": true,
+        "webpack>graceful-fs": true
       }
     },
     "gulp-sourcemaps>@gulp-sourcemaps/identity-map": {
@@ -4177,7 +4041,7 @@
         "process": true
       },
       "packages": {
-        "mocha>ms": true,
+        "gulp-sourcemaps>debug-fabulous>debug>ms": true,
         "mocha>supports-color": true
       }
     },
@@ -4308,7 +4172,7 @@
       "packages": {
         "gulp-watch>anymatch>micromatch>braces>expand-range": true,
         "gulp-watch>anymatch>micromatch>braces>preserve": true,
-        "webpack>micromatch>braces>repeat-element": true
+        "gulp-watch>chokidar>braces>repeat-element": true
       }
     },
     "gulp-watch>anymatch>micromatch>braces>expand-range": {
@@ -4321,8 +4185,8 @@
         "gulp-watch>anymatch>micromatch>braces>expand-range>fill-range>is-number": true,
         "gulp-watch>anymatch>micromatch>braces>expand-range>fill-range>isobject": true,
         "gulp-watch>anymatch>micromatch>braces>expand-range>fill-range>randomatic": true,
-        "webpack>micromatch>braces>fill-range>repeat-string": true,
-        "webpack>micromatch>braces>repeat-element": true
+        "gulp-watch>chokidar>braces>repeat-element": true,
+        "stylelint>@stylelint/postcss-markdown>remark>remark-parse>repeat-string": true
       }
     },
     "gulp-watch>anymatch>micromatch>braces>expand-range>fill-range>is-number": {
@@ -4342,9 +4206,9 @@
     },
     "gulp-watch>anymatch>micromatch>braces>expand-range>fill-range>randomatic": {
       "packages": {
+        "@babel/register>clone-deep>kind-of": true,
         "gulp-watch>anymatch>micromatch>braces>expand-range>fill-range>randomatic>is-number": true,
-        "gulp-watch>anymatch>micromatch>braces>expand-range>fill-range>randomatic>math-random": true,
-        "webpack>micromatch>kind-of": true
+        "gulp-watch>anymatch>micromatch>braces>expand-range>fill-range>randomatic>math-random": true
       }
     },
     "gulp-watch>anymatch>micromatch>braces>expand-range>fill-range>randomatic>math-random": {
@@ -4359,7 +4223,7 @@
     },
     "gulp-watch>anymatch>micromatch>extglob": {
       "packages": {
-        "gulp-watch>anymatch>micromatch>is-extglob": true
+        "gulp-watch>anymatch>micromatch>extglob>is-extglob": true
       }
     },
     "gulp-watch>anymatch>micromatch>is-glob": {
@@ -4471,7 +4335,7 @@
       },
       "packages": {
         "gulp-watch>chokidar>anymatch>normalize-path": true,
-        "webpack>micromatch": true
+        "gulp-watch>chokidar>readdirp>micromatch": true
       }
     },
     "gulp-watch>chokidar>anymatch>normalize-path": {
@@ -4486,16 +4350,16 @@
     },
     "gulp-watch>chokidar>braces": {
       "packages": {
+        "gulp-watch>chokidar>braces>array-unique": true,
         "gulp-watch>chokidar>braces>extend-shallow": true,
         "gulp-watch>chokidar>braces>fill-range": true,
+        "gulp-watch>chokidar>braces>repeat-element": true,
+        "gulp-watch>chokidar>braces>snapdragon": true,
+        "gulp-watch>chokidar>braces>snapdragon-node": true,
+        "gulp-watch>chokidar>braces>split-string": true,
+        "gulp-watch>chokidar>braces>to-regex": true,
         "gulp>gulp-cli>isobject": true,
-        "gulp>undertaker>arr-flatten": true,
-        "webpack>micromatch>array-unique": true,
-        "webpack>micromatch>braces>repeat-element": true,
-        "webpack>micromatch>braces>snapdragon-node": true,
-        "webpack>micromatch>braces>split-string": true,
-        "webpack>micromatch>snapdragon": true,
-        "webpack>micromatch>to-regex": true
+        "gulp>undertaker>arr-flatten": true
       }
     },
     "gulp-watch>chokidar>braces>extend-shallow": {
@@ -4509,15 +4373,379 @@
       },
       "packages": {
         "gulp-watch>chokidar>braces>extend-shallow": true,
+        "gulp-watch>chokidar>braces>fill-range>is-number": true,
         "gulp-watch>chokidar>braces>fill-range>to-regex-range": true,
-        "webpack>micromatch>braces>fill-range>is-number": true,
-        "webpack>micromatch>braces>fill-range>repeat-string": true
+        "stylelint>@stylelint/postcss-markdown>remark>remark-parse>repeat-string": true
+      }
+    },
+    "gulp-watch>chokidar>braces>fill-range>is-number": {
+      "packages": {
+        "gulp-watch>chokidar>braces>fill-range>is-number>kind-of": true
+      }
+    },
+    "gulp-watch>chokidar>braces>fill-range>is-number>kind-of": {
+      "packages": {
+        "browserify>insert-module-globals>is-buffer": true
       }
     },
     "gulp-watch>chokidar>braces>fill-range>to-regex-range": {
       "packages": {
-        "webpack>micromatch>braces>fill-range>is-number": true,
-        "webpack>micromatch>braces>fill-range>repeat-string": true
+        "gulp-watch>chokidar>braces>fill-range>is-number": true,
+        "stylelint>@stylelint/postcss-markdown>remark>remark-parse>repeat-string": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon": {
+      "builtin": {
+        "fs.readFileSync": true,
+        "path.dirname": true,
+        "util.inspect": true
+      },
+      "globals": {
+        "__filename": true
+      },
+      "packages": {
+        "gulp-watch>chokidar>braces>snapdragon>base": true,
+        "gulp-watch>chokidar>braces>snapdragon>debug": true,
+        "gulp-watch>chokidar>braces>snapdragon>define-property": true,
+        "gulp-watch>chokidar>braces>snapdragon>extend-shallow": true,
+        "gulp-watch>chokidar>braces>snapdragon>map-cache": true,
+        "gulp-watch>chokidar>braces>snapdragon>source-map": true,
+        "gulp-watch>chokidar>braces>snapdragon>source-map-resolve": true,
+        "gulp-watch>chokidar>braces>snapdragon>use": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon-node": {
+      "packages": {
+        "gulp-watch>chokidar>braces>snapdragon-node>define-property": true,
+        "gulp-watch>chokidar>braces>snapdragon-node>snapdragon-util": true,
+        "gulp>gulp-cli>isobject": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon-node>define-property": {
+      "packages": {
+        "gulp-watch>chokidar>braces>snapdragon-node>define-property>is-descriptor": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon-node>define-property>is-descriptor": {
+      "packages": {
+        "@babel/register>clone-deep>kind-of": true,
+        "gulp-watch>chokidar>braces>snapdragon-node>define-property>is-descriptor>is-accessor-descriptor": true,
+        "gulp-watch>chokidar>braces>snapdragon-node>define-property>is-descriptor>is-data-descriptor": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon-node>define-property>is-descriptor>is-accessor-descriptor": {
+      "packages": {
+        "@babel/register>clone-deep>kind-of": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon-node>define-property>is-descriptor>is-data-descriptor": {
+      "packages": {
+        "@babel/register>clone-deep>kind-of": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon-node>snapdragon-util": {
+      "packages": {
+        "gulp-watch>chokidar>braces>snapdragon-node>snapdragon-util>kind-of": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon-node>snapdragon-util>kind-of": {
+      "packages": {
+        "browserify>insert-module-globals>is-buffer": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>base": {
+      "builtin": {
+        "util.inherits": true
+      },
+      "packages": {
+        "gulp-watch>chokidar>braces>snapdragon>base>cache-base": true,
+        "gulp-watch>chokidar>braces>snapdragon>base>class-utils": true,
+        "gulp-watch>chokidar>braces>snapdragon>base>component-emitter": true,
+        "gulp-watch>chokidar>braces>snapdragon>base>define-property": true,
+        "gulp-watch>chokidar>braces>snapdragon>base>mixin-deep": true,
+        "gulp-watch>chokidar>braces>snapdragon>base>pascalcase": true,
+        "gulp>gulp-cli>isobject": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>base>cache-base": {
+      "packages": {
+        "gulp-watch>chokidar>braces>snapdragon>base>cache-base>collection-visit": true,
+        "gulp-watch>chokidar>braces>snapdragon>base>cache-base>component-emitter": true,
+        "gulp-watch>chokidar>braces>snapdragon>base>cache-base>has-value": true,
+        "gulp-watch>chokidar>braces>snapdragon>base>cache-base>set-value": true,
+        "gulp-watch>chokidar>braces>snapdragon>base>cache-base>to-object-path": true,
+        "gulp-watch>chokidar>braces>snapdragon>base>cache-base>union-value": true,
+        "gulp-watch>chokidar>braces>snapdragon>base>cache-base>unset-value": true,
+        "gulp>gulp-cli>array-sort>get-value": true,
+        "gulp>gulp-cli>isobject": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>base>cache-base>collection-visit": {
+      "packages": {
+        "gulp-watch>chokidar>braces>snapdragon>base>cache-base>collection-visit>map-visit": true,
+        "gulp-watch>chokidar>braces>snapdragon>base>cache-base>collection-visit>object-visit": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>base>cache-base>collection-visit>map-visit": {
+      "builtin": {
+        "util.inspect": true
+      },
+      "packages": {
+        "gulp-watch>chokidar>braces>snapdragon>base>cache-base>collection-visit>object-visit": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>base>cache-base>collection-visit>object-visit": {
+      "packages": {
+        "gulp>gulp-cli>isobject": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>base>cache-base>has-value": {
+      "packages": {
+        "gulp-watch>chokidar>braces>snapdragon>base>cache-base>has-value>has-values": true,
+        "gulp>gulp-cli>array-sort>get-value": true,
+        "gulp>gulp-cli>isobject": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>base>cache-base>has-value>has-values": {
+      "packages": {
+        "gulp-watch>chokidar>braces>fill-range>is-number": true,
+        "gulp-watch>chokidar>braces>snapdragon>base>cache-base>has-value>has-values>kind-of": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>base>cache-base>has-value>has-values>kind-of": {
+      "packages": {
+        "browserify>insert-module-globals>is-buffer": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>base>cache-base>set-value": {
+      "packages": {
+        "gulp-watch>chokidar>braces>snapdragon>base>cache-base>set-value>extend-shallow": true,
+        "gulp-watch>chokidar>braces>snapdragon>base>cache-base>set-value>is-extendable": true,
+        "gulp-watch>chokidar>braces>snapdragon>base>cache-base>set-value>is-plain-object": true,
+        "gulp-watch>chokidar>braces>split-string": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>base>cache-base>set-value>extend-shallow": {
+      "packages": {
+        "gulp-watch>chokidar>braces>snapdragon>base>cache-base>set-value>is-extendable": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>base>cache-base>set-value>is-plain-object": {
+      "packages": {
+        "gulp>gulp-cli>isobject": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>base>cache-base>to-object-path": {
+      "packages": {
+        "gulp-watch>chokidar>braces>snapdragon>base>cache-base>to-object-path>kind-of": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>base>cache-base>to-object-path>kind-of": {
+      "packages": {
+        "browserify>insert-module-globals>is-buffer": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>base>cache-base>union-value": {
+      "packages": {
+        "gulp-watch>chokidar>braces>snapdragon>base>cache-base>set-value": true,
+        "gulp-watch>chokidar>braces>snapdragon>base>cache-base>union-value>is-extendable": true,
+        "gulp-zip>plugin-error>arr-union": true,
+        "gulp>gulp-cli>array-sort>get-value": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>base>cache-base>unset-value": {
+      "packages": {
+        "gulp-watch>chokidar>braces>snapdragon>base>cache-base>unset-value>has-value": true,
+        "gulp>gulp-cli>isobject": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>base>cache-base>unset-value>has-value": {
+      "packages": {
+        "gulp-watch>chokidar>braces>snapdragon>base>cache-base>unset-value>has-value>has-values": true,
+        "gulp-watch>chokidar>braces>snapdragon>base>cache-base>unset-value>has-value>isobject": true,
+        "gulp>gulp-cli>array-sort>get-value": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>base>cache-base>unset-value>has-value>isobject": {
+      "packages": {
+        "readable-stream>isarray": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>base>class-utils": {
+      "builtin": {
+        "util": true
+      },
+      "packages": {
+        "gulp-watch>chokidar>braces>snapdragon>base>class-utils>static-extend": true,
+        "gulp-watch>chokidar>braces>snapdragon>define-property": true,
+        "gulp-zip>plugin-error>arr-union": true,
+        "gulp>gulp-cli>isobject": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>base>class-utils>static-extend": {
+      "builtin": {
+        "util.inherits": true
+      },
+      "packages": {
+        "gulp-watch>chokidar>braces>snapdragon>base>class-utils>static-extend>object-copy": true,
+        "gulp-watch>chokidar>braces>snapdragon>define-property": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>base>class-utils>static-extend>object-copy": {
+      "packages": {
+        "gulp-watch>chokidar>braces>snapdragon>base>class-utils>static-extend>object-copy>copy-descriptor": true,
+        "gulp-watch>chokidar>braces>snapdragon>base>class-utils>static-extend>object-copy>kind-of": true,
+        "gulp-watch>chokidar>braces>snapdragon>define-property": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>base>class-utils>static-extend>object-copy>kind-of": {
+      "packages": {
+        "browserify>insert-module-globals>is-buffer": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>base>define-property": {
+      "packages": {
+        "gulp-watch>chokidar>braces>snapdragon>base>define-property>is-descriptor": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>base>define-property>is-descriptor": {
+      "packages": {
+        "@babel/register>clone-deep>kind-of": true,
+        "gulp-watch>chokidar>braces>snapdragon>base>define-property>is-descriptor>is-accessor-descriptor": true,
+        "gulp-watch>chokidar>braces>snapdragon>base>define-property>is-descriptor>is-data-descriptor": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>base>define-property>is-descriptor>is-accessor-descriptor": {
+      "packages": {
+        "@babel/register>clone-deep>kind-of": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>base>define-property>is-descriptor>is-data-descriptor": {
+      "packages": {
+        "@babel/register>clone-deep>kind-of": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>base>mixin-deep": {
+      "packages": {
+        "gulp-zip>plugin-error>extend-shallow>is-extendable": true,
+        "gulp>undertaker>object.reduce>for-own>for-in": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>debug": {
+      "builtin": {
+        "fs.SyncWriteStream": true,
+        "net.Socket": true,
+        "tty.WriteStream": true,
+        "tty.isatty": true,
+        "util": true
+      },
+      "globals": {
+        "chrome": true,
+        "console": true,
+        "document": true,
+        "localStorage": true,
+        "navigator": true,
+        "process": true
+      },
+      "packages": {
+        "gulp-watch>chokidar>braces>snapdragon>debug>ms": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>define-property": {
+      "packages": {
+        "gulp-watch>chokidar>braces>snapdragon>define-property>is-descriptor": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>define-property>is-descriptor": {
+      "packages": {
+        "gulp-watch>chokidar>braces>snapdragon>define-property>is-descriptor>is-accessor-descriptor": true,
+        "gulp-watch>chokidar>braces>snapdragon>define-property>is-descriptor>is-data-descriptor": true,
+        "gulp-watch>chokidar>braces>snapdragon>define-property>is-descriptor>kind-of": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>define-property>is-descriptor>is-accessor-descriptor": {
+      "packages": {
+        "gulp-watch>chokidar>braces>snapdragon>define-property>is-descriptor>is-accessor-descriptor>kind-of": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>define-property>is-descriptor>is-accessor-descriptor>kind-of": {
+      "packages": {
+        "browserify>insert-module-globals>is-buffer": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>define-property>is-descriptor>is-data-descriptor": {
+      "packages": {
+        "gulp-watch>chokidar>braces>snapdragon>define-property>is-descriptor>is-data-descriptor>kind-of": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>define-property>is-descriptor>is-data-descriptor>kind-of": {
+      "packages": {
+        "browserify>insert-module-globals>is-buffer": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>extend-shallow": {
+      "packages": {
+        "gulp-watch>chokidar>braces>snapdragon>extend-shallow>is-extendable": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>source-map-resolve": {
+      "builtin": {
+        "url.resolve": true
+      },
+      "globals": {
+        "setImmediate": true
+      },
+      "packages": {
+        "gulp-sourcemaps>css>source-map-resolve>atob": true,
+        "gulp-sourcemaps>css>source-map-resolve>decode-uri-component": true,
+        "resolve-url-loader>rework>css>source-map-resolve>source-map-url": true,
+        "resolve-url-loader>rework>css>urix": true
+      }
+    },
+    "gulp-watch>chokidar>braces>snapdragon>use": {
+      "packages": {
+        "@babel/register>clone-deep>kind-of": true
+      }
+    },
+    "gulp-watch>chokidar>braces>split-string": {
+      "packages": {
+        "gulp-zip>plugin-error>extend-shallow": true
+      }
+    },
+    "gulp-watch>chokidar>braces>to-regex": {
+      "packages": {
+        "gulp-watch>chokidar>braces>to-regex>define-property": true,
+        "gulp-watch>chokidar>braces>to-regex>safe-regex": true,
+        "gulp-zip>plugin-error>extend-shallow": true,
+        "gulp>gulp-cli>matchdep>micromatch>regex-not": true
+      }
+    },
+    "gulp-watch>chokidar>braces>to-regex>define-property": {
+      "packages": {
+        "gulp-watch>chokidar>braces>to-regex>define-property>is-descriptor": true,
+        "gulp>gulp-cli>isobject": true
+      }
+    },
+    "gulp-watch>chokidar>braces>to-regex>define-property>is-descriptor": {
+      "packages": {
+        "@babel/register>clone-deep>kind-of": true,
+        "gulp-watch>chokidar>braces>to-regex>define-property>is-descriptor>is-accessor-descriptor": true,
+        "gulp-watch>chokidar>braces>to-regex>define-property>is-descriptor>is-data-descriptor": true
+      }
+    },
+    "gulp-watch>chokidar>braces>to-regex>define-property>is-descriptor>is-accessor-descriptor": {
+      "packages": {
+        "@babel/register>clone-deep>kind-of": true
+      }
+    },
+    "gulp-watch>chokidar>braces>to-regex>define-property>is-descriptor>is-data-descriptor": {
+      "packages": {
+        "@babel/register>clone-deep>kind-of": true
+      }
+    },
+    "gulp-watch>chokidar>braces>to-regex>safe-regex": {
+      "packages": {
+        "enzyme>rst-selector-parser>nearley>randexp>ret": true
       }
     },
     "gulp-watch>chokidar>fsevents": {
@@ -4921,9 +5149,156 @@
         "setImmediate": true
       },
       "packages": {
-        "fs-extra>graceful-fs": true,
+        "gulp-watch>chokidar>readdirp>micromatch": true,
         "readable-stream": true,
-        "webpack>micromatch": true
+        "webpack>graceful-fs": true
+      }
+    },
+    "gulp-watch>chokidar>readdirp>micromatch": {
+      "builtin": {
+        "path.basename": true,
+        "path.sep": true,
+        "util.inspect": true
+      },
+      "globals": {
+        "process.platform": true
+      },
+      "packages": {
+        "@babel/register>clone-deep>kind-of": true,
+        "gulp-watch>chokidar>braces": true,
+        "gulp-watch>chokidar>braces>array-unique": true,
+        "gulp-watch>chokidar>braces>snapdragon": true,
+        "gulp-watch>chokidar>braces>to-regex": true,
+        "gulp-watch>chokidar>readdirp>micromatch>define-property": true,
+        "gulp-watch>chokidar>readdirp>micromatch>extend-shallow": true,
+        "gulp-watch>chokidar>readdirp>micromatch>extglob": true,
+        "gulp-zip>plugin-error>arr-diff": true,
+        "gulp>gulp-cli>liftoff>fined>object.pick": true,
+        "gulp>gulp-cli>matchdep>micromatch>fragment-cache": true,
+        "gulp>gulp-cli>matchdep>micromatch>nanomatch": true,
+        "gulp>gulp-cli>matchdep>micromatch>regex-not": true
+      }
+    },
+    "gulp-watch>chokidar>readdirp>micromatch>define-property": {
+      "packages": {
+        "gulp-watch>chokidar>readdirp>micromatch>define-property>is-descriptor": true,
+        "gulp>gulp-cli>isobject": true
+      }
+    },
+    "gulp-watch>chokidar>readdirp>micromatch>define-property>is-descriptor": {
+      "packages": {
+        "@babel/register>clone-deep>kind-of": true,
+        "gulp-watch>chokidar>readdirp>micromatch>define-property>is-descriptor>is-accessor-descriptor": true,
+        "gulp-watch>chokidar>readdirp>micromatch>define-property>is-descriptor>is-data-descriptor": true
+      }
+    },
+    "gulp-watch>chokidar>readdirp>micromatch>define-property>is-descriptor>is-accessor-descriptor": {
+      "packages": {
+        "@babel/register>clone-deep>kind-of": true
+      }
+    },
+    "gulp-watch>chokidar>readdirp>micromatch>define-property>is-descriptor>is-data-descriptor": {
+      "packages": {
+        "@babel/register>clone-deep>kind-of": true
+      }
+    },
+    "gulp-watch>chokidar>readdirp>micromatch>extend-shallow": {
+      "packages": {
+        "gulp-watch>chokidar>readdirp>micromatch>extend-shallow>is-extendable": true,
+        "gulp-zip>plugin-error>extend-shallow>assign-symbols": true
+      }
+    },
+    "gulp-watch>chokidar>readdirp>micromatch>extend-shallow>is-extendable": {
+      "packages": {
+        "gulp-watch>chokidar>readdirp>micromatch>extend-shallow>is-extendable>is-plain-object": true
+      }
+    },
+    "gulp-watch>chokidar>readdirp>micromatch>extend-shallow>is-extendable>is-plain-object": {
+      "packages": {
+        "gulp>gulp-cli>isobject": true
+      }
+    },
+    "gulp-watch>chokidar>readdirp>micromatch>extglob": {
+      "packages": {
+        "gulp-watch>chokidar>braces>array-unique": true,
+        "gulp-watch>chokidar>braces>extend-shallow": true,
+        "gulp-watch>chokidar>braces>snapdragon": true,
+        "gulp-watch>chokidar>braces>to-regex": true,
+        "gulp-watch>chokidar>readdirp>micromatch>extglob>define-property": true,
+        "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets": true,
+        "gulp>gulp-cli>matchdep>micromatch>fragment-cache": true,
+        "gulp>gulp-cli>matchdep>micromatch>regex-not": true
+      }
+    },
+    "gulp-watch>chokidar>readdirp>micromatch>extglob>define-property": {
+      "packages": {
+        "gulp-watch>chokidar>readdirp>micromatch>define-property>is-descriptor": true
+      }
+    },
+    "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets": {
+      "globals": {
+        "__filename": true
+      },
+      "packages": {
+        "gulp-watch>chokidar>braces>extend-shallow": true,
+        "gulp-watch>chokidar>braces>snapdragon": true,
+        "gulp-watch>chokidar>braces>to-regex": true,
+        "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>debug": true,
+        "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>define-property": true,
+        "gulp>gulp-cli>matchdep>micromatch>extglob>expand-brackets>posix-character-classes": true,
+        "gulp>gulp-cli>matchdep>micromatch>regex-not": true
+      }
+    },
+    "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>debug": {
+      "builtin": {
+        "fs.SyncWriteStream": true,
+        "net.Socket": true,
+        "tty.WriteStream": true,
+        "tty.isatty": true,
+        "util": true
+      },
+      "globals": {
+        "chrome": true,
+        "console": true,
+        "document": true,
+        "localStorage": true,
+        "navigator": true,
+        "process": true
+      },
+      "packages": {
+        "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>debug>ms": true
+      }
+    },
+    "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>define-property": {
+      "packages": {
+        "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>define-property>is-descriptor": true
+      }
+    },
+    "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>define-property>is-descriptor": {
+      "packages": {
+        "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-accessor-descriptor": true,
+        "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-data-descriptor": true,
+        "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>define-property>is-descriptor>kind-of": true
+      }
+    },
+    "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-accessor-descriptor": {
+      "packages": {
+        "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-accessor-descriptor>kind-of": true
+      }
+    },
+    "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-accessor-descriptor>kind-of": {
+      "packages": {
+        "browserify>insert-module-globals>is-buffer": true
+      }
+    },
+    "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-data-descriptor": {
+      "packages": {
+        "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-data-descriptor>kind-of": true
+      }
+    },
+    "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-data-descriptor>kind-of": {
+      "packages": {
+        "browserify>insert-module-globals>is-buffer": true
       }
     },
     "gulp-watch>chokidar>upath": {
@@ -4982,11 +5357,11 @@
       },
       "packages": {
         "del>globby>pinkie-promise": true,
-        "fs-extra>graceful-fs": true,
         "gulp-watch>vinyl-file>pify": true,
         "gulp-watch>vinyl-file>strip-bom": true,
         "gulp-watch>vinyl-file>strip-bom-stream": true,
-        "gulp-watch>vinyl-file>vinyl": true
+        "gulp-watch>vinyl-file>vinyl": true,
+        "webpack>graceful-fs": true
       }
     },
     "gulp-watch>vinyl-file>strip-bom": {
@@ -5059,9 +5434,25 @@
       },
       "packages": {
         "gulp-watch>ansi-colors": true,
+        "gulp-zip>plugin-error>arr-diff": true,
         "gulp-zip>plugin-error>arr-union": true,
-        "webpack>micromatch>arr-diff": true,
-        "webpack>micromatch>extend-shallow": true
+        "gulp-zip>plugin-error>extend-shallow": true
+      }
+    },
+    "gulp-zip>plugin-error>extend-shallow": {
+      "packages": {
+        "gulp-zip>plugin-error>extend-shallow>assign-symbols": true,
+        "gulp-zip>plugin-error>extend-shallow>is-extendable": true
+      }
+    },
+    "gulp-zip>plugin-error>extend-shallow>is-extendable": {
+      "packages": {
+        "gulp-zip>plugin-error>extend-shallow>is-extendable>is-plain-object": true
+      }
+    },
+    "gulp-zip>plugin-error>extend-shallow>is-extendable>is-plain-object": {
+      "packages": {
+        "gulp>gulp-cli>isobject": true
       }
     },
     "gulp>glob-watcher": {
@@ -5079,14 +5470,158 @@
         "path.sep": true
       },
       "packages": {
-        "mock-require>normalize-path": true,
-        "webpack>micromatch": true
+        "gulp>glob-watcher>anymatch>micromatch": true,
+        "mock-require>normalize-path": true
+      }
+    },
+    "gulp>glob-watcher>anymatch>micromatch": {
+      "builtin": {
+        "path.basename": true,
+        "path.sep": true,
+        "util.inspect": true
+      },
+      "globals": {
+        "process.platform": true
+      },
+      "packages": {
+        "@babel/register>clone-deep>kind-of": true,
+        "gulp-watch>chokidar>braces>snapdragon": true,
+        "gulp-watch>chokidar>braces>to-regex": true,
+        "gulp-zip>plugin-error>arr-diff": true,
+        "gulp>glob-watcher>anymatch>micromatch>define-property": true,
+        "gulp>glob-watcher>anymatch>micromatch>extend-shallow": true,
+        "gulp>glob-watcher>anymatch>micromatch>extglob": true,
+        "gulp>glob-watcher>chokidar>braces": true,
+        "gulp>glob-watcher>chokidar>braces>array-unique": true,
+        "gulp>gulp-cli>liftoff>fined>object.pick": true,
+        "gulp>gulp-cli>matchdep>micromatch>fragment-cache": true,
+        "gulp>gulp-cli>matchdep>micromatch>nanomatch": true,
+        "gulp>gulp-cli>matchdep>micromatch>regex-not": true
+      }
+    },
+    "gulp>glob-watcher>anymatch>micromatch>define-property": {
+      "packages": {
+        "gulp>glob-watcher>anymatch>micromatch>define-property>is-descriptor": true,
+        "gulp>gulp-cli>isobject": true
+      }
+    },
+    "gulp>glob-watcher>anymatch>micromatch>define-property>is-descriptor": {
+      "packages": {
+        "@babel/register>clone-deep>kind-of": true,
+        "gulp>glob-watcher>anymatch>micromatch>define-property>is-descriptor>is-accessor-descriptor": true,
+        "gulp>glob-watcher>anymatch>micromatch>define-property>is-descriptor>is-data-descriptor": true
+      }
+    },
+    "gulp>glob-watcher>anymatch>micromatch>define-property>is-descriptor>is-accessor-descriptor": {
+      "packages": {
+        "@babel/register>clone-deep>kind-of": true
+      }
+    },
+    "gulp>glob-watcher>anymatch>micromatch>define-property>is-descriptor>is-data-descriptor": {
+      "packages": {
+        "@babel/register>clone-deep>kind-of": true
+      }
+    },
+    "gulp>glob-watcher>anymatch>micromatch>extend-shallow": {
+      "packages": {
+        "gulp-zip>plugin-error>extend-shallow>assign-symbols": true,
+        "gulp>glob-watcher>anymatch>micromatch>extend-shallow>is-extendable": true
+      }
+    },
+    "gulp>glob-watcher>anymatch>micromatch>extend-shallow>is-extendable": {
+      "packages": {
+        "gulp>glob-watcher>anymatch>micromatch>extend-shallow>is-extendable>is-plain-object": true
+      }
+    },
+    "gulp>glob-watcher>anymatch>micromatch>extend-shallow>is-extendable>is-plain-object": {
+      "packages": {
+        "gulp>gulp-cli>isobject": true
+      }
+    },
+    "gulp>glob-watcher>anymatch>micromatch>extglob": {
+      "packages": {
+        "gulp-watch>chokidar>braces>snapdragon": true,
+        "gulp-watch>chokidar>braces>to-regex": true,
+        "gulp>glob-watcher>anymatch>micromatch>extglob>define-property": true,
+        "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets": true,
+        "gulp>glob-watcher>chokidar>braces>array-unique": true,
+        "gulp>glob-watcher>chokidar>braces>extend-shallow": true,
+        "gulp>gulp-cli>matchdep>micromatch>fragment-cache": true,
+        "gulp>gulp-cli>matchdep>micromatch>regex-not": true
+      }
+    },
+    "gulp>glob-watcher>anymatch>micromatch>extglob>define-property": {
+      "packages": {
+        "gulp>glob-watcher>anymatch>micromatch>define-property>is-descriptor": true
+      }
+    },
+    "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets": {
+      "globals": {
+        "__filename": true
+      },
+      "packages": {
+        "gulp-watch>chokidar>braces>snapdragon": true,
+        "gulp-watch>chokidar>braces>to-regex": true,
+        "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets>debug": true,
+        "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets>define-property": true,
+        "gulp>glob-watcher>chokidar>braces>extend-shallow": true,
+        "gulp>gulp-cli>matchdep>micromatch>extglob>expand-brackets>posix-character-classes": true,
+        "gulp>gulp-cli>matchdep>micromatch>regex-not": true
+      }
+    },
+    "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets>debug": {
+      "builtin": {
+        "fs.SyncWriteStream": true,
+        "net.Socket": true,
+        "tty.WriteStream": true,
+        "tty.isatty": true,
+        "util": true
+      },
+      "globals": {
+        "chrome": true,
+        "console": true,
+        "document": true,
+        "localStorage": true,
+        "navigator": true,
+        "process": true
+      },
+      "packages": {
+        "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets>debug>ms": true
+      }
+    },
+    "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets>define-property": {
+      "packages": {
+        "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets>define-property>is-descriptor": true
+      }
+    },
+    "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets>define-property>is-descriptor": {
+      "packages": {
+        "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-accessor-descriptor": true,
+        "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-data-descriptor": true,
+        "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets>define-property>is-descriptor>kind-of": true
+      }
+    },
+    "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-accessor-descriptor": {
+      "packages": {
+        "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-accessor-descriptor>kind-of": true
+      }
+    },
+    "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-accessor-descriptor>kind-of": {
+      "packages": {
+        "browserify>insert-module-globals>is-buffer": true
+      }
+    },
+    "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-data-descriptor": {
+      "packages": {
+        "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-data-descriptor>kind-of": true
+      }
+    },
+    "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-data-descriptor>kind-of": {
+      "packages": {
+        "browserify>insert-module-globals>is-buffer": true
       }
     },
     "gulp>glob-watcher>async-done": {
-      "builtin": {
-        "domain.create": true
-      },
       "globals": {
         "process.nextTick": true
       },
@@ -5145,16 +5680,16 @@
     },
     "gulp>glob-watcher>chokidar>braces": {
       "packages": {
+        "gulp-watch>chokidar>braces>repeat-element": true,
+        "gulp-watch>chokidar>braces>snapdragon": true,
+        "gulp-watch>chokidar>braces>snapdragon-node": true,
+        "gulp-watch>chokidar>braces>split-string": true,
+        "gulp-watch>chokidar>braces>to-regex": true,
+        "gulp>glob-watcher>chokidar>braces>array-unique": true,
         "gulp>glob-watcher>chokidar>braces>extend-shallow": true,
         "gulp>glob-watcher>chokidar>braces>fill-range": true,
         "gulp>gulp-cli>isobject": true,
-        "gulp>undertaker>arr-flatten": true,
-        "webpack>micromatch>array-unique": true,
-        "webpack>micromatch>braces>repeat-element": true,
-        "webpack>micromatch>braces>snapdragon-node": true,
-        "webpack>micromatch>braces>split-string": true,
-        "webpack>micromatch>snapdragon": true,
-        "webpack>micromatch>to-regex": true
+        "gulp>undertaker>arr-flatten": true
       }
     },
     "gulp>glob-watcher>chokidar>braces>extend-shallow": {
@@ -5167,16 +5702,16 @@
         "util.inspect": true
       },
       "packages": {
+        "gulp-watch>chokidar>braces>fill-range>is-number": true,
         "gulp>glob-watcher>chokidar>braces>extend-shallow": true,
         "gulp>glob-watcher>chokidar>braces>fill-range>to-regex-range": true,
-        "webpack>micromatch>braces>fill-range>is-number": true,
-        "webpack>micromatch>braces>fill-range>repeat-string": true
+        "stylelint>@stylelint/postcss-markdown>remark>remark-parse>repeat-string": true
       }
     },
     "gulp>glob-watcher>chokidar>braces>fill-range>to-regex-range": {
       "packages": {
-        "webpack>micromatch>braces>fill-range>is-number": true,
-        "webpack>micromatch>braces>fill-range>repeat-string": true
+        "gulp-watch>chokidar>braces>fill-range>is-number": true,
+        "stylelint>@stylelint/postcss-markdown>remark>remark-parse>repeat-string": true
       }
     },
     "gulp>glob-watcher>chokidar>fsevents": {
@@ -5580,9 +6115,9 @@
         "setImmediate": true
       },
       "packages": {
-        "fs-extra>graceful-fs": true,
+        "gulp>glob-watcher>anymatch>micromatch": true,
         "readable-stream": true,
-        "webpack>micromatch": true
+        "webpack>graceful-fs": true
       }
     },
     "gulp>glob-watcher>chokidar>upath": {
@@ -5594,6 +6129,71 @@
       "globals": {
         "clearTimeout": true,
         "setTimeout": true
+      }
+    },
+    "gulp>gulp-cli>liftoff>fined>object.pick": {
+      "packages": {
+        "gulp>gulp-cli>isobject": true
+      }
+    },
+    "gulp>gulp-cli>matchdep>micromatch>fragment-cache": {
+      "packages": {
+        "gulp-watch>chokidar>braces>snapdragon>map-cache": true
+      }
+    },
+    "gulp>gulp-cli>matchdep>micromatch>nanomatch": {
+      "builtin": {
+        "path.basename": true,
+        "path.sep": true,
+        "util.inspect": true
+      },
+      "packages": {
+        "@babel/register>clone-deep>kind-of": true,
+        "gulp-watch>chokidar>braces>snapdragon": true,
+        "gulp-watch>chokidar>braces>to-regex": true,
+        "gulp-zip>plugin-error>arr-diff": true,
+        "gulp-zip>plugin-error>extend-shallow": true,
+        "gulp>gulp-cli>liftoff>fined>object.pick": true,
+        "gulp>gulp-cli>matchdep>micromatch>fragment-cache": true,
+        "gulp>gulp-cli>matchdep>micromatch>nanomatch>array-unique": true,
+        "gulp>gulp-cli>matchdep>micromatch>nanomatch>define-property": true,
+        "gulp>gulp-cli>matchdep>micromatch>nanomatch>is-odd": true,
+        "gulp>gulp-cli>matchdep>micromatch>regex-not": true,
+        "nyc>spawn-wrap>is-windows": true
+      }
+    },
+    "gulp>gulp-cli>matchdep>micromatch>nanomatch>define-property": {
+      "packages": {
+        "gulp>gulp-cli>isobject": true,
+        "gulp>gulp-cli>matchdep>micromatch>nanomatch>define-property>is-descriptor": true
+      }
+    },
+    "gulp>gulp-cli>matchdep>micromatch>nanomatch>define-property>is-descriptor": {
+      "packages": {
+        "@babel/register>clone-deep>kind-of": true,
+        "gulp>gulp-cli>matchdep>micromatch>nanomatch>define-property>is-descriptor>is-accessor-descriptor": true,
+        "gulp>gulp-cli>matchdep>micromatch>nanomatch>define-property>is-descriptor>is-data-descriptor": true
+      }
+    },
+    "gulp>gulp-cli>matchdep>micromatch>nanomatch>define-property>is-descriptor>is-accessor-descriptor": {
+      "packages": {
+        "@babel/register>clone-deep>kind-of": true
+      }
+    },
+    "gulp>gulp-cli>matchdep>micromatch>nanomatch>define-property>is-descriptor>is-data-descriptor": {
+      "packages": {
+        "@babel/register>clone-deep>kind-of": true
+      }
+    },
+    "gulp>gulp-cli>matchdep>micromatch>nanomatch>is-odd": {
+      "packages": {
+        "gulp>gulp-cli>matchdep>micromatch>nanomatch>is-odd>is-number": true
+      }
+    },
+    "gulp>gulp-cli>matchdep>micromatch>regex-not": {
+      "packages": {
+        "gulp-watch>chokidar>braces>to-regex>safe-regex": true,
+        "gulp-zip>plugin-error>extend-shallow": true
       }
     },
     "gulp>gulp-cli>replace-homedir>is-absolute": {
@@ -5642,7 +6242,7 @@
     },
     "gulp>undertaker>arr-map>make-iterator": {
       "packages": {
-        "webpack>micromatch>kind-of": true
+        "@babel/register>clone-deep>kind-of": true
       }
     },
     "gulp>undertaker>bach": {
@@ -5745,13 +6345,12 @@
         "process.nextTick": true
       },
       "packages": {
-        "enzyme>object.assign": true,
-        "fs-extra>graceful-fs": true,
         "gulp>vinyl-fs>fs-mkdirp-stream": true,
         "gulp>vinyl-fs>glob-stream": true,
         "gulp>vinyl-fs>is-valid-glob": true,
         "gulp>vinyl-fs>lazystream": true,
         "gulp>vinyl-fs>lead": true,
+        "gulp>vinyl-fs>object.assign": true,
         "gulp>vinyl-fs>pumpify": true,
         "gulp>vinyl-fs>remove-bom-buffer": true,
         "gulp>vinyl-fs>remove-bom-stream": true,
@@ -5761,7 +6360,8 @@
         "gulp>vinyl-fs>value-or-function": true,
         "gulp>vinyl-fs>vinyl-sourcemap": true,
         "readable-stream": true,
-        "vinyl": true
+        "vinyl": true,
+        "webpack>graceful-fs": true
       }
     },
     "gulp>vinyl-fs>fs-mkdirp-stream": {
@@ -5773,8 +6373,8 @@
         "process.umask": true
       },
       "packages": {
-        "fs-extra>graceful-fs": true,
-        "gulp>vinyl-fs>fs-mkdirp-stream>through2": true
+        "gulp>vinyl-fs>fs-mkdirp-stream>through2": true,
+        "webpack>graceful-fs": true
       }
     },
     "gulp>vinyl-fs>fs-mkdirp-stream>through2": {
@@ -5943,6 +6543,14 @@
         "readable-stream": true
       }
     },
+    "gulp>vinyl-fs>object.assign": {
+      "packages": {
+        "globalthis>define-properties": true,
+        "mocha>object.assign>object-keys": true,
+        "string.prototype.matchall>call-bind": true,
+        "string.prototype.matchall>has-symbols": true
+      }
+    },
     "gulp>vinyl-fs>pumpify": {
       "packages": {
         "gulp>vinyl-fs>pumpify>duplexify": true,
@@ -6041,13 +6649,13 @@
         "Buffer": true
       },
       "packages": {
-        "fs-extra>graceful-fs": true,
         "gulp>vinyl-fs>remove-bom-buffer": true,
         "gulp>vinyl-fs>vinyl-sourcemap>append-buffer": true,
         "gulp>vinyl-fs>vinyl-sourcemap>convert-source-map": true,
         "gulp>vinyl-fs>vinyl-sourcemap>now-and-later": true,
         "mock-require>normalize-path": true,
-        "vinyl": true
+        "vinyl": true,
+        "webpack>graceful-fs": true
       }
     },
     "gulp>vinyl-fs>vinyl-sourcemap>append-buffer": {
@@ -6238,8 +6846,8 @@
       },
       "packages": {
         "lavamoat>@babel/highlight>chalk>ansi-styles": true,
-        "lavamoat>@babel/highlight>chalk>escape-string-regexp": true,
-        "lavamoat>@babel/highlight>chalk>supports-color": true
+        "lavamoat>@babel/highlight>chalk>supports-color": true,
+        "mocha>escape-string-regexp": true
       }
     },
     "lavamoat>@babel/highlight>chalk>ansi-styles": {
@@ -6259,7 +6867,7 @@
         "process.versions.node.split": true
       },
       "packages": {
-        "concurrently>supports-color>has-flag": true
+        "mocha>supports-color>has-flag": true
       }
     },
     "lavamoat>@lavamoat/aa": {
@@ -6383,12 +6991,14 @@
     },
     "mocha>supports-color": {
       "builtin": {
-        "os.release": true,
-        "tty.isatty": true
+        "os.release": true
       },
       "globals": {
         "process.env": true,
-        "process.platform": true
+        "process.platform": true,
+        "process.stderr": true,
+        "process.stdout": true,
+        "process.versions.node.split": true
       },
       "packages": {
         "mocha>supports-color>has-flag": true
@@ -6397,21 +7007,6 @@
     "mocha>supports-color>has-flag": {
       "globals": {
         "process.argv": true
-      }
-    },
-    "mocha>which": {
-      "builtin": {
-        "path.join": true
-      },
-      "globals": {
-        "process.cwd": true,
-        "process.env.OSTYPE": true,
-        "process.env.PATH": true,
-        "process.env.PATHEXT": true,
-        "process.platform": true
-      },
-      "packages": {
-        "mocha>which>isexe": true
       }
     },
     "mocha>which>isexe": {
@@ -6634,6 +7229,11 @@
         "resolve-url-loader>es6-iterator>d": true
       }
     },
+    "resolve-url-loader>rework>css>source-map-resolve>source-map-url": {
+      "globals": {
+        "define": true
+      }
+    },
     "resolve-url-loader>rework>css>urix": {
       "builtin": {
         "path.sep": true
@@ -6716,7 +7316,7 @@
     },
     "string.prototype.matchall>call-bind": {
       "packages": {
-        "enzyme>has>function-bind": true,
+        "mocha>object.assign>function-bind": true,
         "string.prototype.matchall>get-intrinsic": true
       }
     },
@@ -6750,7 +7350,7 @@
       },
       "packages": {
         "enzyme>has": true,
-        "enzyme>has>function-bind": true,
+        "mocha>object.assign>function-bind": true,
         "string.prototype.matchall>has-symbols": true
       }
     },
@@ -6773,6 +7373,15 @@
         "enzyme>object-inspect": true,
         "string.prototype.matchall>call-bind": true,
         "string.prototype.matchall>get-intrinsic": true
+      }
+    },
+    "stylelint>micromatch": {
+      "builtin": {
+        "util.inspect": true
+      },
+      "packages": {
+        "chokidar>braces": true,
+        "depcheck>readdirp>picomatch": true
       }
     },
     "stylelint>postcss>picocolors": {
@@ -7072,637 +7681,58 @@
         "eth-rpc-errors>fast-safe-stringify": true
       }
     },
-    "webpack>micromatch": {
+    "webpack>browserslist": {
       "builtin": {
-        "path.basename": true,
-        "path.sep": true,
-        "util.inspect": true
-      },
-      "globals": {
-        "process.platform": true
-      },
-      "packages": {
-        "webpack>micromatch>arr-diff": true,
-        "webpack>micromatch>array-unique": true,
-        "webpack>micromatch>braces": true,
-        "webpack>micromatch>define-property": true,
-        "webpack>micromatch>extend-shallow": true,
-        "webpack>micromatch>extglob": true,
-        "webpack>micromatch>fragment-cache": true,
-        "webpack>micromatch>kind-of": true,
-        "webpack>micromatch>nanomatch": true,
-        "webpack>micromatch>object.pick": true,
-        "webpack>micromatch>regex-not": true,
-        "webpack>micromatch>snapdragon": true,
-        "webpack>micromatch>to-regex": true
-      }
-    },
-    "webpack>micromatch>braces": {
-      "packages": {
-        "gulp>gulp-cli>isobject": true,
-        "gulp>undertaker>arr-flatten": true,
-        "webpack>micromatch>array-unique": true,
-        "webpack>micromatch>braces>extend-shallow": true,
-        "webpack>micromatch>braces>fill-range": true,
-        "webpack>micromatch>braces>repeat-element": true,
-        "webpack>micromatch>braces>snapdragon-node": true,
-        "webpack>micromatch>braces>split-string": true,
-        "webpack>micromatch>snapdragon": true,
-        "webpack>micromatch>to-regex": true
-      }
-    },
-    "webpack>micromatch>braces>extend-shallow": {
-      "packages": {
-        "webpack>micromatch>braces>extend-shallow>is-extendable": true
-      }
-    },
-    "webpack>micromatch>braces>fill-range": {
-      "builtin": {
-        "util.inspect": true
-      },
-      "packages": {
-        "webpack>micromatch>braces>fill-range>extend-shallow": true,
-        "webpack>micromatch>braces>fill-range>is-number": true,
-        "webpack>micromatch>braces>fill-range>repeat-string": true,
-        "webpack>micromatch>braces>fill-range>to-regex-range": true
-      }
-    },
-    "webpack>micromatch>braces>fill-range>extend-shallow": {
-      "packages": {
-        "webpack>micromatch>braces>extend-shallow>is-extendable": true
-      }
-    },
-    "webpack>micromatch>braces>fill-range>is-number": {
-      "packages": {
-        "webpack>micromatch>braces>fill-range>is-number>kind-of": true
-      }
-    },
-    "webpack>micromatch>braces>fill-range>is-number>kind-of": {
-      "packages": {
-        "browserify>insert-module-globals>is-buffer": true
-      }
-    },
-    "webpack>micromatch>braces>fill-range>to-regex-range": {
-      "packages": {
-        "webpack>micromatch>braces>fill-range>is-number": true,
-        "webpack>micromatch>braces>fill-range>repeat-string": true
-      }
-    },
-    "webpack>micromatch>braces>snapdragon-node": {
-      "packages": {
-        "gulp>gulp-cli>isobject": true,
-        "webpack>micromatch>braces>snapdragon-node>define-property": true,
-        "webpack>micromatch>braces>snapdragon-node>snapdragon-util": true
-      }
-    },
-    "webpack>micromatch>braces>snapdragon-node>define-property": {
-      "packages": {
-        "webpack>micromatch>define-property>is-descriptor": true
-      }
-    },
-    "webpack>micromatch>braces>snapdragon-node>snapdragon-util": {
-      "packages": {
-        "webpack>micromatch>braces>snapdragon-node>snapdragon-util>kind-of": true
-      }
-    },
-    "webpack>micromatch>braces>snapdragon-node>snapdragon-util>kind-of": {
-      "packages": {
-        "browserify>insert-module-globals>is-buffer": true
-      }
-    },
-    "webpack>micromatch>braces>split-string": {
-      "packages": {
-        "webpack>micromatch>extend-shallow": true
-      }
-    },
-    "webpack>micromatch>define-property": {
-      "packages": {
-        "gulp>gulp-cli>isobject": true,
-        "webpack>micromatch>define-property>is-descriptor": true
-      }
-    },
-    "webpack>micromatch>define-property>is-descriptor": {
-      "packages": {
-        "webpack>micromatch>define-property>is-descriptor>is-accessor-descriptor": true,
-        "webpack>micromatch>define-property>is-descriptor>is-data-descriptor": true,
-        "webpack>micromatch>kind-of": true
-      }
-    },
-    "webpack>micromatch>define-property>is-descriptor>is-accessor-descriptor": {
-      "packages": {
-        "webpack>micromatch>kind-of": true
-      }
-    },
-    "webpack>micromatch>define-property>is-descriptor>is-data-descriptor": {
-      "packages": {
-        "webpack>micromatch>kind-of": true
-      }
-    },
-    "webpack>micromatch>extend-shallow": {
-      "packages": {
-        "webpack>micromatch>extend-shallow>assign-symbols": true,
-        "webpack>micromatch>extend-shallow>is-extendable": true
-      }
-    },
-    "webpack>micromatch>extend-shallow>is-extendable": {
-      "packages": {
-        "webpack>micromatch>extend-shallow>is-extendable>is-plain-object": true
-      }
-    },
-    "webpack>micromatch>extend-shallow>is-extendable>is-plain-object": {
-      "packages": {
-        "gulp>gulp-cli>isobject": true
-      }
-    },
-    "webpack>micromatch>extglob": {
-      "packages": {
-        "webpack>micromatch>array-unique": true,
-        "webpack>micromatch>extglob>define-property": true,
-        "webpack>micromatch>extglob>expand-brackets": true,
-        "webpack>micromatch>extglob>extend-shallow": true,
-        "webpack>micromatch>fragment-cache": true,
-        "webpack>micromatch>regex-not": true,
-        "webpack>micromatch>snapdragon": true,
-        "webpack>micromatch>to-regex": true
-      }
-    },
-    "webpack>micromatch>extglob>define-property": {
-      "packages": {
-        "webpack>micromatch>define-property>is-descriptor": true
-      }
-    },
-    "webpack>micromatch>extglob>expand-brackets": {
-      "globals": {
-        "__filename": true
-      },
-      "packages": {
-        "webpack>micromatch>extglob>expand-brackets>debug": true,
-        "webpack>micromatch>extglob>expand-brackets>define-property": true,
-        "webpack>micromatch>extglob>expand-brackets>posix-character-classes": true,
-        "webpack>micromatch>extglob>extend-shallow": true,
-        "webpack>micromatch>regex-not": true,
-        "webpack>micromatch>snapdragon": true,
-        "webpack>micromatch>to-regex": true
-      }
-    },
-    "webpack>micromatch>extglob>expand-brackets>debug": {
-      "builtin": {
-        "fs.SyncWriteStream": true,
-        "net.Socket": true,
-        "tty.WriteStream": true,
-        "tty.isatty": true,
-        "util": true
-      },
-      "globals": {
-        "chrome": true,
-        "console": true,
-        "document": true,
-        "localStorage": true,
-        "navigator": true,
-        "process": true
-      },
-      "packages": {
-        "webpack>micromatch>extglob>expand-brackets>debug>ms": true
-      }
-    },
-    "webpack>micromatch>extglob>expand-brackets>define-property": {
-      "packages": {
-        "webpack>micromatch>extglob>expand-brackets>define-property>is-descriptor": true
-      }
-    },
-    "webpack>micromatch>extglob>expand-brackets>define-property>is-descriptor": {
-      "packages": {
-        "webpack>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-accessor-descriptor": true,
-        "webpack>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-data-descriptor": true,
-        "webpack>micromatch>extglob>expand-brackets>define-property>is-descriptor>kind-of": true
-      }
-    },
-    "webpack>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-accessor-descriptor": {
-      "packages": {
-        "webpack>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-accessor-descriptor>kind-of": true
-      }
-    },
-    "webpack>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-accessor-descriptor>kind-of": {
-      "packages": {
-        "browserify>insert-module-globals>is-buffer": true
-      }
-    },
-    "webpack>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-data-descriptor": {
-      "packages": {
-        "webpack>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-data-descriptor>kind-of": true
-      }
-    },
-    "webpack>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-data-descriptor>kind-of": {
-      "packages": {
-        "browserify>insert-module-globals>is-buffer": true
-      }
-    },
-    "webpack>micromatch>extglob>extend-shallow": {
-      "packages": {
-        "webpack>micromatch>extglob>extend-shallow>is-extendable": true
-      }
-    },
-    "webpack>micromatch>fragment-cache": {
-      "packages": {
-        "webpack>micromatch>snapdragon>map-cache": true
-      }
-    },
-    "webpack>micromatch>nanomatch": {
-      "builtin": {
-        "path.basename": true,
-        "path.sep": true,
-        "util.inspect": true
-      },
-      "packages": {
-        "nyc>spawn-wrap>is-windows": true,
-        "webpack>micromatch>arr-diff": true,
-        "webpack>micromatch>array-unique": true,
-        "webpack>micromatch>define-property": true,
-        "webpack>micromatch>extend-shallow": true,
-        "webpack>micromatch>fragment-cache": true,
-        "webpack>micromatch>kind-of": true,
-        "webpack>micromatch>nanomatch>is-odd": true,
-        "webpack>micromatch>object.pick": true,
-        "webpack>micromatch>regex-not": true,
-        "webpack>micromatch>snapdragon": true,
-        "webpack>micromatch>to-regex": true
-      }
-    },
-    "webpack>micromatch>nanomatch>is-odd": {
-      "packages": {
-        "webpack>micromatch>nanomatch>is-odd>is-number": true
-      }
-    },
-    "webpack>micromatch>object.pick": {
-      "packages": {
-        "gulp>gulp-cli>isobject": true
-      }
-    },
-    "webpack>micromatch>regex-not": {
-      "packages": {
-        "webpack>micromatch>extend-shallow": true,
-        "webpack>micromatch>to-regex>safe-regex": true
-      }
-    },
-    "webpack>micromatch>snapdragon": {
-      "builtin": {
+        "fs.existsSync": true,
         "fs.readFileSync": true,
+        "fs.statSync": true,
+        "path.basename": true,
         "path.dirname": true,
-        "util.inspect": true
+        "path.join": true,
+        "path.resolve": true
       },
       "globals": {
-        "__filename": true
+        "console.warn": true,
+        "process.env.BROWSERSLIST": true,
+        "process.env.BROWSERSLIST_CONFIG": true,
+        "process.env.BROWSERSLIST_DANGEROUS_EXTEND": true,
+        "process.env.BROWSERSLIST_DISABLE_CACHE": true,
+        "process.env.BROWSERSLIST_ENV": true,
+        "process.env.BROWSERSLIST_IGNORE_OLD_DATA": true,
+        "process.env.BROWSERSLIST_STATS": true,
+        "process.env.NODE_ENV": true,
+        "process.versions.node": true
       },
       "packages": {
-        "webpack>micromatch>snapdragon>base": true,
-        "webpack>micromatch>snapdragon>debug": true,
-        "webpack>micromatch>snapdragon>define-property": true,
-        "webpack>micromatch>snapdragon>extend-shallow": true,
-        "webpack>micromatch>snapdragon>map-cache": true,
-        "webpack>micromatch>snapdragon>source-map": true,
-        "webpack>micromatch>snapdragon>source-map-resolve": true,
-        "webpack>micromatch>snapdragon>use": true
+        "webpack>browserslist>caniuse-lite": true,
+        "webpack>browserslist>electron-to-chromium": true,
+        "webpack>browserslist>node-releases": true
       }
     },
-    "webpack>micromatch>snapdragon>base": {
+    "webpack>eslint-scope": {
       "builtin": {
-        "util.inherits": true
+        "assert": true
       },
       "packages": {
-        "gulp>gulp-cli>isobject": true,
-        "webpack>micromatch>snapdragon>base>cache-base": true,
-        "webpack>micromatch>snapdragon>base>class-utils": true,
-        "webpack>micromatch>snapdragon>base>component-emitter": true,
-        "webpack>micromatch>snapdragon>base>define-property": true,
-        "webpack>micromatch>snapdragon>base>mixin-deep": true,
-        "webpack>micromatch>snapdragon>base>pascalcase": true
+        "eslint>eslint-scope>esrecurse": true,
+        "webpack>eslint-scope>estraverse": true
       }
     },
-    "webpack>micromatch>snapdragon>base>cache-base": {
-      "packages": {
-        "gulp>gulp-cli>array-sort>get-value": true,
-        "gulp>gulp-cli>isobject": true,
-        "webpack>micromatch>snapdragon>base>cache-base>collection-visit": true,
-        "webpack>micromatch>snapdragon>base>cache-base>component-emitter": true,
-        "webpack>micromatch>snapdragon>base>cache-base>has-value": true,
-        "webpack>micromatch>snapdragon>base>cache-base>set-value": true,
-        "webpack>micromatch>snapdragon>base>cache-base>to-object-path": true,
-        "webpack>micromatch>snapdragon>base>cache-base>union-value": true,
-        "webpack>micromatch>snapdragon>base>cache-base>unset-value": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>cache-base>collection-visit": {
-      "packages": {
-        "webpack>micromatch>snapdragon>base>cache-base>collection-visit>map-visit": true,
-        "webpack>micromatch>snapdragon>base>cache-base>collection-visit>object-visit": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>cache-base>collection-visit>map-visit": {
+    "webpack>graceful-fs": {
       "builtin": {
-        "util.inspect": true
-      },
-      "packages": {
-        "webpack>micromatch>snapdragon>base>cache-base>collection-visit>object-visit": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>cache-base>collection-visit>object-visit": {
-      "packages": {
-        "gulp>gulp-cli>isobject": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>cache-base>has-value": {
-      "packages": {
-        "gulp>gulp-cli>array-sort>get-value": true,
-        "gulp>gulp-cli>isobject": true,
-        "webpack>micromatch>snapdragon>base>cache-base>has-value>has-values": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>cache-base>has-value>has-values": {
-      "packages": {
-        "webpack>micromatch>braces>fill-range>is-number": true,
-        "webpack>micromatch>snapdragon>base>cache-base>has-value>has-values>kind-of": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>cache-base>has-value>has-values>kind-of": {
-      "packages": {
-        "browserify>insert-module-globals>is-buffer": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>cache-base>set-value": {
-      "packages": {
-        "webpack>micromatch>braces>split-string": true,
-        "webpack>micromatch>snapdragon>base>cache-base>set-value>extend-shallow": true,
-        "webpack>micromatch>snapdragon>base>cache-base>set-value>is-extendable": true,
-        "webpack>micromatch>snapdragon>base>cache-base>set-value>is-plain-object": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>cache-base>set-value>extend-shallow": {
-      "packages": {
-        "webpack>micromatch>snapdragon>base>cache-base>set-value>is-extendable": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>cache-base>set-value>is-plain-object": {
-      "packages": {
-        "gulp>gulp-cli>isobject": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>cache-base>to-object-path": {
-      "packages": {
-        "webpack>micromatch>snapdragon>base>cache-base>to-object-path>kind-of": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>cache-base>to-object-path>kind-of": {
-      "packages": {
-        "browserify>insert-module-globals>is-buffer": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>cache-base>union-value": {
-      "packages": {
-        "gulp-zip>plugin-error>arr-union": true,
-        "gulp>gulp-cli>array-sort>get-value": true,
-        "webpack>micromatch>snapdragon>base>cache-base>set-value": true,
-        "webpack>micromatch>snapdragon>base>cache-base>union-value>is-extendable": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>cache-base>unset-value": {
-      "packages": {
-        "gulp>gulp-cli>isobject": true,
-        "webpack>micromatch>snapdragon>base>cache-base>unset-value>has-value": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>cache-base>unset-value>has-value": {
-      "packages": {
-        "gulp>gulp-cli>array-sort>get-value": true,
-        "webpack>micromatch>snapdragon>base>cache-base>unset-value>has-value>has-values": true,
-        "webpack>micromatch>snapdragon>base>cache-base>unset-value>has-value>isobject": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>cache-base>unset-value>has-value>isobject": {
-      "packages": {
-        "readable-stream>isarray": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>class-utils": {
-      "builtin": {
-        "util": true
-      },
-      "packages": {
-        "gulp-zip>plugin-error>arr-union": true,
-        "gulp>gulp-cli>isobject": true,
-        "webpack>micromatch>snapdragon>base>class-utils>define-property": true,
-        "webpack>micromatch>snapdragon>base>class-utils>static-extend": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>class-utils>define-property": {
-      "packages": {
-        "webpack>micromatch>snapdragon>base>class-utils>define-property>is-descriptor": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>class-utils>define-property>is-descriptor": {
-      "packages": {
-        "webpack>micromatch>snapdragon>base>class-utils>define-property>is-descriptor>is-accessor-descriptor": true,
-        "webpack>micromatch>snapdragon>base>class-utils>define-property>is-descriptor>is-data-descriptor": true,
-        "webpack>micromatch>snapdragon>base>class-utils>define-property>is-descriptor>kind-of": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>class-utils>define-property>is-descriptor>is-accessor-descriptor": {
-      "packages": {
-        "webpack>micromatch>snapdragon>base>class-utils>define-property>is-descriptor>is-accessor-descriptor>kind-of": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>class-utils>define-property>is-descriptor>is-accessor-descriptor>kind-of": {
-      "packages": {
-        "browserify>insert-module-globals>is-buffer": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>class-utils>define-property>is-descriptor>is-data-descriptor": {
-      "packages": {
-        "webpack>micromatch>snapdragon>base>class-utils>define-property>is-descriptor>is-data-descriptor>kind-of": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>class-utils>define-property>is-descriptor>is-data-descriptor>kind-of": {
-      "packages": {
-        "browserify>insert-module-globals>is-buffer": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>class-utils>static-extend": {
-      "builtin": {
-        "util.inherits": true
-      },
-      "packages": {
-        "webpack>micromatch>snapdragon>base>class-utils>static-extend>define-property": true,
-        "webpack>micromatch>snapdragon>base>class-utils>static-extend>object-copy": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>class-utils>static-extend>define-property": {
-      "packages": {
-        "webpack>micromatch>snapdragon>base>class-utils>static-extend>define-property>is-descriptor": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>class-utils>static-extend>define-property>is-descriptor": {
-      "packages": {
-        "webpack>micromatch>snapdragon>base>class-utils>static-extend>define-property>is-descriptor>is-accessor-descriptor": true,
-        "webpack>micromatch>snapdragon>base>class-utils>static-extend>define-property>is-descriptor>is-data-descriptor": true,
-        "webpack>micromatch>snapdragon>base>class-utils>static-extend>define-property>is-descriptor>kind-of": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>class-utils>static-extend>define-property>is-descriptor>is-accessor-descriptor": {
-      "packages": {
-        "webpack>micromatch>snapdragon>base>class-utils>static-extend>define-property>is-descriptor>is-accessor-descriptor>kind-of": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>class-utils>static-extend>define-property>is-descriptor>is-accessor-descriptor>kind-of": {
-      "packages": {
-        "browserify>insert-module-globals>is-buffer": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>class-utils>static-extend>define-property>is-descriptor>is-data-descriptor": {
-      "packages": {
-        "webpack>micromatch>snapdragon>base>class-utils>static-extend>define-property>is-descriptor>is-data-descriptor>kind-of": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>class-utils>static-extend>define-property>is-descriptor>is-data-descriptor>kind-of": {
-      "packages": {
-        "browserify>insert-module-globals>is-buffer": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>class-utils>static-extend>object-copy": {
-      "packages": {
-        "webpack>micromatch>snapdragon>base>class-utils>static-extend>object-copy>copy-descriptor": true,
-        "webpack>micromatch>snapdragon>base>class-utils>static-extend>object-copy>define-property": true,
-        "webpack>micromatch>snapdragon>base>class-utils>static-extend>object-copy>kind-of": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>class-utils>static-extend>object-copy>define-property": {
-      "packages": {
-        "webpack>micromatch>snapdragon>base>class-utils>static-extend>object-copy>define-property>is-descriptor": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>class-utils>static-extend>object-copy>define-property>is-descriptor": {
-      "packages": {
-        "webpack>micromatch>snapdragon>base>class-utils>static-extend>object-copy>define-property>is-descriptor>is-accessor-descriptor": true,
-        "webpack>micromatch>snapdragon>base>class-utils>static-extend>object-copy>define-property>is-descriptor>is-data-descriptor": true,
-        "webpack>micromatch>snapdragon>base>class-utils>static-extend>object-copy>define-property>is-descriptor>kind-of": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>class-utils>static-extend>object-copy>define-property>is-descriptor>is-accessor-descriptor": {
-      "packages": {
-        "webpack>micromatch>snapdragon>base>class-utils>static-extend>object-copy>kind-of": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>class-utils>static-extend>object-copy>define-property>is-descriptor>is-data-descriptor": {
-      "packages": {
-        "webpack>micromatch>snapdragon>base>class-utils>static-extend>object-copy>kind-of": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>class-utils>static-extend>object-copy>kind-of": {
-      "packages": {
-        "browserify>insert-module-globals>is-buffer": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>define-property": {
-      "packages": {
-        "webpack>micromatch>define-property>is-descriptor": true
-      }
-    },
-    "webpack>micromatch>snapdragon>base>mixin-deep": {
-      "packages": {
-        "gulp>undertaker>object.reduce>for-own>for-in": true,
-        "webpack>micromatch>extend-shallow>is-extendable": true
-      }
-    },
-    "webpack>micromatch>snapdragon>debug": {
-      "builtin": {
-        "fs.SyncWriteStream": true,
-        "net.Socket": true,
-        "tty.WriteStream": true,
-        "tty.isatty": true,
+        "assert.equal": true,
+        "constants.O_SYMLINK": true,
+        "constants.O_WRONLY": true,
+        "constants.hasOwnProperty": true,
+        "fs": true,
+        "stream.Stream.call": true,
         "util": true
       },
       "globals": {
-        "chrome": true,
-        "console": true,
-        "document": true,
-        "localStorage": true,
-        "navigator": true,
-        "process": true
-      },
-      "packages": {
-        "webpack>micromatch>snapdragon>debug>ms": true
-      }
-    },
-    "webpack>micromatch>snapdragon>define-property": {
-      "packages": {
-        "webpack>micromatch>snapdragon>define-property>is-descriptor": true
-      }
-    },
-    "webpack>micromatch>snapdragon>define-property>is-descriptor": {
-      "packages": {
-        "webpack>micromatch>snapdragon>define-property>is-descriptor>is-accessor-descriptor": true,
-        "webpack>micromatch>snapdragon>define-property>is-descriptor>is-data-descriptor": true,
-        "webpack>micromatch>snapdragon>define-property>is-descriptor>kind-of": true
-      }
-    },
-    "webpack>micromatch>snapdragon>define-property>is-descriptor>is-accessor-descriptor": {
-      "packages": {
-        "webpack>micromatch>snapdragon>define-property>is-descriptor>is-accessor-descriptor>kind-of": true
-      }
-    },
-    "webpack>micromatch>snapdragon>define-property>is-descriptor>is-accessor-descriptor>kind-of": {
-      "packages": {
-        "browserify>insert-module-globals>is-buffer": true
-      }
-    },
-    "webpack>micromatch>snapdragon>define-property>is-descriptor>is-data-descriptor": {
-      "packages": {
-        "webpack>micromatch>snapdragon>define-property>is-descriptor>is-data-descriptor>kind-of": true
-      }
-    },
-    "webpack>micromatch>snapdragon>define-property>is-descriptor>is-data-descriptor>kind-of": {
-      "packages": {
-        "browserify>insert-module-globals>is-buffer": true
-      }
-    },
-    "webpack>micromatch>snapdragon>extend-shallow": {
-      "packages": {
-        "webpack>micromatch>snapdragon>extend-shallow>is-extendable": true
-      }
-    },
-    "webpack>micromatch>snapdragon>source-map-resolve": {
-      "builtin": {
-        "url.resolve": true
-      },
-      "globals": {
-        "setImmediate": true
-      },
-      "packages": {
-        "gulp-sourcemaps>css>source-map-resolve>atob": true,
-        "gulp-sourcemaps>css>source-map-resolve>decode-uri-component": true,
-        "resolve-url-loader>rework>css>urix": true,
-        "webpack>micromatch>snapdragon>source-map-resolve>source-map-url": true
-      }
-    },
-    "webpack>micromatch>snapdragon>source-map-resolve>source-map-url": {
-      "globals": {
-        "define": true
-      }
-    },
-    "webpack>micromatch>snapdragon>use": {
-      "packages": {
-        "webpack>micromatch>kind-of": true
-      }
-    },
-    "webpack>micromatch>to-regex": {
-      "packages": {
-        "webpack>micromatch>define-property": true,
-        "webpack>micromatch>extend-shallow": true,
-        "webpack>micromatch>regex-not": true,
-        "webpack>micromatch>to-regex>safe-regex": true
-      }
-    },
-    "webpack>micromatch>to-regex>safe-regex": {
-      "packages": {
-        "enzyme>rst-selector-parser>nearley>randexp>ret": true
+        "clearTimeout": true,
+        "console.error": true,
+        "process": true,
+        "setTimeout": true
       }
     },
     "yargs": {

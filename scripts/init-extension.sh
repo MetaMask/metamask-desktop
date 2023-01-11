@@ -8,4 +8,8 @@ rm -rf packages/app/submodules/extension/.desktop
 cp -r packages/common packages/app/submodules/extension/.desktop
 
 # Copy the extension config from the app workspace into the extension
-cp packages/app/.metamaskrc packages/app/submodules/extension/
+if [ -f "packages/app/.metamaskrc" ]; then
+  cp packages/app/.metamaskrc packages/app/submodules/extension/
+else
+  echo ".metamaskrc file not found"
+fi

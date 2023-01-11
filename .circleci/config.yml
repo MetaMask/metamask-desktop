@@ -17,7 +17,7 @@ commands:
       - checkout
       - add_ssh_keys:
           fingerprints:
-            - "07:35:fd:e0:5b:fc:30:43:1c:dc:73:75:92:03:53:59"
+            - "aa:9c:7b:e9:01:de:82:e6:d4:ae:5e:ff:c3:fa:d9:5c"
       - run:
           name: Setup submodule
           command: yarn setup:submodule 
@@ -174,15 +174,12 @@ jobs:
           key: dependency-cache-extension-v1-{{ checksum "<< pipeline.parameters.extension-dir >>/yarn.lock" }}
       - run:
           name: Install extension deps
-          command: YARN_CACHE_FOLDER=.yarn_cache_extension yarn extension install --frozen-lockfile
+          command: YARN_CACHE_FOLDER=.yarn_cache_extension yarn extension --frozen-lockfile
       - save_cache:
           key: dependency-cache-extension-v1-{{ checksum "<< pipeline.parameters.extension-dir >>/yarn.lock" }}
           paths:
             - .yarn_cache_extension
             - << pipeline.parameters.extension-dir >>/node_modules/
-      - run:
-          name: Run extension post install
-          command: yarn extension setup:postinstall
       - run:
           name: Copy common package
           command: cp -r ${COMMON_DIR} ${EXTENSION_DIR}/.desktop

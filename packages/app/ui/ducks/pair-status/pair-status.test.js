@@ -16,13 +16,13 @@ describe('Pair Status State', () => {
     const state = pairStatusReducer(initialState, {
       type: UPDATE_PAIR_STATUS,
       payload: {
-        isDesktopEnabled: false,
+        isDesktopPaired: false,
         isWebSocketConnected: true,
         connections: ['testConnection', 'testConnection2'],
       },
     });
 
-    expect(state.isDesktopEnabled).toBe(false);
+    expect(state.isDesktopPaired).toBe(false);
     expect(state.isWebSocketConnected).toBe(true);
     expect(state.connections).toStrictEqual([
       'testConnection',
@@ -34,12 +34,12 @@ describe('Pair Status State', () => {
     const successfulPairSeenState = {
       ...initialState,
       isSuccessfulPairSeen: true,
-      isDesktopEnabled: true,
+      isDesktopPaired: true,
     };
     const state = pairStatusReducer(successfulPairSeenState, {
       type: UPDATE_PAIR_STATUS,
       payload: {
-        isDesktopEnabled: false,
+        isDesktopPaired: false,
       },
     });
     expect(state.isSuccessfulPairSeen).toBe(false);

@@ -11,9 +11,10 @@ IT CAN ONLY BE USED WITH [FLASK](https://metamask.io/flask/), THE CANARY DISTRIB
 
 The MetaMask desktop app is a companion app which speeds up the [MetaMask browser extension](https://github.com/MetaMask/metamask-extension).
 
-You can find the latest version of MetaMask desktop app on [our releases page](https://github.com/MetaMask/desktop/releases). For help using MetaMask, visit our [User Support Site](https://metamask.zendesk.com/hc/en-us).
+You can find the latest version of MetaMask desktop app on [our releases page](https://github.com/MetaMask/desktop/releases).
 
-For [general questions](https://community.metamask.io/c/learn/26), [feature requests](https://community.metamask.io/c/feature-requests-ideas/13), or [developer questions](https://community.metamask.io/c/developer-questions/11), visit our [Community Forum](https://community.metamask.io/).
+For help using MetaMask Desktop, or for general questions, feature requests, and developer questions, see the [Discussions tab](https://github.com/MetaMask/desktop/discussions).
+
 
 ## Monorepo
 

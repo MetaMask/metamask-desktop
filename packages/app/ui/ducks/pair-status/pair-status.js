@@ -1,5 +1,5 @@
 export const initialPairStatusState = {
-  isDesktopEnabled: false,
+  isDesktopPaired: false,
   isWebSocketConnected: false,
   isSuccessfulPairSeen: false,
   connections: [],
@@ -21,8 +21,8 @@ export default function pairStatusReducer(
         state.isWebSocketConnected === false &&
         action.payload.isWebSocketConnected === true;
       const isUnpaired =
-        state.isDesktopEnabled === true &&
-        action.payload.isDesktopEnabled === false;
+        state.isDesktopPaired === true &&
+        action.payload.isDesktopPaired === false;
       const lastActivation = new Date().getTime();
       return {
         ...state,
@@ -45,7 +45,7 @@ export default function pairStatusReducer(
 
 // Selectors
 export const getLastActivation = (state) => state.pairStatus.lastActivation;
-export const getIsDesktopEnabled = (state) => state.pairStatus.isDesktopEnabled;
+export const getIsDesktopPaired = (state) => state.pairStatus.isDesktopPaired;
 export const getIsWebSocketConnected = (state) =>
   state.pairStatus.isWebSocketConnected;
 export const getIsSuccessfulPairSeen = (state) =>

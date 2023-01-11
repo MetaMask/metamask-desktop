@@ -7,7 +7,7 @@ ignores:
   - '@babel/preset-env'
   - '@babel/preset-react'
   - '@babel/preset-typescript'
-  
+
   # tsconfig
   - '@tsconfig/node16'
 
@@ -28,29 +28,45 @@ ignores:
   - '@ensdomains/content-hash'
   - '@eth-optimism/contracts'
   - '@ethereumjs/common'
+  - '@ethersproject/contracts'
+  - '@ethersproject/providers'
   - '@formatjs/intl-relativetimeformat'
   - '@fortawesome/fontawesome-free'
   - '@keystonehq/bc-ur-registry-eth'
   - '@keystonehq/metamask-airgapped-keyring'
+  - '@lavamoat/snow'
   - '@material-ui/core'
+  - '@metamask/address-book-controller'
+  - '@metamask/announcement-controller'
+  - '@metamask/approval-controller'
+  - '@metamask/assets-controllers'
+  - '@metamask/base-controller'
   - '@metamask/contract-metadata'
+  - '@metamask/controller-utils'
   - '@metamask/controllers'
   - '@metamask/design-tokens'
   - '@metamask/eth-json-rpc-infura'
   - '@metamask/eth-ledger-bridge-keyring'
   - '@metamask/eth-token-tracker'
   - '@metamask/etherscan-link'
+  - '@metamask/gas-fee-controller'
   - '@metamask/jazzicon'
   - '@metamask/logo'
   - '@metamask/metamask-eth-abis'
+  - '@metamask/notification-controller'
   - '@metamask/obs-store'
+  - '@metamask/permission-controller'
+  - '@metamask/phishing-controller'
   - '@metamask/post-message-stream'
   - '@metamask/providers'
+  - '@metamask/rate-limit-controller'
   - '@metamask/rpc-methods'
   - '@metamask/slip44'
   - '@metamask/smart-transactions-controller'
-  - '@metamask/snap-controllers'
-  - '@metamask/snap-utils'
+  - '@metamask/snaps-controllers'
+  - '@metamask/snaps-ui'
+  - '@metamask/snaps-utils'
+  - '@metamask/subject-metadata-controller'
   - '@ngraveio/bc-ur'
   - '@popperjs/core'
   - '@reduxjs/toolkit'
@@ -120,6 +136,7 @@ ignores:
   - react-dom
   - react-idle-timer
   - react-inspector
+  - react-markdown
   - react-otp-input
   - react-popper
   - react-redux
@@ -167,10 +184,12 @@ ignores:
   - '@storybook/addon-knobs'
   - '@storybook/addons'
   - '@storybook/api'
+  - '@storybook/builder-webpack5'
   - '@storybook/client-api'
   - '@storybook/components'
   - '@storybook/core'
   - '@storybook/core-events'
+  - '@storybook/manager-webpack5'
   - '@storybook/react'
   - '@storybook/storybook-deployer'
   - '@storybook/theming'
@@ -247,6 +266,7 @@ ignores:
   - read-installed
   - redux-mock-store
   - remote-redux-devtools
+  - require-from-string
   - resolve-url-loader
   - sass
   - sass-loader
@@ -258,6 +278,7 @@ ignores:
   - source-map-explorer
   - squirrelly
   - storybook-dark-mode
+  - stream-browserify
   - string.prototype.matchall
   - style-loader
   - stylelint

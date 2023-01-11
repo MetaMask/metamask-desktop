@@ -18,17 +18,17 @@ import { PAIR_ROUTE, SETTINGS_ROUTE } from '../../helpers/constants/routes';
 const SuccessfulPair = ({
   history,
   updateSuccessfulPairSeen,
-  isDesktopEnabled,
+  isDesktopPaired,
 }) => {
   const t = useI18nContext();
   const animationEventEmitter = new EventEmitter();
 
   useEffect(() => {
-    if (!isDesktopEnabled) {
+    if (!isDesktopPaired) {
       console.log('Unpaired, redirecting back to pair');
       history.push(PAIR_ROUTE);
     }
-  }, [isDesktopEnabled, history]);
+  }, [isDesktopPaired, history]);
 
   const handleGoToSettings = () => {
     updateSuccessfulPairSeen();
@@ -75,9 +75,9 @@ SuccessfulPair.propTypes = {
    */
   updateSuccessfulPairSeen: PropTypes.func,
   /**
-   * Whether or not the desktop is enabled
+   * Whether or not the app is paired with the extension
    */
-  isDesktopEnabled: PropTypes.bool,
+  isDesktopPaired: PropTypes.bool,
 };
 
 export default SuccessfulPair;

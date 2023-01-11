@@ -67,7 +67,7 @@ const initialize = async () => {
   const initLangCode = await getFirstPreferredLangCode();
   registerStatePersistenceListener();
 
-  await setupController(initState, initLangCode, '', {
+  await setupController(initState, initLangCode, {
     registerConnectListeners,
     getPortStream,
     getOrigin,
