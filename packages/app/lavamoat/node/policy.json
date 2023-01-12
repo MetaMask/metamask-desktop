@@ -859,6 +859,11 @@
         "eth-rpc-errors": true
       }
     },
+    "@metamask/approval-controller>nanoid": {
+      "builtin": {
+        "crypto": true
+      }
+    },
     "@metamask/assets-controllers": {
       "builtin": {
         "events.EventEmitter": true
@@ -1754,6 +1759,11 @@
         "@metamask/notification-controller>nanoid": true
       }
     },
+    "@metamask/notification-controller>nanoid": {
+      "builtin": {
+        "crypto": true
+      }
+    },
     "@metamask/obs-store": {
       "builtin": {
         "stream.Duplex": true
@@ -1787,6 +1797,11 @@
         "eth-rpc-errors": true,
         "immer": true,
         "json-rpc-engine": true
+      }
+    },
+    "@metamask/permission-controller>nanoid": {
+      "builtin": {
+        "crypto": true
       }
     },
     "@metamask/phishing-controller": {
@@ -2651,6 +2666,11 @@
       "packages": {
         "json-rpc-engine>@metamask/safe-event-emitter": true,
         "readable-stream": true
+      }
+    },
+    "@metamask/snaps-controllers>nanoid": {
+      "builtin": {
+        "crypto": true
       }
     },
     "@metamask/snaps-controllers>readable-web-to-node-stream": {

@@ -209,6 +209,26 @@
         "console.warn": false,
         "define": false
       }
+    },
+    "@metamask/permission-controller>nanoid": {
+      "builtin": {
+        "crypto": true
+      }
+    },
+    "@metamask/approval-controller>nanoid": {
+      "builtin": {
+        "crypto": true
+      }
+    },
+    "@metamask/notification-controller>nanoid": {
+      "builtin": {
+        "crypto": true
+      }
+    },
+    "@metamask/snaps-controllers>nanoid": {
+      "builtin": {
+        "crypto": true
+      }
     }
   }
 }
