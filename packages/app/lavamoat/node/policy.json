@@ -7631,6 +7631,15 @@
         "XMLHttpRequest": true
       }
     },
+    "webextension-polyfill": {
+      "globals": {
+        "browser": false,
+        "chrome": false,
+        "console.error": false,
+        "console.warn": false,
+        "define": false
+      }
+    },
     "ws": {
       "builtin": {
         "crypto.createHash": true,
