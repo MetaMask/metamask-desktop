@@ -20,7 +20,7 @@ commands:
             - "aa:9c:7b:e9:01:de:82:e6:d4:ae:5e:ff:c3:fa:d9:5c"
       - run:
           name: Setup submodule
-          command: yarn setup:submodule 
+          command: sh scripts/init-submodule.sh
 
 executors:
   node-browsers:
@@ -137,20 +137,23 @@ jobs:
     steps:
       - checkout_with_submodule
       - restore_cache:
-          key: dependency-cache-v2-{{ checksum "yarn.lock" }}
+          key: dependency-cache-v3-{{ checksum "yarn.lock" }}
       - run:
           name: Install deps
           command: yarn install --frozen-lockfile
       - save_cache:
-          key: dependency-cache-v2-{{ checksum "yarn.lock" }}
+          key: dependency-cache-v3-{{ checksum "yarn.lock" }}
           paths:
             - .yarn/cache
+            - .yarn/install-state.gz
             - node_modules/
             - << pipeline.parameters.common-dir >>/node_modules/
             - << pipeline.parameters.app-dir >>/node_modules/
       - persist_to_workspace:
           root: .
           paths:
+            - .yarn/cache
+            - .yarn/install-state.gz
             - node_modules
             - << pipeline.parameters.app-dir >>/node_modules
             - << pipeline.parameters.common-dir >>/node_modules
