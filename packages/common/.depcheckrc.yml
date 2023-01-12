@@ -11,3 +11,6 @@ ignores:
 
   # Jest config
   - 'jest-environment-jsdom'
+
+  # Yarn
+  - '@lavamoat/allow-scripts'

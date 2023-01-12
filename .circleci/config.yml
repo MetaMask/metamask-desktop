@@ -207,7 +207,7 @@ jobs:
           at: .
       - run:
           name: Detect yarn lock deduplications
-          command: yarn yarn-deduplicate && git diff --exit-code yarn.lock
+          command: yarn dedupe --check
 
   lint-lockfile:
     executor: node-browsers
@@ -226,8 +226,14 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: yarn audit
-          command: .circleci/scripts/yarn-audit.sh
+          name: root audit
+          command: WORKSPACE='' .circleci/scripts/yarn-audit.sh
+      - run:
+          name: common audit
+          command: WORKSPACE='common' .circleci/scripts/yarn-audit.sh
+      - run:
+          name: app audit
+          command: WORKSPACE='app' .circleci/scripts/yarn-audit.sh
 
   validate-lavamoat-config:
     executor: node-browsers

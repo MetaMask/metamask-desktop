@@ -26,7 +26,8 @@
         "@babel/parser": true,
         "depcheck>@babel/parser": true,
         "eslint": true,
-        "lavamoat>lavamoat-tofu>@babel/parser": true
+        "lavamoat>lavamoat-tofu>@babel/parser": true,
+        "jest>@jest/core>jest-snapshot>@babel/traverse>@babel/parser": true
       },
       "globals": {
         "process.versions": true
@@ -105,7 +106,8 @@
     },
     "eslint-plugin-jest>@typescript-eslint/utils>@typescript-eslint/scope-manager>@typescript-eslint/visitor-keys": {
       "packages": {
-        "eslint-plugin-jest>@typescript-eslint/utils>@typescript-eslint/scope-manager>@typescript-eslint/visitor-keys>eslint-visitor-keys": true
+        "eslint-plugin-jest>@typescript-eslint/utils>@typescript-eslint/scope-manager>@typescript-eslint/visitor-keys>eslint-visitor-keys": true,
+        "eslint>eslint-visitor-keys": true
       }
     },
     "@typescript-eslint/eslint-plugin>@typescript-eslint/utils": {
@@ -1076,6 +1078,15 @@
     "gulp>glob-watcher>chokidar>fsevents>node-pre-gyp>tar>safe-buffer": {
       "builtin": {
         "buffer": true
+      }
+    },
+    "webpack>eslint-scope": {
+      "builtin": {
+        "assert": true
+      },
+      "packages": {
+        "webpack>eslint-scope>estraverse": true,
+        "eslint>eslint-scope>esrecurse": true
       }
     }
   }

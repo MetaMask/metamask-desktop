@@ -22,6 +22,9 @@ ignores:
   - '@metamask/eslint-config-jest'
   - '@metamask/eslint-config-typescript'
 
+  # Yarn
+  - '@lavamoat/allow-scripts'
+
   # Extension Runtime
   - '@babel/runtime'
   - '@download/blockies'
@@ -164,7 +167,7 @@ ignores:
   - webextension-polyfill
   - zxcvbn
 
-  # Extension Dev'
+  # Extension Dev
   - '@babel/code-frame'
   - '@babel/core'
   - '@babel/eslint-parser'
