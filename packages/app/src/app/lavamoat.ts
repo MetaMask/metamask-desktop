@@ -3,6 +3,9 @@ import path from 'path';
 import { app } from 'electron';
 import { runLava } from 'lavamoat';
 
+// TODO Remove this whenever we solve the issue with domain builtin
+process.env.LOCKDOWN_DOMAIN_TAMING = 'unsafe';
+
 let appPath = process.cwd();
 const policyRelativePath = '/lavamoat/node/';
 
