@@ -47,7 +47,7 @@ const Pair = ({ isDesktopPaired, isSuccessfulPairSeen, history }) => {
 
   useEffect(() => {
     if (isDesktopPaired) {
-      console.log('Paired, redirecting');
+      electronLog.log('Paired, redirecting');
       clearTimeout(otpValidationTimeoutId);
       if (isSuccessfulPairSeen) {
         history.push(SETTINGS_ROUTE);

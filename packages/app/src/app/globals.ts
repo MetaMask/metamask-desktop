@@ -1,7 +1,9 @@
 import 'global-agent/bootstrap';
+import './logger-init';
 import '../browser/browser-init';
 import { webcrypto } from 'node:crypto';
 import { Headers } from 'node-fetch';
+import * as SentryElectron from '@sentry/electron/main';
 import setupSentry from '../../submodules/extension/app/scripts/lib/setupSentry';
 import { getDesktopVersion } from '../utils/version';
 import { ElectronBridge } from './renderer/preload';
@@ -69,6 +71,7 @@ if (!global.self) {
   global.sentry = setupSentry({
     release: getDesktopVersion(),
     getState: () => global.stateHooks?.getSentryState?.() || {},
+    Sentry: SentryElectron,
   });
 }
 

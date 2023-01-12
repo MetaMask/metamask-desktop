@@ -55,4 +55,7 @@ module.exports = {
     browser: true,
     node: true,
   },
+  globals: {
+    electronLog: 'readonly',
+  },
 };

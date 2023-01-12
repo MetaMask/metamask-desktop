@@ -23,7 +23,9 @@ echo "Copying locales"
 cp -r $EXTENSION_APP_DIR/_locales $OUTPUT_APP_DIR/_locales
 
 echo "Copying assets"
+mkdir -p $OUTPUT_APP_DIR/build-types/desktop/images
 mkdir -p $OUTPUT_APP_DIR/build-types/flask/images
+cp $EXTENSION_APP_DIR/build-types/desktop/images/desktop-mascot.json $OUTPUT_APP_DIR/build-types/desktop/images/
 cp $EXTENSION_APP_DIR/build-types/flask/images/flask-mascot.json $OUTPUT_APP_DIR/build-types/flask/images/
 
 # Export all shell variables

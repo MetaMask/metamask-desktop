@@ -3523,6 +3523,71 @@
         "Buffer.allocUnsafe": true
       }
     },
+    "electron-log": {
+      "builtin": {
+        "events": true,
+        "fs.closeSync": true,
+        "fs.existsSync": true,
+        "fs.mkdirSync": true,
+        "fs.openSync": true,
+        "fs.readFileSync": true,
+        "fs.readSync": true,
+        "fs.readdirSync": true,
+        "fs.renameSync": true,
+        "fs.statSync": true,
+        "fs.writeFile": true,
+        "fs.writeFileSync": true,
+        "http": false,
+        "https": false,
+        "os.EOL": true,
+        "os.homedir": true,
+        "os.release": true,
+        "os.tmpdir": true,
+        "os.type": true,
+        "path.basename": true,
+        "path.dirname": true,
+        "path.join": true,
+        "path.parse": true,
+        "path.resolve": true,
+        "util.formatWithOptions": true
+      },
+      "globals": {
+        "Buffer.alloc": true,
+        "Buffer.byteLength": true,
+        "URLSearchParams": false,
+        "__dirname": true,
+        "asyncWriteQueue": false,
+        "bytesWritten": false,
+        "console.debug": true,
+        "console.error": true,
+        "console.info": true,
+        "console.log": true,
+        "console.warn": true,
+        "electronLog": "write",
+        "functions": false,
+        "hasActiveAsyncWriting": false,
+        "hooks": false,
+        "includeRenderer": false,
+        "initialSize": false,
+        "instances": false,
+        "isActive": false,
+        "isDev": false,
+        "levels": false,
+        "logFn": false,
+        "logId": false,
+        "onError": false,
+        "path": false,
+        "process": true,
+        "scope": false,
+        "setTimeout": true,
+        "showDialog": false,
+        "store": false,
+        "transports": false,
+        "variables": false,
+        "writeAsync": false,
+        "writeOptions": false
+      }
+    },
     "electron-store": {
       "builtin": {
         "electron": true,
@@ -7564,6 +7629,15 @@
     "web3": {
       "globals": {
         "XMLHttpRequest": true
+      }
+    },
+    "webextension-polyfill": {
+      "globals": {
+        "browser": false,
+        "chrome": false,
+        "console.error": false,
+        "console.warn": false,
+        "define": false
       }
     },
     "ws": {

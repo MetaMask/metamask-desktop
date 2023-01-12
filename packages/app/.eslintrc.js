@@ -6,11 +6,11 @@ module.exports = {
   overrides: [
     {
       files: ['src/**/*'],
-      excludedFiles: ['src/**/*.{test,spec}.{js,ts}'],
+      excludedFiles: ['src/**/*.{test,spec}.{js,ts}', 'src/desktop-ui.js'],
       extends: ['.eslintrc.app.js'],
     },
     {
-      files: ['ui/**/*.{js,ts,jsx,tsx}'],
+      files: ['ui/**/*.{js,ts,jsx,tsx}', 'src/desktop-ui.js'],
       excludedFiles: ['ui/**/*.{test,spec}.{js,ts,jsx,tsx}'],
       extends: ['.eslintrc.ui.js'],
     },
