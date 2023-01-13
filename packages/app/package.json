@@ -1,5 +1,5 @@
 {
-  "name": "desktop-app",
+  "name": "metamask-desktop-app",
   "version": "0.0.1",
   "private": true,
   "main": "dist/app/src/app/lavamoat.js",

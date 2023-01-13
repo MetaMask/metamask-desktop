@@ -1,29 +1,35 @@
 diff --git a/node_modules/@metamask/create-release-branch/dist/command-line-arguments.js b/node_modules/@metamask/create-release-branch/dist/command-line-arguments.js
-index b3df9ed..a457eb6 100644
+index b3df9ed..c6e6161 100644
 --- a/node_modules/@metamask/create-release-branch/dist/command-line-arguments.js
 +++ b/node_modules/@metamask/create-release-branch/dist/command-line-arguments.js
-@@ -34,6 +34,11 @@ async function readCommandLineArguments(argv) {
+@@ -34,6 +34,16 @@ async function readCommandLineArguments(argv) {
          describe: 'Instructs the tool to bump the second part of the version rather than the first for a backport release.',
          type: 'boolean',
          default: false,
 +    })
 +        .option('workspace-package', {
-+        describe: 'Instructs the tool to bump the second part of the version rather than the first for a backport release.',
++        describe: 'Instructs the tool to only take into account a specific workspace changes',
++        type: 'string',
++        default: '',
++    })
++        .option('tag-name', {
++        describe: 'Instructs the tool also create a release tag alongside the release branch',
 +        type: 'string',
 +        default: '',
      })
          .help()
          .strict()
 diff --git a/node_modules/@metamask/create-release-branch/dist/initial-parameters.js b/node_modules/@metamask/create-release-branch/dist/initial-parameters.js
-index 65562cd..e61a44d 100644
+index 65562cd..d8a1b28 100644
 --- a/node_modules/@metamask/create-release-branch/dist/initial-parameters.js
 +++ b/node_modules/@metamask/create-release-branch/dist/initial-parameters.js
-@@ -21,10 +21,12 @@ const project_1 = require("./project");
+@@ -21,15 +21,20 @@ const project_1 = require("./project");
  async function determineInitialParameters({ argv, cwd, stderr, }) {
      const args = await (0, command_line_arguments_1.readCommandLineArguments)(argv);
      const projectDirectoryPath = path_1.default.resolve(cwd, args.projectDirectory);
 -    const project = await (0, project_1.readProject)(projectDirectoryPath, { stderr });
 +    const workspacePackage = args.workspacePackage;
++    const tagName = args.tagName;
 +    const project = await (0, project_1.readProject)(projectDirectoryPath, { stderr }, workspacePackage);
      const tempDirectoryPath = args.tempDirectory === undefined
          ? path_1.default.join(os_1.default.tmpdir(), 'create-release-branch', project.rootPackage.validatedManifest.name.replace('/', '__'))
@@ -32,6 +38,77 @@ index 65562cd..e61a44d 100644
      return {
          project,
          tempDirectoryPath,
+         reset: args.reset,
+         releaseType: args.backport ? 'backport' : 'ordinary',
++        workspacePackage,
++        tagName,
+     };
+ }
+ exports.determineInitialParameters = determineInitialParameters;
+diff --git a/node_modules/@metamask/create-release-branch/dist/main.js b/node_modules/@metamask/create-release-branch/dist/main.js
+index 57e8a77..ed35a97 100644
+--- a/node_modules/@metamask/create-release-branch/dist/main.js
++++ b/node_modules/@metamask/create-release-branch/dist/main.js
+@@ -16,7 +16,7 @@ const monorepo_workflow_operations_1 = require("./monorepo-workflow-operations")
+  * @param args.stderr - A stream that can be used to write to standard error.
+  */
+ async function main({ argv, cwd, stdout, stderr, }) {
+-    const { project, tempDirectoryPath, reset, releaseType } = await (0, initial_parameters_1.determineInitialParameters)({ argv, cwd, stderr });
++    const { project, tempDirectoryPath, reset, releaseType, workspacePackage, tagName } = await (0, initial_parameters_1.determineInitialParameters)({ argv, cwd, stderr });
+     if (project.isMonorepo) {
+         stdout.write('Project appears to have workspaces. Following monorepo workflow.\n');
+         await (0, monorepo_workflow_operations_1.followMonorepoWorkflow)({
+@@ -26,6 +26,8 @@ async function main({ argv, cwd, stdout, stderr, }) {
+             releaseType,
+             stdout,
+             stderr,
++            workspacePackage,
++            tagName
+         });
+     }
+     else {
+diff --git a/node_modules/@metamask/create-release-branch/dist/monorepo-workflow-operations.js b/node_modules/@metamask/create-release-branch/dist/monorepo-workflow-operations.js
+index a6776a8..46ce019 100644
+--- a/node_modules/@metamask/create-release-branch/dist/monorepo-workflow-operations.js
++++ b/node_modules/@metamask/create-release-branch/dist/monorepo-workflow-operations.js
+@@ -42,7 +42,7 @@ const release_specification_1 = require("./release-specification");
+  * @param args.stdout - A stream that can be used to write to standard out.
+  * @param args.stderr - A stream that can be used to write to standard error.
+  */
+-async function followMonorepoWorkflow({ project, tempDirectoryPath, firstRemovingExistingReleaseSpecification, releaseType, stdout, stderr, }) {
++async function followMonorepoWorkflow({ project, tempDirectoryPath, firstRemovingExistingReleaseSpecification, releaseType, stdout, stderr, workspacePackage, tagName, }) {
+     const releaseSpecificationPath = path_1.default.join(tempDirectoryPath, 'RELEASE_SPEC');
+     if (!firstRemovingExistingReleaseSpecification &&
+         (await (0, fs_1.fileExists)(releaseSpecificationPath))) {
+@@ -79,6 +79,28 @@ async function followMonorepoWorkflow({ project, tempDirectoryPath, firstRemovin
+     });
+     await (0, release_plan_1.executeReleasePlan)(project, releasePlan, stderr);
+     await (0, fs_1.removeFile)(releaseSpecificationPath);
++
++    // This identifies that we only are creating a release branch for a specific package
++    if (workspacePackage && tagName) {
++        const releasePackage = releasePlan.packages.find(p => {
++          return p.package.directoryPath.endsWith(workspacePackage);
++        });
++
++        if (!releasePackage) {
++          throw new Error('Ups something went wrong. Could not identify package to create tag for');
++        }
++
++        await (0, repo_1.captureChangesInReleaseBranch)(
++            project.directoryPath,
++            {
++                releaseVersion: releasePlan.newVersion,
++            },
++            `${tagName}@${releasePackage.newVersion}`
++        );
++
++        return;
++    }
++
+     await (0, repo_1.captureChangesInReleaseBranch)(project.directoryPath, {
+         releaseVersion: releasePlan.newVersion,
+     });
 diff --git a/node_modules/@metamask/create-release-branch/dist/package-manifest.js b/node_modules/@metamask/create-release-branch/dist/package-manifest.js
 index d7060dc..c54f0c9 100644
 --- a/node_modules/@metamask/create-release-branch/dist/package-manifest.js
@@ -52,7 +129,7 @@ index d7060dc..c54f0c9 100644
          throw new Error(buildPackageManifestFieldValidationErrorMessage({
              manifest,
 diff --git a/node_modules/@metamask/create-release-branch/dist/package.js b/node_modules/@metamask/create-release-branch/dist/package.js
-index c862a5b..7b030e7 100644
+index c862a5b..c7710d3 100644
 --- a/node_modules/@metamask/create-release-branch/dist/package.js
 +++ b/node_modules/@metamask/create-release-branch/dist/package.js
 @@ -45,14 +45,15 @@ function generateMonorepoWorkspacePackageReleaseTagName(packageName, packageVers
@@ -117,7 +194,7 @@ index c862a5b..7b030e7 100644
  /**
   * Updates the changelog file of the given package using
 diff --git a/node_modules/@metamask/create-release-branch/dist/project.js b/node_modules/@metamask/create-release-branch/dist/project.js
-index 6a114e6..260cc9f 100644
+index 6a114e6..9c8b95f 100644
 --- a/node_modules/@metamask/create-release-branch/dist/project.js
 +++ b/node_modules/@metamask/create-release-branch/dist/project.js
 @@ -40,21 +40,26 @@ function examineReleaseVersion(packageVersion) {
@@ -157,3 +234,24 @@ index 6a114e6..260cc9f 100644
          });
      }))).reduce((obj, pkg) => {
          return Object.assign(Object.assign({}, obj), { [pkg.validatedManifest.name]: pkg });
+diff --git a/node_modules/@metamask/create-release-branch/dist/repo.js b/node_modules/@metamask/create-release-branch/dist/repo.js
+index 0821f9e..88b2885 100644
+--- a/node_modules/@metamask/create-release-branch/dist/repo.js
++++ b/node_modules/@metamask/create-release-branch/dist/repo.js
+@@ -134,10 +134,15 @@ exports.getRepositoryHttpsUrl = getRepositoryHttpsUrl;
+  * @param args - The arguments.
+  * @param args.releaseVersion - The release version.
+  */
+-async function captureChangesInReleaseBranch(repositoryDirectoryPath, { releaseVersion }) {
++async function captureChangesInReleaseBranch(repositoryDirectoryPath, { releaseVersion }, tagName) {
++    if (tagName) {
++      await getStdoutFromGitCommandWithin(repositoryDirectoryPath, 'tag', [tagName]);
++    }
++
+     await getStdoutFromGitCommandWithin(repositoryDirectoryPath, 'checkout', [
+         '-b',
+         `release/${releaseVersion}`,
++        ...(tagName ? [tagName] : [])
+     ]);
+     await getStdoutFromGitCommandWithin(repositoryDirectoryPath, 'add', ['-A']);
+     await getStdoutFromGitCommandWithin(repositoryDirectoryPath, 'commit', [
