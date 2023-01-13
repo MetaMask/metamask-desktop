@@ -263,6 +263,7 @@
     "@types/gulp-sourcemaps": "^0.0.35",
     "@types/hdkey": "^2.0.1",
     "@types/jsdom": "^11.2.0",
+    "@types/lodash": "^4.14.191",
     "@types/madge": "^5.0.0",
     "@types/node": "^17.0.21",
     "@types/node-fetch": "^2.6.1",

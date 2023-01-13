@@ -7344,10 +7344,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash@npm:^4.14.107, @types/lodash@npm:^4.14.136, @types/lodash@npm:^4.14.167, @types/lodash@npm:^4.14.176":
-  version: 4.14.184
-  resolution: "@types/lodash@npm:4.14.184"
-  checksum: 6d9a4d67f7f9d0ec3fd21174f3dd3d00629dc1227eb469450eace53adbc1f7e2330699c28d0fe093e5f0fef0f0e763098be1f779268857213224af082b62be21
+"@types/lodash@npm:^4.14.107, @types/lodash@npm:^4.14.136, @types/lodash@npm:^4.14.167, @types/lodash@npm:^4.14.176, @types/lodash@npm:^4.14.191":
+  version: 4.14.191
+  resolution: "@types/lodash@npm:4.14.191"
+  checksum: ba0d5434e10690869f32d5ea49095250157cae502f10d57de0a723fd72229ce6c6a4979576f0f13e0aa9fbe3ce2457bfb9fa7d4ec3d6daba56730a51906d1491
   languageName: node
   linkType: hard
 
@@ -7406,17 +7406,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node-fetch@npm:^2.5.7":
-  version: 2.5.12
-  resolution: "@types/node-fetch@npm:2.5.12"
-  dependencies:
-    "@types/node": "*"
-    form-data: ^3.0.0
-  checksum: ad63c85ba6a9477b8e057ec8682257738130d98e8ece4e31141789bd99df9d9147985cc8bc0cb5c8983ed5aa6bb95d46df23d1e055f4ad5cf8b82fc69cf626c7
-  languageName: node
-  linkType: hard
-
-"@types/node-fetch@npm:^2.6.1":
+"@types/node-fetch@npm:^2.5.7, @types/node-fetch@npm:^2.6.1":
   version: 2.6.2
   resolution: "@types/node-fetch@npm:2.6.2"
   dependencies:
@@ -10571,7 +10561,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bn.js@npm:^4.0.0, bn.js@npm:^4.1.0, bn.js@npm:^4.1.1, bn.js@npm:^4.11.6, bn.js@npm:^4.11.7, bn.js@npm:^4.11.8, bn.js@npm:^4.11.9":
+"bn.js@npm:^4.0.0, bn.js@npm:^4.1.0, bn.js@npm:^4.1.1, bn.js@npm:^4.11.0, bn.js@npm:^4.11.6, bn.js@npm:^4.11.7, bn.js@npm:^4.11.8, bn.js@npm:^4.11.9":
   version: 4.12.0
   resolution: "bn.js@npm:4.12.0"
   checksum: 39afb4f15f4ea537b55eaf1446c896af28ac948fdcf47171961475724d1bb65118cca49fa6e3d67706e4790955ec0e74de584e45c8f1ef89f46c812bee5b5a12
@@ -14082,6 +14072,7 @@ __metadata:
     "@types/gulp-sourcemaps": ^0.0.35
     "@types/hdkey": ^2.0.1
     "@types/jsdom": ^11.2.0
+    "@types/lodash": ^4.14.191
     "@types/madge": ^5.0.0
     "@types/node": ^17.0.21
     "@types/node-fetch": ^2.6.1
@@ -16531,7 +16522,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eth-trezor-keyring@npm:^0.10.0":
+"eth-trezor-keyring@npm:0.10.0":
   version: 0.10.0
   resolution: "eth-trezor-keyring@npm:0.10.0"
   dependencies:
@@ -16541,6 +16532,19 @@ __metadata:
     hdkey: 0.8.0
     trezor-connect: 8.2.6-extended
   checksum: 19af3aa2b855aafd02f342367a17c33536ea2627a5b034e728c4dc0d80091da8b8bd44eaad84b1613a803c9b4850b877976bae7b56f34d24f22170750cdba2a0
+  languageName: node
+  linkType: hard
+
+"eth-trezor-keyring@patch:eth-trezor-keyring@npm%3A0.10.0#./.yarn/patches/eth-trezor-keyring-npm-0.10.0-1bf9aa3f4d.patch::locator=desktop%40workspace%3A.":
+  version: 0.10.0
+  resolution: "eth-trezor-keyring@patch:eth-trezor-keyring@npm%3A0.10.0#./.yarn/patches/eth-trezor-keyring-npm-0.10.0-1bf9aa3f4d.patch::version=0.10.0&hash=378a9e&locator=desktop%40workspace%3A."
+  dependencies:
+    "@ethereumjs/tx": ^3.2.1
+    "@metamask/eth-sig-util": ^4.0.0
+    ethereumjs-util: ^7.0.9
+    hdkey: 0.8.0
+    trezor-connect: 8.2.6-extended
+  checksum: 97e0617af83baa2b11265f75256b998be7bc38b7c3e0c544dcd81a8a0cd88afead0b55dfd93f47e6f634e868c9f683ed2b9dd103d9c8164c92bfb41e550b5391
   languageName: node
   linkType: hard
 
@@ -16683,6 +16687,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ethereumjs-util@npm:5.2.1":
+  version: 5.2.1
+  resolution: "ethereumjs-util@npm:5.2.1"
+  dependencies:
+    bn.js: ^4.11.0
+    create-hash: ^1.1.2
+    elliptic: ^6.5.2
+    ethereum-cryptography: ^0.1.3
+    ethjs-util: ^0.1.3
+    rlp: ^2.0.0
+    safe-buffer: ^5.1.1
+  checksum: 20db6c639d92b35739fd5f7a71e64a92e85442ea0d176b59b5cd5828265b6cf42bd4868cf81a9b20a83738db1ffa7a2f778f1d850d663627a1a5209f7904b44f
+  languageName: node
+  linkType: hard
+
 "ethereumjs-util@npm:7.1.5":
   version: 7.1.5
   resolution: "ethereumjs-util@npm:7.1.5"
@@ -16693,6 +16712,21 @@ __metadata:
     ethereum-cryptography: ^0.1.3
     rlp: ^2.2.4
   checksum: 27a3c79d6e06b2df34b80d478ce465b371c8458b58f5afc14d91c8564c13363ad336e6e83f57eb0bd719fde94d10ee5697ceef78b5aa932087150c5287b286d1
+  languageName: node
+  linkType: hard
+
+"ethereumjs-util@patch:ethereumjs-util@npm%3A5.2.1#./.yarn/patches/ethereumjs-util-npm-5.2.1-72b39f4e7e.patch::locator=desktop%40workspace%3A.":
+  version: 5.2.1
+  resolution: "ethereumjs-util@patch:ethereumjs-util@npm%3A5.2.1#./.yarn/patches/ethereumjs-util-npm-5.2.1-72b39f4e7e.patch::version=5.2.1&hash=9f5be4&locator=desktop%40workspace%3A."
+  dependencies:
+    bn.js: ^4.11.0
+    create-hash: ^1.1.2
+    elliptic: ^6.5.2
+    ethereum-cryptography: ^0.1.3
+    ethjs-util: ^0.1.3
+    rlp: ^2.0.0
+    safe-buffer: ^5.1.1
+  checksum: 0d6a33beab91147e3dc01402e6abc499479a1ae7d17008e27d55f318ee40a566d2bfc23ca4b76d203ac716db02ae443fe9ce219c2ebd562bc0ff59a526ac41fe
   languageName: node
   linkType: hard
 
@@ -16935,7 +16969,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ethjs-util@npm:^0.1.6":
+"ethjs-util@npm:^0.1.3, ethjs-util@npm:^0.1.6":
   version: 0.1.6
   resolution: "ethjs-util@npm:0.1.6"
   dependencies:

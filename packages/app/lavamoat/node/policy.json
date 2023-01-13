@@ -3837,6 +3837,14 @@
         "@truffle/codec>debug>supports-color": true
       }
     },
+    "@metamask/assets-controllers>@metamask/network-controller>web3-provider-engine>ethereumjs-util>bn.js": {
+      "builtin": {
+        "buffer.Buffer": true
+      },
+      "globals": {
+        "Buffer": true
+      }
+    },
     "@metamask/assets-controllers>@metamask/network-controller>web3-provider-engine>readable-stream>util-deprecate": {
       "builtin": {
         "util.deprecate": true
@@ -4001,21 +4009,13 @@
     },
     "@metamask/assets-controllers>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic": {
       "packages": {
+        "@metamask/assets-controllers>@metamask/network-controller>web3-provider-engine>ethereumjs-util>bn.js": true,
         "@metamask/assets-controllers>ethereumjs-util>create-hash>inherits": true,
         "@metamask/assets-controllers>ethereumjs-util>ethereum-cryptography>hash.js": true,
         "@metamask/assets-controllers>ethereumjs-util>ethereum-cryptography>hash.js>minimalistic-assert": true,
-        "@metamask/assets-controllers>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>bn.js": true,
         "@metamask/assets-controllers>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>brorand": true,
         "@metamask/assets-controllers>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>hmac-drbg": true,
         "@metamask/assets-controllers>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>minimalistic-crypto-utils": true
-      }
-    },
-    "@metamask/assets-controllers>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>bn.js": {
-      "builtin": {
-        "buffer.Buffer": true
-      },
-      "globals": {
-        "Buffer": true
       }
     },
     "@metamask/assets-controllers>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>brorand": {
@@ -4538,7 +4538,7 @@
       },
       "packages": {
         "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-abi>bn.js": true,
-        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util": true
+        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-abi>ethereumjs-util": true
       }
     },
     "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-abi>bn.js": {
@@ -4549,7 +4549,7 @@
         "Buffer": true
       }
     },
-    "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util": {
+    "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-abi>ethereumjs-util": {
       "builtin": {
         "assert": true,
         "buffer.Buffer.from": true
@@ -4558,13 +4558,13 @@
         "Buffer": true
       },
       "packages": {
-        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>bn.js": true,
+        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-abi>ethereumjs-util>bn.js": true,
         "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>create-hash": true,
         "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethereum-cryptography": true,
         "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>rlp": true
       }
     },
-    "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>bn.js": {
+    "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-abi>ethereumjs-util>bn.js": {
       "builtin": {
         "buffer.Buffer": true
       },
@@ -4572,12 +4572,62 @@
         "Buffer": true
       }
     },
+    "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util": {
+      "builtin": {
+        "assert": true
+      },
+      "globals": {
+        "Buffer": true
+      },
+      "packages": {
+        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-abi>bn.js": true,
+        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>create-hash": true,
+        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>elliptic": true,
+        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethereum-cryptography": true,
+        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethjs-util": true,
+        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>rlp": true,
+        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>safe-buffer": true
+      }
+    },
     "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>create-hash": {
       "builtin": {
         "crypto.createHash": true
       }
     },
-    "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>create-hash>inherits": {
+    "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>elliptic": {
+      "packages": {
+        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-abi>bn.js": true,
+        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>elliptic>brorand": true,
+        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>elliptic>hash.js": true,
+        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>elliptic>hmac-drbg": true,
+        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>elliptic>inherits": true,
+        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>elliptic>minimalistic-assert": true,
+        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>elliptic>minimalistic-crypto-utils": true
+      }
+    },
+    "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>elliptic>brorand": {
+      "builtin": {
+        "crypto.randomBytes": true
+      },
+      "globals": {
+        "crypto": true,
+        "msCrypto": true
+      }
+    },
+    "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>elliptic>hash.js": {
+      "packages": {
+        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>elliptic>inherits": true,
+        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>elliptic>minimalistic-assert": true
+      }
+    },
+    "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>elliptic>hmac-drbg": {
+      "packages": {
+        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>elliptic>hash.js": true,
+        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>elliptic>minimalistic-assert": true,
+        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>elliptic>minimalistic-crypto-utils": true
+      }
+    },
+    "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>elliptic>inherits": {
       "builtin": {
         "util.inherits": true
       }
@@ -4590,12 +4640,6 @@
         "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethereum-cryptography>keccak": true,
         "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethereum-cryptography>randombytes": true,
         "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethereum-cryptography>secp256k1": true
-      }
-    },
-    "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethereum-cryptography>hash.js": {
-      "packages": {
-        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>create-hash>inherits": true,
-        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethereum-cryptography>hash.js>minimalistic-assert": true
       }
     },
     "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethereum-cryptography>keccak": {
@@ -4640,14 +4684,14 @@
         "process.stdout": true
       },
       "packages": {
-        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>create-hash>inherits": true,
+        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>elliptic>inherits": true,
         "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethereum-cryptography>keccak>readable-stream>string_decoder": true,
         "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethereum-cryptography>keccak>readable-stream>util-deprecate": true
       }
     },
     "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethereum-cryptography>keccak>readable-stream>string_decoder": {
       "packages": {
-        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethereum-cryptography>safe-buffer": true
+        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>safe-buffer": true
       }
     },
     "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethereum-cryptography>keccak>readable-stream>util-deprecate": {
@@ -4660,45 +4704,27 @@
         "crypto.randomBytes": true
       }
     },
-    "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethereum-cryptography>safe-buffer": {
-      "builtin": {
-        "buffer": true
-      }
-    },
     "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethereum-cryptography>secp256k1": {
       "globals": {
         "__dirname": true
       },
       "packages": {
-        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
-        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic": true
+        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>elliptic": true,
+        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true
       }
     },
-    "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic": {
-      "packages": {
-        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-abi>bn.js": true,
-        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>create-hash>inherits": true,
-        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethereum-cryptography>hash.js": true,
-        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethereum-cryptography>hash.js>minimalistic-assert": true,
-        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>brorand": true,
-        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>hmac-drbg": true,
-        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>minimalistic-crypto-utils": true
-      }
-    },
-    "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>brorand": {
-      "builtin": {
-        "crypto.randomBytes": true
-      },
+    "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethjs-util": {
       "globals": {
-        "crypto": true,
-        "msCrypto": true
+        "Buffer": true
+      },
+      "packages": {
+        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethjs-util>is-hex-prefixed": true,
+        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethjs-util>strip-hex-prefix": true
       }
     },
-    "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>hmac-drbg": {
+    "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethjs-util>strip-hex-prefix": {
       "packages": {
-        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethereum-cryptography>hash.js": true,
-        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethereum-cryptography>hash.js>minimalistic-assert": true,
-        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>minimalistic-crypto-utils": true
+        "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethjs-util>is-hex-prefixed": true
       }
     },
     "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>rlp": {
@@ -4717,6 +4743,11 @@
       },
       "globals": {
         "Buffer": true
+      }
+    },
+    "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>safe-buffer": {
+      "builtin": {
+        "buffer": true
       }
     },
     "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>json-stable-stringify": {
@@ -5227,9 +5258,9 @@
       },
       "packages": {
         "@metamask/eth-ledger-bridge-keyring>eth-sig-util>ethereumjs-abi": true,
+        "@metamask/eth-ledger-bridge-keyring>eth-sig-util>ethereumjs-util": true,
         "@metamask/eth-ledger-bridge-keyring>eth-sig-util>tweetnacl": true,
-        "@metamask/eth-ledger-bridge-keyring>eth-sig-util>tweetnacl-util": true,
-        "@metamask/eth-ledger-bridge-keyring>ethereumjs-util": true
+        "@metamask/eth-ledger-bridge-keyring>eth-sig-util>tweetnacl-util": true
       }
     },
     "@metamask/eth-ledger-bridge-keyring>eth-sig-util>ethereumjs-abi": {
@@ -5239,6 +5270,37 @@
       "packages": {
         "@metamask/eth-ledger-bridge-keyring>ethereumjs-util": true,
         "@metamask/eth-ledger-bridge-keyring>hdkey>secp256k1>bn.js": true
+      }
+    },
+    "@metamask/eth-ledger-bridge-keyring>eth-sig-util>ethereumjs-util": {
+      "builtin": {
+        "assert": true
+      },
+      "globals": {
+        "Buffer": true
+      },
+      "packages": {
+        "@metamask/eth-ledger-bridge-keyring>eth-sig-util>ethereumjs-util>ethjs-util": true,
+        "@metamask/eth-ledger-bridge-keyring>ethereumjs-util>create-hash": true,
+        "@metamask/eth-ledger-bridge-keyring>ethereumjs-util>ethereum-cryptography": true,
+        "@metamask/eth-ledger-bridge-keyring>ethereumjs-util>rlp": true,
+        "@metamask/eth-ledger-bridge-keyring>hdkey>safe-buffer": true,
+        "@metamask/eth-ledger-bridge-keyring>hdkey>secp256k1>bn.js": true,
+        "@metamask/eth-ledger-bridge-keyring>hdkey>secp256k1>elliptic": true
+      }
+    },
+    "@metamask/eth-ledger-bridge-keyring>eth-sig-util>ethereumjs-util>ethjs-util": {
+      "globals": {
+        "Buffer": true
+      },
+      "packages": {
+        "@metamask/eth-ledger-bridge-keyring>eth-sig-util>ethereumjs-util>ethjs-util>is-hex-prefixed": true,
+        "@metamask/eth-ledger-bridge-keyring>eth-sig-util>ethereumjs-util>ethjs-util>strip-hex-prefix": true
+      }
+    },
+    "@metamask/eth-ledger-bridge-keyring>eth-sig-util>ethereumjs-util>ethjs-util>strip-hex-prefix": {
+      "packages": {
+        "@metamask/eth-ledger-bridge-keyring>eth-sig-util>ethereumjs-util>ethjs-util>is-hex-prefixed": true
       }
     },
     "@metamask/eth-ledger-bridge-keyring>eth-sig-util>tweetnacl": {
@@ -5665,6 +5727,14 @@
         "@truffle/codec>debug>supports-color": true
       }
     },
+    "@metamask/gas-fee-controller>@metamask/network-controller>web3-provider-engine>ethereumjs-util>bn.js": {
+      "builtin": {
+        "buffer.Buffer": true
+      },
+      "globals": {
+        "Buffer": true
+      }
+    },
     "@metamask/gas-fee-controller>@metamask/network-controller>web3-provider-engine>readable-stream>util-deprecate": {
       "builtin": {
         "util.deprecate": true
@@ -5799,21 +5869,13 @@
     },
     "@metamask/gas-fee-controller>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic": {
       "packages": {
+        "@metamask/gas-fee-controller>@metamask/network-controller>web3-provider-engine>ethereumjs-util>bn.js": true,
         "@metamask/gas-fee-controller>ethereumjs-util>create-hash>inherits": true,
         "@metamask/gas-fee-controller>ethereumjs-util>ethereum-cryptography>hash.js": true,
         "@metamask/gas-fee-controller>ethereumjs-util>ethereum-cryptography>hash.js>minimalistic-assert": true,
-        "@metamask/gas-fee-controller>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>bn.js": true,
         "@metamask/gas-fee-controller>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>brorand": true,
         "@metamask/gas-fee-controller>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>hmac-drbg": true,
         "@metamask/gas-fee-controller>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>minimalistic-crypto-utils": true
-      }
-    },
-    "@metamask/gas-fee-controller>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>bn.js": {
-      "builtin": {
-        "buffer.Buffer": true
-      },
-      "globals": {
-        "Buffer": true
       }
     },
     "@metamask/gas-fee-controller>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>brorand": {
@@ -9308,9 +9370,9 @@
       },
       "packages": {
         "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>ethereumjs-abi": true,
+        "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>ethereumjs-util": true,
         "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>tweetnacl": true,
-        "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>tweetnacl-util": true,
-        "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util": true
+        "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>tweetnacl-util": true
       }
     },
     "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>ethereumjs-abi": {
@@ -9328,6 +9390,64 @@
       },
       "globals": {
         "Buffer": true
+      }
+    },
+    "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>ethereumjs-util": {
+      "builtin": {
+        "assert": true
+      },
+      "globals": {
+        "Buffer": true
+      },
+      "packages": {
+        "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>ethereumjs-abi>bn.js": true,
+        "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>ethereumjs-util>elliptic": true,
+        "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>ethereumjs-util>ethjs-util": true,
+        "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>ethereumjs-util>safe-buffer": true,
+        "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>create-hash": true,
+        "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography": true,
+        "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>rlp": true
+      }
+    },
+    "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>ethereumjs-util>elliptic": {
+      "packages": {
+        "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>ethereumjs-abi>bn.js": true,
+        "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>ethereumjs-util>elliptic>brorand": true,
+        "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>ethereumjs-util>elliptic>hmac-drbg": true,
+        "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>ethereumjs-util>elliptic>minimalistic-assert": true,
+        "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>ethereumjs-util>elliptic>minimalistic-crypto-utils": true,
+        "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>create-hash>inherits": true,
+        "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>hash.js": true
+      }
+    },
+    "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>ethereumjs-util>elliptic>brorand": {
+      "builtin": {
+        "crypto.randomBytes": true
+      },
+      "globals": {
+        "crypto": true,
+        "msCrypto": true
+      }
+    },
+    "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>ethereumjs-util>elliptic>hmac-drbg": {
+      "packages": {
+        "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>ethereumjs-util>elliptic>minimalistic-assert": true,
+        "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>ethereumjs-util>elliptic>minimalistic-crypto-utils": true,
+        "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>hash.js": true
+      }
+    },
+    "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>ethereumjs-util>ethjs-util": {
+      "globals": {
+        "Buffer": true
+      },
+      "packages": {
+        "@metamask/smart-transactions-controller>@metamask/controllers>ethjs-unit>number-to-bn>strip-hex-prefix": true,
+        "@metamask/smart-transactions-controller>@metamask/controllers>ethjs-unit>number-to-bn>strip-hex-prefix>is-hex-prefixed": true
+      }
+    },
+    "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>ethereumjs-util>safe-buffer": {
+      "builtin": {
+        "buffer": true
       }
     },
     "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>tweetnacl": {
@@ -9391,8 +9511,8 @@
         "Buffer.from": true
       },
       "packages": {
+        "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>ethereumjs-util>safe-buffer": true,
         "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>keccak": true,
-        "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>safe-buffer": true,
         "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>secp256k1": true,
         "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-wallet>bs58check": true,
         "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-wallet>randombytes": true
@@ -9405,8 +9525,8 @@
     },
     "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>hash.js": {
       "packages": {
-        "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>create-hash>inherits": true,
-        "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>hash.js>minimalistic-assert": true
+        "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>ethereumjs-util>elliptic>minimalistic-assert": true,
+        "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>create-hash>inherits": true
       }
     },
     "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>keccak": {
@@ -9458,7 +9578,7 @@
     },
     "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>keccak>readable-stream>string_decoder": {
       "packages": {
-        "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>safe-buffer": true
+        "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>ethereumjs-util>safe-buffer": true
       }
     },
     "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>pbkdf2": {
@@ -9474,13 +9594,8 @@
         "setTimeout": true
       },
       "packages": {
-        "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>create-hmac": true,
-        "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>safe-buffer": true
-      }
-    },
-    "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>safe-buffer": {
-      "builtin": {
-        "buffer": true
+        "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>ethereumjs-util>safe-buffer": true,
+        "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>create-hmac": true
       }
     },
     "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>secp256k1": {
@@ -9488,35 +9603,8 @@
         "__dirname": true
       },
       "packages": {
-        "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
-        "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic": true
-      }
-    },
-    "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic": {
-      "packages": {
-        "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>ethereumjs-abi>bn.js": true,
-        "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>create-hash>inherits": true,
-        "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>hash.js": true,
-        "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>hash.js>minimalistic-assert": true,
-        "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>brorand": true,
-        "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>hmac-drbg": true,
-        "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>minimalistic-crypto-utils": true
-      }
-    },
-    "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>brorand": {
-      "builtin": {
-        "crypto.randomBytes": true
-      },
-      "globals": {
-        "crypto": true,
-        "msCrypto": true
-      }
-    },
-    "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>hmac-drbg": {
-      "packages": {
-        "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>hash.js": true,
-        "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>hash.js>minimalistic-assert": true,
-        "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>minimalistic-crypto-utils": true
+        "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>ethereumjs-util>elliptic": true,
+        "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true
       }
     },
     "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>rlp": {
@@ -9568,8 +9656,8 @@
     },
     "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-wallet>bs58check": {
       "packages": {
+        "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>ethereumjs-util>safe-buffer": true,
         "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>create-hash": true,
-        "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>safe-buffer": true,
         "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-wallet>bs58check>bs58": true
       }
     },
@@ -9580,7 +9668,7 @@
     },
     "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-wallet>bs58check>bs58>base-x": {
       "packages": {
-        "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>safe-buffer": true
+        "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>ethereumjs-util>safe-buffer": true
       }
     },
     "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-wallet>randombytes": {
@@ -9700,12 +9788,12 @@
         "@metamask/smart-transactions-controller>@metamask/controllers>eth-json-rpc-infura": true,
         "@metamask/smart-transactions-controller>@metamask/controllers>eth-json-rpc-infura>eth-json-rpc-middleware": true,
         "@metamask/smart-transactions-controller>@metamask/controllers>eth-query>xtend": true,
-        "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util": true,
         "@metamask/smart-transactions-controller>@metamask/controllers>web3-provider-engine>async": true,
         "@metamask/smart-transactions-controller>@metamask/controllers>web3-provider-engine>backoff": true,
         "@metamask/smart-transactions-controller>@metamask/controllers>web3-provider-engine>eth-block-tracker": true,
         "@metamask/smart-transactions-controller>@metamask/controllers>web3-provider-engine>eth-json-rpc-filters": true,
         "@metamask/smart-transactions-controller>@metamask/controllers>web3-provider-engine>eth-sig-util": true,
+        "@metamask/smart-transactions-controller>@metamask/controllers>web3-provider-engine>ethereumjs-util": true,
         "@metamask/smart-transactions-controller>@metamask/controllers>web3-provider-engine>json-stable-stringify": true,
         "@metamask/smart-transactions-controller>@metamask/controllers>web3-provider-engine>semaphore": true,
         "@metamask/smart-transactions-controller>@metamask/controllers>web3-provider-engine>ws": true
@@ -9800,7 +9888,33 @@
     "@metamask/smart-transactions-controller>@metamask/controllers>web3-provider-engine>eth-sig-util": {
       "packages": {
         "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>ethereumjs-abi": true,
-        "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util": true
+        "@metamask/smart-transactions-controller>@metamask/controllers>web3-provider-engine>ethereumjs-util": true
+      }
+    },
+    "@metamask/smart-transactions-controller>@metamask/controllers>web3-provider-engine>ethereumjs-util": {
+      "builtin": {
+        "assert": true
+      },
+      "globals": {
+        "Buffer": true
+      },
+      "packages": {
+        "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>ethereumjs-abi>bn.js": true,
+        "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>ethereumjs-util>elliptic": true,
+        "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>ethereumjs-util>safe-buffer": true,
+        "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>create-hash": true,
+        "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography": true,
+        "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>rlp": true,
+        "@metamask/smart-transactions-controller>@metamask/controllers>web3-provider-engine>ethereumjs-util>ethjs-util": true
+      }
+    },
+    "@metamask/smart-transactions-controller>@metamask/controllers>web3-provider-engine>ethereumjs-util>ethjs-util": {
+      "globals": {
+        "Buffer": true
+      },
+      "packages": {
+        "@metamask/smart-transactions-controller>@metamask/controllers>ethjs-unit>number-to-bn>strip-hex-prefix": true,
+        "@metamask/smart-transactions-controller>@metamask/controllers>ethjs-unit>number-to-bn>strip-hex-prefix>is-hex-prefixed": true
       }
     },
     "@metamask/smart-transactions-controller>@metamask/controllers>web3-provider-engine>json-stable-stringify": {
@@ -13500,17 +13614,12 @@
       },
       "packages": {
         "eth-keyring-controller>@metamask/bip39>pbkdf2>create-hmac": true,
-        "eth-keyring-controller>@metamask/bip39>pbkdf2>safe-buffer": true
+        "eth-keyring-controller>eth-sig-util>ethereumjs-util>safe-buffer": true
       }
     },
     "eth-keyring-controller>@metamask/bip39>pbkdf2>create-hmac": {
       "builtin": {
         "crypto.createHmac": true
-      }
-    },
-    "eth-keyring-controller>@metamask/bip39>pbkdf2>safe-buffer": {
-      "builtin": {
-        "buffer": true
       }
     },
     "eth-keyring-controller>@metamask/bip39>randombytes": {
@@ -13548,25 +13657,11 @@
         "Buffer.from": true
       },
       "packages": {
-        "eth-keyring-controller>@metamask/eth-hd-keyring>@metamask/eth-sig-util>ethjs-util": true,
         "eth-keyring-controller>eth-sig-util>ethereumjs-abi": true,
-        "eth-keyring-controller>eth-sig-util>ethereumjs-util": true,
+        "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethjs-util": true,
         "eth-keyring-controller>eth-sig-util>tweetnacl": true,
-        "eth-keyring-controller>eth-sig-util>tweetnacl-util": true
-      }
-    },
-    "eth-keyring-controller>@metamask/eth-hd-keyring>@metamask/eth-sig-util>ethjs-util": {
-      "globals": {
-        "Buffer": true
-      },
-      "packages": {
-        "eth-keyring-controller>@metamask/eth-hd-keyring>@metamask/eth-sig-util>ethjs-util>is-hex-prefixed": true,
-        "eth-keyring-controller>@metamask/eth-hd-keyring>@metamask/eth-sig-util>ethjs-util>strip-hex-prefix": true
-      }
-    },
-    "eth-keyring-controller>@metamask/eth-hd-keyring>@metamask/eth-sig-util>ethjs-util>strip-hex-prefix": {
-      "packages": {
-        "eth-keyring-controller>@metamask/eth-hd-keyring>@metamask/eth-sig-util>ethjs-util>is-hex-prefixed": true
+        "eth-keyring-controller>eth-sig-util>tweetnacl-util": true,
+        "eth-keyring-controller>eth-simple-keyring>ethereumjs-util": true
       }
     },
     "eth-keyring-controller>browser-passworder": {
@@ -13593,7 +13688,7 @@
       },
       "packages": {
         "eth-keyring-controller>eth-sig-util>ethereumjs-abi>bn.js": true,
-        "eth-keyring-controller>eth-sig-util>ethereumjs-util": true
+        "eth-keyring-controller>eth-simple-keyring>ethereumjs-util": true
       }
     },
     "eth-keyring-controller>eth-sig-util>ethereumjs-abi>bn.js": {
@@ -13606,25 +13701,52 @@
     },
     "eth-keyring-controller>eth-sig-util>ethereumjs-util": {
       "builtin": {
-        "assert": true,
-        "buffer.Buffer.from": true
+        "assert": true
       },
       "globals": {
         "Buffer": true
       },
       "packages": {
         "eth-keyring-controller>@metamask/bip39>create-hash": true,
-        "eth-keyring-controller>eth-sig-util>ethereumjs-util>bn.js": true,
+        "eth-keyring-controller>eth-sig-util>ethereumjs-abi>bn.js": true,
+        "eth-keyring-controller>eth-sig-util>ethereumjs-util>elliptic": true,
         "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethereum-cryptography": true,
-        "eth-keyring-controller>eth-sig-util>ethereumjs-util>rlp": true
+        "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethjs-util": true,
+        "eth-keyring-controller>eth-sig-util>ethereumjs-util>rlp": true,
+        "eth-keyring-controller>eth-sig-util>ethereumjs-util>safe-buffer": true
       }
     },
-    "eth-keyring-controller>eth-sig-util>ethereumjs-util>bn.js": {
+    "eth-keyring-controller>eth-sig-util>ethereumjs-util>elliptic": {
+      "packages": {
+        "eth-keyring-controller>eth-sig-util>ethereumjs-abi>bn.js": true,
+        "eth-keyring-controller>eth-sig-util>ethereumjs-util>elliptic>brorand": true,
+        "eth-keyring-controller>eth-sig-util>ethereumjs-util>elliptic>hash.js": true,
+        "eth-keyring-controller>eth-sig-util>ethereumjs-util>elliptic>hmac-drbg": true,
+        "eth-keyring-controller>eth-sig-util>ethereumjs-util>elliptic>minimalistic-assert": true,
+        "eth-keyring-controller>eth-sig-util>ethereumjs-util>elliptic>minimalistic-crypto-utils": true,
+        "eth-keyring-controller>obs-store>readable-stream>inherits": true
+      }
+    },
+    "eth-keyring-controller>eth-sig-util>ethereumjs-util>elliptic>brorand": {
       "builtin": {
-        "buffer.Buffer": true
+        "crypto.randomBytes": true
       },
       "globals": {
-        "Buffer": true
+        "crypto": true,
+        "msCrypto": true
+      }
+    },
+    "eth-keyring-controller>eth-sig-util>ethereumjs-util>elliptic>hash.js": {
+      "packages": {
+        "eth-keyring-controller>eth-sig-util>ethereumjs-util>elliptic>minimalistic-assert": true,
+        "eth-keyring-controller>obs-store>readable-stream>inherits": true
+      }
+    },
+    "eth-keyring-controller>eth-sig-util>ethereumjs-util>elliptic>hmac-drbg": {
+      "packages": {
+        "eth-keyring-controller>eth-sig-util>ethereumjs-util>elliptic>hash.js": true,
+        "eth-keyring-controller>eth-sig-util>ethereumjs-util>elliptic>minimalistic-assert": true,
+        "eth-keyring-controller>eth-sig-util>ethereumjs-util>elliptic>minimalistic-crypto-utils": true
       }
     },
     "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethereum-cryptography": {
@@ -13638,17 +13760,11 @@
         "Buffer.from": true
       },
       "packages": {
-        "eth-keyring-controller>@metamask/bip39>pbkdf2>safe-buffer": true,
         "eth-keyring-controller>@metamask/bip39>randombytes": true,
         "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethereum-cryptography>keccak": true,
         "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethereum-cryptography>secp256k1": true,
+        "eth-keyring-controller>eth-sig-util>ethereumjs-util>safe-buffer": true,
         "eth-keyring-controller>eth-simple-keyring>ethereumjs-wallet>bs58check": true
-      }
-    },
-    "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethereum-cryptography>hash.js": {
-      "packages": {
-        "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethereum-cryptography>hash.js>minimalistic-assert": true,
-        "eth-keyring-controller>obs-store>readable-stream>inherits": true
       }
     },
     "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethereum-cryptography>keccak": {
@@ -13700,7 +13816,7 @@
     },
     "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethereum-cryptography>keccak>readable-stream>string_decoder": {
       "packages": {
-        "eth-keyring-controller>@metamask/bip39>pbkdf2>safe-buffer": true
+        "eth-keyring-controller>eth-sig-util>ethereumjs-util>safe-buffer": true
       }
     },
     "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethereum-cryptography>secp256k1": {
@@ -13708,35 +13824,22 @@
         "__dirname": true
       },
       "packages": {
-        "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
-        "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic": true
+        "eth-keyring-controller>eth-sig-util>ethereumjs-util>elliptic": true,
+        "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true
       }
     },
-    "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic": {
-      "packages": {
-        "eth-keyring-controller>eth-sig-util>ethereumjs-abi>bn.js": true,
-        "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethereum-cryptography>hash.js": true,
-        "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethereum-cryptography>hash.js>minimalistic-assert": true,
-        "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>brorand": true,
-        "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>hmac-drbg": true,
-        "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>minimalistic-crypto-utils": true,
-        "eth-keyring-controller>obs-store>readable-stream>inherits": true
-      }
-    },
-    "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>brorand": {
-      "builtin": {
-        "crypto.randomBytes": true
-      },
+    "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethjs-util": {
       "globals": {
-        "crypto": true,
-        "msCrypto": true
+        "Buffer": true
+      },
+      "packages": {
+        "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethjs-util>is-hex-prefixed": true,
+        "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethjs-util>strip-hex-prefix": true
       }
     },
-    "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>hmac-drbg": {
+    "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethjs-util>strip-hex-prefix": {
       "packages": {
-        "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethereum-cryptography>hash.js": true,
-        "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethereum-cryptography>hash.js>minimalistic-assert": true,
-        "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>minimalistic-crypto-utils": true
+        "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethjs-util>is-hex-prefixed": true
       }
     },
     "eth-keyring-controller>eth-sig-util>ethereumjs-util>rlp": {
@@ -13755,6 +13858,11 @@
       },
       "globals": {
         "Buffer": true
+      }
+    },
+    "eth-keyring-controller>eth-sig-util>ethereumjs-util>safe-buffer": {
+      "builtin": {
+        "buffer": true
       }
     },
     "eth-keyring-controller>eth-sig-util>tweetnacl": {
@@ -13784,8 +13892,31 @@
       },
       "packages": {
         "eth-keyring-controller>eth-sig-util": true,
-        "eth-keyring-controller>eth-sig-util>ethereumjs-util": true,
+        "eth-keyring-controller>eth-simple-keyring>ethereumjs-util": true,
         "eth-keyring-controller>eth-simple-keyring>ethereumjs-wallet": true
+      }
+    },
+    "eth-keyring-controller>eth-simple-keyring>ethereumjs-util": {
+      "builtin": {
+        "assert": true,
+        "buffer.Buffer.from": true
+      },
+      "globals": {
+        "Buffer": true
+      },
+      "packages": {
+        "eth-keyring-controller>@metamask/bip39>create-hash": true,
+        "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethereum-cryptography": true,
+        "eth-keyring-controller>eth-sig-util>ethereumjs-util>rlp": true,
+        "eth-keyring-controller>eth-simple-keyring>ethereumjs-util>bn.js": true
+      }
+    },
+    "eth-keyring-controller>eth-simple-keyring>ethereumjs-util>bn.js": {
+      "builtin": {
+        "buffer.Buffer": true
+      },
+      "globals": {
+        "Buffer": true
       }
     },
     "eth-keyring-controller>eth-simple-keyring>ethereumjs-wallet": {
@@ -13803,8 +13934,8 @@
       },
       "packages": {
         "eth-keyring-controller>@metamask/bip39>randombytes": true,
-        "eth-keyring-controller>eth-sig-util>ethereumjs-util": true,
         "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethereum-cryptography": true,
+        "eth-keyring-controller>eth-simple-keyring>ethereumjs-util": true,
         "eth-keyring-controller>eth-simple-keyring>ethereumjs-wallet>aes-js": true,
         "eth-keyring-controller>eth-simple-keyring>ethereumjs-wallet>bs58check": true,
         "eth-keyring-controller>eth-simple-keyring>ethereumjs-wallet>scrypt-js": true,
@@ -13820,7 +13951,7 @@
     "eth-keyring-controller>eth-simple-keyring>ethereumjs-wallet>bs58check": {
       "packages": {
         "eth-keyring-controller>@metamask/bip39>create-hash": true,
-        "eth-keyring-controller>@metamask/bip39>pbkdf2>safe-buffer": true,
+        "eth-keyring-controller>eth-sig-util>ethereumjs-util>safe-buffer": true,
         "eth-keyring-controller>eth-simple-keyring>ethereumjs-wallet>bs58check>bs58": true
       }
     },
@@ -13831,7 +13962,7 @@
     },
     "eth-keyring-controller>eth-simple-keyring>ethereumjs-wallet>bs58check>bs58>base-x": {
       "packages": {
-        "eth-keyring-controller>@metamask/bip39>pbkdf2>safe-buffer": true
+        "eth-keyring-controller>eth-sig-util>ethereumjs-util>safe-buffer": true
       }
     },
     "eth-keyring-controller>eth-simple-keyring>ethereumjs-wallet>scrypt-js": {
@@ -14665,10 +14796,36 @@
         "Buffer.from": true
       },
       "packages": {
+        "eth-sig-util>ethereumjs-util": true,
         "eth-sig-util>tweetnacl": true,
         "eth-sig-util>tweetnacl-util": true,
-        "ethereumjs-abi": true,
-        "ethereumjs-util": true
+        "ethereumjs-abi": true
+      }
+    },
+    "eth-sig-util>ethereumjs-util": {
+      "builtin": {
+        "assert": true
+      },
+      "globals": {
+        "Buffer": true
+      },
+      "packages": {
+        "bn.js": true,
+        "eth-sig-util>ethereumjs-util>ethjs-util": true,
+        "ethereumjs-util>create-hash": true,
+        "ethereumjs-util>ethereum-cryptography": true,
+        "ethereumjs-util>rlp": true,
+        "hdkey>safe-buffer": true,
+        "hdkey>secp256k1>elliptic": true
+      }
+    },
+    "eth-sig-util>ethereumjs-util>ethjs-util": {
+      "globals": {
+        "Buffer": true
+      },
+      "packages": {
+        "ethjs>ethjs-util>is-hex-prefixed": true,
+        "ethjs>ethjs-util>strip-hex-prefix": true
       }
     },
     "eth-sig-util>tweetnacl": {

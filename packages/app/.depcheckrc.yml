@@ -31,6 +31,7 @@ ignores:
   - '@ensdomains/content-hash'
   - '@eth-optimism/contracts'
   - '@ethereumjs/common'
+  - '@ethersproject/abi'
   - '@ethersproject/contracts'
   - '@ethersproject/providers'
   - '@formatjs/intl-relativetimeformat'
@@ -116,6 +117,7 @@ ignores:
   - human-standard-token-abi
   - immer
   - is-retry-allowed
+  - isomorphic-ws
   - json-rpc-engine
   - json-rpc-middleware-stream
   - jsonschema
