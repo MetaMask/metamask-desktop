@@ -42,6 +42,12 @@ const Pair = ({ isDesktopPaired, isSuccessfulPairSeen, history }) => {
       setOtpValidating(false);
     });
 
+    // window.electronBridge.simulateError(() => {
+    //   const error = new Error('Error render process')
+    //   console.error('Something wrong happened on render process', error)
+    //   throw error
+    // });
+
     return () => {
       window.electronBridge.removeInvalidOtpListeners();
     };
