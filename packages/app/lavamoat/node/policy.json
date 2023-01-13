@@ -862,6 +862,9 @@
     "@metamask/approval-controller>nanoid": {
       "builtin": {
         "crypto": true
+      },
+      "globals": {
+        "Buffer.allocUnsafe": true
       }
     },
     "@metamask/assets-controllers": {
@@ -1762,6 +1765,9 @@
     "@metamask/notification-controller>nanoid": {
       "builtin": {
         "crypto": true
+      },
+      "globals": {
+        "Buffer.allocUnsafe": true
       }
     },
     "@metamask/obs-store": {
@@ -1802,6 +1808,9 @@
     "@metamask/permission-controller>nanoid": {
       "builtin": {
         "crypto": true
+      },
+      "globals": {
+        "Buffer.allocUnsafe": true
       }
     },
     "@metamask/phishing-controller": {
@@ -2671,6 +2680,9 @@
     "@metamask/snaps-controllers>nanoid": {
       "builtin": {
         "crypto": true
+      },
+      "globals": {
+        "Buffer.allocUnsafe": true
       }
     },
     "@metamask/snaps-controllers>readable-web-to-node-stream": {
@@ -7007,6 +7019,11 @@
         "ethjs>number-to-bn": true
       }
     },
+    "ethjs>ethjs-unit>bn.js": {
+      "builtin": {
+        "buffer.Buffer": true
+      }
+    },
     "ethjs>ethjs-util": {
       "globals": {
         "Buffer": true
@@ -7030,6 +7047,11 @@
       "packages": {
         "ethjs>ethjs-util>strip-hex-prefix": true,
         "ethjs>number-to-bn>bn.js": true
+      }
+    },
+    "ethjs>number-to-bn>bn.js": {
+      "builtin": {
+        "buffer.Buffer": true
       }
     },
     "extension-port-stream": {

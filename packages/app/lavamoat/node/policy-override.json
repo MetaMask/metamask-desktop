@@ -170,6 +170,16 @@
         "buffer.Buffer": true
       }
     },
+    "ethjs>ethjs-unit>bn.js": {
+      "builtin": {
+        "buffer.Buffer": true
+      }
+    },
+    "ethjs>number-to-bn>bn.js": {
+      "builtin": {
+        "buffer.Buffer": true
+      }
+    },
     "electron-log": {
       "builtin": {
         "http": false,
@@ -213,21 +223,33 @@
     "@metamask/permission-controller>nanoid": {
       "builtin": {
         "crypto": true
+      },
+      "globals": {
+        "Buffer.allocUnsafe": true
       }
     },
     "@metamask/approval-controller>nanoid": {
       "builtin": {
         "crypto": true
+      },
+      "globals": {
+        "Buffer.allocUnsafe": true
       }
     },
     "@metamask/notification-controller>nanoid": {
       "builtin": {
         "crypto": true
+      },
+      "globals": {
+        "Buffer.allocUnsafe": true
       }
     },
     "@metamask/snaps-controllers>nanoid": {
       "builtin": {
         "crypto": true
+      },
+      "globals": {
+        "Buffer.allocUnsafe": true
       }
     }
   }
