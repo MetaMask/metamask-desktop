@@ -13,6 +13,17 @@ import { LedgerBridgeKeyring as LedgerKeyring } from '../hw/ledger/ledger-keyrin
 import TrezorKeyring from '../hw/trezor/trezor-keyring';
 import LatticeKeyring from '../hw/lattice/lattice-keyring';
 import DesktopApp from './desktop-app';
+import * as Sentry from "@sentry/electron/main"
+import { Options } from '@sentry/types';
+import {getSentryDefaultOptions} from './renderer/setup-sentry'
+import {getDesktopVersion} from '../utils/version'
+
+const release = getDesktopVersion()
+// Init Sentry in the main process
+const sentryOptions: Options = getSentryDefaultOptions(release)
+  if(sentryOptions){
+    Sentry.init({ ...sentryOptions, ipcMode: Sentry.IPCMode.Both, release });
+  }
 
 /**
  * TODO
