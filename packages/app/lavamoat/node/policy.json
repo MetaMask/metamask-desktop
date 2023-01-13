@@ -199,6 +199,7 @@
         "Buffer.isBuffer": true,
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@ethereumjs/common>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@ethereumjs/common>ethereumjs-util>ethereum-cryptography>keccak>readable-stream": true
@@ -263,6 +264,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@ethereumjs/common>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@ethereumjs/common>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic": true
@@ -408,6 +410,7 @@
         "Buffer.isBuffer": true,
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>keccak>readable-stream": true
@@ -472,6 +475,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic": true
@@ -586,6 +590,7 @@
         "Buffer.isBuffer": true,
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>keccak>readable-stream": true
@@ -650,6 +655,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic": true
@@ -1472,6 +1478,7 @@
         "Buffer.isBuffer": true,
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@keystonehq/metamask-airgapped-keyring>@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@keystonehq/metamask-airgapped-keyring>@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>keccak>readable-stream": true
@@ -1536,6 +1543,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@keystonehq/metamask-airgapped-keyring>@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@keystonehq/metamask-airgapped-keyring>@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic": true
@@ -1650,6 +1658,7 @@
         "Buffer.isBuffer": true,
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@keystonehq/metamask-airgapped-keyring>@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@keystonehq/metamask-airgapped-keyring>@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>keccak>readable-stream": true
@@ -1714,6 +1723,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@keystonehq/metamask-airgapped-keyring>@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@keystonehq/metamask-airgapped-keyring>@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic": true
@@ -2739,6 +2749,7 @@
         "Buffer.isBuffer": true,
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/address-book-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@metamask/address-book-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak>readable-stream": true
@@ -2803,6 +2814,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/address-book-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@metamask/address-book-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic": true
@@ -3943,6 +3955,7 @@
         "Buffer.isBuffer": true,
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/assets-controllers>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@metamask/assets-controllers>ethereumjs-util>ethereum-cryptography>keccak>readable-stream": true
@@ -4002,6 +4015,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/assets-controllers>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@metamask/assets-controllers>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic": true
@@ -4278,6 +4292,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/desktop>eciesjs>secp256k1>elliptic": true,
         "@metamask/desktop>eciesjs>secp256k1>node-gyp-build": true
@@ -4649,6 +4664,7 @@
         "Buffer.isBuffer": true,
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethereum-cryptography>keccak>readable-stream": true
@@ -4708,6 +4724,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>elliptic": true,
         "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true
@@ -4950,6 +4967,7 @@
         "Buffer.isBuffer": true,
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/eth-ledger-bridge-keyring>@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@metamask/eth-ledger-bridge-keyring>@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>keccak>readable-stream": true
@@ -5014,6 +5032,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/eth-ledger-bridge-keyring>@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@metamask/eth-ledger-bridge-keyring>@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic": true
@@ -5128,6 +5147,7 @@
         "Buffer.isBuffer": true,
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/eth-ledger-bridge-keyring>@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@metamask/eth-ledger-bridge-keyring>@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>keccak>readable-stream": true
@@ -5192,6 +5212,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/eth-ledger-bridge-keyring>@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@metamask/eth-ledger-bridge-keyring>@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic": true
@@ -5376,6 +5397,7 @@
         "Buffer.isBuffer": true,
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/eth-ledger-bridge-keyring>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@metamask/eth-ledger-bridge-keyring>ethereumjs-util>ethereum-cryptography>keccak>readable-stream": true
@@ -5435,6 +5457,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/eth-ledger-bridge-keyring>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@metamask/eth-ledger-bridge-keyring>hdkey>secp256k1>elliptic": true
@@ -5803,6 +5826,7 @@
         "Buffer.isBuffer": true,
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/gas-fee-controller>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@metamask/gas-fee-controller>ethereumjs-util>ethereum-cryptography>keccak>readable-stream": true
@@ -5862,6 +5886,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/gas-fee-controller>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@metamask/gas-fee-controller>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic": true
@@ -6048,6 +6073,7 @@
         "Buffer.isBuffer": true,
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak>readable-stream": true
@@ -6112,6 +6138,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic": true
@@ -6481,6 +6508,7 @@
         "Buffer.isBuffer": true,
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/phishing-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@metamask/phishing-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak>readable-stream": true
@@ -6545,6 +6573,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/phishing-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@metamask/phishing-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic": true
@@ -6925,6 +6954,7 @@
         "Buffer.isBuffer": true,
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak>readable-stream": true
@@ -6989,6 +7019,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic": true
@@ -8100,6 +8131,7 @@
         "Buffer.isBuffer": true,
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/smart-transactions-controller>@metamask/controllers>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@metamask/smart-transactions-controller>@metamask/controllers>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>keccak>readable-stream": true
@@ -8164,6 +8196,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/smart-transactions-controller>@metamask/controllers>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@metamask/smart-transactions-controller>@metamask/controllers>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic": true
@@ -8309,6 +8342,7 @@
         "Buffer.isBuffer": true,
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/smart-transactions-controller>@metamask/controllers>@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@metamask/smart-transactions-controller>@metamask/controllers>@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>keccak>readable-stream": true
@@ -8373,6 +8407,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/smart-transactions-controller>@metamask/controllers>@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@metamask/smart-transactions-controller>@metamask/controllers>@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic": true
@@ -8487,6 +8522,7 @@
         "Buffer.isBuffer": true,
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/smart-transactions-controller>@metamask/controllers>@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@metamask/smart-transactions-controller>@metamask/controllers>@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>keccak>readable-stream": true
@@ -8551,6 +8587,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/smart-transactions-controller>@metamask/controllers>@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@metamask/smart-transactions-controller>@metamask/controllers>@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic": true
@@ -9536,6 +9573,7 @@
         "Buffer.isBuffer": true,
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>keccak>readable-stream": true
@@ -9602,6 +9640,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/smart-transactions-controller>@metamask/controllers>eth-sig-util>ethereumjs-util>elliptic": true,
         "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true
@@ -10284,6 +10323,7 @@
         "Buffer.isBuffer": true,
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/snaps-controllers>@metamask/base-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@metamask/snaps-controllers>tar-stream>readable-stream": true
@@ -10314,6 +10354,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/snaps-controllers>@metamask/base-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@metamask/snaps-controllers>@metamask/base-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic": true
@@ -10777,6 +10818,7 @@
         "Buffer.isBuffer": true,
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/snaps-controllers>@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@metamask/snaps-controllers>@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak>readable-stream": true
@@ -10841,6 +10883,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "@metamask/snaps-controllers>@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "@metamask/snaps-controllers>@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic": true
@@ -13774,6 +13817,7 @@
         "Buffer.isBuffer": true,
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethereum-cryptography>keccak>readable-stream": true
@@ -13823,6 +13867,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "eth-keyring-controller>eth-sig-util>ethereumjs-util>elliptic": true,
         "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true
@@ -14119,6 +14164,7 @@
         "Buffer.isBuffer": true,
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "eth-lattice-keyring>@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "eth-lattice-keyring>@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>keccak>readable-stream": true
@@ -14183,6 +14229,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "eth-lattice-keyring>@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "eth-lattice-keyring>@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic": true
@@ -14273,6 +14320,7 @@
         "Buffer.isBuffer": true,
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "eth-lattice-keyring>gridplus-sdk>borc>readable-stream": true,
         "eth-lattice-keyring>gridplus-sdk>secp256k1>node-gyp-build": true
@@ -14287,6 +14335,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "eth-lattice-keyring>gridplus-sdk>elliptic": true,
         "eth-lattice-keyring>gridplus-sdk>secp256k1>node-gyp-build": true
@@ -14585,6 +14634,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "eth-lattice-keyring>gridplus-sdk>elliptic": true,
         "eth-lattice-keyring>gridplus-sdk>secp256k1>node-gyp-build": true
@@ -14812,6 +14862,7 @@
       "packages": {
         "bn.js": true,
         "eth-sig-util>ethereumjs-util>ethjs-util": true,
+        "eth-sig-util>ethereumjs-util>safe-buffer": true,
         "ethereumjs-util>create-hash": true,
         "ethereumjs-util>ethereum-cryptography": true,
         "ethereumjs-util>rlp": true,
@@ -14826,6 +14877,11 @@
       "packages": {
         "ethjs>ethjs-util>is-hex-prefixed": true,
         "ethjs>ethjs-util>strip-hex-prefix": true
+      }
+    },
+    "eth-sig-util>ethereumjs-util>safe-buffer": {
+      "builtin": {
+        "buffer": true
       }
     },
     "eth-sig-util>tweetnacl": {
@@ -14947,6 +15003,7 @@
         "Buffer.isBuffer": true,
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "eth-trezor-keyring>@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "eth-trezor-keyring>@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>keccak>readable-stream": true
@@ -15011,6 +15068,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "eth-trezor-keyring>@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "eth-trezor-keyring>@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic": true
@@ -15125,6 +15183,7 @@
         "Buffer.isBuffer": true,
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "eth-trezor-keyring>@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "eth-trezor-keyring>@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>keccak>readable-stream": true
@@ -15189,6 +15248,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "eth-trezor-keyring>@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "eth-trezor-keyring>@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic": true
@@ -15357,6 +15417,7 @@
         "Buffer.isBuffer": true,
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>blake-hash>node-gyp-build": true,
         "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>blake-hash>readable-stream": true
@@ -15371,6 +15432,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "eth-trezor-keyring>hdkey>secp256k1>elliptic": true,
         "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>blake-hash>node-gyp-build": true
@@ -15913,6 +15975,7 @@
         "Buffer.isBuffer": true,
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>blake-hash>node-gyp-build": true,
         "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>blake-hash>readable-stream": true
@@ -16179,6 +16242,7 @@
       "packages": {
         "ethereumjs-util>create-hash": true,
         "ethereumjs-util>ethereum-cryptography>bs58check>bs58": true,
+        "ethereumjs-util>ethereum-cryptography>bs58check>safe-buffer": true,
         "hdkey>safe-buffer": true
       }
     },
@@ -16189,7 +16253,18 @@
     },
     "ethereumjs-util>ethereum-cryptography>bs58check>bs58>base-x": {
       "packages": {
+        "ethereumjs-util>ethereum-cryptography>bs58check>bs58>base-x>safe-buffer": true,
         "hdkey>safe-buffer": true
+      }
+    },
+    "ethereumjs-util>ethereum-cryptography>bs58check>bs58>base-x>safe-buffer": {
+      "builtin": {
+        "buffer": true
+      }
+    },
+    "ethereumjs-util>ethereum-cryptography>bs58check>safe-buffer": {
+      "builtin": {
+        "buffer": true
       }
     },
     "ethereumjs-util>ethereum-cryptography>hash.js": {
@@ -16205,6 +16280,7 @@
         "Buffer.isBuffer": true,
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "ethereumjs-util>ethereum-cryptography>keccak>readable-stream": true
@@ -16247,7 +16323,13 @@
     },
     "ethereumjs-util>ethereum-cryptography>keccak>readable-stream>string_decoder": {
       "packages": {
+        "ethereumjs-util>ethereum-cryptography>keccak>readable-stream>string_decoder>safe-buffer": true,
         "hdkey>safe-buffer": true
+      }
+    },
+    "ethereumjs-util>ethereum-cryptography>keccak>readable-stream>string_decoder>safe-buffer": {
+      "builtin": {
+        "buffer": true
       }
     },
     "ethereumjs-util>ethereum-cryptography>randombytes": {
@@ -16259,6 +16341,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
         "hdkey>secp256k1>elliptic": true
@@ -16360,6 +16443,7 @@
         "Buffer.isBuffer": true,
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "ethereumjs-wallet>ethereum-cryptography>keccak>node-gyp-build": true,
         "ethereumjs-wallet>ethereum-cryptography>keccak>readable-stream": true
@@ -16414,6 +16498,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "ethereumjs-wallet>ethereum-cryptography>keccak>node-gyp-build": true,
         "ethereumjs-wallet>ethereum-cryptography>secp256k1>elliptic": true
@@ -18605,7 +18690,13 @@
     },
     "hdkey>secp256k1>bip66": {
       "packages": {
-        "hdkey>safe-buffer": true
+        "hdkey>safe-buffer": true,
+        "hdkey>secp256k1>bip66>safe-buffer": true
+      }
+    },
+    "hdkey>secp256k1>bip66>safe-buffer": {
+      "builtin": {
+        "buffer": true
       }
     },
     "hdkey>secp256k1>elliptic": {
@@ -18863,7 +18954,8 @@
       "packages": {
         "end-of-stream": true,
         "obj-multiplex>readable-stream": true,
-        "pump>once": true
+        "pump>once": true,
+        "readable-stream": true
       }
     },
     "obj-multiplex>readable-stream": {
