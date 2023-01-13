@@ -2136,6 +2136,7 @@
         "@storybook/builder-webpack5>glob>minimatch": true,
         "@storybook/builder-webpack5>glob>path-is-absolute": true,
         "duplexify>inherits": true,
+        "eslint>minimatch": true,
         "pump>once": true
       }
     },
@@ -3918,6 +3919,7 @@
         "eslint-plugin-import>object.values": true,
         "eslint-plugin-import>tsconfig-paths": true,
         "eslint>is-glob": true,
+        "eslint>minimatch": true,
         "typescript": true
       }
     },
@@ -4298,6 +4300,7 @@
         "eslint-plugin-node>minimatch": true,
         "eslint-plugin-node>resolve": true,
         "eslint-plugin-node>semver": true,
+        "eslint>minimatch": true,
         "globby>ignore": true
       }
     },
@@ -4825,6 +4828,8 @@
         "eslint>@eslint/eslintrc>strip-json-comments": true,
         "eslint>ajv": true,
         "eslint>debug": true,
+        "eslint>minimatch": true,
+        "eslint>strip-json-comments": true,
         "globby>ignore": true
       }
     },
@@ -4852,7 +4857,8 @@
       "packages": {
         "eslint>@humanwhocodes/config-array>@humanwhocodes/object-schema": true,
         "eslint>@humanwhocodes/config-array>minimatch": true,
-        "eslint>debug": true
+        "eslint>debug": true,
+        "eslint>minimatch": true
       }
     },
     "eslint>@humanwhocodes/config-array>minimatch": {
@@ -7484,6 +7490,7 @@
       },
       "packages": {
         "gulp-watch>chokidar>braces>snapdragon": true,
+        "gulp-watch>chokidar>braces>snapdragon>debug": true,
         "gulp-watch>chokidar>braces>to-regex": true,
         "gulp-watch>chokidar>braces>to-regex>regex-not": true,
         "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>debug": true,
@@ -8657,6 +8664,7 @@
         "gulp>gulp-cli>matchdep>micromatch>extglob>expand-brackets>posix-character-classes": true,
         "gulp>gulp-cli>matchdep>micromatch>regex-not": true,
         "gulp>gulp-cli>matchdep>micromatch>snapdragon": true,
+        "gulp>gulp-cli>matchdep>micromatch>snapdragon>debug": true,
         "gulp>gulp-cli>matchdep>micromatch>snapdragon>define-property": true,
         "gulp>gulp-cli>matchdep>micromatch>to-regex": true
       }
@@ -9767,7 +9775,8 @@
       },
       "packages": {
         "duplexify>inherits": true,
-        "labeled-stream-splicer>stream-splicer>readable-stream": true
+        "labeled-stream-splicer>stream-splicer>readable-stream": true,
+        "readable-stream": true
       }
     },
     "labeled-stream-splicer>stream-splicer>readable-stream": {
@@ -10861,6 +10870,30 @@
         "pumpify>pump>once>wrappy": true
       }
     },
+    "readable-stream": {
+      "builtin": {
+        "events.EventEmitter": true,
+        "stream": true,
+        "util": true
+      },
+      "globals": {
+        "process.browser": true,
+        "process.env.READABLE_STREAM": true,
+        "process.stderr": true,
+        "process.stdout": true,
+        "process.version.slice": true,
+        "setImmediate": true
+      },
+      "packages": {
+        "@storybook/api>util-deprecate": true,
+        "duplexify>inherits": true,
+        "readable-stream>core-util-is": true,
+        "readable-stream>isarray": true,
+        "readable-stream>process-nextick-args": true,
+        "readable-stream>safe-buffer": true,
+        "readable-stream>string_decoder": true
+      }
+    },
     "readable-stream>core-util-is": {
       "globals": {
         "Buffer.isBuffer": true
@@ -10869,6 +10902,16 @@
     "readable-stream>process-nextick-args": {
       "globals": {
         "process": true
+      }
+    },
+    "readable-stream>safe-buffer": {
+      "builtin": {
+        "buffer": true
+      }
+    },
+    "readable-stream>string_decoder": {
+      "packages": {
+        "readable-stream>safe-buffer": true
       }
     },
     "sass": {
@@ -10967,7 +11010,13 @@
     },
     "through2>readable-stream>string_decoder": {
       "packages": {
-        "hdkey>safe-buffer": true
+        "hdkey>safe-buffer": true,
+        "through2>readable-stream>string_decoder>safe-buffer": true
+      }
+    },
+    "through2>readable-stream>string_decoder>safe-buffer": {
+      "builtin": {
+        "buffer": true
       }
     },
     "tsutils": {
@@ -11304,6 +11353,7 @@
       },
       "packages": {
         "eth-query>xtend": true,
+        "readable-stream": true,
         "vinyl>cloneable-readable>through2>readable-stream": true
       }
     },
