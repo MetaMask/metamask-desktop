@@ -6,6 +6,9 @@ ignores:
   - "@babel/preset-env"
   - "@babel/preset-typescript"
 
+  # CircleCI
+  - improved-yarn-audit
+
   # tsconfig
   - "@tsconfig/node16"
 

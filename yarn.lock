@@ -7416,6 +7416,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node-fetch@npm:^2.6.1":
+  version: 2.6.2
+  resolution: "@types/node-fetch@npm:2.6.2"
+  dependencies:
+    "@types/node": "*"
+    form-data: ^3.0.0
+  checksum: 6f73b1470000d303d25a6fb92875ea837a216656cb7474f66cdd67bb014aa81a5a11e7ac9c21fe19bee9ecb2ef87c1962bceeaec31386119d1ac86e4c30ad7a6
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:*, @types/node@npm:>=13.7.0":
   version: 18.7.18
   resolution: "@types/node@npm:18.7.18"
@@ -13974,6 +13984,7 @@ __metadata:
     "@ensdomains/content-hash": ^2.5.6
     "@ethereumjs/common": ^2.3.1
     "@ethereumjs/tx": ^3.2.1
+    "@ethersproject/abi": ^5.5.0
     "@ethersproject/bignumber": ^5.7.0
     "@ethersproject/contracts": ^5.7.0
     "@ethersproject/providers": ^5.7.2
@@ -14073,6 +14084,7 @@ __metadata:
     "@types/jsdom": ^11.2.0
     "@types/madge": ^5.0.0
     "@types/node": ^17.0.21
+    "@types/node-fetch": ^2.6.1
     "@types/pify": ^5.0.1
     "@types/pump": ^1.1.1
     "@types/react": ^16.9.53
@@ -14186,6 +14198,7 @@ __metadata:
     improved-yarn-audit: ^3.0.0
     ini: ^3.0.0
     is-retry-allowed: ^2.2.0
+    isomorphic-ws: ^4.0.1
     jest: ^29.1.2
     jest-canvas-mock: ^2.3.1
     jest-environment-jsdom: ^29.1.2
