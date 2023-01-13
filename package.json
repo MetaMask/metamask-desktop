@@ -15,11 +15,11 @@
     "setup": "yarn setup:submodule && yarn && yarn common build && yarn setup:extension && yarn extension",
     "setup:extension": "sh scripts/init-extension.sh",
     "setup:submodule": "sh scripts/init-submodule.sh",
-    "app": "yarn workspace desktop-app",
+    "app": "yarn workspace metamask-desktop-app",
     "common": "yarn workspace @metamask/desktop",
     "extension": "cd packages/app/submodules/extension && yarn",
     "release:common": "yarn create-release-branch --workspace-package='common'",
-    "release:app": "yarn create-release-branch --workspace-package='app'"
+    "release:app": "yarn create-release-branch --workspace-package='app' --tag-name='metamask-desktop-app'"
   },
   "resolutions": {
     "@babel/runtime@^7.8.4": "patch:@babel/runtime@npm%3A7.18.9#./.yarn/patches/@babel-runtime-npm-7.18.9-28ca6b5f61.patch",

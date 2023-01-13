@@ -447,6 +447,88 @@
       "builtin": {
         "buffer": true
       }
+    },
+    "ethjs>ethjs-unit>bn.js": {
+      "builtin": {
+        "buffer.Buffer": true
+      }
+    },
+    "ethjs>number-to-bn>bn.js": {
+      "builtin": {
+        "buffer.Buffer": true
+      }
+    },
+    "electron-log": {
+      "builtin": {
+        "http": false,
+        "https": false
+      },
+      "globals": {
+        "URLSearchParams": false,
+        "asyncWriteQueue": false,
+        "bytesWritten": false,
+        "functions": false,
+        "hasActiveAsyncWriting": false,
+        "hooks": false,
+        "includeRenderer": false,
+        "initialSize": false,
+        "instances": false,
+        "isActive": false,
+        "isDev": false,
+        "levels": false,
+        "logFn": false,
+        "logId": false,
+        "onError": false,
+        "path": false,
+        "scope": false,
+        "showDialog": false,
+        "store": false,
+        "transports": false,
+        "variables": false,
+        "writeAsync": false,
+        "writeOptions": false
+      }
+    },
+    "webextension-polyfill": {
+      "globals": {
+        "browser": false,
+        "chrome": false,
+        "console.error": false,
+        "console.warn": false,
+        "define": false
+      }
+    },
+    "@metamask/permission-controller>nanoid": {
+      "builtin": {
+        "crypto": true
+      },
+      "globals": {
+        "Buffer.allocUnsafe": true
+      }
+    },
+    "@metamask/approval-controller>nanoid": {
+      "builtin": {
+        "crypto": true
+      },
+      "globals": {
+        "Buffer.allocUnsafe": true
+      }
+    },
+    "@metamask/notification-controller>nanoid": {
+      "builtin": {
+        "crypto": true
+      },
+      "globals": {
+        "Buffer.allocUnsafe": true
+      }
+    },
+    "@metamask/snaps-controllers>nanoid": {
+      "builtin": {
+        "crypto": true
+      },
+      "globals": {
+        "Buffer.allocUnsafe": true
+      }
     }
   }
 }

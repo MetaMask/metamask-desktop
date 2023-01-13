@@ -106,7 +106,7 @@ class DesktopApp extends EventEmitter {
     ipcMain.handle('reset', async (_event) => {
       await clearRawState();
       this.emit('restart');
-      this.status.isDesktopEnabled = false;
+      this.status.isDesktopPaired = false;
     });
 
     ipcMain.handle('set-theme', (event, theme) => {
@@ -130,7 +130,7 @@ class DesktopApp extends EventEmitter {
     const server = await this.createWebSocketServer();
     server.on('connection', (webSocket) => this.onConnection(webSocket));
 
-    this.status.isDesktopEnabled =
+    this.status.isDesktopPaired =
       (await getDesktopState()).desktopEnabled === true;
 
     this.appEvents.register();
@@ -209,7 +209,7 @@ class DesktopApp extends EventEmitter {
     );
 
     extensionConnection.on('paired', () => {
-      this.status.isDesktopEnabled = true;
+      this.status.isDesktopPaired = true;
     });
 
     extensionConnection.getPairing().on('invalid-otp', () => {
@@ -224,7 +224,7 @@ class DesktopApp extends EventEmitter {
 
     // if a connection is active it should set new connection as on hold
     // so the user unpair properly before establishing a new connection
-    if (this.extensionConnection && this.status.isDesktopEnabled) {
+    if (this.extensionConnection && this.status.isDesktopPaired) {
       if (this.additionalExtensionConnection) {
         this.additionalExtensionConnection.disconnect();
         this.additionalExtensionConnection.removeAllListeners();
@@ -265,7 +265,7 @@ class DesktopApp extends EventEmitter {
 
     this.status.connections = [];
     if (isDisconnectedByUser) {
-      this.status.isDesktopEnabled = false;
+      this.status.isDesktopPaired = false;
     }
 
     this.emit('restart');

@@ -22,7 +22,7 @@ import Spinner from '../../../submodules/extension/ui/components/ui/spinner';
 const ANIMATION_COMPLETE_DEFER_IN_MS = 1000;
 const OTP_VALIDATION_TIMEOUT_IN_MS = 5000;
 
-const Pair = ({ isDesktopEnabled, isSuccessfulPairSeen, history }) => {
+const Pair = ({ isDesktopPaired, isSuccessfulPairSeen, history }) => {
   const t = useI18nContext();
   const [otp, setOtp] = React.useState('');
   const [isOtpValidating, setOtpValidating] = React.useState(false);
@@ -46,8 +46,8 @@ const Pair = ({ isDesktopEnabled, isSuccessfulPairSeen, history }) => {
   }, []);
 
   useEffect(() => {
-    if (isDesktopEnabled) {
-      console.log('Paired, redirecting');
+    if (isDesktopPaired) {
+      electronLog.log('Paired, redirecting');
       clearTimeout(otpValidationTimeoutId);
       if (isSuccessfulPairSeen) {
         history.push(SETTINGS_ROUTE);
@@ -55,7 +55,7 @@ const Pair = ({ isDesktopEnabled, isSuccessfulPairSeen, history }) => {
         history.push(SUCCESSFUL_PAIR_ROUTE);
       }
     }
-  }, [isDesktopEnabled, isSuccessfulPairSeen, history, otpValidationTimeoutId]);
+  }, [isDesktopPaired, isSuccessfulPairSeen, history, otpValidationTimeoutId]);
 
   const handleOTPChange = (otpValue) => {
     setOtp(otpValue);
@@ -154,7 +154,7 @@ Pair.propTypes = {
   /**
    * Whether the app is paired with the extension
    */
-  isDesktopEnabled: PropTypes.bool,
+  isDesktopPaired: PropTypes.bool,
   /**
    * History object from react-router
    */

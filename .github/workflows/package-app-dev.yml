@@ -19,11 +19,65 @@ jobs:
 
   package-dev:
     environment: development
-    uses: ./.github/workflows/package-app.yml
-    secrets:
-      INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
-      MMD_WIN_CERT_BASE64: ${{ secrets.MMD_WIN_CERT_BASE64_DEV }}
-      MMD_WIN_CERT_PASSWORD: ${{ secrets.MMD_WIN_CERT_PASSWORD_DEV }}
-      MMD_MAC_CSC_BASE64: ${{ secrets.MMD_MAC_CSC_BASE64_DEV }}
-      MMD_MAC_CSC_KEY_PASSWORD: ${{ secrets.MMD_MAC_CSC_KEY_PASSWORD_DEV }}
-      PUBLISH: "false"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - name: Checkout Git Repository
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          submodules: true
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+      - name: Install deps
+        shell: bash
+        run: yarn install --frozen-lockfile
+      - name: Run root post install
+        shell: bash
+        run: yarn setup:postinstall
+      - name: Run common post install
+        shell: bash
+        run: yarn common setup:postinstall
+      - name: Run app post install
+        shell: bash
+        run: yarn app setup:postinstall
+      - name: Run common build
+        shell: bash
+        run: yarn common build
+      - name: Run setup extension
+        shell: bash
+        run: yarn setup:extension
+      - name: Run extension install deps
+        shell: bash
+        run: yarn extension
+      - name: Build desktop ui
+        shell: bash
+        run: yarn app build:ui:lavamoat:ci
+      - name: Build desktop app
+        shell: bash
+        run: yarn app build:app
+        env:
+          INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
+      - name: Package app for ${{ matrix.os }}
+        shell: bash
+        run:  |
+              if [ "$RUNNER_OS" == "Linux" ]; then
+                yarn app package:linux:ci -p never
+              elif [ "$RUNNER_OS" == "Windows" ]; then
+                yarn app package:win:ci -p never
+              elif [ "$RUNNER_OS" == "macOS" ]; then
+                yarn app package:mac -p never
+              else
+                echo "$RUNNER_OS not supported"
+                exit 1
+              fi
+        env:
+          WIN_CSC_LINK: ${{ secrets.MMD_WIN_CERT_BASE64_DEV }}
+          WIN_CSC_KEY_PASSWORD: ${{ secrets.MMD_WIN_CERT_PASSWORD_DEV }}
+          CSC_LINK: ${{ secrets.MMD_MAC_CSC_BASE64_DEV }}
+          CSC_KEY_PASSWORD: ${{ secrets.MMD_MAC_CSC_KEY_PASSWORD_DEV }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

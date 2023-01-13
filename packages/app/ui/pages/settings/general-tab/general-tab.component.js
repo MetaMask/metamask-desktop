@@ -12,7 +12,7 @@ import useI18nContext from '../../../hooks/useI18nContext';
 
 const GeneralTab = ({
   isWebSocketConnected,
-  isDesktopEnabled,
+  isDesktopPaired,
   isSuccessfulPairSeen,
   lastActivation,
   language,
@@ -124,7 +124,7 @@ const GeneralTab = ({
       <PairStatus
         isWebSocketConnected={isWebSocketConnected}
         lastActivation={lastActivation}
-        isDesktopEnabled={isDesktopEnabled}
+        isDesktopPaired={isDesktopPaired}
         isSuccessfulPairSeen={isSuccessfulPairSeen}
       />
       {renderLanguageSettings()}
@@ -161,9 +161,9 @@ GeneralTab.propTypes = {
    */
   updateTheme: PropTypes.func,
   /**
-   * Whether the desktop app is enabled
+   * Whether the app is paired with the extension
    */
-  isDesktopEnabled: PropTypes.bool,
+  isDesktopPaired: PropTypes.bool,
   /**
    * Whether the user has successfully paired with the desktop app
    */
