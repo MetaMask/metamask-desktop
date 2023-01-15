@@ -2,6 +2,16 @@ import './globals';
 import path from 'path';
 import { app } from 'electron';
 import { runLava } from 'lavamoat';
+import * as Sentry from '@sentry/electron/main';
+import { getDesktopVersion } from '../utils/version';
+import { getSentryDefaultOptions } from './renderer/setup-sentry';
+
+const release = getDesktopVersion();
+// Init Sentry in the main process before lavamoat
+const sentryOptions = getSentryDefaultOptions(release);
+if (sentryOptions) {
+  Sentry.init({ ...sentryOptions, ipcMode: Sentry.IPCMode.Both, release });
+}
 
 // TODO Remove this whenever we solve the issue with domain builtin
 process.env.LOCKDOWN_DOMAIN_TAMING = 'unsafe';

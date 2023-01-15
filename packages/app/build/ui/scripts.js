@@ -133,19 +133,19 @@ function createScriptTasks({ applyLavaMoat, buildType, policyOnly }) {
       }),
     );
 
-        // Sentry subtask
-        const label = 'sentry-install';
-        const installSentrySubtask = createTask(
-          `${taskPrefix}:sentry`,
-          createNormalBundle({
-            buildTarget,
-            buildType,
-            destFilepath: `${label}.js`,
-            entryFilepath: `./src/${label}.ts`,
-            label,
-            policyOnly,
-          })
-        );
+    // Sentry subtask
+    const label = 'sentry-install';
+    const installSentrySubtask = createTask(
+      `${taskPrefix}:sentry`,
+      createNormalBundle({
+        buildTarget,
+        buildType,
+        destFilepath: `${label}.js`,
+        entryFilepath: `./src/${label}.ts`,
+        label,
+        policyOnly,
+      }),
+    );
 
     const allSubtasks = [standardSubtask, installSentrySubtask].map((subtask) =>
       runInChildProcess(subtask, {
@@ -368,7 +368,6 @@ function createNormalBundle({
       policyOnly,
       minify,
       reloadOnChange,
-  
     });
 
     // set bundle entries
@@ -382,9 +381,9 @@ function createNormalBundle({
       pipeline.get('vinyl').push(buffer());
       // setup bundle destination
 
-        const dest = `./dist/ui/`;
-        const destination = policyOnly ? noopWriteStream : gulp.dest(dest);
-        pipeline.get('dest').push(destination);
+      const dest = `./dist/ui/`;
+      const destination = policyOnly ? noopWriteStream : gulp.dest(dest);
+      pipeline.get('dest').push(destination);
     });
 
     await createBundle(buildConfiguration, { reloadOnChange });
