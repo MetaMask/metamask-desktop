@@ -30,6 +30,11 @@ export const UUID_MOCK = '6328e6ae-f867-4876-af6f-22a44efbe251';
 export const OTP_MOCK = '123456';
 export const VERSION_MOCK = '123.456.789.012';
 export const VERSION_2_MOCK = '456.123.789.012';
+export const RELEASE_MOCK = 'mock-release';
+export const SENTRY_DNS_DEV_MOCK = 'https://mock-dsn-dev';
+export const SENTRY_DNS_PROD_MOCK = 'https://mock-dsn-prod';
+export const METAMASK_ENVIRONMENT_DEV_MOCK = 'development';
+export const METAMASK_ENVIRONMENT_PROD_MOCK = 'production';
 
 export const NEW_CONNECTION_MESSAGE_MOCK = {
   clientId: CLIENT_ID_MOCK,

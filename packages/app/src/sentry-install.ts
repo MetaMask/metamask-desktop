@@ -6,6 +6,5 @@ declare const global: typeof globalThis & {
 
 // setup sentry error reporting
 global.sentry = setupSentry({
-  //TODO: Get the Desktop app version
-  release: `desktop-app-renderer`
+  release: `desktop-app-renderer`,
 });
