@@ -25,7 +25,7 @@ const SuccessfulPair = ({
 
   useEffect(() => {
     if (!isDesktopPaired) {
-      electronLog.log('Unpaired, redirecting back to pair');
+      __electronLog.log('Unpaired, redirecting back to pair');
       history.push(PAIR_ROUTE);
     }
   }, [isDesktopPaired, history]);
