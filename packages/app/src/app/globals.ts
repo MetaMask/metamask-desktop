@@ -72,7 +72,7 @@ if (!global.self) {
     release: getDesktopVersion(),
     getState: () => global.stateHooks?.getSentryState?.() || {},
     Sentry: SentryElectron,
-  });
+  } as any);
 }
 
 export {};

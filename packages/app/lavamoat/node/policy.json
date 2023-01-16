@@ -3003,6 +3003,14 @@
         "process.env.NODE_ENV": true
       }
     },
+    "@metamask/approval-controller>nanoid": {
+      "builtin": {
+        "crypto": true
+      },
+      "globals": {
+        "Buffer.allocUnsafe": true
+      }
+    },
     "@metamask/assets-controllers": {
       "builtin": {
         "events.EventEmitter": true
@@ -5967,332 +5975,18 @@
         "Buffer.from": true
       }
     },
-    "@metamask/notification-controller": {
-      "packages": {
-        "@metamask/notification-controller>@metamask/base-controller": true,
-        "@metamask/notification-controller>@metamask/controller-utils": true,
-        "@metamask/notification-controller>nanoid": true
-      }
-    },
-    "@metamask/notification-controller>@metamask/base-controller": {
-      "packages": {
-        "@metamask/notification-controller>immer": true
-      }
-    },
-    "@metamask/notification-controller>@metamask/controller-utils": {
-      "globals": {
-        "Buffer.from": true,
-        "console.error": true,
-        "fetch": true,
-        "setTimeout": true
-      },
-      "packages": {
-        "@metamask/notification-controller>@metamask/controller-utils>eth-ens-namehash": true,
-        "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util": true,
-        "@metamask/notification-controller>@metamask/controller-utils>ethjs-unit": true,
-        "@metamask/notification-controller>@metamask/controller-utils>fast-deep-equal": true,
-        "@metamask/notification-controller>@metamask/controller-utils>isomorphic-fetch": true
-      }
-    },
-    "@metamask/notification-controller>@metamask/controller-utils>eth-ens-namehash": {
-      "globals": {
-        "Buffer": true,
-        "name": "write"
-      },
-      "packages": {
-        "@metamask/notification-controller>@metamask/controller-utils>eth-ens-namehash>idna-uts46-hx": true,
-        "@metamask/notification-controller>@metamask/controller-utils>eth-ens-namehash>js-sha3": true
-      }
-    },
-    "@metamask/notification-controller>@metamask/controller-utils>eth-ens-namehash>idna-uts46-hx": {
-      "builtin": {
-        "punycode": true
-      },
-      "globals": {
-        "define": true
-      }
-    },
-    "@metamask/notification-controller>@metamask/controller-utils>eth-ens-namehash>js-sha3": {
-      "globals": {
-        "process": true
-      }
-    },
-    "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util": {
-      "builtin": {
-        "assert": true,
-        "buffer.Buffer.from": true
-      },
-      "globals": {
-        "Buffer": true
-      },
-      "packages": {
-        "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>bn.js": true,
-        "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>create-hash": true,
-        "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography": true,
-        "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>rlp": true
-      }
-    },
-    "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>bn.js": {
-      "builtin": {
-        "buffer.Buffer": true
-      },
-      "globals": {
-        "Buffer": true
-      }
-    },
-    "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>create-hash": {
-      "builtin": {
-        "crypto.createHash": true
-      }
-    },
-    "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>create-hash>inherits": {
-      "builtin": {
-        "util.inherits": true
-      }
-    },
-    "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography": {
-      "globals": {
-        "Buffer.from": true
-      },
-      "packages": {
-        "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak": true,
-        "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>randombytes": true,
-        "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1": true
-      }
-    },
-    "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>hash.js": {
-      "packages": {
-        "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>create-hash>inherits": true,
-        "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>hash.js>minimalistic-assert": true
-      }
-    },
     "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak": {
-      "globals": {
-        "Buffer.alloc": true,
-        "Buffer.from": true,
-        "Buffer.isBuffer": true,
-        "__dirname": true
-      },
-      "native": true,
-      "packages": {
-        "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
-        "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak>readable-stream": true
-      }
-    },
-    "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": {
-      "builtin": {
-        "fs.existsSync": true,
-        "fs.readdirSync": true,
-        "os.arch": true,
-        "os.platform": true,
-        "path.dirname": true,
-        "path.join": true,
-        "path.resolve": true
-      },
-      "globals": {
-        "__non_webpack_require__": true,
-        "__webpack_require__": true,
-        "process": true
-      }
-    },
-    "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak>readable-stream": {
-      "builtin": {
-        "buffer.Buffer": true,
-        "events.EventEmitter": true,
-        "stream": true,
-        "util": true
-      },
-      "globals": {
-        "process.env.READABLE_STREAM": true,
-        "process.nextTick": true,
-        "process.stderr": true,
-        "process.stdout": true
-      },
-      "packages": {
-        "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>create-hash>inherits": true,
-        "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak>readable-stream>string_decoder": true,
-        "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak>readable-stream>util-deprecate": true
-      }
-    },
-    "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak>readable-stream>string_decoder": {
-      "packages": {
-        "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>safe-buffer": true
-      }
-    },
-    "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak>readable-stream>util-deprecate": {
-      "builtin": {
-        "util.deprecate": true
-      }
-    },
-    "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>randombytes": {
-      "builtin": {
-        "crypto.randomBytes": true
-      }
-    },
-    "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>safe-buffer": {
-      "builtin": {
-        "buffer": true
-      }
+      "native": true
     },
     "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1": {
-      "globals": {
-        "__dirname": true
-      },
-      "native": true,
-      "packages": {
-        "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
-        "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic": true
-      }
+      "native": true
     },
-    "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic": {
-      "packages": {
-        "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>create-hash>inherits": true,
-        "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>hash.js": true,
-        "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>hash.js>minimalistic-assert": true,
-        "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>bn.js": true,
-        "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>brorand": true,
-        "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>hmac-drbg": true,
-        "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>minimalistic-crypto-utils": true
-      }
-    },
-    "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>bn.js": {
+    "@metamask/notification-controller>nanoid": {
       "builtin": {
-        "buffer.Buffer": true
+        "crypto": true
       },
       "globals": {
-        "Buffer": true
-      }
-    },
-    "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>brorand": {
-      "builtin": {
-        "crypto.randomBytes": true
-      },
-      "globals": {
-        "crypto": true,
-        "msCrypto": true
-      }
-    },
-    "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>hmac-drbg": {
-      "packages": {
-        "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>hash.js": true,
-        "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>hash.js>minimalistic-assert": true,
-        "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>minimalistic-crypto-utils": true
-      }
-    },
-    "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>rlp": {
-      "globals": {
-        "Buffer.concat": true,
-        "Buffer.from": true,
-        "Buffer.isBuffer": true
-      },
-      "packages": {
-        "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>rlp>bn.js": true
-      }
-    },
-    "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>rlp>bn.js": {
-      "builtin": {
-        "buffer.Buffer": true
-      },
-      "globals": {
-        "Buffer": true
-      }
-    },
-    "@metamask/notification-controller>@metamask/controller-utils>ethjs-unit": {
-      "packages": {
-        "@metamask/notification-controller>@metamask/controller-utils>ethjs-unit>bn.js": true,
-        "@metamask/notification-controller>@metamask/controller-utils>ethjs-unit>number-to-bn": true
-      }
-    },
-    "@metamask/notification-controller>@metamask/controller-utils>ethjs-unit>number-to-bn": {
-      "packages": {
-        "@metamask/notification-controller>@metamask/controller-utils>ethjs-unit>number-to-bn>bn.js": true,
-        "@metamask/notification-controller>@metamask/controller-utils>ethjs-unit>number-to-bn>strip-hex-prefix": true
-      }
-    },
-    "@metamask/notification-controller>@metamask/controller-utils>ethjs-unit>number-to-bn>strip-hex-prefix": {
-      "packages": {
-        "@metamask/notification-controller>@metamask/controller-utils>ethjs-unit>number-to-bn>strip-hex-prefix>is-hex-prefixed": true
-      }
-    },
-    "@metamask/notification-controller>@metamask/controller-utils>isomorphic-fetch": {
-      "globals": {
-        "Headers": "write",
-        "Request": "write",
-        "Response": "write",
-        "fetch": "write"
-      },
-      "packages": {
-        "@metamask/notification-controller>@metamask/controller-utils>isomorphic-fetch>node-fetch": true
-      }
-    },
-    "@metamask/notification-controller>@metamask/controller-utils>isomorphic-fetch>node-fetch": {
-      "builtin": {
-        "http": true,
-        "https": true,
-        "stream": true,
-        "url": true,
-        "zlib": true
-      },
-      "globals": {
-        "Buffer": true,
-        "clearTimeout": true,
-        "setTimeout": true
-      },
-      "packages": {
-        "@metamask/notification-controller>@metamask/controller-utils>isomorphic-fetch>node-fetch>encoding": true,
-        "@metamask/notification-controller>@metamask/controller-utils>isomorphic-fetch>node-fetch>whatwg-url": true
-      }
-    },
-    "@metamask/notification-controller>@metamask/controller-utils>isomorphic-fetch>node-fetch>encoding": {
-      "globals": {
-        "Buffer.from": true,
-        "console.error": true
-      },
-      "packages": {
-        "@metamask/notification-controller>@metamask/controller-utils>isomorphic-fetch>node-fetch>encoding>iconv-lite": true
-      }
-    },
-    "@metamask/notification-controller>@metamask/controller-utils>isomorphic-fetch>node-fetch>encoding>iconv-lite": {
-      "builtin": {
-        "stream": true,
-        "string_decoder.StringDecoder": true
-      },
-      "globals": {
-        "console.error": true
-      },
-      "packages": {
-        "@metamask/notification-controller>@metamask/controller-utils>isomorphic-fetch>node-fetch>encoding>iconv-lite>safer-buffer": true
-      }
-    },
-    "@metamask/notification-controller>@metamask/controller-utils>isomorphic-fetch>node-fetch>encoding>iconv-lite>safer-buffer": {
-      "builtin": {
-        "buffer": true
-      },
-      "globals": {
-        "process.binding": true
-      }
-    },
-    "@metamask/notification-controller>@metamask/controller-utils>isomorphic-fetch>node-fetch>whatwg-url": {
-      "builtin": {
-        "punycode.ucs2.decode": true
-      },
-      "globals": {
-        "Buffer": true
-      },
-      "packages": {
-        "@metamask/notification-controller>@metamask/controller-utils>isomorphic-fetch>node-fetch>whatwg-url>tr46": true,
-        "@metamask/notification-controller>@metamask/controller-utils>isomorphic-fetch>node-fetch>whatwg-url>webidl-conversions": true
-      }
-    },
-    "@metamask/notification-controller>@metamask/controller-utils>isomorphic-fetch>node-fetch>whatwg-url>tr46": {
-      "builtin": {
-        "punycode.toASCII": true,
-        "punycode.toUnicode": true
-      }
-    },
-    "@metamask/notification-controller>immer": {
-      "globals": {
-        "process.env.NODE_ENV": true
+        "Buffer.allocUnsafe": true
       }
     },
     "@metamask/obs-store": {
@@ -6390,6 +6084,14 @@
         "eth-rpc-errors": true,
         "immer": true,
         "json-rpc-engine": true
+      }
+    },
+    "@metamask/permission-controller>nanoid": {
+      "builtin": {
+        "crypto": true
+      },
+      "globals": {
+        "Buffer.allocUnsafe": true
       }
     },
     "@metamask/phishing-controller": {
@@ -6740,57 +6442,11 @@
         "punycode.toUnicode": true
       }
     },
-    "@metamask/rate-limit-controller": {
-      "globals": {
-        "setTimeout": true
-      },
-      "packages": {
-        "@metamask/rate-limit-controller>@metamask/base-controller": true,
-        "@metamask/rate-limit-controller>eth-rpc-errors": true
-      }
-    },
-    "@metamask/rate-limit-controller>@metamask/base-controller": {
-      "packages": {
-        "@metamask/rate-limit-controller>immer": true
-      }
-    },
-    "@metamask/rate-limit-controller>eth-rpc-errors": {
-      "packages": {
-        "@metamask/rate-limit-controller>eth-rpc-errors>fast-safe-stringify": true
-      }
-    },
-    "@metamask/rate-limit-controller>immer": {
-      "globals": {
-        "process.env.NODE_ENV": true
-      }
-    },
     "@metamask/rpc-methods": {
-      "globals": {
-        "console.warn": true
-      },
       "packages": {
-        "@metamask/rpc-methods>@metamask/browser-passworder": true,
         "@metamask/rpc-methods>@metamask/key-tree": true,
-        "@metamask/rpc-methods>@metamask/permission-controller": true,
-        "@metamask/rpc-methods>@metamask/snaps-ui": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils": true,
         "@metamask/rpc-methods>@metamask/utils": true,
-        "@metamask/rpc-methods>@noble/hashes": true,
-        "@metamask/rpc-methods>eth-rpc-errors": true,
-        "@metamask/rpc-methods>nanoid": true,
-        "@metamask/rpc-methods>superstruct": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/browser-passworder": {
-      "globals": {
-        "Buffer.from": true,
-        "btoa": true,
-        "crypto.getRandomValues": true,
-        "crypto.subtle.decrypt": true,
-        "crypto.subtle.deriveKey": true,
-        "crypto.subtle.encrypt": true,
-        "crypto.subtle.exportKey": true,
-        "crypto.subtle.importKey": true
+        "@metamask/rpc-methods>@noble/hashes": true
       }
     },
     "@metamask/rpc-methods>@metamask/controllers>eth-method-registry>ethjs>bn.js": {
@@ -6844,777 +6500,11 @@
         "@metamask/rpc-methods>@noble/hashes": true
       }
     },
-    "@metamask/rpc-methods>@metamask/permission-controller": {
-      "packages": {
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/base-controller": true,
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils": true,
-        "@metamask/rpc-methods>@metamask/permission-controller>deep-freeze-strict": true,
-        "@metamask/rpc-methods>@metamask/permission-controller>immer": true,
-        "@metamask/rpc-methods>@metamask/permission-controller>json-rpc-engine": true,
-        "@metamask/rpc-methods>eth-rpc-errors": true,
-        "@metamask/rpc-methods>nanoid": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/base-controller": {
-      "packages": {
-        "@metamask/rpc-methods>@metamask/permission-controller>immer": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils": {
-      "globals": {
-        "Buffer.from": true,
-        "console.error": true,
-        "fetch": true,
-        "setTimeout": true
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>eth-ens-namehash": true,
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util": true,
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethjs-unit": true,
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>isomorphic-fetch": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>fast-deep-equal": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>eth-ens-namehash": {
-      "globals": {
-        "Buffer": true,
-        "name": "write"
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>eth-ens-namehash>idna-uts46-hx": true,
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>eth-ens-namehash>js-sha3": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>eth-ens-namehash>idna-uts46-hx": {
-      "builtin": {
-        "punycode": true
-      },
-      "globals": {
-        "define": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>eth-ens-namehash>js-sha3": {
-      "globals": {
-        "process": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util": {
-      "builtin": {
-        "assert": true,
-        "buffer.Buffer.from": true
-      },
-      "globals": {
-        "Buffer": true
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>bn.js": true,
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>create-hash": true,
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography": true,
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>rlp": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>bn.js": {
-      "builtin": {
-        "buffer.Buffer": true
-      },
-      "globals": {
-        "Buffer": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>create-hash": {
-      "builtin": {
-        "crypto.createHash": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>create-hash>inherits": {
-      "builtin": {
-        "util.inherits": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography": {
-      "globals": {
-        "Buffer.from": true
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak": true,
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>randombytes": true,
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>hash.js": {
-      "packages": {
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>create-hash>inherits": true,
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>hash.js>minimalistic-assert": true
-      }
-    },
     "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak": {
-      "globals": {
-        "Buffer.alloc": true,
-        "Buffer.from": true,
-        "Buffer.isBuffer": true,
-        "__dirname": true
-      },
-      "native": true,
-      "packages": {
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak>readable-stream": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": {
-      "builtin": {
-        "fs.existsSync": true,
-        "fs.readdirSync": true,
-        "os.arch": true,
-        "os.platform": true,
-        "path.dirname": true,
-        "path.join": true,
-        "path.resolve": true
-      },
-      "globals": {
-        "__non_webpack_require__": true,
-        "__webpack_require__": true,
-        "process": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak>readable-stream": {
-      "builtin": {
-        "buffer.Buffer": true,
-        "events.EventEmitter": true,
-        "stream": true,
-        "util": true
-      },
-      "globals": {
-        "process.env.READABLE_STREAM": true,
-        "process.nextTick": true,
-        "process.stderr": true,
-        "process.stdout": true
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>create-hash>inherits": true,
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak>readable-stream>string_decoder": true,
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak>readable-stream>util-deprecate": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak>readable-stream>string_decoder": {
-      "packages": {
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>safe-buffer": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak>readable-stream>util-deprecate": {
-      "builtin": {
-        "util.deprecate": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>randombytes": {
-      "builtin": {
-        "crypto.randomBytes": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>safe-buffer": {
-      "builtin": {
-        "buffer": true
-      }
+      "native": true
     },
     "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1": {
-      "globals": {
-        "__dirname": true
-      },
-      "native": true,
-      "packages": {
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak>node-gyp-build": true,
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic": {
-      "packages": {
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>create-hash>inherits": true,
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>hash.js": true,
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>hash.js>minimalistic-assert": true,
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>bn.js": true,
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>brorand": true,
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>hmac-drbg": true,
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>minimalistic-crypto-utils": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>bn.js": {
-      "builtin": {
-        "buffer.Buffer": true
-      },
-      "globals": {
-        "Buffer": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>brorand": {
-      "builtin": {
-        "crypto.randomBytes": true
-      },
-      "globals": {
-        "crypto": true,
-        "msCrypto": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>hmac-drbg": {
-      "packages": {
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>hash.js": true,
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>hash.js>minimalistic-assert": true,
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1>elliptic>minimalistic-crypto-utils": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>rlp": {
-      "globals": {
-        "Buffer.concat": true,
-        "Buffer.from": true,
-        "Buffer.isBuffer": true
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>rlp>bn.js": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>rlp>bn.js": {
-      "builtin": {
-        "buffer.Buffer": true
-      },
-      "globals": {
-        "Buffer": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethjs-unit": {
-      "packages": {
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethjs-unit>bn.js": true,
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethjs-unit>number-to-bn": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethjs-unit>number-to-bn": {
-      "packages": {
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethjs-unit>number-to-bn>bn.js": true,
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethjs-unit>number-to-bn>strip-hex-prefix": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethjs-unit>number-to-bn>strip-hex-prefix": {
-      "packages": {
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethjs-unit>number-to-bn>strip-hex-prefix>is-hex-prefixed": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>isomorphic-fetch": {
-      "globals": {
-        "Headers": "write",
-        "Request": "write",
-        "Response": "write",
-        "fetch": "write"
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>isomorphic-fetch>node-fetch": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>isomorphic-fetch>node-fetch": {
-      "builtin": {
-        "http": true,
-        "https": true,
-        "stream": true,
-        "url": true,
-        "zlib": true
-      },
-      "globals": {
-        "Buffer": true,
-        "clearTimeout": true,
-        "setTimeout": true
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>isomorphic-fetch>node-fetch>encoding": true,
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>isomorphic-fetch>node-fetch>whatwg-url": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>isomorphic-fetch>node-fetch>encoding": {
-      "globals": {
-        "Buffer.from": true,
-        "console.error": true
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>isomorphic-fetch>node-fetch>encoding>iconv-lite": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>isomorphic-fetch>node-fetch>encoding>iconv-lite": {
-      "builtin": {
-        "stream": true,
-        "string_decoder.StringDecoder": true
-      },
-      "globals": {
-        "console.error": true
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>isomorphic-fetch>node-fetch>encoding>iconv-lite>safer-buffer": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>isomorphic-fetch>node-fetch>encoding>iconv-lite>safer-buffer": {
-      "builtin": {
-        "buffer": true
-      },
-      "globals": {
-        "process.binding": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>isomorphic-fetch>node-fetch>whatwg-url": {
-      "builtin": {
-        "punycode.ucs2.decode": true
-      },
-      "globals": {
-        "Buffer": true
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>isomorphic-fetch>node-fetch>whatwg-url>tr46": true,
-        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>isomorphic-fetch>node-fetch>whatwg-url>webidl-conversions": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>isomorphic-fetch>node-fetch>whatwg-url>tr46": {
-      "builtin": {
-        "punycode.toASCII": true,
-        "punycode.toUnicode": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>immer": {
-      "globals": {
-        "process.env.NODE_ENV": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>json-rpc-engine": {
-      "packages": {
-        "@metamask/rpc-methods>@metamask/permission-controller>json-rpc-engine>@metamask/safe-event-emitter": true,
-        "@metamask/rpc-methods>eth-rpc-errors": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/permission-controller>json-rpc-engine>@metamask/safe-event-emitter": {
-      "builtin": {
-        "events.EventEmitter": true
-      },
-      "globals": {
-        "setTimeout": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-ui": {
-      "packages": {
-        "@metamask/rpc-methods>@metamask/utils": true,
-        "@metamask/rpc-methods>superstruct": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils": {
-      "builtin": {
-        "child_process.fork": true,
-        "crypto": true,
-        "events": true,
-        "fs.promises.mkdir": true,
-        "fs.promises.readFile": true,
-        "fs.promises.stat": true,
-        "fs.promises.writeFile": true,
-        "fs/promises": true,
-        "path": true
-      },
-      "globals": {
-        "Buffer.byteLength": true,
-        "TextDecoder": true,
-        "URL": true,
-        "__dirname": true
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/key-tree>@scure/base": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/types": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>cron-parser": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>fast-deep-equal": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>rfdc": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>semver": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>validate-npm-package-name": true,
-        "@metamask/rpc-methods>@metamask/utils": true,
-        "@metamask/rpc-methods>@noble/hashes": true,
-        "@metamask/rpc-methods>superstruct": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core": {
-      "builtin": {
-        "assert": true,
-        "fs": true,
-        "module": true,
-        "path": true,
-        "url": true,
-        "util": true
-      },
-      "globals": {
-        "console.error": true,
-        "console.log": true,
-        "process": true
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@ampproject/remapping": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/code-frame": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/generator": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/helper-compilation-targets": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/helper-module-transforms": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/helpers": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/parser": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/template": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/traverse": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/types": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>convert-source-map": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>debug": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>gensync": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>json5": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>semver": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@ampproject/remapping": {
-      "globals": {
-        "define": true
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@ampproject/remapping>@jridgewell/gen-mapping": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@ampproject/remapping>@jridgewell/trace-mapping": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@ampproject/remapping>@jridgewell/gen-mapping": {
-      "globals": {
-        "define": true
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/generator>@jridgewell/gen-mapping>@jridgewell/set-array": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/generator>@jridgewell/gen-mapping>@jridgewell/sourcemap-codec": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@ampproject/remapping>@jridgewell/trace-mapping": {
-      "globals": {
-        "define": true
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@ampproject/remapping>@jridgewell/trace-mapping>@jridgewell/resolve-uri": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/generator>@jridgewell/gen-mapping>@jridgewell/sourcemap-codec": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@ampproject/remapping>@jridgewell/trace-mapping>@jridgewell/resolve-uri": {
-      "globals": {
-        "define": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/code-frame": {
-      "globals": {
-        "console.warn": true,
-        "process.emitWarning": true
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/code-frame>@babel/highlight": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/code-frame>@babel/highlight": {
-      "packages": {
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/code-frame>@babel/highlight>chalk": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/code-frame>@babel/highlight>js-tokens": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/types>@babel/helper-validator-identifier": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/code-frame>@babel/highlight>chalk": {
-      "globals": {
-        "process.env.TERM": true,
-        "process.platform": true
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/code-frame>@babel/highlight>chalk>ansi-styles": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/code-frame>@babel/highlight>chalk>escape-string-regexp": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>debug>supports-color": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/code-frame>@babel/highlight>chalk>ansi-styles": {
-      "packages": {
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/code-frame>@babel/highlight>chalk>ansi-styles>color-convert": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/code-frame>@babel/highlight>chalk>ansi-styles>color-convert": {
-      "packages": {
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/code-frame>@babel/highlight>chalk>ansi-styles>color-convert>color-name": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/generator": {
-      "globals": {
-        "console.error": true
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/generator>@jridgewell/gen-mapping": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/generator>jsesc": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/types": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/generator>@jridgewell/gen-mapping": {
-      "globals": {
-        "define": true
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@ampproject/remapping>@jridgewell/trace-mapping": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/generator>@jridgewell/gen-mapping>@jridgewell/set-array": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/generator>@jridgewell/gen-mapping>@jridgewell/sourcemap-codec": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/generator>@jridgewell/gen-mapping>@jridgewell/set-array": {
-      "globals": {
-        "define": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/generator>@jridgewell/gen-mapping>@jridgewell/sourcemap-codec": {
-      "globals": {
-        "Buffer": true,
-        "TextDecoder": true,
-        "define": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/generator>jsesc": {
-      "globals": {
-        "Buffer.isBuffer": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/helper-compilation-targets": {
-      "globals": {
-        "console.warn": true,
-        "process.versions.node": true
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/helper-compilation-targets>@babel/compat-data": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/helper-compilation-targets>@babel/helper-validator-option": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/helper-compilation-targets>browserslist": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/helper-compilation-targets>lru-cache": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>semver": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/helper-compilation-targets>browserslist": {
-      "builtin": {
-        "fs.existsSync": true,
-        "fs.readFileSync": true,
-        "fs.statSync": true,
-        "path.basename": true,
-        "path.dirname": true,
-        "path.join": true,
-        "path.resolve": true
-      },
-      "globals": {
-        "console.warn": true,
-        "process.env.BROWSERSLIST": true,
-        "process.env.BROWSERSLIST_CONFIG": true,
-        "process.env.BROWSERSLIST_DANGEROUS_EXTEND": true,
-        "process.env.BROWSERSLIST_DISABLE_CACHE": true,
-        "process.env.BROWSERSLIST_ENV": true,
-        "process.env.BROWSERSLIST_IGNORE_OLD_DATA": true,
-        "process.env.BROWSERSLIST_STATS": true,
-        "process.env.NODE_ENV": true,
-        "process.versions.node": true
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/helper-compilation-targets>browserslist>caniuse-lite": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/helper-compilation-targets>browserslist>electron-to-chromium": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/helper-compilation-targets>browserslist>node-releases": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/helper-compilation-targets>lru-cache": {
-      "packages": {
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/helper-compilation-targets>lru-cache>yallist": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/helper-module-transforms": {
-      "builtin": {
-        "assert": true,
-        "path.basename": true,
-        "path.extname": true
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/helper-module-transforms>@babel/helper-module-imports": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/helper-module-transforms>@babel/helper-simple-access": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/template": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/traverse": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/traverse>@babel/helper-environment-visitor": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/traverse>@babel/helper-split-export-declaration": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/types": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/types>@babel/helper-validator-identifier": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/helper-module-transforms>@babel/helper-module-imports": {
-      "builtin": {
-        "assert": true
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/types": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/helper-module-transforms>@babel/helper-simple-access": {
-      "packages": {
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/types": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/helpers": {
-      "packages": {
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/template": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/traverse": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/types": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/template": {
-      "packages": {
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/code-frame": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/parser": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/types": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/traverse": {
-      "globals": {
-        "console.log": true,
-        "console.trace": true
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/code-frame": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/generator": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/parser": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/traverse>@babel/helper-environment-visitor": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/traverse>@babel/helper-function-name": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/traverse>@babel/helper-hoist-variables": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/traverse>@babel/helper-split-export-declaration": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/traverse>globals": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/types": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>debug": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/traverse>@babel/helper-function-name": {
-      "packages": {
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/template": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/types": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/traverse>@babel/helper-hoist-variables": {
-      "packages": {
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/types": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/traverse>@babel/helper-split-export-declaration": {
-      "packages": {
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/types": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/types": {
-      "globals": {
-        "console.trace": true,
-        "process.env.BABEL_TYPES_8_BREAKING": true
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/types>@babel/helper-string-parser": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/types>@babel/helper-validator-identifier": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>@babel/types>to-fast-properties": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>convert-source-map": {
-      "builtin": {
-        "fs.readFileSync": true,
-        "path.join": true
-      },
-      "globals": {
-        "Buffer.from": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>debug": {
-      "builtin": {
-        "tty.isatty": true,
-        "util.deprecate": true,
-        "util.format": true,
-        "util.inspect": true
-      },
-      "globals": {
-        "console": true,
-        "document": true,
-        "localStorage": true,
-        "navigator": true,
-        "process": true
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>debug>ms": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>debug>supports-color": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>debug>supports-color": {
-      "builtin": {
-        "os.release": true
-      },
-      "globals": {
-        "process.env": true,
-        "process.platform": true,
-        "process.stderr": true,
-        "process.stdout": true,
-        "process.versions.node.split": true
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>debug>supports-color>has-flag": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>debug>supports-color>has-flag": {
-      "globals": {
-        "process.argv": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>json5": {
-      "globals": {
-        "console.warn": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>@babel/core>semver": {
-      "globals": {
-        "console": true,
-        "process": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>@babel/types": {
-      "globals": {
-        "console.trace": true,
-        "process.env.BABEL_TYPES_8_BREAKING": true
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/types>@babel/helper-string-parser": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/types>@babel/helper-validator-identifier": true,
-        "@metamask/rpc-methods>@metamask/snaps-utils>@babel/types>to-fast-properties": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>cron-parser": {
-      "builtin": {
-        "fs.readFile": true
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/snaps-utils>cron-parser>luxon": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>cron-parser>luxon": {
-      "globals": {
-        "Intl": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>rfdc": {
-      "globals": {
-        "Buffer": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>semver": {
-      "globals": {
-        "console.error": true,
-        "process": true
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/snaps-utils>semver>lru-cache": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>semver>lru-cache": {
-      "packages": {
-        "@metamask/rpc-methods>@metamask/snaps-utils>semver>lru-cache>yallist": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>validate-npm-package-name": {
-      "packages": {
-        "@metamask/rpc-methods>@metamask/snaps-utils>validate-npm-package-name>builtins": true
-      }
-    },
-    "@metamask/rpc-methods>@metamask/snaps-utils>validate-npm-package-name>builtins": {
-      "globals": {
-        "process.version": true
-      },
-      "packages": {
-        "@metamask/rpc-methods>@metamask/snaps-utils>semver": true
-      }
+      "native": true
     },
     "@metamask/rpc-methods>@metamask/utils": {
       "globals": {
@@ -7652,11 +6542,6 @@
       },
       "globals": {
         "TextEncoder": true
-      }
-    },
-    "@metamask/rpc-methods>eth-rpc-errors": {
-      "packages": {
-        "@metamask/rpc-methods>eth-rpc-errors>fast-safe-stringify": true
       }
     },
     "@metamask/rpc-methods>nanoid": {
@@ -12223,6 +11108,14 @@
         "@metamask/snaps-controllers>json-rpc-middleware-stream>readable-stream>safe-buffer": true
       }
     },
+    "@metamask/snaps-controllers>nanoid": {
+      "builtin": {
+        "crypto": true
+      },
+      "globals": {
+        "Buffer.allocUnsafe": true
+      }
+    },
     "@metamask/snaps-controllers>pump": {
       "builtin": {
         "fs": true
@@ -12864,6 +11757,74 @@
       },
       "globals": {
         "Buffer.allocUnsafe": true
+      }
+    },
+    "electron-log": {
+      "builtin": {
+        "events": true,
+        "fs.closeSync": true,
+        "fs.existsSync": true,
+        "fs.mkdirSync": true,
+        "fs.openSync": true,
+        "fs.readFileSync": true,
+        "fs.readSync": true,
+        "fs.readdirSync": true,
+        "fs.renameSync": true,
+        "fs.statSync": true,
+        "fs.writeFile": true,
+        "fs.writeFileSync": true,
+        "http": false,
+        "https": false,
+        "os.EOL": true,
+        "os.homedir": true,
+        "os.release": true,
+        "os.tmpdir": true,
+        "os.type": true,
+        "path.basename": true,
+        "path.dirname": true,
+        "path.join": true,
+        "path.parse": true,
+        "path.resolve": true,
+        "util.formatWithOptions": true
+      },
+      "globals": {
+        "Buffer.alloc": true,
+        "Buffer.byteLength": true,
+        "Buffer.from": true,
+        "URLSearchParams": false,
+        "__dirname": true,
+        "__electronLog": "write",
+        "addEventListener": true,
+        "asyncWriteQueue": false,
+        "bytesWritten": false,
+        "console.debug": true,
+        "console.error": true,
+        "console.info": true,
+        "console.log": true,
+        "console.warn": true,
+        "functions": false,
+        "hasActiveAsyncWriting": false,
+        "hooks": false,
+        "includeRenderer": false,
+        "initialSize": false,
+        "instances": false,
+        "isActive": false,
+        "isDev": false,
+        "levels": false,
+        "logFn": false,
+        "logId": false,
+        "onError": false,
+        "path": false,
+        "postMessage": true,
+        "process": true,
+        "scope": false,
+        "setTimeout": true,
+        "showDialog": false,
+        "store": false,
+        "transports": false,
+        "variables": false,
+        "writeAsync": false,
+        "writeOptions": false
       }
     },
     "electron-store": {
@@ -18469,6 +17430,11 @@
         "ethjs>number-to-bn": true
       }
     },
+    "ethjs>ethjs-unit>bn.js": {
+      "builtin": {
+        "buffer.Buffer": true
+      }
+    },
     "ethjs>ethjs-util": {
       "globals": {
         "Buffer": true
@@ -18492,6 +17458,11 @@
       "packages": {
         "ethjs>ethjs-util>strip-hex-prefix": true,
         "ethjs>number-to-bn>bn.js": true
+      }
+    },
+    "ethjs>number-to-bn>bn.js": {
+      "builtin": {
+        "buffer.Buffer": true
       }
     },
     "extension-port-stream": {
@@ -19102,6 +18073,15 @@
     "web3": {
       "globals": {
         "XMLHttpRequest": true
+      }
+    },
+    "webextension-polyfill": {
+      "globals": {
+        "browser": false,
+        "chrome": false,
+        "console.error": false,
+        "console.warn": false,
+        "define": false
       }
     },
     "ws": {

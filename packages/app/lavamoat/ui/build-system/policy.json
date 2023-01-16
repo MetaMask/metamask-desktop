@@ -9907,7 +9907,8 @@
         "path.relative": true
       },
       "globals": {
-        "performantResolve": true
+        "performantResolve": true,
+        "process.platform": true
       },
       "packages": {
         "lavamoat-browserify>@lavamoat/aa>resolve": true
