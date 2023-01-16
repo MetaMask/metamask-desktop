@@ -28,3 +28,8 @@ export class ExtensionSignInPage {
     await this.unlockBtn.click();
   }
 }
+
+export async function signInFlow(page: Page, extensionId: string) {
+  const signIn = new ExtensionSignInPage(page, extensionId);
+  await signIn.signIn();
+}

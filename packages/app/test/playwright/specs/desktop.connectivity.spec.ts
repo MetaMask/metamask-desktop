@@ -1,46 +1,22 @@
-import { Page, BrowserContext, expect } from '@playwright/test';
-import test from '../helpers/setup';
-import { ChromeExtensionPage } from '../pageObjects/ext-chrome-extension-page';
-import { ExtensionMainMenuPage } from '../pageObjects/ext-mainMenu-page';
-import { ExtensionSignUpPage } from '../pageObjects/ext-signup-page';
+import { BrowserContext, expect, chromium } from '@playwright/test';
+import test, { extensionPath } from '../helpers/setup';
+import {
+  enableDesktopAppErrorFlow,
+  enableDesktopAppFlow,
+} from '../pageObjects/ext-mainMenu-page';
+import { signUpFlow } from '../pageObjects/ext-signup-page';
 import { ExtensionInitialPage } from '../pageObjects/ext-initial-page';
 import { electronStartup, getDesktopWindowByName } from '../helpers/electron';
 import { DesktopOTPPage } from '../pageObjects/desktop-otp-pairing-page';
-import { ExtensionSignInPage } from '../pageObjects/ext-signin-page';
+import { signInFlow } from '../pageObjects/ext-signin-page';
 
-async function signUpFlow(page: Page, context: BrowserContext) {
-  // Getting extension id of Extension
-  const extensions = new ChromeExtensionPage(await context.newPage());
-  await extensions.goto();
-  await extensions.setDevMode();
-  const extensionId = await extensions.getExtensionId();
-  await extensions.close();
-
-  const signUp = new ExtensionSignUpPage(page, extensionId as string);
-  await signUp.goto();
-  await signUp.start();
-  await signUp.authentication();
-  await signUp.termsAndConditions();
-  return extensionId;
+async function getAnotherBrowserSession(): Promise<BrowserContext> {
+  const launchOptions = {
+    headless: false,
+    args: [`--disable-extensions-except=${extensionPath}`],
+  };
+  return await chromium.launchPersistentContext('', launchOptions);
 }
-
-const enableDesktopAppFlow = async (page: Page): Promise<string> => {
-  // Setup testnetwork in settings
-  const mainMenuPage = new ExtensionMainMenuPage(page);
-  await mainMenuPage.selectSettings();
-  await mainMenuPage.selectSettingsAdvance();
-  await mainMenuPage.showTestNetworkOn();
-  await mainMenuPage.showIncomingTransactionsOff();
-  return await mainMenuPage.enableDesktopApp();
-};
-
-const enableDesktopAppErrorFlow = async (page: Page) => {
-  // Setup testnetwork in settings
-  const mainMenuPage = new ExtensionMainMenuPage(page);
-  await mainMenuPage.selectSettings();
-  await mainMenuPage.page.locator('text=Experimental').click();
-  await mainMenuPage.page.locator('text=Enable desktop app').click();
-};
 
 test.describe('Extension / Desktop connectivity issues', () => {
   test('Extension error when desktop not available', async ({
@@ -83,11 +59,7 @@ test.describe('Extension / Desktop connectivity issues', () => {
     await otpWindow.setOtpPairingKey(optPairingKey);
 
     const connectedFlow = await context.newPage();
-    const signIn = new ExtensionSignInPage(
-      connectedFlow,
-      extensionId as string,
-    );
-    await signIn.signIn();
+    await signInFlow(connectedFlow, extensionId as string);
 
     await otpWindow.checkIsActive();
     const initialPage = new ExtensionInitialPage(connectedFlow);
@@ -101,5 +73,66 @@ test.describe('Extension / Desktop connectivity issues', () => {
     ]);
 
     await initialPage.errorClickButton('Disable MetaMask Desktop');
+  });
+
+  test('Desktop already connected in another extension', async ({
+    page,
+    context,
+  }) => {
+    const electronApp = await electronStartup();
+
+    const mainWindow = await getDesktopWindowByName(
+      electronApp,
+      'MetaMask Desktop',
+    );
+    const desktopWindow = new DesktopOTPPage(mainWindow);
+
+    // BROWSER SESSION 1 START
+    const browserSession1 = page;
+    const extensionId = (await signUpFlow(browserSession1, context)) as string;
+    let optPairingKey = await enableDesktopAppFlow(browserSession1);
+    await desktopWindow.setOtpPairingKey(optPairingKey);
+    // Create a new tab to connect to extension again
+    const browserSession1Connected = await context.newPage();
+    await signInFlow(browserSession1Connected, extensionId);
+    await desktopWindow.checkIsActive();
+    const browserSession1ConnectedInitial = new ExtensionInitialPage(
+      browserSession1Connected,
+    );
+    await browserSession1ConnectedInitial.hasDesktopEnabled();
+    // BROWSER SESSION 1 FINISH
+
+    // BROWSER SESSION 2 START
+    const anotherSession = await getAnotherBrowserSession();
+    const browserSession2 = await anotherSession.newPage();
+    await signUpFlow(browserSession2, anotherSession);
+    // Try connecting Desktop app in second session
+    await enableDesktopAppErrorFlow(browserSession2);
+    const initialPage = new ExtensionInitialPage(browserSession2);
+    await initialPage.checkErrorMessages([
+      'MM Desktop is already paired',
+      'If you want to start a new pairing, please remove the current connection.',
+      'Go to Settings in MetaMask Desktop',
+    ]);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await initialPage.errorClickButton('Return to Settings Page');
+
+    // This two lines disconnect session 1
+    await desktopWindow.removeConnection();
+    await desktopWindow.pairWithMetamask();
+
+    // Pair session 2
+    optPairingKey = await enableDesktopAppFlow(browserSession2);
+    await desktopWindow.setOtpPairingKey(optPairingKey);
+
+    const browserSession2Connected = await anotherSession.newPage();
+    await signInFlow(browserSession2Connected, extensionId);
+    await desktopWindow.checkIsActive();
+    const browserSession2ConnectedInitial = new ExtensionInitialPage(
+      browserSession2Connected,
+    );
+    await browserSession2ConnectedInitial.hasDesktopEnabled();
+
+    await electronApp.close();
   });
 });
