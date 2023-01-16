@@ -118,7 +118,7 @@ function createScriptTasks({ applyLavaMoat, buildType, policyOnly }) {
         buildTarget,
         buildType,
         destFilepath: `${label}.js`,
-        entryFilepath: `./src/${label}.ts`,
+        entryFilepath: `./src/app/renderer/${label}.ts`,
         label,
         policyOnly,
       }),
