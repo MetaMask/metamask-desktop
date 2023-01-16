@@ -22,6 +22,9 @@ ignores:
   - '@metamask/eslint-config-jest'
   - '@metamask/eslint-config-typescript'
 
+  # Playwright
+  - playwright-core
+
   # Yarn
   - '@lavamoat/allow-scripts'
 
