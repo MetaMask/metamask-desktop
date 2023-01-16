@@ -1,3 +1,4 @@
 [submodule "extension"]
 	path = packages/app/submodules/extension
 	url = git@github.com:MetaMask/desktop-extension.git
+	branch = chore/e2e-lavamoat-enabled

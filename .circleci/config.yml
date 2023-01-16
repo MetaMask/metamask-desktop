@@ -88,6 +88,9 @@ workflows:
       - build-app-test-app:
           requires:
             - install-deps-extension
+      - build-app-test-app-lavamoat:
+          requires:
+            - install-deps-extension            
       - build-ui:
           requires:
             - install-deps-extension
@@ -97,12 +100,18 @@ workflows:
       - build-ui-test-app:
           requires:
             - install-deps-extension
+      - build-ui-test-app-lavamoat:
+          requires:
+            - install-deps-extension            
       - build-extension-test-extension:
           requires:
             - install-deps-extension
       - build-extension-test-app:
           requires:
             - install-deps-extension
+      - build-extension-test-app-lavamoat:
+          requires:
+            - install-deps-extension            
       - lint-common:
           requires:
             - install-deps
@@ -130,6 +139,11 @@ workflows:
             - build-app-test-app
             - build-ui-test-app
             - build-extension-test-app
+      - test-e2e-app-lavamoat:
+          requires:
+            - build-app-test-app-lavamoat
+            - build-ui-test-app-lavamoat
+            - build-extension-test-app-lavamoat            
       - package-windows:
           requires:
             - build-app
@@ -334,6 +348,23 @@ jobs:
           paths:
             - << pipeline.parameters.app-dir >>/dist-app-test-app
 
+  build-app-test-app-lavamoat:
+    executor: node-browsers
+    steps:
+      - checkout_with_submodule
+      - attach_workspace:
+          at: .
+      - run:
+          name: build
+          command: yarn app build:app:test:app:lavamoat
+      - run:
+          name: Move dist to avoid conflicts
+          command: mv ./${APP_DIR}/dist/app ./${APP_DIR}/dist-app-test-app-lavamoat
+      - persist_to_workspace:
+          root: .
+          paths:
+            - << pipeline.parameters.app-dir >>/dist-app-test-app-lavamoat
+
   build-ui:
     executor: node-browsers
     steps:
@@ -385,6 +416,23 @@ jobs:
           paths:
             - << pipeline.parameters.app-dir >>/dist-ui-test-app
 
+  build-ui-test-app-lavamoat:
+    executor: node-browsers
+    steps:
+      - checkout_with_submodule
+      - attach_workspace:
+          at: .
+      - run:
+          name: build
+          command: yarn app build:ui:ci
+      - run:
+          name: Move dist to avoid conflicts
+          command: mv ./${APP_DIR}/dist/ui ./${APP_DIR}/dist-ui-test-app-lavamoat
+      - persist_to_workspace:
+          root: .
+          paths:
+            - << pipeline.parameters.app-dir >>/dist-ui-test-app-lavamoat
+
   build-extension-test-extension:
     executor: node-browsers
     steps:
@@ -418,6 +466,23 @@ jobs:
           root: .
           paths:
             - << pipeline.parameters.extension-dir >>/dist-extension-test-app
+
+  build-extension-test-app-lavamoat:
+    executor: node-browsers
+    steps:
+      - checkout_with_submodule
+      - attach_workspace:
+          at: .
+      - run:
+          name: build
+          command: yarn extension build:test:desktop:app:lavamoat
+      - run:
+          name: Move dist to avoid conflicts
+          command: mv ./${EXTENSION_DIR}/dist ./${EXTENSION_DIR}/dist-extension-test-app-lavamoat
+      - persist_to_workspace:
+          root: .
+          paths:
+            - << pipeline.parameters.extension-dir >>/dist-extension-test-app-lavamoat
 
   lint-common:
     executor: node-browsers
@@ -547,6 +612,48 @@ jobs:
           name: Move extension build
           command: |
             mv ./${EXTENSION_DIR}/dist-extension-test-app ./${EXTENSION_DIR}/dist
+      - run:
+          name: Install PW dependencies
+          command: |
+            cd ./${APP_DIR}
+            npx playwright install chrome
+      - run:
+          name: Run e2e desktop command
+          command: |
+            if .circleci/scripts/test-run-e2e.sh
+            then
+              xvfb-run yarn app test:e2e:app
+            fi
+          no_output_timeout: 20m
+      - store_artifacts:
+          name: html-report and artifacts
+          path: ./<< pipeline.parameters.app-dir >>/test/playwright/playwright-reports/
+      - store_test_results:
+          name: report for pipeline integration
+          path: ./<< pipeline.parameters.app-dir >>/test/playwright/playwright-reports/junit/test-results.xml
+      - store_artifacts:
+          name: screenshots and trace.zip
+          path: ./<< pipeline.parameters.app-dir >>/test/playwright/test-results/
+
+  test-e2e-app-lavamoat:
+    executor: playwright
+    steps:
+      - checkout_with_submodule
+      - attach_workspace:
+          at: .
+      - run:
+          name: Move app build
+          command: |
+            mkdir -p ./${APP_DIR}/dist
+            mv ./${APP_DIR}/dist-app-test-app-lavamoat ./${APP_DIR}/dist/app
+      - run:
+          name: Move UI build
+          command: |
+            mv ./${APP_DIR}/dist-ui-test-app-lavamoat ./${APP_DIR}/dist/ui
+      - run:
+          name: Move extension build
+          command: |
+            mv ./${EXTENSION_DIR}/dist-extension-test-app-lavamoat ./${EXTENSION_DIR}/dist
       - run:
           name: Install PW dependencies
           command: |
