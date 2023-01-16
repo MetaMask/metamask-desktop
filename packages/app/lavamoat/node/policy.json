@@ -7309,7 +7309,13 @@
         "process.versions.node.split": true
       },
       "packages": {
-        "@truffle/codec>debug>supports-color>has-flag": true
+        "@truffle/codec>debug>supports-color>has-flag": true,
+        "lavamoat>@babel/highlight>chalk>supports-color>has-flag": true
+      }
+    },
+    "lavamoat>@babel/highlight>chalk>supports-color>has-flag": {
+      "globals": {
+        "process.argv": true
       }
     },
     "lavamoat>bindings": {
