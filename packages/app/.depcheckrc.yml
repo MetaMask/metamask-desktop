@@ -22,12 +22,19 @@ ignores:
   - '@metamask/eslint-config-jest'
   - '@metamask/eslint-config-typescript'
 
+  # Playwright
+  - playwright-core
+
+  # Yarn
+  - '@lavamoat/allow-scripts'
+
   # Extension Runtime
   - '@babel/runtime'
   - '@download/blockies'
   - '@ensdomains/content-hash'
   - '@eth-optimism/contracts'
   - '@ethereumjs/common'
+  - '@ethersproject/abi'
   - '@ethersproject/contracts'
   - '@ethersproject/providers'
   - '@formatjs/intl-relativetimeformat'
@@ -113,6 +120,7 @@ ignores:
   - human-standard-token-abi
   - immer
   - is-retry-allowed
+  - isomorphic-ws
   - json-rpc-engine
   - json-rpc-middleware-stream
   - jsonschema
@@ -164,7 +172,7 @@ ignores:
   - webextension-polyfill
   - zxcvbn
 
-  # Extension Dev'
+  # Extension Dev
   - '@babel/code-frame'
   - '@babel/core'
   - '@babel/eslint-parser'

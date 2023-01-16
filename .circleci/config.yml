@@ -20,7 +20,7 @@ commands:
             - "aa:9c:7b:e9:01:de:82:e6:d4:ae:5e:ff:c3:fa:d9:5c"
       - run:
           name: Setup submodule
-          command: yarn setup:submodule 
+          command: sh scripts/init-submodule.sh
 
 executors:
   node-browsers:
@@ -137,29 +137,23 @@ jobs:
     steps:
       - checkout_with_submodule
       - restore_cache:
-          key: dependency-cache-v2-{{ checksum "yarn.lock" }}
+          key: dependency-cache-v3-{{ checksum "yarn.lock" }}
       - run:
           name: Install deps
-          command: YARN_CACHE_FOLDER=.yarn_cache yarn install --frozen-lockfile
+          command: yarn install --frozen-lockfile
       - save_cache:
-          key: dependency-cache-v2-{{ checksum "yarn.lock" }}
+          key: dependency-cache-v3-{{ checksum "yarn.lock" }}
           paths:
-            - .yarn_cache
+            - .yarn/cache
+            - .yarn/install-state.gz
             - node_modules/
             - << pipeline.parameters.common-dir >>/node_modules/
             - << pipeline.parameters.app-dir >>/node_modules/
-      - run:
-          name: Run root post install
-          command: yarn setup:postinstall
-      - run:
-          name: Run common post install
-          command: yarn common setup:postinstall
-      - run:
-          name: Run app post install
-          command: yarn app setup:postinstall
       - persist_to_workspace:
           root: .
           paths:
+            - .yarn/cache
+            - .yarn/install-state.gz
             - node_modules
             - << pipeline.parameters.app-dir >>/node_modules
             - << pipeline.parameters.common-dir >>/node_modules
@@ -174,11 +168,11 @@ jobs:
           key: dependency-cache-extension-v1-{{ checksum "<< pipeline.parameters.extension-dir >>/yarn.lock" }}
       - run:
           name: Install extension deps
-          command: YARN_CACHE_FOLDER=.yarn_cache_extension yarn extension --frozen-lockfile
+          command: yarn extension --frozen-lockfile
       - save_cache:
           key: dependency-cache-extension-v1-{{ checksum "<< pipeline.parameters.extension-dir >>/yarn.lock" }}
           paths:
-            - .yarn_cache_extension
+            - << pipeline.parameters.extension-dir >>/.yarn/cache/
             - << pipeline.parameters.extension-dir >>/node_modules/
       - run:
           name: Copy common package
@@ -213,7 +207,7 @@ jobs:
           at: .
       - run:
           name: Detect yarn lock deduplications
-          command: yarn yarn-deduplicate && git diff --exit-code yarn.lock
+          command: yarn dedupe --check
 
   lint-lockfile:
     executor: node-browsers
@@ -232,8 +226,14 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: yarn audit
-          command: .circleci/scripts/yarn-audit.sh
+          name: root audit
+          command: WORKSPACE='' .circleci/scripts/yarn-audit.sh
+      - run:
+          name: common audit
+          command: WORKSPACE='common' .circleci/scripts/yarn-audit.sh
+      - run:
+          name: app audit
+          command: WORKSPACE='app' .circleci/scripts/yarn-audit.sh
 
   validate-lavamoat-config:
     executor: node-browsers
@@ -517,6 +517,7 @@ jobs:
 
   test-e2e-app:
     executor: playwright
+    parallelism: 4
     steps:
       - checkout_with_submodule
       - attach_workspace:

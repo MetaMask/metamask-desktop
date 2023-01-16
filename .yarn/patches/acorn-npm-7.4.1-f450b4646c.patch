@@ -1,0 +1,13 @@
+diff --git a/dist/acorn.js b/dist/acorn.js
+index 0523f0e3485d0100b6c83d9a290b6ea05bc1f921..25bd80e0505e29eb34d9b1936b03463f196790db 100644
+--- a/dist/acorn.js
++++ b/dist/acorn.js
+@@ -5140,7 +5140,7 @@
+   // [api]: https://developer.mozilla.org/en-US/docs/SpiderMonkey/Parser_API
+ 
+   function parse(input, options) {
+-    return Parser.parse(input, options)
++    return Parser.parse(input, options)
+   }
+ 
+   // This function tries to parse a single expression at a given

@@ -170,6 +170,284 @@
         "buffer.Buffer": true
       }
     },
+    "@ethereumjs/common>ethereumjs-util>ethereum-cryptography>keccak": {
+      "native": true
+    },
+    "@ethereumjs/common>ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
+    },
+    "@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>keccak": {
+      "native": true
+    },
+    "@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
+    },
+    "@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>keccak": {
+      "native": true
+    },
+    "@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
+    },
+    "@keystonehq/metamask-airgapped-keyring>@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>keccak": {
+      "native": true
+    },
+    "@keystonehq/metamask-airgapped-keyring>@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
+    },
+    "@keystonehq/metamask-airgapped-keyring>@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>keccak": {
+      "native": true
+    },
+    "@keystonehq/metamask-airgapped-keyring>@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
+    },
+    "@metamask/address-book-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak": {
+      "native": true
+    },
+    "@metamask/address-book-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
+    },
+    "@metamask/assets-controllers>ethereumjs-util>ethereum-cryptography>keccak": {
+      "native": true
+    },
+    "@metamask/assets-controllers>ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
+    },
+    "@metamask/desktop>eciesjs>secp256k1": {
+      "native": true
+    },
+    "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethereum-cryptography>keccak": {
+      "native": true
+    },
+    "@metamask/eth-json-rpc-infura>eth-json-rpc-middleware>eth-sig-util>ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
+    },
+    "@metamask/eth-ledger-bridge-keyring>@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>keccak": {
+      "native": true
+    },
+    "@metamask/eth-ledger-bridge-keyring>@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
+    },
+    "@metamask/eth-ledger-bridge-keyring>@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>keccak": {
+      "native": true
+    },
+    "@metamask/eth-ledger-bridge-keyring>@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
+    },
+    "@metamask/eth-ledger-bridge-keyring>ethereumjs-util>ethereum-cryptography>keccak": {
+      "native": true
+    },
+    "@metamask/eth-ledger-bridge-keyring>ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
+    },
+    "@metamask/gas-fee-controller>ethereumjs-util>ethereum-cryptography>keccak": {
+      "native": true
+    },
+    "@metamask/gas-fee-controller>ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
+    },
+    "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak": {
+      "native": true
+    },
+    "@metamask/notification-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
+    },
+    "@metamask/phishing-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak": {
+      "native": true
+    },
+    "@metamask/phishing-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
+    },
+    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak": {
+      "native": true
+    },
+    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
+    },
+    "@metamask/smart-transactions-controller>@metamask/controllers>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>keccak": {
+      "native": true
+    },
+    "@metamask/smart-transactions-controller>@metamask/controllers>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
+    },
+    "@metamask/smart-transactions-controller>@metamask/controllers>@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>keccak": {
+      "native": true
+    },
+    "@metamask/smart-transactions-controller>@metamask/controllers>@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
+    },
+    "@metamask/smart-transactions-controller>@metamask/controllers>@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>keccak": {
+      "native": true
+    },
+    "@metamask/smart-transactions-controller>@metamask/controllers>@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
+    },
+    "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>keccak": {
+      "native": true
+    },
+    "@metamask/smart-transactions-controller>@metamask/controllers>ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
+    },
+    "@metamask/snaps-controllers>@metamask/base-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak": {
+      "native": true
+    },
+    "@metamask/snaps-controllers>@metamask/base-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
+    },
+    "@metamask/snaps-controllers>@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak": {
+      "native": true
+    },
+    "@metamask/snaps-controllers>@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
+    },
+    "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethereum-cryptography>keccak": {
+      "native": true
+    },
+    "eth-keyring-controller>eth-sig-util>ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
+    },
+    "eth-lattice-keyring>@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>keccak": {
+      "native": true
+    },
+    "eth-lattice-keyring>@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
+    },
+    "eth-lattice-keyring>@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>keccak": {
+      "native": true
+    },
+    "eth-lattice-keyring>@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
+    },
+    "eth-lattice-keyring>gridplus-sdk>secp256k1": {
+      "native": true
+    },
+    "eth-sig-util>ethereumjs-util": {
+      "packages": {
+        "hdkey>safe-buffer": true,
+        "eth-sig-util>ethereumjs-util>safe-buffer": true
+      }
+    },
+    "eth-trezor-keyring>@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>keccak": {
+      "native": true
+    },
+    "eth-trezor-keyring>@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
+    },
+    "eth-trezor-keyring>@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>keccak": {
+      "native": true
+    },
+    "eth-trezor-keyring>@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
+    },
+    "eth-trezor-keyring>ethereumjs-util>ethereum-cryptography>keccak": {
+      "native": true
+    },
+    "eth-trezor-keyring>ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
+    },
+    "eth-trezor-keyring>trezor-connect>@trezor/utxo-lib>blake-hash": {
+      "native": true
+    },
+    "ethereumjs-util>ethereum-cryptography>bs58check": {
+      "packages": {
+        "hdkey>safe-buffer": true,
+        "ethereumjs-util>ethereum-cryptography>bs58check>safe-buffer": true
+      }
+    },
+    "ethereumjs-util>ethereum-cryptography>bs58check>bs58>base-x": {
+      "packages": {
+        "hdkey>safe-buffer": true,
+        "ethereumjs-util>ethereum-cryptography>bs58check>bs58>base-x>safe-buffer": true
+      }
+    },
+    "ethereumjs-util>ethereum-cryptography>keccak": {
+      "native": true
+    },
+    "ethereumjs-util>ethereum-cryptography>keccak>readable-stream>string_decoder": {
+      "packages": {
+        "hdkey>safe-buffer": true,
+        "ethereumjs-util>ethereum-cryptography>keccak>readable-stream>string_decoder>safe-buffer": true
+      }
+    },
+    "ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
+    },
+    "ethereumjs-wallet>ethereum-cryptography>keccak": {
+      "native": true
+    },
+    "ethereumjs-wallet>ethereum-cryptography>secp256k1": {
+      "native": true
+    },
+    "hdkey>secp256k1>bip66": {
+      "packages": {
+        "hdkey>safe-buffer": true,
+        "hdkey>secp256k1>bip66>safe-buffer": true
+      }
+    },
+    "obj-multiplex": {
+      "packages": {
+        "obj-multiplex>readable-stream": true,
+        "readable-stream": true
+      }
+    },
+    "obj-multiplex>readable-stream": {
+      "builtin": {
+        "events.EventEmitter": true,
+        "stream": true,
+        "util": true
+      },
+      "globals": {
+        "process.browser": true,
+        "process.env.READABLE_STREAM": true,
+        "process.stderr": true,
+        "process.stdout": true,
+        "process.version.slice": true,
+        "setImmediate": true
+      },
+      "packages": {
+        "obj-multiplex>readable-stream>safe-buffer": true,
+        "obj-multiplex>readable-stream>string_decoder": true,
+        "readable-stream>core-util-is": true,
+        "readable-stream>inherits": true,
+        "readable-stream>isarray": true,
+        "readable-stream>process-nextick-args": true,
+        "readable-stream>util-deprecate": true
+      }
+    },
+    "obj-multiplex>readable-stream>safe-buffer": {
+      "builtin": {
+        "buffer": true
+      }
+    },
+    "obj-multiplex>readable-stream>string_decoder": {
+      "packages": {
+        "obj-multiplex>readable-stream>safe-buffer": true
+      }
+    },
+    "eth-sig-util>ethereumjs-util>safe-buffer": {
+      "builtin": {
+        "buffer": true
+      }
+    },
+    "ethereumjs-util>ethereum-cryptography>bs58check>bs58>base-x>safe-buffer": {
+      "builtin": {
+        "buffer": true
+      }
+    },
+    "ethereumjs-util>ethereum-cryptography>bs58check>safe-buffer": {
+      "builtin": {
+        "buffer": true
+      }
+    },
+    "ethereumjs-util>ethereum-cryptography>keccak>readable-stream>string_decoder>safe-buffer": {
+      "builtin": {
+        "buffer": true
+      }
+    },
+    "hdkey>secp256k1>bip66>safe-buffer": {
+      "builtin": {
+        "buffer": true
+      }
+    },
     "ethjs>ethjs-unit>bn.js": {
       "builtin": {
         "buffer.Buffer": true

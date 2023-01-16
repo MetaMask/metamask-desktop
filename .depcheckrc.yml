@@ -7,7 +7,9 @@ ignores:
   - improved-yarn-audit
   - yarn-deduplicate
 
- # Release process
+  # Release process
   - '@metamask/auto-changelog'
   - '@metamask/create-release-branch'
-  - patch-package
+
+  # Yarn
+  - '@lavamoat/allow-scripts'
