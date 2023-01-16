@@ -25,15 +25,6 @@ const electronBridge = {
       callback(statusData);
     });
   },
-  simulateError: (callback: () => void) => {
-    ipcRenderer.on('simulate-error', () => {
-      console.log('msg arrived') 
-      const error = new Error('Error render process')
-      console.error('Something wrong happened on render process', error)
-      throw error
-      callback();
-    });
-  },
   onUrlRequests: (callback: (url: string) => void) => {
     ipcRenderer.on('url-request', (_, url) => {
       callback(url);
@@ -49,12 +40,6 @@ const electronBridge = {
   },
   sendOtp: async (otpValue: string) => {
     await ipcRenderer.invoke('otp', otpValue);
-  },
-  error: async () => {
-    console.log('msg arrived')
-    const error = new Error('Error render process')
-    console.error('Something wrong happened on render process', error)
-    throw error
   },
   unpair: async () => {
     await ipcRenderer.invoke('unpair');

@@ -43,7 +43,7 @@ describe('getSentryDefaultOptions', () => {
     process.env.METAMASK_ENVIRONMENT = METAMASK_ENVIRONMENT_DEV_MOCK;
     process.env.METAMASK_BUILD_TYPE = 'main';
     process.env.SENTRY_DSN_DEV = SENTRY_DNS_DEV_MOCK;
-    expect(getSentryDefaultOptions(RELEASE_MOCK)).toEqual({
+    expect(getSentryDefaultOptions(RELEASE_MOCK)).toStrictEqual({
       dsn: SENTRY_DNS_DEV_MOCK,
       debug: true,
       environment: METAMASK_ENVIRONMENT_DEV_MOCK,
@@ -57,7 +57,7 @@ describe('getSentryDefaultOptions', () => {
     process.env.METAMASK_ENVIRONMENT = METAMASK_ENVIRONMENT_PROD_MOCK;
     process.env.METAMASK_BUILD_TYPE = 'main';
     process.env.SENTRY_DSN = SENTRY_DNS_PROD_MOCK;
-    expect(getSentryDefaultOptions(RELEASE_MOCK)).toEqual({
+    expect(getSentryDefaultOptions(RELEASE_MOCK)).toStrictEqual({
       dsn: SENTRY_DNS_PROD_MOCK,
       debug: false,
       environment: METAMASK_ENVIRONMENT_PROD_MOCK,

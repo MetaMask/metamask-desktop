@@ -1,4 +1,4 @@
-import setupSentry from './app/renderer/setup-sentry';
+import setupSentry from './setup-sentry';
 
 declare const global: typeof globalThis & {
   sentry: unknown;

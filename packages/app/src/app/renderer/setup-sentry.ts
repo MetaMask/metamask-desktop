@@ -59,7 +59,6 @@ export const getSentryDefaultOptions = (
 export default function setupSentry(opts: {
   release: string;
 }): typeof Sentry | undefined {
-  console.log('>>>>>>>>>', release);
   const sentryDefaultOptions = getSentryDefaultOptions(opts.release);
 
   // return if options are not available
