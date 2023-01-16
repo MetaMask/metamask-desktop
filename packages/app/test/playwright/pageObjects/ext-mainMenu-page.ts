@@ -118,6 +118,13 @@ export class ExtensionMainMenuPage {
       .click();
   }
 
+  async enableDesktopAppError(messages: string[]) {
+    await this.page.locator('text=Experimental').click();
+    await this.page.locator('text=Enable desktop app').click();
+    await this.checkWarningActionableMessage(messages);
+    await this.page.locator('text=Return to Settings Page').click();
+  }
+
   async enableDesktopApp(messages?: string[]) {
     await this.page.locator('text=Experimental').click();
     await this.page.locator('text=Enable desktop app').click();
@@ -156,8 +163,13 @@ export const enableDesktopAppFlow = async (page: Page): Promise<string> => {
   // Setup testnetwork in settings
   const mainMenuPage = new ExtensionMainMenuPage(page);
   await mainMenuPage.selectSettings();
-  await mainMenuPage.selectSettingsAdvance();
-  await mainMenuPage.showTestNetworkOn();
-  await mainMenuPage.showIncomingTransactionsOff();
   return await mainMenuPage.enableDesktopApp();
+};
+
+export const enableDesktopAppErrorFlow = async (page: Page) => {
+  // Setup testnetwork in settings
+  const mainMenuPage = new ExtensionMainMenuPage(page);
+  await mainMenuPage.selectSettings();
+  await mainMenuPage.page.locator('text=Experimental').click();
+  await mainMenuPage.page.locator('text=Enable desktop app').click();
 };
