@@ -529,6 +529,16 @@
       "globals": {
         "Buffer.allocUnsafe": true
       }
+    },
+    "lavamoat>@babel/highlight>chalk>supports-color": {
+      "packages": {
+        "lavamoat>@babel/highlight>chalk>supports-color>has-flag": true
+      }
+    },
+    "lavamoat>@babel/highlight>chalk>supports-color>has-flag": {
+      "globals": {
+        "process.argv": true
+      }
     }
   }
 }
