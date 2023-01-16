@@ -517,6 +517,7 @@ jobs:
 
   test-e2e-app:
     executor: playwright
+    parallelism: 4
     steps:
       - checkout_with_submodule
       - attach_workspace:
