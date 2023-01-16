@@ -1,4 +1,3 @@
-import { release } from 'os';
 import { Dedupe, ExtraErrorData } from '@sentry/integrations';
 import * as Sentry from '@sentry/electron/renderer';
 import { Integration, Options } from '@sentry/types';
