@@ -1,0 +1,21 @@
+diff --git a/lib/TransportNodeHid.js b/lib/TransportNodeHid.js
+index 3423c48..f8f7ad2 100644
+--- a/lib/TransportNodeHid.js
++++ b/lib/TransportNodeHid.js
+@@ -59,7 +59,6 @@ var node_hid_1 = __importDefault(require("node-hid"));
+ var logs_1 = require("@ledgerhq/logs");
+ var hw_transport_1 = __importDefault(require("@ledgerhq/hw-transport"));
+ var devices_1 = require("@ledgerhq/devices");
+-var hid_framing_1 = __importDefault(require("@ledgerhq/devices/hid-framing"));
+ var devices_2 = require("@ledgerhq/devices");
+ var errors_1 = require("@ledgerhq/errors");
+ var filterInterface = function (device) {
+@@ -169,7 +168,7 @@ var TransportNodeHidNoEvents = /** @class */ (function (_super) {
+                                     case 0:
+                                         _a = this, channel = _a.channel, packetSize = _a.packetSize;
+                                         (0, logs_1.log)("apdu", "=> " + apdu.toString("hex"));
+-                                        framing = (0, hid_framing_1["default"])(channel, packetSize);
++                                        framing = (0, devices_2.createHIDframing)(channel, packetSize);
+                                         blocks = framing.makeBlocks(apdu);
+                                         i = 0;
+                                         _b.label = 1;

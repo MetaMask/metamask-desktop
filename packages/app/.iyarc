@@ -1,0 +1,11 @@
+# improved-yarn-audit advisory exclusions
+GHSA-257v-vj4p-3w2h
+GHSA-hrpp-h998-j3pp
+GHSA-v5vg-g7rq-363w
+
+# pending review
+GHSA-6xrf-q977-5vgc
+GHSA-9c47-m6qq-7p4h
+GHSA-3xq5-wjfh-ppjc
+GHSA-6fc8-4gx4-v693
+GHSA-93q8-gq69-wqmw

@@ -56,6 +56,6 @@ module.exports = {
     node: true,
   },
   globals: {
-    electronLog: 'readonly',
+    __electronLog: 'readonly',
   },
 };

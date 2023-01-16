@@ -6,8 +6,14 @@ ignores:
   - "@babel/preset-env"
   - "@babel/preset-typescript"
 
+  # CircleCI
+  - improved-yarn-audit
+
   # tsconfig
   - "@tsconfig/node16"
 
   # Jest config
   - 'jest-environment-jsdom'
+
+  # Yarn
+  - '@lavamoat/allow-scripts'
