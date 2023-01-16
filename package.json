@@ -148,7 +148,8 @@
     "undeclared-identifiers@^1.1.2": "patch:undeclared-identifiers@npm%3A1.1.2#./.yarn/patches/undeclared-identifiers-npm-1.1.2-13d6792e9e.patch",
     "watchify@^4.0.0": "patch:watchify@npm%3A4.0.0#./.yarn/patches/watchify-npm-4.0.0-4fd965dd49.patch",
     "web3@^0.20.7": "patch:web3@npm%3A0.20.7#./.yarn/patches/web3-npm-0.20.7-ee7ef00c57.patch",
-    "zxcvbn@^4.4.2": "patch:zxcvbn@npm%3A4.4.2#./.yarn/patches/zxcvbn-npm-4.4.2-6527983856.patch"
+    "zxcvbn@^4.4.2": "patch:zxcvbn@npm%3A4.4.2#./.yarn/patches/zxcvbn-npm-4.4.2-6527983856.patch",
+    "electron-log@5.0.0-beta.14": "patch:electron-log@npm%3A5.0.0-beta.14#./.yarn/patches/electron-log-npm-5.0.0-beta.14-c717427c39.patch"
   },
   "devDependencies": {
     "@lavamoat/allow-scripts": "^2.0.3",
