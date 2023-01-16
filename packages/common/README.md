@@ -11,6 +11,6 @@ IT CAN ONLY BE USED WITH [FLASK](https://metamask.io/flask/), THE CANARY DISTRIB
 
 The [MetaMask browser extension](https://github.com/MetaMask/metamask-extension) is a crypto wallet & gateway to blockchain apps.
 
-The [MetaMask desktop app](https://github.com/MetaMask/desktop) is a companion app which speeds up the [MetaMask browser extension](https://github.com/MetaMask/metamask-extension).
+The [MetaMask Desktop app](https://github.com/MetaMask/desktop) is one of many experiments we are exploring to improve our extension-driven experiences. The Desktop app improves the overall performance of the extension when using the [Flask build](https://metamask.io/flask/).
 
-This package contains the functions and classes needed to pair the MetaMask browser extension with the MetaMask desktop app.
+This package contains the functions and classes needed to pair the MetaMask browser extension with the MetaMask Desktop app.

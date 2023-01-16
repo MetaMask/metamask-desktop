@@ -1,5 +1,5 @@
 diff --git a/node_modules/@lavamoat/aa/src/index.js b/node_modules/@lavamoat/aa/src/index.js
-index 070b772..7090bc8 100644
+index 070b772..d741c3a 100644
 --- a/node_modules/@lavamoat/aa/src/index.js
 +++ b/node_modules/@lavamoat/aa/src/index.js
 @@ -76,6 +76,7 @@ function getDependencies(packageDir, includeDevDeps) {
@@ -10,7 +10,7 @@ index 070b772..7090bc8 100644
      ...Object.keys(includeDevDeps ? packageJson.devDependencies || {} : {}),
    ].sort(comparePreferredPackageName)
    return depsToWalk
-@@ -156,6 +157,14 @@ function getPackageNameForModulePath(canonicalNameMap, modulePath) {
+@@ -156,6 +157,16 @@ function getPackageNameForModulePath(canonicalNameMap, modulePath) {
    const relativeToPackageDir = path.relative(packageDir, modulePath)
    // files should never be associated with a package directory across a package boundary (as tested via the presense of "node_modules" in the path)
    if (relativeToPackageDir.includes('node_modules')) {
@@ -18,7 +18,9 @@ index 070b772..7090bc8 100644
 +    // TO REMOVE ONCE WE DO NOT RELY ON EXTENSION NODE MODULES
 +    // Which is not the case until we have our own UI components and stop importing the extension ones.
 +    // This is happening because of how browserify lavamoat resolves require paths
-+    if (relativeToPackageDir.includes('submodules/extension/node_modules/')) {
++    const dirSeparator = process.platform === 'win32' ? '\\' : '/';
++    const nodeModulesPath = `submodules${dirSeparator}extension${dirSeparator}node_modules${dirSeparator}`;
++    if (relativeToPackageDir.includes(nodeModulesPath)) {
 +      return packageName;
 +    }
 +

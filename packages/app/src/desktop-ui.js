@@ -7,7 +7,7 @@
 import launchDesktopUi from '../ui';
 
 start().catch((error) => {
-  console.log('Error starting desktop app', error);
+  electronLog.error('Error starting desktop app', error);
 });
 
 /**

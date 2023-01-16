@@ -6879,7 +6879,8 @@
         "path.relative": true
       },
       "globals": {
-        "performantResolve": true
+        "performantResolve": true,
+        "process.platform": true
       },
       "packages": {
         "brfs>resolve": true

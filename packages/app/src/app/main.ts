@@ -2,6 +2,7 @@ import './globals';
 import './controller-init';
 import log from 'loglevel';
 import { RawState, RemotePort } from '@metamask/desktop/dist/types';
+import { NodeThreadExecutionService } from '@metamask/snaps-controllers';
 import {
   loadStateFromPersistence,
   setupController,
@@ -40,6 +41,10 @@ const getOrigin = () => {
   return 'DESKTOP_APP';
 };
 
+const createSnapExecutionService = (args: any) => {
+  return new NodeThreadExecutionService(args);
+};
+
 /**
  * Register Desktop App specific extension connect listeners.
  *
@@ -71,6 +76,7 @@ const initialize = async () => {
     registerConnectListeners,
     getPortStream,
     getOrigin,
+    createSnapExecutionService,
     keyrings: {
       trezor: TrezorKeyring,
       ledger: LedgerKeyring,

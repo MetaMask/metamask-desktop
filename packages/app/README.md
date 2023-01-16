@@ -29,15 +29,11 @@ Run unit tests and the linter with `yarn test`. To run just unit tests, run `yar
 
 You can run the linter by itself with `yarn lint`, and you can automatically fix some lint problems with `yarn lint:fix`. You can also run these two commands just on your local changes to save time with `yarn lint:changed` and `yarn lint:changed:fix` respectively.
 
-### Clearing persistent data for desktop UI
+### Clear Electron app state data
 
-Desktop UI persists data for the user settings and extension.
+Desktop UI persists data for the user settings and extension. To clear this data, run `yarn clear:electron-state`
 
-To clear this data, run
-- `rm ~/Library/Application\ Support/Electron/mmd-desktop-ui*.json` for MacOS
-- `del %APPDATA%\Electron\mmd-desktop-ui*.json` for Windows
-- `rm ~/.config/Electron/mmd-desktop-ui*.json` for Linux
-
+Note: _This will clear the data for all development Electron apps._
 
 ### Environment Variables
 

@@ -1,0 +1,22 @@
+diff --git a/node_modules/electron-log/src/main.js b/node_modules/electron-log/src/main.js
+index 02acfc9..ac0419f 100644
+--- a/node_modules/electron-log/src/main.js
++++ b/node_modules/electron-log/src/main.js
+@@ -3,7 +3,7 @@
+ const electronApi = require('./core/electronApi');
+ const transportConsole = require('./transports/console');
+ const transportFile = require('./transports/file');
+-const transportRemote = require('./transports/remote');
++// const transportRemote = require('./transports/remote');
+ const Logger = require('./core/Logger');
+ 
+ module.exports = new Logger({
+@@ -12,7 +12,7 @@ module.exports = new Logger({
+   transportFactories: {
+     console: transportConsole,
+     file: transportFile,
+-    remote: transportRemote,
++    // remote: transportRemote,
+   },
+ });
+ module.exports.default = module.exports;

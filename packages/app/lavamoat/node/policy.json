@@ -859,6 +859,14 @@
         "eth-rpc-errors": true
       }
     },
+    "@metamask/approval-controller>nanoid": {
+      "builtin": {
+        "crypto": true
+      },
+      "globals": {
+        "Buffer.allocUnsafe": true
+      }
+    },
     "@metamask/assets-controllers": {
       "builtin": {
         "events.EventEmitter": true
@@ -1754,6 +1762,14 @@
         "@metamask/notification-controller>nanoid": true
       }
     },
+    "@metamask/notification-controller>nanoid": {
+      "builtin": {
+        "crypto": true
+      },
+      "globals": {
+        "Buffer.allocUnsafe": true
+      }
+    },
     "@metamask/obs-store": {
       "builtin": {
         "stream.Duplex": true
@@ -1787,6 +1803,14 @@
         "eth-rpc-errors": true,
         "immer": true,
         "json-rpc-engine": true
+      }
+    },
+    "@metamask/permission-controller>nanoid": {
+      "builtin": {
+        "crypto": true
+      },
+      "globals": {
+        "Buffer.allocUnsafe": true
       }
     },
     "@metamask/phishing-controller": {
@@ -2651,6 +2675,14 @@
       "packages": {
         "json-rpc-engine>@metamask/safe-event-emitter": true,
         "readable-stream": true
+      }
+    },
+    "@metamask/snaps-controllers>nanoid": {
+      "builtin": {
+        "crypto": true
+      },
+      "globals": {
+        "Buffer.allocUnsafe": true
       }
     },
     "@metamask/snaps-controllers>readable-web-to-node-stream": {
@@ -3521,6 +3553,71 @@
       },
       "globals": {
         "Buffer.allocUnsafe": true
+      }
+    },
+    "electron-log": {
+      "builtin": {
+        "events": true,
+        "fs.closeSync": true,
+        "fs.existsSync": true,
+        "fs.mkdirSync": true,
+        "fs.openSync": true,
+        "fs.readFileSync": true,
+        "fs.readSync": true,
+        "fs.readdirSync": true,
+        "fs.renameSync": true,
+        "fs.statSync": true,
+        "fs.writeFile": true,
+        "fs.writeFileSync": true,
+        "http": false,
+        "https": false,
+        "os.EOL": true,
+        "os.homedir": true,
+        "os.release": true,
+        "os.tmpdir": true,
+        "os.type": true,
+        "path.basename": true,
+        "path.dirname": true,
+        "path.join": true,
+        "path.parse": true,
+        "path.resolve": true,
+        "util.formatWithOptions": true
+      },
+      "globals": {
+        "Buffer.alloc": true,
+        "Buffer.byteLength": true,
+        "URLSearchParams": false,
+        "__dirname": true,
+        "asyncWriteQueue": false,
+        "bytesWritten": false,
+        "console.debug": true,
+        "console.error": true,
+        "console.info": true,
+        "console.log": true,
+        "console.warn": true,
+        "electronLog": "write",
+        "functions": false,
+        "hasActiveAsyncWriting": false,
+        "hooks": false,
+        "includeRenderer": false,
+        "initialSize": false,
+        "instances": false,
+        "isActive": false,
+        "isDev": false,
+        "levels": false,
+        "logFn": false,
+        "logId": false,
+        "onError": false,
+        "path": false,
+        "process": true,
+        "scope": false,
+        "setTimeout": true,
+        "showDialog": false,
+        "store": false,
+        "transports": false,
+        "variables": false,
+        "writeAsync": false,
+        "writeOptions": false
       }
     },
     "electron-store": {
@@ -6922,6 +7019,11 @@
         "ethjs>number-to-bn": true
       }
     },
+    "ethjs>ethjs-unit>bn.js": {
+      "builtin": {
+        "buffer.Buffer": true
+      }
+    },
     "ethjs>ethjs-util": {
       "globals": {
         "Buffer": true
@@ -6945,6 +7047,11 @@
       "packages": {
         "ethjs>ethjs-util>strip-hex-prefix": true,
         "ethjs>number-to-bn>bn.js": true
+      }
+    },
+    "ethjs>number-to-bn>bn.js": {
+      "builtin": {
+        "buffer.Buffer": true
       }
     },
     "extension-port-stream": {
@@ -7564,6 +7671,15 @@
     "web3": {
       "globals": {
         "XMLHttpRequest": true
+      }
+    },
+    "webextension-polyfill": {
+      "globals": {
+        "browser": false,
+        "chrome": false,
+        "console.error": false,
+        "console.warn": false,
+        "define": false
       }
     },
     "ws": {

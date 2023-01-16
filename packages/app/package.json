@@ -1,8 +1,8 @@
 {
-  "name": "desktop-app",
+  "name": "metamask-desktop-app",
   "version": "0.0.1",
   "private": true,
-  "main": "dist/app/src/app/main.js",
+  "main": "dist/app/src/app/lavamoat.js",
   "repository": "https://github.com/MetaMask/desktop",
   "scripts": {
     "build:app": "./build/build.sh",
@@ -35,7 +35,7 @@
     "package:mac:ci": "electron-builder --config electron-builder.ci.json -m",
     "package:win": "dotenv -e .metamaskrc -- electron-builder -w",
     "package:win:ci": "electron-builder --config electron-builder.ci.json -w",
-    "package:win:docker": "docker compose -f build/windows/docker-compose.yml up",
+    "package:win:docker": "docker-compose -f build/windows/docker-compose.yml up",
     "release:linux": "electron-builder -l -p 'onTagOrDraft'",
     "setup:postinstall": "yarn patch-package && yarn allow-scripts",
     "start": "electron dist/app/src/app/main.js",
@@ -46,7 +46,8 @@
     "test:e2e:extension": "yarn test:e2e:extension:base test:e2e:chrome",
     "test:e2e:extension:base": "E2E_ARGS='--file ../../test/e2e/hook.js' yarn extension",
     "test:e2e:extension:single": "yarn test:e2e:extension:base test:e2e:single",
-    "test:e2e:extension:snaps": "yarn test:e2e:extension:base test:e2e:chrome:snaps"
+    "test:e2e:extension:snaps": "yarn test:e2e:extension:base test:e2e:chrome:snaps",
+    "clear:electron-state": "./build/clear-electron-state.sh"
   },
   "dependencies": {
     "@babel/runtime": "^7.5.5",
@@ -119,6 +120,7 @@
     "currency-formatter": "^1.4.2",
     "debounce-stream": "^2.0.0",
     "deep-freeze-strict": "1.1.1",
+    "electron-log": "^5.0.0-beta.12",
     "electron-store": "^8.1.0",
     "electron-updater": "^5.2.1",
     "end-of-stream": "^1.4.4",
