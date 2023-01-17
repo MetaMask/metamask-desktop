@@ -56,8 +56,7 @@ jobs:
       - name: Install
         shell: bash
         run: |
-          yarn common install --frozen-lockfile
-          yarn common setup:postinstall
+          yarn common install --immutable
           yarn common build
       - name: Build
         run: yarn common build

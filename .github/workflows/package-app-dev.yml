@@ -14,7 +14,7 @@ jobs:
         run: bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/7fdc9630cc360ea1a469eed64ac6d78caeda1234/scripts/download-actionlint.bash) 1.6.22
         shell: bash
       - name: Check workflow files
-        run: ${{ steps.download-actionlint.outputs.executable }} -color .github/workflows/publish-common-release.yml
+        run: ${{ steps.download-actionlint.outputs.executable }} -color .github/workflows/package-app-dev.yml
         shell: bash
 
   package-dev:
@@ -35,16 +35,7 @@ jobs:
           node-version-file: '.nvmrc'
       - name: Install deps
         shell: bash
-        run: yarn install --frozen-lockfile
-      - name: Run root post install
-        shell: bash
-        run: yarn setup:postinstall
-      - name: Run common post install
-        shell: bash
-        run: yarn common setup:postinstall
-      - name: Run app post install
-        shell: bash
-        run: yarn app setup:postinstall
+        run: yarn install --immutable
       - name: Run common build
         shell: bash
         run: yarn common build
