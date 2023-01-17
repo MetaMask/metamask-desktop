@@ -676,15 +676,15 @@ jobs:
           name: Move app build
           command: |
             mkdir -p ./${APP_DIR}/dist
-            mv ./${APP_DIR}/dist-app-test-extension-lavamoat ./${APP_DIR}/dist/app
+            mv ./${APP_DIR}/dist-app-test-extension ./${APP_DIR}/dist/app
       - run:
           name: Move UI build
           command: |
-            mv ./${APP_DIR}/dist-ui-test-extension-lavamoat ./${APP_DIR}/dist/ui
+            mv ./${APP_DIR}/dist-ui-test-extension ./${APP_DIR}/dist/ui
       - run:
           name: Move extension build
           command: |
-            mv ./${EXTENSION_DIR}/dist-extension-test-lavamoat ./${EXTENSION_DIR}/dist
+            mv ./${EXTENSION_DIR}/dist-extension-test ./${EXTENSION_DIR}/dist
       - run:
           name: test:e2e:chrome:desktop:snaps
           command: |
@@ -708,15 +708,15 @@ jobs:
           name: Move app build
           command: |
             mkdir -p ./${APP_DIR}/dist
-            mv ./${APP_DIR}/dist-app-test-extension ./${APP_DIR}/dist/app
+            mv ./${APP_DIR}/dist-app-test-extension-lavamoat ./${APP_DIR}/dist/app
       - run:
           name: Move UI build
           command: |
-            mv ./${APP_DIR}/dist-ui-test-extension ./${APP_DIR}/dist/ui
+            mv ./${APP_DIR}/dist-ui-test-extension-lavamoat ./${APP_DIR}/dist/ui
       - run:
           name: Move extension build
           command: |
-            mv ./${EXTENSION_DIR}/dist-extension-test ./${EXTENSION_DIR}/dist
+            mv ./${EXTENSION_DIR}/dist-extension-test-lavamoat ./${EXTENSION_DIR}/dist
       - run:
           name: test:e2e:chrome:desktop:snaps
           command: |
