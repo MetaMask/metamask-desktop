@@ -317,7 +317,6 @@ jobs:
           paths:
             - << pipeline.parameters.app-dir >>/dist-app-test-extension
 
-
   build-app-test-app:
     executor: node-browsers
     steps:
@@ -334,7 +333,6 @@ jobs:
           root: .
           paths:
             - << pipeline.parameters.app-dir >>/dist-app-test-app
-
 
   build-ui:
     executor: node-browsers
@@ -370,7 +368,6 @@ jobs:
           paths:
             - << pipeline.parameters.app-dir >>/dist-ui-test-extension
 
-
   build-ui-test-app:
     executor: node-browsers
     steps:
@@ -405,7 +402,6 @@ jobs:
           paths:
             - << pipeline.parameters.extension-dir >>/dist-extension-test
 
-
   build-extension-test-app:
     executor: node-browsers
     steps:
@@ -422,7 +418,6 @@ jobs:
           root: .
           paths:
             - << pipeline.parameters.extension-dir >>/dist-extension-test-app
-
 
   lint-common:
     executor: node-browsers
@@ -500,7 +495,6 @@ jobs:
             fi
           no_output_timeout: 20m
 
-
   test-e2e-extension-snaps:
     executor: node-browsers
     parallelism: 2
@@ -532,7 +526,6 @@ jobs:
               yarn app test:e2e:extension:snaps --retries 2
             fi
           no_output_timeout: 20m
-
 
   test-e2e-app:
     executor: playwright
