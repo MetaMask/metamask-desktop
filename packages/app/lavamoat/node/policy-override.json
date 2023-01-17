@@ -140,6 +140,14 @@
         "Buffer.allocUnsafe": true
       }
     },
+    "@metamask/snaps-controllers>@metamask/rpc-methods>nanoid": {
+      "builtin": {
+        "crypto": true
+      },
+      "globals": {
+        "Buffer.allocUnsafe": true
+      }
+    },
     "@metamask/smart-transactions-controller>@metamask/controllers>eth-method-registry>ethjs>bn.js": {
       "builtin": {
         "buffer.Buffer": true

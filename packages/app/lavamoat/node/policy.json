@@ -11547,6 +11547,14 @@
         "@metamask/snaps-controllers>@metamask/rpc-methods>eth-rpc-errors>fast-safe-stringify": true
       }
     },
+    "@metamask/snaps-controllers>@metamask/rpc-methods>nanoid": {
+      "builtin": {
+        "crypto": true
+      },
+      "globals": {
+        "Buffer.allocUnsafe": true
+      }
+    },
     "@metamask/snaps-controllers>@metamask/snaps-utils": {
       "builtin": {
         "child_process.fork": true,
@@ -12929,7 +12937,6 @@
       "globals": {
         "Buffer.alloc": true,
         "Buffer.byteLength": true,
-        "Buffer.from": true,
         "URLSearchParams": false,
         "__dirname": true,
         "__electronLog": "write",
