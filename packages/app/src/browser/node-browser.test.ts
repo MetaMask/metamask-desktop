@@ -5,6 +5,7 @@ import {
   createStreamMock,
   UUID_MOCK,
   VALUE_2_MOCK,
+  VERSION_MOCK,
 } from '../../test/mocks';
 import { simulateNodeEvent } from '../../test/utils';
 import { browser, registerRequestStream } from './node-browser';
@@ -41,6 +42,7 @@ describe('Node Browser', () => {
 
   describe('call', () => {
     it('invokes manually defined function', () => {
+      process.env.PACKAGE_VERSION = VERSION_MOCK;
       expect(browserMock.runtime.getManifest().manifest_version).toBe(2);
     });
 
