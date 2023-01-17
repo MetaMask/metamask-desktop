@@ -6832,6 +6832,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/analytics-node@npm:^3.1.9":
+  version: 3.1.9
+  resolution: "@types/analytics-node@npm:3.1.9"
+  checksum: 9cd083c35cefbe07edc2be6e235b4d5d8e0a4dae63103665e4ffb38e432a5f3d52a5c8fd765efbacc2a6e4fe33f34d2a5d1146de0f2edfd0ca80c27896c429b1
+  languageName: node
+  linkType: hard
+
 "@types/aria-query@npm:^4.2.0":
   version: 4.2.0
   resolution: "@types/aria-query@npm:4.2.0"
@@ -9032,6 +9039,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"analytics-node@npm:^6.2.0":
+  version: 6.2.0
+  resolution: "analytics-node@npm:6.2.0"
+  dependencies:
+    "@segment/loosely-validate-event": ^2.0.0
+    axios: ^0.27.2
+    axios-retry: 3.2.0
+    lodash.isstring: ^4.0.1
+    md5: ^2.2.1
+    ms: ^2.0.0
+    remove-trailing-slash: ^0.1.0
+    uuid: ^8.3.2
+  checksum: d682f99742255b0e00a5f7a9a6245736eb04917cb0eb4cb196c3f7f1f889632f2fef62e64d471df24fd35d4da7e6581db08b43fe770cc67c5f277158acef5267
+  languageName: node
+  linkType: hard
+
 "ansi-align@npm:^2.0.0":
   version: 2.0.0
   resolution: "ansi-align@npm:2.0.0"
@@ -9936,6 +9959,24 @@ __metadata:
   version: 4.3.3
   resolution: "axe-core@npm:4.3.3"
   checksum: ac349d0b5341ad0859052d843717a1f596adf2efaa85ed9796581aa2f8fea74fda0f68b300363da8a0fb50f4b41b381c4f0b53dd14052205b9a082be0ca388b7
+  languageName: node
+  linkType: hard
+
+"axios-retry@npm:3.2.0":
+  version: 3.2.0
+  resolution: "axios-retry@npm:3.2.0"
+  dependencies:
+    is-retry-allowed: ^1.1.0
+  checksum: 411bedb3d2254bd05f9eaf8c9c7a7e14a985ad424f3448d6ec15e2a3584079c3bb99950c07465bdbab1138a5329ccb3e9d22c58db58c83253df4ca3f41e315e6
+  languageName: node
+  linkType: hard
+
+"axios@npm:^0.21.2":
+  version: 0.21.4
+  resolution: "axios@npm:0.21.4"
+  dependencies:
+    follow-redirects: ^1.14.0
+  checksum: 44245f24ac971e7458f3120c92f9d66d1fc695e8b97019139de5b0cc65d9b8104647db01e5f46917728edfc0cfd88eb30fc4c55e6053eef4ace76768ce95ff3c
   languageName: node
   linkType: hard
 
@@ -11814,6 +11855,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"charenc@npm:0.0.2":
+  version: 0.0.2
+  resolution: "charenc@npm:0.0.2"
+  checksum: 81dcadbe57e861d527faf6dd3855dc857395a1c4d6781f4847288ab23cffb7b3ee80d57c15bba7252ffe3e5e8019db767757ee7975663ad2ca0939bb8fcaf2e5
+  languageName: node
+  linkType: hard
+
 "checkpoint-store@npm:^1.1.0":
   version: 1.1.0
   resolution: "checkpoint-store@npm:1.1.0"
@@ -13125,6 +13173,13 @@ __metadata:
     shebang-command: ^2.0.0
     which: ^2.0.1
   checksum: 671cc7c7288c3a8406f3c69a3ae2fc85555c04169e9d611def9a675635472614f1c0ed0ef80955d5b6d4e724f6ced67f0ad1bb006c2ea643488fcfef994d7f52
+  languageName: node
+  linkType: hard
+
+"crypt@npm:0.0.2":
+  version: 0.0.2
+  resolution: "crypt@npm:0.0.2"
+  checksum: baf4c7bbe05df656ec230018af8cf7dbe8c14b36b98726939cef008d473f6fe7a4fad906cfea4062c93af516f1550a3f43ceb4d6615329612c6511378ed9fe34
   languageName: node
   linkType: hard
 
@@ -17653,7 +17708,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.14.8, follow-redirects@npm:^1.14.9":
+"follow-redirects@npm:^1.14.0, follow-redirects@npm:^1.14.8, follow-redirects@npm:^1.14.9":
   version: 1.15.2
   resolution: "follow-redirects@npm:1.15.2"
   peerDependenciesMeta:
@@ -20403,7 +20458,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-buffer@npm:^1.0.2, is-buffer@npm:^1.1.0, is-buffer@npm:^1.1.5":
+"is-buffer@npm:^1.0.2, is-buffer@npm:^1.1.0, is-buffer@npm:^1.1.5, is-buffer@npm:~1.1.6":
   version: 1.1.6
   resolution: "is-buffer@npm:1.1.6"
   checksum: 4a186d995d8bbf9153b4bd9ff9fd04ae75068fe695d29025d25e592d9488911eeece84eefbd8fa41b8ddcc0711058a71d4c466dcf6f1f6e1d83830052d8ca707
@@ -21004,7 +21059,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-retry-allowed@npm:^1.0.0":
+"is-retry-allowed@npm:^1.0.0, is-retry-allowed@npm:^1.1.0":
   version: 1.2.0
   resolution: "is-retry-allowed@npm:1.2.0"
   checksum: 50d700a89ae31926b1c91b3eb0104dbceeac8790d8b80d02f5c76d9a75c2056f1bb24b5268a8a018dead606bddf116b2262e5ac07401eb8b8783b266ed22558d
@@ -23410,6 +23465,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lodash.isstring@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "lodash.isstring@npm:4.0.1"
+  checksum: eaac87ae9636848af08021083d796e2eea3d02e80082ab8a9955309569cb3a463ce97fd281d7dc119e402b2e7d8c54a23914b15d2fc7fff56461511dc8937ba0
+  languageName: node
+  linkType: hard
+
 "lodash.memoize@npm:~3.0.3":
   version: 3.0.4
   resolution: "lodash.memoize@npm:3.0.4"
@@ -23880,6 +23942,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"md5@npm:^2.2.1":
+  version: 2.3.0
+  resolution: "md5@npm:2.3.0"
+  dependencies:
+    charenc: 0.0.2
+    crypt: 0.0.2
+    is-buffer: ~1.1.6
+  checksum: a63cacf4018dc9dee08c36e6f924a64ced735b37826116c905717c41cebeb41a522f7a526ba6ad578f9c80f02cb365033ccd67fe186ffbcc1a1faeb75daa9b6e
+  languageName: node
+  linkType: hard
+
 "mdast-squeeze-paragraphs@npm:^4.0.0":
   version: 4.0.0
   resolution: "mdast-squeeze-paragraphs@npm:4.0.0"
@@ -24297,6 +24370,7 @@ __metadata:
     "@truffle/codec": ^0.11.18
     "@truffle/decoder": ^5.1.0
     "@tsconfig/node16": ^1.0.3
+    "@types/analytics-node": ^3.1.9
     "@types/babelify": ^7.3.7
     "@types/browserify": ^12.0.37
     "@types/end-of-stream": ^1.4.1
@@ -24323,6 +24397,7 @@ __metadata:
     "@zxing/browser": ^0.0.10
     "@zxing/library": 0.8.0
     addons-linter: ^5.2.0
+    analytics-node: ^6.2.0
     await-semaphore: ^0.1.1
     babel-plugin-transform-inline-environment-variables: ^0.4.4
     babelify: ^10.0.0
@@ -29796,7 +29871,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"remove-trailing-slash@npm:^0.1.1":
+"remove-trailing-slash@npm:^0.1.0, remove-trailing-slash@npm:^0.1.1":
   version: 0.1.1
   resolution: "remove-trailing-slash@npm:0.1.1"
   checksum: dd200c6b7d6f2b49d12b3eff3abc7089917e8a268cefcd5bf67ff23f8c2ad9f866fbe2f3566e1a8dbdc4f4b1171e2941f7dd00852f8de549bb73c3df53b09d96
