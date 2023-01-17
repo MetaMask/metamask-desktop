@@ -600,7 +600,7 @@ jobs:
 
   test-e2e-extension:
     executor: node-browsers
-    parallelism: 8
+    parallelism: 10
     steps:
       - checkout_with_submodule
       - run:
@@ -632,7 +632,7 @@ jobs:
 
   test-e2e-extension-lavamoat:
     executor: node-browsers
-    parallelism: 8
+    parallelism: 10
     steps:
       - checkout_with_submodule
       - run:
@@ -771,6 +771,7 @@ jobs:
 
   test-e2e-app-lavamoat:
     executor: playwright
+    parallelism: 4
     steps:
       - checkout_with_submodule
       - attach_workspace:
