@@ -91,6 +91,15 @@ workflows:
       - build-app-test-app-lavamoat:
           requires:
             - install-deps-extension
+      - build-app-test-extension-lavamoat:
+          requires:
+            - install-deps-extension
+      - build-ui-test-extension-lavamoat:
+          requires:
+            - install-deps-extension
+      - build-extension-test-extension-lavamoat:
+          requires:
+            - install-deps-extension
       - build-ui:
           requires:
             - install-deps-extension
