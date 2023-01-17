@@ -1,11 +1,8 @@
 import path from 'path';
-import { BrowserWindow } from 'electron';
+import { app, BrowserWindow } from 'electron';
 import log from 'loglevel';
-import { MILLISECOND } from '../../submodules/extension/shared/constants/time';
 import UIState from './ui-state';
 import { titleBarOverlayOpts } from './ui-constants';
-
-const MAIN_WINDOW_SHOW_DELAY = 750 * MILLISECOND;
 
 export default class WindowService {
   private UIState: typeof UIState;
@@ -15,7 +12,9 @@ export default class WindowService {
   }
 
   public async createMainWindow() {
+    const { wasOpenedAsHidden } = app.getLoginItemSettings();
     const mainWindow = new BrowserWindow({
+      show: !wasOpenedAsHidden,
       width: 840,
       height: 680,
       minWidth: 800,
@@ -35,15 +34,10 @@ export default class WindowService {
 
     mainWindow.loadFile(
       path.resolve(__dirname, '../../../ui/desktop-ui.html'),
-      // Temporary open pair page, it will redirect to settings page if isDesktopPaired is true
       { hash: 'pair' },
     );
 
-    setTimeout(() => {
-      mainWindow.show();
-    }, MAIN_WINDOW_SHOW_DELAY);
-
-    log.debug('Created status window');
+    log.debug('Created main window');
 
     this.UIState.mainWindow = mainWindow;
   }

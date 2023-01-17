@@ -7,8 +7,8 @@ import {
   updateTheme,
   getTheme,
   getLanguage,
-  getOpenAtLogin,
-  updateOpenAtLogin,
+  getPreferredStartup,
+  updatePreferredStartup,
 } from '../../../ducks/app/app';
 import {
   getLastActivation,
@@ -26,7 +26,7 @@ function mapStateToProps(state) {
     lastActivation: getLastActivation(state),
     language: getLanguage(state),
     theme: getTheme(state),
-    openAtLogin: getOpenAtLogin(state),
+    preferredStartup: getPreferredStartup(state),
   };
 }
 
@@ -34,7 +34,8 @@ function mapDispatchToProps(dispatch) {
   return {
     updateCurrentLanguage: (newLocale) => dispatch(updateLanguage(newLocale)),
     updateTheme: (newTheme) => dispatch(updateTheme(newTheme)),
-    updateOpenAtLogin: (openAtLogin) => dispatch(updateOpenAtLogin(openAtLogin)),
+    updatePreferredStartup: (openAtLogin) =>
+      dispatch(updatePreferredStartup(openAtLogin)),
   };
 }
 

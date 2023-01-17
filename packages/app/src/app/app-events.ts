@@ -1,9 +1,9 @@
 import { app, globalShortcut } from 'electron';
 import cfg from '../utils/config';
+import { determineLoginItemSettings } from '../utils/settings';
 import AppNavigation from './app-navigation';
 import UIState from './ui-state';
-import { getPersistedAppState } from './ui-storage';
-
+import { getPreferredStartupState } from './ui-storage';
 
 export default class AppEvents {
   public appNavigation: AppNavigation;
@@ -25,18 +25,11 @@ export default class AppEvents {
       return;
     }
 
-    let openAtLogin = true;
-    try {
-      const appState = getPersistedAppState();
-      openAtLogin = appState.openAtLogin;
-    } catch (error) {
-      log.error('Error getting persisted app state', error);
+    // Set preferred startup setting
+    if (!process.env.DESKTOP_PREVENT_OPEN_ON_STARTUP) {
+      const preferredStartup = getPreferredStartupState();
+      app.setLoginItemSettings(determineLoginItemSettings(preferredStartup));
     }
-
-    // Set open at login
-    app.setLoginItemSettings({
-      openAtLogin,
-    });
 
     // Focus MainWindow if the second instance is opened
     app.on('second-instance', () => this.onSecondInstance());
@@ -61,7 +54,7 @@ export default class AppEvents {
     }
 
     // On Development: Open dev tools with CMD+SHIFT+I
-    if (process.env.DESKTOP_UI_DEBUG) {
+    if (process.env.DESKTOP_UI_ENABLE_DEV_TOOLS) {
       globalShortcut.register('CommandOrControl+Shift+I', () => {
         this.UIState.mainWindow?.webContents.openDevTools();
       });

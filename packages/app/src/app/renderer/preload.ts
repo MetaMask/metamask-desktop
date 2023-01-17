@@ -15,7 +15,7 @@ const uiStoreBridge = (name: string) => {
 };
 
 const electronBridge = {
-  rootStore: uiStoreBridge('root'),
+  appStore: uiStoreBridge('app'),
   pairStatusStore: uiStoreBridge('pair-status'),
   desktopVersion: () => {
     return ipcRenderer.invoke('get-desktop-version') as Promise<string>;
@@ -53,8 +53,8 @@ const electronBridge = {
   openExternalShell: async (link: string) => {
     await shell.openExternal(link);
   },
-  setOpenAtLogin: async (openAtStartup: boolean) => {
-    await ipcRenderer.invoke('set-open-at-login', openAtStartup);
+  setPreferredStartup: async (preferredStartup: string) => {
+    await ipcRenderer.invoke('set-preferred-startup', preferredStartup);
   },
 };
 

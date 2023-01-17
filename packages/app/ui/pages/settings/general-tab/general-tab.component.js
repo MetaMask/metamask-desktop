@@ -4,7 +4,6 @@ import { PropTypes } from 'prop-types';
 import PairStatus from '../../../components/pair-status';
 import Typography from '../../../../submodules/extension/ui/components/ui/typography';
 import Button from '../../../../submodules/extension/ui/components/ui/button';
-import ToggleButton from '../../../../submodules/extension/ui/components/ui/toggle-button';
 import Dropdown from '../../../components/dropdown';
 import { TYPOGRAPHY } from '../../../../submodules/extension/ui/helpers/constants/design-system';
 import localeIndex from '../../../helpers/constants/localeIndex';
@@ -20,8 +19,8 @@ const GeneralTab = ({
   updateCurrentLanguage,
   theme,
   updateTheme,
-  openAtLogin,
-  updateOpenAtLogin,
+  preferredStartup,
+  updatePreferredStartup,
 }) => {
   const t = useI18nContext();
 
@@ -84,7 +83,13 @@ const GeneralTab = ({
     );
   };
 
-  const renderOpenAtLogin = () => {
+  const renderPreferredStartupOptions = () => {
+    const preferredStartupOptions = [
+      { name: t('minimized'), value: 'minimized' },
+      { name: t('yes'), value: 'yes' },
+      { name: t('no'), value: 'no' },
+    ];
+
     return (
       <div className="mmd-settings-page__setting-row">
         <div className="mmd-settings-page__setting-item">
@@ -95,11 +100,10 @@ const GeneralTab = ({
         </div>
         <div className="mmd-settings-page__setting-item">
           <div className="mmd-settings-page__setting-col">
-            <ToggleButton
-              value={openAtLogin}
-              onToggle={(value) => updateOpenAtLogin(!value)}
-              offLabel={t('off')}
-              onLabel={t('on')}
+            <Dropdown
+              options={preferredStartupOptions}
+              selectedOption={preferredStartup}
+              onChange={(value) => updatePreferredStartup(value)}
             />
           </div>
         </div>
@@ -155,7 +159,7 @@ const GeneralTab = ({
       />
       {renderLanguageSettings()}
       {renderThemeSettings()}
-      {renderOpenAtLogin()}
+      {renderPreferredStartupOptions()}
       {isSuccessfulPairSeen &&
         (isWebSocketConnected ? renderUnpairButton() : renderResetButton())}
     </>
@@ -195,6 +199,14 @@ GeneralTab.propTypes = {
    * Whether the user has successfully paired with the desktop app
    */
   isSuccessfulPairSeen: PropTypes.bool,
+  /**
+   * The user's preferred startup option
+   */
+  preferredStartup: PropTypes.string,
+  /**
+   * Updates the user's preferred startup option
+   */
+  updatePreferredStartup: PropTypes.func,
 };
 
 export default GeneralTab;

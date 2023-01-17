@@ -16,6 +16,7 @@ import {
 import EncryptedWebSocketStream from '@metamask/desktop/dist/encryption/web-socket-stream';
 import { StatusMessage } from '../types/message';
 import { forwardEvents } from '../utils/events';
+import { determineLoginItemSettings } from '../utils/settings';
 import cfg from '../utils/config';
 import { getDesktopVersion } from '../utils/version';
 import ExtensionConnection from './extension-connection';
@@ -23,7 +24,7 @@ import { updateCheck } from './update-check';
 import {
   titleBarOverlayOpts,
   protocolKey,
-  uiRootStorage,
+  uiAppStorage,
   uiPairStatusStorage,
 } from './ui-constants';
 import AppNavigation from './app-navigation';
@@ -93,9 +94,7 @@ class DesktopApp extends EventEmitter {
       this.extensionConnection?.getPairing().submitOTP(data),
     );
 
-    ipcMain.handle('minimize', () =>
-      this.UIState.mainWindow?.minimize(),
-    );
+    ipcMain.handle('minimize', () => this.UIState.mainWindow?.minimize());
 
     ipcMain.handle('unpair', async () => {
       await this.extensionConnection?.disable();
@@ -112,17 +111,17 @@ class DesktopApp extends EventEmitter {
       win?.setTitleBarOverlay?.(titleBarOverlayOpts[theme]);
     });
 
-    ipcMain.handle('set-open-at-login', (event, openAtLogin) => {
-      app.setLoginItemSettings({
-        openAtLogin,
+    if (!process.env.DESKTOP_PREVENT_OPEN_ON_STARTUP) {
+      ipcMain.handle('set-preferred-startup', (_event, preferredStartup) => {
+        app.setLoginItemSettings(determineLoginItemSettings(preferredStartup));
       });
-    });
+    }
 
     ipcMain.handle('get-desktop-version', () => {
       return getDesktopVersion();
     });
 
-    setUiStorage(uiRootStorage);
+    setUiStorage(uiAppStorage);
     setUiStorage(uiPairStatusStorage);
 
     if (!cfg().isExtensionTest) {

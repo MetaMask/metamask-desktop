@@ -1,8 +1,7 @@
 import { ipcMain } from 'electron';
 import Store from 'electron-store';
-import {
-  uiRootStorage,
-} from './ui-constants';
+import log from 'loglevel';
+import { uiAppStorage } from './ui-constants';
 
 export interface UiStorageSettings {
   name: string;
@@ -33,9 +32,32 @@ export const getUiStorage = ({ name, schemaVersion }: UiStorageSettings) => {
   });
 };
 
+export const getPreferredStartupState = () => {
+  const defaultPreferredStartup = 'minimized';
+  const persistedState = getUiStorage(uiAppStorage).get(
+    'persist:app',
+  ) as string;
 
-export const getPersistedAppState = () => {
-  const storage = getUiStorage(uiRootStorage);
-  const stringifiedState = JSON.parse(storage.get('persist:root')).app;
-  return JSON.parse(stringifiedState);
-}
+  if (!persistedState) {
+    log.info('No persisted state found, using default value');
+    return defaultPreferredStartup;
+  }
+
+  try {
+    const { preferredStartup } = JSON.parse(persistedState);
+    if (preferredStartup) {
+      return preferredStartup;
+    }
+
+    log.info(
+      'No preferredStartup found in persisted state, using default value',
+    );
+    return defaultPreferredStartup;
+  } catch (error) {
+    log.error(
+      'Error reading preferredStartup from persisted app state, using default value',
+      error,
+    );
+    return defaultPreferredStartup;
+  }
+};
