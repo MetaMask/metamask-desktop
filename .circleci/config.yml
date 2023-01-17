@@ -90,7 +90,7 @@ workflows:
             - install-deps-extension
       - build-app-test-app-lavamoat:
           requires:
-            - install-deps-extension            
+            - install-deps-extension
       - build-ui:
           requires:
             - install-deps-extension
@@ -102,7 +102,7 @@ workflows:
             - install-deps-extension
       - build-ui-test-app-lavamoat:
           requires:
-            - install-deps-extension            
+            - install-deps-extension
       - build-extension-test-extension:
           requires:
             - install-deps-extension
@@ -111,7 +111,7 @@ workflows:
             - install-deps-extension
       - build-extension-test-app-lavamoat:
           requires:
-            - install-deps-extension            
+            - install-deps-extension
       - lint-common:
           requires:
             - install-deps
@@ -134,6 +134,16 @@ workflows:
             - build-app-test-extension
             - build-ui-test-extension
             - build-extension-test-extension
+      - test-e2e-extension-lavamoat:
+          requires:
+            - build-app-test-extension-lavamoat
+            - build-ui-test-extension-lavamoat
+            - build-extension-test-extension-lavamoat
+      - test-e2e-extension-snaps-lavamoat:
+          requires:
+            - build-app-test-extension-lavamoat
+            - build-ui-test-extension-lavamoat
+            - build-extension-test-extension-lavamoat
       - test-e2e-app:
           requires:
             - build-app-test-app
@@ -143,7 +153,7 @@ workflows:
           requires:
             - build-app-test-app-lavamoat
             - build-ui-test-app-lavamoat
-            - build-extension-test-app-lavamoat            
+            - build-extension-test-app-lavamoat
       - package-windows:
           requires:
             - build-app
@@ -331,6 +341,23 @@ jobs:
           paths:
             - << pipeline.parameters.app-dir >>/dist-app-test-extension
 
+  build-app-test-extension-lavamoat:
+    executor: node-browsers
+    steps:
+      - checkout_with_submodule
+      - attach_workspace:
+          at: .
+      - run:
+          name: build
+          command: yarn app build:app:test:extension:lavamoat
+      - run:
+          name: Move dist to avoid conflicts
+          command: mv ./${APP_DIR}/dist/app ./${APP_DIR}/dist-app-test-extension-lavamoat
+      - persist_to_workspace:
+          root: .
+          paths:
+            - << pipeline.parameters.app-dir >>/dist-app-test-extension-lavamoat
+
   build-app-test-app:
     executor: node-browsers
     steps:
@@ -399,6 +426,23 @@ jobs:
           paths:
             - << pipeline.parameters.app-dir >>/dist-ui-test-extension
 
+  build-ui-test-extension-lavamoat:
+    executor: node-browsers
+    steps:
+      - checkout_with_submodule
+      - attach_workspace:
+          at: .
+      - run:
+          name: build
+          command: yarn app build:ui:lavamoat:ci
+      - run:
+          name: Move dist to avoid conflicts
+          command: mv ./${APP_DIR}/dist/ui ./${APP_DIR}/dist-ui-test-extension-lavamoat
+      - persist_to_workspace:
+          root: .
+          paths:
+            - << pipeline.parameters.app-dir >>/dist-ui-test-extension-lavamoat
+
   build-ui-test-app:
     executor: node-browsers
     steps:
@@ -449,6 +493,23 @@ jobs:
           root: .
           paths:
             - << pipeline.parameters.extension-dir >>/dist-extension-test
+
+  build-extension-test-extension-lavamoat:
+    executor: node-browsers
+    steps:
+      - checkout_with_submodule
+      - attach_workspace:
+          at: .
+      - run:
+          name: build
+          command: yarn extension build:test:desktop:extension:lavamoat
+      - run:
+          name: Move dist to avoid conflicts
+          command: mv ./${EXTENSION_DIR}/dist ./${EXTENSION_DIR}/dist-extension-test-lavamoat
+      - persist_to_workspace:
+          root: .
+          paths:
+            - << pipeline.parameters.extension-dir >>/dist-extension-test-lavamoat
 
   build-extension-test-app:
     executor: node-browsers
@@ -560,7 +621,71 @@ jobs:
             fi
           no_output_timeout: 20m
 
+  test-e2e-extension-lavamoat:
+    executor: node-browsers
+    parallelism: 8
+    steps:
+      - checkout_with_submodule
+      - run:
+          name: Re-Install Chrome
+          command: ./.circleci/scripts/chrome-install.sh
+      - attach_workspace:
+          at: .
+      - run:
+          name: Move app build
+          command: |
+            mkdir -p ./${APP_DIR}/dist
+            mv ./${APP_DIR}/dist-app-test-extension-lavamoat ./${APP_DIR}/dist/app
+      - run:
+          name: Move UI build
+          command: |
+            mv ./${APP_DIR}/dist-ui-test-extension-lavamoat ./${APP_DIR}/dist/ui
+      - run:
+          name: Move extension build
+          command: |
+            mv ./${EXTENSION_DIR}/dist-extension-test-lavamoat ./${EXTENSION_DIR}/dist
+      - run:
+          name: test:e2e:chrome:desktop
+          command: |
+            if .circleci/scripts/test-run-e2e.sh
+            then
+              yarn app test:e2e:extension --retries 2
+            fi
+          no_output_timeout: 20m
+
   test-e2e-extension-snaps:
+    executor: node-browsers
+    parallelism: 2
+    steps:
+      - checkout_with_submodule
+      - run:
+          name: Re-Install Chrome
+          command: ./.circleci/scripts/chrome-install.sh
+      - attach_workspace:
+          at: .
+      - run:
+          name: Move app build
+          command: |
+            mkdir -p ./${APP_DIR}/dist
+            mv ./${APP_DIR}/dist-app-test-extension-lavamoat ./${APP_DIR}/dist/app
+      - run:
+          name: Move UI build
+          command: |
+            mv ./${APP_DIR}/dist-ui-test-extension-lavamoat ./${APP_DIR}/dist/ui
+      - run:
+          name: Move extension build
+          command: |
+            mv ./${EXTENSION_DIR}/dist-extension-test-lavamoat ./${EXTENSION_DIR}/dist
+      - run:
+          name: test:e2e:chrome:desktop:snaps
+          command: |
+            if .circleci/scripts/test-run-e2e.sh
+            then
+              yarn app test:e2e:extension:snaps --retries 2
+            fi
+          no_output_timeout: 20m
+
+  test-e2e-extension-snaps-lavamoat:
     executor: node-browsers
     parallelism: 2
     steps:

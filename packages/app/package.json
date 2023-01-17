@@ -11,6 +11,7 @@
     "build:app": "./build/build.sh",
     "build:app:prod": "NODE_ENV=production yarn build:app",
     "build:app:test:extension": "IN_TEST=true SEGMENT_HOST='https://api.segment.io' SEGMENT_WRITE_KEY='FAKE' PHISHING_WARNING_PAGE_URL=http://localhost:9999/ METAMASK_DEBUG=1 yarn build:app",
+    "build:app:test:extension:lavamoat": "IN_TEST=true SEGMENT_HOST='https://api.segment.io' SEGMENT_WRITE_KEY='FAKE' PHISHING_WARNING_PAGE_URL=http://localhost:9999/ METAMASK_DEBUG=1 yarn lavamoat",
     "build:app:test:app": "UI_TEST=true METAMASK_DEBUG=1 yarn build:app",
     "build:app:test:app:lavamoat": "UI_TEST=true METAMASK_DEBUG=1 yarn lavamoat",
     "build:ui": "node build/ui/desktop-ui.js dev --apply-lavamoat=false",
