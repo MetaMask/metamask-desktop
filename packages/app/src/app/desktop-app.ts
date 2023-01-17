@@ -93,17 +93,15 @@ class DesktopApp extends EventEmitter {
       this.extensionConnection?.getPairing().submitOTP(data),
     );
 
-    ipcMain.handle('popup', (_event) => {
-      log.debug('Show popup not implemented');
-    });
+    ipcMain.handle('minimize', () =>
+      this.UIState.mainWindow?.minimize(),
+    );
 
-    ipcMain.handle('minimize', (_event) => this.UIState.mainWindow?.minimize());
-
-    ipcMain.handle('unpair', async (_event) => {
+    ipcMain.handle('unpair', async () => {
       await this.extensionConnection?.disable();
     });
 
-    ipcMain.handle('reset', async (_event) => {
+    ipcMain.handle('reset', async () => {
       await clearRawState();
       this.emit('restart');
       this.status.isDesktopPaired = false;
@@ -112,6 +110,12 @@ class DesktopApp extends EventEmitter {
     ipcMain.handle('set-theme', (event, theme) => {
       const win = BrowserWindow.fromWebContents(event.sender);
       win?.setTitleBarOverlay?.(titleBarOverlayOpts[theme]);
+    });
+
+    ipcMain.handle('set-open-at-login', (event, openAtLogin) => {
+      app.setLoginItemSettings({
+        openAtLogin,
+      });
     });
 
     ipcMain.handle('get-desktop-version', () => {

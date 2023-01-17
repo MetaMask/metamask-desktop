@@ -11,6 +11,9 @@
   "allSetFox": {
     "message": "All set, fox"
   },
+  "allowOpenAtLoginDescription": {
+    "message": "Allow MetaMask Desktop to open when you log in to your computer"
+  },
   "attributions": {
     "message": "Attributions"
   },
@@ -163,6 +166,9 @@
   },
   "on": {
     "message": "ON"
+  },
+  "openAtLogin": {
+    "message": "Open at login"
   },
   "os": {
     "message": "System"

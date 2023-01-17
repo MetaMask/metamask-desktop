@@ -1,5 +1,8 @@
 import { ipcMain } from 'electron';
 import Store from 'electron-store';
+import {
+  uiRootStorage,
+} from './ui-constants';
 
 export interface UiStorageSettings {
   name: string;
@@ -23,3 +26,16 @@ export const setUiStorage = ({ name, schemaVersion }: UiStorageSettings) => {
     uiStore.delete(key);
   });
 };
+
+export const getUiStorage = ({ name, schemaVersion }: UiStorageSettings) => {
+  return new Store({
+    name: `mmd-desktop-ui-v${schemaVersion}-${name}`,
+  });
+};
+
+
+export const getPersistedAppState = () => {
+  const storage = getUiStorage(uiRootStorage);
+  const stringifiedState = JSON.parse(storage.get('persist:root')).app;
+  return JSON.parse(stringifiedState);
+}

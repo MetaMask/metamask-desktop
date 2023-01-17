@@ -53,6 +53,9 @@ const electronBridge = {
   openExternalShell: async (link: string) => {
     await shell.openExternal(link);
   },
+  setOpenAtLogin: async (openAtStartup: boolean) => {
+    await ipcRenderer.invoke('set-open-at-login', openAtStartup);
+  },
 };
 
 contextBridge.exposeInMainWorld('electronBridge', electronBridge);
