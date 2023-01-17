@@ -49,13 +49,20 @@
         "crypto.getRandomValues": true
       }
     },
+    "@storybook/api>util-deprecate": {
+      "globals": {
+        "console.trace": true,
+        "console.warn": true,
+        "localStorage": true
+      }
+    },
     "browserify>assert": {
       "globals": {
         "Buffer": true
       },
       "packages": {
-        "browserify>assert>object-assign": true,
-        "browserify>assert>util": true
+        "browserify>assert>util": true,
+        "react>object-assign": true
       }
     },
     "browserify>assert>util": {
@@ -70,11 +77,6 @@
         "browserify>process": true
       }
     },
-    "browserify>browser-pack>safe-buffer": {
-      "packages": {
-        "browserify>buffer": true
-      }
-    },
     "browserify>browser-resolve": {
       "packages": {
         "ethjs-query>babel-runtime>core-js": true
@@ -85,7 +87,7 @@
         "console": true
       },
       "packages": {
-        "browserify>buffer>base64-js": true,
+        "base64-js": true,
         "browserify>buffer>ieee754": true
       }
     },
@@ -105,58 +107,16 @@
         "define": true
       }
     },
-    "browserify>readable-stream": {
-      "packages": {
-        "browserify>browser-resolve": true,
-        "browserify>events": true,
-        "browserify>inherits": true,
-        "browserify>process": true,
-        "browserify>readable-stream>core-util-is": true,
-        "browserify>readable-stream>isarray": true,
-        "browserify>readable-stream>process-nextick-args": true,
-        "browserify>readable-stream>safe-buffer": true,
-        "browserify>readable-stream>string_decoder": true,
-        "browserify>readable-stream>util-deprecate": true,
-        "browserify>timers-browserify": true
-      }
-    },
-    "browserify>readable-stream>core-util-is": {
-      "packages": {
-        "browserify>insert-module-globals>is-buffer": true
-      }
-    },
-    "browserify>readable-stream>process-nextick-args": {
-      "packages": {
-        "browserify>process": true
-      }
-    },
-    "browserify>readable-stream>safe-buffer": {
-      "packages": {
-        "browserify>buffer": true
-      }
-    },
-    "browserify>readable-stream>string_decoder": {
-      "packages": {
-        "browserify>readable-stream>safe-buffer": true
-      }
-    },
-    "browserify>readable-stream>util-deprecate": {
-      "globals": {
-        "console.trace": true,
-        "console.warn": true,
-        "localStorage": true
-      }
-    },
     "browserify>stream-browserify": {
       "packages": {
         "browserify>events": true,
-        "browserify>inherits": true,
-        "browserify>readable-stream": true
+        "pumpify>inherits": true,
+        "readable-stream": true
       }
     },
     "browserify>string_decoder": {
       "packages": {
-        "browserify>browser-pack>safe-buffer": true
+        "hdkey>safe-buffer": true
       }
     },
     "browserify>timers-browserify": {
@@ -206,6 +166,11 @@
         "@babel/runtime": true
       }
     },
+    "hdkey>safe-buffer": {
+      "packages": {
+        "browserify>buffer": true
+      }
+    },
     "lodash": {
       "globals": {
         "clearTimeout": true,
@@ -231,8 +196,8 @@
         "console": true
       },
       "packages": {
-        "prop-types>object-assign": true,
-        "prop-types>react-is": true
+        "prop-types>react-is": true,
+        "react>object-assign": true
       }
     },
     "prop-types>react-is": {
@@ -245,8 +210,8 @@
         "console": true
       },
       "packages": {
-        "react>object-assign": true,
-        "react>prop-types": true
+        "prop-types": true,
+        "react>object-assign": true
       }
     },
     "react-devtools": {
@@ -292,8 +257,8 @@
       "packages": {
         "prop-types": true,
         "react": true,
-        "react-dom>object-assign": true,
-        "react-dom>scheduler": true
+        "react-dom>scheduler": true,
+        "react>object-assign": true
       }
     },
     "react-dom>scheduler": {
@@ -325,33 +290,23 @@
       "packages": {
         "@babel/runtime": true,
         "prop-types": true,
+        "prop-types>react-is": true,
         "react": true,
         "react-dom": true,
         "react-redux>hoist-non-react-statics": true,
-        "react-redux>react-is": true,
         "redux": true
       }
     },
     "react-redux>hoist-non-react-statics": {
       "packages": {
-        "react-redux>hoist-non-react-statics>react-is": true
-      }
-    },
-    "react-redux>hoist-non-react-statics>react-is": {
-      "globals": {
-        "console": true
-      }
-    },
-    "react-redux>react-is": {
-      "globals": {
-        "console": true
+        "prop-types>react-is": true
       }
     },
     "react-router-dom": {
       "packages": {
+        "prop-types": true,
         "react": true,
         "react-router-dom>history": true,
-        "react-router-dom>prop-types": true,
         "react-router-dom>react-router": true,
         "react-router-dom>tiny-invariant": true,
         "react-router-dom>tiny-warning": true
@@ -374,55 +329,43 @@
         "react-router-dom>tiny-warning": true
       }
     },
-    "react-router-dom>prop-types": {
-      "globals": {
-        "console": true
-      },
-      "packages": {
-        "react-router-dom>prop-types>object-assign": true,
-        "react-router-dom>prop-types>react-is": true
-      }
-    },
-    "react-router-dom>prop-types>react-is": {
-      "globals": {
-        "console": true
-      }
-    },
     "react-router-dom>react-router": {
       "packages": {
+        "prop-types": true,
+        "prop-types>react-is": true,
         "react": true,
-        "react-router-dom>history": true,
-        "react-router-dom>prop-types": true,
-        "react-router-dom>react-router>hoist-non-react-statics": true,
+        "react-redux>hoist-non-react-statics": true,
+        "react-router-dom>react-router>history": true,
         "react-router-dom>react-router>mini-create-react-context": true,
-        "react-router-dom>react-router>path-to-regexp": true,
-        "react-router-dom>react-router>react-is": true,
+        "react-router-dom>tiny-invariant": true,
+        "react-router-dom>tiny-warning": true,
+        "sinon>nise>path-to-regexp": true
+      }
+    },
+    "react-router-dom>react-router>history": {
+      "globals": {
+        "addEventListener": true,
+        "confirm": true,
+        "document": true,
+        "history": true,
+        "location": true,
+        "navigator.userAgent": true,
+        "removeEventListener": true
+      },
+      "packages": {
+        "react-router-dom>history>resolve-pathname": true,
+        "react-router-dom>history>value-equal": true,
         "react-router-dom>tiny-invariant": true,
         "react-router-dom>tiny-warning": true
       }
     },
-    "react-router-dom>react-router>hoist-non-react-statics": {
-      "packages": {
-        "react-router-dom>react-router>react-is": true
-      }
-    },
     "react-router-dom>react-router>mini-create-react-context": {
       "packages": {
+        "@babel/runtime": true,
+        "prop-types": true,
         "react": true,
-        "react-router-dom>@babel/runtime": true,
-        "react-router-dom>prop-types": true,
         "react-router-dom>react-router>mini-create-react-context>gud": true,
         "react-router-dom>tiny-warning": true
-      }
-    },
-    "react-router-dom>react-router>path-to-regexp": {
-      "packages": {
-        "react-router-dom>react-router>path-to-regexp>isarray": true
-      }
-    },
-    "react-router-dom>react-router>react-is": {
-      "globals": {
-        "console": true
       }
     },
     "react-router-dom>tiny-warning": {
@@ -430,9 +373,39 @@
         "console": true
       }
     },
-    "react>prop-types": {
-      "globals": {
-        "console": true
+    "readable-stream": {
+      "packages": {
+        "@storybook/api>util-deprecate": true,
+        "browserify>browser-resolve": true,
+        "browserify>events": true,
+        "browserify>process": true,
+        "browserify>timers-browserify": true,
+        "pumpify>inherits": true,
+        "readable-stream>core-util-is": true,
+        "readable-stream>isarray": true,
+        "readable-stream>process-nextick-args": true,
+        "readable-stream>safe-buffer": true,
+        "readable-stream>string_decoder": true
+      }
+    },
+    "readable-stream>core-util-is": {
+      "packages": {
+        "browserify>insert-module-globals>is-buffer": true
+      }
+    },
+    "readable-stream>process-nextick-args": {
+      "packages": {
+        "browserify>process": true
+      }
+    },
+    "readable-stream>safe-buffer": {
+      "packages": {
+        "browserify>buffer": true
+      }
+    },
+    "readable-stream>string_decoder": {
+      "packages": {
+        "readable-stream>safe-buffer": true
       }
     },
     "redux": {
@@ -454,6 +427,11 @@
       "packages": {
         "react": true,
         "redux": true
+      }
+    },
+    "sinon>nise>path-to-regexp": {
+      "packages": {
+        "sinon>nise>path-to-regexp>isarray": true
       }
     },
     "web3": {

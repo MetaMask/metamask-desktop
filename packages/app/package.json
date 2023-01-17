@@ -548,7 +548,9 @@
       "react-devtools>electron": true,
       "react-devtools>electron>@electron/get>global-agent>core-js": false,
       "react-inspector>babel-runtime>core-js": false,
-      "ethereumjs-util>ethereum-cryptography>secp256k1": false
+      "ethereumjs-util>ethereum-cryptography>secp256k1": false,
+      "ws>bufferutil": false,
+      "ws>utf-8-validate": false
     }
   }
 }

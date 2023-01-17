@@ -137,12 +137,12 @@ jobs:
     steps:
       - checkout_with_submodule
       - restore_cache:
-          key: dependency-cache-v3-{{ checksum "yarn.lock" }}
+          key: dependency-cache-v4-{{ checksum "yarn.lock" }}
       - run:
           name: Install deps
           command: yarn install --frozen-lockfile
       - save_cache:
-          key: dependency-cache-v3-{{ checksum "yarn.lock" }}
+          key: dependency-cache-v4-{{ checksum "yarn.lock" }}
           paths:
             - .yarn/cache
             - .yarn/install-state.gz
