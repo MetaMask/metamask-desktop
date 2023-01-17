@@ -32,6 +32,7 @@ import AppEvents from './app-events';
 import WindowService from './window-service';
 import UIState from './ui-state';
 import { setUiStorage } from './ui-storage';
+import analytics from './segment-analytics';
 
 // Set protocol for deeplinking
 if (!cfg().isUnitTest) {
@@ -218,6 +219,13 @@ class DesktopApp extends EventEmitter {
     extensionConnection.on('paired', () => {
       this.status.isDesktopPaired = true;
       this.appNavigation.setPairedTrayIcon();
+      // Segment example
+      analytics.getInstance().identify('f4ca124298', {
+        name: 'MMD',
+        version: getDesktopVersion(),
+        paired: true,
+        createdAt: new Date(),
+      });
     });
 
     extensionConnection.getPairing().on('invalid-otp', () => {
