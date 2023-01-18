@@ -61,7 +61,7 @@ jobs:
           PACKAGE_JSON="./packages/app/package.json"
           RELEASE_VERSION="$(jq --raw-output .version $PACKAGE_JSON)"
           echo "v@$RELEASE_VERSION"
-          gh release create "v$RELEASE_VERSION" -F packages/app/CHANGELOG.md -d
+          gh release create "v$RELEASE_VERSION" -t "MetaMask Desktop v$RELEASE_VERSION" -F packages/app/CHANGELOG.md -d
 
   package-prod:
     needs: publish-app-release-draft
