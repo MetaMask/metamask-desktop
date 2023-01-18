@@ -8,6 +8,7 @@ module.exports = function (api) {
     targets: {
       electron: '22',
     },
+    sourceMaps: 'inline',
     presets: [
       '@babel/preset-typescript',
       '@babel/preset-env',

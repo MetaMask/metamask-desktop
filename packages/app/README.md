@@ -1,47 +1,117 @@
 # MetaMask Desktop App
-### Prerequisites
 
-- Install [Node.js](https://nodejs.org) version 16
-    - If you are using [nvm](https://github.com/creationix/nvm#installation) (recommended) running `nvm use` will automatically choose the right node version for you.
-- Install [Yarn](https://yarnpkg.com/en/docs/install)
+This directory contains the MetaMask Desktop application, built with [Electron](https://www.electronjs.org/docs/latest), which can be paired with the Flask extension to improve its overall performance. 
 
-### Building locally
+## Getting Started
 
-- Install dependencies: `yarn setup` (not the usual install command)
-- Copy the `.metamaskrc.dist` file to `.metamaskrc`
-    - Replace the `INFURA_PROJECT_ID` value with your own personal [Infura Project ID](https://infura.io/docs).
-    - Optionally, replace the `PASSWORD` value with your development wallet password to avoid entering it each time you open the app.
-- Run `yarn build` to start development environment. (This will open up extension, desktop main process and desktop renderer process in watch mode)
-    - Run `yarn app start` to run the electron application.
+Build the [React](https://reactjs.org/) UI used by the Electron app:
 
-### Building locally with MV3 enabled
+```
+yarn app build:ui
+```
 
-- Install dependencies: `yarn setup` (not the usual install command)
-- Copy the `.metamaskrc.dist` file to `.metamaskrc`
-    - `ENABLE_MV3=true` is automatically set at build step.
-- Build the extension with desktop support using `yarn extension build:desktop:extension:mv3`.
-- Build the desktop app using `yarn app build:app:mv3`.
-    - Run `yarn app start` to run the desktop app.
+Build the Electron app:
 
-### Running Unit Tests and Linting
+```
+yarn app build:app
+```
 
-Run unit tests and the linter with `yarn test`. To run just unit tests, run `yarn test:unit`.
+Start the app:
 
-You can run the linter by itself with `yarn lint`, and you can automatically fix some lint problems with `yarn lint:fix`. You can also run these two commands just on your local changes to save time with `yarn lint:changed` and `yarn lint:changed:fix` respectively.
+```
+yarn app start
+```
 
-### Clear Electron app state data
+## Package
 
-Desktop UI persists data for the user settings and extension. To clear this data, run `yarn clear:electron-state`
+Generate a suitable installer package for a specific operating system:
 
-Note: _This will clear the data for all development Electron apps._
+| Platform | Type | Command |
+| --- | --- | --- |
+| Windows | NSIS Installer | `yarn app package:win` |
+| MacOS | DMG Image | `yarn app package:mac` |
+| Linux | AppImage | `yarn app package:linux` |
+
+## Test
+
+### Unit Tests
+
+```
+yarn app test
+```
+
+### E2E Tests
+
+Verify the behaviour of the extension when paired with the app:
+
+```
+yarn build:test:extension
+yarn app test:e2e:extension
+```
+
+To verify the behaviour of the app itself, see the [Playwright setup instructions](test/playwright/README.md).
+
+## Lint
+
+Check for linting issues:
+
+```
+yarn app lint
+```
+
+Attempt to automatically fix linting issues:
+
+```
+yarn app lint:fix
+```
+
+## Debug
+
+### Visual Studio Code
+
+This repository contains configuration to support debugging within Visual Studio Code.
+
+1. Open the `Run and Debug` view.
+2. Run the desired configuration:
+   | Configuration | Description |
+   | --- | --- |
+   | Electron - Main Process | Debug only the main Electron process which handles requests from the extension. |
+   | Electron - Renderer Processes | Debug only the Electron renderer processes which correspond to each Electron window. |
+   | Electron - All | Debug the Electron main and renderer processes simultaneously. |
+3. Add breakpoints to any desired source files.
+
+Note: _Source maps are used to support debugging with the original TypeScript files rather than any transpiled files in the `packages/app/dist` directory._
+
+### Chrome Developer Tools
+
+As each Electron window is ran in a Chrome instance, the Chrome developer tools can be used to debug the main renderer process.
+
+1. Set `DESKTOP_UI_DEBUG=1` in `packages/app/.metamaskrc` before building the UI.
+2. When in the main Electron window, press `Command / Control + Shift + I`.
+3. Use the `sources` tab to create breakpoints in any of the source files.
+
+## Configuration
+
+The below variables can be specified using a `.metamaskrc` file in the `packages/app` directory.
 
 ### Environment Variables
-
-#### Development
 
 | Name | Description |
 | ---  | --- |
 | COMPATIBILITY_VERSION_DESKTOP | Override the compatibility version of the desktop app. |
 | COMPATIBILITY_VERSION_EXTENSION | Override the compatibility version of the extension. |
+| DESKTOP_UI_DEBUG | Set to `1` to enable the Chrome developer tools in the main Electron window. |
 | DISABLE_WEB_SOCKET_ENCRYPTION | Set this to `1` to disable all encryption when communicating with the desktop app. |
 | SKIP_OTP_PAIRING_FLOW | Set this to `1` to skip the pairing process when enabling desktop mode. |
+
+## Reset Electron State
+
+The app persists data for both user preferences and extension state.
+
+To clear all persisted state:
+
+```
+yarn app clear:electron-state
+```
+
+Note: _This will remove data for all Electron apps ran in development mode._
