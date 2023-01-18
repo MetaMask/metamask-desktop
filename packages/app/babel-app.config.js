@@ -1,5 +1,6 @@
 module.exports = function (api) {
   const isUnitTest = api.env('test');
+  const isProd = api.env('production');
   api.cache(false);
   return {
     parserOpts: {
@@ -8,6 +9,7 @@ module.exports = function (api) {
     targets: {
       electron: '22',
     },
+    sourceMaps: isProd ? false : 'inline',
     presets: [
       '@babel/preset-typescript',
       '@babel/preset-env',
