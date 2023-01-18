@@ -69,15 +69,16 @@ yarn app lint:fix
 
 ### Visual Studio Code
 
-This repository contains configuration to support debugging within Visual Studio Code.
+The repository contains configuration files to support debugging the app within Visual Studio Code.
+
+| Configuration | Description |
+| --- | --- |
+| Electron - Main Process | Debug only the main Electron process which handles requests from the extension. |
+| Electron - Renderer Processes | Debug only the Electron renderer processes which correspond to each Electron window. |
+| Electron - All | Debug the Electron main and renderer processes simultaneously. |
 
 1. Open the `Run and Debug` view.
-2. Run the desired configuration:
-   | Configuration | Description |
-   | --- | --- |
-   | Electron - Main Process | Debug only the main Electron process which handles requests from the extension. |
-   | Electron - Renderer Processes | Debug only the Electron renderer processes which correspond to each Electron window. |
-   | Electron - All | Debug the Electron main and renderer processes simultaneously. |
+2. Run the desired configuration.
 3. Add breakpoints to any desired source files.
 
 Note: _Source maps are used to support debugging with the original TypeScript files rather than any transpiled files in the `packages/app/dist` directory._
@@ -101,8 +102,8 @@ The below variables can be specified using a `.metamaskrc` file in the `packages
 | COMPATIBILITY_VERSION_DESKTOP | Override the compatibility version of the desktop app. |
 | COMPATIBILITY_VERSION_EXTENSION | Override the compatibility version of the extension. |
 | DESKTOP_UI_DEBUG | Set to `1` to enable the Chrome developer tools in the main Electron window. |
-| DISABLE_WEB_SOCKET_ENCRYPTION | Set this to `1` to disable all encryption when communicating with the desktop app. |
-| SKIP_OTP_PAIRING_FLOW | Set this to `1` to skip the pairing process when enabling desktop mode. |
+| DISABLE_WEB_SOCKET_ENCRYPTION | Set to `1` to disable all encryption when communicating with the desktop app. |
+| SKIP_OTP_PAIRING_FLOW | Set to `1` to skip the pairing process when enabling desktop mode. |
 
 ## Reset Electron State
 
