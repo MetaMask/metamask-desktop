@@ -16,8 +16,8 @@ export default class WindowService {
 
   public async createMainWindow() {
     const mainWindow = new BrowserWindow({
-      width: 800,
-      height: 640,
+      width: 840,
+      height: 680,
       minWidth: 800,
       minHeight: 640,
       titleBarStyle: 'hidden',
