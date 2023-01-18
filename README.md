@@ -72,7 +72,7 @@ If you see "All set Fox" message displayed in your Desktop app, it means you're 
 
 Your MetaMask Desktop app now acts as a companion app for your Flask extension which shall improve its overall performance.
 
-## Other scripts
+## Other Scripts
 
 Run a script for a specific package:
 ```

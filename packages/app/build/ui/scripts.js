@@ -435,8 +435,12 @@ function setupSourcemaps(buildConfiguration, { buildTarget }) {
       // https://bugs.chromium.org/p/chromium/issues/detail?id=931675
       .push(
         isDevBuild(buildTarget)
-          ? sourcemaps.write()
-          : sourcemaps.write('./sourcemaps', { addComment: false }),
+          ? sourcemaps.write({
+              sourceRoot: '/packages/app/',
+            })
+          : sourcemaps.write('./sourcemaps', {
+              addComment: false,
+            }),
       );
   });
 }
