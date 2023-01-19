@@ -9,6 +9,7 @@ import {
 } from '../../helpers/constants/routes';
 import useI18nContext from '../../hooks/useI18nContext';
 import Typography from '../../../submodules/extension/ui/components/ui/typography';
+import Button from '../../../submodules/extension/ui/components/ui/button';
 import SettingIcon from '../../components/icons/settings-icon';
 import {
   FONT_WEIGHT,
@@ -18,6 +19,7 @@ import {
 } from '../../../submodules/extension/ui/helpers/constants/design-system';
 import Mascot from '../../components/mascot';
 import Spinner from '../../../submodules/extension/ui/components/ui/spinner';
+import { metamaskDesktopSubmitTicket } from '../../helpers/constants/links';
 
 const ANIMATION_COMPLETE_DEFER_IN_MS = 1000;
 const OTP_VALIDATION_TIMEOUT_IN_MS = 5000;
@@ -145,6 +147,17 @@ const Pair = ({ isDesktopPaired, isSuccessfulPairSeen, history }) => {
             )}
           </div>
         )}
+        <Button
+          type="link"
+          className="support-link"
+          onClick={() => {
+            window.electronBridge.openExternalShell(
+              metamaskDesktopSubmitTicket,
+            );
+          }}
+        >
+          {t('needSupport')}
+        </Button>
       </div>
     </>
   );
