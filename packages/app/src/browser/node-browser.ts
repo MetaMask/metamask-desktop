@@ -7,6 +7,7 @@ import {
   BrowserProxyResponse,
 } from '@metamask/desktop/dist/types';
 import ObfuscatedStore from '../app/storage';
+import { getDesktopVersion } from '../utils/version';
 
 const TIMEOUT_REQUEST = 5000;
 
@@ -58,6 +59,7 @@ const raw = {
     getManifest: () => ({
       manifest_version: 2,
       version: '103.0.5060.134',
+      version_name: getDesktopVersion(),
     }),
     getPlatformInfo: () => Promise.resolve({ os: 'mac' }),
   },

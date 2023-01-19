@@ -1,6 +1,9 @@
 import path from 'path';
 import { app, Tray, Menu, shell } from 'electron';
-import { metamaskDesktopAboutWebsite } from './ui-constants';
+import {
+  metamaskDesktopAboutWebsite,
+  metamaskDesktopSubmitTicket,
+} from './ui-constants';
 import UIState from './ui-state';
 
 export default class AppNavigation {
@@ -65,6 +68,15 @@ export default class AppNavigation {
     };
   }
 
+  private createSupportMenuItem() {
+    return {
+      label: 'Submit a ticket',
+      click: async () => {
+        await shell.openExternal(metamaskDesktopSubmitTicket);
+      },
+    };
+  }
+
   private createQuitMenuItem() {
     return {
       label: 'Quit',
@@ -79,7 +91,11 @@ export default class AppNavigation {
     const menuTemplate = [
       {
         label: app.name,
-        submenu: [this.createAboutMenuItem(), this.createQuitMenuItem()],
+        submenu: [
+          this.createAboutMenuItem(),
+          this.createSupportMenuItem(),
+          this.createQuitMenuItem(),
+        ],
       },
     ];
     const menu = Menu.buildFromTemplate(menuTemplate);
