@@ -6,6 +6,7 @@ import { ExtensionInitialPage } from '../pageObjects/ext-initial-page';
 
 import { electronStartup, getDesktopWindowByName } from '../helpers/electron';
 import { DesktopOTPPage } from '../pageObjects/desktop-otp-pairing-page';
+import { delay } from '../helpers/utils';
 
 test.describe('Desktop State Sync', () => {
   test('Automatic state sync after disconnect desktop', async ({
@@ -43,7 +44,7 @@ test.describe('Desktop State Sync', () => {
 
     // Add a 2secs delay to allow desktop / extension sync
     // 2 secs as desktop / extension debounce changes by 1 sec
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await delay(2000);
     // Close desktop
     await electronApp.close();
 
