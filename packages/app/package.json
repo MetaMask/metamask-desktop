@@ -3,7 +3,10 @@
   "version": "0.0.2",
   "private": true,
   "main": "dist/app/src/app/lavamoat.js",
-  "repository": "https://github.com/MetaMask/desktop",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MetaMask/metamask-desktop.git"
+  },
   "scripts": {
     "build:app": "./build/build.sh",
     "build:app:prod": "NODE_ENV=production yarn build:app",
