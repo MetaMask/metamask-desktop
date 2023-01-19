@@ -6,6 +6,8 @@ import UIState from './ui-state';
 export default class AppNavigation {
   private UIState: typeof UIState;
 
+  private tray?: Tray;
+
   constructor() {
     this.UIState = UIState;
   }
@@ -26,6 +28,22 @@ export default class AppNavigation {
     if (mainWindow) {
       mainWindow.show();
       mainWindow.focus();
+    }
+  }
+
+  public setPairedTrayIcon() {
+    if (this.tray) {
+      this.tray.setImage(
+        path.resolve(__dirname, '../../../ui/icons/paired_icon.png'),
+      );
+    }
+  }
+
+  public setUnPairedTrayIcon() {
+    if (this.tray) {
+      this.tray.setImage(
+        path.resolve(__dirname, '../../../ui/icons/unpaired_icon.png'),
+      );
     }
   }
 
@@ -78,7 +96,7 @@ export default class AppNavigation {
 
   private createTray() {
     const tray = new Tray(
-      path.resolve(__dirname, '../../../ui/icons/icon.png'),
+      path.resolve(__dirname, '../../../ui/icons/unpaired_icon.png'),
     );
     const trayMenuTemplate = [
       this.createShowMenuItem(),
@@ -90,5 +108,6 @@ export default class AppNavigation {
     tray.on('double-click', () => {
       this.showAndFocusMainWindow();
     });
+    this.tray = tray;
   }
 }
