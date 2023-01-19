@@ -14,6 +14,7 @@ import {
   getDesktopState,
 } from '@metamask/desktop/dist/utils/state';
 import EncryptedWebSocketStream from '@metamask/desktop/dist/encryption/web-socket-stream';
+import { uuid } from '@metamask/desktop/dist/utils/utils';
 import { StatusMessage } from '../types/message';
 import { forwardEvents } from '../utils/events';
 import { determineLoginItemSettings } from '../utils/settings';
@@ -32,7 +33,8 @@ import AppEvents from './app-events';
 import WindowService from './window-service';
 import UIState from './ui-state';
 import { setUiStorage } from './ui-storage';
-import analytics from './segment-analytics';
+import MetricsService from './metrics/metrics-service';
+import { EVENT_NAMES } from './metrics/metrics-constants';
 
 // Set protocol for deeplinking
 if (!cfg().isUnitTest) {
@@ -62,8 +64,11 @@ class DesktopApp extends EventEmitter {
 
   private UIState: typeof UIState;
 
+  private metricsService: typeof MetricsService;
+
   constructor() {
     super();
+    this.metricsService = MetricsService;
     this.UIState = UIState;
     this.appNavigation = new AppNavigation();
     this.appEvents = new AppEvents();
@@ -219,9 +224,9 @@ class DesktopApp extends EventEmitter {
     extensionConnection.on('paired', () => {
       this.status.isDesktopPaired = true;
       this.appNavigation.setPairedTrayIcon();
-      // Segment example
-      analytics.getInstance().identify('f4ca124298', {
-        name: 'MMD',
+      // track event on Segment
+      this.metricsService.track(EVENT_NAMES.DESKTOP_APP_PAIRED, {
+        messageId: uuid(),
         version: getDesktopVersion(),
         paired: true,
         createdAt: new Date(),
