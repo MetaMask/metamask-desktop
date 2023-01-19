@@ -14,7 +14,6 @@ import {
   getDesktopState,
 } from '@metamask/desktop/dist/utils/state';
 import EncryptedWebSocketStream from '@metamask/desktop/dist/encryption/web-socket-stream';
-import { uuid } from '@metamask/desktop/dist/utils/utils';
 import { StatusMessage } from '../types/message';
 import { forwardEvents } from '../utils/events';
 import { determineLoginItemSettings } from '../utils/settings';
