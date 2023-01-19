@@ -32,6 +32,7 @@ export default class Analytics {
     event: string;
     userId?: string;
     properties?: any;
+    context?: any;
   }): void {
     this.analytics.track({ ...message, timestamp: new Date() });
   }

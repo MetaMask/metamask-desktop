@@ -14,7 +14,6 @@ import {
   getDesktopState,
 } from '@metamask/desktop/dist/utils/state';
 import EncryptedWebSocketStream from '@metamask/desktop/dist/encryption/web-socket-stream';
-import { uuid } from '@metamask/desktop/dist/utils/utils';
 import { StatusMessage } from '../types/message';
 import { forwardEvents } from '../utils/events';
 import { determineLoginItemSettings } from '../utils/settings';
@@ -224,10 +223,8 @@ class DesktopApp extends EventEmitter {
     extensionConnection.on('paired', () => {
       this.status.isDesktopPaired = true;
       this.appNavigation.setPairedTrayIcon();
-      // track event on Segment
+      // send metrics to Segment
       this.metricsService.track(EVENT_NAMES.DESKTOP_APP_PAIRED, {
-        messageId: uuid(),
-        version: getDesktopVersion(),
         paired: true,
         createdAt: new Date(),
       });
