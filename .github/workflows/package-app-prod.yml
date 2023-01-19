@@ -121,3 +121,6 @@ jobs:
           CSC_LINK: ${{ secrets.MMD_MAC_CSC_BASE64 }}
           CSC_KEY_PASSWORD: ${{ secrets.MMD_MAC_CSC_KEY_PASSWORD }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
