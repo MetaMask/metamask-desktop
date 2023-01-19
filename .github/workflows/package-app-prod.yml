@@ -102,6 +102,7 @@ jobs:
         run: yarn app build:app
         env:
           INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
+          METAMASK_ENVIRONMENT: 'production'
       - name: Package app for ${{ matrix.os }}
         shell: bash
         run:  |
