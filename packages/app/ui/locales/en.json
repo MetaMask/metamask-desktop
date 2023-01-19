@@ -110,6 +110,9 @@
   "links": {
     "message": "Links"
   },
+  "needSupport": {
+    "message": "Need support? Visit our Help Center"
+  },
   "os": {
     "message": "System"
   },
