@@ -42,30 +42,12 @@ const {
   ENVIRONMENT,
 } = require('../../submodules/extension/development/build/constants');
 const {
-  getConfig,
-} = require('../../submodules/extension/development/build/config');
-const {
   isDevBuild,
   getEnvironment,
   logError,
 } = require('../../submodules/extension/development/build/utils');
 const { runInChildProcess, createTask, composeParallel } = require('./task');
-
-/**
- * Get the appropriate Segment write key.
- *
- * @param {object} options - The Segment write key options.
- * @param {object} options.config - The environment variable configuration.
- * @param {keyof ENVIRONMENT} options.environment - The current build environment.
- * @returns {string} The Segment write key.
- */
-function getSegmentWriteKey({ config, environment }) {
-  if (environment !== ENVIRONMENT.PRODUCTION) {
-    // Skip validation because this is unset on PRs from forks, and isn't necessary for development builds.
-    return config.SEGMENT_WRITE_KEY;
-  }
-  return config.SEGMENT_PROD_WRITE_KEY;
-}
+const { getConfig } = require('./config');
 
 const noopWriteStream = through.obj((_file, _fileEncoding, callback) =>
   callback(),
@@ -514,30 +496,22 @@ async function createBundle(buildConfiguration, { reloadOnChange }) {
  * Get environment variables to inject in the current build.
  *
  * @param {object} options - Build options.
- * @param {BUILD_TARGETS} options.buildTarget - The current build target.
- * @param {BuildType} options.buildType - The current build type (e.g. "main",
+ * @param {BUILD_TARGETS} options._buildTarget - The current build target.
+ * @param {BuildType} options._buildType - The current build type (e.g. "main",
  * "flask", etc.).
  * @returns {object} A map of environment variables to inject.
  */
-async function getEnvironmentVariables({ buildTarget, buildType }) {
-  const environment = getEnvironment({ buildTarget });
+async function getEnvironmentVariables({ _buildTarget, _buildType }) {
   const config = await getConfig();
 
-  const devMode = isDevBuild(buildTarget);
-  const iconNames = await generateIconNames();
   return {
-    CONF: devMode ? config : {},
-    DISABLE_WEB_SOCKET_ENCRYPTION: config.DISABLE_WEB_SOCKET_ENCRYPTION === '1',
-    ICON_NAMES: iconNames,
-    SKIP_OTP_PAIRING_FLOW: config.SKIP_OTP_PAIRING_FLOW === '1',
-    METAMASK_DEBUG: devMode || config.METAMASK_DEBUG === '1',
-    METAMASK_ENVIRONMENT: environment,
-    METAMASK_BUILD_TYPE: buildType,
-    NODE_ENV: devMode ? ENVIRONMENT.DEVELOPMENT : ENVIRONMENT.PRODUCTION,
-    SEGMENT_HOST: config.SEGMENT_HOST,
-    SEGMENT_WRITE_KEY: getSegmentWriteKey({ buildType, config, environment }),
-    SENTRY_DSN: config.SENTRY_DSN,
-    SENTRY_DSN_DEV: config.SENTRY_DSN_DEV,
+    COMPATIBILITY_VERSION_DESKTOP: config.COMPATIBILITY_VERSION_DESKTOP,
+    DESKTOP_ENABLE_UPDATES: config.DESKTOP_ENABLE_UPDATES,
+    DESKTOP_UI_DEBUG: config.DESKTOP_UI_DEBUG,
+    DISABLE_WEB_SOCKET_ENCRYPTION: config.DISABLE_WEB_SOCKET_ENCRYPTION,
+    INFURA_PROJECT_ID: config.INFURA_PROJECT_ID,
+    SKIP_OTP_PAIRING_FLOW: config.SKIP_OTP_PAIRING_FLOW,
+    WEB_SOCKET_PORT: config.WEB_SOCKET_PORT,
   };
 }
 

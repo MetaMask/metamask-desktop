@@ -29,6 +29,7 @@ const loadConfig = () => {
     isAppTest,
     isUnitTest: envStringMatch(process.env.NODE_ENV, 'test'),
     skipOtpPairingFlow: envBool(process.env.SKIP_OTP_PAIRING_FLOW),
+    uiDebug: envBool(process.env.DESKTOP_UI_DEBUG),
     compatibilityVersion: {
       desktop: compatibilityVersionDesktopFinal,
     },

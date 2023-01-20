@@ -4,7 +4,7 @@ services:
   builder:
     image: electronuserland/builder:16-wine
     env_file:
-      - ../../.metamaskrc
+      - ../../.env
     environment:
       - ELECTRON_CACHE=/root/.cache/electron
       - ELECTRON_BUILDER_CACHE=/root/.cache/electron-builder

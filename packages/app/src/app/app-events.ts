@@ -42,7 +42,7 @@ export default class AppEvents {
     }
 
     // Be able to open dev tools with CMD + SHIFT + I in dev mode
-    if (process.env.DESKTOP_UI_DEBUG) {
+    if (cfg().uiDebug) {
       globalShortcut.register('CommandOrControl+Shift+I', () => {
         this.UIState.mainWindow?.webContents.openDevTools();
       });
