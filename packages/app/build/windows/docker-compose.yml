@@ -3,8 +3,6 @@ version: '3'
 services:
   builder:
     image: electronuserland/builder:16-wine
-    env_file:
-      - ../../.env
     environment:
       - ELECTRON_CACHE=/root/.cache/electron
       - ELECTRON_BUILDER_CACHE=/root/.cache/electron-builder
