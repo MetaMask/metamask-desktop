@@ -35,15 +35,10 @@ const {
   streamFlatMap,
 } = require('../../submodules/extension/development/stream-flat-map');
 const {
-  generateIconNames,
-} = require('../../submodules/extension/development/generate-icon-names');
-const {
   BUILD_TARGETS,
-  ENVIRONMENT,
 } = require('../../submodules/extension/development/build/constants');
 const {
   isDevBuild,
-  getEnvironment,
   logError,
 } = require('../../submodules/extension/development/build/utils');
 const { runInChildProcess, createTask, composeParallel } = require('./task');
