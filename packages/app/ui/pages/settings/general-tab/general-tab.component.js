@@ -19,6 +19,8 @@ const GeneralTab = ({
   updateCurrentLanguage,
   theme,
   updateTheme,
+  preferredStartup,
+  updatePreferredStartup,
 }) => {
   const t = useI18nContext();
 
@@ -81,6 +83,34 @@ const GeneralTab = ({
     );
   };
 
+  const renderPreferredStartupOptions = () => {
+    const preferredStartupOptions = [
+      { name: t('minimized'), value: 'minimized' },
+      { name: t('yes'), value: 'yes' },
+      { name: t('no'), value: 'no' },
+    ];
+
+    return (
+      <div className="mmd-settings-page__setting-row">
+        <div className="mmd-settings-page__setting-item">
+          <Typography variant={TYPOGRAPHY.H5}>{t('openAtLogin')}</Typography>
+          <Typography variant={TYPOGRAPHY.H6}>
+            {t('allowOpenAtLoginDescription')}
+          </Typography>
+        </div>
+        <div className="mmd-settings-page__setting-item">
+          <div className="mmd-settings-page__setting-col">
+            <Dropdown
+              options={preferredStartupOptions}
+              selectedOption={preferredStartup}
+              onChange={(value) => updatePreferredStartup(value)}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const renderUnpairButton = () => {
     return (
       <div className="mmd-settings-page__setting-row">
@@ -129,6 +159,7 @@ const GeneralTab = ({
       />
       {renderLanguageSettings()}
       {renderThemeSettings()}
+      {renderPreferredStartupOptions()}
       {isSuccessfulPairSeen &&
         (isWebSocketConnected ? renderUnpairButton() : renderResetButton())}
     </>
@@ -168,6 +199,14 @@ GeneralTab.propTypes = {
    * Whether the user has successfully paired with the desktop app
    */
   isSuccessfulPairSeen: PropTypes.bool,
+  /**
+   * The user's preferred startup option
+   */
+  preferredStartup: PropTypes.string,
+  /**
+   * Updates the user's preferred startup option
+   */
+  updatePreferredStartup: PropTypes.func,
 };
 
 export default GeneralTab;

@@ -16,6 +16,7 @@ import {
 import EncryptedWebSocketStream from '@metamask/desktop/dist/encryption/web-socket-stream';
 import { StatusMessage } from '../types/message';
 import { forwardEvents } from '../utils/events';
+import { determineLoginItemSettings } from '../utils/settings';
 import cfg from '../utils/config';
 import { getDesktopVersion } from '../utils/version';
 import ExtensionConnection from './extension-connection';
@@ -23,7 +24,7 @@ import { updateCheck } from './update-check';
 import {
   titleBarOverlayOpts,
   protocolKey,
-  uiRootStorage,
+  uiAppStorage,
   uiPairStatusStorage,
 } from './ui-constants';
 import AppNavigation from './app-navigation';
@@ -93,17 +94,13 @@ class DesktopApp extends EventEmitter {
       this.extensionConnection?.getPairing().submitOTP(data),
     );
 
-    ipcMain.handle('popup', (_event) => {
-      log.debug('Show popup not implemented');
-    });
+    ipcMain.handle('minimize', () => this.UIState.mainWindow?.minimize());
 
-    ipcMain.handle('minimize', (_event) => this.UIState.mainWindow?.minimize());
-
-    ipcMain.handle('unpair', async (_event) => {
+    ipcMain.handle('unpair', async () => {
       await this.extensionConnection?.disable();
     });
 
-    ipcMain.handle('reset', async (_event) => {
+    ipcMain.handle('reset', async () => {
       await clearRawState();
       this.emit('restart');
       this.status.isDesktopPaired = false;
@@ -114,11 +111,17 @@ class DesktopApp extends EventEmitter {
       win?.setTitleBarOverlay?.(titleBarOverlayOpts[theme]);
     });
 
+    if (!process.env.DESKTOP_PREVENT_OPEN_ON_STARTUP) {
+      ipcMain.handle('set-preferred-startup', (_event, preferredStartup) => {
+        app.setLoginItemSettings(determineLoginItemSettings(preferredStartup));
+      });
+    }
+
     ipcMain.handle('get-desktop-version', () => {
       return getDesktopVersion();
     });
 
-    setUiStorage(uiRootStorage);
+    setUiStorage(uiAppStorage);
     setUiStorage(uiPairStatusStorage);
 
     if (!cfg().isExtensionTest) {
