@@ -40,11 +40,12 @@ echo "Package Version: ${PACKAGE_VERSION}"
 SKIP_BACKGROUND_INITIALIZATION='true'
 echo "Skipping background.js initialization: ${SKIP_BACKGROUND_INITIALIZATION}"
 
-# Add variables from .metamaskrc
 # shellcheck disable=SC2046
-if [ -f ".metamaskrc" ]; then
-    echo "Loading .metamaskrc on environment"
-    export $(< .metamaskrc grep -v ";" | grep -v -e '^$' | grep -v -e '=$')
+if [ -f ".env" ]; then
+    echo "Loading environment variables from file"
+    export $(< .env grep -v "#" | grep -v -e '^$' | grep -v -e '=$')
+else
+    echo "No environment variable file found"
 fi
 
 echo "Transpiling JavaScript"

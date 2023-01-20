@@ -26,7 +26,7 @@ export default class AppEvents {
     }
 
     // Set preferred startup setting
-    if (!process.env.DESKTOP_PREVENT_OPEN_ON_STARTUP) {
+    if (!cfg().ui.preventOpenOnStartup) {
       const preferredStartup = getPreferredStartupState();
       app.setLoginItemSettings(determineLoginItemSettings(preferredStartup));
     }
@@ -54,7 +54,7 @@ export default class AppEvents {
     }
 
     // On Development: Open dev tools with CMD+SHIFT+I
-    if (process.env.DESKTOP_UI_ENABLE_DEV_TOOLS) {
+    if (cfg().ui.enableDevTools) {
       globalShortcut.register('CommandOrControl+Shift+I', () => {
         this.UIState.mainWindow?.webContents.openDevTools();
       });
@@ -87,7 +87,7 @@ export default class AppEvents {
   }
 
   private onWindowClose(event: any) {
-    if (!process.env.DESKTOP_UI_FORCE_CLOSE) {
+    if (!cfg().ui.forceClose) {
       // Check if close emitted from menu
       if (this.UIState.forceQuit) {
         app.exit(0);

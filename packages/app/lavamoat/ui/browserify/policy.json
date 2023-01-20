@@ -196,6 +196,7 @@
         "console": true
       },
       "packages": {
+        "browserify>process": true,
         "prop-types>react-is": true,
         "react>object-assign": true
       }
@@ -203,6 +204,9 @@
     "prop-types>react-is": {
       "globals": {
         "console": true
+      },
+      "packages": {
+        "browserify>process": true
       }
     },
     "react": {
@@ -210,6 +214,7 @@
         "console": true
       },
       "packages": {
+        "browserify>process": true,
         "prop-types": true,
         "react>object-assign": true
       }
@@ -255,6 +260,7 @@
         "trustedTypes": true
       },
       "packages": {
+        "browserify>process": true,
         "prop-types": true,
         "react": true,
         "react-dom>scheduler": true,
@@ -271,6 +277,9 @@
         "performance": true,
         "requestAnimationFrame": true,
         "setTimeout": true
+      },
+      "packages": {
+        "browserify>process": true
       }
     },
     "react-otp-input": {
@@ -289,6 +298,7 @@
       },
       "packages": {
         "@babel/runtime": true,
+        "browserify>process": true,
         "prop-types": true,
         "prop-types>react-is": true,
         "react": true,
@@ -304,6 +314,7 @@
     },
     "react-router-dom": {
       "packages": {
+        "browserify>process": true,
         "prop-types": true,
         "react": true,
         "react-router-dom>history": true,
@@ -323,14 +334,26 @@
         "removeEventListener": true
       },
       "packages": {
+        "browserify>process": true,
         "react-router-dom>history>resolve-pathname": true,
         "react-router-dom>history>value-equal": true,
         "react-router-dom>tiny-invariant": true,
         "react-router-dom>tiny-warning": true
       }
     },
+    "react-router-dom>history>resolve-pathname": {
+      "packages": {
+        "browserify>process": true
+      }
+    },
+    "react-router-dom>history>value-equal": {
+      "packages": {
+        "browserify>process": true
+      }
+    },
     "react-router-dom>react-router": {
       "packages": {
+        "browserify>process": true,
         "prop-types": true,
         "prop-types>react-is": true,
         "react": true,
@@ -353,6 +376,7 @@
         "removeEventListener": true
       },
       "packages": {
+        "browserify>process": true,
         "react-router-dom>history>resolve-pathname": true,
         "react-router-dom>history>value-equal": true,
         "react-router-dom>tiny-invariant": true,
@@ -362,15 +386,24 @@
     "react-router-dom>react-router>mini-create-react-context": {
       "packages": {
         "@babel/runtime": true,
+        "browserify>process": true,
         "prop-types": true,
         "react": true,
         "react-router-dom>react-router>mini-create-react-context>gud": true,
         "react-router-dom>tiny-warning": true
       }
     },
+    "react-router-dom>tiny-invariant": {
+      "packages": {
+        "browserify>process": true
+      }
+    },
     "react-router-dom>tiny-warning": {
       "globals": {
         "console": true
+      },
+      "packages": {
+        "browserify>process": true
       }
     },
     "readable-stream": {
@@ -413,7 +446,8 @@
         "console": true
       },
       "packages": {
-        "@babel/runtime": true
+        "@babel/runtime": true,
+        "browserify>process": true
       }
     },
     "redux-persist": {
@@ -425,6 +459,7 @@
         "setTimeout": true
       },
       "packages": {
+        "browserify>process": true,
         "react": true,
         "redux": true
       }

@@ -6,6 +6,7 @@ import { ExtensionInitialPage } from '../pageObjects/ext-initial-page';
 
 import { electronStartup, getDesktopWindowByName } from '../helpers/electron';
 import { DesktopOTPPage } from '../pageObjects/desktop-otp-pairing-page';
+import { delay } from '../helpers/utils';
 
 test.describe('Desktop OTP pairing', () => {
   test('Desktop: successfull OTP pairing', async ({ page, context }) => {
@@ -61,6 +62,7 @@ test.describe('Desktop OTP pairing', () => {
     await initialPage.desktopAppIs('enabled');
     // Disasble desktop
     await initialPage.disableDesktop();
+    await delay(3000);
     await otpWindow.checkIsInactive();
 
     const disconnectedFlow = await context.newPage();

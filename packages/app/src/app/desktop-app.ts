@@ -111,7 +111,7 @@ class DesktopApp extends EventEmitter {
       win?.setTitleBarOverlay?.(titleBarOverlayOpts[theme]);
     });
 
-    if (!process.env.DESKTOP_PREVENT_OPEN_ON_STARTUP) {
+    if (!cfg().ui.preventOpenOnStartup) {
       ipcMain.handle('set-preferred-startup', (_event, preferredStartup) => {
         app.setLoginItemSettings(determineLoginItemSettings(preferredStartup));
       });

@@ -34,9 +34,9 @@ async function main() {
   const testDir = path.join(__dirname, 'specs');
   const testPaths = await getTestPathsForTestDir(testDir);
 
-  const relativeTestPaths = testPaths.map(
-    (path) => `test/playwright${path.replace(__dirname, '')}`,
-  );
+  const relativeTestPaths =
+    process.argv.slice(2) ||
+    testPaths.map((path) => `test/playwright${path.replace(__dirname, '')}`);
 
   const currentChunkIndex = process.env.CIRCLE_NODE_INDEX ?? 0;
   const totalChunks = process.env.CIRCLE_NODE_TOTAL ?? 1;

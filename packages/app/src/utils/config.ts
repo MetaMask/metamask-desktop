@@ -32,6 +32,13 @@ const loadConfig = () => {
     compatibilityVersion: {
       desktop: compatibilityVersionDesktopFinal,
     },
+    ui: {
+      enableDevTools: envBool(process.env.DESKTOP_UI_ENABLE_DEV_TOOLS),
+      forceClose: envBool(process.env.DESKTOP_UI_FORCE_CLOSE),
+      preventOpenOnStartup: envBool(
+        process.env.DESKTOP_PREVENT_OPEN_ON_STARTUP,
+      ),
+    },
     webSocket: {
       disableEncryption: envBool(process.env.DISABLE_WEB_SOCKET_ENCRYPTION),
       port,

@@ -91,21 +91,11 @@ As each Electron window is ran in a Chrome instance, the Chrome developer tools 
 2. When in the main Electron window, press `Command / Control + Shift + I`.
 3. Use the `sources` tab to create breakpoints in any of the source files.
 
-## Configuration
+## Environment Variables
 
-The below variables can be specified using a `.metamaskrc` file in the `packages/app` directory.
+Environment variables can be specified using a `.env` file in the `packages/app` directory.
 
-### Environment Variables
-
-| Name | Description |
-| ---  | --- |
-| COMPATIBILITY_VERSION_DESKTOP | Override the compatibility version of the desktop app. |
-| COMPATIBILITY_VERSION_EXTENSION | Override the compatibility version of the extension. |
-| DISABLE_WEB_SOCKET_ENCRYPTION | Set to `1` to disable all encryption when communicating with the desktop app. |
-| SKIP_OTP_PAIRING_FLOW | Set to `1` to skip the pairing process when enabling desktop mode. |
-| DESKTOP_FORCE_CLOSE | Set this to `1` to close the app when the window close button is clicked. |
-| DESKTOP_PREVENT_OPEN_ON_STARTUP | Set this to `1` to short circuit the desktop app startup settings. |
-| DESKTOP_UI_ENABLE_DEV_TOOLS | Set this to `1` to enable CMD+SHIFT+I to open the dev tools. |
+See [.env.example](.env.example) for a list of available variables.
 
 ## Reset Electron State
 

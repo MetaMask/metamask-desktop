@@ -1,4 +1,5 @@
 import { Page, expect } from '@playwright/test';
+import { delay } from '../helpers/utils';
 
 export class DesktopOTPPage {
   readonly window: Page;
@@ -19,7 +20,7 @@ export class DesktopOTPPage {
         .type(element);
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    await delay(3000);
 
     await this.window.screenshot({
       path: 'test/playwright/test-results/visual/desktop-all-set.main.png',

@@ -39,6 +39,7 @@ executors:
       COMMON_DIR: << pipeline.parameters.common-dir >>
       EXTENSION_DIR: << pipeline.parameters.extension-dir >>
       NODE_ENV: development
+      OSTYPE: linux-gnu
   electron-builder:
     docker:
       - image: electronuserland/builder:16-wine
