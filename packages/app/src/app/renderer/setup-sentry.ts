@@ -1,6 +1,4 @@
-import { Dedupe, ExtraErrorData } from '@sentry/integrations';
-import * as Sentry from '@sentry/electron/renderer';
-import { Integration, Options } from '@sentry/types';
+import { Options } from '@sentry/types';
 
 export const getSentryDefaultOptions = (
   release: string,
@@ -54,24 +52,3 @@ export const getSentryDefaultOptions = (
     release,
   };
 };
-
-export default function setupSentry(opts: {
-  release: string;
-}): typeof Sentry | undefined {
-  const sentryDefaultOptions = getSentryDefaultOptions(opts.release);
-
-  // return if options are not available
-  if (!sentryDefaultOptions) {
-    return undefined;
-  }
-
-  Sentry.init({
-    ...sentryDefaultOptions,
-    integrations: [
-      new Dedupe() as Integration,
-      new ExtraErrorData() as Integration,
-    ],
-  });
-
-  return Sentry;
-}
