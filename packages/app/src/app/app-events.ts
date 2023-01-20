@@ -62,11 +62,6 @@ export default class AppEvents {
         this.UIState.mainWindow?.webContents.openDevTools();
       });
     }
-
-    // Do not close the app when the window is closed
-    this.UIState.mainWindow?.on('close', (event: any) =>
-      this.onWindowClose(event),
-    );
   }
 
   private onSecondInstance() {

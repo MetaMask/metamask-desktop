@@ -3,10 +3,18 @@ import './logger-init';
 import '../browser/browser-init';
 import { webcrypto } from 'node:crypto';
 import { Headers } from 'node-fetch';
-import * as SentryElectron from '@sentry/electron/main';
-import setupSentry from '../../submodules/extension/app/scripts/lib/setupSentry';
+import * as Sentry from '@sentry/electron/main';
+import { Dedupe, ExtraErrorData } from '@sentry/integrations';
+import { Integration } from '@sentry/types/dist/integration';
+import { FilterEvents } from '../../submodules/extension/app/scripts/lib/sentry-filter-events';
+import {
+  getMetaMetricsEnabled,
+  removeUrlsFromBreadCrumb,
+  rewriteReport,
+} from '../../submodules/extension/app/scripts/lib/setupSentry';
 import { getDesktopVersion } from '../utils/version';
 import { ElectronBridge } from './renderer/preload';
+import { getSentryDefaultOptions } from './renderer/setup-sentry';
 
 declare global {
   interface Window {
@@ -67,12 +75,43 @@ if (!global.self) {
   // the root compartment will populate this with hooks
   global.stateHooks = {};
 
-  // setup sentry error reporting
-  global.sentry = setupSentry({
-    release: getDesktopVersion(),
-    getState: () => global.stateHooks?.getSentryState?.() || {},
-    Sentry: SentryElectron,
-  } as any);
+  const getState = () => global.stateHooks?.getSentryState?.() || {};
+  const release = getDesktopVersion();
+
+  // Init Sentry in the main process before lavamoat
+  const sentryOptions = getSentryDefaultOptions(release);
+  Sentry.init({
+    ...sentryOptions,
+    ipcMode: Sentry.IPCMode.Both,
+    integrations: [
+      new FilterEvents({
+        // TODO ADD FILTER FOR UI STATE
+        getMetaMetricsEnabled: getMetaMetricsEnabled(getState),
+      }),
+      new Dedupe() as Integration,
+      new ExtraErrorData() as Integration,
+    ],
+    beforeSend: (report) => rewriteReport(report, getState),
+    beforeBreadcrumb(breadcrumb) {
+      if (getState) {
+        const appState = getState();
+        if (
+          Object.values(appState).length &&
+          (!appState?.store?.metamask?.participateInMetaMetrics ||
+            !appState?.store?.metamask?.completedOnboarding ||
+            breadcrumb?.category === 'ui.input')
+        ) {
+          return null;
+        }
+      } else {
+        return null;
+      }
+      const newBreadcrumb = removeUrlsFromBreadCrumb(breadcrumb);
+      return newBreadcrumb;
+    },
+  });
+
+  global.sentry = Sentry;
 }
 
 export {};
