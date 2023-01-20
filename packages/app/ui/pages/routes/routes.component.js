@@ -7,12 +7,14 @@ import {
   PAIR_ROUTE,
   ERROR_ROUTE,
   SUCCESSFUL_PAIR_ROUTE,
+  METAMETRICS_OPT_IN_ROUTE,
 } from '../../helpers/constants/routes';
 import setTheme from '../../helpers/utils/theme';
 import Pair from '../pair';
 import SuccessfulPair from '../successful-pair';
 import Settings from '../settings';
 import ErrorPage from '../error';
+import MetametricsOptInPage from '../metametrics-opt-in';
 import useDeeplinkRegister from '../../hooks/useDeeplinkRegister';
 
 const Routes = ({ theme }) => {
@@ -20,7 +22,7 @@ const Routes = ({ theme }) => {
   useEffect(() => {
     // Set theme (html attr) for the first time
     setTheme(theme);
-  }, []);
+  }, [theme]);
 
   return (
     <div id="mmd-app-content">
@@ -28,6 +30,10 @@ const Routes = ({ theme }) => {
         <Route path={PAIR_ROUTE} component={Pair} />
         <Route path={SUCCESSFUL_PAIR_ROUTE} component={SuccessfulPair} />
         <Route path={SETTINGS_ROUTE} component={Settings} />
+        <Route
+          path={METAMETRICS_OPT_IN_ROUTE}
+          component={MetametricsOptInPage}
+        />
         <Route path={`${ERROR_ROUTE}/:errorType`} component={ErrorPage} exact />
         <Route
           path="*"

@@ -6,6 +6,7 @@ import {
   GENERAL_ROUTE,
   ABOUT_US_ROUTE,
   SETTINGS_ROUTE,
+  PRIVACY_ROUTE,
 } from '../../helpers/constants/routes';
 import TabBar from '../../../submodules/extension/ui/components/app/tab-bar';
 import Typography from '../../../submodules/extension/ui/components/ui/typography';
@@ -13,8 +14,9 @@ import { TYPOGRAPHY } from '../../../submodules/extension/ui/helpers/constants/d
 import useI18nContext from '../../hooks/useI18nContext';
 import GeneralTab from './general-tab';
 import AboutTab from './about-tab';
+import PrivacyTab from './privacy-tab';
 
-const Settings = ({ currentPath, isAboutPage }) => {
+const Settings = ({ currentPath, isAboutPage, isPrivacyPage }) => {
   const t = useI18nContext();
   const history = useHistory();
 
@@ -31,6 +33,11 @@ const Settings = ({ currentPath, isAboutPage }) => {
             content: t('about'),
             icon: <i className="fa fa-info-circle" />,
             key: ABOUT_US_ROUTE,
+          },
+          {
+            content: t('privacy'),
+            icon: <i className="fa fa-lock" />,
+            key: PRIVACY_ROUTE,
           },
         ]}
         isActive={(key) => {
@@ -53,6 +60,7 @@ const Settings = ({ currentPath, isAboutPage }) => {
           component={GeneralTab}
         />
         <Route path={ABOUT_US_ROUTE} exact component={AboutTab} />
+        <Route path={PRIVACY_ROUTE} exact component={PrivacyTab} />
       </Switch>
     );
   };
@@ -62,6 +70,8 @@ const Settings = ({ currentPath, isAboutPage }) => {
 
     if (isAboutPage) {
       subheaderText = t('about');
+    } else if (isPrivacyPage) {
+      subheaderText = t('privacy');
     } else {
       subheaderText = t('general');
     }
@@ -100,6 +110,10 @@ Settings.propTypes = {
    * Whether the current page is the about page
    */
   isAboutPage: PropTypes.bool,
+  /**
+   * Whether the current page is the privacy page
+   */
+  isPrivacyPage: PropTypes.bool,
 };
 
 export default Settings;
