@@ -2,7 +2,6 @@ import { combineReducers } from 'redux';
 import { persistReducer } from 'redux-persist';
 
 import appReducer from './app/app';
-import localesReducer from './locale/locale';
 import pairStatusReducer from './pair-status/pair-status';
 
 const pairStatusPersistConfig = {
@@ -16,17 +15,15 @@ const persistedPairStatusReducer = persistReducer(
   pairStatusReducer,
 );
 
+const appPersistConfig = {
+  key: 'app',
+  storage: window.electronBridge.appStore,
+};
+const persistedAppReducer = persistReducer(appPersistConfig, appReducer);
+
 const rootReducer = combineReducers({
-  app: appReducer,
-  locales: localesReducer,
+  app: persistedAppReducer,
   pairStatus: persistedPairStatusReducer,
 });
 
-const rootPersistConfig = {
-  key: 'root',
-  storage: window.electronBridge.rootStore,
-  whitelist: ['app', 'locales'],
-};
-const persistedRootReducer = persistReducer(rootPersistConfig, rootReducer);
-
-export default persistedRootReducer;
+export default rootReducer;

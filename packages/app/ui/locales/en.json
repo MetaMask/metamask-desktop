@@ -11,6 +11,9 @@
   "allSetFox": {
     "message": "All set, fox"
   },
+  "allowOpenAtLoginDescription": {
+    "message": "Allow MetaMask Desktop to open when you log in to your computer"
+  },
   "attributions": {
     "message": "Attributions"
   },
@@ -152,8 +155,14 @@
   "metametricsOptInDescription": {
     "message": "MetaMask would like to gather usage data to better understand how our users interact with the extension. This data will be used to continually improve the usability and user experience of our product and the Ethereum ecosystem."
   },
+  "minimized": {
+    "message": "Minimized"
+  },
   "needSupport": {
     "message": "Need support? Visit our Help Center"
+  },
+  "no": {
+    "message": "No"
   },
   "noThanks": {
     "message": "No thanks"
@@ -223,5 +232,8 @@
   },
   "visitWebSite": {
     "message": "Visit our website"
+  },
+  "yes": {
+    "message": "Yes"
   }
 }

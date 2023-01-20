@@ -1,7 +1,9 @@
 import { app, globalShortcut } from 'electron';
 import cfg from '../utils/config';
+import { determineLoginItemSettings } from '../utils/settings';
 import AppNavigation from './app-navigation';
 import UIState from './ui-state';
+import { getPreferredStartupState } from './ui-storage';
 
 export default class AppEvents {
   public appNavigation: AppNavigation;
@@ -18,40 +20,45 @@ export default class AppEvents {
 
   public register() {
     if (!this.gotTheLock && !cfg().isUnitTest) {
-      // This is the second instance, we should quit
+      // Force quit if the second instance is opened
       app.quit();
       return;
     }
 
-    // We wanted to show and focus if the second instance is opened
+    // Set preferred startup setting
+    if (!process.env.DESKTOP_PREVENT_OPEN_ON_STARTUP) {
+      const preferredStartup = getPreferredStartupState();
+      app.setLoginItemSettings(determineLoginItemSettings(preferredStartup));
+    }
+
+    // Focus MainWindow if the second instance is opened
     app.on('second-instance', () => this.onSecondInstance());
 
-    // On macOS: when the dock icon is clicked and there are no other windows open
-    app.on('activate', () => this.onActivate());
-
-    // Handle the protocol. In this case, we choose to show an Error Box.
+    // Handle incoming protocol requests (deep linking)
     app.on('open-url', (_: any, url: string) => this.onOpenUrl(url));
 
-    // 'before-quit' is emitted when Electron receives the signal to exit and wants to start closing windows.
-    // This is for "dock right click -> quit" to work
+    // Prevent app close if close emitted from window
+    this.UIState.mainWindow?.on('close', (event: any) =>
+      this.onWindowClose(event),
+    );
+
+    // For "Dock right click -> quit"
     app.on('before-quit', () => this.beforeQuit());
 
-    // Handle CMD + Q for MacOS
+    // On MacOS: When the dock icon is clicked and there are no other windows open
+    app.on('activate', () => this.onActivate());
+
+    // On MacOS: Handle CMD+Q
     if (process.platform === 'darwin') {
       globalShortcut.register('Command+Q', () => this.onCmdQPressed());
     }
 
-    // Be able to open dev tools with CMD + SHIFT + I in dev mode
-    if (process.env.DESKTOP_UI_DEBUG) {
+    // On Development: Open dev tools with CMD+SHIFT+I
+    if (process.env.DESKTOP_UI_ENABLE_DEV_TOOLS) {
       globalShortcut.register('CommandOrControl+Shift+I', () => {
         this.UIState.mainWindow?.webContents.openDevTools();
       });
     }
-
-    // Do not close the app when the window is closed
-    this.UIState.mainWindow?.on('close', (event: any) =>
-      this.onWindowClose(event),
-    );
   }
 
   private onSecondInstance() {

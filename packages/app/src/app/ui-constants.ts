@@ -21,8 +21,8 @@ export const metamaskDesktopSubmitTicket =
 
 export const protocolKey = 'metamask-desktop';
 
-export const uiRootStorage: UiStorageSettings = {
-  name: 'root',
+export const uiAppStorage: UiStorageSettings = {
+  name: 'app',
   schemaVersion: '0.0.0',
 };
 

@@ -2,15 +2,15 @@ import React, { createContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { getMessage } from '../helpers/utils/i18n-helper';
-import { getCurrentLocales, getEnLocales } from '../ducks/locale/locale';
+import { locales } from '../locales';
 import { getLanguage } from '../ducks/app/app';
 
 export const I18nContext = createContext((key) => `[${key}]`);
 
 export const I18nProvider = (props) => {
   const currentLocale = useSelector(getLanguage);
-  const current = useSelector(getCurrentLocales);
-  const en = useSelector(getEnLocales);
+  const current = locales[currentLocale];
+  const { en } = locales;
 
   const t = useMemo(() => {
     return (key, ...args) =>
