@@ -16,6 +16,8 @@ export const titleBarOverlayOpts = {
 
 // TODO: Update this link to the correct one
 export const metamaskDesktopAboutWebsite = 'https://metamask.io/desktop';
+export const metamaskDesktopSubmitTicket =
+  'https://github.com/MetaMask/metamask-desktop/discussions/new?category=general';
 
 export const protocolKey = 'metamask-desktop';
 

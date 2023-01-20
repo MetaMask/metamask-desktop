@@ -210,6 +210,7 @@ class DesktopApp extends EventEmitter {
 
     extensionConnection.on('paired', () => {
       this.status.isDesktopPaired = true;
+      this.appNavigation.setPairedTrayIcon();
     });
 
     extensionConnection.getPairing().on('invalid-otp', () => {
@@ -267,6 +268,8 @@ class DesktopApp extends EventEmitter {
     if (isDisconnectedByUser) {
       this.status.isDesktopPaired = false;
     }
+
+    this.appNavigation.setUnPairedTrayIcon();
 
     this.emit('restart');
   }
