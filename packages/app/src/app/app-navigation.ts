@@ -1,10 +1,15 @@
 import path from 'path';
 import { app, Tray, Menu, shell } from 'electron';
-import { metamaskDesktopAboutWebsite } from './ui-constants';
+import {
+  metamaskDesktopAboutWebsite,
+  metamaskDesktopSubmitTicket,
+} from './ui-constants';
 import UIState from './ui-state';
 
 export default class AppNavigation {
   private UIState: typeof UIState;
+
+  private tray?: Tray;
 
   constructor() {
     this.UIState = UIState;
@@ -29,6 +34,22 @@ export default class AppNavigation {
     }
   }
 
+  public setPairedTrayIcon() {
+    if (this.tray) {
+      this.tray.setImage(
+        path.resolve(__dirname, '../../../ui/icons/paired_icon.png'),
+      );
+    }
+  }
+
+  public setUnPairedTrayIcon() {
+    if (this.tray) {
+      this.tray.setImage(
+        path.resolve(__dirname, '../../../ui/icons/unpaired_icon.png'),
+      );
+    }
+  }
+
   private createShowMenuItem() {
     return {
       label: 'Show',
@@ -47,6 +68,15 @@ export default class AppNavigation {
     };
   }
 
+  private createSupportMenuItem() {
+    return {
+      label: 'Submit a ticket',
+      click: async () => {
+        await shell.openExternal(metamaskDesktopSubmitTicket);
+      },
+    };
+  }
+
   private createQuitMenuItem() {
     return {
       label: 'Quit',
@@ -61,7 +91,11 @@ export default class AppNavigation {
     const menuTemplate = [
       {
         label: app.name,
-        submenu: [this.createAboutMenuItem(), this.createQuitMenuItem()],
+        submenu: [
+          this.createAboutMenuItem(),
+          this.createSupportMenuItem(),
+          this.createQuitMenuItem(),
+        ],
       },
     ];
     const menu = Menu.buildFromTemplate(menuTemplate);
@@ -78,7 +112,7 @@ export default class AppNavigation {
 
   private createTray() {
     const tray = new Tray(
-      path.resolve(__dirname, '../../../ui/icons/icon.png'),
+      path.resolve(__dirname, '../../../ui/icons/unpaired_icon.png'),
     );
     const trayMenuTemplate = [
       this.createShowMenuItem(),
@@ -90,5 +124,6 @@ export default class AppNavigation {
     tray.on('double-click', () => {
       this.showAndFocusMainWindow();
     });
+    this.tray = tray;
   }
 }

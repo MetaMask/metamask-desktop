@@ -2,10 +2,16 @@
   "name": "@metamask/desktop",
   "version": "0.1.1",
   "main": "dist/index.js",
+  "description": "Functions and classes needed to work with MetaMask Desktop",
   "repository": {
     "type": "git",
-    "url": "https://github.com/MetaMask/desktop.git"
+    "url": "https://github.com/MetaMask/metamask-desktop.git"
   },
+  "bugs": {
+    "url": "https://github.com/MetaMask/metamask-desktop/issues"
+  },
+  "homepage": "https://github.com/MetaMask/metamask-desktop/tree/main/packages/common",
+  "license": "MIT",
   "files": [
     "dist/"
   ],
