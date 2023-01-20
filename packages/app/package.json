@@ -1,11 +1,15 @@
 {
   "name": "metamask-desktop-app",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": true,
   "main": "dist/app/src/app/lavamoat.js",
-  "repository": "https://github.com/MetaMask/desktop",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MetaMask/metamask-desktop.git"
+  },
   "scripts": {
     "build:app": "./build/build.sh",
+    "build:app:prod": "NODE_ENV=production yarn build:app",
     "build:app:test:extension": "IN_TEST=true SEGMENT_HOST='https://api.segment.io' SEGMENT_WRITE_KEY='FAKE' PHISHING_WARNING_PAGE_URL=http://localhost:9999/ METAMASK_DEBUG=1 yarn build:app",
     "build:app:test:app": "UI_TEST=true METAMASK_DEBUG=1 yarn build:app",
     "build:ui": "node build/ui/desktop-ui.js dev --apply-lavamoat=false",
