@@ -8,14 +8,14 @@ import Analytics from './analytics';
 jest.mock('analytics-node');
 
 describe('Analytics', () => {
-  let analytics: Analytics;
+  let analytics: typeof Analytics;
 
   beforeEach(() => {
-    analytics = Analytics.getInstance();
+    analytics = Analytics;
   });
 
   it('creates a singleton instance of Analytics', () => {
-    const anotherAnalytics = Analytics.getInstance();
+    const anotherAnalytics = Analytics;
     expect(analytics).toBe(anotherAnalytics);
   });
 
@@ -23,8 +23,8 @@ describe('Analytics', () => {
     const spy = jest.spyOn(analytics, 'identify');
     const userId = UUID_MOCK;
     const traits = { name: 'mock-name' };
-    analytics.identify(userId, traits);
-    expect(spy).toHaveBeenCalledWith(userId, traits);
+    analytics.identify({ userId, traits });
+    expect(spy).toHaveBeenCalledWith({ userId, traits });
   });
 
   it('calls track on the analytics-node instance', () => {

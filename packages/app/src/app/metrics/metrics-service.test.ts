@@ -48,14 +48,14 @@ jest.mock('loglevel');
 
 describe('MetricsService', () => {
   let metricsService: typeof MetricsService;
-  let analytics: Analytics;
+  let analytics: typeof Analytics;
   const electronStoreConstructorMock = Store as jest.MockedClass<typeof Store>;
   const storeMock = createElectronStoreMock();
 
   beforeEach(() => {
     process.env.PACKAGE_VERSION = VERSION_MOCK;
     metricsService = MetricsService as any;
-    analytics = Analytics.getInstance();
+    analytics = Analytics;
     electronStoreConstructorMock.mockReturnValue(storeMock);
   });
 

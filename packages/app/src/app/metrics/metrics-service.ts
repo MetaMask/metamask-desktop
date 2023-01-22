@@ -3,48 +3,26 @@ import { uuid } from '@metamask/desktop/dist/utils/utils';
 import log from 'loglevel';
 import { app } from 'electron';
 import { getDesktopVersion } from '../../utils/version';
+import {
+  MetricsState,
+  Properties,
+  SegmentApiCalls,
+  Traits,
+  Event,
+} from '../../types/metrics';
 import Analytics from './analytics';
-
-interface Traits {
-  [key: string]: any;
-}
-
-interface Properties {
-  paired?: boolean;
-  createdAt?: Date;
-  [key: string]: any;
-}
-
-interface Event {
-  userId: string | undefined;
-  event: string;
-  properties: Properties;
-  context: any;
-  messageId?: string;
-}
-
-interface SegmentApiCalls {
-  [key: string]: Event;
-}
-
-interface MetricsState {
-  participateInDesktopMetrics: boolean;
-  desktopMetricsId?: string;
-  eventsBeforeMetricsOptIn: Event[];
-  traits: Traits;
-  segmentApiCalls: SegmentApiCalls;
-}
 
 class MetricsService {
   private store: Store<MetricsState>;
 
-  private analytics: Analytics;
+  private analytics: typeof Analytics;
 
-  // TODO: implement DesktopMetrics page the user to optIn/OptOut
+  // TODO: Update participateInDesktopMetrics when user opt-in/opt-out on metrics UI
   private participateInDesktopMetrics = true;
 
   private desktopMetricsId?: string;
 
+  // Events saved before users opt-in/opt-out of metrics
   private eventsBeforeMetricsOptIn: Event[];
 
   // Traits are pieces of information you know about a user that are included in an identify call
@@ -54,7 +32,7 @@ class MetricsService {
   private segmentApiCalls: SegmentApiCalls;
 
   constructor() {
-    this.analytics = Analytics.getInstance();
+    this.analytics = Analytics;
     this.store = new Store<MetricsState>({
       name: `mmd-desktop-metrics`,
     });
@@ -72,6 +50,7 @@ class MetricsService {
     this.segmentApiCalls = this.store.get('segmentApiCalls', {});
   }
 
+  /* The track method lets you record the actions your users perform. */
   track(event: string, properties: Properties = {}) {
     if (!this.desktopMetricsId) {
       this.setDesktopMetricsId(uuid());
@@ -94,9 +73,15 @@ class MetricsService {
     this.saveCallSegmentAPI(eventToTrack);
   }
 
+  /* The identify method lets you tie a user to their actions and record
+       traits about them. */
   identify(traits: Traits) {
     this.traits = { ...this.traits, ...traits };
-    this.analytics.identify(this.desktopMetricsId, this.traits);
+    this.analytics.identify({
+      userId: this.desktopMetricsId,
+      traits: this.traits,
+      context: this.buildContext(),
+    });
   }
 
   setParticipateInDesktopMetrics(isParticipant: boolean) {
@@ -110,9 +95,10 @@ class MetricsService {
 
   setDesktopMetricsId(id: string) {
     this.desktopMetricsId = id;
-    this.store.set('metaMetricsId', id);
+    this.store.set('desktopMetricsId', id);
   }
 
+  // TODO: Implement flush events that are saved before users opt-in/opt-out
   flushEventsBeforeOptIn() {
     log.debug('No implementation provided');
   }
