@@ -8,7 +8,6 @@ import { Dedupe, ExtraErrorData } from '@sentry/integrations';
 import { Integration } from '@sentry/types/dist/integration';
 import { FilterEvents } from '../../submodules/extension/app/scripts/lib/sentry-filter-events';
 import {
-  getMetaMetricsEnabled,
   removeUrlsFromBreadCrumb,
   rewriteReport,
 } from '../../submodules/extension/app/scripts/lib/setupSentry';
@@ -24,6 +23,7 @@ declare global {
 
 declare const global: typeof globalThis & {
   isDesktopApp: boolean;
+  desktopMetaMetricsOptIn: boolean;
   stateHooks: Record<string, any>;
   sentry: unknown;
 };
@@ -32,7 +32,9 @@ if (!global.self) {
   global.self = {} as unknown as Window & typeof globalThis;
   // required by symmetric encryption and crypto utils
   global.crypto = webcrypto as any;
+
   global.isDesktopApp = true;
+  global.desktopMetaMetricsOptIn = false;
 
   // represents the state and the identity of the user agent
   global.navigator = {
@@ -85,8 +87,25 @@ if (!global.self) {
     ipcMode: Sentry.IPCMode.Both,
     integrations: [
       new FilterEvents({
-        // TODO ADD FILTER FOR UI STATE
-        getMetaMetricsEnabled: getMetaMetricsEnabled(getState),
+        getMetaMetricsEnabled: () => {
+          const extensionState = getState();
+
+          const hasValidExtensionState =
+            extensionState.store?.metamask?.desktopEnabled;
+
+          const extensionMetaMetricsOptIn =
+            extensionState.store?.metamask?.participateInMetaMetrics;
+
+          const { desktopMetaMetricsOptIn } = global;
+
+          // Desktop opt in must be enabled
+          // Extension opt in must be enabled if desktop currently enabled
+          const shouldShareMetrics =
+            desktopMetaMetricsOptIn &&
+            (!hasValidExtensionState || extensionMetaMetricsOptIn);
+
+          return shouldShareMetrics;
+        },
       }),
       new Dedupe() as Integration,
       new ExtraErrorData() as Integration,

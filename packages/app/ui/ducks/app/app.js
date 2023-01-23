@@ -33,6 +33,7 @@ export default function appReducer(state = initialAppState, action) {
     }
 
     case UPDATE_METAMETRICS_OPT_IN: {
+      window.electronBridge.setDesktopMetaMetricsOptIn(action.payload);
       return {
         ...state,
         metametricsOptIn: action.payload,

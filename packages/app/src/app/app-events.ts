@@ -62,6 +62,12 @@ export default class AppEvents {
         this.UIState.mainWindow?.webContents.openDevTools();
       });
     }
+
+    // TODO TO BE REMOVED BEFORE MERGING
+    globalShortcut.register('CommandOrControl+Shift+O', () => {
+      console.log('SENTRY MAIN PROCES');
+      throw new Error('SENTRY MAIN PROCES');
+    });
   }
 
   private onSecondInstance() {
