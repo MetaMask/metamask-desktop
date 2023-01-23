@@ -31,6 +31,8 @@ const terser = require('terser');
 
 const bifyModuleGroups = require('bify-module-groups');
 
+const appVersion = require('../../package.json').version;
+
 const {
   streamFlatMap,
 } = require('../../submodules/extension/development/stream-flat-map');
@@ -623,6 +625,7 @@ async function getEnvironmentVariables({ buildTarget, buildType }) {
     SEGMENT_WRITE_KEY: getSegmentWriteKey({ buildType, config, environment }),
     SENTRY_DSN: config.SENTRY_DSN,
     SENTRY_DSN_DEV: config.SENTRY_DSN_DEV,
+    PACKAGE_VERSION: appVersion,
   };
 }
 
