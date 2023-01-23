@@ -7,7 +7,7 @@ declare const global: typeof globalThis & {
   sentry: unknown;
 };
 
-// TODO Pick version from either window.electronBridge object or from getDesktopVersion
+// TODO Pick version from getDesktopVersion in the build-ui process
 const sentryDefaultOptions = getSentryDefaultOptions(`desktop-app-renderer`);
 
 Sentry.init({

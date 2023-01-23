@@ -4,22 +4,10 @@ export const getSentryDefaultOptions = (
   release: string,
 ): Options | undefined => {
   const METAMASK_DEBUG = process.env.METAMASK_DEBUG === '1';
-  const { METAMASK_ENVIRONMENT } = process.env;
+  const { METAMASK_ENVIRONMENT, METAMASK_BUILD_TYPE } = process.env;
   const SENTRY_DSN_DEV =
     process.env.SENTRY_DSN_DEV ||
     'https://f59f3dd640d2429d9d0e2445a87ea8e1@sentry.io/273496';
-  const { METAMASK_BUILD_TYPE } = process.env;
-  const { IN_TEST } = process.env;
-
-  if (METAMASK_DEBUG && !IN_TEST) {
-    /**
-     * Workaround until the following issue is resolved
-     * https://github.com/MetaMask/metamask-extension/issues/15691
-     * The IN_TEST condition allows the e2e tests to run with both
-     * yarn start:test and yarn build:test
-     */
-    return undefined;
-  }
 
   const environment =
     METAMASK_BUILD_TYPE === 'main'
