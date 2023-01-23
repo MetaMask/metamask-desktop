@@ -52,6 +52,7 @@ test.describe('Extension / Desktop connectivity issues', () => {
       electronApp,
       'MetaMask Desktop',
     );
+    await mainWindow.locator('text=No thanks').click();
     const otpWindow = new DesktopOTPPage(mainWindow);
 
     const extensionId = await signUpFlow(page, context);
@@ -86,6 +87,7 @@ test.describe('Extension / Desktop connectivity issues', () => {
       electronApp,
       'MetaMask Desktop',
     );
+    await mainWindow.locator('text=No thanks').click();
     const desktopWindow = new DesktopOTPPage(mainWindow);
 
     // BROWSER SESSION 1 START

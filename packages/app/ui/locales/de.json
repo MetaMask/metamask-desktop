@@ -35,14 +35,14 @@
   "os": {
     "message": "System"
   },
+  "pairWithExtension": {
+    "message": "Mit Erweiterung synchronisieren"
+  },
   "settings": {
     "message": "Einstellungen"
   },
   "status": {
     "message": "Status"
-  },
-  "syncWithExtension": {
-    "message": "Mit Erweiterung synchronisieren"
   },
   "temporaryPairLink": {
     "message": "Temporary Pair Page Link"

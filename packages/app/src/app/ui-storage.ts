@@ -8,6 +8,11 @@ export interface UiStorageSettings {
   schemaVersion: `${number}.${number}.${number}`;
 }
 
+export interface PersistedSettingFromStoreOpts {
+  defaultValue: any;
+  key: string;
+}
+
 export const setUiStorage = ({ name, schemaVersion }: UiStorageSettings) => {
   const uiStore = new Store({
     name: `mmd-desktop-ui-v${schemaVersion}-${name}`,
@@ -32,32 +37,46 @@ export const getUiStorage = ({ name, schemaVersion }: UiStorageSettings) => {
   });
 };
 
-export const getPreferredStartupState = () => {
-  const defaultPreferredStartup = 'minimized';
-  const persistedState = getUiStorage(uiAppStorage).get(
+const getPersistedAppState = () => {
+  const persistedAppState = getUiStorage(uiAppStorage).get(
     'persist:app',
   ) as string;
 
-  if (!persistedState) {
-    log.info('No persisted state found, using default value');
-    return defaultPreferredStartup;
+  if (!persistedAppState) {
+    log.info('No persisted app state found');
+    return null;
   }
 
   try {
-    const { preferredStartup } = JSON.parse(persistedState);
-    if (preferredStartup) {
-      return preferredStartup;
-    }
-
-    log.info(
-      'No preferredStartup found in persisted state, using default value',
-    );
-    return defaultPreferredStartup;
+    return JSON.parse(persistedAppState);
   } catch (error) {
-    log.error(
-      'Error reading preferredStartup from persisted app state, using default value',
-      error,
-    );
-    return defaultPreferredStartup;
+    log.error('Error parsing persisted app state', error);
+    return null;
   }
+};
+
+export const readPersistedSettingFromAppState = ({
+  defaultValue,
+  key,
+}: PersistedSettingFromStoreOpts) => {
+  const persistedAppState = getPersistedAppState();
+
+  if (!persistedAppState) {
+    log.info(
+      `Persisted app state not found, using default value for ${key} : ${defaultValue}`,
+    );
+    return defaultValue;
+  }
+
+  const value = persistedAppState[key];
+
+  if (value) {
+    return value;
+  }
+
+  log.info(
+    `${key} not found in persisted app state, using default value : ${defaultValue}`,
+  );
+
+  return defaultValue;
 };

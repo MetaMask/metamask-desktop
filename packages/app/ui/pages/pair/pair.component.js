@@ -99,7 +99,7 @@ const Pair = ({ isDesktopPaired, isSuccessfulPairSeen, history }) => {
           height="150"
         />
         <Typography variant={TYPOGRAPHY.H3} fontWeight={FONT_WEIGHT.BOLD}>
-          {t('syncWithExtension')}
+          {t('pairWithExtension')}
         </Typography>
         <Typography variant={TYPOGRAPHY.Paragraph} fontSize={14}>
           {t('typeTheSixDigitCodeBelow')}

@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer, shell } from 'electron';
+import { contextBridge, ipcRenderer } from 'electron';
 
 const uiStoreBridge = (name: string) => {
   return {
@@ -51,7 +51,7 @@ const electronBridge = {
     await ipcRenderer.invoke('set-theme', themeCode);
   },
   openExternalShell: async (link: string) => {
-    await shell.openExternal(link);
+    await ipcRenderer.invoke('open-external', link);
   },
   setPreferredStartup: async (preferredStartup: string) => {
     await ipcRenderer.invoke('set-preferred-startup', preferredStartup);
