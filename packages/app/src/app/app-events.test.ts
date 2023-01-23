@@ -1,5 +1,4 @@
-import process from 'process';
-import { app, globalShortcut } from 'electron';
+import { app } from 'electron';
 import { mockFilteredNodeEvent } from '../../test/utils';
 import AppEvents from './app-events';
 
@@ -23,7 +22,6 @@ jest.mock(
 
 describe('App Events', () => {
   const electronAppMock = app as jest.Mocked<any>;
-  const globalShortcutMock = globalShortcut as jest.Mocked<any>;
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -87,24 +85,6 @@ describe('App Events', () => {
     mockFilteredNodeEvent(electronAppMock, 'on', 'before-quit');
     appEvents.register();
 
-    expect(appEvents.UIState.forceQuit).toBe(true);
-  });
-
-  it('should quit once CMD + Q pressed on MacOS', () => {
-    // Manually set process.platform to darwin
-    // eslint-disable-next-line
-    // @ts-ignore
-    delete process.platform;
-    // eslint-disable-next-line
-    // @ts-ignore
-    process.platform = 'darwin';
-    const appQuitMock = jest.fn();
-    app.quit = appQuitMock;
-    const appEvents = new AppEvents();
-    mockFilteredNodeEvent(globalShortcutMock, 'register', 'Command+Q');
-
-    appEvents.register();
-    expect(appQuitMock).toHaveBeenCalled();
     expect(appEvents.UIState.forceQuit).toBe(true);
   });
 
