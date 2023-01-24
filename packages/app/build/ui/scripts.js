@@ -31,6 +31,8 @@ const terser = require('terser');
 
 const bifyModuleGroups = require('bify-module-groups');
 
+const appVersion = require('../../package.json').version;
+
 const {
   streamFlatMap,
 } = require('../../submodules/extension/development/stream-flat-map');
@@ -601,6 +603,7 @@ async function getEnvironmentVariables({ _buildTarget, _buildType }) {
     INFURA_PROJECT_ID: config.INFURA_PROJECT_ID,
     SKIP_OTP_PAIRING_FLOW: config.SKIP_OTP_PAIRING_FLOW,
     WEB_SOCKET_PORT: config.WEB_SOCKET_PORT,
+    PACKAGE_VERSION: appVersion,
   };
 }
 

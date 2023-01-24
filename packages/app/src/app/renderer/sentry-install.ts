@@ -8,7 +8,9 @@ declare const global: typeof globalThis & {
 };
 
 // TODO Pick version from getDesktopVersion in the build-ui process
-const sentryDefaultOptions = getSentryDefaultOptions(`desktop-app-renderer`);
+const sentryDefaultOptions = getSentryDefaultOptions(
+  `${process.env.PACKAGE_VERSION}-desktop.0`,
+);
 
 Sentry.init({
   ...sentryDefaultOptions,
