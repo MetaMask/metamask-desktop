@@ -43,7 +43,7 @@ const SuccessfulPair = ({
         height="150"
       />
       <Typography variant={TYPOGRAPHY.H3} fontWeight={FONT_WEIGHT.BOLD}>
-        {t('allSetFox')}
+        {t('pairingComplete')}
       </Typography>
       <Typography
         className="description"

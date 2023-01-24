@@ -4,6 +4,7 @@ export const initialAppState = {
   theme: 'os',
   language: 'en',
   metametricsOptIn: false,
+  isMetametricsOptionSelected: false,
   preferredStartup: 'minimized',
 };
 
@@ -35,6 +36,7 @@ export default function appReducer(state = initialAppState, action) {
       return {
         ...state,
         metametricsOptIn: action.payload,
+        isMetametricsOptionSelected: true,
       };
     }
 

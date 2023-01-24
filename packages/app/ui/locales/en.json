@@ -8,9 +8,6 @@
   "agree": {
     "message": "I agree"
   },
-  "allSetFox": {
-    "message": "All set, fox"
-  },
   "allowOpenAtLoginDescription": {
     "message": "Allow MetaMask Desktop to open when you log in to your computer"
   },
@@ -173,6 +170,9 @@
   "on": {
     "message": "ON"
   },
+  "openAtLogin": {
+    "message": "Open at Login"
+  },
   "os": {
     "message": "System"
   },
@@ -184,6 +184,12 @@
   },
   "pairNow": {
     "message": "Pair with your MetaMask extension"
+  },
+  "pairWithExtension": {
+    "message": "Pair with Extension"
+  },
+  "pairingComplete": {
+    "message": "Pairing complete!"
   },
   "participateInMetaMetrics": {
     "message": "Participate in MetaMetrics"
@@ -207,16 +213,13 @@
     "message": "Settings"
   },
   "someExplainer": {
-    "message": "Some explainer about using the extension as usual but keep this app open and check the alerts."
+    "message": "Be sure to enter your password in MetaMask Extension. Keep this app open to see any alerts that you might receive."
   },
   "status": {
     "message": "Status"
   },
   "supportCenter": {
     "message": "Visit our support center"
-  },
-  "syncWithExtension": {
-    "message": "Sync with Extension"
   },
   "temporaryPairLink": {
     "message": "Temporary Pair Page Link"
@@ -228,7 +231,7 @@
     "message": "Theme"
   },
   "typeTheSixDigitCodeBelow": {
-    "message": "Open your MetaMask Extension and type the six-digit code below."
+    "message": "Enter the six-digit code visible on the MetaMask Extension screen"
   },
   "visitWebSite": {
     "message": "Visit our website"
