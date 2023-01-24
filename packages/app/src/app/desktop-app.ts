@@ -1,6 +1,6 @@
 import { Duplex, EventEmitter } from 'stream';
 import path from 'path';
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, shell } from 'electron';
 // eslint-disable-next-line @typescript-eslint/no-shadow
 import { Server as WebSocketServer, WebSocket } from 'ws';
 import log from 'loglevel';
@@ -109,6 +109,10 @@ class DesktopApp extends EventEmitter {
     ipcMain.handle('set-theme', (event, theme) => {
       const win = BrowserWindow.fromWebContents(event.sender);
       win?.setTitleBarOverlay?.(titleBarOverlayOpts[theme]);
+    });
+
+    ipcMain.handle('open-external', (_event, link) => {
+      shell.openExternal(link);
     });
 
     if (!cfg().ui.preventOpenOnStartup) {
@@ -225,6 +229,10 @@ class DesktopApp extends EventEmitter {
       'connect-remote',
       'connect-external',
     ]);
+
+    if (this.status.isDesktopPaired) {
+      this.appNavigation.setPairedTrayIcon();
+    }
 
     // if a connection is active it should set new connection as on hold
     // so the user unpair properly before establishing a new connection

@@ -3,6 +3,7 @@ import { app, BrowserWindow } from 'electron';
 import log from 'loglevel';
 import UIState from './ui-state';
 import { titleBarOverlayOpts } from './ui-constants';
+import { readPersistedSettingFromAppState } from './ui-storage';
 
 export default class WindowService {
   private UIState: typeof UIState;
@@ -32,9 +33,18 @@ export default class WindowService {
       mainWindow?.setMenu(null);
     }
 
+    const isMetametricsOptionSelected = readPersistedSettingFromAppState({
+      defaultValue: false,
+      key: 'isMetametricsOptionSelected',
+    });
+
+    const startupPage = isMetametricsOptionSelected
+      ? 'pair'
+      : 'metametrics-opt-in';
+
     mainWindow.loadFile(
       path.resolve(__dirname, '../../../ui/desktop-ui.html'),
-      { hash: 'pair' },
+      { hash: startupPage },
     );
 
     log.debug('Created main window');

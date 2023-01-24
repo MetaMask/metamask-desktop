@@ -3,7 +3,7 @@ import cfg from '../utils/config';
 import { determineLoginItemSettings } from '../utils/settings';
 import AppNavigation from './app-navigation';
 import UIState from './ui-state';
-import { getPreferredStartupState } from './ui-storage';
+import { readPersistedSettingFromAppState } from './ui-storage';
 
 export default class AppEvents {
   public appNavigation: AppNavigation;
@@ -27,7 +27,10 @@ export default class AppEvents {
 
     // Set preferred startup setting
     if (!cfg().ui.preventOpenOnStartup) {
-      const preferredStartup = getPreferredStartupState();
+      const preferredStartup = readPersistedSettingFromAppState({
+        defaultValue: 'minimized',
+        key: 'preferredStartup',
+      });
       app.setLoginItemSettings(determineLoginItemSettings(preferredStartup));
     }
 

@@ -20,6 +20,7 @@ test.describe('Desktop State Sync', () => {
       electronApp,
       'MetaMask Desktop',
     );
+    await mainWindow.locator('text=No thanks').click();
     const otpWindow = new DesktopOTPPage(mainWindow);
 
     const extensionId = await signUpFlow(page, context);
