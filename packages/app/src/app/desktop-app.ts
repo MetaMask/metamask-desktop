@@ -125,13 +125,6 @@ class DesktopApp extends EventEmitter {
       return getDesktopVersion();
     });
 
-    ipcMain.handle(
-      'set-meta-metrics-opt-in',
-      (_event, desktopMetaMetricsOptIn) => {
-        (global as any).desktopMetaMetricsOptIn = desktopMetaMetricsOptIn;
-      },
-    );
-
     setUiStorage(uiAppStorage);
     setUiStorage(uiPairStatusStorage);
 

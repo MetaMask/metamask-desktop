@@ -56,12 +56,6 @@ const electronBridge = {
   setPreferredStartup: async (preferredStartup: string) => {
     await ipcRenderer.invoke('set-preferred-startup', preferredStartup);
   },
-  setDesktopMetaMetricsOptIn: async (desktopMetaMetricsOptIn: boolean) => {
-    await ipcRenderer.invoke(
-      'set-meta-metrics-opt-in',
-      desktopMetaMetricsOptIn,
-    );
-  },
 };
 
 contextBridge.exposeInMainWorld('electronBridge', electronBridge);

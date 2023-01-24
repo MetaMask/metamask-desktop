@@ -23,7 +23,6 @@ declare global {
 
 declare const global: typeof globalThis & {
   isDesktopApp: boolean;
-  desktopMetaMetricsOptIn: boolean;
   stateHooks: Record<string, any>;
   sentry: unknown;
 };
@@ -32,9 +31,7 @@ if (!global.self) {
   global.self = {} as unknown as Window & typeof globalThis;
   // required by symmetric encryption and crypto utils
   global.crypto = webcrypto as any;
-
   global.isDesktopApp = true;
-  global.desktopMetaMetricsOptIn = false;
 
   // represents the state and the identity of the user agent
   global.navigator = {
@@ -96,7 +93,7 @@ if (!global.self) {
           const extensionMetaMetricsOptIn =
             extensionState.store?.metamask?.participateInMetaMetrics;
 
-          const { desktopMetaMetricsOptIn } = global;
+          const desktopMetaMetricsOptIn = true;
 
           // Desktop opt in must be enabled
           // Extension opt in must be enabled if desktop currently enabled
