@@ -547,6 +547,11 @@
       "globals": {
         "process.argv": true
       }
+    },
+    "@metamask/assets-controllers": {
+      "globals": {
+        "window": true
+      }
     }
   }
 }
