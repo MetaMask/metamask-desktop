@@ -6,16 +6,9 @@ import { getSentryDefaultOptions } from './setup-sentry';
 declare const global: typeof globalThis & {
   sentry: unknown;
 };
-
-const environment =
-  process.env.METAMASK_BUILD_TYPE === 'main'
-    ? process.env.METAMASK_ENVIRONMENT
-    : `${process.env.METAMASK_ENVIRONMENT}-${process.env.METAMASK_BUILD_TYPE}`;
-
-const sentryDefaultOptions = getSentryDefaultOptions({
-  release: `${process.env.PACKAGE_VERSION}-desktop.0`,
-  environment: `${environment}`,
-});
+const sentryDefaultOptions = getSentryDefaultOptions(
+  `${process.env.PACKAGE_VERSION}-desktop.0`,
+);
 
 Sentry.init({
   ...sentryDefaultOptions,

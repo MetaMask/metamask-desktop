@@ -79,10 +79,7 @@ if (!global.self) {
   const getState = () => global.stateHooks?.getSentryState?.() || {};
 
   // Init Sentry in the main process before lavamoat
-  const sentryOptions = getSentryDefaultOptions({
-    release: getDesktopVersion(),
-    environment: `${process.env.METAMASK_ENVIRONMENT}`,
-  });
+  const sentryOptions = getSentryDefaultOptions(getDesktopVersion());
   Sentry.init({
     ...sentryOptions,
     ipcMode: Sentry.IPCMode.Both,

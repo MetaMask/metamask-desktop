@@ -587,11 +587,11 @@ async function createBundle(buildConfiguration, { reloadOnChange }) {
  *
  * @param {object} options - Build options.
  * @param {BUILD_TARGETS} options.buildTarget - The current build target.
- * @param {BuildType} options.buildType - The current build type (e.g. "main",
+ * @param {BuildType} options._buildType - The current build type (e.g. "main",
  * "flask", etc.).
  * @returns {object} A map of environment variables to inject.
  */
-async function getEnvironmentVariables({ buildTarget, buildType }) {
+async function getEnvironmentVariables({ buildTarget, _buildType }) {
   const config = await getConfig();
   const environment = getEnvironment({ buildTarget });
 
@@ -605,11 +605,9 @@ async function getEnvironmentVariables({ buildTarget, buildType }) {
     INFURA_PROJECT_ID: config.INFURA_PROJECT_ID,
     SKIP_OTP_PAIRING_FLOW: config.SKIP_OTP_PAIRING_FLOW,
     WEB_SOCKET_PORT: config.WEB_SOCKET_PORT,
-    METAMASK_DEBUG: config.METAMASK_DEBUG === '1',
+    METAMASK_DEBUG: config.METAMASK_DEBUG,
     METAMASK_ENVIRONMENT: environment,
-    METAMASK_BUILD_TYPE: buildType,
     SENTRY_DSN: config.SENTRY_DSN,
-    SENTRY_DSN_DEV: config.SENTRY_DSN_DEV,
     PACKAGE_VERSION: appVersion,
   };
 }
