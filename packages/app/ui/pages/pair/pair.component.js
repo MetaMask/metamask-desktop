@@ -77,12 +77,6 @@ const Pair = ({ isDesktopPaired, isSuccessfulPairSeen, history }) => {
         setOtpDisabled(false);
       }, OTP_VALIDATION_TIMEOUT_IN_MS + ANIMATION_COMPLETE_DEFER_IN_MS);
       setOtpValidationTimeoutId(timeoutId);
-
-      // TODO TO BE REMOVED BEFORE MERGING
-      if (otpValue === '111111') {
-        console.log('SENTRY RENDERER ERROR');
-        throw new Error('SENTRY RENDERER ERROR');
-      }
     }
   };
 
