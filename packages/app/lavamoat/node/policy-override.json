@@ -550,7 +550,7 @@
     },
     "@metamask/assets-controllers": {
       "globals": {
-        "window": true
+        "window.Headers": true
       }
     }
   }
