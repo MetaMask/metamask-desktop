@@ -9,7 +9,7 @@ import { Dedupe, ExtraErrorData } from '@sentry/integrations';
 import { Integration } from '@sentry/types/dist/integration';
 import { FilterEvents } from '../../submodules/extension/app/scripts/lib/sentry-filter-events';
 import {
-  removeUrlsFromBreadCrumb,
+  beforeBreadcrumb,
   rewriteReport,
 } from '../../submodules/extension/app/scripts/lib/setupSentry';
 import { getDesktopVersion } from '../utils/version';
@@ -129,23 +129,7 @@ if (!global.self) {
       new ExtraErrorData() as Integration,
     ],
     beforeSend: (report) => rewriteReport(report, getState),
-    beforeBreadcrumb(breadcrumb) {
-      if (getState) {
-        const appState = getState();
-        if (
-          Object.values(appState).length &&
-          (!appState?.store?.metamask?.participateInMetaMetrics ||
-            !appState?.store?.metamask?.completedOnboarding ||
-            breadcrumb?.category === 'ui.input')
-        ) {
-          return null;
-        }
-      } else {
-        return null;
-      }
-      const newBreadcrumb = removeUrlsFromBreadCrumb(breadcrumb);
-      return newBreadcrumb;
-    },
+    beforeBreadcrumb: beforeBreadcrumb(getState),
   });
 
   global.sentry = Sentry;
