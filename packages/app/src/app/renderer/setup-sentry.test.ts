@@ -20,7 +20,7 @@ describe('getSentryDefaultOptions', () => {
 
   it('should disable sentry when no DSN is passed in development', () => {
     process.env.METAMASK_ENVIRONMENT = METAMASK_ENVIRONMENT_DEV_MOCK;
-    process.env.SENTRY_DSN = undefined;
+    process.env.SENTRY_DSN = '';
     expect(getSentryDefaultOptions(RELEASE_MOCK)).toStrictEqual({
       enabled: false,
       dsn: process.env.SENTRY_DSN,
@@ -41,6 +41,7 @@ describe('getSentryDefaultOptions', () => {
       process.env.METAMASK_ENVIRONMENT = METAMASK_ENVIRONMENT_DEV_MOCK;
       process.env.SENTRY_DSN = SENTRY_DSN_MOCK;
       expect(getSentryDefaultOptions(RELEASE_MOCK)).toStrictEqual({
+        enabled: true,
         dsn: SENTRY_DSN_MOCK,
         debug: expectedDebug,
         environment: METAMASK_ENVIRONMENT_DEV_MOCK,
