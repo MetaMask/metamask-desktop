@@ -42,6 +42,7 @@ const {
 const {
   isDevBuild,
   logError,
+  getEnvironment,
 } = require('../../submodules/extension/development/build/utils');
 const { runInChildProcess, createTask, composeParallel } = require('./task');
 const { getConfig } = require('./config');
@@ -585,13 +586,14 @@ async function createBundle(buildConfiguration, { reloadOnChange }) {
  * Get environment variables to inject in the current build.
  *
  * @param {object} options - Build options.
- * @param {BUILD_TARGETS} options._buildTarget - The current build target.
- * @param {BuildType} options._buildType - The current build type (e.g. "main",
+ * @param {BUILD_TARGETS} options.buildTarget - The current build target.
+ * @param {BuildType} options.buildType - The current build type (e.g. "main",
  * "flask", etc.).
  * @returns {object} A map of environment variables to inject.
  */
-async function getEnvironmentVariables({ _buildTarget, _buildType }) {
+async function getEnvironmentVariables({ buildTarget, buildType }) {
   const config = await getConfig();
+  const environment = getEnvironment({ buildTarget });
 
   return {
     COMPATIBILITY_VERSION_DESKTOP: config.COMPATIBILITY_VERSION_DESKTOP,
@@ -603,6 +605,11 @@ async function getEnvironmentVariables({ _buildTarget, _buildType }) {
     INFURA_PROJECT_ID: config.INFURA_PROJECT_ID,
     SKIP_OTP_PAIRING_FLOW: config.SKIP_OTP_PAIRING_FLOW,
     WEB_SOCKET_PORT: config.WEB_SOCKET_PORT,
+    METAMASK_DEBUG: config.METAMASK_DEBUG === '1',
+    METAMASK_ENVIRONMENT: environment,
+    METAMASK_BUILD_TYPE: buildType,
+    SENTRY_DSN: config.SENTRY_DSN,
+    SENTRY_DSN_DEV: config.SENTRY_DSN_DEV,
     PACKAGE_VERSION: appVersion,
   };
 }

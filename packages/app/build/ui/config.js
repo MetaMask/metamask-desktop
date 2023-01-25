@@ -16,7 +16,7 @@ const configurationPropertyNames = [
 /**
  * Get configuration for non-production builds.
  *
- * @returns {object} The production configuration.
+ * @returns {Promise<object>} The production configuration.
  */
 async function getConfig() {
   const configPath = path.resolve(__dirname, '..', '..', '.env');

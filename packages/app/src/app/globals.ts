@@ -2,6 +2,7 @@ import 'global-agent/bootstrap';
 import './logger-init';
 import '../browser/browser-init';
 import { webcrypto } from 'node:crypto';
+import electronLog from 'electron-log';
 import { Headers } from 'node-fetch';
 import * as Sentry from '@sentry/electron/main';
 import { Dedupe, ExtraErrorData } from '@sentry/integrations';
@@ -14,6 +15,7 @@ import {
 import { getDesktopVersion } from '../utils/version';
 import { ElectronBridge } from './renderer/preload';
 import { getSentryDefaultOptions } from './renderer/setup-sentry';
+import { readPersistedSettingFromAppState } from './ui-storage';
 
 declare global {
   interface Window {
@@ -75,10 +77,12 @@ if (!global.self) {
   global.stateHooks = {};
 
   const getState = () => global.stateHooks?.getSentryState?.() || {};
-  const release = getDesktopVersion();
 
   // Init Sentry in the main process before lavamoat
-  const sentryOptions = getSentryDefaultOptions(release);
+  const sentryOptions = getSentryDefaultOptions({
+    release: getDesktopVersion(),
+    environment: `${process.env.METAMASK_ENVIRONMENT}`,
+  });
   Sentry.init({
     ...sentryOptions,
     ipcMode: Sentry.IPCMode.Both,
@@ -93,13 +97,30 @@ if (!global.self) {
           const extensionMetaMetricsOptIn =
             extensionState.store?.metamask?.participateInMetaMetrics;
 
-          const desktopMetaMetricsOptIn = true;
+          // TODO Currently returning a string, needs simplifying when schema fixed
+          const desktopMetaMetricsOptInValue = readPersistedSettingFromAppState(
+            {
+              defaultValue: false,
+              key: 'metametricsOptIn',
+            },
+          );
+          const desktopMetaMetricsOptIn =
+            typeof desktopMetaMetricsOptInValue === 'string'
+              ? desktopMetaMetricsOptInValue === 'true'
+              : desktopMetaMetricsOptInValue;
 
           // Desktop opt in must be enabled
           // Extension opt in must be enabled if desktop currently enabled
           const shouldShareMetrics =
             desktopMetaMetricsOptIn &&
             (!hasValidExtensionState || extensionMetaMetricsOptIn);
+
+          electronLog.debug('Sentry metric filter for main process', {
+            hasValidExtensionState,
+            extensionMetaMetricsOptIn,
+            desktopMetaMetricsOptIn,
+            shouldShareMetrics,
+          });
 
           return shouldShareMetrics;
         },

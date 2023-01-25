@@ -7,10 +7,15 @@ declare const global: typeof globalThis & {
   sentry: unknown;
 };
 
-// TODO Pick version from getDesktopVersion in the build-ui process
-const sentryDefaultOptions = getSentryDefaultOptions(
-  `${process.env.PACKAGE_VERSION}-desktop.0`,
-);
+const environment =
+  process.env.METAMASK_BUILD_TYPE === 'main'
+    ? process.env.METAMASK_ENVIRONMENT
+    : `${process.env.METAMASK_ENVIRONMENT}-${process.env.METAMASK_BUILD_TYPE}`;
+
+const sentryDefaultOptions = getSentryDefaultOptions({
+  release: `${process.env.PACKAGE_VERSION}-desktop.0`,
+  environment: `${environment}`,
+});
 
 Sentry.init({
   ...sentryDefaultOptions,
