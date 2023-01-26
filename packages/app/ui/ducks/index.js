@@ -1,6 +1,8 @@
 import { combineReducers } from 'redux';
-import { persistReducer } from 'redux-persist';
+import { persistReducer, createMigrate } from 'redux-persist';
 
+import pairStatusMigrations from '../migrations/pair-status';
+import rootMigrations from '../migrations/root';
 import appReducer from './app/app';
 import pairStatusReducer from './pair-status/pair-status';
 
@@ -9,6 +11,8 @@ const pairStatusPersistConfig = {
   storage: window.electronBridge.pairStatusStore,
   blacklist: ['connections', 'isWebSocketConnected', 'isDesktopPaired'],
   whitelist: ['isSuccessfulPairSeen', 'lastActivation'],
+  migrate: createMigrate(pairStatusMigrations, { debug: false }),
+  version: 0,
 };
 const persistedPairStatusReducer = persistReducer(
   pairStatusPersistConfig,
@@ -18,6 +22,8 @@ const persistedPairStatusReducer = persistReducer(
 const appPersistConfig = {
   key: 'app',
   storage: window.electronBridge.appStore,
+  migrate: createMigrate(rootMigrations, { debug: false }),
+  version: 0,
 };
 const persistedAppReducer = persistReducer(appPersistConfig, appReducer);
 
