@@ -3992,7 +3992,7 @@ __metadata:
 
 "@metamask/create-release-branch@patch:@metamask/create-release-branch@npm%3A1.0.1#./.yarn/patches/@metamask-create-release-branch-npm-1.0.1-12ecd95bee.patch::locator=desktop%40workspace%3A.":
   version: 1.0.1
-  resolution: "@metamask/create-release-branch@patch:@metamask/create-release-branch@npm%3A1.0.1#./.yarn/patches/@metamask-create-release-branch-npm-1.0.1-12ecd95bee.patch::version=1.0.1&hash=148cca&locator=desktop%40workspace%3A."
+  resolution: "@metamask/create-release-branch@patch:@metamask/create-release-branch@npm%3A1.0.1#./.yarn/patches/@metamask-create-release-branch-npm-1.0.1-12ecd95bee.patch::version=1.0.1&hash=d21ed7&locator=desktop%40workspace%3A."
   dependencies:
     "@metamask/action-utils": ^0.0.2
     "@metamask/utils": ^3.0.3
@@ -4006,7 +4006,7 @@ __metadata:
     yargs: ^17.5.1
   bin:
     create-release-branch: bin/create-release-branch.js
-  checksum: 8d84a2e1ddbd0aca6cd7a1c2c130c575b24c9d01ffc6724ca91fb5ac07f85eff05835a2ecf3484fb7f4f65c166fa93130824b35ba433aff3be1825751321c1a4
+  checksum: b1fd3e39ba7895b14feccfa0fcb6efe1ccf22bef171e291068ce1a908c5191a3188e0414edab7147b2da6a837542d27724d8850dcd49ebb527a281e0fd9af394
   languageName: node
   linkType: hard
 
