@@ -655,7 +655,8 @@
         "clearTimeout": true,
         "console.log": true,
         "setInterval": true,
-        "setTimeout": true
+        "setTimeout": true,
+        "window.Headers": true
       },
       "packages": {
         "@ethersproject/abi": true,
