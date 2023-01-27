@@ -1,5 +1,5 @@
 import path from 'path';
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, nativeTheme } from 'electron';
 import log from 'loglevel';
 import UIState from './ui-state';
 import { titleBarOverlayOpts } from './ui-constants';
@@ -15,7 +15,8 @@ export default class WindowService {
   public async createMainWindow() {
     const { wasOpenedAsHidden } = app.getLoginItemSettings();
     const mainWindow = new BrowserWindow({
-      show: !wasOpenedAsHidden,
+      // Always set to false, otherwise the window will be shown before it is ready
+      show: false,
       width: 840,
       height: 680,
       minWidth: 800,
@@ -33,21 +34,15 @@ export default class WindowService {
       mainWindow?.setMenu(null);
     }
 
-    const isMetametricsOptionSelected = readPersistedSettingFromAppState({
-      defaultValue: false,
-      key: 'isMetametricsOptionSelected',
-    });
-
-    const startupPage = isMetametricsOptionSelected
-      ? 'pair'
-      : 'metametrics-opt-in';
-
-    mainWindow.loadFile(
-      path.resolve(__dirname, '../../../ui/desktop-ui.html'),
-      { hash: startupPage },
-    );
+    mainWindow.loadFile(this.getHtmlPath(), this.getAppStartupPage());
 
     log.debug('Created main window');
+
+    mainWindow.once('ready-to-show', () => {
+      if (!wasOpenedAsHidden) {
+        mainWindow.show();
+      }
+    });
 
     this.UIState.mainWindow = mainWindow;
   }
@@ -104,5 +99,48 @@ export default class WindowService {
     log.debug('Created lattice window');
 
     this.UIState.latticeWindow = latticeWindow;
+  }
+
+  private getHtmlPath() {
+    const darkHtmlPath = path.resolve(
+      __dirname,
+      '../../../ui/desktop-ui-dark.html',
+    );
+    const lightHtmlPath = path.resolve(
+      __dirname,
+      '../../../ui/desktop-ui.html',
+    );
+    let htmlPath;
+
+    const selectedTheme = readPersistedSettingFromAppState({
+      defaultValue: 'os',
+      key: 'theme',
+    });
+
+    if (selectedTheme === 'os') {
+      if (nativeTheme.shouldUseDarkColors) {
+        htmlPath = darkHtmlPath;
+      } else {
+        htmlPath = lightHtmlPath;
+      }
+    } else if (selectedTheme === 'dark') {
+      htmlPath = darkHtmlPath;
+    } else {
+      htmlPath = lightHtmlPath;
+    }
+    return path.resolve(__dirname, htmlPath);
+  }
+
+  private getAppStartupPage() {
+    const isMetametricsOptionSelected = readPersistedSettingFromAppState({
+      defaultValue: false,
+      key: 'isMetametricsOptionSelected',
+    });
+
+    const startupPage = isMetametricsOptionSelected
+      ? 'pair'
+      : 'metametrics-opt-in';
+
+    return { hash: startupPage };
   }
 }
