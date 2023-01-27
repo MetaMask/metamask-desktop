@@ -1,5 +1,5 @@
 diff --git a/dist/command-line-arguments.js b/dist/command-line-arguments.js
-index b3df9ed..c6e6161 100644
+index b3df9ed7ecd0677551434b62f4b82ec5738778f1..be3b276a461184af504e3dd50589600aa74ca1d5 100644
 --- a/dist/command-line-arguments.js
 +++ b/dist/command-line-arguments.js
 @@ -34,6 +34,16 @@ async function readCommandLineArguments(argv) {
@@ -20,10 +20,10 @@ index b3df9ed..c6e6161 100644
          .help()
          .strict()
 diff --git a/dist/initial-parameters.js b/dist/initial-parameters.js
-index 65562cd..d8a1b28 100644
+index 65562cd4eaefe6118cb178bfaa3af72ea9ce8524..1a773c22c34d5bc7d793854b8c745f009f0085b8 100644
 --- a/dist/initial-parameters.js
 +++ b/dist/initial-parameters.js
-@@ -21,15 +21,20 @@ const project_1 = require("./project");
+@@ -21,7 +21,9 @@ const project_1 = require("./project");
  async function determineInitialParameters({ argv, cwd, stderr, }) {
      const args = await (0, command_line_arguments_1.readCommandLineArguments)(argv);
      const projectDirectoryPath = path_1.default.resolve(cwd, args.projectDirectory);
@@ -34,9 +34,7 @@ index 65562cd..d8a1b28 100644
      const tempDirectoryPath = args.tempDirectory === undefined
          ? path_1.default.join(os_1.default.tmpdir(), 'create-release-branch', project.rootPackage.validatedManifest.name.replace('/', '__'))
          : path_1.default.resolve(cwd, args.tempDirectory);
-+
-     return {
-         project,
+@@ -30,6 +32,8 @@ async function determineInitialParameters({ argv, cwd, stderr, }) {
          tempDirectoryPath,
          reset: args.reset,
          releaseType: args.backport ? 'backport' : 'ordinary',
@@ -46,7 +44,7 @@ index 65562cd..d8a1b28 100644
  }
  exports.determineInitialParameters = determineInitialParameters;
 diff --git a/dist/main.js b/dist/main.js
-index 57e8a77..ed35a97 100644
+index 57e8a77a2b0bfc0d3e86e345c74fc6740f1c75e9..622a7d31b71d43c333da18ff765a3dd29030f9f2 100644
 --- a/dist/main.js
 +++ b/dist/main.js
 @@ -16,7 +16,7 @@ const monorepo_workflow_operations_1 = require("./monorepo-workflow-operations")
@@ -68,7 +66,7 @@ index 57e8a77..ed35a97 100644
      }
      else {
 diff --git a/dist/monorepo-workflow-operations.js b/dist/monorepo-workflow-operations.js
-index a6776a8..46ce019 100644
+index a6776a8d595517171ede5a403eadafc0bfc812e8..ee6000872ddd083672136b698bd41160ee2ca302 100644
 --- a/dist/monorepo-workflow-operations.js
 +++ b/dist/monorepo-workflow-operations.js
 @@ -42,7 +42,7 @@ const release_specification_1 = require("./release-specification");
@@ -80,37 +78,51 @@ index a6776a8..46ce019 100644
      const releaseSpecificationPath = path_1.default.join(tempDirectoryPath, 'RELEASE_SPEC');
      if (!firstRemovingExistingReleaseSpecification &&
          (await (0, fs_1.fileExists)(releaseSpecificationPath))) {
-@@ -79,6 +79,28 @@ async function followMonorepoWorkflow({ project, tempDirectoryPath, firstRemovin
+@@ -79,9 +79,41 @@ async function followMonorepoWorkflow({ project, tempDirectoryPath, firstRemovin
      });
      await (0, release_plan_1.executeReleasePlan)(project, releasePlan, stderr);
      await (0, fs_1.removeFile)(releaseSpecificationPath);
+-    await (0, repo_1.captureChangesInReleaseBranch)(project.directoryPath, {
 +
-+    // This identifies that we only are creating a release branch for a specific package
-+    if (workspacePackage && tagName) {
-+        const releasePackage = releasePlan.packages.find(p => {
-+          return p.package.directoryPath.endsWith(workspacePackage);
-+        });
++    if (!workspacePackage) {
++      await (0, repo_1.captureChangesInReleaseBranch)(project.directoryPath, {
+         releaseVersion: releasePlan.newVersion,
++      });
 +
-+        if (!releasePackage) {
-+          throw new Error('Ups something went wrong. Could not identify package to create tag for');
-+        }
-+
-+        await (0, repo_1.captureChangesInReleaseBranch)(
-+            project.directoryPath,
-+            {
-+                releaseVersion: releasePlan.newVersion,
-+            },
-+            `${tagName}@${releasePackage.newVersion}`
-+        );
-+
-+        return;
++      return
 +    }
 +
-     await (0, repo_1.captureChangesInReleaseBranch)(project.directoryPath, {
-         releaseVersion: releasePlan.newVersion,
++    // Below this we are creating a release branch for a single specific package
++
++    const releasePackage = releasePlan.packages.find(p => {
++      return p.package.directoryPath.endsWith(workspacePackage);
      });
++
++    if (!releasePackage) {
++      throw new Error('Ups something went wrong. Could not identify package to create tag for');
++    }
++
++    if (tagName) {
++      await (0, repo_1.captureChangesInReleaseBranch)(
++          project.directoryPath,
++          { releaseVersion: releasePlan.newVersion },
++          `${workspacePackage}-${releasePackage.newVersion}`,
++          `${tagName}@${releasePackage.newVersion}`,
++      );
++
++      return;
++    }
++
++    await (0, repo_1.captureChangesInReleaseBranch)(
++      project.directoryPath,
++      { releaseVersion: releasePlan.newVersion },
++      `${workspacePackage}-${releasePackage.newVersion}`,
++  );
+ }
+ exports.followMonorepoWorkflow = followMonorepoWorkflow;
+ //# sourceMappingURL=monorepo-workflow-operations.js.map
 diff --git a/dist/package-manifest.js b/dist/package-manifest.js
-index d7060dc..c54f0c9 100644
+index d7060dca0a3cdaf8f34eb044937c9fe4d92c4449..c54f0c92af674a628f06586feab3de2dd022d117 100644
 --- a/dist/package-manifest.js
 +++ b/dist/package-manifest.js
 @@ -132,8 +132,13 @@ function isValidPackageManifestWorkspacesField(workspaces) {
@@ -129,7 +141,7 @@ index d7060dc..c54f0c9 100644
          throw new Error(buildPackageManifestFieldValidationErrorMessage({
              manifest,
 diff --git a/dist/package.js b/dist/package.js
-index c862a5b..c7710d3 100644
+index c862a5ba3a2f8a044a52f08baa182bf6d601e7ff..c7710d35a3227270f3913728b4bcaa67b08f8056 100644
 --- a/dist/package.js
 +++ b/dist/package.js
 @@ -45,14 +45,15 @@ function generateMonorepoWorkspacePackageReleaseTagName(packageName, packageVers
@@ -194,7 +206,7 @@ index c862a5b..c7710d3 100644
  /**
   * Updates the changelog file of the given package using
 diff --git a/dist/project.js b/dist/project.js
-index 6a114e6..9c8b95f 100644
+index 6a114e68771f726ed5df4c52a6355544ca0d130e..9c8b95f490906971bed27481cb9b50265b4ce79b 100644
 --- a/dist/project.js
 +++ b/dist/project.js
 @@ -40,21 +40,26 @@ function examineReleaseVersion(packageVersion) {
@@ -234,24 +246,59 @@ index 6a114e6..9c8b95f 100644
          });
      }))).reduce((obj, pkg) => {
          return Object.assign(Object.assign({}, obj), { [pkg.validatedManifest.name]: pkg });
+diff --git a/dist/repo.d.ts b/dist/repo.d.ts
+index 50c53e36a5b52f29c488d9ccc8618e015f87db05..dd1c1d331b56d2b0f90df7b898a38c166828bd75 100644
+--- a/dist/repo.d.ts
++++ b/dist/repo.d.ts
+@@ -27,9 +27,12 @@ export declare function getRepositoryHttpsUrl(repositoryDirectoryPath: string):
+  * @param args - The arguments.
+  * @param args.releaseVersion - The release version.
+  */
+-export declare function captureChangesInReleaseBranch(repositoryDirectoryPath: string, { releaseVersion }: {
+-    releaseVersion: string;
+-}): Promise<void>;
++export declare function captureChangesInReleaseBranch(
++    repositoryDirectoryPath: string,
++    { releaseVersion }: { releaseVersion: string },
++    branchNameSuffix?: string,
++    tagName?: string
++): Promise<void>;
+ /**
+  * Retrieves the names of the tags in the given repo, sorted by ascending
+  * semantic version order. As this fetches tags from the remote first, you are
 diff --git a/dist/repo.js b/dist/repo.js
-index 0821f9e..88b2885 100644
+index 0821f9e8995077b0666febb48d32569c4a021730..342271844c23628ea8415d69a4b6ac77ee8f2ef1 100644
 --- a/dist/repo.js
 +++ b/dist/repo.js
-@@ -134,10 +134,15 @@ exports.getRepositoryHttpsUrl = getRepositoryHttpsUrl;
+@@ -134,15 +134,28 @@ exports.getRepositoryHttpsUrl = getRepositoryHttpsUrl;
   * @param args - The arguments.
   * @param args.releaseVersion - The release version.
   */
 -async function captureChangesInReleaseBranch(repositoryDirectoryPath, { releaseVersion }) {
-+async function captureChangesInReleaseBranch(repositoryDirectoryPath, { releaseVersion }, tagName) {
++async function captureChangesInReleaseBranch(repositoryDirectoryPath, { releaseVersion }, branchNameSuffix, tagName) {
++    let branchName = `release/${releaseVersion}`;
++    let commitMessage = `Release ${releaseVersion}`;
++
++    if (branchNameSuffix) {
++      branchName = `release/${branchNameSuffix}`;
++      commitMessage = `Release ${branchNameSuffix}`;
++    }
++
 +    if (tagName) {
-+      await getStdoutFromGitCommandWithin(repositoryDirectoryPath, 'tag', [tagName]);
++        await getStdoutFromGitCommandWithin(repositoryDirectoryPath, 'tag', [tagName]);
 +    }
 +
      await getStdoutFromGitCommandWithin(repositoryDirectoryPath, 'checkout', [
          '-b',
-         `release/${releaseVersion}`,
+-        `release/${releaseVersion}`,
++        branchName,
 +        ...(tagName ? [tagName] : [])
      ]);
      await getStdoutFromGitCommandWithin(repositoryDirectoryPath, 'add', ['-A']);
      await getStdoutFromGitCommandWithin(repositoryDirectoryPath, 'commit', [
+         '-m',
+-        `Release ${releaseVersion}`,
++        commitMessage,
+     ]);
+ }
+ exports.captureChangesInReleaseBranch = captureChangesInReleaseBranch;
