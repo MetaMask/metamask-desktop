@@ -1,5 +1,6 @@
 import path from 'path';
-import { app, Tray, Menu, shell } from 'electron';
+import { app, Tray, Menu, shell, dialog } from 'electron';
+import { getDesktopState } from '@metamask/desktop/dist/utils/state';
 import {
   metamaskDesktopAboutWebsite,
   metamaskDesktopSubmitTicket,
@@ -80,7 +81,26 @@ export default class AppNavigation {
   private createQuitMenuItem() {
     return {
       label: 'Quit',
-      click: () => {
+      click: async () => {
+        const isDesktopPaired =
+          (await getDesktopState()).desktopEnabled === true;
+        if (isDesktopPaired) {
+          const { response: forceExit } = await dialog.showMessageBox({
+            type: 'warning',
+            buttons: ['Ok', 'Exit'],
+            cancelId: 0,
+            defaultId: 1,
+            icon: path.resolve(__dirname, '../../dist/app/icon.png'),
+            title: 'Warning',
+            message:
+              'MetaMask Extension is paired with MetaMask Desktop in the background. To quit, click Exit.',
+          });
+          if (forceExit) {
+            this.UIState.forceQuit = true;
+            app.quit();
+          }
+          return;
+        }
         this.UIState.forceQuit = true;
         app.quit();
       },
