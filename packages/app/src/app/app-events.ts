@@ -85,8 +85,7 @@ export default class AppEvents {
   }
 
   private onCmdQPressed() {
-    this.UIState.forceQuit = true;
-    app.quit();
+    this.UIState.mainWindow?.hide?.();
   }
 
   private onWindowClose(event: any) {
