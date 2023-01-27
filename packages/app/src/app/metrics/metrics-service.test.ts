@@ -1,4 +1,3 @@
-import log from 'loglevel';
 import Store from 'electron-store';
 import {
   EVENT_NAME_MOCK,
@@ -11,6 +10,16 @@ import MetricsService from './metrics-service';
 import Analytics from './analytics';
 
 jest.mock(
+  '../ui-storage',
+  () => ({
+    readPersistedSettingFromAppState: jest.fn().mockReturnValueOnce(true),
+  }),
+  {
+    virtual: true,
+  },
+);
+
+jest.mock(
   'electron-store',
   () => {
     return jest.fn().mockImplementation(() => {
@@ -21,6 +30,8 @@ jest.mock(
               return true;
             case 'segmentApiCalls':
               return {};
+            case 'eventsBeforeMetricsOptIn':
+              return [];
             default:
               return undefined;
           }
@@ -49,6 +60,9 @@ jest.mock('loglevel');
 describe('MetricsService', () => {
   let metricsService: typeof MetricsService;
   let analytics: typeof Analytics;
+  let trackSpy: any;
+  let identifySpy: any;
+  let checkParticipateInDesktopMetricsSpy: any;
   const electronStoreConstructorMock = Store as jest.MockedClass<typeof Store>;
   const storeMock = createElectronStoreMock();
 
@@ -57,10 +71,24 @@ describe('MetricsService', () => {
     metricsService = MetricsService as any;
     analytics = Analytics;
     electronStoreConstructorMock.mockReturnValue(storeMock);
+    trackSpy = jest.spyOn(analytics, 'track');
+    identifySpy = jest.spyOn(analytics, 'identify');
+    checkParticipateInDesktopMetricsSpy = jest.spyOn(
+      metricsService as any,
+      'checkParticipateInDesktopMetrics',
+    );
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('set desktopMetricsId', () => {
+    metricsService.setDesktopMetricsId(UUID_MOCK);
+    expect(electronStoreConstructorMock).toHaveBeenCalledTimes(1);
   });
 
   it('tracks an event with properties and saved it to the store', () => {
-    const trackSpy = jest.spyOn(analytics, 'track');
     metricsService.track(EVENT_NAME_MOCK, PROPERTIES_OBJECT_MOCK);
 
     expect(trackSpy).toHaveBeenCalledTimes(1);
@@ -73,18 +101,37 @@ describe('MetricsService', () => {
     });
   });
 
-  it('set participateInDesktopMetrics', () => {
-    metricsService.setParticipateInDesktopMetrics(false);
-    expect(electronStoreConstructorMock).toHaveBeenCalledTimes(1);
+  it('tracks an event before users opt-in and store it in eventsBeforeMetricsOptIn', () => {
+    metricsService.track(EVENT_NAME_MOCK, PROPERTIES_OBJECT_MOCK);
+
+    expect(trackSpy).toHaveBeenCalledTimes(0);
   });
 
-  it('set desktopMetricsId', () => {
-    metricsService.setDesktopMetricsId(UUID_MOCK);
-    expect(electronStoreConstructorMock).toHaveBeenCalledTimes(1);
+  it('should call identify and send it to Segment when the user has opted in', () => {
+    const traits = PROPERTIES_OBJECT_MOCK;
+    (metricsService as any).desktopMetricsId = UUID_MOCK;
+
+    metricsService.identify(traits);
+
+    expect(identifySpy).toHaveBeenCalledTimes(1);
+    expect(analytics.identify).toHaveBeenCalledWith({
+      userId: UUID_MOCK,
+      traits,
+      context: {
+        app: {
+          name: expect.anything(),
+          version: expect.any(String),
+        },
+      },
+    });
   });
 
-  it('flush events before optIn', () => {
-    metricsService.flushEventsBeforeOptIn();
-    expect(log.debug).toHaveBeenCalledWith('No implementation provided');
+  it('should not call identify when the user has opted out', () => {
+    const traits = PROPERTIES_OBJECT_MOCK;
+    checkParticipateInDesktopMetricsSpy.mockReturnValue(false);
+
+    metricsService.identify(traits);
+
+    expect(identifySpy).toHaveBeenCalledTimes(0);
   });
 });

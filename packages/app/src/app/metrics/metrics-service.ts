@@ -10,6 +10,7 @@ import {
   Traits,
   Event,
 } from '../../types/metrics';
+import { readPersistedSettingFromAppState } from '../ui-storage';
 import Analytics from './analytics';
 
 class MetricsService {
@@ -17,9 +18,7 @@ class MetricsService {
 
   private analytics: typeof Analytics;
 
-  // TODO: Update participateInDesktopMetrics when user opt-in/opt-out on metrics UI
-  private participateInDesktopMetrics = true;
-
+  // Unique identifier representing userId property on events
   private desktopMetricsId?: string;
 
   // Events saved before users opt-in/opt-out of metrics
@@ -37,10 +36,6 @@ class MetricsService {
       name: `mmd-desktop-metrics`,
     });
 
-    this.participateInDesktopMetrics = this.store.get(
-      'participateInDesktopMetrics',
-      true,
-    );
     this.desktopMetricsId = this.store.get('desktopMetricsId', '');
     this.eventsBeforeMetricsOptIn = this.store.get(
       'eventsBeforeMetricsOptIn',
@@ -52,6 +47,7 @@ class MetricsService {
 
   /* The track method lets you record the actions your users perform. */
   track(event: string, properties: Properties = {}) {
+    log.debug('track event', event);
     if (!this.desktopMetricsId) {
       this.setDesktopMetricsId(uuid());
     }
@@ -64,7 +60,12 @@ class MetricsService {
       messageId: uuid(),
     };
 
-    if (!this.participateInDesktopMetrics) {
+    const isParticipateInDesktopMetrics =
+      this.checkParticipateInDesktopMetrics();
+    if (isParticipateInDesktopMetrics === false) {
+      return;
+      // If the condition is true, it means that the user has not yet opt-in/opt-out on the metrics page
+    } else if (isParticipateInDesktopMetrics === undefined) {
       this.eventsBeforeMetricsOptIn.push(eventToTrack);
       return;
     }
@@ -76,6 +77,10 @@ class MetricsService {
   /* The identify method lets you tie a user to their actions and record
        traits about them. */
   identify(traits: Traits) {
+    log.debug('identify event', traits);
+    if (this.checkParticipateInDesktopMetrics() === false) {
+      return;
+    }
     this.traits = { ...this.traits, ...traits };
     this.analytics.identify({
       userId: this.desktopMetricsId,
@@ -84,26 +89,39 @@ class MetricsService {
     });
   }
 
-  setParticipateInDesktopMetrics(isParticipant: boolean) {
-    this.participateInDesktopMetrics = isParticipant;
-    this.store.set('participateInDesktopMetrics', isParticipant);
-
-    if (isParticipant) {
-      this.flushEventsBeforeOptIn();
-    }
-  }
-
   setDesktopMetricsId(id: string) {
     this.desktopMetricsId = id;
     this.store.set('desktopMetricsId', id);
   }
 
-  // TODO: Implement flush events that are saved before users opt-in/opt-out
-  flushEventsBeforeOptIn() {
-    log.debug('No implementation provided');
+  private checkParticipateInDesktopMetrics(): boolean | undefined {
+    const desktopMetricsOptInValue = readPersistedSettingFromAppState({
+      defaultValue: undefined,
+      key: 'metametricsOptIn',
+    });
+    const desktopMetricsOptIn =
+      typeof desktopMetricsOptInValue === 'string'
+        ? desktopMetricsOptInValue === 'true'
+        : desktopMetricsOptInValue;
+
+    // Flush events saved before user opt-in
+    if (desktopMetricsOptIn && this.eventsBeforeMetricsOptIn?.length > 0) {
+      this.flushEventsBeforeOptIn();
+    }
+    return desktopMetricsOptIn;
   }
 
-  saveCallSegmentAPI(event: Event) {
+  private flushEventsBeforeOptIn() {
+    log.debug('flushing events saved before user optIn');
+    this.eventsBeforeMetricsOptIn?.forEach((event) => {
+      this.analytics.track(event);
+      this.saveCallSegmentAPI(event);
+    });
+
+    this.eventsBeforeMetricsOptIn = [];
+  }
+
+  private saveCallSegmentAPI(event: Event) {
     this.segmentApiCalls[uuid()] = event;
     this.store.set('segmentApiCalls', this.segmentApiCalls);
   }
