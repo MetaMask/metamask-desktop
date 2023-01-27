@@ -265,6 +265,13 @@ function createFactoredBuild({
               commonSet,
               applyLavaMoat,
             });
+
+            renderHtmlFile({
+              htmlName: 'desktop-ui-dark',
+              groupSet,
+              commonSet,
+              applyLavaMoat,
+            });
             break;
           }
 
