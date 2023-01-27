@@ -71,7 +71,7 @@ export const readPersistedSettingFromAppState = ({
   const value = persistedAppState[key];
 
   if (value) {
-    return value;
+    return JSON.parse(value);
   }
 
   log.info(
