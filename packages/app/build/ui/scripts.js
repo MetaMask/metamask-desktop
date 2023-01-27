@@ -31,6 +31,8 @@ const terser = require('terser');
 
 const bifyModuleGroups = require('bify-module-groups');
 
+const appVersion = require('../../package.json').version;
+
 const {
   streamFlatMap,
 } = require('../../submodules/extension/development/stream-flat-map');
@@ -40,6 +42,7 @@ const {
 const {
   isDevBuild,
   logError,
+  getEnvironment,
 } = require('../../submodules/extension/development/build/utils');
 const { runInChildProcess, createTask, composeParallel } = require('./task');
 const { getConfig } = require('./config');
@@ -110,7 +113,21 @@ function createScriptTasks({ applyLavaMoat, buildType, policyOnly }) {
       }),
     );
 
-    const allSubtasks = [standardSubtask].map((subtask) =>
+    // Sentry subtask
+    const label = 'sentry-install';
+    const installSentrySubtask = createTask(
+      `${taskPrefix}:sentry`,
+      createNormalBundle({
+        buildTarget,
+        buildType,
+        destFilepath: `${label}.js`,
+        entryFilepath: `./src/app/renderer/${label}.ts`,
+        label,
+        policyOnly,
+      }),
+    );
+
+    const allSubtasks = [standardSubtask, installSentrySubtask].map((subtask) =>
       runInChildProcess(subtask, {
         applyLavaMoat,
         buildType,
@@ -249,6 +266,7 @@ function createFactoredBuild({
       if (policyOnly) {
         return;
       }
+
       const commonSet = sizeGroupMap.get('common');
       // create entry points for each file
       for (const [groupLabel, groupSet] of sizeGroupMap.entries()) {
@@ -283,6 +301,76 @@ function createFactoredBuild({
         }
       }
       console.log('Bundling done!');
+    });
+
+    await createBundle(buildConfiguration, { reloadOnChange });
+  };
+}
+
+/**
+ * Return a function that creates a single JavaScript bundle.
+ *
+ * @param {object} options - Build options.
+ * @param {BUILD_TARGETS} options.buildTarget - The current build target.
+ * @param {BuildType} options.buildType - The current build type (e.g. "main",
+ * "flask", etc.).
+ * @param {string} options.destFilepath - The file path the bundle should be
+ * written to.
+ * @param {string[]} options.entryFilepath - The entry point file path,
+ * relative to the repository root directory.
+ * @param {string} options.label - A label used to describe this bundle in any
+ * diagnostic messages.
+ * @param {boolean} options.policyOnly - Whether to stop the build after
+ * generating the LavaMoat policy, skipping any writes to disk other than the
+ * LavaMoat policy itself.
+ * @returns {Function} A function that creates the bundle.
+ */
+function createNormalBundle({
+  buildTarget,
+  buildType,
+  destFilepath,
+  entryFilepath,
+  label,
+  policyOnly,
+}) {
+  return async function () {
+    // create bundler setup and apply defaults
+    const buildConfiguration = createBuildConfiguration();
+    buildConfiguration.label = label;
+    const { bundlerOpts, events } = buildConfiguration;
+
+    // devMode options
+    const devMode = isDevBuild(buildTarget);
+    const reloadOnChange = Boolean(devMode);
+    const minify = Boolean(devMode) === false;
+
+    const envVars = await getEnvironmentVariables({
+      buildTarget,
+      buildType,
+    });
+
+    setupBundlerDefaults(buildConfiguration, {
+      buildTarget,
+      envVars,
+      policyOnly,
+      minify,
+      reloadOnChange,
+    });
+
+    // set bundle entries
+    bundlerOpts.entries = [entryFilepath];
+
+    // instrument pipeline
+    events.on('configurePipeline', ({ pipeline }) => {
+      // convert bundle stream to gulp vinyl stream
+      // and ensure file contents are buffered
+      pipeline.get('vinyl').push(source(destFilepath));
+      pipeline.get('vinyl').push(buffer());
+      // setup bundle destination
+
+      const dest = `./dist/ui/`;
+      const destination = policyOnly ? noopWriteStream : gulp.dest(dest);
+      pipeline.get('dest').push(destination);
     });
 
     await createBundle(buildConfiguration, { reloadOnChange });
@@ -498,13 +586,14 @@ async function createBundle(buildConfiguration, { reloadOnChange }) {
  * Get environment variables to inject in the current build.
  *
  * @param {object} options - Build options.
- * @param {BUILD_TARGETS} options._buildTarget - The current build target.
+ * @param {BUILD_TARGETS} options.buildTarget - The current build target.
  * @param {BuildType} options._buildType - The current build type (e.g. "main",
  * "flask", etc.).
  * @returns {object} A map of environment variables to inject.
  */
-async function getEnvironmentVariables({ _buildTarget, _buildType }) {
+async function getEnvironmentVariables({ buildTarget, _buildType }) {
   const config = await getConfig();
+  const environment = getEnvironment({ buildTarget });
 
   return {
     COMPATIBILITY_VERSION_DESKTOP: config.COMPATIBILITY_VERSION_DESKTOP,
@@ -516,6 +605,10 @@ async function getEnvironmentVariables({ _buildTarget, _buildType }) {
     INFURA_PROJECT_ID: config.INFURA_PROJECT_ID,
     SKIP_OTP_PAIRING_FLOW: config.SKIP_OTP_PAIRING_FLOW,
     WEB_SOCKET_PORT: config.WEB_SOCKET_PORT,
+    METAMASK_DEBUG: config.METAMASK_DEBUG,
+    METAMASK_ENVIRONMENT: environment,
+    SENTRY_DSN: config.SENTRY_DSN,
+    PACKAGE_VERSION: appVersion,
   };
 }
 
