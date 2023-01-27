@@ -359,7 +359,7 @@ jobs:
           at: .
       - run:
           name: build
-          command: yarn app dist:desktop:ui
+          command: yarn app build:ui:lavamoat:ci
       - run:
           name: Move dist to avoid conflicts
           command: mv ./${APP_DIR}/dist/ui ./${APP_DIR}/dist-ui-test-extension
@@ -376,7 +376,7 @@ jobs:
           at: .
       - run:
           name: build
-          command: yarn app build:ui:ci
+          command: yarn app build:ui:lavamoat:ci
       - run:
           name: Move dist to avoid conflicts
           command: mv ./${APP_DIR}/dist/ui ./${APP_DIR}/dist-ui-test-app
@@ -465,7 +465,7 @@ jobs:
 
   test-e2e-extension:
     executor: node-browsers
-    parallelism: 8
+    parallelism: 10
     steps:
       - checkout_with_submodule
       - run:
