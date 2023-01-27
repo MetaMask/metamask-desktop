@@ -1,4 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron';
+import { Properties } from '../../types/metrics';
 
 const uiStoreBridge = (name: string) => {
   return {
@@ -10,6 +11,14 @@ const uiStoreBridge = (name: string) => {
     },
     removeItem: async (key: string) => {
       await ipcRenderer.invoke(`${name}-store-delete`, key);
+    },
+  };
+};
+
+const analyticsBridge = (name: string) => {
+  return {
+    track: (eventName: string, properties: Properties) => {
+      return ipcRenderer.invoke(`${name}-track`, eventName, properties);
     },
   };
 };
@@ -59,6 +68,7 @@ const electronBridge = {
   setLanguage: async (language: string) => {
     await ipcRenderer.invoke('set-language', language);
   },
+  analytics: analyticsBridge('analytics'),
 };
 
 contextBridge.exposeInMainWorld('electronBridge', electronBridge);

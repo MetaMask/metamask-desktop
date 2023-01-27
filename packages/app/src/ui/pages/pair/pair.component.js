@@ -20,6 +20,8 @@ import {
 import Mascot from '../../components/mascot';
 import Spinner from '../../../../submodules/extension/ui/components/ui/spinner';
 import { URL_SUBMIT_TICKET } from '../../../shared/constants/links';
+// eslint-disable-next-line import/no-unresolved
+import { EVENT_NAMES } from '../../../src/app/metrics/metrics-constants';
 
 const ANIMATION_COMPLETE_DEFER_IN_MS = 1000;
 const OTP_VALIDATION_TIMEOUT_IN_MS = 5000;
@@ -75,12 +77,16 @@ const Pair = ({ isDesktopPaired, isSuccessfulPairSeen, history }) => {
         setOtpTimeoutError(true);
         setOtpValidating(false);
         setOtpDisabled(false);
+        window.electronBridge.analytics.track(EVENT_NAMES.INVALID_OTP, {
+          paired: false,
+          error: 'Timeout: no response when validating',
+        });
       }, OTP_VALIDATION_TIMEOUT_IN_MS + ANIMATION_COMPLETE_DEFER_IN_MS);
       setOtpValidationTimeoutId(timeoutId);
     }
   };
 
-  const handleOnSettinsIconClick = () => {
+  const handleOnSettingsIconClick = () => {
     history.push(SETTINGS_ROUTE);
   };
 
@@ -88,7 +94,7 @@ const Pair = ({ isDesktopPaired, isSuccessfulPairSeen, history }) => {
     <>
       <div
         className="mmd-pair-page__settings-icon"
-        onClick={handleOnSettinsIconClick}
+        onClick={handleOnSettingsIconClick}
       >
         <SettingIcon width="24" height="24" fill="var(--color-text-muted)" />
       </div>
