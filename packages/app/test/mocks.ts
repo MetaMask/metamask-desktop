@@ -34,6 +34,12 @@ export const RELEASE_MOCK = 'mock-release';
 export const SENTRY_DSN_MOCK = 'https://mock-dsn';
 export const METAMASK_ENVIRONMENT_DEV_MOCK = 'development';
 export const METAMASK_ENVIRONMENT_PROD_MOCK = 'production';
+export const EVENT_NAME_MOCK = 'mock-event-name';
+
+export const PROPERTIES_OBJECT_MOCK = {
+  prop1: 'value1',
+  prop2: 'value2',
+};
 
 export const NEW_CONNECTION_MESSAGE_MOCK = {
   clientId: CLIENT_ID_MOCK,
@@ -105,6 +111,8 @@ export const createExtensionConnectionMock =
 export const createElectronStoreMock = (): jest.Mocked<ElectronStore> =>
   ({
     clear: jest.fn(),
+    get: jest.fn(),
+    set: jest.fn(),
   } as any);
 
 export const createDesktopPairingMock = (): jest.Mocked<DesktopPairing> =>
