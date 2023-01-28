@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+EXTENSION_DIR="packages/app/submodules/extension"
+
 # Use common workspace in extension
 cd packages/app/submodules/extension
 yarn link ../../../common
@@ -18,3 +20,11 @@ fi
 if [ ! -f "packages/app/.env" ]; then
   cp packages/app/.env.example packages/app/.env
 fi
+
+# Ensure the React dependencies are identical in the extension and app to avoid two React instances at runtime in app UI
+echo "Linking extension dependencies to app"
+for DEPENDENCY in $(ls $EXTENSION_DIR/node_modules | grep react); do
+  rm -rf $EXTENSION_DIR/node_modules/$DEPENDENCY
+  ln -s ../../../node_modules/$DEPENDENCY/ $EXTENSION_DIR/node_modules/$DEPENDENCY
+  echo "Processed extension dependency: $DEPENDENCY"
+done

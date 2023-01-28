@@ -9,6 +9,7 @@ const configurationPropertyNames = [
   'DESKTOP_UI_FORCE_CLOSE',
   'DISABLE_WEB_SOCKET_ENCRYPTION',
   'INFURA_PROJECT_ID',
+  'METAMASK_DEBUG',
   'SKIP_OTP_PAIRING_FLOW',
   'WEB_SOCKET_PORT',
 ];
@@ -43,7 +44,14 @@ async function getConfig() {
     .filter((line) => line && !line.startsWith('#') && line.includes('='))
     .reduce((result, line) => {
       const lineParts = line.split('=');
-      result[lineParts[0]] = lineParts[1];
+      const variableName = lineParts[0];
+      let value = lineParts[1];
+
+      if (value === 'true') {
+        value = true;
+      }
+
+      result[variableName] = value;
       return result;
     }, {});
 

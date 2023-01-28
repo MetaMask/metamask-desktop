@@ -30,6 +30,9 @@ const lavamoatBrowserify = require('lavamoat-browserify');
 const terser = require('terser');
 
 const bifyModuleGroups = require('bify-module-groups');
+const {
+  generateIconNames,
+} = require('../../submodules/extension/development/generate-icon-names');
 
 const appVersion = require('../../package.json').version;
 
@@ -594,6 +597,7 @@ async function createBundle(buildConfiguration, { reloadOnChange }) {
 async function getEnvironmentVariables({ buildTarget, _buildType }) {
   const config = await getConfig();
   const environment = getEnvironment({ buildTarget });
+  const iconNames = await generateIconNames();
 
   return {
     COMPATIBILITY_VERSION_DESKTOP: config.COMPATIBILITY_VERSION_DESKTOP,
@@ -602,6 +606,7 @@ async function getEnvironmentVariables({ buildTarget, _buildType }) {
     DESKTOP_UI_ENABLE_DEV_TOOLS: config.DESKTOP_UI_ENABLE_DEV_TOOLS,
     DESKTOP_UI_FORCE_CLOSE: config.DESKTOP_UI_FORCE_CLOSE,
     DISABLE_WEB_SOCKET_ENCRYPTION: config.DISABLE_WEB_SOCKET_ENCRYPTION,
+    ICON_NAMES: iconNames,
     INFURA_PROJECT_ID: config.INFURA_PROJECT_ID,
     SKIP_OTP_PAIRING_FLOW: config.SKIP_OTP_PAIRING_FLOW,
     WEB_SOCKET_PORT: config.WEB_SOCKET_PORT,

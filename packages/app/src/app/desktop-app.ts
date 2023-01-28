@@ -35,6 +35,7 @@ import { setLanguage, t } from './utils/translation';
 import { setUiStorage } from './storage/ui-storage';
 import MetricsService from './metrics/metrics-service';
 import { EVENT_NAMES } from './metrics/metrics-constants';
+import { IPCRendererStream } from './ipc-renderer-stream';
 
 // Set protocol for deeplinking
 if (!cfg().isUnitTest) {
@@ -50,6 +51,8 @@ if (!cfg().isUnitTest) {
 }
 
 class DesktopApp extends EventEmitter {
+  public approvalStream?: IPCRendererStream;
+
   private extensionConnection?: ExtensionConnection;
 
   private additionalExtensionConnection?: ExtensionConnection;
@@ -153,6 +156,15 @@ class DesktopApp extends EventEmitter {
       return getDesktopVersion();
     });
 
+    ipcMain.on('show-approval-window', (_, show: boolean) => {
+      log.debug('Received show message', show);
+      if (show) {
+        this.UIState.approvalWindow?.show();
+      } else {
+        this.UIState.approvalWindow?.hide();
+      }
+    });
+
     setUiStorage(uiAppStorage);
     setUiStorage(uiPairStatusStorage);
 
@@ -177,6 +189,15 @@ class DesktopApp extends EventEmitter {
         openAtLogin: true,
         startedAt: new Date(),
       });
+    }
+
+    if (cfg().enableDesktopPopup) {
+      await this.windowService.createApprovalWindow();
+
+      this.approvalStream = new IPCRendererStream(
+        this.UIState.approvalWindow as any,
+        'approval-ui',
+      );
     }
 
     log.debug('Initialised desktop app');

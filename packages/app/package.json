@@ -431,7 +431,7 @@
       "@keystonehq/metamask-airgapped-keyring>@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>secp256k1": false,
       "@keystonehq/metamask-airgapped-keyring>@keystonehq/base-eth-keyring>hdkey>secp256k1": false,
       "@keystonehq/metamask-airgapped-keyring>@keystonehq/bc-ur-registry-eth>hdkey>secp256k1": false,
-      "@ledgerhq/hw-transport-node-hid-noevents>node-hid": true,
+      "@ledgerhq/hw-transport-node-hid-noevents>node-hid": false,
       "@metamask/address-book-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak": false,
       "@metamask/address-book-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1": false,
       "@metamask/announcement-controller>@metamask/base-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak": false,
@@ -576,7 +576,8 @@
       "eth-json-rpc-filters>eth-json-rpc-middleware>ethereumjs-util>ethereum-cryptography>secp256k1": false,
       "eth-sig-util>ethereumjs-util>ethereum-cryptography>secp256k1": false,
       "@storybook/test-runner>playwright": false,
-      "memoizee>es5-ext": false
+      "memoizee>es5-ext": false,
+      "global-agent>core-js": false
     }
   }
 }

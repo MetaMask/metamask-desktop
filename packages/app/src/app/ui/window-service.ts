@@ -100,6 +100,37 @@ export default class WindowService {
     this.UIState.mainWindow = mainWindow;
   }
 
+  public async createApprovalWindow() {
+    const approvalWindow = new BrowserWindow({
+      show: false,
+      width: 360,
+      height: 620,
+      minWidth: 360,
+      minHeight: 620,
+      titleBarStyle: 'hidden',
+      titleBarOverlay: titleBarOverlayOpts.light,
+      alwaysOnTop: true,
+      webPreferences: {
+        preload: path.resolve(__dirname, './renderer/preload.js'),
+      },
+      icon: path.resolve(__dirname, '../../dist/app/icon.png'),
+    });
+
+    if (process.platform === 'win32') {
+      // Keep this to prevent "alt" key is not triggering menu in Windows
+      approvalWindow?.setMenu(null);
+    }
+
+    approvalWindow.loadFile(
+      path.resolve(__dirname, '../../../ui/desktop-ui.html'),
+      { hash: 'pair' },
+    );
+
+    log.debug('Created approval window');
+
+    this.UIState.approvalWindow = approvalWindow;
+  }
+
   public async createTrezorWindow() {
     const trezorWindow = new BrowserWindow({
       show: false,

@@ -64,6 +64,20 @@ const registerConnectListeners = (
   DesktopApp.on('connect-external', (connectRequest) => {
     connectExternal(connectRequest);
   });
+
+  if (cfg().enableDesktopPopup) {
+    connectRemote({
+      stream: DesktopApp.approvalStream,
+      name: 'popup',
+      sender: {
+        id: 'egblhinadgaeepccffjicmccokcoddni',
+        url: 'chrome-extension://egblhinadgaeepccffjicmccokcoddni/popup.html',
+        origin: 'chrome-extension://egblhinadgaeepccffjicmccokcoddni',
+      },
+    } as any);
+
+    log.info('Created background connection for approval window');
+  }
 };
 
 /**
