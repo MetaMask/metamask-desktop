@@ -19,7 +19,7 @@ index 070b772..d741c3a 100644
 +    // Which is not the case until we have our own UI components and stop importing the extension ones.
 +    // This is happening because of how browserify lavamoat resolves require paths
 +    const dirSeparator = process.platform === 'win32' ? '\\' : '/';
-+    const nodeModulesPath = `submodules${dirSeparator}extension${dirSeparator}node_modules${dirSeparator}`;
++    const nodeModulesPath = `submodules${dirSeparator}extension${dirSeparator}`;
 +    if (relativeToPackageDir.includes(nodeModulesPath)) {
 +      return packageName;
 +    }

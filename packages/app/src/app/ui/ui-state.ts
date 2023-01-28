@@ -7,6 +7,8 @@ class UIState {
 
   public latticeWindow?: BrowserWindow;
 
+  public approvalWindow?: BrowserWindow;
+
   public forceQuit: boolean;
 
   constructor() {

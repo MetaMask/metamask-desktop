@@ -3382,12 +3382,12 @@ __metadata:
 
 "@lavamoat/aa@patch:@lavamoat/aa@npm%3A3.1.0#./.yarn/patches/@lavamoat-aa-npm-3.1.0-edf86c24f7.patch::locator=desktop%40workspace%3A.":
   version: 3.1.0
-  resolution: "@lavamoat/aa@patch:@lavamoat/aa@npm%3A3.1.0#./.yarn/patches/@lavamoat-aa-npm-3.1.0-edf86c24f7.patch::version=3.1.0&hash=5c499f&locator=desktop%40workspace%3A."
+  resolution: "@lavamoat/aa@patch:@lavamoat/aa@npm%3A3.1.0#./.yarn/patches/@lavamoat-aa-npm-3.1.0-edf86c24f7.patch::version=3.1.0&hash=58baf7&locator=desktop%40workspace%3A."
   dependencies:
     resolve: ^1.20.0
   bin:
     lavamoat-ls: src/cli.js
-  checksum: 906e593f07fa579abc69367113c7492172c89b9f59a27f73628dbcc8b355812a7235322cb27dc5f53b7922c76726382be2800e70c20217a9240a93f5fcf48ccc
+  checksum: c129fea958b57ee355ddec8bad573dafce337535e4f5d9eb854a327ae52d73f10ac618ba83a2247eafc00adf512f49c06f2a5414f54d8cfee87abf64d0951016
   languageName: node
   linkType: hard
 

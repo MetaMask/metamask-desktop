@@ -9,6 +9,14 @@ import { I18nProvider } from '../contexts/i18n';
 import { EVENT_NAMES } from '../../app/metrics/metrics-constants';
 import Routes from './routes';
 import CriticalError from './error/critical-error.component';
+import {
+  I18nProvider as ExtensionI18nProvider,
+  LegacyI18nProvider,
+} from '../../submodules/extension/ui/contexts/i18n';
+import {
+  MetaMetricsProvider,
+  LegacyMetaMetricsProvider,
+} from '../../submodules/extension/ui/contexts/metametrics';
 
 class Root extends PureComponent {
   state = {};
@@ -41,9 +49,17 @@ class Root extends PureComponent {
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <HashRouter>
-            <I18nProvider>
-              <Routes />
-            </I18nProvider>
+            <MetaMetricsProvider>
+              <LegacyMetaMetricsProvider>
+                <I18nProvider>
+                  <ExtensionI18nProvider>
+                    <LegacyI18nProvider>
+                      <Routes />
+                    </LegacyI18nProvider>
+                  </ExtensionI18nProvider>
+                </I18nProvider>
+              </LegacyMetaMetricsProvider>
+            </MetaMetricsProvider>
           </HashRouter>
         </PersistGate>
       </Provider>

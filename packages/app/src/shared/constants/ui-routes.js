@@ -9,6 +9,7 @@ const SETTINGS_ROUTE = '/settings';
 const GENERAL_ROUTE = '/settings/general';
 const ABOUT_US_ROUTE = '/settings/about-us';
 const PRIVACY_ROUTE = '/settings/privacy';
+const CONFIRMATION_ROUTE = '/confirmation';
 
 export {
   PAIR_PAGE,
@@ -21,4 +22,5 @@ export {
   GENERAL_ROUTE,
   ABOUT_US_ROUTE,
   PRIVACY_ROUTE,
+  CONFIRMATION_ROUTE,
 };

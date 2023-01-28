@@ -24,6 +24,7 @@ const loadConfig = () => {
       : compatibilityVersionDesktop;
 
   return {
+    enableDesktopPopup: envBool(process.env.DESKTOP_POPUP),
     enableUpdates: envBool(process.env.DESKTOP_ENABLE_UPDATES),
     isExtensionTest: envBool(process.env.IN_TEST),
     isAppTest,

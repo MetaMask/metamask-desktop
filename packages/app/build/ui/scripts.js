@@ -30,6 +30,9 @@ const lavamoatBrowserify = require('lavamoat-browserify');
 const terser = require('terser');
 
 const bifyModuleGroups = require('bify-module-groups');
+const {
+  generateIconNames,
+} = require('../../submodules/extension/development/generate-icon-names');
 
 const appVersion = require('../../package.json').version;
 
