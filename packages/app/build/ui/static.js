@@ -84,6 +84,10 @@ function getCopyTargets(shouldIncludeLockdown) {
       dest: `vendor`,
     },
     {
+      src: `./submodules/extension/app/_locales/`,
+      dest: `_locales`,
+    },
+    {
       src: `./node_modules/@fortawesome/fontawesome-free/webfonts/`,
       dest: `fonts/fontawesome`,
     },
