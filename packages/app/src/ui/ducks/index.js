@@ -10,8 +10,8 @@ import confirmTransactionReducer from '../../submodules/extension/ui/ducks/confi
 import metamaskReducer from '../../submodules/extension/ui/ducks/metamask/metamask';
 import domainsReducer from '../../submodules/extension/ui/ducks/domains';
 import gasReducer from '../../submodules/extension/ui/ducks/gas/gas.duck';
+import localeMessagesReducer from '../../submodules/extension/ui/ducks/locale/locale';
 import appReducer from './app/app';
-import localeMessagesReducer from './localeMessages/localeMessages';
 import pairStatusReducer from './pair-status/pair-status';
 
 const pairStatusPersistConfig = {
