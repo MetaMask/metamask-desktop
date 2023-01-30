@@ -32,6 +32,8 @@ import AppEvents from './app-events';
 import WindowService from './window-service';
 import UIState from './ui-state';
 import { setUiStorage } from './ui-storage';
+import MetricsService from './metrics/metrics-service';
+import { EVENT_NAMES } from './metrics/metrics-constants';
 
 // Set protocol for deeplinking
 if (!cfg().isUnitTest) {
@@ -61,8 +63,11 @@ class DesktopApp extends EventEmitter {
 
   private UIState: typeof UIState;
 
+  private metricsService: typeof MetricsService;
+
   constructor() {
     super();
+    this.metricsService = MetricsService;
     this.UIState = UIState;
     this.appNavigation = new AppNavigation();
     this.appEvents = new AppEvents();
@@ -218,6 +223,11 @@ class DesktopApp extends EventEmitter {
     extensionConnection.on('paired', () => {
       this.status.isDesktopPaired = true;
       this.appNavigation.setPairedTrayIcon();
+      // send metrics to Segment
+      this.metricsService.track(EVENT_NAMES.DESKTOP_APP_PAIRED, {
+        paired: true,
+        createdAt: new Date(),
+      });
     });
 
     extensionConnection.getPairing().on('invalid-otp', () => {

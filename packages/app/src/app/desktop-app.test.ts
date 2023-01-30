@@ -25,9 +25,11 @@ jest.mock('./app-navigation');
 jest.mock('./app-events');
 jest.mock('./window-service');
 jest.mock('./ui-state');
+jest.mock('./metrics/analytics');
 jest.mock('./ui-storage', () => ({
   setUiStorage: jest.fn(),
 }));
+jest.mock('./metrics/metrics-service', () => jest.fn(), { virtual: true });
 
 jest.mock('@metamask/desktop/dist/browser', () => ({
   browser: { storage: { local: { get: jest.fn(), set: jest.fn() } } },
