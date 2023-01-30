@@ -95,14 +95,10 @@ class MetricsService {
   }
 
   private checkParticipateInDesktopMetrics(): boolean | undefined {
-    const desktopMetricsOptInValue = readPersistedSettingFromAppState({
+    const desktopMetricsOptIn = readPersistedSettingFromAppState({
       defaultValue: undefined,
       key: 'metametricsOptIn',
     });
-    const desktopMetricsOptIn =
-      typeof desktopMetricsOptInValue === 'string'
-        ? desktopMetricsOptInValue === 'true'
-        : desktopMetricsOptInValue;
 
     // Flush events saved before user opt-in
     if (desktopMetricsOptIn && this.eventsBeforeMetricsOptIn?.length > 0) {
@@ -119,6 +115,7 @@ class MetricsService {
     });
 
     this.eventsBeforeMetricsOptIn = [];
+    this.store.set('eventsBeforeMetricsOptIn', []);
   }
 
   private saveCallSegmentAPI(event: Event) {
