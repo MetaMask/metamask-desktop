@@ -1,0 +1,50 @@
+@import '../../../submodules/extension/ui/css/reset.scss';
+@import '../../../submodules/extension/ui/css/design-system/index';
+@import '../../../submodules/extension/ui/css/utilities/colors.scss';
+@import '../../../submodules/extension/ui/css/base-styles.scss';
+@import '../../../submodules/extension/ui/css/itcss/settings/index';
+@import '../../../node_modules/@metamask/design-tokens/src/css/design-tokens';
+
+// Imported partials
+// @import '../../submodules/extension/ui/components/app/app-components';
+@import '../../../submodules/extension/ui/components/app/tab-bar/index.scss';
+
+// Imported partials
+// @import '../../submodules/extension/ui/components/ui/ui-components';
+@import '../../../submodules/extension/ui/components/ui/button/buttons.scss';
+@import '../../../submodules/extension/ui/components/ui/chip/chip.scss';
+@import '../../../submodules/extension/ui/components/ui/typography/typography.scss';
+@import '../../../submodules/extension/ui/components/ui/box/box.scss';
+@import '../../../submodules/extension/ui/components/ui/dropdown/dropdown.scss';
+@import '../../../submodules/extension/ui/components/ui/toggle-button/index.scss';
+
+$title-bar-height: 32px;
+
+body {
+  background-color: var(--color-background-default);
+}
+
+#mmd-root {
+  height: 100%;
+  width: 100%;
+  overflow-y: scroll;
+  padding-top: $title-bar-height;
+}
+
+#mmd-app-content {
+  padding: 0 16px;
+  height: 100%;
+  position: relative;
+}
+
+#mmd-draggable-hidden-bar {
+  height: $title-bar-height;
+  width: 100%;
+  -webkit-app-region: drag;
+  position: fixed;
+  top: 0;
+  background-color: var(--color-background-default);
+}
+
+@import '../pages/mmd-pages.scss';
+@import '../components/mmd-components.scss';

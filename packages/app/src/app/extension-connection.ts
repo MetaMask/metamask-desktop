@@ -35,9 +35,9 @@ import {
 import {
   registerRequestStream,
   unregisterRequestStream,
-} from '../browser/node-browser';
-import { DesktopPairing } from '../shared/pairing';
-import { DesktopVersionCheck } from '../shared/version-check';
+} from './browser/node-browser';
+import { DesktopVersionCheck } from './version-check';
+import { DesktopPairing } from './pairing';
 
 export default class ExtensionConnection extends EventEmitter {
   private stream: Duplex;

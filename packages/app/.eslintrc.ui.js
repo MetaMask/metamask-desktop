@@ -15,6 +15,10 @@ module.exports = {
   rules: {
     'no-shadow': 'off',
     'jsdoc/require-jsdoc': 'off',
+    'jsdoc/require-param-description': 'off',
+    'jsdoc/require-param-type': 'off',
+    'jsdoc/require-returns': 'off',
+    'jsdoc/require-description': 'off',
     'react/no-unused-prop-types': 'error',
     'react/no-unused-state': 'error',
     'react/jsx-boolean-value': 'error',
@@ -47,7 +51,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['ui/**/*.ts'],
+      files: ['src/ui/**/*.ts'],
       extends: ['.eslintrc.typescript.js'],
     },
   ],
