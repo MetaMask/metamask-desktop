@@ -5,7 +5,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['src/**/*.js'],
+      files: ['src/app/**/*.js'],
       extends: ['.eslintrc.node.js'],
       parserOptions: {
         ecmaVersion: 11,
@@ -13,7 +13,7 @@ module.exports = {
       },
     },
     {
-      files: ['src/**/*.ts'],
+      files: ['src/app/**/*.ts'],
       extends: ['.eslintrc.typescript.js'],
     },
   ],

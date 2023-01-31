@@ -1,8 +1,9 @@
 #!/bin/sh
 
 OUTPUT_DIR="dist/app"
+APP_DIR="src/app"
 OUTPUT_HTML_DIR="$OUTPUT_DIR/html"
-SOURCE_HTML_DIR="html"
+SOURCE_HW_DIR="$APP_DIR/hw"
 EXTENSION_DIR="submodules/extension"
 OUTPUT_EXTENSION_DIR="$OUTPUT_DIR/$EXTENSION_DIR"
 OUTPUT_APP_DIR="$OUTPUT_EXTENSION_DIR/app"
@@ -14,10 +15,11 @@ rm -rf $OUTPUT_DIR
 echo "Creating directories"
 mkdir -p $OUTPUT_HTML_DIR
 mkdir -p $OUTPUT_APP_DIR
+mkdir -p $OUTPUT_DIR/src/app/icons
 
-echo "Copying HTML"
-cp $SOURCE_HTML_DIR/desktop-trezor.html $OUTPUT_HTML_DIR/desktop-trezor.html
-cp $SOURCE_HTML_DIR/desktop-lattice.html $OUTPUT_HTML_DIR/desktop-lattice.html
+echo "Copying HW HTML files"
+cp $SOURCE_HW_DIR/trezor/desktop-trezor.html $OUTPUT_HTML_DIR/desktop-trezor.html
+cp $SOURCE_HW_DIR/lattice/desktop-lattice.html $OUTPUT_HTML_DIR/desktop-lattice.html
 
 echo "Copying locales"
 cp -r $EXTENSION_APP_DIR/_locales $OUTPUT_APP_DIR/_locales
@@ -27,6 +29,7 @@ mkdir -p $OUTPUT_APP_DIR/build-types/desktop/images
 mkdir -p $OUTPUT_APP_DIR/build-types/flask/images
 cp $EXTENSION_APP_DIR/build-types/desktop/images/desktop-mascot.json $OUTPUT_APP_DIR/build-types/desktop/images/
 cp $EXTENSION_APP_DIR/build-types/flask/images/flask-mascot.json $OUTPUT_APP_DIR/build-types/flask/images/
+cp -r $APP_DIR/icons $OUTPUT_DIR/src/app
 
 # Export all shell variables
 set -a

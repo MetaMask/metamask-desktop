@@ -14,11 +14,11 @@ import {
   getDesktopState,
 } from '@metamask/desktop/dist/utils/state';
 import EncryptedWebSocketStream from '@metamask/desktop/dist/encryption/web-socket-stream';
-import { StatusMessage } from '../types/message';
-import { forwardEvents } from '../utils/events';
-import { determineLoginItemSettings } from '../utils/settings';
-import cfg from '../utils/config';
-import { getDesktopVersion } from '../utils/version';
+import { StatusMessage } from './types/message';
+import { forwardEvents } from './utils/events';
+import { determineLoginItemSettings } from './utils/settings';
+import cfg from './utils/config';
+import { getDesktopVersion } from './utils/version';
 import ExtensionConnection from './extension-connection';
 import { updateCheck } from './update-check';
 import {
@@ -26,12 +26,12 @@ import {
   protocolKey,
   uiAppStorage,
   uiPairStatusStorage,
-} from './ui-constants';
-import AppNavigation from './app-navigation';
-import AppEvents from './app-events';
-import WindowService from './window-service';
-import UIState from './ui-state';
-import { setUiStorage } from './ui-storage';
+} from './ui/ui-constants';
+import AppNavigation from './ui/app-navigation';
+import AppEvents from './ui/app-events';
+import WindowService from './ui/window-service';
+import UIState from './ui/ui-state';
+import { setUiStorage } from './storage/ui-storage';
 import MetricsService from './metrics/metrics-service';
 import { EVENT_NAMES } from './metrics/metrics-constants';
 
@@ -113,7 +113,9 @@ class DesktopApp extends EventEmitter {
 
     ipcMain.handle('set-theme', (event, theme) => {
       const win = BrowserWindow.fromWebContents(event.sender);
-      win?.setTitleBarOverlay?.(titleBarOverlayOpts[theme]);
+      win?.setTitleBarOverlay?.(
+        titleBarOverlayOpts[theme as keyof typeof titleBarOverlayOpts],
+      );
     });
 
     ipcMain.handle('open-external', (_event, link) => {
