@@ -73,3 +73,11 @@ jobs:
           CSC_LINK: ${{ secrets.MMD_MAC_CSC_BASE64_DEV }}
           CSC_KEY_PASSWORD: ${{ secrets.MMD_MAC_CSC_KEY_PASSWORD_DEV }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Persist artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: packaged-apps
+          path: |
+            packages/app/packages/*.dmg
+            packages/app/packages/*.AppImage
+            packages/app/packages/*.exe
