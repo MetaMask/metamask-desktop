@@ -6,9 +6,7 @@ const sourcemaps = require('gulp-sourcemaps');
 const rtlcss = require('gulp-rtlcss');
 const rename = require('gulp-rename');
 const pump = pify(require('pump'));
-const {
-  TASKS,
-} = require('../../submodules/extension/development/build/constants');
+const { TASKS } = require('./constants');
 const { createTask } = require('./task');
 
 let sass;

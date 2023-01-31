@@ -3,9 +3,7 @@ const fs = require('fs-extra');
 const watch = require('gulp-watch');
 const glob = require('fast-glob');
 
-const {
-  TASKS,
-} = require('../../submodules/extension/development/build/constants');
+const { TASKS } = require('./constants');
 const { createTask, composeSeries } = require('./task');
 
 const EMPTY_JS_FILE = '../../submodules/extension/development/empty.js';
