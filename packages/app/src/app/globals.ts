@@ -121,7 +121,7 @@ if (!global.self) {
 
           return shouldShareMetrics;
         },
-      }),
+      }) as Integration,
       new Dedupe() as Integration,
       new ExtraErrorData() as Integration,
     ],
