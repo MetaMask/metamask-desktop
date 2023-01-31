@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
-import { Route, Switch, useHistory, Redirect } from 'react-router-dom';
+import { Route, Switch, useHistory } from 'react-router-dom';
 
 import {
   SETTINGS_ROUTE,
@@ -22,15 +22,18 @@ import Confirmation from '../../../submodules/extension/ui/pages/confirmation';
 import {
   CONFIRM_TRANSACTION_ROUTE,
   CONNECT_ROUTE,
+  DEFAULT_ROUTE,
 } from '../../../submodules/extension/ui/helpers/constants/routes';
 import PermissionsConnect from '../../../submodules/extension/ui/pages/permissions-connect';
 import ConfirmTransaction from '../../../submodules/extension/ui/pages/confirm-transaction';
+import Loading from '../loading/loading.component';
 
 const Routes = ({
   theme,
-  pendingApprovals,
-  firstPermissionsRequestId,
-  unconfirmedTransactionsCount,
+  hasPendingApproval,
+  hasPendingPermissionApproval,
+  hasPendingTransactionApproval,
+  permissionRequestId,
 }) => {
   useDeeplinkRegister();
   useEffect(() => {
@@ -43,28 +46,28 @@ const Routes = ({
   useEffect(() => {
     let requiredRoute;
 
-    if (firstPermissionsRequestId) {
-      requiredRoute = `${CONNECT_ROUTE}/${firstPermissionsRequestId}`;
-    } else if (unconfirmedTransactionsCount > 0) {
+    if (hasPendingPermissionApproval) {
+      requiredRoute = `${CONNECT_ROUTE}/${permissionRequestId}`;
+    } else if (hasPendingTransactionApproval) {
       requiredRoute = CONFIRM_TRANSACTION_ROUTE;
-    } else if (pendingApprovals.length > 0) {
+    } else if (hasPendingApproval) {
       requiredRoute = CONFIRMATION_ROUTE;
     }
 
     if (isApproving && !requiredRoute) {
       setApproving(false);
-      window.electronBridge.showApprovalWindow(false);
+      history.push(DEFAULT_ROUTE);
     }
 
     if (!isApproving && requiredRoute) {
       history.push(requiredRoute);
       setApproving(true);
-      window.electronBridge.showApprovalWindow(true);
     }
   }, [
-    pendingApprovals,
-    firstPermissionsRequestId,
-    unconfirmedTransactionsCount,
+    hasPendingPermissionApproval,
+    hasPendingTransactionApproval,
+    hasPendingApproval,
+    permissionRequestId,
     isApproving,
     history,
   ]);
@@ -76,6 +79,7 @@ const Routes = ({
   return (
     <div id="mmd-app-content">
       <Switch>
+        <Route path={DEFAULT_ROUTE} component={Loading} exact />
         <Route path={PAIR_ROUTE} component={Pair} />
         <Route path={SUCCESSFUL_PAIR_ROUTE} component={SuccessfulPair} />
         <Route path={SETTINGS_ROUTE} component={Settings} />
@@ -104,9 +108,10 @@ Routes.propTypes = {
    * Theme name from app state
    */
   theme: PropTypes.string,
-  pendingApprovals: PropTypes.any,
-  firstPermissionsRequestId: PropTypes.string,
-  unconfirmedTransactionsCount: PropTypes.number,
+  hasPendingApproval: PropTypes.bool,
+  hasPendingPermissionApproval: PropTypes.bool,
+  hasPendingTransactionApproval: PropTypes.bool,
+  permissionRequestId: PropTypes.string,
 };
 
 export default Routes;
