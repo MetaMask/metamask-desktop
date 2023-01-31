@@ -103,12 +103,13 @@ export default class WindowService {
       minHeight: 620,
       titleBarStyle: 'hidden',
       titleBarOverlay: titleBarOverlayOpts.light,
-      alwaysOnTop: true,
       webPreferences: {
         preload: path.resolve(__dirname, './renderer/preload.js'),
       },
       icon: path.resolve(__dirname, '../../dist/app/icon.png'),
     });
+
+    approvalWindow.setAlwaysOnTop(true, 'screen-saver');
 
     if (process.platform === 'win32') {
       // Keep this to prevent "alt" key is not triggering menu in Windows
@@ -117,7 +118,7 @@ export default class WindowService {
 
     approvalWindow.loadFile(
       path.resolve(__dirname, '../../../ui/desktop-ui.html'),
-      { hash: 'pair' },
+      { hash: '/' },
     );
 
     log.debug('Created approval window');

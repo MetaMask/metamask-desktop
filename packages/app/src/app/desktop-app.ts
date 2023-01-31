@@ -205,15 +205,6 @@ class DesktopApp extends EventEmitter {
         });
     });
 
-    ipcMain.on('show-approval-window', (_, show: boolean) => {
-      log.debug('Received show message', show);
-      if (show) {
-        this.UIState.approvalWindow?.show();
-      } else {
-        this.UIState.approvalWindow?.hide();
-      }
-    });
-
     setUiStorage(uiAppStorage);
     setUiStorage(uiPairStatusStorage);
 
@@ -272,6 +263,22 @@ class DesktopApp extends EventEmitter {
     }
 
     this.UIState.latticeWindow.webContents.send(channel, ...args);
+  }
+
+  public onApprovalStateChange(state: any) {
+    if (
+      (state.pendingApprovalCount || 0) > 0 ||
+      Object.keys(state.unapprovedTxs || {}).length > 0 ||
+      (state.unapprovedTypedMessagesCount || 0) > 0 ||
+      (state.unapprovedMsgCount || 0) > 0 ||
+      (state.unapprovedPersonalMsgCount || 0) > 0 ||
+      (state.unapprovedDecryptMsgCount || 0) > 0 ||
+      (state.unapprovedEncryptionPublicKeyMsgCount || 0) > 0
+    ) {
+      this.UIState.approvalWindow?.show();
+    } else {
+      this.UIState.approvalWindow?.hide();
+    }
   }
 
   private updateMainWindow() {

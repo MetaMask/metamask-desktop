@@ -4,26 +4,27 @@ import { compose } from 'redux';
 
 import { getTheme } from '../../ducks/app/app';
 import {
-  getFirstPermissionRequestId,
+  getFirstPermissionRequest,
   getUnapprovedTemplatedConfirmations,
   unconfirmedTransactionsCountSelector,
-} from '../../selectors';
+} from '../../../submodules/extension/ui/selectors';
 import Routes from './routes.component';
 
 function mapStateToProps(state) {
   const stateLoaded = state.metamask.desktopEnabled;
 
+  const permissionRequest = stateLoaded
+    ? getFirstPermissionRequest(state)
+    : null;
+
   return {
     theme: getTheme(state),
-    pendingApprovals: stateLoaded
-      ? getUnapprovedTemplatedConfirmations(state)
-      : [],
-    firstPermissionsRequestId: stateLoaded
-      ? getFirstPermissionRequestId(state)
-      : undefined,
-    unconfirmedTransactionsCount: stateLoaded
-      ? unconfirmedTransactionsCountSelector(state)
-      : 0,
+    hasPendingApproval:
+      stateLoaded && getUnapprovedTemplatedConfirmations(state).length > 0,
+    hasPendingPermissionApproval: stateLoaded && Boolean(permissionRequest),
+    hasPendingTransactionApproval:
+      stateLoaded && unconfirmedTransactionsCountSelector(state) > 0,
+    permissionRequestId: permissionRequest?.metadata?.id,
   };
 }
 

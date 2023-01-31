@@ -93,6 +93,20 @@ const initialize = async () => {
     getPortStream,
     getOrigin,
     createSnapExecutionService,
+    storeListeners: [
+      [
+        [
+          'approvalController',
+          'txController',
+          'typedMessageManager',
+          'messageManager',
+          'personalMessageManager',
+          'decryptMessageManager',
+          'encryptionPublicKeyManager',
+        ],
+        (state: any) => DesktopApp.onApprovalStateChange(state),
+      ],
+    ],
     keyrings: {
       trezor: TrezorKeyring,
       ledger: LedgerKeyring,
