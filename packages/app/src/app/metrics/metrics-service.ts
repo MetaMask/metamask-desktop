@@ -13,7 +13,7 @@ import {
 } from '../types/metrics';
 import { readPersistedSettingFromAppState } from '../storage/ui-storage';
 import Analytics from './analytics';
-import { MetricsDecision } from './metrics-constants';
+import { EVENT_NAMES, MetricsDecision } from './metrics-constants';
 
 class MetricsService {
   private store: Store<MetricsState>;
@@ -40,6 +40,16 @@ class MetricsService {
       name: `mmd-desktop-metrics`,
     });
 
+    // Creates an object with the events and set the value first time event to true
+    const defaultFirstTimeEvents: FirstTimeEvents = {};
+    for (const event of Object.values(EVENT_NAMES)) {
+      defaultFirstTimeEvents[event] = true;
+    }
+
+    this.firstTimeEvents = this.store.get(
+      'firstTimeEvents',
+      defaultFirstTimeEvents,
+    );
     this.desktopMetricsId = this.store.get('desktopMetricsId', '');
     this.eventsSavedBeforeMetricsDecision = this.store.get(
       'eventsSavedBeforeMetricsDecision',
@@ -63,6 +73,8 @@ class MetricsService {
       messageId: uuid(),
     };
 
+    this.checkAndUpdateFirstTimeEvent(eventToTrack.event);
+
     log.debug('track event', eventToTrack);
 
     const metricsDecision = this.getMetricsDecision();
@@ -75,25 +87,15 @@ class MetricsService {
 
     this.analytics.track(eventToTrack);
     this.saveCallSegmentAPI(eventToTrack);
-
-    this.checkFirstTimeEvent(eventToTrack.event);
   }
 
-  private checkFirstTimeEvent(eventName: string): boolean {
-    const isFirstTimeEvent = this.firstTimeEvents[eventName];
-    if (!isFirstTimeEvent) {
-      // false
-      return isFirstTimeEvent;
+  private checkAndUpdateFirstTimeEvent(eventName: string) {
+    if (!this.firstTimeEvents[eventName]) {
+      return;
     }
     this.firstTimeEvents[eventName] = false;
-    return true;
 
-    // for (const eventSaved of Object.values(this.saveCallSegmentAPI)) {
-    //   if (eventName === eventSaved.event) {
-    //     return true;
-    //   }
-    // }
-    // return false;
+    this.store.set('firstTimeEvents', this.firstTimeEvents);
   }
 
   /* The identify method lets you tie a user to their actions and record

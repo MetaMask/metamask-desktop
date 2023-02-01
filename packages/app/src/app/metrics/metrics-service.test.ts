@@ -33,6 +33,8 @@ jest.mock(
               return {};
             case 'eventsSavedBeforeMetricsDecision':
               return [];
+            case 'firstTimeEvents':
+              return { 'mock-event-name': true, 'mock-event-name-2': true };
             default:
               return undefined;
           }

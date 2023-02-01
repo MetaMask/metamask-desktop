@@ -30,9 +30,9 @@ export interface SegmentApiCalls {
 }
 
 export interface MetricsState {
-  participateInDesktopMetrics: boolean;
   desktopMetricsId?: string;
   eventsSavedBeforeMetricsDecision: Event[];
   traits: Traits;
   segmentApiCalls: SegmentApiCalls;
+  firstTimeEvents: FirstTimeEvents;
 }
