@@ -13,7 +13,7 @@ import {
   createExtensionConnectionMock,
 } from '../../test/mocks';
 import { simulateNodeEvent } from '../../test/utils';
-import cfg from '../utils/config';
+import cfg from './utils/config';
 import ExtensionConnection from './extension-connection';
 import { updateCheck } from './update-check';
 import DesktopApp from './desktop-app';
@@ -21,13 +21,15 @@ import DesktopApp from './desktop-app';
 jest.mock('extension-port-stream');
 jest.mock('@metamask/desktop/dist/encryption/web-socket-stream');
 jest.mock('./extension-connection');
-jest.mock('./app-navigation');
-jest.mock('./app-events');
-jest.mock('./window-service');
-jest.mock('./ui-state');
-jest.mock('./ui-storage', () => ({
+jest.mock('./ui/app-navigation');
+jest.mock('./ui/app-events');
+jest.mock('./ui/window-service');
+jest.mock('./ui/ui-state');
+jest.mock('./metrics/analytics');
+jest.mock('./storage/ui-storage', () => ({
   setUiStorage: jest.fn(),
 }));
+jest.mock('./metrics/metrics-service', () => jest.fn(), { virtual: true });
 
 jest.mock('@metamask/desktop/dist/browser', () => ({
   browser: { storage: { local: { get: jest.fn(), set: jest.fn() } } },

@@ -9,8 +9,9 @@
   "scripts": {
     "build": "yarn common build && concurrently -n extension,ui,app  \"yarn extension build:desktop:extension\" \"yarn app build:ui\"  \"yarn app build:app\"",
     "build:lavamoat": "yarn common build && concurrently -n extension,ui,app  \"yarn extension build:desktop:extension:lavamoat\" \"yarn app build:ui:lavamoat\"  \"yarn app build:app:prod\"",
-    "build:test:app": "yarn common build && concurrently -n extension,ui,app  \"yarn extension build:test:desktop:app\" \"yarn app build:ui\"  \"yarn app build:app:test:app\"",
-    "build:test:extension": "yarn common build && concurrently -n extension,ui,app  \"yarn extension build:test:desktop:extension\" \"yarn app build:ui\"  \"yarn app build:app:test:extension\"",
+    "build:test:app": "yarn common build && concurrently -n extension,ui,app  \"yarn extension build:test:desktop:app\" \"yarn app build:ui:lavamoat\"  \"yarn app build:app:test:app\"",
+    "build:test:extension": "yarn common build && concurrently -n extension,ui,app  \"yarn extension build:test:desktop:extension\" \"yarn app build:ui:lavamoat\"  \"yarn app build:app:test:extension\"",
+    "build:test:extension:mv3": "yarn common build && concurrently -n extension,ui,app  \"ENABLE_MV3=true yarn extension build:test:desktop:extension\" \"yarn app build:ui:lavamoat\"  \"yarn app build:app:test:extension\"",
     "lint:lockfile": "lockfile-lint --path yarn.lock --allowed-hosts npm yarn github.com codeload.github.com --empty-hostname true --allowed-schemes \"https:\" \"git+https:\" \"npm:\" \"patch:\" \"workspace:\"",
     "setup": "yarn setup:submodule && yarn && yarn common build && yarn setup:extension && yarn extension",
     "setup:extension": "sh scripts/init-extension.sh",

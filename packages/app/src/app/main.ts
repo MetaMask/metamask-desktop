@@ -8,10 +8,10 @@ import {
   setupController,
   statePersistenceEvents,
 } from '../../submodules/extension/app/scripts/background';
-import cfg from '../utils/config';
-import { LedgerBridgeKeyring as LedgerKeyring } from '../hw/ledger/ledger-keyring';
-import TrezorKeyring from '../hw/trezor/trezor-keyring';
-import LatticeKeyring from '../hw/lattice/lattice-keyring';
+import cfg from './utils/config';
+import { LedgerBridgeKeyring as LedgerKeyring } from './hw/ledger/ledger-keyring';
+import TrezorKeyring from './hw/trezor/trezor-keyring';
+import LatticeKeyring from './hw/lattice/lattice-keyring';
 import DesktopApp from './desktop-app';
 
 /**

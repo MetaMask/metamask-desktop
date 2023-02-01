@@ -24,12 +24,12 @@ import {
   expectEventToFire,
   flushPromises,
 } from '../../test/utils';
-import { unregisterRequestStream } from '../browser/node-browser';
-import { DesktopPairing } from '../shared/pairing';
+import { unregisterRequestStream } from './browser/node-browser';
+import { DesktopPairing } from './pairing';
 import ExtensionConnection from './extension-connection';
 
 jest.mock('obj-multiplex', () => jest.fn(), { virtual: true });
-jest.mock('../shared/pairing');
+jest.mock('./pairing');
 
 jest.mock('@metamask/desktop/dist/utils/state', () => ({
   addPairingKeyToRawState: jest.fn(),
@@ -40,7 +40,7 @@ jest.mock('@metamask/desktop/dist/utils/state', () => ({
 }));
 
 jest.mock(
-  '../browser/node-browser',
+  './browser/node-browser',
   () => ({
     registerRequestStream: jest.fn(),
     unregisterRequestStream: jest.fn(),

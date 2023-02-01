@@ -5,13 +5,13 @@ module.exports = {
 
   overrides: [
     {
-      files: ['src/**/*'],
-      excludedFiles: ['src/**/*.{test,spec}.{js,ts}', 'src/desktop-ui.js'],
+      files: ['src/app/**/*'],
+      excludedFiles: ['src/app/**/*.{test,spec}.{js,ts}'],
       extends: ['.eslintrc.app.js'],
     },
     {
-      files: ['ui/**/*.{js,ts,jsx,tsx}', 'src/desktop-ui.js'],
-      excludedFiles: ['ui/**/*.{test,spec}.{js,ts,jsx,tsx}'],
+      files: ['src/ui/**/*.{js,ts,jsx,tsx}'],
+      excludedFiles: ['src/ui/**/*.{test,spec}.{js,ts,jsx,tsx}'],
       extends: ['.eslintrc.ui.js'],
     },
     {
@@ -55,7 +55,7 @@ module.exports = {
     'dist',
     'lavamoat',
     'packages',
-    'src/hw/ledger/ledger-keyring.*',
+    'src/app/hw/ledger/ledger-keyring.*',
     'test/playwright/chrome/**/*',
     'test/playwright/playwright-reports/**/*',
     'submodules',

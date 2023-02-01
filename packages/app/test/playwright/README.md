@@ -1,37 +1,31 @@
 # Desktop App E2E Tests
 
-## Setup
+## Prerequisites
 
-### Preconditions:
-1. Install Google Chrome
+Install [Google Chrome](https://www.google.com/chrome/)
 
-2. Have deps installed
+Install dependencies:
+
 ```
 yarn setup
 ```
 
-### Build testing artifacts
-2. Build the desktop app
+## Build Test Artifacts
+
 ```
 yarn build:test:app
 ```
 
-### Initialise playwright in case is your first time
-3. Install browsers to test with Playwright (only chrome needed for now)
+## Initialise Playwright
+
+Install browsers to test with Playwright:
+
 ```
 yarn app playwright install chromium
 ```
 
-4. Specify the following environment variables in the CLI or in a [.env](../../.env.example) file
+## Run Tests
 
-| Name | Description
-| --- | --- |
-| `ELECTRON_APP_PATH` | Path to the transpiled Electron app being tested
-| `ELECTRON_CONFIG_PATH` | Path to the Electron system folder where config files are persisted
-| `MMD_PASSWORD` | Password used to secure the extension within the tests
-| `SEED_PHRASE` | Seed phrase used to generate predictable wallet addresses within the tests
-
-## Run
 ```
 yarn app test:e2e:app
 ```

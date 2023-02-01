@@ -31,41 +31,21 @@ const terser = require('terser');
 
 const bifyModuleGroups = require('bify-module-groups');
 
+const appVersion = require('../../package.json').version;
+
 const {
   streamFlatMap,
 } = require('../../submodules/extension/development/stream-flat-map');
 const {
-  generateIconNames,
-} = require('../../submodules/extension/development/generate-icon-names');
-const {
   BUILD_TARGETS,
-  ENVIRONMENT,
 } = require('../../submodules/extension/development/build/constants');
 const {
-  getConfig,
-} = require('../../submodules/extension/development/build/config');
-const {
   isDevBuild,
-  getEnvironment,
   logError,
+  getEnvironment,
 } = require('../../submodules/extension/development/build/utils');
 const { runInChildProcess, createTask, composeParallel } = require('./task');
-
-/**
- * Get the appropriate Segment write key.
- *
- * @param {object} options - The Segment write key options.
- * @param {object} options.config - The environment variable configuration.
- * @param {keyof ENVIRONMENT} options.environment - The current build environment.
- * @returns {string} The Segment write key.
- */
-function getSegmentWriteKey({ config, environment }) {
-  if (environment !== ENVIRONMENT.PRODUCTION) {
-    // Skip validation because this is unset on PRs from forks, and isn't necessary for development builds.
-    return config.SEGMENT_WRITE_KEY;
-  }
-  return config.SEGMENT_PROD_WRITE_KEY;
-}
+const { getConfig } = require('./config');
 
 const noopWriteStream = through.obj((_file, _fileEncoding, callback) =>
   callback(),
@@ -127,13 +107,27 @@ function createScriptTasks({ applyLavaMoat, buildType, policyOnly }) {
         buildTarget,
         buildType,
         entryFiles: ['desktop-ui'].map((label) => {
-          return `./src/${label}.js`;
+          return `./src/ui/${label}.js`;
         }),
         policyOnly,
       }),
     );
 
-    const allSubtasks = [standardSubtask].map((subtask) =>
+    // Sentry subtask
+    const label = 'sentry-install';
+    const installSentrySubtask = createTask(
+      `${taskPrefix}:sentry`,
+      createNormalBundle({
+        buildTarget,
+        buildType,
+        destFilepath: `${label}.js`,
+        entryFilepath: `./src/app/log/${label}.ts`,
+        label,
+        policyOnly,
+      }),
+    );
+
+    const allSubtasks = [standardSubtask, installSentrySubtask].map((subtask) =>
       runInChildProcess(subtask, {
         applyLavaMoat,
         buildType,
@@ -272,6 +266,7 @@ function createFactoredBuild({
       if (policyOnly) {
         return;
       }
+
       const commonSet = sizeGroupMap.get('common');
       // create entry points for each file
       for (const [groupLabel, groupSet] of sizeGroupMap.entries()) {
@@ -288,6 +283,13 @@ function createFactoredBuild({
               commonSet,
               applyLavaMoat,
             });
+
+            renderHtmlFile({
+              htmlName: 'desktop-ui-dark',
+              groupSet,
+              commonSet,
+              applyLavaMoat,
+            });
             break;
           }
 
@@ -299,6 +301,76 @@ function createFactoredBuild({
         }
       }
       console.log('Bundling done!');
+    });
+
+    await createBundle(buildConfiguration, { reloadOnChange });
+  };
+}
+
+/**
+ * Return a function that creates a single JavaScript bundle.
+ *
+ * @param {object} options - Build options.
+ * @param {BUILD_TARGETS} options.buildTarget - The current build target.
+ * @param {BuildType} options.buildType - The current build type (e.g. "main",
+ * "flask", etc.).
+ * @param {string} options.destFilepath - The file path the bundle should be
+ * written to.
+ * @param {string[]} options.entryFilepath - The entry point file path,
+ * relative to the repository root directory.
+ * @param {string} options.label - A label used to describe this bundle in any
+ * diagnostic messages.
+ * @param {boolean} options.policyOnly - Whether to stop the build after
+ * generating the LavaMoat policy, skipping any writes to disk other than the
+ * LavaMoat policy itself.
+ * @returns {Function} A function that creates the bundle.
+ */
+function createNormalBundle({
+  buildTarget,
+  buildType,
+  destFilepath,
+  entryFilepath,
+  label,
+  policyOnly,
+}) {
+  return async function () {
+    // create bundler setup and apply defaults
+    const buildConfiguration = createBuildConfiguration();
+    buildConfiguration.label = label;
+    const { bundlerOpts, events } = buildConfiguration;
+
+    // devMode options
+    const devMode = isDevBuild(buildTarget);
+    const reloadOnChange = Boolean(devMode);
+    const minify = Boolean(devMode) === false;
+
+    const envVars = await getEnvironmentVariables({
+      buildTarget,
+      buildType,
+    });
+
+    setupBundlerDefaults(buildConfiguration, {
+      buildTarget,
+      envVars,
+      policyOnly,
+      minify,
+      reloadOnChange,
+    });
+
+    // set bundle entries
+    bundlerOpts.entries = [entryFilepath];
+
+    // instrument pipeline
+    events.on('configurePipeline', ({ pipeline }) => {
+      // convert bundle stream to gulp vinyl stream
+      // and ensure file contents are buffered
+      pipeline.get('vinyl').push(source(destFilepath));
+      pipeline.get('vinyl').push(buffer());
+      // setup bundle destination
+
+      const dest = `./dist/ui/`;
+      const destination = policyOnly ? noopWriteStream : gulp.dest(dest);
+      pipeline.get('dest').push(destination);
     });
 
     await createBundle(buildConfiguration, { reloadOnChange });
@@ -515,29 +587,28 @@ async function createBundle(buildConfiguration, { reloadOnChange }) {
  *
  * @param {object} options - Build options.
  * @param {BUILD_TARGETS} options.buildTarget - The current build target.
- * @param {BuildType} options.buildType - The current build type (e.g. "main",
+ * @param {BuildType} options._buildType - The current build type (e.g. "main",
  * "flask", etc.).
  * @returns {object} A map of environment variables to inject.
  */
-async function getEnvironmentVariables({ buildTarget, buildType }) {
-  const environment = getEnvironment({ buildTarget });
+async function getEnvironmentVariables({ buildTarget, _buildType }) {
   const config = await getConfig();
+  const environment = getEnvironment({ buildTarget });
 
-  const devMode = isDevBuild(buildTarget);
-  const iconNames = await generateIconNames();
   return {
-    CONF: devMode ? config : {},
-    DISABLE_WEB_SOCKET_ENCRYPTION: config.DISABLE_WEB_SOCKET_ENCRYPTION === '1',
-    ICON_NAMES: iconNames,
-    SKIP_OTP_PAIRING_FLOW: config.SKIP_OTP_PAIRING_FLOW === '1',
-    METAMASK_DEBUG: devMode || config.METAMASK_DEBUG === '1',
+    COMPATIBILITY_VERSION_DESKTOP: config.COMPATIBILITY_VERSION_DESKTOP,
+    DESKTOP_ENABLE_UPDATES: config.DESKTOP_ENABLE_UPDATES,
+    DESKTOP_PREVENT_OPEN_ON_STARTUP: config.DESKTOP_PREVENT_OPEN_ON_STARTUP,
+    DESKTOP_UI_ENABLE_DEV_TOOLS: config.DESKTOP_UI_ENABLE_DEV_TOOLS,
+    DESKTOP_UI_FORCE_CLOSE: config.DESKTOP_UI_FORCE_CLOSE,
+    DISABLE_WEB_SOCKET_ENCRYPTION: config.DISABLE_WEB_SOCKET_ENCRYPTION,
+    INFURA_PROJECT_ID: config.INFURA_PROJECT_ID,
+    SKIP_OTP_PAIRING_FLOW: config.SKIP_OTP_PAIRING_FLOW,
+    WEB_SOCKET_PORT: config.WEB_SOCKET_PORT,
+    METAMASK_DEBUG: config.METAMASK_DEBUG,
     METAMASK_ENVIRONMENT: environment,
-    METAMASK_BUILD_TYPE: buildType,
-    NODE_ENV: devMode ? ENVIRONMENT.DEVELOPMENT : ENVIRONMENT.PRODUCTION,
-    SEGMENT_HOST: config.SEGMENT_HOST,
-    SEGMENT_WRITE_KEY: getSegmentWriteKey({ buildType, config, environment }),
     SENTRY_DSN: config.SENTRY_DSN,
-    SENTRY_DSN_DEV: config.SENTRY_DSN_DEV,
+    PACKAGE_VERSION: appVersion,
   };
 }
 
@@ -547,7 +618,7 @@ function renderHtmlFile({ htmlName, groupSet, commonSet, applyLavaMoat }) {
       'build/scripts/renderHtmlFile - must specify "applyLavaMoat" option',
     );
   }
-  const htmlFilePath = `./html/${htmlName}.html`;
+  const htmlFilePath = `./src/ui/html/${htmlName}.html`;
   const htmlTemplate = readFileSync(htmlFilePath, 'utf8');
   const jsBundles = [...commonSet.values(), ...groupSet.values()].map(
     (label) => `./${label}.js`,

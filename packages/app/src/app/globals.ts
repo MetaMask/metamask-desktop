@@ -1,12 +1,21 @@
 import 'global-agent/bootstrap';
-import './logger-init';
-import '../browser/browser-init';
+import './log/logger-init';
+import './browser/browser-init';
 import { webcrypto } from 'node:crypto';
+import electronLog from 'electron-log';
 import { Headers } from 'node-fetch';
-import * as SentryElectron from '@sentry/electron/main';
-import setupSentry from '../../submodules/extension/app/scripts/lib/setupSentry';
-import { getDesktopVersion } from '../utils/version';
-import { ElectronBridge } from './renderer/preload';
+import * as Sentry from '@sentry/electron/main';
+import { Dedupe, ExtraErrorData } from '@sentry/integrations';
+import { Integration } from '@sentry/types/dist/integration';
+import { FilterEvents } from '../../submodules/extension/app/scripts/lib/sentry-filter-events';
+import {
+  beforeBreadcrumb,
+  rewriteReport,
+} from '../../submodules/extension/app/scripts/lib/setupSentry';
+import { getDesktopVersion } from './utils/version';
+import { ElectronBridge } from './ui/preload';
+import { getSentryDefaultOptions } from './log/setup-sentry';
+import { readPersistedSettingFromAppState } from './storage/ui-storage';
 
 declare global {
   interface Window {
@@ -67,12 +76,60 @@ if (!global.self) {
   // the root compartment will populate this with hooks
   global.stateHooks = {};
 
-  // setup sentry error reporting
-  global.sentry = setupSentry({
-    release: getDesktopVersion(),
-    getState: () => global.stateHooks?.getSentryState?.() || {},
-    Sentry: SentryElectron,
-  } as any);
+  const getState = () => global.stateHooks?.getSentryState?.() || {};
+
+  // Init Sentry in the main process before lavamoat
+  const sentryOptions = getSentryDefaultOptions(getDesktopVersion());
+  Sentry.init({
+    ...sentryOptions,
+    ipcMode: Sentry.IPCMode.Both,
+    integrations: [
+      new FilterEvents({
+        getMetaMetricsEnabled: () => {
+          const extensionState = getState();
+
+          const hasValidExtensionState =
+            extensionState.store?.metamask?.desktopEnabled;
+
+          const extensionMetaMetricsOptIn =
+            extensionState.store?.metamask?.participateInMetaMetrics;
+
+          // TODO Currently returning a string, needs simplifying when schema fixed
+          const desktopMetaMetricsOptInValue = readPersistedSettingFromAppState(
+            {
+              defaultValue: false,
+              key: 'metametricsOptIn',
+            },
+          );
+          const desktopMetaMetricsOptIn =
+            typeof desktopMetaMetricsOptInValue === 'string'
+              ? desktopMetaMetricsOptInValue === 'true'
+              : desktopMetaMetricsOptInValue;
+
+          // Desktop opt in must be enabled
+          // Extension opt in must be enabled if desktop currently enabled
+          const shouldShareMetrics =
+            desktopMetaMetricsOptIn &&
+            (!hasValidExtensionState || extensionMetaMetricsOptIn);
+
+          electronLog.debug('Sentry metric filter for main process', {
+            hasValidExtensionState,
+            extensionMetaMetricsOptIn,
+            desktopMetaMetricsOptIn,
+            shouldShareMetrics,
+          });
+
+          return shouldShareMetrics;
+        },
+      }),
+      new Dedupe() as Integration,
+      new ExtraErrorData() as Integration,
+    ],
+    beforeSend: (report) => rewriteReport(report, getState),
+    beforeBreadcrumb: beforeBreadcrumb(getState),
+  });
+
+  global.sentry = Sentry;
 }
 
 export {};

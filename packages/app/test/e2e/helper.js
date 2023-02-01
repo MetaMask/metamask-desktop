@@ -86,7 +86,7 @@ const startDesktopApp = async () => {
 
 const stopDesktopApp = () => {
   console.info('Stopping desktop app');
-  killProcessesByCommand(['main.js', 'start:test']);
+  killProcessesByCommand(['lavamoat.js', 'start:test']);
 };
 
 const setDesktopAppState = async (state) => {

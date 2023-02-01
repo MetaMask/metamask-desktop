@@ -1,6 +1,6 @@
 import { Duplex, EventEmitter } from 'stream';
 import path from 'path';
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, shell } from 'electron';
 // eslint-disable-next-line @typescript-eslint/no-shadow
 import { Server as WebSocketServer, WebSocket } from 'ws';
 import log from 'loglevel';
@@ -14,23 +14,26 @@ import {
   getDesktopState,
 } from '@metamask/desktop/dist/utils/state';
 import EncryptedWebSocketStream from '@metamask/desktop/dist/encryption/web-socket-stream';
-import { StatusMessage } from '../types/message';
-import { forwardEvents } from '../utils/events';
-import cfg from '../utils/config';
-import { getDesktopVersion } from '../utils/version';
+import { StatusMessage } from './types/message';
+import { forwardEvents } from './utils/events';
+import { determineLoginItemSettings } from './utils/settings';
+import cfg from './utils/config';
+import { getDesktopVersion } from './utils/version';
 import ExtensionConnection from './extension-connection';
 import { updateCheck } from './update-check';
 import {
   titleBarOverlayOpts,
   protocolKey,
-  uiRootStorage,
+  uiAppStorage,
   uiPairStatusStorage,
-} from './ui-constants';
-import AppNavigation from './app-navigation';
-import AppEvents from './app-events';
-import WindowService from './window-service';
-import UIState from './ui-state';
-import { setUiStorage } from './ui-storage';
+} from './ui/ui-constants';
+import AppNavigation from './ui/app-navigation';
+import AppEvents from './ui/app-events';
+import WindowService from './ui/window-service';
+import UIState from './ui/ui-state';
+import { setUiStorage } from './storage/ui-storage';
+import MetricsService from './metrics/metrics-service';
+import { EVENT_NAMES } from './metrics/metrics-constants';
 
 // Set protocol for deeplinking
 if (!cfg().isUnitTest) {
@@ -60,8 +63,11 @@ class DesktopApp extends EventEmitter {
 
   private UIState: typeof UIState;
 
+  private metricsService: typeof MetricsService;
+
   constructor() {
     super();
+    this.metricsService = MetricsService;
     this.UIState = UIState;
     this.appNavigation = new AppNavigation();
     this.appEvents = new AppEvents();
@@ -93,17 +99,13 @@ class DesktopApp extends EventEmitter {
       this.extensionConnection?.getPairing().submitOTP(data),
     );
 
-    ipcMain.handle('popup', (_event) => {
-      log.debug('Show popup not implemented');
-    });
+    ipcMain.handle('minimize', () => this.UIState.mainWindow?.minimize());
 
-    ipcMain.handle('minimize', (_event) => this.UIState.mainWindow?.minimize());
-
-    ipcMain.handle('unpair', async (_event) => {
+    ipcMain.handle('unpair', async () => {
       await this.extensionConnection?.disable();
     });
 
-    ipcMain.handle('reset', async (_event) => {
+    ipcMain.handle('reset', async () => {
       await clearRawState();
       this.emit('restart');
       this.status.isDesktopPaired = false;
@@ -111,14 +113,26 @@ class DesktopApp extends EventEmitter {
 
     ipcMain.handle('set-theme', (event, theme) => {
       const win = BrowserWindow.fromWebContents(event.sender);
-      win?.setTitleBarOverlay?.(titleBarOverlayOpts[theme]);
+      win?.setTitleBarOverlay?.(
+        titleBarOverlayOpts[theme as keyof typeof titleBarOverlayOpts],
+      );
     });
+
+    ipcMain.handle('open-external', (_event, link) => {
+      shell.openExternal(link);
+    });
+
+    if (!cfg().ui.preventOpenOnStartup) {
+      ipcMain.handle('set-preferred-startup', (_event, preferredStartup) => {
+        app.setLoginItemSettings(determineLoginItemSettings(preferredStartup));
+      });
+    }
 
     ipcMain.handle('get-desktop-version', () => {
       return getDesktopVersion();
     });
 
-    setUiStorage(uiRootStorage);
+    setUiStorage(uiAppStorage);
     setUiStorage(uiPairStatusStorage);
 
     if (!cfg().isExtensionTest) {
@@ -210,6 +224,12 @@ class DesktopApp extends EventEmitter {
 
     extensionConnection.on('paired', () => {
       this.status.isDesktopPaired = true;
+      this.appNavigation.setPairedTrayIcon();
+      // send metrics to Segment
+      this.metricsService.track(EVENT_NAMES.DESKTOP_APP_PAIRED, {
+        paired: true,
+        createdAt: new Date(),
+      });
     });
 
     extensionConnection.getPairing().on('invalid-otp', () => {
@@ -221,6 +241,10 @@ class DesktopApp extends EventEmitter {
       'connect-remote',
       'connect-external',
     ]);
+
+    if (this.status.isDesktopPaired) {
+      this.appNavigation.setPairedTrayIcon();
+    }
 
     // if a connection is active it should set new connection as on hold
     // so the user unpair properly before establishing a new connection
@@ -267,6 +291,8 @@ class DesktopApp extends EventEmitter {
     if (isDisconnectedByUser) {
       this.status.isDesktopPaired = false;
     }
+
+    this.appNavigation.setUnPairedTrayIcon();
 
     this.emit('restart');
   }

@@ -1,4 +1,5 @@
 import { Locator, Page, BrowserContext } from '@playwright/test';
+import { MMD_PASSWORD, SEED_PHRASE } from '../helpers/constants';
 import { ChromeExtensionPage } from './ext-chrome-extension-page';
 
 export class ExtensionSignUpPage {
@@ -55,14 +56,14 @@ export class ExtensionSignUpPage {
   }
 
   async authentication() {
-    const seeds = process.env.SEED_PHRASE?.trim().split(/\s+/u);
+    const seeds = SEED_PHRASE.trim().split(/\s+/u);
     for (const [index, element] of (seeds as string[]).entries()) {
       await this.page
         .locator(`data-testid=import-srp__srp-word-${index}`)
         .type(element);
     }
-    await this.passwordTxt.type(process.env.MMD_PASSWORD as string);
-    await this.passwordConfirmTxt.type(process.env.MMD_PASSWORD as string);
+    await this.passwordTxt.type(MMD_PASSWORD);
+    await this.passwordConfirmTxt.type(MMD_PASSWORD);
   }
 
   async termsAndConditions() {

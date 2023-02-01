@@ -1,5 +1,6 @@
-import fs from 'fs';
 import { ElectronApplication, Page, _electron as electron } from 'playwright';
+import { runInShell } from '../../../submodules/extension/development/lib/run-command';
+import { ELECTRON_APP_PATH } from './constants';
 
 export async function electronStartup(): Promise<ElectronApplication> {
   // Delete config.json to have the same initial setup every run
@@ -13,28 +14,17 @@ export async function electronStartup(): Promise<ElectronApplication> {
 }
 
 export async function resetConfigFiles() {
-  const path = process.env.ELECTRON_CONFIG_PATH as string;
-  fs.unlink(`${path}/config.json`, (err) => {
-    if (err) {
-      console.log('File not found:', err.message);
-    } else {
-      console.log(`${path}/config.json} was deleted`);
-    }
-  });
-  const regex = /mmd-desktop-ui.*/u;
   try {
-    fs.readdirSync(path)
-      .filter((f) => regex.test(f))
-      .map((f) => fs.unlinkSync(path + f));
-  } catch (e: any) {
-    console.log(e.message);
+    await runInShell('yarn', ['clear:electron-state']);
+  } catch {
+    // Ignore errors
   }
 }
 
 export async function createElectronApp() {
   console.log('electron.launch start');
   const electronApp = await electron.launch({
-    args: [process.env.ELECTRON_APP_PATH as string],
+    args: [ELECTRON_APP_PATH],
   });
   console.log('electron.launch finish');
   return electronApp;

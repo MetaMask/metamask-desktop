@@ -567,27 +567,7 @@
         "setTimeout": true
       },
       "packages": {
-        "@ledgerhq/hw-app-eth>axios>follow-redirects": true
-      }
-    },
-    "@ledgerhq/hw-app-eth>axios>follow-redirects": {
-      "builtin": {
-        "assert": true,
-        "http": true,
-        "https": true,
-        "stream.Writable.call": true,
-        "stream.Writable.prototype": true,
-        "url.URL": true,
-        "url.format": true,
-        "url.parse": true,
-        "url.resolve": true
-      },
-      "globals": {
-        "clearTimeout": true,
-        "setTimeout": true
-      },
-      "packages": {
-        "@truffle/codec>debug": true
+        "analytics-node>axios>follow-redirects": true
       }
     },
     "@ledgerhq/hw-app-eth>bignumber.js": {
@@ -675,7 +655,8 @@
         "clearTimeout": true,
         "console.log": true,
         "setInterval": true,
-        "setTimeout": true
+        "setTimeout": true,
+        "window.Headers": true
       },
       "packages": {
         "@ethersproject/abi": true,
@@ -3020,6 +3001,88 @@
     "@truffle/codec>debug>supports-color>has-flag": {
       "globals": {
         "process.argv": true
+      }
+    },
+    "analytics-node": {
+      "builtin": {
+        "assert": true
+      },
+      "globals": {
+        "clearTimeout": true,
+        "process": true,
+        "setImmediate": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "@segment/loosely-validate-event": true,
+        "analytics-node>axios": true,
+        "analytics-node>axios-retry": true,
+        "analytics-node>lodash.isstring": true,
+        "analytics-node>md5": true,
+        "analytics-node>ms": true,
+        "remove-trailing-slash": true,
+        "uuid": true
+      }
+    },
+    "analytics-node>axios": {
+      "builtin": {
+        "http": true,
+        "https": true,
+        "url.parse": true,
+        "zlib.createUnzip": true
+      },
+      "globals": {
+        "Buffer.concat": true,
+        "Buffer.from": true,
+        "Buffer.isBuffer": true,
+        "FormData": true,
+        "URLSearchParams": true,
+        "XMLHttpRequest": true,
+        "btoa": true,
+        "console.warn": true,
+        "document": true,
+        "location.href": true,
+        "navigator": true,
+        "process": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "analytics-node>axios>follow-redirects": true
+      }
+    },
+    "analytics-node>axios-retry": {
+      "globals": {
+        "setTimeout": true
+      },
+      "packages": {
+        "analytics-node>axios-retry>is-retry-allowed": true
+      }
+    },
+    "analytics-node>axios>follow-redirects": {
+      "builtin": {
+        "assert": true,
+        "http": true,
+        "https": true,
+        "stream.Writable.call": true,
+        "stream.Writable.prototype": true,
+        "url.URL": true,
+        "url.format": true,
+        "url.parse": true,
+        "url.resolve": true
+      },
+      "globals": {
+        "clearTimeout": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "@truffle/codec>debug": true
+      }
+    },
+    "analytics-node>md5": {
+      "packages": {
+        "analytics-node>md5>charenc": true,
+        "analytics-node>md5>crypt": true,
+        "analytics-node>md5>is-buffer": true
       }
     },
     "await-semaphore": {
