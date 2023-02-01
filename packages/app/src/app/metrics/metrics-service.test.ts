@@ -10,7 +10,7 @@ import MetricsService from './metrics-service';
 import Analytics from './analytics';
 
 jest.mock(
-  '../ui-storage',
+  '../storage/ui-storage',
   () => ({
     readPersistedSettingFromAppState: jest.fn().mockReturnValueOnce(true),
   }),

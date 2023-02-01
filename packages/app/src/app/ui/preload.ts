@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron';
-import { Properties } from '../../types/metrics';
+import { Properties } from '../types/metrics';
 
 const uiStoreBridge = (name: string) => {
   return {
