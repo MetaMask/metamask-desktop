@@ -9,6 +9,7 @@ import {
   SegmentApiCalls,
   Traits,
   Event,
+  FirstTimeEvents,
 } from '../types/metrics';
 import { readPersistedSettingFromAppState } from '../storage/ui-storage';
 import Analytics from './analytics';
@@ -30,6 +31,8 @@ class MetricsService {
 
   // Every event submitted to segment
   private segmentApiCalls: SegmentApiCalls;
+
+  private firstTimeEvents: FirstTimeEvents;
 
   constructor() {
     this.analytics = Analytics;
@@ -72,6 +75,25 @@ class MetricsService {
 
     this.analytics.track(eventToTrack);
     this.saveCallSegmentAPI(eventToTrack);
+
+    this.checkFirstTimeEvent(eventToTrack.event);
+  }
+
+  private checkFirstTimeEvent(eventName: string): boolean {
+    const isFirstTimeEvent = this.firstTimeEvents[eventName];
+    if (!isFirstTimeEvent) {
+      // false
+      return isFirstTimeEvent;
+    }
+    this.firstTimeEvents[eventName] = false;
+    return true;
+
+    // for (const eventSaved of Object.values(this.saveCallSegmentAPI)) {
+    //   if (eventName === eventSaved.event) {
+    //     return true;
+    //   }
+    // }
+    // return false;
   }
 
   /* The identify method lets you tie a user to their actions and record

@@ -7,6 +7,10 @@ export interface Traits {
   [key: string]: any;
 }
 
+export interface FirstTimeEvents {
+  [key: string]: boolean;
+}
+
 export interface Properties {
   paired?: boolean;
   createdAt?: Date;
