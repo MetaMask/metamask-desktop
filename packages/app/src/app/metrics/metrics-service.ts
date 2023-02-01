@@ -32,6 +32,7 @@ class MetricsService {
   // Every event submitted to segment
   private segmentApiCalls: SegmentApiCalls;
 
+  // Tracks first time events
   private firstTimeEvents: FirstTimeEvents;
 
   constructor() {
@@ -40,7 +41,7 @@ class MetricsService {
       name: `mmd-desktop-metrics`,
     });
 
-    // Creates an object with the events and set the value first time event to true
+    // Creates an object with all events and sets the value first-time event to true
     const defaultFirstTimeEvents: FirstTimeEvents = {};
     for (const event of Object.values(EVENT_NAMES)) {
       defaultFirstTimeEvents[event] = true;
@@ -87,15 +88,6 @@ class MetricsService {
 
     this.analytics.track(eventToTrack);
     this.saveCallSegmentAPI(eventToTrack);
-  }
-
-  private checkAndUpdateFirstTimeEvent(eventName: string) {
-    if (!this.firstTimeEvents[eventName]) {
-      return;
-    }
-    this.firstTimeEvents[eventName] = false;
-
-    this.store.set('firstTimeEvents', this.firstTimeEvents);
   }
 
   /* The identify method lets you tie a user to their actions and record
@@ -167,6 +159,15 @@ class MetricsService {
         version: getDesktopVersion(),
       },
     };
+  }
+
+  private checkAndUpdateFirstTimeEvent(eventName: string) {
+    if (!this.firstTimeEvents[eventName]) {
+      return;
+    }
+    this.firstTimeEvents[eventName] = false;
+
+    this.store.set('firstTimeEvents', this.firstTimeEvents);
   }
 }
 
