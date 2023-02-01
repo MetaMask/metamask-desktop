@@ -7,7 +7,7 @@ import {
   ABOUT_US_ROUTE,
   SETTINGS_ROUTE,
   PRIVACY_ROUTE,
-} from '../../helpers/constants/routes';
+} from '../../../shared/constants/ui-routes';
 import TabBar from '../../../../submodules/extension/ui/components/app/tab-bar';
 import Typography from '../../../../submodules/extension/ui/components/ui/typography';
 import { TYPOGRAPHY } from '../../../../submodules/extension/ui/helpers/constants/design-system';

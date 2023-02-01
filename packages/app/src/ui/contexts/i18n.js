@@ -1,8 +1,8 @@
 import React, { createContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { getMessage } from '../helpers/utils/i18n-helper';
-import { locales } from '../locales';
+import { getMessage } from '../helpers/i18n-helper';
+import { locales } from '../../shared/locales';
 import { getLanguage } from '../ducks/app/app';
 
 export const I18nContext = createContext((key) => `[${key}]`);

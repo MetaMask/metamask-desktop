@@ -1,10 +1,8 @@
 import path from 'path';
 import { app, Tray, Menu, shell, dialog } from 'electron';
 import { getDesktopState } from '@metamask/desktop/dist/utils/state';
-import {
-  metamaskDesktopAboutWebsite,
-  metamaskDesktopSubmitTicket,
-} from './ui-constants';
+import { t } from '../utils/translation';
+import { MMD_WEBSITE, URL_SUBMIT_TICKET } from '../../shared/constants/links';
 import UIState from './ui-state';
 
 export default class AppNavigation {
@@ -49,7 +47,7 @@ export default class AppNavigation {
 
   private createShowMenuItem() {
     return {
-      label: 'Show',
+      label: t('show'),
       click: () => {
         this.showAndFocusMainWindow();
       },
@@ -58,18 +56,18 @@ export default class AppNavigation {
 
   private createAboutMenuItem() {
     return {
-      label: 'About MetaMask Desktop',
+      label: t('aboutMMD'),
       click: async () => {
-        await shell.openExternal(metamaskDesktopAboutWebsite);
+        await shell.openExternal(MMD_WEBSITE);
       },
     };
   }
 
   private createSupportMenuItem() {
     return {
-      label: 'Submit a ticket',
+      label: t('submitTicket'),
       click: async () => {
-        await shell.openExternal(metamaskDesktopSubmitTicket);
+        await shell.openExternal(URL_SUBMIT_TICKET);
       },
     };
   }
@@ -83,13 +81,12 @@ export default class AppNavigation {
         if (isDesktopPaired) {
           const { response: forceExit } = await dialog.showMessageBox({
             type: 'warning',
-            buttons: ['Ok', 'Exit'],
+            buttons: [t('ok'), t('exit')],
             cancelId: 0,
             defaultId: 1,
             icon: path.resolve(__dirname, '../../dist/app/icon.png'),
             title: 'Warning',
-            message:
-              'MetaMask Extension is paired with MetaMask Desktop in the background. To quit, click Exit.',
+            message: t('approveQuitApp'),
           });
           if (forceExit) {
             this.UIState.forceQuit = true;

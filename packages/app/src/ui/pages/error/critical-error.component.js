@@ -2,7 +2,7 @@ import React from 'react';
 import { PropTypes } from 'prop-types';
 
 import useI18nContext from '../../hooks/useI18nContext';
-import { metamaskDesktopSubmitTicket } from '../../helpers/constants/links';
+import { URL_SUBMIT_TICKET } from '../../../shared/constants/links';
 
 const CriticalError = ({ error }) => {
   const t = useI18nContext();
@@ -29,7 +29,7 @@ const CriticalError = ({ error }) => {
       key="metamaskSupportLink"
       rel="noopener noreferrer"
       onClick={() => {
-        window.electronBridge.openExternalShell(metamaskDesktopSubmitTicket);
+        window.electronBridge.openExternalShell(URL_SUBMIT_TICKET);
       }}
     >
       <span className="error-page__link-text">{t('here')}</span>

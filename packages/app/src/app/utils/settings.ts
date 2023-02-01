@@ -1,16 +1,18 @@
+import { STARTUP_OPTION_TYPES } from '../../shared/constants/startup-option';
+
 export const determineLoginItemSettings = (preferredStartup: string) => {
   switch (preferredStartup) {
-    case 'yes':
+    case STARTUP_OPTION_TYPES.YES:
       return {
         openAtLogin: true,
         openAsHidden: false,
       };
-    case 'no':
+    case STARTUP_OPTION_TYPES.NO:
       return {
         openAtLogin: false,
         openAsHidden: false,
       };
-    case 'minimized':
+    case STARTUP_OPTION_TYPES.MINIMIZED:
     default:
       return {
         openAtLogin: true,

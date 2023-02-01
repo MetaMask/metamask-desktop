@@ -8,8 +8,8 @@ import {
   ERROR_ROUTE,
   SUCCESSFUL_PAIR_ROUTE,
   METAMETRICS_OPT_IN_ROUTE,
-} from '../../helpers/constants/routes';
-import setTheme from '../../helpers/utils/theme';
+} from '../../../shared/constants/ui-routes';
+import setTheme from '../../helpers/theme';
 import Pair from '../pair';
 import SuccessfulPair from '../successful-pair';
 import Settings from '../settings';

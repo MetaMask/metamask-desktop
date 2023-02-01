@@ -1,13 +1,14 @@
 #!/bin/sh
 
-OUTPUT_DIR="dist/app"
 APP_DIR="src/app"
-OUTPUT_HTML_DIR="$OUTPUT_DIR/html"
+SHARED_DIR="src/shared"
 SOURCE_HW_DIR="$APP_DIR/hw"
 EXTENSION_DIR="submodules/extension"
+EXTENSION_APP_DIR="$EXTENSION_DIR/app"
+OUTPUT_DIR="dist/app"
+OUTPUT_HTML_DIR="$OUTPUT_DIR/html"
 OUTPUT_EXTENSION_DIR="$OUTPUT_DIR/$EXTENSION_DIR"
 OUTPUT_APP_DIR="$OUTPUT_EXTENSION_DIR/app"
-EXTENSION_APP_DIR="$EXTENSION_DIR/app"
 
 echo "Removing existing build files"
 rm -rf $OUTPUT_DIR
@@ -16,6 +17,7 @@ echo "Creating directories"
 mkdir -p $OUTPUT_HTML_DIR
 mkdir -p $OUTPUT_APP_DIR
 mkdir -p $OUTPUT_DIR/src/app/icons
+mkdir -p $OUTPUT_DIR/$SHARED_DIR/locales/
 
 echo "Copying HW HTML files"
 cp $SOURCE_HW_DIR/trezor/desktop-trezor.html $OUTPUT_HTML_DIR/desktop-trezor.html
@@ -23,6 +25,9 @@ cp $SOURCE_HW_DIR/lattice/desktop-lattice.html $OUTPUT_HTML_DIR/desktop-lattice.
 
 echo "Copying locales"
 cp -r $EXTENSION_APP_DIR/_locales $OUTPUT_APP_DIR/_locales
+
+echo "Copying shared locales"
+cp $SHARED_DIR/locales/*.json $OUTPUT_DIR/$SHARED_DIR/locales/
 
 echo "Copying assets"
 mkdir -p $OUTPUT_APP_DIR/build-types/desktop/images

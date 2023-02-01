@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 
 import useI18nContext from '../../hooks/useI18nContext';
+import { PAIR_ROUTE } from '../../../shared/constants/ui-routes';
 import Chip from '../../../../submodules/extension/ui/components/ui/chip';
 import Typography from '../../../../submodules/extension/ui/components/ui/typography';
 import Button from '../../../../submodules/extension/ui/components/ui/button';
@@ -12,7 +13,6 @@ import {
   FONT_WEIGHT,
 } from '../../../../submodules/extension/ui/helpers/constants/design-system';
 import { formatDate } from '../../../../submodules/extension/ui/helpers/utils/util';
-import { PAIR_ROUTE } from '../../helpers/constants/routes';
 
 const PairStatus = ({
   isWebSocketConnected,

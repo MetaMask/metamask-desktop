@@ -1,9 +1,9 @@
-import { THEME_TYPE } from '../../../../submodules/extension/ui/pages/settings/settings-tab/settings-tab.constant';
+import { THEME_TYPES } from '../../shared/constants/theme';
 
 const getOSTheme = () => {
   return window?.matchMedia('(prefers-color-scheme: dark)')?.matches
-    ? THEME_TYPE.DARK
-    : THEME_TYPE.LIGHT;
+    ? THEME_TYPES.DARK
+    : THEME_TYPES.LIGHT;
 };
 
 const handleOSTheme = () => {
@@ -13,7 +13,7 @@ const handleOSTheme = () => {
 
 const setTheme = (theme) => {
   let themeCode = theme;
-  if (theme === THEME_TYPE.OS) {
+  if (theme === THEME_TYPES.OS) {
     handleOSTheme();
     themeCode = getOSTheme();
   } else {

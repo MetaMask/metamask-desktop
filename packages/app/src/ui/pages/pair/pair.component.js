@@ -6,7 +6,7 @@ import OtpInput from 'react-otp-input';
 import {
   SETTINGS_ROUTE,
   SUCCESSFUL_PAIR_ROUTE,
-} from '../../helpers/constants/routes';
+} from '../../../shared/constants/ui-routes';
 import useI18nContext from '../../hooks/useI18nContext';
 import Typography from '../../../../submodules/extension/ui/components/ui/typography';
 import Button from '../../../../submodules/extension/ui/components/ui/button';
@@ -19,7 +19,7 @@ import {
 } from '../../../../submodules/extension/ui/helpers/constants/design-system';
 import Mascot from '../../components/mascot';
 import Spinner from '../../../../submodules/extension/ui/components/ui/spinner';
-import { metamaskDesktopSubmitTicket } from '../../helpers/constants/links';
+import { URL_SUBMIT_TICKET } from '../../../shared/constants/links';
 
 const ANIMATION_COMPLETE_DEFER_IN_MS = 1000;
 const OTP_VALIDATION_TIMEOUT_IN_MS = 5000;
@@ -151,9 +151,7 @@ const Pair = ({ isDesktopPaired, isSuccessfulPairSeen, history }) => {
           type="link"
           className="support-link"
           onClick={() => {
-            window.electronBridge.openExternalShell(
-              metamaskDesktopSubmitTicket,
-            );
+            window.electronBridge.openExternalShell(URL_SUBMIT_TICKET);
           }}
         >
           {t('needSupport')}

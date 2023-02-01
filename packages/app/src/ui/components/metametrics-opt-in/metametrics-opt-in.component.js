@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 
-import { PAIR_ROUTE } from '../../helpers/constants/routes';
+import { PAIR_ROUTE } from '../../../shared/constants/ui-routes';
 import Mascot from '../mascot';
 import Button from '../../../../submodules/extension/ui/components/ui/button';
 import useI18nContext from '../../hooks/useI18nContext';

@@ -2,6 +2,7 @@ import { dialog } from 'electron';
 import { autoUpdater, UpdateCheckResult } from 'electron-updater';
 import log from 'loglevel';
 import cfg from './utils/config';
+import { t } from './utils/translation';
 
 export const updateCheck = async (): Promise<UpdateCheckResult | null> => {
   if (!cfg().enableUpdates || !autoUpdater.isUpdaterActive()) {
@@ -23,9 +24,9 @@ export const updateCheck = async (): Promise<UpdateCheckResult | null> => {
     dialog
       .showMessageBox({
         type: 'info',
-        title: 'Found Updates',
-        message: 'Found updates, do you want update now?',
-        buttons: ['Sure', 'No'],
+        title: t('foundUpdates'),
+        message: t('updateNowDesc'),
+        buttons: [t('yes'), t('no')],
       })
       .then((messageBoxReturnValue) => {
         if (messageBoxReturnValue.response === 0) {
@@ -41,8 +42,8 @@ export const updateCheck = async (): Promise<UpdateCheckResult | null> => {
   autoUpdater.on('update-downloaded', () => {
     dialog
       .showMessageBox({
-        title: 'Install Updates',
-        message: 'Updates downloaded, application will be quit for update...',
+        title: t('installUpdates'),
+        message: t('updatesDownloaded'),
       })
       .then(() => {
         setImmediate(() => autoUpdater.quitAndInstall());

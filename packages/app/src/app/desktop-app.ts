@@ -31,6 +31,7 @@ import AppNavigation from './ui/app-navigation';
 import AppEvents from './ui/app-events';
 import WindowService from './ui/window-service';
 import UIState from './ui/ui-state';
+import { setLanguage } from './utils/translation';
 import { setUiStorage } from './storage/ui-storage';
 import MetricsService from './metrics/metrics-service';
 import { EVENT_NAMES } from './metrics/metrics-constants';
@@ -116,6 +117,10 @@ class DesktopApp extends EventEmitter {
       win?.setTitleBarOverlay?.(
         titleBarOverlayOpts[theme as keyof typeof titleBarOverlayOpts],
       );
+    });
+
+    ipcMain.handle('set-language', (_event, language) => {
+      setLanguage(language);
     });
 
     ipcMain.handle('open-external', (_event, link) => {
