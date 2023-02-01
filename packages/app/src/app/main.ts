@@ -16,6 +16,12 @@ import DesktopApp from './desktop-app';
 import metricsService from './metrics/metrics-service';
 import { EVENT_NAMES } from './metrics/metrics-constants';
 
+const onExtensionBackgroundMessage = (data: any) => {
+  if (data.data?.method === 'markNotificationPopupAsAutomaticallyClosed') {
+    DesktopApp.hideApprovalWindow();
+  }
+};
+
 /**
  * TODO
  * Gets user the preferred language code.
@@ -36,6 +42,8 @@ const registerStatePersistenceListener = () => {
 };
 
 const getPortStream = (remotePort: RemotePort) => {
+  remotePort.stream.on('data', (data) => onExtensionBackgroundMessage(data));
+
   return remotePort.stream;
 };
 
@@ -93,20 +101,6 @@ const initialize = async () => {
     getPortStream,
     getOrigin,
     createSnapExecutionService,
-    storeListeners: [
-      [
-        [
-          'approvalController',
-          'txController',
-          'typedMessageManager',
-          'messageManager',
-          'personalMessageManager',
-          'decryptMessageManager',
-          'encryptionPublicKeyManager',
-        ],
-        (state: any) => DesktopApp.onApprovalStateChange(state),
-      ],
-    ],
     keyrings: {
       trezor: TrezorKeyring,
       ledger: LedgerKeyring,

@@ -77,7 +77,7 @@ const Routes = ({
   }, []);
 
   return (
-    <div id="mmd-app-content">
+    <div id="mmd-app-content" className={isApproving ? 'approval-window' : ''}>
       <Switch>
         <Route path={DEFAULT_ROUTE} component={Loading} exact />
         <Route path={PAIR_ROUTE} component={Pair} />

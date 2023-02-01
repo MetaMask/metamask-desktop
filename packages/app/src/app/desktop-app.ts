@@ -20,6 +20,8 @@ import { forwardEvents } from './utils/events';
 import { determineLoginItemSettings } from './utils/settings';
 import cfg from './utils/config';
 import { getDesktopVersion } from './utils/version';
+import { registerWindowHandler } from '../browser/node-browser';
+import { WindowCreateRequest } from '../types/window';
 import ExtensionConnection from './extension-connection';
 import { updateCheck } from './update-check';
 import {
@@ -234,6 +236,11 @@ class DesktopApp extends EventEmitter {
     if (cfg().enableDesktopPopup) {
       await this.windowService.createApprovalWindow();
 
+      registerWindowHandler({
+        create: (request: WindowCreateRequest) => this.onWindowCreate(request),
+        remove: (windowId: string) => this.onWindowRemove(windowId),
+      });
+
       this.approvalStream = new IPCRendererStream(
         this.UIState.approvalWindow as any,
         'approval-ui',
@@ -265,20 +272,8 @@ class DesktopApp extends EventEmitter {
     this.UIState.latticeWindow.webContents.send(channel, ...args);
   }
 
-  public onApprovalStateChange(state: any) {
-    if (
-      (state.pendingApprovalCount || 0) > 0 ||
-      Object.keys(state.unapprovedTxs || {}).length > 0 ||
-      (state.unapprovedTypedMessagesCount || 0) > 0 ||
-      (state.unapprovedMsgCount || 0) > 0 ||
-      (state.unapprovedPersonalMsgCount || 0) > 0 ||
-      (state.unapprovedDecryptMsgCount || 0) > 0 ||
-      (state.unapprovedEncryptionPublicKeyMsgCount || 0) > 0
-    ) {
-      this.UIState.approvalWindow?.show();
-    } else {
-      this.UIState.approvalWindow?.hide();
-    }
+  public hideApprovalWindow() {
+    this.UIState.approvalWindow?.hide();
   }
 
   private updateMainWindow() {
@@ -397,6 +392,23 @@ class DesktopApp extends EventEmitter {
     this.appNavigation.setUnPairedTrayIcon();
 
     this.emit('restart');
+  }
+
+  private onWindowCreate(request: WindowCreateRequest) {
+    const { approvalWindow } = this.UIState;
+
+    if (!approvalWindow) {
+      return;
+    }
+
+    approvalWindow.setSize(request.width, request.height);
+    approvalWindow.setPosition(request.left, request.top);
+    approvalWindow.setTitle('MetaMask Desktop Notification');
+    approvalWindow.show();
+  }
+
+  private onWindowRemove(_windowId: string) {
+    this.UIState?.approvalWindow?.hide();
   }
 
   private async createWebSocketServer(): Promise<WebSocketServer> {
