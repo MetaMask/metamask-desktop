@@ -8,7 +8,7 @@ import {
 } from '@metamask/desktop/dist/web-socket-stream';
 import { ConnectionType } from '@metamask/desktop/dist/types';
 import ExtensionConnection from '../src/app/extension-connection';
-import { DesktopPairing } from '../src/shared/pairing';
+import { DesktopPairing } from '../src/app/pairing';
 
 export const DECRYPTED_STRING_MOCK = 'testDecryptedData';
 export const PROPERTY_MOCK = 'test';

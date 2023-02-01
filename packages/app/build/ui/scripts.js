@@ -107,7 +107,7 @@ function createScriptTasks({ applyLavaMoat, buildType, policyOnly }) {
         buildTarget,
         buildType,
         entryFiles: ['desktop-ui'].map((label) => {
-          return `./src/${label}.js`;
+          return `./src/ui/${label}.js`;
         }),
         policyOnly,
       }),
@@ -121,7 +121,7 @@ function createScriptTasks({ applyLavaMoat, buildType, policyOnly }) {
         buildTarget,
         buildType,
         destFilepath: `${label}.js`,
-        entryFilepath: `./src/app/renderer/${label}.ts`,
+        entryFilepath: `./src/app/log/${label}.ts`,
         label,
         policyOnly,
       }),
@@ -618,7 +618,7 @@ function renderHtmlFile({ htmlName, groupSet, commonSet, applyLavaMoat }) {
       'build/scripts/renderHtmlFile - must specify "applyLavaMoat" option',
     );
   }
-  const htmlFilePath = `./html/${htmlName}.html`;
+  const htmlFilePath = `./src/ui/html/${htmlName}.html`;
   const htmlTemplate = readFileSync(htmlFilePath, 'utf8');
   const jsBundles = [...commonSet.values(), ...groupSet.values()].map(
     (label) => `./${label}.js`,

@@ -92,7 +92,7 @@ function getCopyTargets(shouldIncludeLockdown) {
       dest: 'react-gallery/',
     },
     {
-      src: `./ui/css/output/`,
+      src: `./src/ui/css/output/`,
       pattern: `*.css`,
       dest: ``,
     },
@@ -133,9 +133,9 @@ function getCopyTargets(shouldIncludeLockdown) {
       dest: `runtime-lavamoat.js`,
     },
     {
-      src: `./images/desktop-icons/`,
+      src: `./src/app/icons/`,
       pattern: `*.png`,
-      dest: `icons/`,
+      dest: `../app/src/app/icons/`,
     },
   ];
 

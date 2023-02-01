@@ -2,14 +2,14 @@ import Store from 'electron-store';
 import { uuid } from '@metamask/desktop/dist/utils/utils';
 import log from 'loglevel';
 import { app } from 'electron';
-import { getDesktopVersion } from '../../utils/version';
+import { getDesktopVersion } from '../utils/version';
 import {
   MetricsState,
   Properties,
   SegmentApiCalls,
   Traits,
   Event,
-} from '../../types/metrics';
+} from '../types/metrics';
 import Analytics from './analytics';
 
 class MetricsService {

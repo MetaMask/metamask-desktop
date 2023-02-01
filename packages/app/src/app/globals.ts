@@ -1,6 +1,6 @@
 import 'global-agent/bootstrap';
-import './logger-init';
-import '../browser/browser-init';
+import './log/logger-init';
+import './browser/browser-init';
 import { webcrypto } from 'node:crypto';
 import electronLog from 'electron-log';
 import { Headers } from 'node-fetch';
@@ -12,10 +12,10 @@ import {
   beforeBreadcrumb,
   rewriteReport,
 } from '../../submodules/extension/app/scripts/lib/setupSentry';
-import { getDesktopVersion } from '../utils/version';
-import { ElectronBridge } from './renderer/preload';
-import { getSentryDefaultOptions } from './renderer/setup-sentry';
-import { readPersistedSettingFromAppState } from './ui-storage';
+import { getDesktopVersion } from './utils/version';
+import { ElectronBridge } from './ui/preload';
+import { getSentryDefaultOptions } from './log/setup-sentry';
+import { readPersistedSettingFromAppState } from './storage/ui-storage';
 
 declare global {
   interface Window {

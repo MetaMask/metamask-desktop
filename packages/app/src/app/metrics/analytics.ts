@@ -1,6 +1,6 @@
 import AnalyticsNode from 'analytics-node';
-import cfg from '../../utils/config';
-import { Identity } from '../../types/metrics';
+import cfg from '../utils/config';
+import { Identity } from '../types/metrics';
 
 class Analytics {
   private static instance: AnalyticsNode;
