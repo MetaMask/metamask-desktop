@@ -103,12 +103,6 @@ export default class WindowService {
   public async createApprovalWindow() {
     const approvalWindow = new BrowserWindow({
       show: false,
-      width: 360,
-      height: 620,
-      minWidth: 360,
-      minHeight: 620,
-      titleBarStyle: 'hidden',
-      titleBarOverlay: titleBarOverlayOpts.light,
       webPreferences: {
         preload: path.resolve(__dirname, './renderer/preload.js'),
       },

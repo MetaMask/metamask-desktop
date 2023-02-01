@@ -11,6 +11,7 @@ import {
   getDesktopVersion,
   getNumericalDesktopVersion,
 } from '../utils/version';
+import { WindowCreateRequest, WindowHandler } from '../types/window';
 
 const TIMEOUT_REQUEST = 5000;
 
@@ -37,7 +38,6 @@ const PROXY_FUNCTIONS = [
   'notifications.create',
   'runtime.getURL',
   'tabs.query',
-  'windows.create',
   'windows.getAll',
   'windows.getLastFocused',
   'windows.update',
@@ -45,28 +45,7 @@ const PROXY_FUNCTIONS = [
 
 const requestPromises: { [id: string]: (result: any) => void } = {};
 let requestStream: Duplex | undefined;
-
-const raw = {
-  storage: {
-    local: {
-      get: () => ObfuscatedStore.getStore(),
-      set: async (data: any) => {
-        await ObfuscatedStore.setStore(data);
-      },
-      clear: () => ObfuscatedStore.clear(),
-    },
-  },
-  runtime: {
-    id: '1234',
-    lastError: undefined,
-    getManifest: () => ({
-      manifest_version: 2,
-      version: getNumericalDesktopVersion(),
-      version_name: getDesktopVersion(),
-    }),
-    getPlatformInfo: () => Promise.resolve({ os: 'mac' }),
-  },
-};
+let windowHandler: WindowHandler | undefined;
 
 const warn = (key: string[]) => {
   log.debug(`Browser method not supported - ${key.join('.')}`);
@@ -157,6 +136,41 @@ const init = (manualOverrides: any): Browser => {
   return browser;
 };
 
+const raw = {
+  storage: {
+    local: {
+      get: () => ObfuscatedStore.getStore(),
+      set: async (data: any) => {
+        await ObfuscatedStore.setStore(data);
+      },
+      clear: () => ObfuscatedStore.clear(),
+    },
+  },
+  runtime: {
+    id: '1234',
+    lastError: undefined,
+    getManifest: () => ({
+      manifest_version: 2,
+      version: getNumericalDesktopVersion(),
+      version_name: getDesktopVersion(),
+    }),
+    getPlatformInfo: () => Promise.resolve({ os: 'mac' }),
+  },
+  windows: {
+    create: (request: WindowCreateRequest) => {
+      proxy(['windows', 'create'], [request]);
+      windowHandler?.create({
+        ...request,
+        left: request.left - request.width - 10,
+      });
+    },
+    remove: (windowId: string) => {
+      proxy(['windows', 'remove'], [windowId]);
+      windowHandler?.remove(windowId);
+    },
+  },
+};
+
 export const browser: Browser = init(raw);
 
 export const registerRequestStream = (stream: Duplex) => {
@@ -173,4 +187,8 @@ export const unregisterRequestStream = () => {
 
   requestStream.removeAllListeners();
   requestStream = undefined;
+};
+
+export const registerWindowHandler = (handler: WindowHandler) => {
+  windowHandler = handler;
 };

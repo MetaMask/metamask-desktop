@@ -31,10 +31,18 @@ body {
   padding-top: $title-bar-height;
 }
 
+#mmd-root:has(.approval-window) {
+  padding-top: 0;
+}
+
 #mmd-app-content {
   padding: 0 16px;
   height: 100%;
   position: relative;
+}
+
+#mmd-app-content.approval-window {
+  padding: 0 0 0 0;
 }
 
 #mmd-draggable-hidden-bar {
