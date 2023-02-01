@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron';
-import { Properties } from '../types/metrics';
+import { Properties, Traits } from '../types/metrics';
 
 const uiStoreBridge = (name: string) => {
   return {
@@ -19,6 +19,9 @@ const analyticsBridge = (name: string) => {
   return {
     track: (eventName: string, properties: Properties) => {
       return ipcRenderer.invoke(`${name}-track`, eventName, properties);
+    },
+    identify: (traits: Traits) => {
+      return ipcRenderer.invoke(`${name}-identify`, traits);
     },
   };
 };

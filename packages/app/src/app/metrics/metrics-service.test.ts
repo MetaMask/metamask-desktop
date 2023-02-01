@@ -52,6 +52,7 @@ jest.mock(
   'electron',
   () => ({
     app: { name: jest.fn() },
+    ipcMain: { handle: jest.fn() },
   }),
   {
     virtual: true,

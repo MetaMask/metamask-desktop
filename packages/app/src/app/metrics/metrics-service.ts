@@ -1,7 +1,7 @@
 import Store from 'electron-store';
 import { uuid } from '@metamask/desktop/dist/utils/utils';
 import log from 'loglevel';
-import { app } from 'electron';
+import { app, ipcMain } from 'electron';
 import { getDesktopVersion } from '../utils/version';
 import {
   MetricsState,
@@ -58,6 +58,8 @@ class MetricsService {
     );
     this.traits = this.store.get('traits', {});
     this.segmentApiCalls = this.store.get('segmentApiCalls', {});
+
+    this.registerMetricsBridgeHandler();
   }
 
   /* The track method lets you record the actions your users perform. */
@@ -168,6 +170,19 @@ class MetricsService {
     this.firstTimeEvents[eventName] = false;
 
     this.store.set('firstTimeEvents', this.firstTimeEvents);
+  }
+
+  private registerMetricsBridgeHandler() {
+    ipcMain.handle(
+      'analytics-track',
+      (_event, eventName: string, properties: Properties) => {
+        this.track(eventName, properties);
+      },
+    );
+
+    ipcMain.handle('analytics-identify', (_event, traits: Traits) => {
+      this.identify(traits);
+    });
   }
 }
 
