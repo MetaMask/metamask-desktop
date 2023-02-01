@@ -1,7 +1,5 @@
 const del = require('del');
-const {
-  TASKS,
-} = require('../../submodules/extension/development/build/constants');
+const { TASKS } = require('./constants');
 const { createTask } = require('./task');
 
 module.exports = createEtcTasks;

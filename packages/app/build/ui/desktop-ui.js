@@ -9,11 +9,9 @@ const {
   BuildType,
 } = require('../../submodules/extension/development/lib/build-type');
 const {
-  TASKS,
-} = require('../../submodules/extension/development/build/constants');
-const {
   getConfig,
 } = require('../../submodules/extension/development/build/config');
+const { TASKS } = require('./constants');
 const {
   createTask,
   composeSeries,
