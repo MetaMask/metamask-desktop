@@ -67,7 +67,6 @@ export class ExtensionSignUpPage {
 
   async goto() {
     await this.page.goto(`chrome-extension://${this.extensionId}/home.html`);
-    // this.page.locator('button:has-text("I accept the risks")').click();
   }
 
   async start() {
@@ -89,12 +88,6 @@ export class ExtensionSignUpPage {
     await this.importMyWalletBtn.click();
   }
 
-  // async termsAndConditions() {
-  //   await this.agreeCheck.click();
-  //   await this.importBtn.click();
-  //   await this.doneBtn.click();
-  // }
-
   async completed() {
     await this.gotItBtn.click();
     await this.nextBtn.click();
@@ -114,7 +107,6 @@ export async function signUpFlow(page: Page, context: BrowserContext) {
   await signUp.goto();
   await signUp.start();
   await signUp.authentication();
-  // await signUp.termsAndConditions();
   await signUp.completed();
   return extensionId;
 }
