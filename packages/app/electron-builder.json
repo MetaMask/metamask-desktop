@@ -41,7 +41,7 @@
     "deleteAppDataOnUninstall": true,
     "artifactName": "metamask-desktop-${version}-setup.${ext}"
   },
-  "productName": "MetaMask Desktop",
+  "productName": "MetaMask Desktop Companion App",
   "win": {
     "icon": "build/icon.png",
     "forceCodeSigning": false,
