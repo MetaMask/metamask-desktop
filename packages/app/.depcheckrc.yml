@@ -35,7 +35,9 @@ ignores:
   - '@eth-optimism/contracts'
   - '@ethereumjs/common'
   - '@ethersproject/abi'
+  - '@ethersproject/bignumber'
   - '@ethersproject/contracts'
+  - '@ethersproject/hdnode'
   - '@ethersproject/providers'
   - '@formatjs/intl-relativetimeformat'
   - '@fortawesome/fontawesome-free'
@@ -53,6 +55,7 @@ ignores:
   - '@metamask/controllers'
   - '@metamask/design-tokens'
   - '@metamask/eth-json-rpc-infura'
+  - '@metamask/eth-keyring-controller'
   - '@metamask/eth-ledger-bridge-keyring'
   - '@metamask/eth-token-tracker'
   - '@metamask/etherscan-link'
@@ -68,12 +71,14 @@ ignores:
   - '@metamask/providers'
   - '@metamask/rate-limit-controller'
   - '@metamask/rpc-methods'
+  - '@metamask/scure-bip39'
   - '@metamask/slip44'
   - '@metamask/smart-transactions-controller'
   - '@metamask/snaps-controllers'
   - '@metamask/snaps-ui'
   - '@metamask/snaps-utils'
   - '@metamask/subject-metadata-controller'
+  - '@metamask/utils'
   - '@ngraveio/bc-ur'
   - '@popperjs/core'
   - '@reduxjs/toolkit'
@@ -200,6 +205,7 @@ ignores:
   - '@storybook/manager-webpack5'
   - '@storybook/react'
   - '@storybook/storybook-deployer'
+  - '@storybook/test-runner'
   - '@storybook/theming'
   - '@testing-library/jest-dom'
   - '@testing-library/react'
@@ -254,7 +260,7 @@ ignores:
   - improved-yarn-audit
   - ini
   - jest-canvas-mock
-  - jest-it-up
+  - js-yaml
   - koa
   - lavamoat-browserify
   - lavamoat-viz
@@ -298,6 +304,7 @@ ignores:
   - vinyl-buffer
   - vinyl-source-stream
   - vinyl-sourcemaps-apply
+  - wait-on
   - watchify
   - webpack
   - yargs
