@@ -114,6 +114,9 @@ const MetaMetricsOptIn = ({ updateMetametricsOptIn }) => {
         </div>
         <div className="metametrics-opt-in__footer">
           <div className="metametrics-opt-in__bottom-text">
+            {t('metricsSharingStrategy')}
+          </div>
+          <div className="metametrics-opt-in__bottom-text">
             {t('gdprMessage', [
               <a
                 key="metametrics-bottom-text-wrapper"
