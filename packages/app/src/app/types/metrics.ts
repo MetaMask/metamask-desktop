@@ -7,8 +7,8 @@ export interface Traits {
   [key: string]: any;
 }
 
-export interface FirstTimeEvents {
-  [key: string]: boolean;
+export interface EventsStorage {
+  firstTimeEvents: Set<string>;
 }
 
 export interface Properties {
@@ -29,10 +29,9 @@ export interface SegmentApiCalls {
   [key: string]: Event;
 }
 
-export interface MetricsState {
+export interface MetricsStorage {
   desktopMetricsId?: string;
   eventsSavedBeforeMetricsDecision: Event[];
   traits: Traits;
   segmentApiCalls: SegmentApiCalls;
-  firstTimeEvents: FirstTimeEvents;
 }

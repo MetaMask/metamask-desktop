@@ -4,19 +4,21 @@ import log from 'loglevel';
 import { app, ipcMain } from 'electron';
 import { getDesktopVersion } from '../utils/version';
 import {
-  MetricsState,
+  MetricsStorage,
   Properties,
   SegmentApiCalls,
   Traits,
   Event,
-  FirstTimeEvents,
+  EventsStorage,
 } from '../types/metrics';
 import { readPersistedSettingFromAppState } from '../storage/ui-storage';
 import Analytics from './analytics';
-import { EVENT_NAMES, MetricsDecision } from './metrics-constants';
+import { MetricsDecision } from './metrics-constants';
 
 class MetricsService {
-  private store: Store<MetricsState>;
+  private store: Store<MetricsStorage>;
+
+  private eventStore: Store<EventsStorage>;
 
   private analytics: typeof Analytics;
 
@@ -33,24 +35,15 @@ class MetricsService {
   private segmentApiCalls: SegmentApiCalls;
 
   // Tracks first time events
-  private firstTimeEvents: FirstTimeEvents;
+  private firstTimeEvents: Set<string>;
 
   constructor() {
     this.analytics = Analytics;
-    this.store = new Store<MetricsState>({
+
+    this.store = new Store<MetricsStorage>({
       name: `mmd-desktop-metrics`,
     });
 
-    // Creates an object with all events and sets the value first-time event to true
-    const defaultFirstTimeEvents: FirstTimeEvents = {};
-    for (const event of Object.values(EVENT_NAMES)) {
-      defaultFirstTimeEvents[event] = true;
-    }
-
-    this.firstTimeEvents = this.store.get(
-      'firstTimeEvents',
-      defaultFirstTimeEvents,
-    );
     this.desktopMetricsId = this.store.get('desktopMetricsId', '');
     this.eventsSavedBeforeMetricsDecision = this.store.get(
       'eventsSavedBeforeMetricsDecision',
@@ -58,6 +51,15 @@ class MetricsService {
     );
     this.traits = this.store.get('traits', {});
     this.segmentApiCalls = this.store.get('segmentApiCalls', {});
+
+    this.eventStore = new Store<EventsStorage>({
+      name: `mmd-desktop-metrics-events`,
+    });
+
+    this.firstTimeEvents = this.eventStore.get(
+      'firstTimeEvents',
+      new Set<string>(),
+    );
 
     this.registerMetricsBridgeHandler();
   }
@@ -76,7 +78,7 @@ class MetricsService {
       messageId: uuid(),
     };
 
-    this.checkAndUpdateFirstTimeEvent(eventToTrack.event);
+    this.saveFirstTimeEvent(eventToTrack.event);
 
     log.debug('track event', eventToTrack);
 
@@ -163,11 +165,11 @@ class MetricsService {
     };
   }
 
-  private checkAndUpdateFirstTimeEvent(eventName: string) {
-    if (!this.firstTimeEvents[eventName]) {
+  private saveFirstTimeEvent(eventName: string) {
+    if (this.firstTimeEvents.has(eventName)) {
       return;
     }
-    this.firstTimeEvents[eventName] = false;
+    this.firstTimeEvents.add(eventName);
 
     this.store.set('firstTimeEvents', this.firstTimeEvents);
   }

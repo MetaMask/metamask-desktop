@@ -34,7 +34,7 @@ jest.mock(
             case 'eventsSavedBeforeMetricsDecision':
               return [];
             case 'firstTimeEvents':
-              return { 'mock-event-name': true, 'mock-event-name-2': true };
+              return new Set<string>(['mock-event-name', 'mock-event-name-2']);
             default:
               return undefined;
           }
@@ -87,9 +87,9 @@ describe('MetricsService', () => {
     jest.clearAllMocks();
   });
 
-  it('set desktopMetricsId', () => {
+  it('sets desktop metrics id', () => {
     metricsService.setDesktopMetricsId(UUID_MOCK);
-    expect(electronStoreConstructorMock).toHaveBeenCalledTimes(1);
+    expect(electronStoreConstructorMock).toHaveBeenCalledTimes(2);
   });
 
   it('tracks an event with properties and saved it to the store', () => {

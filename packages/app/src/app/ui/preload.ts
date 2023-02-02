@@ -15,17 +15,6 @@ const uiStoreBridge = (name: string) => {
   };
 };
 
-const analyticsBridge = (name: string) => {
-  return {
-    track: (eventName: string, properties: Properties) => {
-      return ipcRenderer.invoke(`${name}-track`, eventName, properties);
-    },
-    identify: (traits: Traits) => {
-      return ipcRenderer.invoke(`${name}-identify`, traits);
-    },
-  };
-};
-
 const electronBridge = {
   appStore: uiStoreBridge('app'),
   pairStatusStore: uiStoreBridge('pair-status'),
@@ -71,7 +60,12 @@ const electronBridge = {
   setLanguage: async (language: string) => {
     await ipcRenderer.invoke('set-language', language);
   },
-  analytics: analyticsBridge('analytics'),
+  track: (eventName: string, properties: Properties) => {
+    return ipcRenderer.invoke('analytics-track', eventName, properties);
+  },
+  identify: (traits: Traits) => {
+    return ipcRenderer.invoke('analytics-identify', traits);
+  },
 };
 
 contextBridge.exposeInMainWorld('electronBridge', electronBridge);
