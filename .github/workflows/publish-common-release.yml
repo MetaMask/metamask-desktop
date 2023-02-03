@@ -12,7 +12,7 @@ on:
   push:
     paths:
       - packages/common/**
-    branches: [main-desktop]
+    branches: [main]
 
 jobs:
   check-common-workflows:
@@ -38,7 +38,7 @@ jobs:
         if:  ${{ !github.event.inputs.bypass_is_release }}
         uses: MetaMask/action-is-release@v1
         with:
-          commit-starts-with: 'Release [version]'
+          commit-starts-with: 'Release Common [version]'
 
   build:
     needs: is-release
@@ -55,10 +55,9 @@ jobs:
           node-version-file: '.nvmrc'
       - name: Install
         shell: bash
-        run: |
-          yarn common install --immutable
-          yarn common build
+        run: yarn install --immutable
       - name: Build
+        shell: bash
         run: yarn common build
       - uses: actions/cache@v3
         id: restore-build
