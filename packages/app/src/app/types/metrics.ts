@@ -8,7 +8,7 @@ export interface Traits {
 }
 
 export interface EventsStorage {
-  firstTimeEvents: Set<string>;
+  firstTimeEvents: string[];
 }
 
 export interface Properties {

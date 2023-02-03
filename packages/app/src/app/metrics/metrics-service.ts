@@ -35,7 +35,7 @@ class MetricsService {
   private segmentApiCalls: SegmentApiCalls;
 
   // Tracks first time events
-  private firstTimeEvents: Set<string>;
+  private firstTimeEvents: string[];
 
   constructor() {
     this.analytics = Analytics;
@@ -56,10 +56,7 @@ class MetricsService {
       name: `mmd-desktop-metrics-events`,
     });
 
-    this.firstTimeEvents = this.eventStore.get(
-      'firstTimeEvents',
-      new Set<string>(),
-    );
+    this.firstTimeEvents = this.eventStore.get('firstTimeEvents', []);
 
     this.registerMetricsBridgeHandler();
   }
@@ -73,12 +70,16 @@ class MetricsService {
     const eventToTrack = {
       event,
       userId: this.desktopMetricsId,
-      properties: { ...properties, ...this.traits },
+      properties: {
+        ...properties,
+        firstTimeEvent: Boolean(!this.firstTimeEvents.includes(event)),
+        ...this.traits,
+      },
       context: this.buildContext(),
       messageId: uuid(),
     };
 
-    this.saveFirstTimeEvent(eventToTrack.event);
+    this.saveFirstTimeEvents(eventToTrack.event);
 
     log.debug('track event', eventToTrack);
 
@@ -87,6 +88,10 @@ class MetricsService {
       return;
     } else if (metricsDecision === MetricsDecision.PENDING) {
       this.eventsSavedBeforeMetricsDecision.push(eventToTrack);
+      this.store.set(
+        'eventsSavedBeforeMetricsDecision',
+        this.eventsSavedBeforeMetricsDecision,
+      );
       return;
     }
 
@@ -165,13 +170,13 @@ class MetricsService {
     };
   }
 
-  private saveFirstTimeEvent(eventName: string) {
-    if (this.firstTimeEvents.has(eventName)) {
+  private saveFirstTimeEvents(eventName: string) {
+    if (this.firstTimeEvents.includes(eventName)) {
       return;
     }
-    this.firstTimeEvents.add(eventName);
+    this.firstTimeEvents.push(eventName);
 
-    this.store.set('firstTimeEvents', this.firstTimeEvents);
+    this.eventStore.set('firstTimeEvents', this.firstTimeEvents);
   }
 
   private registerMetricsBridgeHandler() {
