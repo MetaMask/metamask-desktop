@@ -35,6 +35,8 @@ import { setUiStorage } from './storage/ui-storage';
 import MetricsService from './metrics/metrics-service';
 import { EVENT_NAMES } from './metrics/metrics-constants';
 
+console.log('Dummy commit');
+
 // Set protocol for deeplinking
 if (!cfg().isUnitTest) {
   if (process.defaultApp) {
