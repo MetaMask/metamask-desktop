@@ -53,6 +53,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
+      - uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: ./.yarn/cache
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
       - name: Install
         shell: bash
         run: yarn install --immutable
@@ -102,6 +109,16 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
+      - uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: ./.yarn/cache
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Install
+        shell: bash
+        run: yarn install --immutable
       - name: Dry Run Publish
         id: dry-run-publish
         shell: bash
@@ -124,6 +141,16 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
+      - uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: ./.yarn/cache
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Install
+        shell: bash
+        run: yarn install --immutable
       - name: Publish
         id: publish
         shell: bash
