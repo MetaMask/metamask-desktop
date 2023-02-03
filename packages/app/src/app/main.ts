@@ -13,12 +13,14 @@ import { LedgerBridgeKeyring as LedgerKeyring } from './hw/ledger/ledger-keyring
 import TrezorKeyring from './hw/trezor/trezor-keyring';
 import LatticeKeyring from './hw/lattice/lattice-keyring';
 import DesktopApp from './desktop-app';
+import metricsService from './metrics/metrics-service';
+import { EVENT_NAMES } from './metrics/metrics-constants';
 
 /**
  * TODO
  * Gets user the preferred language code.
  *
- * @returns The laguange code to be used for the app localisation. Defaults to 'en'.
+ * @returns The language code to be used for the app localisation. Defaults to 'en'.
  */
 const getFirstPreferredLangCode = () => {
   return 'en';
@@ -109,6 +111,7 @@ const onDesktopRestart = async (desktopApp: typeof DesktopApp) => {
  * Initialize desktop app.
  */
 const initDesktopApp = async () => {
+  metricsService.track(EVENT_NAMES.DESKTOP_APP_STARTING);
   await DesktopApp.init();
   DesktopApp.on('restart', () => onDesktopRestart(DesktopApp));
 };
