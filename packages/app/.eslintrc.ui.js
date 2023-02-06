@@ -48,6 +48,17 @@ module.exports = {
       // no-go, so we grab it from React's package.json.
       version: reactVersion,
     },
+    'import/resolver': {
+      // When determining the location of an `import`, prefer TypeScript's
+      // resolution algorithm. Note that due to how we've configured
+      // TypeScript in `tsconfig.json`, we are able to import JavaScript
+      // files from TypeScript files.
+      typescript: {
+        // Always try to resolve types under `<root>/@types` directory even
+        // it doesn't contain any source code, like `@types/unist`
+        alwaysTryTypes: true,
+      },
+    },
   },
   overrides: [
     {
