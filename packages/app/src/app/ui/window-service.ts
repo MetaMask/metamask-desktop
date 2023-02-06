@@ -18,7 +18,7 @@ export default class WindowService {
       // Always set to false, otherwise the window will be shown before it is ready
       show: false,
       width: 840,
-      height: 680,
+      height: 780,
       minWidth: 800,
       minHeight: 640,
       titleBarStyle: 'hidden',

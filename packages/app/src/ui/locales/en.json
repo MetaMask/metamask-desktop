@@ -171,6 +171,9 @@
   "metametricsOptInDescription": {
     "message": "MetaMask would like to gather usage data to better understand how our users interact with the extension. This data will be used to continually improve the usability and user experience of our product and the Ethereum ecosystem."
   },
+  "metricsSharingStrategy": {
+    "message": "In the situation where the desktop application is paired with a MetaMask extension and you agreed to share your usage data to MetaMask both in the desktop application and in the extension, some of the extension's data will transit through the desktop application before being sent to MetaMask, along with the desktop application's data."
+  },
   "minimized": {
     "message": "Minimized"
   },
