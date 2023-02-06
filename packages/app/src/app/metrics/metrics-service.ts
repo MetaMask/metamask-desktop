@@ -6,7 +6,6 @@ import { getDesktopVersion } from '../utils/version';
 import {
   MetricsStorage,
   Properties,
-  SegmentApiCalls,
   Traits,
   Event,
   EventsStorage,
@@ -31,9 +30,6 @@ class MetricsService {
   // Traits are pieces of information you know about a user that are included in an identify call
   private traits: Traits;
 
-  // Every event submitted to segment
-  private segmentApiCalls: SegmentApiCalls;
-
   // Tracks first time events
   private firstTimeEvents: string[];
 
@@ -50,7 +46,6 @@ class MetricsService {
       [],
     );
     this.traits = this.store.get('traits', {});
-    this.segmentApiCalls = this.store.get('segmentApiCalls', {});
 
     this.eventStore = new Store<EventsStorage>({
       name: `mmd-desktop-metrics-events`,
@@ -96,7 +91,6 @@ class MetricsService {
     }
 
     this.analytics.track(eventToTrack);
-    this.saveCallSegmentAPI(eventToTrack);
   }
 
   /* The identify method lets you tie a user to their actions and record
@@ -144,7 +138,6 @@ class MetricsService {
     log.debug('sending events saved before user optIn');
     this.eventsSavedBeforeMetricsDecision?.forEach((event) => {
       this.analytics.track(event);
-      this.saveCallSegmentAPI(event);
     });
 
     this.cleanPendingEvents();
@@ -153,11 +146,6 @@ class MetricsService {
   private cleanPendingEvents() {
     this.eventsSavedBeforeMetricsDecision = [];
     this.store.set('eventsSavedBeforeMetricsDecision', []);
-  }
-
-  private saveCallSegmentAPI(event: Event) {
-    this.segmentApiCalls[uuid()] = event;
-    this.store.set('segmentApiCalls', this.segmentApiCalls);
   }
 
   // Build the context object to attach to page and track events.

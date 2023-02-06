@@ -25,13 +25,8 @@ export interface Event {
   messageId?: string;
 }
 
-export interface SegmentApiCalls {
-  [key: string]: Event;
-}
-
 export interface MetricsStorage {
   desktopMetricsId?: string;
   eventsSavedBeforeMetricsDecision: Event[];
   traits: Traits;
-  segmentApiCalls: SegmentApiCalls;
 }

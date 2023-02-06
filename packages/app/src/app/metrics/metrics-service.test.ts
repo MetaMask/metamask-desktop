@@ -29,8 +29,6 @@ jest.mock(
           switch (value) {
             case 'participateInDesktopMetrics':
               return true;
-            case 'segmentApiCalls':
-              return {};
             case 'eventsSavedBeforeMetricsDecision':
               return [];
             case 'firstTimeEvents':
