@@ -1,6 +1,5 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import { Server as WebSocketServer } from 'ws';
-import { browser } from '@metamask/desktop/dist/browser';
 import { WebSocketStream } from '@metamask/desktop/dist/web-socket-stream';
 import * as RawStateUtils from '@metamask/desktop/dist/utils/state';
 import EncryptedWebSocketStream from '@metamask/desktop/dist/encryption/web-socket-stream';
@@ -30,10 +29,6 @@ jest.mock('./storage/ui-storage', () => ({
   setUiStorage: jest.fn(),
 }));
 jest.mock('./metrics/metrics-service', () => jest.fn(), { virtual: true });
-
-jest.mock('@metamask/desktop/dist/browser', () => ({
-  browser: { storage: { local: { get: jest.fn(), set: jest.fn() } } },
-}));
 
 jest.mock('@metamask/desktop/dist/utils/state', () => ({
   getDesktopState: jest.fn(),
@@ -78,7 +73,6 @@ describe('Desktop', () => {
   const webSocketServerMock = createWebSocketServerMock();
   const appMock = app as any;
   const extensionConnectionMock = createExtensionConnectionMock();
-  const browserMock = browser as any;
   const pairingMock = createEventEmitterMock();
   const rawStateUtilsMock = RawStateUtils as jest.Mocked<typeof RawStateUtils>;
   const IPCMainMock = ipcMain as jest.Mocked<any>;
@@ -129,8 +123,6 @@ describe('Desktop', () => {
         return webSocketServerMock;
       },
     );
-
-    browserMock.storage.local.get.mockResolvedValue({});
 
     rawStateUtilsMock.getDesktopState.mockResolvedValue({
       desktopEnabled: false,

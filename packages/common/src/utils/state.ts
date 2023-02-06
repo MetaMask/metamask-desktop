@@ -2,7 +2,7 @@ import { DesktopState, RawState } from '../types';
 import { browser } from '../browser';
 
 export const getRawState = async (): Promise<RawState> => {
-  return await browser.storage.local.get();
+  return (await browser.storage.local.get()) as any;
 };
 
 export const getDesktopState = async (): Promise<DesktopState> => {
