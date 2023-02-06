@@ -2,7 +2,10 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'redux';
 
-import { ABOUT_US_ROUTE, PRIVACY_ROUTE } from '../../helpers/constants/routes';
+import {
+  ABOUT_US_ROUTE,
+  PRIVACY_ROUTE,
+} from '../../../shared/constants/ui-routes';
 import Settings from './settings.component';
 
 function mapStateToProps(_, ownProps) {

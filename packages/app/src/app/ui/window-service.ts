@@ -2,6 +2,10 @@ import path from 'path';
 import { app, BrowserWindow, nativeTheme } from 'electron';
 import log from 'loglevel';
 import { readPersistedSettingFromAppState } from '../storage/ui-storage';
+import {
+  PAIR_PAGE,
+  METAMETRICS_OPT_IN_PAGE,
+} from '../../shared/constants/ui-routes';
 import UIState from './ui-state';
 import { titleBarOverlayOpts } from './ui-constants';
 
@@ -150,8 +154,8 @@ export default class WindowService {
     });
 
     const startupPage = isMetametricsOptionSelected
-      ? 'pair'
-      : 'metametrics-opt-in';
+      ? PAIR_PAGE
+      : METAMETRICS_OPT_IN_PAGE;
 
     return { hash: startupPage };
   }

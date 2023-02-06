@@ -13,7 +13,10 @@ import {
   DISPLAY,
   FLEX_DIRECTION,
 } from '../../../../submodules/extension/ui/helpers/constants/design-system';
-import { PAIR_ROUTE, SETTINGS_ROUTE } from '../../helpers/constants/routes';
+import {
+  PAIR_ROUTE,
+  SETTINGS_ROUTE,
+} from '../../../shared/constants/ui-routes';
 
 const SuccessfulPair = ({
   history,

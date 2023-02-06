@@ -1,42 +1,13 @@
 import React from 'react';
+import { getPureMessage } from '../../shared/locales/getPureMessage';
 // import * as Sentry from '@sentry/browser';
-
-const warned = {};
-const missingMessageErrors = {};
 const missingSubstitutionErrors = {};
 
-// Keep same getMessage function as in the extension
 export const getMessage = (localeCode, localeMessages, key, substitutions) => {
-  if (!localeMessages) {
+  let phrase = getPureMessage(localeCode, localeMessages, key);
+  if (phrase === null) {
     return null;
   }
-
-  if (!localeMessages[key]) {
-    if (localeCode === 'en') {
-      if (!missingMessageErrors[key]) {
-        missingMessageErrors[key] = new Error(
-          `Unable to find value of key "${key}" for locale "${localeCode}"`,
-        );
-        // Sentry.captureException(missingMessageErrors[key]);
-        __electronLog.error(missingMessageErrors[key]);
-        if (process.env.IN_TEST) {
-          throw missingMessageErrors[key];
-        }
-      }
-    } else if (!warned[localeCode] || !warned[localeCode][key]) {
-      if (!warned[localeCode]) {
-        warned[localeCode] = {};
-      }
-      warned[localeCode][key] = true;
-      __electronLog.warn(
-        `Translator - Unable to find value of key "${key}" for locale "${localeCode}"`,
-      );
-    }
-    return null;
-  }
-  const entry = localeMessages[key];
-  let phrase = entry.message;
-
   const hasSubstitutions = Boolean(substitutions && substitutions.length);
   const hasReactSubstitutions =
     hasSubstitutions &&
