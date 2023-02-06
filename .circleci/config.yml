@@ -195,12 +195,13 @@ jobs:
             - << pipeline.parameters.extension-dir >>/.yarn/cache/
             - << pipeline.parameters.extension-dir >>/node_modules/
       - run:
-          name: Copy common package
-          command: cp -r ${COMMON_DIR} ${EXTENSION_DIR}/.desktop
+          name: Initialise extension
+          command: yarn setup:extension
       - persist_to_workspace:
           root: .
           paths:
-            - << pipeline.parameters.extension-dir >>/.desktop
+            - << pipeline.parameters.extension-dir >>/yarn.lock
+            - << pipeline.parameters.extension-dir >>/package.json
             - << pipeline.parameters.extension-dir >>/node_modules
 
   validate-deps:
