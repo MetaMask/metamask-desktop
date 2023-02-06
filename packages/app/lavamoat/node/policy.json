@@ -5264,11 +5264,11 @@
     },
     "webextension-polyfill": {
       "globals": {
-        "browser": false,
-        "chrome": false,
-        "console.error": false,
-        "console.warn": false,
-        "define": false
+        "browser": true,
+        "chrome": true,
+        "console.error": true,
+        "console.warn": true,
+        "define": true
       }
     },
     "ws": {

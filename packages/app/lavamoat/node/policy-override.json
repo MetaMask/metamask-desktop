@@ -497,15 +497,6 @@
         "writeOptions": false
       }
     },
-    "webextension-polyfill": {
-      "globals": {
-        "browser": false,
-        "chrome": false,
-        "console.error": false,
-        "console.warn": false,
-        "define": false
-      }
-    },
     "@metamask/permission-controller>nanoid": {
       "builtin": {
         "crypto": true
