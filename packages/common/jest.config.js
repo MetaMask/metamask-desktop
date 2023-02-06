@@ -19,4 +19,7 @@ module.exports = {
   ],
   setupFiles: ['<rootDir>/test/setup.ts'],
   testEnvironment: 'jsdom',
+  testEnvironmentOptions: {
+    customExportConditions: ['node', 'node-addons'],
+  },
 };

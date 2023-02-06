@@ -800,7 +800,8 @@
         "@metamask/desktop>loglevel": true,
         "@metamask/desktop>obj-multiplex": true,
         "@metamask/desktop>otpauth": true,
-        "@metamask/desktop>uuid": true
+        "@metamask/desktop>uuid": true,
+        "@metamask/desktop>webextension-polyfill": true
       }
     },
     "@metamask/desktop>@metamask/obs-store": {
@@ -1039,6 +1040,15 @@
         "Buffer.from": true
       }
     },
+    "@metamask/desktop>webextension-polyfill": {
+      "globals": {
+        "browser": true,
+        "chrome": true,
+        "console.error": true,
+        "console.warn": true,
+        "define": true
+      }
+    },
     "@metamask/eth-json-rpc-infura": {
       "globals": {
         "setTimeout": true
@@ -1253,7 +1263,6 @@
       "globals": {
         "__dirname": true
       },
-      "native": true,
       "packages": {
         "hdkey>secp256k1>elliptic": true,
         "lavamoat>node-gyp-build": true
@@ -3753,7 +3762,6 @@
       "globals": {
         "__dirname": true
       },
-      "native": true,
       "packages": {
         "hdkey>secp256k1>elliptic": true,
         "lavamoat>node-gyp-build": true

@@ -7,12 +7,12 @@ import {
   VALUE_MOCK,
 } from '../../test/mocks';
 import { simulateStreamMessage } from '../../test/utils';
-import { browser } from './browser-polyfill';
-import { registerResponseStream } from '.';
+import { registerResponseStream } from './browser-proxy';
+import { browser } from '.';
 
 jest.mock('loglevel');
 
-jest.mock('./browser-polyfill', () => ({
+jest.mock('.', () => ({
   browser: {
     browserAction: {
       setBadgeText: jest.fn(),

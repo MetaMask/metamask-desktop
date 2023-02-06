@@ -29,3 +29,5 @@ global.setImmediate =
 
 global.clearImmediate =
   global.clearImmediate || ((id) => global.clearTimeout(id));
+
+global.chrome = { runtime: { id: 'testid' } } as any;
