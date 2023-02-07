@@ -44,6 +44,7 @@ body {
   position: fixed;
   top: 0;
   background-color: var(--color-background-default);
+  z-index: 1;
 }
 
 @import '../pages/mmd-pages.scss';
