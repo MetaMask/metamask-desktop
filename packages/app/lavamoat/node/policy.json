@@ -800,7 +800,8 @@
         "@metamask/desktop>loglevel": true,
         "@metamask/desktop>obj-multiplex": true,
         "@metamask/desktop>otpauth": true,
-        "@metamask/desktop>uuid": true
+        "@metamask/desktop>uuid": true,
+        "@metamask/desktop>webextension-polyfill": true
       }
     },
     "@metamask/desktop>@metamask/obs-store": {
@@ -1037,6 +1038,15 @@
       },
       "globals": {
         "Buffer.from": true
+      }
+    },
+    "@metamask/desktop>webextension-polyfill": {
+      "globals": {
+        "browser": true,
+        "chrome": true,
+        "console.error": true,
+        "console.warn": true,
+        "define": true
       }
     },
     "@metamask/eth-json-rpc-infura": {
@@ -5320,11 +5330,11 @@
     },
     "webextension-polyfill": {
       "globals": {
-        "browser": false,
-        "chrome": false,
-        "console.error": false,
-        "console.warn": false,
-        "define": false
+        "browser": true,
+        "chrome": true,
+        "console.error": true,
+        "console.warn": true,
+        "define": true
       }
     },
     "ws": {

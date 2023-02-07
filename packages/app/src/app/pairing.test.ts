@@ -19,12 +19,6 @@ jest.mock('@metamask/desktop/dist/utils/crypto', () => ({
   hashString: jest.fn(),
 }));
 
-jest.mock('@metamask/desktop/dist/browser', () => ({
-  browser: {
-    runtime: { reload: jest.fn() },
-  },
-}));
-
 jest.mock('@metamask/desktop/dist/utils/state', () => ({
   getDesktopState: jest.fn(),
   setDesktopState: jest.fn(),

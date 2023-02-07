@@ -3974,6 +3974,7 @@ __metadata:
     "@types/jest": ^29.1.2
     "@types/node": ^17.0.21
     "@types/uuid": ^8.3.4
+    "@types/webextension-polyfill": ^0.10.0
     "@types/ws": ^8.5.3
     "@typescript-eslint/eslint-plugin": ^5.30.7
     "@typescript-eslint/parser": ^5.30.7
@@ -3997,7 +3998,8 @@ __metadata:
     prettier: ^2.7.1
     rimraf: ^3.0.2
     typescript: ~4.5.0
-    uuid: ^9.0.0
+    uuid: ^8.3.2
+    webextension-polyfill: ^0.8.0
     ws: ^7.4.6
   languageName: unknown
   linkType: soft
@@ -8096,6 +8098,13 @@ __metadata:
   dependencies:
     "@types/browserify": "*"
   checksum: 3500bb3b18072f0dd9aab1036c931d6b4cf4eee06ee0719aef6d5c19062f27b0cb892180a4cd5c249806bc5d2b8b2ef7da71373142179a376eca2e8123089416
+  languageName: node
+  linkType: hard
+
+"@types/webextension-polyfill@npm:^0.10.0":
+  version: 0.10.0
+  resolution: "@types/webextension-polyfill@npm:0.10.0"
+  checksum: 1c6d0b3f6f1b1ba666c86d78d6bf079a5382e0c3084a307021ed19dc711a9fc044d82417e322ce403782e343b0fead8ad46db8d97ea19011fb1d85157e2b9d7f
   languageName: node
   linkType: hard
 
@@ -35793,15 +35802,6 @@ __metadata:
   bin:
     uuid: dist/bin/uuid
   checksum: 5575a8a75c13120e2f10e6ddc801b2c7ed7d8f3c8ac22c7ed0c7b2ba6383ec0abda88c905085d630e251719e0777045ae3236f04c812184b7c765f63a70e58df
-  languageName: node
-  linkType: hard
-
-"uuid@npm:^9.0.0":
-  version: 9.0.0
-  resolution: "uuid@npm:9.0.0"
-  bin:
-    uuid: dist/bin/uuid
-  checksum: 8dd2c83c43ddc7e1c71e36b60aea40030a6505139af6bee0f382ebcd1a56f6cd3028f7f06ffb07f8cf6ced320b76aea275284b224b002b289f89fe89c389b028
   languageName: node
   linkType: hard
 

@@ -497,15 +497,6 @@
         "writeOptions": false
       }
     },
-    "webextension-polyfill": {
-      "globals": {
-        "browser": false,
-        "chrome": false,
-        "console.error": false,
-        "console.warn": false,
-        "define": false
-      }
-    },
     "@metamask/permission-controller>nanoid": {
       "builtin": {
         "crypto": true
@@ -552,6 +543,12 @@
       "globals": {
         "window.Headers": true
       }
+    },
+    "@metamask/eth-ledger-bridge-keyring>eth-sig-util>ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
+    },
+    "eth-sig-util>ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
     }
   }
 }
