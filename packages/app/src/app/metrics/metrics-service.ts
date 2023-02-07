@@ -31,7 +31,7 @@ class MetricsService {
   private traits: Traits;
 
   // Tracks first time events
-  private firstTimeEvents: string[];
+  private processedEvents: string[];
 
   constructor() {
     this.analytics = Analytics;
@@ -51,7 +51,7 @@ class MetricsService {
       name: `mmd-desktop-metrics-events`,
     });
 
-    this.firstTimeEvents = this.eventStore.get('firstTimeEvents', []);
+    this.processedEvents = this.eventStore.get('processedEvents', []);
 
     this.registerMetricsBridgeHandler();
   }
@@ -67,14 +67,14 @@ class MetricsService {
       userId: this.desktopMetricsId,
       properties: {
         ...properties,
-        firstTimeEvent: Boolean(!this.firstTimeEvents.includes(event)),
+        firstTimeEvent: !this.processedEvents.includes(event),
         ...this.traits,
       },
       context: this.buildContext(),
       messageId: uuid(),
     };
 
-    this.saveFirstTimeEvents(eventToTrack.event);
+    this.saveProcessedEvents(eventToTrack.event);
 
     log.debug('track event', eventToTrack);
 
@@ -97,10 +97,13 @@ class MetricsService {
        traits about them. */
   identify(traits: Traits) {
     log.debug('identify event', traits);
+    this.traits = { ...this.traits, ...traits };
+    this.store.set('traits', this.traits);
+
     if (this.getMetricsDecision() === MetricsDecision.DISABLED) {
       return;
     }
-    this.traits = { ...this.traits, ...traits };
+
     this.analytics.identify({
       userId: this.desktopMetricsId,
       traits: this.traits,
@@ -158,13 +161,13 @@ class MetricsService {
     };
   }
 
-  private saveFirstTimeEvents(eventName: string) {
-    if (this.firstTimeEvents.includes(eventName)) {
+  private saveProcessedEvents(eventName: string) {
+    if (this.processedEvents.includes(eventName)) {
       return;
     }
-    this.firstTimeEvents.push(eventName);
+    this.processedEvents.push(eventName);
 
-    this.eventStore.set('firstTimeEvents', this.firstTimeEvents);
+    this.eventStore.set('processedEvents', this.processedEvents);
   }
 
   private registerMetricsBridgeHandler() {
