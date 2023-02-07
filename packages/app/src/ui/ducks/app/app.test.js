@@ -1,4 +1,4 @@
-import * as themeHelpers from '../../helpers/utils/theme';
+import * as themeHelpers from '../../helpers/theme';
 import appReducer, {
   initialAppState,
   UPDATE_THEME,
@@ -26,11 +26,16 @@ describe('App State', () => {
   });
 
   it('updates language', () => {
+    const setLanguageMock = jest.fn();
+    global.window.electronBridge = {
+      setLanguage: setLanguageMock,
+    };
     const state = appReducer(initialState, {
       type: UPDATE_LANGUAGE,
       payload: 'en',
     });
 
+    expect(setLanguageMock).toHaveBeenCalledWith('en');
     expect(state.language).toStrictEqual('en');
   });
 });

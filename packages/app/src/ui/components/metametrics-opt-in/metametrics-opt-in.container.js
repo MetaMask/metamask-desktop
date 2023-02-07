@@ -2,9 +2,6 @@ import { connect } from 'react-redux';
 import { updateMetametricsOptIn } from '../../ducks/app/app';
 import MetaMetricsOptIn from './metametrics-opt-in.component';
 
-/**
- *
- */
 function mapStateToProps() {
   return {};
 }

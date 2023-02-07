@@ -1,9 +1,6 @@
 import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
-/**
- *
- */
 export default function useDeeplinkRegister() {
   const history = useHistory();
   useEffect(() => {

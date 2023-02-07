@@ -56,6 +56,9 @@ const electronBridge = {
   setPreferredStartup: async (preferredStartup: string) => {
     await ipcRenderer.invoke('set-preferred-startup', preferredStartup);
   },
+  setLanguage: async (language: string) => {
+    await ipcRenderer.invoke('set-language', language);
+  },
 };
 
 contextBridge.exposeInMainWorld('electronBridge', electronBridge);

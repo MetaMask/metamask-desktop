@@ -1,13 +1,9 @@
-import { THEME_TYPE } from '../helpers/constants/themeIndex';
+import { THEME_TYPES } from '../../shared/constants/theme';
 import { getTheme } from '../ducks/app/app';
-import setTheme from '../helpers/utils/theme';
+import setTheme from '../helpers/theme';
 
-/**
- *
- * @param store
- */
 export default function registerUpdateOSTheme(store) {
   return () => {
-    getTheme(store.getState()) === THEME_TYPE.OS && setTheme(THEME_TYPE.OS);
+    getTheme(store.getState()) === THEME_TYPES.OS && setTheme(THEME_TYPES.OS);
   };
 }

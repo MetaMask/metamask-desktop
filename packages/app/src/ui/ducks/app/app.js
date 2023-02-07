@@ -1,4 +1,4 @@
-import setTheme from '../../helpers/utils/theme';
+import setTheme from '../../helpers/theme';
 
 export const initialAppState = {
   theme: 'os',
@@ -31,6 +31,7 @@ export default function appReducer(state = initialAppState, action) {
     }
 
     case UPDATE_LANGUAGE: {
+      window.electronBridge.setLanguage(action.payload);
       return {
         ...state,
         language: action.payload,

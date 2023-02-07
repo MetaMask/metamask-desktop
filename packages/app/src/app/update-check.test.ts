@@ -34,6 +34,7 @@ jest.mock(
   'loglevel',
   () => ({
     debug: jest.fn(),
+    info: jest.fn(),
   }),
   { virtual: true },
 );

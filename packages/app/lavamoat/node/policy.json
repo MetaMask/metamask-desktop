@@ -5058,6 +5058,70 @@
         "Intl": true
       }
     },
+    "memoizee": {
+      "globals": {
+        "clearTimeout": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "memoizee>d": true,
+        "memoizee>es5-ext": true,
+        "memoizee>event-emitter": true,
+        "memoizee>is-promise": true,
+        "memoizee>lru-queue": true,
+        "memoizee>next-tick": true,
+        "memoizee>timers-ext": true
+      }
+    },
+    "memoizee>d": {
+      "packages": {
+        "memoizee>d>type": true,
+        "memoizee>es5-ext": true
+      }
+    },
+    "memoizee>es5-ext": {
+      "packages": {
+        "memoizee>es5-ext>es6-symbol": true
+      }
+    },
+    "memoizee>es5-ext>es6-symbol": {
+      "packages": {
+        "memoizee>d": true,
+        "memoizee>es5-ext>es6-symbol>ext": true
+      }
+    },
+    "memoizee>es5-ext>es6-symbol>ext": {
+      "globals": {
+        "__global__": true
+      }
+    },
+    "memoizee>event-emitter": {
+      "packages": {
+        "memoizee>d": true,
+        "memoizee>es5-ext": true
+      }
+    },
+    "memoizee>lru-queue": {
+      "packages": {
+        "memoizee>es5-ext": true
+      }
+    },
+    "memoizee>next-tick": {
+      "globals": {
+        "MutationObserver": true,
+        "WebKitMutationObserver": true,
+        "document": true,
+        "process": true,
+        "queueMicrotask": true,
+        "setImmediate": true,
+        "setTimeout": true
+      }
+    },
+    "memoizee>timers-ext": {
+      "packages": {
+        "memoizee>es5-ext": true
+      }
+    },
     "nanoid": {
       "builtin": {
         "crypto.randomBytes": true,

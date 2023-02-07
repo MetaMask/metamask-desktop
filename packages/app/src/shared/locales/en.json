@@ -2,6 +2,9 @@
   "about": {
     "message": "About"
   },
+  "aboutMMD": {
+    "message": "About MetaMask Desktop"
+  },
   "active": {
     "message": "Active"
   },
@@ -107,6 +110,9 @@
   "errorPageTitle": {
     "message": "MetaMask Desktop encountered an error"
   },
+  "foundUpdates": {
+    "message": "Found Updates"
+  },
   "gdprMessage": {
     "message": "This data is aggregated and is therefore anonymous for the purposes of General Data Protection Regulation (EU) 2016/679. For more information in relation to our privacy practices, please see our $1."
   },
@@ -124,6 +130,9 @@
   },
   "inactive": {
     "message": "Inactive"
+  },
+  "installUpdates": {
+    "message": "Install Updates"
   },
   "invalidOtpCode": {
     "message": "Invalid OTP code"
@@ -170,6 +179,9 @@
   },
   "metametricsOptInDescription": {
     "message": "MetaMask would like to gather usage data to better understand how our users interact with the extension. This data will be used to continually improve the usability and user experience of our product and the Ethereum ecosystem."
+  },
+  "metricsSharingStrategy": {
+    "message": "In the situation where the desktop application is paired with a MetaMask extension and you agreed to share your usage data to MetaMask both in the desktop application and in the extension, some of the extension's data will transit through the desktop application before being sent to MetaMask, along with the desktop application's data."
   },
   "minimized": {
     "message": "Minimized"
@@ -231,11 +243,17 @@
   "settings": {
     "message": "Settings"
   },
+  "show": {
+    "message": "Show"
+  },
   "someExplainer": {
     "message": "Be sure to enter your password in MetaMask Extension. Keep this app open to see any alerts that you might receive."
   },
   "status": {
     "message": "Status"
+  },
+  "submitTicket": {
+    "message": "Submit a ticket"
   },
   "supportCenter": {
     "message": "Visit our support center"
@@ -251,6 +269,12 @@
   },
   "typeTheSixDigitCodeBelow": {
     "message": "Enter the six-digit code visible on the MetaMask Extension screen"
+  },
+  "updateNowDesc": {
+    "message": "Found updates, do you want update now?"
+  },
+  "updatesDownloaded": {
+    "message": "Updates downloaded, application will be quit for update..."
   },
   "visitWebSite": {
     "message": "Visit our website"

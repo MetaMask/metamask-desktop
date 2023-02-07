@@ -27,6 +27,7 @@ jest.mock('./ui/ui-state');
 jest.mock('./metrics/analytics');
 jest.mock('./storage/ui-storage', () => ({
   setUiStorage: jest.fn(),
+  readPersistedSettingFromAppState: jest.fn(),
 }));
 jest.mock('./metrics/metrics-service', () => jest.fn(), { virtual: true });
 

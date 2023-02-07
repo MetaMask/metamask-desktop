@@ -6,8 +6,9 @@ import Typography from '../../../../../submodules/extension/ui/components/ui/typ
 import Button from '../../../../../submodules/extension/ui/components/ui/button';
 import Dropdown from '../../../components/dropdown';
 import { TYPOGRAPHY } from '../../../../../submodules/extension/ui/helpers/constants/design-system';
-import localeIndex from '../../../helpers/constants/localeIndex';
-import themeIndex from '../../../helpers/constants/themeIndex';
+import { LocaleIndex } from '../../../../shared/constants/locale';
+import { ThemeIndex } from '../../../../shared/constants/theme';
+import { StartupOptionIndex } from '../../../../shared/constants/startup-option';
 import useI18nContext from '../../../hooks/useI18nContext';
 
 const GeneralTab = ({
@@ -25,7 +26,7 @@ const GeneralTab = ({
   const t = useI18nContext();
 
   const renderLanguageSettings = () => {
-    const localeOptions = localeIndex.map((locale) => {
+    const localeOptions = LocaleIndex.map((locale) => {
       return {
         name: `${locale.name}`,
         value: locale.code,
@@ -54,7 +55,7 @@ const GeneralTab = ({
   };
 
   const renderThemeSettings = () => {
-    const themeOptions = themeIndex.map((themeOption) => {
+    const themeOptions = ThemeIndex.map((themeOption) => {
       return {
         name: t(themeOption.name),
         value: themeOption.value,
@@ -84,11 +85,12 @@ const GeneralTab = ({
   };
 
   const renderPreferredStartupOptions = () => {
-    const preferredStartupOptions = [
-      { name: t('minimized'), value: 'minimized' },
-      { name: t('yes'), value: 'yes' },
-      { name: t('no'), value: 'no' },
-    ];
+    const preferredStartupOptions = StartupOptionIndex.map((startupOption) => {
+      return {
+        name: t(startupOption.name),
+        value: startupOption.value,
+      };
+    });
 
     return (
       <div className="mmd-settings-page__setting-row">

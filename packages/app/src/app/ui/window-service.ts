@@ -2,6 +2,10 @@ import path from 'path';
 import { app, BrowserWindow, nativeTheme } from 'electron';
 import log from 'loglevel';
 import { readPersistedSettingFromAppState } from '../storage/ui-storage';
+import {
+  PAIR_PAGE,
+  METAMETRICS_OPT_IN_PAGE,
+} from '../../shared/constants/ui-routes';
 import UIState from './ui-state';
 import { titleBarOverlayOpts } from './ui-constants';
 
@@ -18,7 +22,7 @@ export default class WindowService {
       // Always set to false, otherwise the window will be shown before it is ready
       show: false,
       width: 840,
-      height: 680,
+      height: 780,
       minWidth: 800,
       minHeight: 640,
       titleBarStyle: 'hidden',
@@ -41,6 +45,18 @@ export default class WindowService {
     mainWindow.once('ready-to-show', () => {
       if (!wasOpenedAsHidden) {
         mainWindow.show();
+      }
+    });
+
+    mainWindow.on('hide', () => {
+      if (process.platform === 'darwin') {
+        app.dock.hide();
+      }
+    });
+
+    mainWindow.on('show', () => {
+      if (process.platform === 'darwin') {
+        app.dock.show();
       }
     });
 
@@ -138,8 +154,8 @@ export default class WindowService {
     });
 
     const startupPage = isMetametricsOptionSelected
-      ? 'pair'
-      : 'metametrics-opt-in';
+      ? PAIR_PAGE
+      : METAMETRICS_OPT_IN_PAGE;
 
     return { hash: startupPage };
   }
