@@ -66,6 +66,12 @@ const electronBridge = {
   identify: (traits: Traits) => {
     return ipcRenderer.invoke('analytics-identify', traits);
   },
+  analyticsPendingEventsHandler: (metricsDecision: boolean) => {
+    return ipcRenderer.invoke(
+      'analytics-pending-events-handler',
+      metricsDecision,
+    );
+  },
 };
 
 contextBridge.exposeInMainWorld('electronBridge', electronBridge);

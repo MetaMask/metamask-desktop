@@ -58,6 +58,11 @@ class MetricsService {
 
   /* The track method lets you record the actions your users perform. */
   track(event: string, properties: Properties = {}) {
+    const metricsDecision = this.getMetricsDecision();
+    if (metricsDecision === MetricsDecision.DISABLED) {
+      return;
+    }
+
     if (!this.desktopMetricsId) {
       this.setDesktopMetricsId(uuid());
     }
@@ -78,10 +83,7 @@ class MetricsService {
 
     log.debug('track event', eventToTrack);
 
-    const metricsDecision = this.getMetricsDecision();
-    if (metricsDecision === MetricsDecision.DISABLED) {
-      return;
-    } else if (metricsDecision === MetricsDecision.PENDING) {
+    if (metricsDecision === MetricsDecision.PENDING) {
       this.eventsSavedBeforeMetricsDecision.push(eventToTrack);
       this.store.set(
         'eventsSavedBeforeMetricsDecision',
@@ -117,24 +119,18 @@ class MetricsService {
   }
 
   private getMetricsDecision(): MetricsDecision {
+    const defaultValue = undefined;
     const desktopMetricsOptIn = readPersistedSettingFromAppState({
-      defaultValue: undefined,
+      defaultValue,
       key: 'metametricsOptIn',
     });
 
-    if (desktopMetricsOptIn) {
-      // Flush events saved before user opt-in
-      if (this.eventsSavedBeforeMetricsDecision?.length > 0) {
-        this.sendPendingEvents();
-      }
-      return MetricsDecision.ENABLED;
-    } else if (desktopMetricsOptIn === false) {
-      if (this.eventsSavedBeforeMetricsDecision?.length > 0) {
-        this.cleanPendingEvents();
-      }
-      return MetricsDecision.DISABLED;
+    if (desktopMetricsOptIn === defaultValue) {
+      return MetricsDecision.PENDING;
     }
-    return MetricsDecision.PENDING;
+    return desktopMetricsOptIn
+      ? MetricsDecision.ENABLED
+      : MetricsDecision.DISABLED;
   }
 
   private sendPendingEvents() {
@@ -142,8 +138,6 @@ class MetricsService {
     this.eventsSavedBeforeMetricsDecision?.forEach((event) => {
       this.analytics.track(event);
     });
-
-    this.cleanPendingEvents();
   }
 
   private cleanPendingEvents() {
@@ -181,6 +175,16 @@ class MetricsService {
     ipcMain.handle('analytics-identify', (_event, traits: Traits) => {
       this.identify(traits);
     });
+
+    ipcMain.handle(
+      'analytics-pending-events-handler',
+      (_event, metricsDecision: boolean) => {
+        if (metricsDecision) {
+          this.sendPendingEvents();
+        }
+        this.cleanPendingEvents();
+      },
+    );
   }
 }
 
