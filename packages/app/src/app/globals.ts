@@ -3,7 +3,7 @@ import './log/logger-init';
 import './browser/browser-init';
 import { webcrypto } from 'node:crypto';
 import electronLog from 'electron-log';
-import { Headers } from 'node-fetch';
+import fetch, { Headers } from 'node-fetch';
 import * as Sentry from '@sentry/electron/main';
 import { Dedupe, ExtraErrorData } from '@sentry/integrations';
 import { Integration } from '@sentry/types/dist/integration';
@@ -50,6 +50,7 @@ if (!global.self) {
     location: {
       href: 'test.com',
     },
+    fetch,
     // required by the background to send CONNECTION_READY (mv3) and contentscript
     postMessage: () => undefined,
     // add listeners required by deep link, phishing warning page on the background
