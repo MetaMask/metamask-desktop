@@ -1263,6 +1263,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "hdkey>secp256k1>elliptic": true,
         "lavamoat>node-gyp-build": true
@@ -3762,6 +3763,7 @@
       "globals": {
         "__dirname": true
       },
+      "native": true,
       "packages": {
         "hdkey>secp256k1>elliptic": true,
         "lavamoat>node-gyp-build": true

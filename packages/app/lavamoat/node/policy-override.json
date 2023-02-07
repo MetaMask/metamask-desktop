@@ -543,6 +543,12 @@
       "globals": {
         "window.Headers": true
       }
+    },
+    "@metamask/eth-ledger-bridge-keyring>eth-sig-util>ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
+    },
+    "eth-sig-util>ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
     }
   }
 }
