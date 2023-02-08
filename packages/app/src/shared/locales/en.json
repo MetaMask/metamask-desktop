@@ -14,6 +14,9 @@
   "allowOpenAtLoginDescription": {
     "message": "Allow MetaMask Desktop to open when you log in to your computer"
   },
+  "approveQuitApp": {
+    "message": "MetaMask Extension is paired with MetaMask Desktop in the background. To quit, click Exit."
+  },
   "attributions": {
     "message": "Attributions"
   },
@@ -110,6 +113,9 @@
   "errorPageTitle": {
     "message": "MetaMask Desktop encountered an error"
   },
+  "exit": {
+    "message": "Exit"
+  },
   "foundUpdates": {
     "message": "Found Updates"
   },
@@ -197,6 +203,9 @@
   },
   "off": {
     "message": "OFF"
+  },
+  "ok": {
+    "message": "Ok"
   },
   "on": {
     "message": "ON"
