@@ -8,6 +8,7 @@ import {
 } from '../../../test/mocks';
 import MetricsService from './metrics-service';
 import Analytics from './analytics';
+import { MetricsDecision } from './metrics-constants';
 
 jest.mock(
   '../storage/ui-storage',
@@ -30,7 +31,7 @@ jest.mock(
               return true;
             case 'segmentApiCalls':
               return {};
-            case 'eventsBeforeMetricsOptIn':
+            case 'eventsSavedBeforeMetricsDecision':
               return [];
             default:
               return undefined;
@@ -62,7 +63,7 @@ describe('MetricsService', () => {
   let analytics: typeof Analytics;
   let trackSpy: any;
   let identifySpy: any;
-  let checkParticipateInDesktopMetricsSpy: any;
+  let getMetricsDecisionSpy: any;
   const electronStoreConstructorMock = Store as jest.MockedClass<typeof Store>;
   const storeMock = createElectronStoreMock();
 
@@ -73,9 +74,9 @@ describe('MetricsService', () => {
     electronStoreConstructorMock.mockReturnValue(storeMock);
     trackSpy = jest.spyOn(analytics, 'track');
     identifySpy = jest.spyOn(analytics, 'identify');
-    checkParticipateInDesktopMetricsSpy = jest.spyOn(
+    getMetricsDecisionSpy = jest.spyOn(
       metricsService as any,
-      'checkParticipateInDesktopMetrics',
+      'getMetricsDecision',
     );
   });
 
@@ -101,7 +102,7 @@ describe('MetricsService', () => {
     });
   });
 
-  it('tracks an event before users opt-in and store it in eventsBeforeMetricsOptIn', () => {
+  it('tracks an event before users opted in and store it in eventsSavedBeforeMetricsDecision', () => {
     metricsService.track(EVENT_NAME_MOCK, PROPERTIES_OBJECT_MOCK);
 
     expect(trackSpy).toHaveBeenCalledTimes(0);
@@ -128,7 +129,7 @@ describe('MetricsService', () => {
 
   it('should not call identify when the user has opted out', () => {
     const traits = PROPERTIES_OBJECT_MOCK;
-    checkParticipateInDesktopMetricsSpy.mockReturnValue(false);
+    getMetricsDecisionSpy.mockReturnValue(MetricsDecision.DISABLED);
 
     metricsService.identify(traits);
 

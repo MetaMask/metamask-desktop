@@ -12,6 +12,7 @@ import {
 } from '../types/metrics';
 import { readPersistedSettingFromAppState } from '../storage/ui-storage';
 import Analytics from './analytics';
+import { MetricsDecision } from './metrics-constants';
 
 class MetricsService {
   private store: Store<MetricsState>;
@@ -22,7 +23,7 @@ class MetricsService {
   private desktopMetricsId?: string;
 
   // Events saved before users opt-in/opt-out of metrics
-  private eventsBeforeMetricsOptIn: Event[];
+  private eventsSavedBeforeMetricsDecision: Event[];
 
   // Traits are pieces of information you know about a user that are included in an identify call
   private traits: Traits;
@@ -37,8 +38,8 @@ class MetricsService {
     });
 
     this.desktopMetricsId = this.store.get('desktopMetricsId', '');
-    this.eventsBeforeMetricsOptIn = this.store.get(
-      'eventsBeforeMetricsOptIn',
+    this.eventsSavedBeforeMetricsDecision = this.store.get(
+      'eventsSavedBeforeMetricsDecision',
       [],
     );
     this.traits = this.store.get('traits', {});
@@ -47,7 +48,6 @@ class MetricsService {
 
   /* The track method lets you record the actions your users perform. */
   track(event: string, properties: Properties = {}) {
-    log.debug('track event', event);
     if (!this.desktopMetricsId) {
       this.setDesktopMetricsId(uuid());
     }
@@ -60,13 +60,13 @@ class MetricsService {
       messageId: uuid(),
     };
 
-    const isParticipateInDesktopMetrics =
-      this.checkParticipateInDesktopMetrics();
-    if (isParticipateInDesktopMetrics === false) {
+    log.debug('track event', eventToTrack);
+
+    const metricsDecision = this.getMetricsDecision();
+    if (metricsDecision === MetricsDecision.DISABLED) {
       return;
-      // If the condition is true, it means that the user has not yet opt-in/opt-out on the metrics page
-    } else if (isParticipateInDesktopMetrics === undefined) {
-      this.eventsBeforeMetricsOptIn.push(eventToTrack);
+    } else if (metricsDecision === MetricsDecision.PENDING) {
+      this.eventsSavedBeforeMetricsDecision.push(eventToTrack);
       return;
     }
 
@@ -78,7 +78,7 @@ class MetricsService {
        traits about them. */
   identify(traits: Traits) {
     log.debug('identify event', traits);
-    if (this.checkParticipateInDesktopMetrics() === false) {
+    if (this.getMetricsDecision() === MetricsDecision.DISABLED) {
       return;
     }
     this.traits = { ...this.traits, ...traits };
@@ -94,28 +94,40 @@ class MetricsService {
     this.store.set('desktopMetricsId', id);
   }
 
-  private checkParticipateInDesktopMetrics(): boolean | undefined {
+  private getMetricsDecision(): MetricsDecision {
     const desktopMetricsOptIn = readPersistedSettingFromAppState({
       defaultValue: undefined,
       key: 'metametricsOptIn',
     });
 
-    // Flush events saved before user opt-in
-    if (desktopMetricsOptIn && this.eventsBeforeMetricsOptIn?.length > 0) {
-      this.flushEventsBeforeOptIn();
+    if (desktopMetricsOptIn) {
+      // Flush events saved before user opt-in
+      if (this.eventsSavedBeforeMetricsDecision?.length > 0) {
+        this.sendPendingEvents();
+      }
+      return MetricsDecision.ENABLED;
+    } else if (desktopMetricsOptIn === false) {
+      if (this.eventsSavedBeforeMetricsDecision?.length > 0) {
+        this.cleanPendingEvents();
+      }
+      return MetricsDecision.DISABLED;
     }
-    return desktopMetricsOptIn;
+    return MetricsDecision.PENDING;
   }
 
-  private flushEventsBeforeOptIn() {
-    log.debug('flushing events saved before user optIn');
-    this.eventsBeforeMetricsOptIn?.forEach((event) => {
+  private sendPendingEvents() {
+    log.debug('sending events saved before user optIn');
+    this.eventsSavedBeforeMetricsDecision?.forEach((event) => {
       this.analytics.track(event);
       this.saveCallSegmentAPI(event);
     });
 
-    this.eventsBeforeMetricsOptIn = [];
-    this.store.set('eventsBeforeMetricsOptIn', []);
+    this.cleanPendingEvents();
+  }
+
+  private cleanPendingEvents() {
+    this.eventsSavedBeforeMetricsDecision = [];
+    this.store.set('eventsSavedBeforeMetricsDecision', []);
   }
 
   private saveCallSegmentAPI(event: Event) {

@@ -28,7 +28,7 @@ export interface SegmentApiCalls {
 export interface MetricsState {
   participateInDesktopMetrics: boolean;
   desktopMetricsId?: string;
-  eventsBeforeMetricsOptIn: Event[];
+  eventsSavedBeforeMetricsDecision: Event[];
   traits: Traits;
   segmentApiCalls: SegmentApiCalls;
 }

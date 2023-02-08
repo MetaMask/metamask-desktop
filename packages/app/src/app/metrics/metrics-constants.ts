@@ -7,3 +7,9 @@ export const EVENT_NAMES = {
   METRICS_OPT_OUT: 'Metrics Opt Out',
   INVALID_OTP: 'Invalid OTP',
 };
+
+export enum MetricsDecision {
+  ENABLED = 'ENABLED',
+  DISABLED = 'DISABLED',
+  PENDING = 'PENDING',
+}
