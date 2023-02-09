@@ -4230,6 +4230,11 @@
         "define": true
       }
     },
+    "eth-trezor-keyring>trezor-connect>bowser": {
+      "globals": {
+        "define": true
+      }
+    },
     "eth-trezor-keyring>trezor-connect>cbor-web": {
       "builtin": {
         "util": true
@@ -4843,8 +4848,12 @@
       }
     },
     "json-rpc-middleware-stream": {
+      "globals": {
+        "setTimeout": true
+      },
       "packages": {
-        "readable-stream": true
+        "readable-stream": true,
+        "safe-event-emitter": true
       }
     },
     "jsonschema": {
