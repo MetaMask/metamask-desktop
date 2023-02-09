@@ -62,9 +62,10 @@ jest.mock('loglevel');
 describe('MetricsService', () => {
   let metricsService: typeof MetricsService;
   let analytics: typeof Analytics;
-  let trackSpy: any;
-  let identifySpy: any;
-  let getMetricsDecisionSpy: any;
+  let trackSpy: jest.SpyInstance;
+  let identifySpy: jest.SpyInstance;
+  let getMetricsDecisionSpy: jest.SpyInstance;
+  let saveProcessedEventsSpy: jest.SpyInstance;
   const electronStoreConstructorMock = Store as jest.MockedClass<typeof Store>;
   const storeMock = createElectronStoreMock();
 
@@ -79,15 +80,15 @@ describe('MetricsService', () => {
       metricsService as any,
       'getMetricsDecision',
     );
+
+    saveProcessedEventsSpy = jest.spyOn(
+      metricsService as any,
+      'saveProcessedEvents',
+    );
   });
 
   afterEach(() => {
     jest.clearAllMocks();
-  });
-
-  it('sets desktop metrics id', () => {
-    metricsService.setDesktopMetricsId(UUID_MOCK);
-    expect(electronStoreConstructorMock).toHaveBeenCalledTimes(2);
   });
 
   describe('track events', () => {
@@ -112,11 +113,21 @@ describe('MetricsService', () => {
     );
   });
 
+  it('should not send events to segment if user disables metrics', () => {
+    getMetricsDecisionSpy.mockReturnValue(MetricsDecision.DISABLED);
+    metricsService.track(EVENT_NAME_MOCK, PROPERTIES_OBJECT_MOCK);
+
+    expect(trackSpy).toHaveBeenCalledTimes(0);
+    expect(saveProcessedEventsSpy).toHaveBeenCalledTimes(0);
+  });
+
   it('tracks an event before users opted in and store it in eventsSavedBeforeMetricsDecision', () => {
     getMetricsDecisionSpy.mockReturnValue(MetricsDecision.PENDING);
     metricsService.track(EVENT_NAME_MOCK, PROPERTIES_OBJECT_MOCK);
 
     expect(trackSpy).toHaveBeenCalledTimes(0);
+    expect(saveProcessedEventsSpy).toHaveBeenCalledTimes(1);
+    expect(saveProcessedEventsSpy).toHaveBeenCalledWith(EVENT_NAME_MOCK);
   });
 
   it('should call identify and send it to Segment when the user has opted in', () => {

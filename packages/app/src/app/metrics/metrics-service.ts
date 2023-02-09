@@ -102,18 +102,16 @@ class MetricsService {
     this.traits = { ...this.traits, ...traits };
     this.store.set('traits', this.traits);
 
-    if (this.getMetricsDecision() === MetricsDecision.DISABLED) {
-      return;
+    if (this.getMetricsDecision() === MetricsDecision.ENABLED) {
+      this.analytics.identify({
+        userId: this.desktopMetricsId,
+        traits: this.traits,
+        context: this.buildContext(),
+      });
     }
-
-    this.analytics.identify({
-      userId: this.desktopMetricsId,
-      traits: this.traits,
-      context: this.buildContext(),
-    });
   }
 
-  setDesktopMetricsId(id: string) {
+  private setDesktopMetricsId(id: string) {
     this.desktopMetricsId = id;
     this.store.set('desktopMetricsId', id);
   }
