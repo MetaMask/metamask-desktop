@@ -402,7 +402,7 @@ jobs:
           at: .
       - run:
           name: build
-          command: yarn extension build:test:desktop:extension
+          command: yarn app build:extension:test
       - run:
           name: Move dist to avoid conflicts
           command: mv ./${EXTENSION_DIR}/dist ./${EXTENSION_DIR}/dist-extension-test
@@ -436,7 +436,7 @@ jobs:
           at: .
       - run:
           name: build
-          command: ENABLE_MV3=true yarn extension build:test:desktop:extension
+          command: ENABLE_MV3=true yarn app build:extension:test
       - run:
           name: Move dist to avoid conflicts
           command: mv ./${EXTENSION_DIR}/dist ./${EXTENSION_DIR}/dist-extension-test-mv3
