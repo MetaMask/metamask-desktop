@@ -40,4 +40,31 @@ describe('Analytics', () => {
       ...message,
     });
   });
+
+  it('calls page on the analytics-node instance', () => {
+    const spy = jest.spyOn(analytics, 'page');
+    const message = {
+      name: EVENT_NAME_MOCK,
+      userId: UUID_MOCK,
+      properties: PROPERTIES_OBJECT_MOCK,
+      messageId: UUID_MOCK,
+    };
+    analytics.page(message);
+    expect(spy).toHaveBeenCalledWith({
+      ...message,
+    });
+  });
+
+  it('calls screen on the analytics-node instance', () => {
+    const spy = jest.spyOn(analytics, 'screen');
+    const message = {
+      name: EVENT_NAME_MOCK,
+      userId: UUID_MOCK,
+      properties: PROPERTIES_OBJECT_MOCK,
+    };
+    analytics.screen(message);
+    expect(spy).toHaveBeenCalledWith({
+      ...message,
+    });
+  });
 });

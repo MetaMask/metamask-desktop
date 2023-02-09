@@ -1,4 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron';
+import { Properties, Traits } from '../types/metrics';
 
 const uiStoreBridge = (name: string) => {
   return {
@@ -58,6 +59,18 @@ const electronBridge = {
   },
   setLanguage: async (language: string) => {
     await ipcRenderer.invoke('set-language', language);
+  },
+  track: (eventName: string, properties: Properties) => {
+    return ipcRenderer.invoke('analytics-track', eventName, properties);
+  },
+  identify: (traits: Traits) => {
+    return ipcRenderer.invoke('analytics-identify', traits);
+  },
+  analyticsPendingEventsHandler: (metricsDecision: boolean) => {
+    return ipcRenderer.invoke(
+      'analytics-pending-events-handler',
+      metricsDecision,
+    );
   },
 };
 

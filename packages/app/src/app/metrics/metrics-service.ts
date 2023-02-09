@@ -1,57 +1,68 @@
 import Store from 'electron-store';
 import { uuid } from '@metamask/desktop/dist/utils/utils';
 import log from 'loglevel';
-import { app } from 'electron';
+import { app, ipcMain } from 'electron';
 import { getDesktopVersion } from '../utils/version';
 import {
-  MetricsState,
+  MetricsStorage,
   Properties,
-  SegmentApiCalls,
   Traits,
   Event,
+  EventsStorage,
 } from '../types/metrics';
+import { readPersistedSettingFromAppState } from '../storage/ui-storage';
 import Analytics from './analytics';
+import { MetricsDecision } from './metrics-constants';
 
 class MetricsService {
-  private store: Store<MetricsState>;
+  private store: Store<MetricsStorage>;
+
+  private eventStore: Store<EventsStorage>;
 
   private analytics: typeof Analytics;
 
-  // TODO: Update participateInDesktopMetrics when user opt-in/opt-out on metrics UI
-  private participateInDesktopMetrics = true;
-
+  // Unique identifier representing userId property on events
   private desktopMetricsId?: string;
 
   // Events saved before users opt-in/opt-out of metrics
-  private eventsBeforeMetricsOptIn: Event[];
+  private eventsSavedBeforeMetricsDecision: Event[];
 
   // Traits are pieces of information you know about a user that are included in an identify call
   private traits: Traits;
 
-  // Every event submitted to segment
-  private segmentApiCalls: SegmentApiCalls;
+  // Tracks first time events
+  private processedEvents: string[];
 
   constructor() {
     this.analytics = Analytics;
-    this.store = new Store<MetricsState>({
+
+    this.store = new Store<MetricsStorage>({
       name: `mmd-desktop-metrics`,
     });
 
-    this.participateInDesktopMetrics = this.store.get(
-      'participateInDesktopMetrics',
-      true,
-    );
     this.desktopMetricsId = this.store.get('desktopMetricsId', '');
-    this.eventsBeforeMetricsOptIn = this.store.get(
-      'eventsBeforeMetricsOptIn',
+    this.eventsSavedBeforeMetricsDecision = this.store.get(
+      'eventsSavedBeforeMetricsDecision',
       [],
     );
     this.traits = this.store.get('traits', {});
-    this.segmentApiCalls = this.store.get('segmentApiCalls', {});
+
+    this.eventStore = new Store<EventsStorage>({
+      name: `mmd-desktop-metrics-events`,
+    });
+
+    this.processedEvents = this.eventStore.get('processedEvents', []);
+
+    this.registerMetricsBridgeHandler();
   }
 
   /* The track method lets you record the actions your users perform. */
   track(event: string, properties: Properties = {}) {
+    const metricsDecision = this.getMetricsDecision();
+    if (metricsDecision === MetricsDecision.DISABLED) {
+      return;
+    }
+
     if (!this.desktopMetricsId) {
       this.setDesktopMetricsId(uuid());
     }
@@ -59,53 +70,77 @@ class MetricsService {
     const eventToTrack = {
       event,
       userId: this.desktopMetricsId,
-      properties: { ...properties, ...this.traits },
+      properties: {
+        ...properties,
+        firstTimeEvent: !this.processedEvents.includes(event),
+        ...this.traits,
+      },
       context: this.buildContext(),
       messageId: uuid(),
     };
 
-    if (!this.participateInDesktopMetrics) {
-      this.eventsBeforeMetricsOptIn.push(eventToTrack);
+    this.saveProcessedEvents(eventToTrack.event);
+
+    log.debug('track event', eventToTrack);
+
+    if (metricsDecision === MetricsDecision.PENDING) {
+      this.eventsSavedBeforeMetricsDecision.push(eventToTrack);
+      this.store.set(
+        'eventsSavedBeforeMetricsDecision',
+        this.eventsSavedBeforeMetricsDecision,
+      );
       return;
     }
 
     this.analytics.track(eventToTrack);
-    this.saveCallSegmentAPI(eventToTrack);
   }
 
   /* The identify method lets you tie a user to their actions and record
        traits about them. */
   identify(traits: Traits) {
+    log.debug('identify event', traits);
     this.traits = { ...this.traits, ...traits };
-    this.analytics.identify({
-      userId: this.desktopMetricsId,
-      traits: this.traits,
-      context: this.buildContext(),
-    });
-  }
+    this.store.set('traits', this.traits);
 
-  setParticipateInDesktopMetrics(isParticipant: boolean) {
-    this.participateInDesktopMetrics = isParticipant;
-    this.store.set('participateInDesktopMetrics', isParticipant);
-
-    if (isParticipant) {
-      this.flushEventsBeforeOptIn();
+    if (this.getMetricsDecision() === MetricsDecision.ENABLED) {
+      this.analytics.identify({
+        userId: this.desktopMetricsId,
+        traits: this.traits,
+        context: this.buildContext(),
+      });
     }
   }
 
-  setDesktopMetricsId(id: string) {
+  private setDesktopMetricsId(id: string) {
     this.desktopMetricsId = id;
     this.store.set('desktopMetricsId', id);
   }
 
-  // TODO: Implement flush events that are saved before users opt-in/opt-out
-  flushEventsBeforeOptIn() {
-    log.debug('No implementation provided');
+  private getMetricsDecision(): MetricsDecision {
+    const defaultValue = undefined;
+    const desktopMetricsOptIn = readPersistedSettingFromAppState({
+      defaultValue,
+      key: 'metametricsOptIn',
+    });
+
+    if (desktopMetricsOptIn === defaultValue) {
+      return MetricsDecision.PENDING;
+    }
+    return desktopMetricsOptIn
+      ? MetricsDecision.ENABLED
+      : MetricsDecision.DISABLED;
   }
 
-  saveCallSegmentAPI(event: Event) {
-    this.segmentApiCalls[uuid()] = event;
-    this.store.set('segmentApiCalls', this.segmentApiCalls);
+  private sendPendingEvents() {
+    log.debug('sending events saved before user optIn');
+    this.eventsSavedBeforeMetricsDecision?.forEach((event) => {
+      this.analytics.track(event);
+    });
+  }
+
+  private cleanPendingEvents() {
+    this.eventsSavedBeforeMetricsDecision = [];
+    this.store.set('eventsSavedBeforeMetricsDecision', []);
   }
 
   // Build the context object to attach to page and track events.
@@ -116,6 +151,38 @@ class MetricsService {
         version: getDesktopVersion(),
       },
     };
+  }
+
+  private saveProcessedEvents(eventName: string) {
+    if (this.processedEvents.includes(eventName)) {
+      return;
+    }
+    this.processedEvents.push(eventName);
+
+    this.eventStore.set('processedEvents', this.processedEvents);
+  }
+
+  private registerMetricsBridgeHandler() {
+    ipcMain.handle(
+      'analytics-track',
+      (_event, eventName: string, properties: Properties) => {
+        this.track(eventName, properties);
+      },
+    );
+
+    ipcMain.handle('analytics-identify', (_event, traits: Traits) => {
+      this.identify(traits);
+    });
+
+    ipcMain.handle(
+      'analytics-pending-events-handler',
+      (_event, metricsDecision: boolean) => {
+        if (metricsDecision) {
+          this.sendPendingEvents();
+        }
+        this.cleanPendingEvents();
+      },
+    );
   }
 }
 

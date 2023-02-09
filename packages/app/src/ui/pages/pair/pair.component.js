@@ -80,7 +80,7 @@ const Pair = ({ isDesktopPaired, isSuccessfulPairSeen, history }) => {
     }
   };
 
-  const handleOnSettinsIconClick = () => {
+  const handleOnSettingsIconClick = () => {
     history.push(SETTINGS_ROUTE);
   };
 
@@ -88,7 +88,7 @@ const Pair = ({ isDesktopPaired, isSuccessfulPairSeen, history }) => {
     <>
       <div
         className="mmd-pair-page__settings-icon"
-        onClick={handleOnSettinsIconClick}
+        onClick={handleOnSettingsIconClick}
       >
         <SettingIcon width="24" height="24" fill="var(--color-text-muted)" />
       </div>

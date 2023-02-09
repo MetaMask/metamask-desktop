@@ -16,6 +16,7 @@ import Settings from '../settings';
 import ErrorPage from '../error';
 import MetametricsOptInPage from '../metametrics-opt-in';
 import useDeeplinkRegister from '../../hooks/useDeeplinkRegister';
+import { EVENT_NAMES } from '../../../app/metrics/metrics-constants';
 
 const Routes = ({ theme }) => {
   useDeeplinkRegister();
@@ -23,6 +24,10 @@ const Routes = ({ theme }) => {
     // Set theme (html attr) for the first time
     setTheme(theme);
   }, [theme]);
+
+  useEffect(() => {
+    window.electronBridge.track(EVENT_NAMES.DESKTOP_UI_LOADED);
+  }, []);
 
   return (
     <div id="mmd-app-content">

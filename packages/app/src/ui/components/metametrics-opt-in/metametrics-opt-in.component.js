@@ -96,6 +96,7 @@ const MetaMetricsOptIn = ({ updateMetametricsOptIn }) => {
           <Button
             type="secondary"
             onClick={() => {
+              window.electronBridge.analyticsPendingEventsHandler(false);
               updateMetametricsOptIn(false);
               history.push(PAIR_ROUTE);
             }}
@@ -105,6 +106,7 @@ const MetaMetricsOptIn = ({ updateMetametricsOptIn }) => {
           <Button
             type="primary"
             onClick={() => {
+              window.electronBridge.analyticsPendingEventsHandler(true);
               updateMetametricsOptIn(true);
               history.push(PAIR_ROUTE);
             }}
