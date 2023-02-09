@@ -16,7 +16,10 @@ class Analytics {
       context?: any;
     },
   ): void {
-    Analytics.instance.identify({ ...message, timestamp: new Date() });
+    Analytics.instance.identify({
+      ...message,
+      timestamp: message.timestamp || new Date(),
+    });
   }
 
   public track(
@@ -27,7 +30,40 @@ class Analytics {
       context?: any;
     },
   ): void {
-    Analytics.instance.track({ ...message, timestamp: new Date() });
+    Analytics.instance.track({
+      ...message,
+      timestamp: message.timestamp || new Date(),
+    });
+  }
+
+  public page(
+    message: Identity & {
+      category?: string | undefined;
+      name?: string | undefined;
+      properties?: any;
+      timestamp?: Date | undefined;
+      context?: any;
+      messageId?: string | undefined;
+    },
+  ): void {
+    Analytics.instance.page({
+      ...message,
+      timestamp: message.timestamp || new Date(),
+    });
+  }
+
+  public screen(
+    message: Identity & {
+      name?: string | undefined;
+      properties?: any;
+      timestamp?: Date | undefined;
+      context?: any;
+    },
+  ): void {
+    Analytics.instance.screen({
+      ...message,
+      timestamp: message.timestamp || new Date(),
+    });
   }
 
   private init = () => {

@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron';
-import { Properties } from '../types/metrics';
+import { Properties, Traits } from '../types/metrics';
 
 const uiStoreBridge = (name: string) => {
   return {
@@ -11,14 +11,6 @@ const uiStoreBridge = (name: string) => {
     },
     removeItem: async (key: string) => {
       await ipcRenderer.invoke(`${name}-store-delete`, key);
-    },
-  };
-};
-
-const analyticsBridge = (name: string) => {
-  return {
-    track: (eventName: string, properties: Properties) => {
-      return ipcRenderer.invoke(`${name}-track`, eventName, properties);
     },
   };
 };
@@ -68,7 +60,18 @@ const electronBridge = {
   setLanguage: async (language: string) => {
     await ipcRenderer.invoke('set-language', language);
   },
-  analytics: analyticsBridge('analytics'),
+  track: (eventName: string, properties: Properties) => {
+    return ipcRenderer.invoke('analytics-track', eventName, properties);
+  },
+  identify: (traits: Traits) => {
+    return ipcRenderer.invoke('analytics-identify', traits);
+  },
+  analyticsPendingEventsHandler: (metricsDecision: boolean) => {
+    return ipcRenderer.invoke(
+      'analytics-pending-events-handler',
+      metricsDecision,
+    );
+  },
 };
 
 contextBridge.exposeInMainWorld('electronBridge', electronBridge);

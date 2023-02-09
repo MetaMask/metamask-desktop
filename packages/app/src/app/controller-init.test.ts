@@ -4,6 +4,16 @@ import { AppDesktopController } from './controller-init';
 
 jest.mock('./desktop-app');
 
+jest.mock(
+  'electron',
+  () => ({
+    ipcMain: { handle: jest.fn() },
+  }),
+  {
+    virtual: true,
+  },
+);
+
 describe('App Desktop Controller', () => {
   const desktopAppMock = desktopApp as jest.Mocked<typeof desktopApp>;
   const extensionConnectionMock = createExtensionConnectionMock();

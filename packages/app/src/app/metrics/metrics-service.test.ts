@@ -29,10 +29,10 @@ jest.mock(
           switch (value) {
             case 'participateInDesktopMetrics':
               return true;
-            case 'segmentApiCalls':
-              return {};
             case 'eventsSavedBeforeMetricsDecision':
               return [];
+            case 'processedEvents':
+              return ['mock-event-name-2'];
             default:
               return undefined;
           }
@@ -50,6 +50,7 @@ jest.mock(
   'electron',
   () => ({
     app: { name: jest.fn() },
+    ipcMain: { handle: jest.fn() },
   }),
   {
     virtual: true,
@@ -84,25 +85,35 @@ describe('MetricsService', () => {
     jest.clearAllMocks();
   });
 
-  it('set desktopMetricsId', () => {
+  it('sets desktop metrics id', () => {
     metricsService.setDesktopMetricsId(UUID_MOCK);
-    expect(electronStoreConstructorMock).toHaveBeenCalledTimes(1);
+    expect(electronStoreConstructorMock).toHaveBeenCalledTimes(2);
   });
 
-  it('tracks an event with properties and saved it to the store', () => {
-    metricsService.track(EVENT_NAME_MOCK, PROPERTIES_OBJECT_MOCK);
+  describe('track events', () => {
+    it.each([true, false])(
+      `tracks an event with the property firstTimeEvent $firstTimeEvent and saved it to the store`,
+      (firstTimeEvent) => {
+        getMetricsDecisionSpy.mockReturnValue(MetricsDecision.ENABLED);
+        metricsService.track(EVENT_NAME_MOCK, PROPERTIES_OBJECT_MOCK);
 
-    expect(trackSpy).toHaveBeenCalledTimes(1);
-    expect(analytics.track).toHaveBeenCalledWith({
-      event: EVENT_NAME_MOCK,
-      userId: expect.any(String),
-      properties: PROPERTIES_OBJECT_MOCK,
-      context: expect.any(Object),
-      messageId: expect.any(String),
-    });
+        expect(trackSpy).toHaveBeenCalledTimes(1);
+        expect(analytics.track).toHaveBeenCalledWith({
+          event: EVENT_NAME_MOCK,
+          userId: expect.any(String),
+          properties: {
+            ...PROPERTIES_OBJECT_MOCK,
+            firstTimeEvent,
+          },
+          context: expect.any(Object),
+          messageId: expect.any(String),
+        });
+      },
+    );
   });
 
   it('tracks an event before users opted in and store it in eventsSavedBeforeMetricsDecision', () => {
+    getMetricsDecisionSpy.mockReturnValue(MetricsDecision.PENDING);
     metricsService.track(EVENT_NAME_MOCK, PROPERTIES_OBJECT_MOCK);
 
     expect(trackSpy).toHaveBeenCalledTimes(0);

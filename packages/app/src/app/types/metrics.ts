@@ -7,6 +7,10 @@ export interface Traits {
   [key: string]: any;
 }
 
+export interface EventsStorage {
+  processedEvents: string[];
+}
+
 export interface Properties {
   paired?: boolean;
   createdAt?: Date;
@@ -21,14 +25,8 @@ export interface Event {
   messageId?: string;
 }
 
-export interface SegmentApiCalls {
-  [key: string]: Event;
-}
-
-export interface MetricsState {
-  participateInDesktopMetrics: boolean;
+export interface MetricsStorage {
   desktopMetricsId?: string;
   eventsSavedBeforeMetricsDecision: Event[];
   traits: Traits;
-  segmentApiCalls: SegmentApiCalls;
 }

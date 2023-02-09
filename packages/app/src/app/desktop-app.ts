@@ -19,7 +19,6 @@ import { forwardEvents } from './utils/events';
 import { determineLoginItemSettings } from './utils/settings';
 import cfg from './utils/config';
 import { getDesktopVersion } from './utils/version';
-import { Properties } from './types/metrics';
 import ExtensionConnection from './extension-connection';
 import { updateCheck } from './update-check';
 import {
@@ -127,13 +126,6 @@ class DesktopApp extends EventEmitter {
     ipcMain.handle('open-external', (_event, link) => {
       shell.openExternal(link);
     });
-
-    ipcMain.handle(
-      'analytics-track',
-      (_event, eventName: string, properties: Properties) => {
-        this.metricsService.track(eventName, properties);
-      },
-    );
 
     if (!cfg().ui.preventOpenOnStartup) {
       ipcMain.handle('set-preferred-startup', (_event, preferredStartup) => {
