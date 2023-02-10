@@ -49,7 +49,11 @@ jest.mock(
 jest.mock(
   'electron',
   () => ({
-    app: { whenReady: jest.fn(), disableHardwareAcceleration: jest.fn() },
+    app: {
+      whenReady: jest.fn(),
+      disableHardwareAcceleration: jest.fn(),
+      getLoginItemSettings: jest.fn(),
+    },
     BrowserWindow: jest.fn(),
     ipcMain: { handle: jest.fn() },
   }),
