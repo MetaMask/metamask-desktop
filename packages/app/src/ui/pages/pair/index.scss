@@ -59,8 +59,16 @@ $otp-height: 142px;
     }
   }
 
-  .support-link {
+  .support-link-container {
     font-size: 14px;
-    color: #535A61;
+    .link {
+      display: inline;
+      padding:0;
+      padding-left: 4px;
+      font-size: 14px;
+    }
+    p {
+      font-size: 14px;
+    }
   }
 }
