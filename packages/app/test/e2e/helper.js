@@ -3,6 +3,7 @@
 
 const cp = require('child_process');
 const { promises: fs } = require('fs');
+const { By } = require('selenium-webdriver');
 
 const APP_START_TIMEOUT = 30000;
 const BEFORE_NAVIGATE_DELAY = 3000;
@@ -115,8 +116,14 @@ const beforeDesktopNavigate = async (_driver) => {
 };
 
 const afterDesktopNavigate = async (driver) => {
-  if (driver.isElementPresent(SELECTOR_EXPERIMENTAL_AREA_CONFIRM_BUTTON)) {
-    driver.clickElement(SELECTOR_EXPERIMENTAL_AREA_CONFIRM_BUTTON);
+  await sleep(500);
+
+  const elements = await driver.driver.findElements(
+    By.css(SELECTOR_EXPERIMENTAL_AREA_CONFIRM_BUTTON),
+  );
+
+  if (elements.length) {
+    await elements[0].click();
   }
 };
 
