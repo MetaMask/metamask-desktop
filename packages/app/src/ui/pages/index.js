@@ -5,6 +5,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import PropTypes from 'prop-types';
 
 import { I18nProvider } from '../contexts/i18n';
+import { EVENT_NAMES } from '../../app/metrics/metrics-constants';
 import Routes from './routes';
 import CriticalError from './error/critical-error.component';
 
@@ -17,6 +18,7 @@ class Root extends PureComponent {
 
   componentDidCatch(error) {
     // TODO: Sentry.captureException(error);
+    window.electronBridge.track(EVENT_NAMES.UI_CRITICAL_ERROR);
     console.error('Exception Error Page', error);
   }
 
