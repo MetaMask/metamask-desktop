@@ -1,5 +1,7 @@
 /* eslint-disable node/no-unpublished-require */
 
+const SKIPPED_TESTS = ['Import Account using json file'];
+
 const mockttp = require('mockttp');
 const mock = require('mock-require');
 const sinon = require('sinon');
@@ -117,7 +119,10 @@ const registerHelpersHooks = () => {
   const mockHelpers = {
     ...helpers,
     withFixtures: async (...args) => {
-      helpersWithFixturesHook(...args);
+      if (!helpersWithFixturesHook(...args)) {
+        return;
+      }
+
       await originalWithFixtures(...args);
     },
   };
@@ -184,4 +189,11 @@ driverCheckConsoleErrorsHook.callsFake(() => []);
 
 helpersWithFixturesHook.callsFake((options) => {
   currentTestTitle = options.title;
+
+  if (SKIPPED_TESTS.includes(options.title)) {
+    console.log('Skipping test as using desktop app');
+    return false;
+  }
+
+  return true;
 });
