@@ -3,6 +3,7 @@
 
 const cp = require('child_process');
 const { promises: fs } = require('fs');
+// eslint-disable-next-line node/no-unpublished-require
 const { By } = require('selenium-webdriver');
 
 const APP_START_TIMEOUT = 30000;
