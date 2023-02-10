@@ -419,7 +419,7 @@ jobs:
           at: .
       - run:
           name: build
-          command: yarn extension build:test:desktop:app
+          command: yarn app build:extension:test:app
       - run:
           name: Move dist to avoid conflicts
           command: mv ./${EXTENSION_DIR}/dist ./${EXTENSION_DIR}/dist-extension-test-app

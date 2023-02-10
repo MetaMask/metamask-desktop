@@ -6,6 +6,8 @@ const { promises: fs } = require('fs');
 
 const APP_START_TIMEOUT = 30000;
 const BEFORE_NAVIGATE_DELAY = 3000;
+const SELECTOR_EXPERIMENTAL_AREA_CONFIRM_BUTTON =
+  '[data-testid="experimental-area"] .btn-primary';
 
 const sleep = async (milliseconds) => {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
@@ -112,6 +114,12 @@ const beforeDesktopNavigate = async (_driver) => {
   await sleep(BEFORE_NAVIGATE_DELAY);
 };
 
+const afterDesktopNavigate = async (driver) => {
+  if (driver.isElementPresent(SELECTOR_EXPERIMENTAL_AREA_CONFIRM_BUTTON)) {
+    driver.clickElement(SELECTOR_EXPERIMENTAL_AREA_CONFIRM_BUTTON);
+  }
+};
+
 const getElectronWindowCount = () => {
   return getProcessesByCommand(['electron', 'dist/app', '--type=renderer'], {
     matchAll: true,
@@ -124,5 +132,6 @@ module.exports = {
   setDesktopAppState,
   addDesktopState,
   beforeDesktopNavigate,
+  afterDesktopNavigate,
   getElectronWindowCount,
 };

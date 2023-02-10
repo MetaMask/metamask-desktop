@@ -14,6 +14,7 @@ const fixtureServerAfterStopHook = sinon.stub();
 const fixtureServerBeforeLoadStateHook = sinon.stub();
 const mockServerAfterStartHook = sinon.stub();
 const driverBeforeNavigateHook = sinon.stub();
+const driverAfterNavigateHook = sinon.stub();
 const driverGetWindowsHook = sinon.stub();
 const driverCheckConsoleErrorsHook = sinon.stub();
 const helpersWithFixturesHook = sinon.stub();
@@ -77,8 +78,9 @@ const registerMockServerHooks = () => {
 const registerDriverHooks = () => {
   class DesktopDriver extends Driver {
     async navigate(...args) {
-      await driverBeforeNavigateHook();
+      await driverBeforeNavigateHook(this);
       await super.navigate(...args);
+      await driverAfterNavigateHook(this);
     }
 
     // eslint-disable-next-line no-empty-function
@@ -158,8 +160,12 @@ mockServerAfterStartHook.callsFake(async () => {
   await helper.startDesktopApp();
 });
 
-driverBeforeNavigateHook.callsFake(async () => {
-  await helper.beforeDesktopNavigate();
+driverBeforeNavigateHook.callsFake(async (driver) => {
+  await helper.beforeDesktopNavigate(driver);
+});
+
+driverAfterNavigateHook.callsFake(async (driver) => {
+  await helper.afterDesktopNavigate(driver);
 });
 
 driverGetWindowsHook.callsFake(() => {
