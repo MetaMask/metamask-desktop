@@ -36,6 +36,16 @@ const electronBridge = {
       callback();
     });
   },
+  onResized: (callback: (size: { width: number; height: number }) => void) => {
+    ipcRenderer.on('resized', (_, size) => {
+      callback(size);
+    });
+  },
+  onMoved: (callback: (position: { x: number; y: number }) => void) => {
+    ipcRenderer.on('moved', (_, position) => {
+      callback(position);
+    });
+  },
   removeInvalidOtpListeners: () => {
     ipcRenderer.removeAllListeners('invalid-otp');
   },

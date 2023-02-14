@@ -1,19 +1,36 @@
 import path from 'path';
 import { app, BrowserWindow, nativeTheme } from 'electron';
+import { debounce } from 'lodash';
 import log from 'loglevel';
 import { readPersistedSettingFromAppState } from '../storage/ui-storage';
 import {
   PAIR_PAGE,
   METAMETRICS_OPT_IN_PAGE,
 } from '../../shared/constants/ui-routes';
+import * as windowConstants from '../../shared/constants/window';
 import UIState from './ui-state';
 import { titleBarOverlayOpts } from './ui-constants';
 
 export default class WindowService {
   private UIState: typeof UIState;
 
+  private size: { width: number; height: number };
+
+  private position: { x: number; y: number };
+
   constructor() {
     this.UIState = UIState;
+    const { x, y, width, height } = readPersistedSettingFromAppState({
+      defaultValue: {
+        x: undefined,
+        y: undefined,
+        width: windowConstants.DEFAULT_WINDOW_WIDTH,
+        height: windowConstants.DEFAULT_WINDOW_HEIGHT,
+      },
+      key: 'window',
+    });
+    this.size = { width, height };
+    this.position = { x, y };
   }
 
   public async createMainWindow() {
@@ -21,10 +38,12 @@ export default class WindowService {
     const mainWindow = new BrowserWindow({
       // Always set to false, otherwise the window will be shown before it is ready
       show: false,
-      width: 840,
-      height: 780,
-      minWidth: 800,
-      minHeight: 640,
+      width: this.size.width,
+      height: this.size.height,
+      x: this.position.x,
+      y: this.position.y,
+      minWidth: windowConstants.MIN_WINDOW_WIDTH,
+      minHeight: windowConstants.MIN_WINDOW_HEIGHT,
       titleBarStyle: 'hidden',
       titleBarOverlay: titleBarOverlayOpts.light,
       webPreferences: {
@@ -59,6 +78,24 @@ export default class WindowService {
         app.dock.show();
       }
     });
+
+    mainWindow.on(
+      'resized',
+      debounce(() => {
+        const { width, height } = mainWindow.getBounds();
+        mainWindow.webContents.send('resized', { width, height });
+        this.size = { width, height };
+      }, windowConstants.UPDATE_FREQUENCY_MS),
+    );
+
+    mainWindow.on(
+      'moved',
+      debounce(() => {
+        const { x, y } = mainWindow.getBounds();
+        mainWindow.webContents.send('moved', { x, y });
+        this.position = { x, y };
+      }, windowConstants.UPDATE_FREQUENCY_MS),
+    );
 
     this.UIState.mainWindow = mainWindow;
   }
