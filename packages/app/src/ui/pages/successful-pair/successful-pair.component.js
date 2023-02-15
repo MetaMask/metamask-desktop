@@ -9,7 +9,7 @@ import Box from '../../../../submodules/extension/ui/components/ui/box';
 import Button from '../../../../submodules/extension/ui/components/ui/button';
 import {
   FONT_WEIGHT,
-  TYPOGRAPHY,
+  TypographyVariant,
   DISPLAY,
   FLEX_DIRECTION,
 } from '../../../../submodules/extension/ui/helpers/constants/design-system';
@@ -45,12 +45,12 @@ const SuccessfulPair = ({
         width="150"
         height="150"
       />
-      <Typography variant={TYPOGRAPHY.H3} fontWeight={FONT_WEIGHT.BOLD}>
+      <Typography variant={TypographyVariant.H3} fontWeight={FONT_WEIGHT.BOLD}>
         {t('pairingComplete')}
       </Typography>
       <Typography
         className="description"
-        variant={TYPOGRAPHY.Paragraph}
+        variant={TypographyVariant.Paragraph}
         fontSize={14}
       >
         {t('someExplainer')}

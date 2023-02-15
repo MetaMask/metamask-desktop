@@ -13,8 +13,8 @@ import Button from '../../../../submodules/extension/ui/components/ui/button';
 import SettingIcon from '../../components/icons/settings-icon';
 import {
   FONT_WEIGHT,
-  TYPOGRAPHY,
-  COLORS,
+  TypographyVariant,
+  Color,
   TEXT_ALIGN,
 } from '../../../../submodules/extension/ui/helpers/constants/design-system';
 import Mascot from '../../components/mascot';
@@ -98,10 +98,10 @@ const Pair = ({ isDesktopPaired, isSuccessfulPairSeen, history }) => {
           width="150"
           height="150"
         />
-        <Typography variant={TYPOGRAPHY.H3} fontWeight={FONT_WEIGHT.BOLD}>
+        <Typography variant={TypographyVariant.H3} fontWeight={FONT_WEIGHT.BOLD}>
           {t('pairWithExtension')}
         </Typography>
-        <Typography variant={TYPOGRAPHY.Paragraph} fontSize={14}>
+        <Typography variant={TypographyVariant.Paragraph} fontSize={14}>
           {t('typeTheSixDigitCodeBelow')}
         </Typography>
         {isOtpValidating ? (
@@ -125,9 +125,9 @@ const Pair = ({ isDesktopPaired, isSuccessfulPairSeen, history }) => {
             />
             {isInvalidOtpError && (
               <Typography
-                variant={TYPOGRAPHY.Paragraph}
+                variant={TypographyVariant.Paragraph}
                 fontSize={14}
-                color={COLORS.ERROR_DEFAULT}
+                color={Color.errorDefault}
                 align={TEXT_ALIGN.CENTER}
                 className="mmd-pair-page__otp-input__error-message"
               >
@@ -136,9 +136,9 @@ const Pair = ({ isDesktopPaired, isSuccessfulPairSeen, history }) => {
             )}
             {isOtpTimeoutError && (
               <Typography
-                variant={TYPOGRAPHY.Paragraph}
+                variant={TypographyVariant.Paragraph}
                 fontSize={14}
-                color={COLORS.ERROR_DEFAULT}
+                color={Color.errorDefault}
                 align={TEXT_ALIGN.CENTER}
                 className="mmd-pair-page__otp-input__error-message"
               >
@@ -148,7 +148,7 @@ const Pair = ({ isDesktopPaired, isSuccessfulPairSeen, history }) => {
           </div>
         )}
         <div className="support-link-container">
-          <Typography variant={TYPOGRAPHY.Paragraph}>
+          <Typography variant={TypographyVariant.Paragraph}>
             {t('needSupport')}
             <Button
               type="link"

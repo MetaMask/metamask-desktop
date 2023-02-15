@@ -5,7 +5,7 @@ import PairStatus from '../../../components/pair-status';
 import Typography from '../../../../../submodules/extension/ui/components/ui/typography';
 import Button from '../../../../../submodules/extension/ui/components/ui/button';
 import Dropdown from '../../../components/dropdown';
-import { TYPOGRAPHY } from '../../../../../submodules/extension/ui/helpers/constants/design-system';
+import { TypographyVariant } from '../../../../../submodules/extension/ui/helpers/constants/design-system';
 import { LocaleIndex } from '../../../../shared/constants/locale';
 import { ThemeIndex } from '../../../../shared/constants/theme';
 import { StartupOptionIndex } from '../../../../shared/constants/startup-option';
@@ -36,8 +36,8 @@ const GeneralTab = ({
     return (
       <div className="mmd-settings-page__setting-row">
         <div className="mmd-settings-page__setting-item">
-          <Typography variant={TYPOGRAPHY.H5}>{t('language')}</Typography>
-          <Typography variant={TYPOGRAPHY.H6}>
+          <Typography variant={TypographyVariant.H5}>{t('language')}</Typography>
+          <Typography variant={TypographyVariant.H6}>
             {t('chooseYourPreferredLanguage')}
           </Typography>
         </div>
@@ -66,8 +66,8 @@ const GeneralTab = ({
     return (
       <div className="mmd-settings-page__setting-row">
         <div className="mmd-settings-page__setting-item">
-          <Typography variant={TYPOGRAPHY.H5}>{t('theme')}</Typography>
-          <Typography variant={TYPOGRAPHY.H6}>
+          <Typography variant={TypographyVariant.H5}>{t('theme')}</Typography>
+          <Typography variant={TypographyVariant.H6}>
             {t('chooseYourPreferredMetaMaskTheme')}
           </Typography>
         </div>
@@ -95,8 +95,8 @@ const GeneralTab = ({
     return (
       <div className="mmd-settings-page__setting-row">
         <div className="mmd-settings-page__setting-item">
-          <Typography variant={TYPOGRAPHY.H5}>{t('openAtLogin')}</Typography>
-          <Typography variant={TYPOGRAPHY.H6}>
+          <Typography variant={TypographyVariant.H5}>{t('openAtLogin')}</Typography>
+          <Typography variant={TypographyVariant.H6}>
             {t('allowOpenAtLoginDescription')}
           </Typography>
         </div>
