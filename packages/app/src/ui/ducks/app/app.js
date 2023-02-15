@@ -1,4 +1,5 @@
 import setTheme from '../../helpers/theme';
+import * as windowConstants from '../../../shared/constants/window';
 
 export const initialAppState = {
   theme: 'os',
@@ -6,6 +7,12 @@ export const initialAppState = {
   metametricsOptIn: false,
   isMetametricsOptionSelected: false,
   preferredStartup: 'minimized',
+  window: {
+    width: windowConstants.DEFAULT_WINDOW_WIDTH,
+    height: windowConstants.DEFAULT_WINDOW_HEIGHT,
+    x: undefined,
+    y: undefined,
+  },
 };
 
 // Actions
@@ -13,13 +20,10 @@ export const UPDATE_THEME = 'UPDATE_THEME';
 export const UPDATE_LANGUAGE = 'UPDATE_LANGUAGE';
 export const UPDATE_METAMETRICS_OPT_IN = 'UPDATE_METAMETRICS_OPT_IN';
 export const UPDATE_PREFERRED_STARTUP = 'UPDATE_PREFFERED_STARTUP';
+export const UPDATE_WINDOW_SIZE = 'UPDATE_WINDOW_SIZE';
+export const UPDATE_WINDOW_POSITION = 'UPDATE_WINDOW_POSITION';
 
 // Reducer
-/**
- *
- * @param state
- * @param action
- */
 export default function appReducer(state = initialAppState, action) {
   switch (action.type) {
     case UPDATE_THEME: {
@@ -53,6 +57,26 @@ export default function appReducer(state = initialAppState, action) {
         preferredStartup: action.payload,
       };
     }
+
+    case UPDATE_WINDOW_SIZE: {
+      return {
+        ...state,
+        window: {
+          ...state.window,
+          ...action.size,
+        },
+      };
+    }
+
+    case UPDATE_WINDOW_POSITION: {
+      return {
+        ...state,
+        window: {
+          ...state.window,
+          ...action.position,
+        },
+      };
+    }
     default:
       return state;
   }
@@ -65,34 +89,26 @@ export const getMetametricsOptIn = (state) => state.app.metametricsOptIn;
 export const getPreferredStartup = (state) => state.app.preferredStartup;
 
 // Action Creators
-/**
- *
- * @param payload
- */
 export function updateTheme(payload) {
   return { type: UPDATE_THEME, payload };
 }
 
-/**
- *
- * @param payload
- */
 export function updateLanguage(payload) {
   return { type: UPDATE_LANGUAGE, payload };
 }
 
-/**
- *
- * @param payload
- */
 export function updateMetametricsOptIn(payload) {
   return { type: UPDATE_METAMETRICS_OPT_IN, payload };
 }
 
-/**
- *
- * @param payload
- */
 export function updatePreferredStartup(payload) {
   return { type: UPDATE_PREFERRED_STARTUP, payload };
+}
+
+export function updateWindowSize(size) {
+  return { type: UPDATE_WINDOW_SIZE, size };
+}
+
+export function updateWindowPosition(position) {
+  return { type: UPDATE_WINDOW_POSITION, position };
 }
