@@ -9,6 +9,8 @@ export const EVENT_NAMES = {
   DESKTOP_APP_STARTING: 'Desktop App Starting',
   DESKTOP_UI_LOADED: 'Desktop UI Loaded',
   UI_CRITICAL_ERROR: 'Desktop UI Critical Error',
+  DESKTOP_APP_UNPAIRED: 'Desktop App Unpaired',
+  DESKTOP_APP_OPENED_STARTUP: 'Desktop App Opened at Startup',
 };
 
 export enum MetricsDecision {

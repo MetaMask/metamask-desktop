@@ -103,6 +103,10 @@ class DesktopApp extends EventEmitter {
     ipcMain.handle('minimize', () => this.UIState.mainWindow?.minimize());
 
     ipcMain.handle('unpair', async () => {
+      this.metricsService.track(EVENT_NAMES.DESKTOP_APP_UNPAIRED, {
+        paired: false,
+        createdAt: new Date(),
+      });
       await this.extensionConnection?.disable();
     });
 
@@ -154,6 +158,14 @@ class DesktopApp extends EventEmitter {
 
     this.appEvents.register();
     this.appNavigation.create();
+
+    // Tracks an event whenever desktop app is set to open at startup
+    if (app.getLoginItemSettings()?.openAtLogin) {
+      this.metricsService.track(EVENT_NAMES.DESKTOP_APP_OPENED_STARTUP, {
+        openAtLogin: true,
+        startedAt: new Date(),
+      });
+    }
 
     log.debug('Initialised desktop app');
 
@@ -230,7 +242,6 @@ class DesktopApp extends EventEmitter {
     extensionConnection.on('paired', () => {
       this.status.isDesktopPaired = true;
       this.appNavigation.setPairedTrayIcon();
-      // send metrics to Segment
       this.metricsService.track(EVENT_NAMES.DESKTOP_APP_PAIRED, {
         paired: true,
         createdAt: new Date(),
@@ -239,6 +250,7 @@ class DesktopApp extends EventEmitter {
 
     extensionConnection.getPairing().on('invalid-otp', () => {
       this.UIState.mainWindow?.webContents.send('invalid-otp', false);
+      this.metricsService.track(EVENT_NAMES.INVALID_OTP, {});
     });
 
     forwardEvents(extensionConnection, this, [
