@@ -147,15 +147,20 @@ const Pair = ({ isDesktopPaired, isSuccessfulPairSeen, history }) => {
             )}
           </div>
         )}
-        <Button
-          type="link"
-          className="support-link"
-          onClick={() => {
-            window.electronBridge.openExternalShell(URL_SUBMIT_TICKET);
-          }}
-        >
-          {t('needSupport')}
-        </Button>
+        <div className="support-link-container">
+          <Typography variant={TYPOGRAPHY.Paragraph}>
+            {t('needSupport')}
+            <Button
+              type="link"
+              className="link"
+              onClick={() => {
+                window.electronBridge.openExternalShell(URL_SUBMIT_TICKET);
+              }}
+            >
+              {t('visitOurHelpCenter')}
+            </Button>
+          </Typography>
+        </div>
       </div>
     </>
   );

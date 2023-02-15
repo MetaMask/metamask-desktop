@@ -163,7 +163,7 @@
     "description": "This string is localized separately from some of the commitments so that we can bold it"
   },
   "metametricsCommitmentsIntro": {
-    "message": "MetaMask will.."
+    "message": "MetaMask Desktop will.."
   },
   "metametricsCommitmentsNeverCollectIP": {
     "message": "$1 collect your full IP address",
@@ -184,7 +184,7 @@
     "message": "Help us improve MetaMask"
   },
   "metametricsOptInDescription": {
-    "message": "MetaMask would like to gather usage data to better understand how our users interact with the extension. This data will be used to continually improve the usability and user experience of our product and the Ethereum ecosystem."
+    "message": "MetaMask would like to gather usage data to better understand how our users interact with the desktop application. This data will be used to continually improve the usability and user experience of our product and the Ethereum ecosystem."
   },
   "metricsSharingStrategy": {
     "message": "In the situation where the desktop application is paired with a MetaMask extension and you agreed to share your usage data to MetaMask both in the desktop application and in the extension, some of the extension's data will transit through the desktop application before being sent to MetaMask, along with the desktop application's data."
@@ -193,7 +193,7 @@
     "message": "Minimized"
   },
   "needSupport": {
-    "message": "Need support? Visit our Help Center"
+    "message": "Need support?"
   },
   "no": {
     "message": "No"
@@ -284,6 +284,9 @@
   },
   "updatesDownloaded": {
     "message": "Updates downloaded, application will be quit for update..."
+  },
+  "visitOurHelpCenter": {
+    "message": "Visit our Help Center"
   },
   "visitWebSite": {
     "message": "Visit our website"

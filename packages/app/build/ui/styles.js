@@ -30,7 +30,7 @@ function createStyleTasks() {
       src: 'src/ui/css/index.scss',
       dest: 'src/ui/css/output',
       devMode: true,
-      pattern: '{ui, submodules/extension/ui}/**/*.scss',
+      pattern: '**/{ui, submodules/extension/ui}/**/*.scss',
     }),
   );
 
