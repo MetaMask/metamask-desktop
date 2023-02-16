@@ -20,8 +20,8 @@ import { forwardEvents } from './utils/events';
 import { determineLoginItemSettings } from './utils/settings';
 import cfg from './utils/config';
 import { getDesktopVersion } from './utils/version';
-import { registerWindowHandler } from '../browser/node-browser';
-import { WindowCreateRequest } from '../types/window';
+import { registerWindowHandler } from './browser/node-browser';
+import { WindowCreateRequest } from './types/window';
 import ExtensionConnection from './extension-connection';
 import { updateCheck } from './update-check';
 import {

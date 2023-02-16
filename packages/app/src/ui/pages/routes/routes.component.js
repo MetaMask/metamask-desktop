@@ -18,15 +18,15 @@ import ErrorPage from '../error';
 import MetametricsOptInPage from '../metametrics-opt-in';
 import useDeeplinkRegister from '../../hooks/useDeeplinkRegister';
 import { EVENT_NAMES } from '../../../app/metrics/metrics-constants';
-import Confirmation from '../../../submodules/extension/ui/pages/confirmation';
+import Confirmation from '../../../../submodules/extension/ui/pages/confirmation';
 import {
   CONFIRM_TRANSACTION_ROUTE,
   CONNECT_ROUTE,
   DEFAULT_ROUTE,
-} from '../../../submodules/extension/ui/helpers/constants/routes';
-import PermissionsConnect from '../../../submodules/extension/ui/pages/permissions-connect';
-import ConfirmTransaction from '../../../submodules/extension/ui/pages/confirm-transaction';
-import Loading from '../loading/loading.component';
+} from '../../../../submodules/extension/ui/helpers/constants/routes';
+import PermissionsConnect from '../../../../submodules/extension/ui/pages/permissions-connect';
+import ConfirmTransaction from '../../../../submodules/extension/ui/pages/confirm-transaction';
+import Loading from '../../pages/loading';
 
 const Routes = ({
   theme,
