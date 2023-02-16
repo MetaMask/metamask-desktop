@@ -104,9 +104,9 @@ export default class WindowService {
     const approvalWindow = new BrowserWindow({
       show: false,
       webPreferences: {
-        preload: path.resolve(__dirname, './renderer/preload.js'),
+        preload: path.resolve(__dirname, './preload.js'),
       },
-      icon: path.resolve(__dirname, '../../dist/app/icon.png'),
+      icon: path.resolve(__dirname, '../dist/app/icon.png'),
     });
 
     approvalWindow.setAlwaysOnTop(true, 'screen-saver');
@@ -116,10 +116,7 @@ export default class WindowService {
       approvalWindow?.setMenu(null);
     }
 
-    approvalWindow.loadFile(
-      path.resolve(__dirname, '../../../ui/desktop-ui.html'),
-      { hash: '/' },
-    );
+    approvalWindow.loadFile(this.getHtmlPath(), { hash: '/' });
 
     log.debug('Created approval window');
 

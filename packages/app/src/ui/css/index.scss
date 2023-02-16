@@ -18,6 +18,18 @@
 @import '../../../submodules/extension/ui/components/ui/dropdown/dropdown.scss';
 @import '../../../submodules/extension/ui/components/ui/toggle-button/index.scss';
 
+@import '../../../submodules/extension/ui/pages/confirm-import-token';
+@import '../../../submodules/extension/ui/pages/confirm-add-suggested-token/index';
+@import '../../../submodules/extension/ui/pages/confirm-approve/index';
+@import '../../../submodules/extension/ui/pages/confirm-decrypt-message/confirm-decrypt-message';
+@import '../../../submodules/extension/ui/pages/confirm-encryption-public-key/confirm-encryption-public-key';
+@import '../../../submodules/extension/ui/pages/confirmation/confirmation';
+@import '../../../submodules/extension/ui/pages/permissions-connect/index';
+
+@import '../../../submodules/extension/ui/components/app/app-components.scss';
+@import '../../../submodules/extension/ui/components/ui/ui-components';
+@import '../../../submodules/extension/ui/css/loading.scss';
+
 $title-bar-height: 32px;
 
 body {

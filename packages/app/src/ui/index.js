@@ -1,9 +1,9 @@
 import React from 'react';
 import { render } from 'react-dom';
 
-import { _setBackgroundConnection } from '../submodules/extension/ui/store/action-queue';
-import { IPCMainStream } from '../src/app/ipc-main-stream';
-import metaRPCClientFactory from '../submodules/extension/app/scripts/lib/metaRPCClientFactory';
+import { _setBackgroundConnection } from '../../submodules/extension/ui/store/action-queue';
+import { IPCMainStream } from '../app/ipc-main-stream';
+import metaRPCClientFactory from '../../submodules/extension/app/scripts/lib/metaRPCClientFactory';
 import * as actions from './actions';
 import configureStore from './store/store';
 import Root from './pages';

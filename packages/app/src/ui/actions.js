@@ -1,9 +1,9 @@
 import {
   setCurrentLocale,
   updateMetamaskState,
-} from '../submodules/extension/ui/store/actions';
-import * as actionConstants from '../submodules/extension/ui/store/actionConstants';
-import { fetchLocale } from '../submodules/extension/ui/helpers/utils/i18n-helper';
+} from '../../submodules/extension/ui/store/actions';
+import * as actionConstants from '../../submodules/extension/ui/store/actionConstants';
+import { fetchLocale } from '../../submodules/extension/ui/helpers/utils/i18n-helper';
 
 export function updateState(newState) {
   return async (dispatch, getState) => {

@@ -23,7 +23,6 @@ module.exports = function (api) {
       'packages',
       'test',
       'playwright',
-      'submodules/extension/.storybook',
       'submodules/extension/.yarn',
       'submodules/extension/builds',
       'submodules/extension/development',

@@ -8,7 +8,7 @@ import {
   getFirstSnapInstallOrUpdateRequest,
   getUnapprovedTemplatedConfirmations,
   unconfirmedTransactionsCountSelector,
-} from '../../../submodules/extension/ui/selectors';
+} from '../../../../submodules/extension/ui/selectors';
 import Routes from './routes.component';
 
 function getPermissionRequestId(state) {

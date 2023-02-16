@@ -12,11 +12,11 @@ import CriticalError from './error/critical-error.component';
 import {
   I18nProvider as ExtensionI18nProvider,
   LegacyI18nProvider,
-} from '../../submodules/extension/ui/contexts/i18n';
+} from '../../../submodules/extension/ui/contexts/i18n';
 import {
   MetaMetricsProvider,
   LegacyMetaMetricsProvider,
-} from '../../submodules/extension/ui/contexts/metametrics';
+} from '../../../submodules/extension/ui/contexts/metametrics';
 
 class Root extends PureComponent {
   state = {};
