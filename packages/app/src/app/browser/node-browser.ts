@@ -12,6 +12,7 @@ import {
   getNumericalDesktopVersion,
 } from '../utils/version';
 import { WindowCreateRequest, WindowHandler } from '../types/window';
+import cfg from '../utils/config';
 
 const TIMEOUT_REQUEST = 5000;
 
@@ -158,14 +159,17 @@ const raw = {
   },
   windows: {
     create: (request: WindowCreateRequest) => {
-      proxy(['windows', 'create'], [request]);
-      windowHandler?.create({
+      if (!cfg().disableExtensionPopup) {
+        proxy(['windows', 'create'], [request]);
+      }
         ...request,
         left: request.left - request.width - 10,
       });
     },
     remove: (windowId: string) => {
-      proxy(['windows', 'remove'], [windowId]);
+      if (!cfg().disableExtensionPopup) {
+        proxy(['windows', 'remove'], [windowId]);
+      }
       windowHandler?.remove(windowId);
     },
   },
