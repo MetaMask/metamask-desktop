@@ -4,6 +4,7 @@ import { HashRouter } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/integration/react';
 import PropTypes from 'prop-types';
 
+import * as Sentry from '@sentry/electron/renderer';
 import { I18nProvider } from '../contexts/i18n';
 import { EVENT_NAMES } from '../../app/metrics/metrics-constants';
 import Routes from './routes';
@@ -17,7 +18,7 @@ class Root extends PureComponent {
   }
 
   componentDidCatch(error) {
-    // TODO: Sentry.captureException(error);
+    Sentry.captureException(error);
     window.electronBridge.track(EVENT_NAMES.UI_CRITICAL_ERROR);
     console.error('Exception Error Page', error);
   }
