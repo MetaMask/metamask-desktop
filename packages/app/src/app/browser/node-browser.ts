@@ -162,6 +162,8 @@ const raw = {
       if (!cfg().disableExtensionPopup) {
         proxy(['windows', 'create'], [request]);
       }
+
+      return windowHandler?.create({
         ...request,
         left: request.left - request.width - 10,
       });

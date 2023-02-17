@@ -349,17 +349,21 @@ class DesktopApp extends EventEmitter {
     this.emit('restart');
   }
 
-  private onWindowCreate(request: WindowCreateRequest) {
+  private onWindowCreate(
+    request: WindowCreateRequest,
+  ): BrowserWindow | undefined {
     const { approvalWindow } = this.UIState;
 
     if (!approvalWindow) {
-      return;
+      return undefined;
     }
 
     approvalWindow.setSize(request.width, request.height);
     approvalWindow.setPosition(request.left, request.top);
     approvalWindow.setTitle('MetaMask Desktop Notification');
     approvalWindow.show();
+
+    return approvalWindow;
   }
 
   private onWindowRemove(_windowId: string) {
