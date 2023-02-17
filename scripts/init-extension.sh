@@ -28,3 +28,11 @@ for DEPENDENCY in $(ls $EXTENSION_DIR/node_modules | grep react); do
   ln -s ../../../node_modules/$DEPENDENCY/ $EXTENSION_DIR/node_modules/$DEPENDENCY
   echo "Processed extension dependency: $DEPENDENCY"
 done
+
+# Extend the webextension-polyfill patch to Extension deps
+echo "Linking extension dependencies to app"
+for DEPENDENCY in $(ls $EXTENSION_DIR/node_modules | grep webextension-polyfill); do
+  rm -rf $EXTENSION_DIR/node_modules/$DEPENDENCY
+  ln -s ../../../node_modules/$DEPENDENCY/ $EXTENSION_DIR/node_modules/$DEPENDENCY
+  echo "Processed extension dependency: $DEPENDENCY"
+done
