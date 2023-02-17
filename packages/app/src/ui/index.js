@@ -12,7 +12,14 @@ import registerUpdateOSTheme from './hooks/registerUpdateOSTheme';
 import registerResizedEvent from './hooks/registerResizedEvent';
 import registerMovedEvent from './hooks/registerMovedEvent';
 
+const noop = () => {};
+
 async function launchDesktopUi() {
+  global.platform = {
+    currentTab: noop,
+    closeCurrentWindow: noop
+  };
+
   const { store, persistor } = configureStore();
 
   // Register listener OS theme change
