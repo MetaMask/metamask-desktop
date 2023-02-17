@@ -1,4 +1,5 @@
 import { app, globalShortcut } from 'electron';
+import * as Sentry from '@sentry/electron';
 import cfg from '../utils/config';
 import { determineLoginItemSettings } from '../utils/settings';
 import { readPersistedSettingFromAppState } from '../storage/ui-storage';
@@ -62,6 +63,13 @@ export default class AppEvents {
         this.UIState.mainWindow?.webContents.openDevTools();
       });
     }
+
+    // Drain any remaining events before closing
+    app.on('before-quit', async () => {
+      const sentryClient = Sentry.getCurrentHub().getClient();
+      await sentryClient?.flush(2000);
+      sentryClient?.close();
+    });
   }
 
   private onSecondInstance() {
