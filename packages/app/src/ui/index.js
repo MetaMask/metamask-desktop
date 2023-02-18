@@ -12,12 +12,13 @@ import registerUpdateOSTheme from './hooks/registerUpdateOSTheme';
 import registerResizedEvent from './hooks/registerResizedEvent';
 import registerMovedEvent from './hooks/registerMovedEvent';
 
+// eslint-disable-next-line no-empty-function
 const noop = () => {};
 
 async function launchDesktopUi() {
   global.platform = {
     currentTab: noop,
-    closeCurrentWindow: noop
+    closeCurrentWindow: noop,
   };
 
   const { store, persistor } = configureStore();
