@@ -7,8 +7,6 @@ import PropTypes from 'prop-types';
 import * as Sentry from '@sentry/electron/renderer';
 import { I18nProvider } from '../contexts/i18n';
 import { EVENT_NAMES } from '../../app/metrics/metrics-constants';
-import Routes from './routes';
-import CriticalError from './error/critical-error.component';
 import {
   I18nProvider as ExtensionI18nProvider,
   LegacyI18nProvider,
@@ -17,6 +15,8 @@ import {
   MetaMetricsProvider,
   LegacyMetaMetricsProvider,
 } from '../../../submodules/extension/ui/contexts/metametrics';
+import Routes from './routes';
+import CriticalError from './error/critical-error.component';
 
 class Root extends PureComponent {
   state = {};

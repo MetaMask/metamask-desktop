@@ -26,7 +26,7 @@ import {
 } from '../../../../submodules/extension/ui/helpers/constants/routes';
 import PermissionsConnect from '../../../../submodules/extension/ui/pages/permissions-connect';
 import ConfirmTransaction from '../../../../submodules/extension/ui/pages/confirm-transaction';
-import Loading from '../../pages/loading';
+import Loading from '../loading';
 
 const Routes = ({
   theme,

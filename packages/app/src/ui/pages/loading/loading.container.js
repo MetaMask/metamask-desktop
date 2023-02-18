@@ -1,13 +1,13 @@
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'redux';
-import Loading from './loading.component';
 import {
   getTotalUnapprovedCount,
   hasUnsignedQRHardwareTransaction,
-  hasUnsignedQRHardwareMessage
-} from '../../../../submodules/extension/ui/selectors'
-import { closeNotificationPopup } from '../../../../submodules/extension/ui/store/actions'
+  hasUnsignedQRHardwareMessage,
+} from '../../../../submodules/extension/ui/selectors';
+import { closeNotificationPopup } from '../../../../submodules/extension/ui/store/actions';
+import Loading from './loading.component';
 
 function mapStateToProps(state) {
   const totalUnapprovedCount = getTotalUnapprovedCount(state);
@@ -18,7 +18,7 @@ function mapStateToProps(state) {
   return {
     isNotification: true,
     totalUnapprovedCount,
-    isSigningQRHardwareTransaction
+    isSigningQRHardwareTransaction,
   };
 }
 
@@ -28,4 +28,7 @@ function mapDispatchToProps() {
   };
 }
 
-export default compose(withRouter, connect(mapStateToProps, mapDispatchToProps))(Loading);
+export default compose(
+  withRouter,
+  connect(mapStateToProps, mapDispatchToProps),
+)(Loading);
