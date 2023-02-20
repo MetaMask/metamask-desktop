@@ -140,6 +140,10 @@ class DesktopApp extends EventEmitter {
       );
     });
 
+    ipcMain.handle('sync-theme', (_event, theme) => {
+      this.UIState.approvalWindow?.webContents.send('theme-changed', theme);
+    });
+
     ipcMain.handle('set-language', (_event, language) => {
       setLanguage(language);
     });
