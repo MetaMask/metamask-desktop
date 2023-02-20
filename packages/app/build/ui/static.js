@@ -101,6 +101,11 @@ function getCopyTargets(shouldIncludeLockdown) {
       dest: ``,
     },
     {
+      src: `./src/popup-ui/css/output/`,
+      pattern: `*.css`,
+      dest: `popup-`,
+    },
+    {
       src: `./node_modules/globalthis/dist/browser.js`,
       dest: `globalthis.js`,
     },
