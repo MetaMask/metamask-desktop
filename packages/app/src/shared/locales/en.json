@@ -279,6 +279,12 @@
   "typeTheSixDigitCodeBelow": {
     "message": "Enter the six-digit code visible on the MetaMask Extension screen"
   },
+  "unpairMetaMaskDesktop": {
+    "message": "Unpair MetaMask Desktop"
+  },
+  "unpairMetaMaskDesktopDesc": {
+    "message": "Are you sure you want to unpair your MetaMask Desktop?"
+  },
   "updateNowDesc": {
     "message": "Found updates, do you want update now?"
   },

@@ -95,7 +95,6 @@ if (!global.self) {
           const extensionMetaMetricsOptIn =
             extensionState.store?.metamask?.participateInMetaMetrics;
 
-          // TODO Currently returning a string, needs simplifying when schema fixed
           const desktopMetaMetricsOptInValue = readPersistedSettingFromAppState(
             {
               defaultValue: false,

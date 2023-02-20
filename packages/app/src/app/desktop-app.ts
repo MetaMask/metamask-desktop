@@ -1,6 +1,6 @@
 import { Duplex, EventEmitter } from 'stream';
 import path from 'path';
-import { app, BrowserWindow, ipcMain, shell } from 'electron';
+import { app, BrowserWindow, ipcMain, shell, dialog } from 'electron';
 // eslint-disable-next-line @typescript-eslint/no-shadow
 import { Server as WebSocketServer, WebSocket } from 'ws';
 import log from 'loglevel';
@@ -31,7 +31,7 @@ import AppNavigation from './ui/app-navigation';
 import AppEvents from './ui/app-events';
 import WindowService from './ui/window-service';
 import UIState from './ui/ui-state';
-import { setLanguage } from './utils/translation';
+import { setLanguage, t } from './utils/translation';
 import { setUiStorage } from './storage/ui-storage';
 import MetricsService from './metrics/metrics-service';
 import { EVENT_NAMES } from './metrics/metrics-constants';
@@ -103,11 +103,22 @@ class DesktopApp extends EventEmitter {
     ipcMain.handle('minimize', () => this.UIState.mainWindow?.minimize());
 
     ipcMain.handle('unpair', async () => {
-      this.metricsService.track(EVENT_NAMES.DESKTOP_APP_UNPAIRED, {
-        paired: false,
-        createdAt: new Date(),
-      });
-      await this.extensionConnection?.disable();
+      dialog
+        .showMessageBox({
+          type: 'info',
+          title: t('unpairMetaMaskDesktop'),
+          message: t('unpairMetaMaskDesktopDesc'),
+          buttons: [t('yes'), t('no')],
+        })
+        .then(async (value) => {
+          if (value.response === 0) {
+            this.metricsService.track(EVENT_NAMES.DESKTOP_APP_UNPAIRED, {
+              paired: false,
+              createdAt: new Date(),
+            });
+            await this.extensionConnection?.disable();
+          }
+        });
     });
 
     ipcMain.handle('reset', async () => {
