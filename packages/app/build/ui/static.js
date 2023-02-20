@@ -76,6 +76,10 @@ module.exports = function createStaticAssetTasks({
 function getCopyTargets(shouldIncludeLockdown) {
   const allCopyTargets = [
     {
+      src: `./submodules/extension/app/images/icons/`,
+      dest: `images/icons`,
+    },
+    {
       src: `./submodules/extension/app/fonts/`,
       dest: `fonts`,
     },
