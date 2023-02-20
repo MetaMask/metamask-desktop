@@ -3,6 +3,7 @@
 @import '../../../submodules/extension/ui/css/utilities/colors.scss';
 @import '../../../submodules/extension/ui/css/base-styles.scss';
 @import '../../../submodules/extension/ui/css/itcss/settings/index';
+@import '../../../submodules/extension/ui/components/component-library/component-library-components.scss';
 @import '../../../node_modules/@metamask/design-tokens/src/css/design-tokens';
 
 // Imported partials
@@ -55,14 +56,4 @@ body {
 
 #mmd-popup-content.approval-window {
   padding: 0 0 0 0;
-}
-
-#mmd-popup-draggable-hidden-bar {
-  height: $title-bar-height;
-  width: 100%;
-  -webkit-app-region: drag;
-  position: fixed;
-  top: 0;
-  background-color: var(--color-background-default);
-  z-index: 1;
 }
