@@ -7,6 +7,8 @@ import metaRPCClientFactory from '../../submodules/extension/app/scripts/lib/met
 import * as actions from './actions';
 import configureStore from './store/store';
 import Root from './pages';
+import registerUpdateOSTheme from '../ui/hooks/registerUpdateOSTheme';
+import setTheme from '../ui/helpers/theme';
 
 // eslint-disable-next-line no-empty-function
 const noop = () => {};
@@ -18,6 +20,14 @@ async function launchPopupUi() {
   };
 
   const { store } = configureStore();
+
+  window
+    .matchMedia('(prefers-color-scheme: dark)')
+    .addEventListener('change', registerUpdateOSTheme(store));
+
+  window.popupElectronBridge.onThemeChanged((theme) => {
+    setTheme(theme);
+  });
 
   window.popupElectronBridge.addBackgroundMessageListener(async (data) => {
     if (data.data?.method !== 'sendUpdate') {
