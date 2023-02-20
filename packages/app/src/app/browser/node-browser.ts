@@ -15,6 +15,7 @@ import { WindowCreateRequest, WindowHandler } from '../types/window';
 import cfg from '../utils/config';
 
 const TIMEOUT_REQUEST = 5000;
+const PADDING_POPUP = 10;
 
 const UNHANDLED_FUNCTIONS = [
   'notifications.onClicked.addListener',
@@ -159,13 +160,16 @@ const raw = {
   },
   windows: {
     create: (request: WindowCreateRequest) => {
+      let left = request.left;
+
       if (!cfg().disableExtensionPopup) {
         proxy(['windows', 'create'], [request]);
+        left -= request.width + PADDING_POPUP;
       }
 
       return windowHandler?.create({
         ...request,
-        left: request.left - request.width - 10,
+        left,
       });
     },
     remove: (windowId: string) => {
