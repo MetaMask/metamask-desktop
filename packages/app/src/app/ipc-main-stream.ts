@@ -1,14 +1,15 @@
 import { Duplex } from 'stream';
+import { PopupElectronBridge } from './ui/preload-popup';
 
 export class IPCMainStream extends Duplex {
-  private electronBridge: any;
+  private popupElectronBridge: PopupElectronBridge;
 
-  constructor(electronBridge: any) {
+  constructor(popupElectronBridge: any) {
     super({ objectMode: true });
 
-    this.electronBridge = electronBridge;
+    this.popupElectronBridge = popupElectronBridge;
 
-    electronBridge.addBackgroundMessageListener((data: any) => {
+    popupElectronBridge.addBackgroundMessageListener((data: any) => {
       this.onMessage(data);
     });
   }
@@ -19,7 +20,7 @@ export class IPCMainStream extends Duplex {
 
   public async _write(msg: any, _: string, cb: () => void) {
     __electronLog.info('Sending message to main process', msg);
-    await this.electronBridge.sendBackgroundMessage(msg);
+    await this.popupElectronBridge.sendBackgroundMessage(msg);
     cb();
   }
 

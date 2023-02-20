@@ -30,7 +30,7 @@ function createStyleTasks() {
       src: 'src/ui/css/index.scss',
       dest: 'src/ui/css/output',
       devMode: true,
-      pattern: '**/{ui, submodules/extension/ui}/**/*.scss',
+      pattern: '**/{ui,popup-ui,submodules/extension/ui}/**/*.scss',
     }),
   );
 
@@ -70,10 +70,9 @@ async function buildScssPipeline(src, dest, devMode, rtl) {
       // pre-process
       gulp.src(src),
       devMode && sourcemaps.init(),
-      sass({ includePaths: ['submodules/extension/ui/css/', 'ui/'] }).on(
-        'error',
-        sass.logError,
-      ),
+      sass({
+        includePaths: ['submodules/extension/ui/css/', 'ui/', 'popup-ui/'],
+      }).on('error', sass.logError),
       autoprefixer(),
       rtl && rtlcss(),
       rtl && rename({ suffix: '-rtl' }),

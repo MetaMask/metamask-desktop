@@ -18,17 +18,6 @@ const uiStoreBridge = (name: string) => {
 const electronBridge = {
   appStore: uiStoreBridge('app'),
   pairStatusStore: uiStoreBridge('pair-status'),
-  sendBackgroundMessage: async (data: any) => {
-    ipcRenderer.send('approval-ui', { name: 'controller', data });
-  },
-  addBackgroundMessageListener: (listener: (data: any) => void) => {
-    ipcRenderer.on('approval-ui', (_: any, data: any) => {
-      listener(data);
-    });
-  },
-  showApprovalWindow: (show: boolean) => {
-    ipcRenderer.send('show-approval-window', show);
-  },
   desktopVersion: () => {
     return ipcRenderer.invoke('get-desktop-version') as Promise<string>;
   },
