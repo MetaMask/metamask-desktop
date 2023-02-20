@@ -57,7 +57,10 @@ export default class WindowService {
       mainWindow?.setMenu(null);
     }
 
-    mainWindow.loadFile(this.getHtmlPath(), this.getAppStartupPage());
+    mainWindow.loadFile(
+      this.getHtmlPath({ popup: false }),
+      this.getAppStartupPage(),
+    );
 
     log.debug('Created main window');
 
@@ -104,7 +107,7 @@ export default class WindowService {
     const approvalWindow = new BrowserWindow({
       show: false,
       webPreferences: {
-        preload: path.resolve(__dirname, './preload.js'),
+        preload: path.resolve(__dirname, './preload-popup.js'),
       },
       icon: path.resolve(__dirname, '../dist/app/icon.png'),
     });
@@ -116,7 +119,7 @@ export default class WindowService {
       approvalWindow?.setMenu(null);
     }
 
-    approvalWindow.loadFile(this.getHtmlPath(), { hash: '/' });
+    approvalWindow.loadFile(this.getHtmlPath({ popup: true }), { hash: '/' });
 
     log.debug('Created approval window');
 
@@ -177,14 +180,14 @@ export default class WindowService {
     this.UIState.latticeWindow = latticeWindow;
   }
 
-  private getHtmlPath() {
+  private getHtmlPath({ popup }: { popup: boolean }) {
     const darkHtmlPath = path.resolve(
       __dirname,
-      '../../../../ui/desktop-ui-dark.html',
+      `../../../../ui/${popup ? 'popup' : 'desktop'}-ui-dark.html`,
     );
     const lightHtmlPath = path.resolve(
       __dirname,
-      '../../../../ui/desktop-ui.html',
+      `../../../../ui/${popup ? 'popup' : 'desktop'}-ui.html`,
     );
     let htmlPath;
 

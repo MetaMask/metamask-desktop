@@ -18,6 +18,17 @@
 @import '../../../submodules/extension/ui/components/ui/dropdown/dropdown.scss';
 @import '../../../submodules/extension/ui/components/ui/toggle-button/index.scss';
 
+@import '../../../submodules/extension/ui/pages/confirm-import-token';
+@import '../../../submodules/extension/ui/pages/confirm-add-suggested-token/index';
+@import '../../../submodules/extension/ui/pages/confirm-approve/index';
+@import '../../../submodules/extension/ui/pages/confirm-decrypt-message/confirm-decrypt-message';
+@import '../../../submodules/extension/ui/pages/confirm-encryption-public-key/confirm-encryption-public-key';
+@import '../../../submodules/extension/ui/pages/confirmation/confirmation';
+@import '../../../submodules/extension/ui/pages/permissions-connect/index';
+
+@import '../../../submodules/extension/ui/components/app/app-components.scss';
+@import '../../../submodules/extension/ui/components/ui/ui-components';
+@import '../../../submodules/extension/ui/css/loading.scss';
 
 $title-bar-height: 32px;
 
@@ -25,20 +36,28 @@ body {
   background-color: var(--color-background-default);
 }
 
-#mmd-root {
+#mmd-popup-root {
   height: 100%;
   width: 100%;
   overflow-y: scroll;
   padding-top: $title-bar-height;
 }
 
-#mmd-app-content {
+#mmd-popup-root:has(.approval-window) {
+  padding-top: 0;
+}
+
+#mmd-popup-content {
   padding: 0 16px;
   height: 100%;
   position: relative;
 }
 
-#mmd-draggable-hidden-bar {
+#mmd-popup-content.approval-window {
+  padding: 0 0 0 0;
+}
+
+#mmd-popup-draggable-hidden-bar {
   height: $title-bar-height;
   width: 100%;
   -webkit-app-region: drag;
@@ -47,8 +66,3 @@ body {
   background-color: var(--color-background-default);
   z-index: 1;
 }
-
-@import '../pages/mmd-pages.scss';
-@import '../components/mmd-components.scss';
-
-@import '../../popup-ui/css/index.scss'
