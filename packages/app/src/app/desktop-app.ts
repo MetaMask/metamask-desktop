@@ -32,7 +32,10 @@ import AppEvents from './ui/app-events';
 import WindowService from './ui/window-service';
 import UIState from './ui/ui-state';
 import { setLanguage, t } from './utils/translation';
-import { setUiStorage } from './storage/ui-storage';
+import {
+  readPersistedSettingFromAppState,
+  setUiStorage,
+} from './storage/ui-storage';
 import MetricsService from './metrics/metrics-service';
 import { EVENT_NAMES } from './metrics/metrics-constants';
 
@@ -151,6 +154,13 @@ class DesktopApp extends EventEmitter {
 
     ipcMain.handle('get-desktop-version', () => {
       return getDesktopVersion();
+    });
+
+    ipcMain.handle('get-desktop-metrics-decision', () => {
+      return readPersistedSettingFromAppState({
+        defaultValue: false,
+        key: 'metametricsOptIn',
+      });
     });
 
     setUiStorage(uiAppStorage);
