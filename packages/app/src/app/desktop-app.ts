@@ -21,6 +21,7 @@ import cfg from './utils/config';
 import { getDesktopVersion } from './utils/version';
 import { registerWindowHandler } from './browser/node-browser';
 import { WindowCreateRequest } from './types/window';
+import { WindowCreateRequest, WindowUpdateRequest } from './types/window';
 import ExtensionConnection from './extension-connection';
 import { updateCheck } from './update-check';
 import {
@@ -194,6 +195,7 @@ class DesktopApp extends EventEmitter {
       registerWindowHandler({
         create: (request: WindowCreateRequest) => this.onWindowCreate(request),
         remove: (windowId: string) => this.onWindowRemove(windowId),
+        update: (request: WindowUpdateRequest) => this.onWindowUpdate(request),
       });
 
       this.approvalStream = new IPCRendererStream(
@@ -373,6 +375,16 @@ class DesktopApp extends EventEmitter {
 
   private onWindowRemove(_windowId: string) {
     this.UIState?.approvalWindow?.hide();
+  }
+
+  private onWindowUpdate(request: WindowUpdateRequest) {
+    const { approvalWindow } = this.UIState;
+
+    if (!approvalWindow) {
+      return;
+    }
+
+    approvalWindow.setPosition(request.left, request.top);
   }
 
   private async createWebSocketServer(): Promise<WebSocketServer> {
