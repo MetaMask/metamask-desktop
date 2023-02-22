@@ -29,6 +29,13 @@ import { DesktopPairing } from './pairing';
 import ExtensionConnection from './extension-connection';
 
 jest.mock('obj-multiplex', () => jest.fn(), { virtual: true });
+jest.mock(
+  './metrics/metrics-service',
+  () => ({
+    track: jest.fn(),
+  }),
+  { virtual: true },
+);
 jest.mock('./pairing');
 
 jest.mock('@metamask/desktop/dist/utils/state', () => ({
@@ -44,6 +51,16 @@ jest.mock(
   () => ({
     registerRequestStream: jest.fn(),
     unregisterRequestStream: jest.fn(),
+  }),
+  {
+    virtual: true,
+  },
+);
+
+jest.mock(
+  'electron',
+  () => ({
+    ipcMain: { handle: jest.fn() },
   }),
   {
     virtual: true,

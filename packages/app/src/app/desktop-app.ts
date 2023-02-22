@@ -117,10 +117,6 @@ class DesktopApp extends EventEmitter {
         })
         .then(async (value) => {
           if (value.response === 0) {
-            this.metricsService.track(EVENT_NAMES.DESKTOP_APP_UNPAIRED, {
-              paired: false,
-              createdAt: new Date(),
-            });
             await this.extensionConnection?.disable();
           }
         });
