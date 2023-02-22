@@ -19,8 +19,10 @@ import { forwardEvents } from './utils/events';
 import { determineLoginItemSettings } from './utils/settings';
 import cfg from './utils/config';
 import { getDesktopVersion } from './utils/version';
-import { registerWindowHandler } from './browser/node-browser';
-import { WindowCreateRequest } from './types/window';
+import {
+  registerTabsHandler,
+  registerWindowHandler,
+} from './browser/node-browser';
 import { WindowCreateRequest, WindowUpdateRequest } from './types/window';
 import ExtensionConnection from './extension-connection';
 import { updateCheck } from './update-check';
@@ -39,6 +41,7 @@ import { setUiStorage } from './storage/ui-storage';
 import MetricsService from './metrics/metrics-service';
 import { EVENT_NAMES } from './metrics/metrics-constants';
 import { IPCRendererStream } from './ipc-renderer-stream';
+import { TabsQuery } from './types/tabs';
 
 // Set protocol for deeplinking
 if (!cfg().isUnitTest) {
@@ -197,6 +200,8 @@ class DesktopApp extends EventEmitter {
         remove: (windowId: string) => this.onWindowRemove(windowId),
         update: (request: WindowUpdateRequest) => this.onWindowUpdate(request),
       });
+
+      registerTabsHandler({ query: (_request: TabsQuery) => [] });
 
       this.approvalStream = new IPCRendererStream(
         this.UIState.approvalWindow as any,
