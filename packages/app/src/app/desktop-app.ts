@@ -428,13 +428,7 @@ class DesktopApp extends EventEmitter {
   }
 
   private onWindowUpdate(request: WindowUpdateRequest) {
-    const { approvalWindow } = this.UIState;
-
-    if (!approvalWindow) {
-      return;
-    }
-
-    approvalWindow.setPosition(request.left, request.top);
+   // Not required yet as only used in FireFox to position window
   }
 
   private async createWebSocketServer(): Promise<WebSocketServer> {

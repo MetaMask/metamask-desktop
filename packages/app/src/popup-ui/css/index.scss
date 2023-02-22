@@ -31,8 +31,6 @@
 @import '../../../submodules/extension/ui/components/ui/ui-components';
 @import '../../../submodules/extension/ui/css/loading.scss';
 
-$title-bar-height: 32px;
-
 body {
   background-color: var(--color-background-default);
 }
@@ -41,19 +39,12 @@ body {
   height: 100%;
   width: 100%;
   overflow-y: scroll;
-  padding-top: $title-bar-height;
-}
-
-#mmd-popup-root:has(.approval-window) {
   padding-top: 0;
 }
 
 #mmd-popup-content {
-  padding: 0 16px;
+  padding: 0 0 0 0;
   height: 100%;
   position: relative;
-}
-
-#mmd-popup-content.approval-window {
-  padding: 0 0 0 0;
+  display: flex;
 }

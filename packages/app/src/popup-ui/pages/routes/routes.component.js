@@ -54,7 +54,6 @@ const Routes = ({
   return (
     <div
       id="mmd-popup-content"
-      className={isApproving ? 'approval-window' : ''}
     >
       <Switch>
         <Route path={DEFAULT_ROUTE} component={Loading} exact />
