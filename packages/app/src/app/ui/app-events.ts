@@ -1,5 +1,5 @@
 import { app, globalShortcut } from 'electron';
-import * as Sentry from '@sentry/electron';
+import * as Sentry from '@sentry/electron/renderer';
 import cfg from '../utils/config';
 import { determineLoginItemSettings } from '../utils/settings';
 import { readPersistedSettingFromAppState } from '../storage/ui-storage';

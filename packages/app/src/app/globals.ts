@@ -116,7 +116,7 @@ if (!global.self) {
             shouldShareMetrics,
           });
 
-          return false;
+          return shouldShareMetrics;
         },
       }) as Integration,
       new Dedupe() as Integration,
