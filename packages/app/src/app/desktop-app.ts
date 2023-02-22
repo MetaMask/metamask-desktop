@@ -103,6 +103,11 @@ class DesktopApp extends EventEmitter {
     ipcMain.handle('minimize', () => this.UIState.mainWindow?.minimize());
 
     ipcMain.handle('unpair', async () => {
+      if (cfg().isExtensionTest || cfg().isAppTest) {
+        await this.extensionConnection?.disable();
+        return;
+      }
+
       dialog
         .showMessageBox({
           type: 'info',
