@@ -17,19 +17,8 @@ export const VALUE_MOCK = 'value';
 export const VALUE_2_MOCK = 'value2';
 export const DATA_MOCK = { [PROPERTY_MOCK]: VALUE_MOCK };
 export const DATA_2_MOCK = { [PROPERTY_2_MOCK]: VALUE_2_MOCK };
-export const DECRYPTED_STRING_MOCK = 'testDecryptedData';
-export const DECRYPTED_BUFFER_MOCK = Buffer.from(DECRYPTED_STRING_MOCK);
-export const ENCRYPTED_BUFFER_MOCK = Buffer.from([4, 5, 6]);
-export const ENCRYPTED_HEX_MOCK = Buffer.from(ENCRYPTED_BUFFER_MOCK).toString(
-  'hex',
-);
-export const EXPORTED_KEY_MOCK = Buffer.from([1, 2, 3]);
-export const EXPORTED_KEY_HEX_MOCK =
-  Buffer.from(EXPORTED_KEY_MOCK).toString('hex');
-export const IV_BUFFER_MOCK = Buffer.from([7, 8, 9]);
-export const IV_HEX_MOCK = Buffer.from(IV_BUFFER_MOCK).toString('hex');
+export const IV_BUFFER_MOCK = Uint8Array.from([7, 8, 9]);
 export const JSON_MOCK = '{"test":"value"}';
-export const KEY_MOCK = {} as CryptoKey;
 export const PUBLIC_KEY_MOCK = 'testPublicKey';
 export const PRIVATE_KEY_MOCK = 'testPrivateKey';
 export const STRING_DATA_MOCK = 'testStringData';
@@ -51,6 +40,19 @@ export const WRONG_OTP_MOCK = '654321';
 export const REMOTE_PORT_NAME_MOCK = 'testPort';
 export const REMOTE_PORT_SENDER_MOCK = { test2: 'value2' };
 export const JSON_RPC_ID_MOCK = 123456;
+export const KEY_BYTES_MOCK = [4, 5, 6];
+export const KEY_MOCK = {} as CryptoKey;
+export const KEY_EXPORTED_MOCK = Uint8Array.from(KEY_BYTES_MOCK);
+export const KEY_EXPORTED_HEX_MOCK =
+  Buffer.from(KEY_BYTES_MOCK).toString('hex');
+export const IV_BYTES_MOCK = [7, 8, 9];
+export const IV_MOCK = Uint8Array.from(IV_BYTES_MOCK);
+export const ENCRYPTED_BYTES_MOCK = [1, 2, 3];
+export const ENCRYPTED_MOCK = Uint8Array.from([1, 2, 3]);
+export const ENCRYPTED_BUFFER_MOCK = Buffer.from(ENCRYPTED_BYTES_MOCK);
+export const ENCRYPTED_HEX_MOCK = ENCRYPTED_BUFFER_MOCK.toString('hex');
+export const DECRYPTED_STRING_MOCK = 'decryptedData';
+export const DECRYPTED_MOCK = new TextEncoder().encode(DECRYPTED_STRING_MOCK);
 
 export const TEST_CONNECTION_RESULT_MOCK: TestConnectionResult = {
   isConnected: true,
