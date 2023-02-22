@@ -17,6 +17,7 @@ import {
   WindowUpdateRequest,
 } from '../types/window';
 import cfg from '../utils/config';
+import { TabsHandler, TabsQuery } from '../types/tabs';
 
 const TIMEOUT_REQUEST = 5000;
 const PADDING_POPUP = 10;
@@ -43,7 +44,6 @@ const PROXY_FUNCTIONS = [
   'browserAction.setBadgeText',
   'notifications.create',
   'runtime.getURL',
-  'tabs.query',
   'windows.getAll',
   'windows.getLastFocused',
 ];
@@ -51,6 +51,7 @@ const PROXY_FUNCTIONS = [
 const requestPromises: { [id: string]: (result: any) => void } = {};
 let requestStream: Duplex | undefined;
 let windowHandler: WindowHandler | undefined;
+let tabHandler: TabsHandler | undefined;
 
 const warn = (key: string[]) => {
   log.debug(`Browser method not supported - ${key.join('.')}`);
@@ -189,6 +190,15 @@ const raw = {
       return windowHandler?.update(request);
     },
   },
+  tabs: {
+    query: (opts: TabsQuery) => {
+      if (!cfg().disableExtensionPopup) {
+        return proxy(['tabs', 'query'], [opts]);
+      }
+
+      return tabHandler?.query({});
+    },
+  },
 };
 
 export const browser: Browser = init(raw);
@@ -211,4 +221,8 @@ export const unregisterRequestStream = () => {
 
 export const registerWindowHandler = (handler: WindowHandler) => {
   windowHandler = handler;
+};
+
+export const registerTabsHandler = (handler: TabsHandler) => {
+  tabHandler = handler;
 };
