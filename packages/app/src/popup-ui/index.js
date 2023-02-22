@@ -1,25 +1,16 @@
 import React from 'react';
 import { render } from 'react-dom';
-
 import { _setBackgroundConnection } from '../../submodules/extension/ui/store/action-queue';
 import { IPCMainStream } from '../app/ipc-main-stream';
 import metaRPCClientFactory from '../../submodules/extension/app/scripts/lib/metaRPCClientFactory';
-import * as actions from './actions';
 import * as extensionActions from '../../submodules/extension/ui/store/actions';
-import configureStore from './store/store';
-import Root from './pages';
 import registerUpdateOSTheme from '../ui/hooks/registerUpdateOSTheme';
 import setTheme from '../ui/helpers/theme';
-
-// eslint-disable-next-line no-empty-function
-const noop = () => {};
+import * as actions from './actions';
+import configureStore from './store/store';
+import Root from './pages';
 
 async function launchPopupUi() {
-  global.platform = {
-    currentTab: noop,
-    closeCurrentWindow: noop,
-  };
-
   const { store } = configureStore();
 
   window.popupElectronBridge.onShow(async () => {
