@@ -1,6 +1,5 @@
 import React from 'react';
 import { render } from 'react-dom';
-
 import configureStore from './store/store';
 import Root from './pages';
 import registerUpdatePairStatus from './hooks/registerUpdatePairStatus';
@@ -8,15 +7,7 @@ import registerUpdateOSTheme from './hooks/registerUpdateOSTheme';
 import registerResizedEvent from './hooks/registerResizedEvent';
 import registerMovedEvent from './hooks/registerMovedEvent';
 
-// eslint-disable-next-line no-empty-function
-const noop = () => {};
-
 async function launchDesktopUi() {
-  global.platform = {
-    currentTab: noop,
-    closeCurrentWindow: noop,
-  };
-
   const { store, persistor } = configureStore();
 
   // Register listener OS theme change
