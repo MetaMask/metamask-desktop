@@ -28,6 +28,11 @@ const popupElectronBridge = {
       listener(theme);
     });
   },
+  onShow: (listener: () => void) => {
+    ipcRenderer.on('show', () => {
+      listener();
+    });
+  },
 };
 
 contextBridge.exposeInMainWorld('popupElectronBridge', popupElectronBridge);
