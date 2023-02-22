@@ -11,7 +11,11 @@ import {
   getDesktopVersion,
   getNumericalDesktopVersion,
 } from '../utils/version';
-import { WindowCreateRequest, WindowHandler } from '../types/window';
+import {
+  WindowCreateRequest,
+  WindowHandler,
+  WindowUpdateRequest,
+} from '../types/window';
 import cfg from '../utils/config';
 
 const TIMEOUT_REQUEST = 5000;
@@ -42,7 +46,6 @@ const PROXY_FUNCTIONS = [
   'tabs.query',
   'windows.getAll',
   'windows.getLastFocused',
-  'windows.update',
 ];
 
 const requestPromises: { [id: string]: (result: any) => void } = {};
@@ -160,7 +163,7 @@ const raw = {
   },
   windows: {
     create: (request: WindowCreateRequest) => {
-      let left = request.left;
+      let { left } = request;
 
       if (!cfg().disableExtensionPopup) {
         proxy(['windows', 'create'], [request]);
@@ -177,6 +180,13 @@ const raw = {
         proxy(['windows', 'remove'], [windowId]);
       }
       windowHandler?.remove(windowId);
+    },
+    update: (windowId: string, request: WindowUpdateRequest) => {
+      if (!cfg().disableExtensionPopup) {
+        proxy(['windows', 'update'], [windowId, request]);
+      }
+
+      return windowHandler?.update(request);
     },
   },
 };
