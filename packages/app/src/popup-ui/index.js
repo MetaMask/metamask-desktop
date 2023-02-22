@@ -5,6 +5,7 @@ import { _setBackgroundConnection } from '../../submodules/extension/ui/store/ac
 import { IPCMainStream } from '../app/ipc-main-stream';
 import metaRPCClientFactory from '../../submodules/extension/app/scripts/lib/metaRPCClientFactory';
 import * as actions from './actions';
+import * as extensionActions from '../../submodules/extension/ui/store/actions';
 import configureStore from './store/store';
 import Root from './pages';
 import registerUpdateOSTheme from '../ui/hooks/registerUpdateOSTheme';
@@ -20,6 +21,10 @@ async function launchPopupUi() {
   };
 
   const { store } = configureStore();
+
+  window.popupElectronBridge.onShow(async () => {
+    await extensionActions.forceUpdateMetamaskState(store.dispatch);
+  });
 
   window
     .matchMedia('(prefers-color-scheme: dark)')

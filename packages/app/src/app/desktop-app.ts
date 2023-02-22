@@ -365,6 +365,7 @@ class DesktopApp extends EventEmitter {
     approvalWindow.setSize(request.width, request.height);
     approvalWindow.setPosition(request.left, request.top);
     approvalWindow.setTitle('MetaMask Desktop Notification');
+    approvalWindow.webContents.send('show');
     approvalWindow.show();
 
     return approvalWindow;
