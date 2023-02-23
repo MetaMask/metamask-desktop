@@ -52,9 +52,7 @@ const Routes = ({
   ]);
 
   return (
-    <div
-      id="mmd-popup-content"
-    >
+    <div id="mmd-popup-content">
       <Switch>
         <Route path={DEFAULT_ROUTE} component={Loading} exact />
         <Route path={CONFIRMATION_ROUTE} component={Confirmation} exact />

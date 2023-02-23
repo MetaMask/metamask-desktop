@@ -14,7 +14,11 @@ describe('App State', () => {
   });
 
   it('updates theme', () => {
-    // Set theme fn
+    const syncThemeMock = jest.fn();
+    global.window.electronBridge = {
+      syncTheme: syncThemeMock,
+    };
+
     jest.spyOn(themeHelpers, 'default').mockImplementation();
     const state = appReducer(initialState, {
       type: UPDATE_THEME,
@@ -23,6 +27,7 @@ describe('App State', () => {
 
     expect(state.theme).toStrictEqual('dark');
     expect(themeHelpers.default).toHaveBeenCalledWith('dark');
+    expect(syncThemeMock).toHaveBeenCalledWith('dark');
   });
 
   it('updates language', () => {

@@ -427,8 +427,8 @@ class DesktopApp extends EventEmitter {
     this.UIState?.approvalWindow?.hide();
   }
 
-  private onWindowUpdate(request: WindowUpdateRequest) {
-   // Not required yet as only used in FireFox to position window
+  private onWindowUpdate(_request: WindowUpdateRequest) {
+    // Not required yet as only used in FireFox to position window
   }
 
   private async createWebSocketServer(): Promise<WebSocketServer> {
