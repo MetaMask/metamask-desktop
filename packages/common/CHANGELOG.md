@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.0]
 ### Uncategorized
-- chore: remove common browser ([#511](https://github.com/MetaMask/desktop/pull/511))
+- chore: remove common browser ([#511](https://github.com/MetaMask/metamask-desktop/pull/511))
 
 ## [0.1.0]
 ### Uncategorized
@@ -41,6 +41,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Move encryption and generic utils to common workspace ([#264](https://github.com/MetaMask/metamask-desktop/pull/264))
 - Move browser and version check logic to common workspace ([#259](https://github.com/MetaMask/metamask-desktop/pull/259))
 
-[Unreleased]: https://github.com/MetaMask/desktop/compare/@metamask/desktop@0.2.0...HEAD
-[0.2.0]: https://github.com/MetaMask/desktop/compare/@metamask/desktop@0.1.0...@metamask/desktop@0.2.0
-[0.1.0]: https://github.com/MetaMask/desktop/releases/tag/@metamask/desktop@0.1.0
+[Unreleased]: https://github.com/MetaMask/metamask-desktop/compare/@metamask/desktop@0.2.0...HEAD
+[0.2.0]: https://github.com/MetaMask/metamask-desktop/compare/@metamask/desktop@0.1.0...@metamask/desktop@0.2.0
+[0.1.0]: https://github.com/MetaMask/metamask-desktop/releases/tag/@metamask/desktop@0.1.0
