@@ -98,7 +98,10 @@ const Pair = ({ isDesktopPaired, isSuccessfulPairSeen, history }) => {
           width="150"
           height="150"
         />
-        <Typography variant={TypographyVariant.H3} fontWeight={FONT_WEIGHT.BOLD}>
+        <Typography
+          variant={TypographyVariant.H3}
+          fontWeight={FONT_WEIGHT.BOLD}
+        >
           {t('pairWithExtension')}
         </Typography>
         <Typography variant={TypographyVariant.Paragraph} fontSize={14}>

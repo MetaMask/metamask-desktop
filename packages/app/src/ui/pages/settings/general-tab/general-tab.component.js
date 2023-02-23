@@ -36,7 +36,9 @@ const GeneralTab = ({
     return (
       <div className="mmd-settings-page__setting-row">
         <div className="mmd-settings-page__setting-item">
-          <Typography variant={TypographyVariant.H5}>{t('language')}</Typography>
+          <Typography variant={TypographyVariant.H5}>
+            {t('language')}
+          </Typography>
           <Typography variant={TypographyVariant.H6}>
             {t('chooseYourPreferredLanguage')}
           </Typography>
@@ -95,7 +97,9 @@ const GeneralTab = ({
     return (
       <div className="mmd-settings-page__setting-row">
         <div className="mmd-settings-page__setting-item">
-          <Typography variant={TypographyVariant.H5}>{t('openAtLogin')}</Typography>
+          <Typography variant={TypographyVariant.H5}>
+            {t('openAtLogin')}
+          </Typography>
           <Typography variant={TypographyVariant.H6}>
             {t('allowOpenAtLoginDescription')}
           </Typography>
