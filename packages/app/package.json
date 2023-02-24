@@ -52,7 +52,7 @@
     "test": "jest",
     "test:e2e:app": "node test/playwright/run.js",
     "test:e2e:extension": "yarn test:e2e:extension:base test:e2e:chrome",
-    "test:e2e:extension:base": "E2E_ARGS='--reporter=spec --file ../../test/e2e/hook.js' yarn extension",
+    "test:e2e:extension:base": "E2E_ARGS='--file ../../test/e2e/hook.js' yarn extension",
     "test:e2e:extension:single": "yarn test:e2e:extension:base test:e2e:single",
     "test:e2e:extension:snaps": "yarn test:e2e:extension:base test:e2e:chrome:snaps",
     "test:e2e:extension:mv3": "yarn test:e2e:extension:base test:e2e:chrome --mv3",
