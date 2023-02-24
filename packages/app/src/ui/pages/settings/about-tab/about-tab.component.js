@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import Button from '../../../../../submodules/extension/ui/components/ui/button';
 
-import { SUPPORT_REQUEST_LINK } from '../../../../../submodules/extension/ui/helpers/constants/common';
-import { SUPPORT_LINK } from '../../../../../submodules/extension/shared/lib/ui-utils';
+import {
+  URL_SUBMIT_TICKET,
+  MMD_WEBSITE,
+} from '../../../../shared/constants/links';
 import useI18nContext from '../../../hooks/useI18nContext';
 
 const AboutTab = () => {
@@ -68,7 +70,7 @@ const AboutTab = () => {
           target="_blank"
           rel="noopener noreferrer"
           className="about-tab__link-text"
-          onClick={handleLinkClick(SUPPORT_LINK)}
+          onClick={handleLinkClick(URL_SUBMIT_TICKET)}
         >
           {t('supportCenter')}
         </Button>
@@ -79,7 +81,7 @@ const AboutTab = () => {
           target="_blank"
           rel="noopener noreferrer"
           className="about-tab__link-text"
-          onClick={handleLinkClick('https://metamask.io/')}
+          onClick={handleLinkClick(MMD_WEBSITE)}
         >
           {t('visitWebSite')}
         </Button>
@@ -90,7 +92,7 @@ const AboutTab = () => {
           target="_blank"
           rel="noopener noreferrer"
           className="about-tab__link-text"
-          onClick={handleLinkClick(SUPPORT_REQUEST_LINK)}
+          onClick={handleLinkClick(URL_SUBMIT_TICKET)}
         >
           {t('contactUs')}
         </Button>
