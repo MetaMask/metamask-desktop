@@ -10,6 +10,9 @@ parameters:
   extension-dir:
     type: string
     default: packages/app/submodules/extension
+  extension-dir-clean:
+    type: string
+    default: packages/app/submodules/extension/clean_node_modules
   extension-release:
     type: boolean
     default: false
@@ -62,6 +65,7 @@ executors:
       APP_DIR: << pipeline.parameters.app-dir >>
       COMMON_DIR: << pipeline.parameters.common-dir >>
       EXTENSION_DIR: << pipeline.parameters.extension-dir >>
+      EXTENSION_DIR_CLEAN: << pipeline.parameters.extension-dir-clean >>
   playwright:
     docker:
       - image: mcr.microsoft.com/playwright:v1.29.1-focal
@@ -70,6 +74,7 @@ executors:
       APP_DIR: << pipeline.parameters.app-dir >>
       COMMON_DIR: << pipeline.parameters.common-dir >>
       EXTENSION_DIR: << pipeline.parameters.extension-dir >>
+      EXTENSION_DIR_CLEAN: << pipeline.parameters.extension-dir-clean >>
       NODE_ENV: development
       OSTYPE: linux-gnu
   electron-builder:
@@ -94,6 +99,9 @@ workflows:
     jobs:
       - install-deps
       - install-deps-extension:
+          requires:
+            - build-common
+      - install-deps-extension-clean:
           requires:
             - build-common
       - validate-deps:
@@ -134,13 +142,13 @@ workflows:
             - install-deps-extension
       - build-extension-test-extension:
           requires:
-            - install-deps-extension
+            - install-deps-extension-clean
       - build-extension-test-app:
           requires:
-            - install-deps-extension
+            - install-deps-extension-clean
       - build-extension-test-mv3:
           requires:
-            - install-deps-extension
+            - install-deps-extension-clean
       - lint-common:
           requires:
             - install-deps
@@ -224,10 +232,10 @@ workflows:
             - install-deps-extension
       - build-extension-test-extension:
           requires:
-            - install-deps-extension
+            - install-deps-extension-clean
       - build-extension-test-app:
           requires:
-            - install-deps-extension
+            - install-deps-extension-clean
       - test-e2e-extension:
           requires:
             - build-app-test-extension
@@ -510,6 +518,9 @@ jobs:
       - attach_workspace:
           at: .
       - run:
+          name: Use Extension clean deps
+          command: mv ./${EXTENSION_DIR_CLEAN} ./${EXTENSION_DIR}/node_modules
+      - run:
           name: build
           command: yarn app build:extension:test
       - run:
@@ -527,6 +538,9 @@ jobs:
       - attach_workspace:
           at: .
       - run:
+          name: Use Extension clean deps
+          command: mv ./${EXTENSION_DIR_CLEAN} ./${EXTENSION_DIR}/node_modules
+      - run:
           name: build
           command: yarn app build:extension:test:app
       - run:
@@ -543,6 +557,9 @@ jobs:
       - checkout_with_submodule
       - attach_workspace:
           at: .
+      - run:
+          name: Use Extension clean deps
+          command: mv ./${EXTENSION_DIR_CLEAN} ./${EXTENSION_DIR}/node_modules
       - run:
           name: build
           command: ENABLE_MV3=true yarn app build:extension:test
