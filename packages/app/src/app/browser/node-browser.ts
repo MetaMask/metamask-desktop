@@ -165,38 +165,48 @@ const raw = {
   windows: {
     create: (request: WindowCreateRequest) => {
       let { left } = request;
+      let proxyWindowCreate;
 
       if (!cfg().disableExtensionPopup) {
-        proxy(['windows', 'create'], [request]);
         left -= request.width + PADDING_POPUP;
+        proxyWindowCreate = proxy(['windows', 'create'], [request]);
       }
 
-      return windowHandler?.create({
-        ...request,
-        left,
-      });
+      return (
+        windowHandler?.create({
+          ...request,
+          left,
+        }) || proxyWindowCreate
+      );
     },
     remove: (windowId: string) => {
+      let proxyWindowRemove;
+
       if (!cfg().disableExtensionPopup) {
-        proxy(['windows', 'remove'], [windowId]);
-      }
-      windowHandler?.remove(windowId);
-    },
-    update: (windowId: string, request: WindowUpdateRequest) => {
-      if (!cfg().disableExtensionPopup) {
-        proxy(['windows', 'update'], [windowId, request]);
+        proxyWindowRemove = proxy(['windows', 'remove'], [windowId]);
       }
 
-      return windowHandler?.update(request);
+      return windowHandler?.remove(windowId) || proxyWindowRemove;
+    },
+    update: (windowId: string, request: WindowUpdateRequest) => {
+      let proxyWindowUpdate;
+
+      if (!cfg().disableExtensionPopup) {
+        proxyWindowUpdate = proxy(['windows', 'update'], [windowId, request]);
+      }
+
+      return windowHandler?.update(request) || proxyWindowUpdate;
     },
   },
   tabs: {
     query: (opts: TabsQuery) => {
+      let proxyTabsQuery;
+
       if (!cfg().disableExtensionPopup) {
-        return proxy(['tabs', 'query'], [opts]);
+        proxyTabsQuery = proxy(['tabs', 'query'], [opts]);
       }
 
-      return tabHandler?.query({});
+      return tabHandler?.query({}) || proxyTabsQuery;
     },
   },
 };
