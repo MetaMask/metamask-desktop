@@ -26,10 +26,12 @@ executors:
   node-browsers:
     docker:
       - image: circleci/node:16-browsers
+    resource_class: medium+
     environment:
       APP_DIR: << pipeline.parameters.app-dir >>
       COMMON_DIR: << pipeline.parameters.common-dir >>
       EXTENSION_DIR: << pipeline.parameters.extension-dir >>
+      NODE_OPTIONS: --max_old_space_size=2048
   playwright:
     docker:
       - image: mcr.microsoft.com/playwright:v1.23.1-focal
