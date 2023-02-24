@@ -46,6 +46,7 @@ const {
 } = require('../../submodules/extension/development/build/utils');
 const { runInChildProcess, createTask, composeParallel } = require('./task');
 const { getConfig } = require('./config');
+const { generateIconNames } = require('../../submodules/extension/development/generate-icon-names');
 
 const noopWriteStream = through.obj((_file, _fileEncoding, callback) =>
   callback(),
@@ -594,6 +595,7 @@ async function createBundle(buildConfiguration, { reloadOnChange }) {
 async function getEnvironmentVariables({ buildTarget, _buildType }) {
   const config = await getConfig();
   const environment = getEnvironment({ buildTarget });
+  const iconNames = await generateIconNames();
 
   return {
     COMPATIBILITY_VERSION_DESKTOP: config.COMPATIBILITY_VERSION_DESKTOP,
@@ -602,6 +604,7 @@ async function getEnvironmentVariables({ buildTarget, _buildType }) {
     DESKTOP_UI_ENABLE_DEV_TOOLS: config.DESKTOP_UI_ENABLE_DEV_TOOLS,
     DESKTOP_UI_FORCE_CLOSE: config.DESKTOP_UI_FORCE_CLOSE,
     DISABLE_WEB_SOCKET_ENCRYPTION: config.DISABLE_WEB_SOCKET_ENCRYPTION,
+    ICON_NAMES: iconNames,
     INFURA_PROJECT_ID: config.INFURA_PROJECT_ID,
     SKIP_OTP_PAIRING_FLOW: config.SKIP_OTP_PAIRING_FLOW,
     WEB_SOCKET_PORT: config.WEB_SOCKET_PORT,
