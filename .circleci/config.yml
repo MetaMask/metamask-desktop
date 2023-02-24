@@ -218,8 +218,8 @@ jobs:
           command: yarn extension lavamoat:webapp:auto:ci -t desktop
       - persist_to_workspace:
           root: .
-            paths:
-              - << pipeline.parameters.extension-dir >>/lavamoat/browserify/desktop/policy.json
+          paths:
+            - << pipeline.parameters.extension-dir >>/lavamoat/browserify/desktop/policy.json
 
   validate-deps:
     executor: node-browsers
