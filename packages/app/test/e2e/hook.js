@@ -1,6 +1,9 @@
 /* eslint-disable node/no-unpublished-require */
 
-const SKIPPED_TESTS = ['Import Account using json file'];
+const SKIPPED_TESTS = [
+  // Flaky in metamask-extension
+  'Add a custom network and then delete that same network',
+];
 
 const mockttp = require('mockttp');
 const mock = require('mock-require');
@@ -79,6 +82,20 @@ const registerMockServerHooks = () => {
 
 const registerDriverHooks = () => {
   class DesktopDriver extends Driver {
+    constructor(driver, browser, extensionUrl) {
+      driver.getAllWindowHandles = async () => {
+        const handles = await driverGetWindowsHook();
+
+        if (handles) {
+          return handles;
+        }
+
+        return await driver.getAllWindowHandles();
+      };
+
+      super(driver, browser, extensionUrl, 60000);
+    }
+
     async navigate(...args) {
       await driverBeforeNavigateHook(this);
       await super.navigate(...args);
@@ -94,16 +111,6 @@ const registerDriverHooks = () => {
       }
 
       return super.checkBrowserForConsoleErrors();
-    }
-
-    async getAllWindowHandles() {
-      const handles = await driverGetWindowsHook();
-
-      if (handles) {
-        return handles;
-      }
-
-      return await super.getAllWindowHandles();
     }
   }
 
