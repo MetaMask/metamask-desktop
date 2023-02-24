@@ -61,6 +61,9 @@ workflows:
       - install-deps-extension:
           requires:
             - build-common
+      - update-extension-policies:
+          requires:
+            - install-deps-extension
       - validate-deps:
           requires:
             - install-deps
@@ -99,13 +102,13 @@ workflows:
             - install-deps-extension
       - build-extension-test-extension:
           requires:
-            - install-deps-extension
+            - update-extension-policies
       - build-extension-test-app:
           requires:
-            - install-deps-extension
+            - update-extension-policies
       - build-extension-test-mv3:
           requires:
-            - install-deps-extension
+            - update-extension-policies
       - lint-common:
           requires:
             - install-deps
@@ -203,6 +206,20 @@ jobs:
             - << pipeline.parameters.extension-dir >>/yarn.lock
             - << pipeline.parameters.extension-dir >>/package.json
             - << pipeline.parameters.extension-dir >>/node_modules
+
+  update-extension-policies:
+    executor: node-browsers
+    steps:
+      - checkout_with_submodule
+      - attach_workspace:
+          at: .
+      - run:
+          name: Generate extension browserify LavaMoat policies for desktop build type
+          command: yarn extension lavamoat:webapp:auto:ci -t desktop
+      - persist_to_workspace:
+          root: .
+            paths:
+              - << pipeline.parameters.extension-dir >>/lavamoat/browserify/desktop/policy.json
 
   validate-deps:
     executor: node-browsers

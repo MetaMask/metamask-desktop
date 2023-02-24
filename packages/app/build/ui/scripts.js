@@ -44,9 +44,11 @@ const {
   logError,
   getEnvironment,
 } = require('../../submodules/extension/development/build/utils');
+const {
+  generateIconNames,
+} = require('../../submodules/extension/development/generate-icon-names');
 const { runInChildProcess, createTask, composeParallel } = require('./task');
 const { getConfig } = require('./config');
-const { generateIconNames } = require('../../submodules/extension/development/generate-icon-names');
 
 const noopWriteStream = through.obj((_file, _fileEncoding, callback) =>
   callback(),

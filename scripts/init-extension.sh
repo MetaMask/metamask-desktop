@@ -5,9 +5,6 @@ cd packages/app/submodules/extension
 yarn link ../../../common
 cd -
 
-# Update extension LavaMoat policies to support link to common workspace
-yarn extension lavamoat:webapp:auto:ci -t desktop
-
 # Ensure an extension env file exists
 if [ ! -f "packages/app/submodules/extension/.metamaskrc" ]; then
   if [ -f "packages/app/.metamaskrc" ]; then
