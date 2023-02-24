@@ -771,6 +771,8 @@
       },
       "globals": {
         "Buffer.from": true,
+        "TextDecoder": true,
+        "TextEncoder": true,
         "WebSocket": true,
         "clearInterval": true,
         "clearTimeout": true,
