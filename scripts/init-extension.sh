@@ -2,10 +2,22 @@
 
 EXTENSION_DIR="packages/app/submodules/extension"
 
+while getopts c: flag
+do
+    case "${flag}" in
+        c) CLEAN_INSTALL=${OPTARG};;
+    esac
+done
+
 # Use common workspace in extension
 cd packages/app/submodules/extension
 yarn link ../../../common
 cd -
+
+if [ "$CLEAN_INSTALL" = true ]; then
+  echo "Exit after linking common"
+  exit 0
+fi
 
 # Ensure an extension env file exists
 if [ ! -f "packages/app/submodules/extension/.metamaskrc" ]; then

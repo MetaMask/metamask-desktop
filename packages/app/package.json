@@ -430,7 +430,7 @@
       "@keystonehq/metamask-airgapped-keyring>@ethereumjs/tx>ethereumjs-util>ethereum-cryptography>secp256k1": false,
       "@keystonehq/metamask-airgapped-keyring>@keystonehq/base-eth-keyring>hdkey>secp256k1": false,
       "@keystonehq/metamask-airgapped-keyring>@keystonehq/bc-ur-registry-eth>hdkey>secp256k1": false,
-      "@ledgerhq/hw-transport-node-hid-noevents>node-hid": false,
+      "@ledgerhq/hw-transport-node-hid-noevents>node-hid": true,
       "@metamask/address-book-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak": false,
       "@metamask/address-book-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1": false,
       "@metamask/announcement-controller>@metamask/base-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak": false,

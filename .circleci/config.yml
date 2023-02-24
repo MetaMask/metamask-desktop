@@ -10,9 +10,12 @@ parameters:
   extension-dir:
     type: string
     default: packages/app/submodules/extension
+  extension-dir-clean:
+    type: string
+    default: packages/app/submodules/extension/clean_node_modules
   extension-release:
     type: boolean
-    default: false    
+    default: false
   extension-release-branch:
     type: string
     default: main
@@ -40,19 +43,77 @@ commands:
             and: # All must be true to trigger
             - equal: [true, << pipeline.parameters.extension-release >>]
           steps:
-          - run: 
+          - run:
               name: checkout
               command: git clone -b "<< pipeline.parameters.app-stable-branch >>" "https://github.com/MetaMask/metamask-desktop.git" .
           - add_ssh_keys:
               fingerprints:
-                - "aa:9c:7b:e9:01:de:82:e6:d4:ae:5e:ff:c3:fa:d9:5c"            
+                - "aa:9c:7b:e9:01:de:82:e6:d4:ae:5e:ff:c3:fa:d9:5c"
           - run:
               name: Setup submodule
-              command: | 
+              command: |
                 ssh-keyscan github.com >> ~/.ssh/known_hosts
                 sh scripts/init-submodule.sh
                 cd packages/app/submodules/extension
-                git checkout << pipeline.parameters.extension-release-branch >>   
+                git checkout << pipeline.parameters.extension-release-branch >>
+
+  install-deps-extension-cmd:
+    parameters:
+      clean:
+        description: Clean install (do not link App dependencies)
+        type: boolean
+        default: false
+    steps:
+      - when:
+          condition: << parameters.clean >>
+          steps:
+            - attach_workspace:
+                at: .
+            - restore_cache:
+                key: dependency-cache-extension-v1-{{ checksum "<< pipeline.parameters.extension-dir >>/yarn.lock" }}
+            - run:
+                name: Install extension deps
+                command: yarn extension --frozen-lockfile
+            - save_cache:
+                key: dependency-cache-extension-v1-{{ checksum "<< pipeline.parameters.extension-dir >>/yarn.lock" }}
+                paths:
+                  - << pipeline.parameters.extension-dir >>/.yarn/cache/
+                  - << pipeline.parameters.extension-dir >>/node_modules/
+            - run:
+                name: Initialise extension
+                command: |
+                  yarn setup:extension -c true
+                  mv << pipeline.parameters.extension-dir >>/node_modules << pipeline.parameters.extension-dir-clean >>
+            - persist_to_workspace:
+                root: .
+                paths:
+                  - << pipeline.parameters.extension-dir-clean >>
+      - when:
+          condition:
+            not: << parameters.clean >>
+          steps:
+            - checkout_with_submodule
+            - attach_workspace:
+                at: .
+            - restore_cache:
+                key: dependency-cache-extension-v1-{{ checksum "<< pipeline.parameters.extension-dir >>/yarn.lock" }}
+            - run:
+                name: Install extension deps
+                command: yarn extension --frozen-lockfile
+            - save_cache:
+                key: dependency-cache-extension-v1-{{ checksum "<< pipeline.parameters.extension-dir >>/yarn.lock" }}
+                paths:
+                  - << pipeline.parameters.extension-dir >>/.yarn/cache/
+                  - << pipeline.parameters.extension-dir >>/node_modules/
+            - run:
+                name: Initialise extension
+                command: yarn setup:extension
+            - persist_to_workspace:
+                root: .
+                paths:
+                  - << pipeline.parameters.extension-dir >>/yarn.lock
+                  - << pipeline.parameters.extension-dir >>/package.json
+                  - << pipeline.parameters.extension-dir >>/node_modules
 
 executors:
   node-browsers:
@@ -62,6 +123,7 @@ executors:
       APP_DIR: << pipeline.parameters.app-dir >>
       COMMON_DIR: << pipeline.parameters.common-dir >>
       EXTENSION_DIR: << pipeline.parameters.extension-dir >>
+      EXTENSION_DIR_CLEAN: << pipeline.parameters.extension-dir-clean >>
   playwright:
     docker:
       - image: mcr.microsoft.com/playwright:v1.23.1-focal
@@ -70,6 +132,7 @@ executors:
       APP_DIR: << pipeline.parameters.app-dir >>
       COMMON_DIR: << pipeline.parameters.common-dir >>
       EXTENSION_DIR: << pipeline.parameters.extension-dir >>
+      EXTENSION_DIR_CLEAN: << pipeline.parameters.extension-dir-clean >>
       NODE_ENV: development
       OSTYPE: linux-gnu
   electron-builder:
@@ -90,10 +153,13 @@ workflows:
   test_and_release:
     when:
       and: # All must be true to trigger
-      - equal: [false, << pipeline.parameters.extension-release >>]  
+      - equal: [false, << pipeline.parameters.extension-release >>]
     jobs:
       - install-deps
       - install-deps-extension:
+          requires:
+            - build-common
+      - install-deps-extension-clean:
           requires:
             - build-common
       - validate-deps:
@@ -134,13 +200,13 @@ workflows:
             - install-deps-extension
       - build-extension-test-extension:
           requires:
-            - install-deps-extension
+            - install-deps-extension-clean
       - build-extension-test-app:
           requires:
-            - install-deps-extension
+            - install-deps-extension-clean
       - build-extension-test-mv3:
           requires:
-            - install-deps-extension
+            - install-deps-extension-clean
       - lint-common:
           requires:
             - install-deps
@@ -171,8 +237,8 @@ workflows:
       - test-e2e-extension-mv3:
           requires:
             - build-app-test-extension
-            - build-ui-test-extension          
-            - build-extension-test-mv3           
+            - build-ui-test-extension
+            - build-extension-test-mv3
       - package-windows:
           requires:
             - build-app
@@ -225,10 +291,10 @@ workflows:
             - install-deps-extension
       - build-extension-test-extension:
           requires:
-            - install-deps-extension
+            - install-deps-extension-clean
       - build-extension-test-app:
           requires:
-            - install-deps-extension
+            - install-deps-extension-clean
       - test-e2e-extension:
           requires:
             - build-app-test-extension
@@ -276,27 +342,15 @@ jobs:
     executor: node-browsers
     steps:
       - checkout_with_submodule
-      - attach_workspace:
-          at: .
-      - restore_cache:
-          key: dependency-cache-extension-v1-{{ checksum "<< pipeline.parameters.extension-dir >>/yarn.lock" }}
-      - run:
-          name: Install extension deps
-          command: yarn extension --frozen-lockfile
-      - save_cache:
-          key: dependency-cache-extension-v1-{{ checksum "<< pipeline.parameters.extension-dir >>/yarn.lock" }}
-          paths:
-            - << pipeline.parameters.extension-dir >>/.yarn/cache/
-            - << pipeline.parameters.extension-dir >>/node_modules/
-      - run:
-          name: Initialise extension
-          command: yarn setup:extension
-      - persist_to_workspace:
-          root: .
-          paths:
-            - << pipeline.parameters.extension-dir >>/yarn.lock
-            - << pipeline.parameters.extension-dir >>/package.json
-            - << pipeline.parameters.extension-dir >>/node_modules
+      - install-deps-extension-cmd:
+          clean: false
+
+  install-deps-extension-clean:
+    executor: node-browsers
+    steps:
+      - checkout_with_submodule
+      - install-deps-extension-cmd:
+          clean: true
 
   validate-deps:
     executor: node-browsers
@@ -495,6 +549,9 @@ jobs:
       - attach_workspace:
           at: .
       - run:
+          name: Use Extension clean deps
+          command: mv ./${EXTENSION_DIR_CLEAN} ./${EXTENSION_DIR}/node_modules
+      - run:
           name: build
           command: yarn extension build:test:desktop:extension
       - run:
@@ -512,6 +569,9 @@ jobs:
       - attach_workspace:
           at: .
       - run:
+          name: Use Extension clean deps
+          command: mv ./${EXTENSION_DIR_CLEAN} ./${EXTENSION_DIR}/node_modules
+      - run:
           name: build
           command: yarn extension build:test:desktop:app
       - run:
@@ -528,6 +588,9 @@ jobs:
       - checkout_with_submodule
       - attach_workspace:
           at: .
+      - run:
+          name: Use Extension clean deps
+          command: mv ./${EXTENSION_DIR_CLEAN} ./${EXTENSION_DIR}/node_modules
       - run:
           name: build
           command: ENABLE_MV3=true yarn extension build:test:desktop:extension
