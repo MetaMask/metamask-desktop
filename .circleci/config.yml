@@ -295,8 +295,8 @@ jobs:
       - run:
           name: Initialise extension
           command: |
-            yarn extension allow-scripts auto
             yarn setup:extension
+            yarn extension allow-scripts auto
       - persist_to_workspace:
           root: .
           paths:
