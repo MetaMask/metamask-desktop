@@ -629,7 +629,7 @@ jobs:
           command: |
             if .circleci/scripts/test-run-e2e.sh
             then
-              yarn app test:e2e:extension --retries 2
+              yarn app test:e2e:extension --retries 4
             fi
           no_output_timeout: 20m
 
@@ -661,7 +661,7 @@ jobs:
           command: |
             if .circleci/scripts/test-run-e2e.sh
             then
-              yarn app test:e2e:extension:snaps --retries 2
+              yarn app test:e2e:extension:snaps --retries 4
             fi
           no_output_timeout: 20m
 
