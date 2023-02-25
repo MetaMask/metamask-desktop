@@ -294,7 +294,9 @@ jobs:
             - << pipeline.parameters.extension-dir >>/node_modules/
       - run:
           name: Initialise extension
-          command: yarn setup:extension
+          command: |
+            yarn extension allow-scripts auto
+            yarn setup:extension
       - persist_to_workspace:
           root: .
           paths:
