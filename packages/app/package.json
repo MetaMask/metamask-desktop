@@ -17,7 +17,7 @@
     "build:extension": "yarn extension start --build-type desktop",
     "build:extension:lavamoat": "yarn extension build:dev dev --build-type desktop --apply-lavamoat=true",
     "build:extension:mv3": "ENABLE_MV3=true yarn build:extension",
-    "build:extension:test": "SKIP_OTP_PAIRING_FLOW=1 yarn extension build:test --build-type desktop",
+    "build:extension:test": "SKIP_OTP_PAIRING_FLOW=1 yarn extension build:test --build-type desktop --apply-lavamoat=false",
     "build:extension:test:app": "yarn extension build:dev dist --apply-lavamoat=true --build-type desktop",
     "build:ui": "node build/ui/desktop-ui.js dev --apply-lavamoat=false",
     "build:ui:ci": "node build/ui/desktop-ui.js dist --apply-lavamoat=false",
