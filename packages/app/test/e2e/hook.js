@@ -83,6 +83,9 @@ const registerMockServerHooks = () => {
 const registerDriverHooks = () => {
   class DesktopDriver extends Driver {
     constructor(driver, browser, extensionUrl) {
+      const originalGetAllWindowHandles =
+        driver.getAllWindowHandles.bind(driver);
+
       driver.getAllWindowHandles = async () => {
         const handles = await driverGetWindowsHook();
 
@@ -90,15 +93,15 @@ const registerDriverHooks = () => {
           return handles;
         }
 
-        return await driver.getAllWindowHandles();
+        return await originalGetAllWindowHandles();
       };
 
       console.log('-----Process Args', process.argv);
 
-      // const testPath = process.argv[7];
-      // const timeout = testPath.includes('from-import-ui') ? 60000 : 10000;
+      const testPath = process.argv[7];
+      const timeout = testPath.includes('from-import-ui') ? 60000 : 10000;
 
-      super(driver, browser, extensionUrl, 10000);
+      super(driver, browser, extensionUrl, timeout);
     }
 
     async navigate(...args) {
