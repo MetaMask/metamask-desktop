@@ -1,6 +1,6 @@
 import { Duplex, EventEmitter } from 'stream';
 import path from 'path';
-import { app, BrowserWindow, ipcMain, shell } from 'electron';
+import { app, BrowserWindow, ipcMain, shell, dialog } from 'electron';
 // eslint-disable-next-line @typescript-eslint/no-shadow
 import { Server as WebSocketServer, WebSocket } from 'ws';
 import log from 'loglevel';
@@ -31,7 +31,7 @@ import AppNavigation from './ui/app-navigation';
 import AppEvents from './ui/app-events';
 import WindowService from './ui/window-service';
 import UIState from './ui/ui-state';
-import { setLanguage } from './utils/translation';
+import { setLanguage, t } from './utils/translation';
 import { setUiStorage } from './storage/ui-storage';
 import MetricsService from './metrics/metrics-service';
 import { EVENT_NAMES } from './metrics/metrics-constants';
@@ -103,7 +103,23 @@ class DesktopApp extends EventEmitter {
     ipcMain.handle('minimize', () => this.UIState.mainWindow?.minimize());
 
     ipcMain.handle('unpair', async () => {
-      await this.extensionConnection?.disable();
+      if (cfg().isExtensionTest || cfg().isAppTest) {
+        await this.extensionConnection?.disable();
+        return;
+      }
+
+      dialog
+        .showMessageBox({
+          type: 'info',
+          title: t('unpairMetaMaskDesktop'),
+          message: t('unpairMetaMaskDesktopDesc'),
+          buttons: [t('yes'), t('no')],
+        })
+        .then(async (value) => {
+          if (value.response === 0) {
+            await this.extensionConnection?.disable();
+          }
+        });
     });
 
     ipcMain.handle('reset', async () => {
@@ -154,6 +170,14 @@ class DesktopApp extends EventEmitter {
 
     this.appEvents.register();
     this.appNavigation.create();
+
+    // Tracks an event whenever desktop app is set to open at startup
+    if (app.getLoginItemSettings()?.openAtLogin) {
+      this.metricsService.track(EVENT_NAMES.DESKTOP_APP_OPENED_STARTUP, {
+        openAtLogin: true,
+        startedAt: new Date(),
+      });
+    }
 
     log.debug('Initialised desktop app');
 
@@ -230,7 +254,6 @@ class DesktopApp extends EventEmitter {
     extensionConnection.on('paired', () => {
       this.status.isDesktopPaired = true;
       this.appNavigation.setPairedTrayIcon();
-      // send metrics to Segment
       this.metricsService.track(EVENT_NAMES.DESKTOP_APP_PAIRED, {
         paired: true,
         createdAt: new Date(),
@@ -239,6 +262,7 @@ class DesktopApp extends EventEmitter {
 
     extensionConnection.getPairing().on('invalid-otp', () => {
       this.UIState.mainWindow?.webContents.send('invalid-otp', false);
+      this.metricsService.track(EVENT_NAMES.INVALID_OTP, {});
     });
 
     forwardEvents(extensionConnection, this, [

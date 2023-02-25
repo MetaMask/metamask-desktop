@@ -13,9 +13,9 @@ The MetaMask Desktop app is one of many experiments we are exploring to improve 
 
 This is useful for use cases like the execution of complex Snaps (e.g. zk-related Snaps), which are very demanding in terms of processing power.
 
-You can find the latest version of MetaMask Desktop app on [our releases page](https://github.com/MetaMask/desktop/releases).
+You can find the latest version of MetaMask Desktop app on [our releases page](https://github.com/MetaMask/metamask-desktop/releases).
 
-For help using MetaMask Desktop, or for general questions, feature requests, and developer questions, see the [Discussions tab](https://github.com/MetaMask/desktop/discussions).
+For help using MetaMask Desktop, or for general questions, feature requests, and developer questions, see the [Discussions tab](https://github.com/MetaMask/metamask-desktop/discussions).
 
 
 ## Monorepo

@@ -1,7 +1,7 @@
 import * as OTPAuth from 'otpauth';
 import { randomHex } from './crypto';
 
-const MAX_TOTP_VALIDATE_RETRY_IN_30_SECONDS = 10;
+export const MAX_TOTP_VALIDATE_RETRY_IN_30_SECONDS = 5;
 class TOTP {
   private static instance: OTPAuth.TOTP;
 

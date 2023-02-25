@@ -1,6 +1,6 @@
 import { TOTP as TOTPAuth } from 'otpauth';
 import { OTP_MOCK, WRONG_OTP_MOCK } from '../../test/mocks';
-import TOTP from './totp';
+import TOTP, { MAX_TOTP_VALIDATE_RETRY_IN_30_SECONDS } from './totp';
 
 describe('TOTP', () => {
   let validateMock: jest.SpyInstance;
@@ -40,11 +40,14 @@ describe('TOTP', () => {
   });
 
   it('resets TOTP instance after exceed the max attempts within 30 seconds', async () => {
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < MAX_TOTP_VALIDATE_RETRY_IN_30_SECONDS; i++) {
       TOTP.validate(WRONG_OTP_MOCK);
       expect(validateMock).toHaveBeenCalled();
     }
-    expect(validateMock).toHaveBeenCalledTimes(10);
+
+    expect(validateMock).toHaveBeenCalledTimes(
+      MAX_TOTP_VALIDATE_RETRY_IN_30_SECONDS,
+    );
     expect(initMock).toHaveBeenCalledTimes(1);
   });
 });

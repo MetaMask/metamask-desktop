@@ -10,17 +10,49 @@ parameters:
   extension-dir:
     type: string
     default: packages/app/submodules/extension
+  extension-release:
+    type: boolean
+    default: false    
+  extension-release-branch:
+    type: string
+    default: main
+  app-stable-branch:
+    type: string
+    default: main
 
 commands:
   checkout_with_submodule:
     steps:
-      - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - "aa:9c:7b:e9:01:de:82:e6:d4:ae:5e:ff:c3:fa:d9:5c"
-      - run:
-          name: Setup submodule
-          command: sh scripts/init-submodule.sh
+      - when:
+          condition:
+            and: # All must be true to trigger
+            - equal: [false, << pipeline.parameters.extension-release >>]
+          steps:
+          - checkout
+          - add_ssh_keys:
+              fingerprints:
+                - "aa:9c:7b:e9:01:de:82:e6:d4:ae:5e:ff:c3:fa:d9:5c"
+          - run:
+              name: Setup submodule
+              command: sh scripts/init-submodule.sh
+      - when:
+          condition:
+            and: # All must be true to trigger
+            - equal: [true, << pipeline.parameters.extension-release >>]
+          steps:
+          - run: 
+              name: checkout
+              command: git clone -b "<< pipeline.parameters.app-stable-branch >>" "https://github.com/MetaMask/metamask-desktop.git" .
+          - add_ssh_keys:
+              fingerprints:
+                - "aa:9c:7b:e9:01:de:82:e6:d4:ae:5e:ff:c3:fa:d9:5c"            
+          - run:
+              name: Setup submodule
+              command: | 
+                ssh-keyscan github.com >> ~/.ssh/known_hosts
+                sh scripts/init-submodule.sh
+                cd packages/app/submodules/extension
+                git checkout << pipeline.parameters.extension-release-branch >>   
 
 executors:
   node-browsers:
@@ -30,7 +62,6 @@ executors:
       APP_DIR: << pipeline.parameters.app-dir >>
       COMMON_DIR: << pipeline.parameters.common-dir >>
       EXTENSION_DIR: << pipeline.parameters.extension-dir >>
-      NODE_OPTIONS: --max_old_space_size=4096
   playwright:
     docker:
       - image: mcr.microsoft.com/playwright:v1.23.1-focal
@@ -57,6 +88,9 @@ executors:
 
 workflows:
   test_and_release:
+    when:
+      and: # All must be true to trigger
+      - equal: [false, << pipeline.parameters.extension-release >>]  
     jobs:
       - install-deps
       - install-deps-extension:
@@ -154,6 +188,65 @@ workflows:
           requires:
             - build-app
             - build-ui
+
+  released_extension_test:
+    when:
+      and: # All must be true to trigger
+      - equal: [true, << pipeline.parameters.extension-release >>]
+
+    jobs:
+      - install-deps
+      - install-deps-extension:
+          requires:
+            - build-common
+      - validate-deps:
+          requires:
+            - install-deps
+      - validate-lock-duplicates:
+          requires:
+            - install-deps
+      - validate-lavamoat-config:
+          requires:
+            - install-deps-extension
+      - audit:
+          requires:
+            - install-deps
+      - build-common:
+          requires:
+            - install-deps
+      - build-app-test-extension:
+          requires:
+            - install-deps-extension
+      - build-app-test-app:
+          requires:
+            - install-deps-extension
+      - build-ui-test-extension:
+          requires:
+            - install-deps-extension
+      - build-ui-test-app:
+          requires:
+            - install-deps-extension
+      - build-extension-test-extension:
+          requires:
+            - install-deps-extension
+      - build-extension-test-app:
+          requires:
+            - install-deps-extension
+      - test-e2e-extension:
+          requires:
+            - build-app-test-extension
+            - build-ui-test-extension
+            - build-extension-test-extension
+      - test-e2e-extension-snaps:
+          requires:
+            - build-app-test-extension
+            - build-ui-test-extension
+            - build-extension-test-extension
+      - test-e2e-app:
+          requires:
+            - build-app-test-app
+            - build-ui-test-app
+            - build-extension-test-app
 
 jobs:
   install-deps:

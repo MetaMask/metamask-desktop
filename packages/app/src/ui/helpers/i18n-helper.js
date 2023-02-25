@@ -1,6 +1,7 @@
 import React from 'react';
+import * as Sentry from '@sentry/electron/renderer';
 import { getPureMessage } from '../../shared/locales/getPureMessage';
-// import * as Sentry from '@sentry/browser';
+
 const missingSubstitutionErrors = {};
 
 export const getMessage = (localeCode, localeMessages, key, substitutions) => {
@@ -40,7 +41,7 @@ export const getMessage = (localeCode, localeMessages, key, substitutions) => {
           `Insufficient number of substitutions for key "${key}" with locale "${localeCode}"`,
         );
         __electronLog.error(error);
-        // Sentry.captureException(error);
+        Sentry.captureException(error);
       }
       return substitutions[substituteIndex];
     });

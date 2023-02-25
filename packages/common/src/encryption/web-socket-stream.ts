@@ -30,11 +30,11 @@ export default class EncryptedWebSocketStream extends Duplex {
 
   private asymmetricKeyPair?: asymmetricEncryption.KeyPair;
 
-  private symmetricKey?: string;
+  private symmetricKey?: number[];
 
   private targetPublicKey?: string;
 
-  private targetSymmetricKey?: string;
+  private targetSymmetricKey?: number[];
 
   private performingHandshake: boolean;
 

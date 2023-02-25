@@ -49,6 +49,117 @@
         "crypto.getRandomValues": true
       }
     },
+    "@sentry/browser": {
+      "globals": {
+        "XMLHttpRequest": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "@sentry/browser>@sentry/core": true,
+        "@sentry/browser>tslib": true,
+        "@sentry/types": true,
+        "@sentry/utils": true
+      }
+    },
+    "@sentry/browser>@sentry/core": {
+      "globals": {
+        "clearInterval": true,
+        "console.warn": true,
+        "setInterval": true
+      },
+      "packages": {
+        "@sentry/browser>@sentry/core>@sentry/hub": true,
+        "@sentry/browser>@sentry/core>@sentry/minimal": true,
+        "@sentry/browser>@sentry/core>tslib": true,
+        "@sentry/utils": true
+      }
+    },
+    "@sentry/browser>@sentry/core>@sentry/hub": {
+      "globals": {
+        "clearInterval": true,
+        "setInterval": true
+      },
+      "packages": {
+        "@sentry/browser>@sentry/core>@sentry/hub>tslib": true,
+        "@sentry/utils": true
+      }
+    },
+    "@sentry/browser>@sentry/core>@sentry/hub>tslib": {
+      "globals": {
+        "define": true
+      }
+    },
+    "@sentry/browser>@sentry/core>@sentry/minimal": {
+      "packages": {
+        "@sentry/browser>@sentry/core>@sentry/hub": true,
+        "@sentry/browser>@sentry/core>@sentry/minimal>tslib": true
+      }
+    },
+    "@sentry/browser>@sentry/core>@sentry/minimal>tslib": {
+      "globals": {
+        "define": true
+      }
+    },
+    "@sentry/browser>@sentry/core>tslib": {
+      "globals": {
+        "define": true
+      }
+    },
+    "@sentry/browser>tslib": {
+      "globals": {
+        "define": true
+      }
+    },
+    "@sentry/electron": {
+      "globals": {
+        "__SENTRY_IPC__": true,
+        "__SENTRY__RENDERER_INIT__": "write",
+        "console.error": true,
+        "fetch": true
+      },
+      "packages": {
+        "@sentry/browser": true,
+        "@sentry/browser>@sentry/core": true,
+        "@sentry/electron>tslib": true,
+        "@sentry/types": true,
+        "@sentry/utils": true,
+        "addons-linter>deepmerge": true
+      }
+    },
+    "@sentry/electron>tslib": {
+      "globals": {
+        "define": true
+      }
+    },
+    "@sentry/utils": {
+      "globals": {
+        "CustomEvent": true,
+        "DOMError": true,
+        "DOMException": true,
+        "Element": true,
+        "ErrorEvent": true,
+        "Event": true,
+        "Headers": true,
+        "Request": true,
+        "Response": true,
+        "XMLHttpRequest.prototype": true,
+        "__SENTRY_BROWSER_BUNDLE__": true,
+        "clearTimeout": true,
+        "console.error": true,
+        "document": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "@sentry/types": true,
+        "@sentry/utils>tslib": true,
+        "browserify>process": true
+      }
+    },
+    "@sentry/utils>tslib": {
+      "globals": {
+        "define": true
+      }
+    },
     "@storybook/api>util-deprecate": {
       "globals": {
         "console.trace": true,

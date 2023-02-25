@@ -2,9 +2,10 @@ import ObjectMultiplex from 'obj-multiplex';
 import {
   createMultiplexMock,
   createStreamMock,
-  DECRYPTED_STRING_MOCK,
   HASH_BUFFER_2_HEX_MOCK,
   HASH_BUFFER_HEX_MOCK,
+  KEY_BYTES_MOCK,
+  KEY_EXPORTED_HEX_MOCK,
   OTP_MOCK,
   STRING_DATA_MOCK,
 } from '../test/mocks';
@@ -81,7 +82,7 @@ describe('Pairing', () => {
 
     describe('if OTP is valid', () => {
       beforeEach(async () => {
-        encryptionMock.createKey.mockResolvedValue(DECRYPTED_STRING_MOCK);
+        encryptionMock.createKey.mockResolvedValue(KEY_BYTES_MOCK);
         hashStringMock.mockResolvedValueOnce(STRING_DATA_MOCK);
 
         totpMock.validate.mockReturnValue(true);
@@ -107,7 +108,7 @@ describe('Pairing', () => {
         expect(requestStreamMock.write).toHaveBeenCalledTimes(1);
         expect(requestStreamMock.write).toHaveBeenCalledWith({
           isDesktopEnabled: true,
-          pairingKey: DECRYPTED_STRING_MOCK,
+          pairingKey: KEY_EXPORTED_HEX_MOCK,
         });
       });
     });

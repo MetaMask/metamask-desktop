@@ -317,7 +317,7 @@
     "dotenv": "^16.0.3",
     "dotenv-cli": "^6.0.0",
     "duplexify": "^4.1.1",
-    "electron": "^22.0.0",
+    "electron": "^23.0.0",
     "electron-builder": "^23.3.3",
     "electron-notarize": "^1.2.1",
     "enzyme": "^3.10.0",

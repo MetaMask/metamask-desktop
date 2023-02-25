@@ -41,6 +41,9 @@ if (!global.self) {
     userAgent: 'Firefox',
   } as Navigator;
 
+  // Use node-fetch which supports proxying with global-agent rather than built-in fetch provided by Node 18
+  global.fetch = fetch as any;
+
   // represents a window containing a DOM document
   global.window = {
     // supports fetchWithCache
@@ -97,7 +100,6 @@ if (!global.self) {
           const extensionMetaMetricsOptIn =
             extensionState.store?.metamask?.participateInMetaMetrics;
 
-          // TODO Currently returning a string, needs simplifying when schema fixed
           const desktopMetaMetricsOptInValue = readPersistedSettingFromAppState(
             {
               defaultValue: false,
