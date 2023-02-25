@@ -93,10 +93,12 @@ const registerDriverHooks = () => {
         return await driver.getAllWindowHandles();
       };
 
-      const testPath = process.argv[7];
-      const timeout = testPath.includes('from-import-ui') ? 60000 : 10000;
+      console.log('-----Process Args', process.argv);
 
-      super(driver, browser, extensionUrl, timeout);
+      // const testPath = process.argv[7];
+      // const timeout = testPath.includes('from-import-ui') ? 60000 : 10000;
+
+      super(driver, browser, extensionUrl, 10000);
     }
 
     async navigate(...args) {
