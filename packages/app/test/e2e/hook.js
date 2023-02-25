@@ -96,7 +96,7 @@ const registerDriverHooks = () => {
         return await originalGetAllWindowHandles();
       };
 
-      const testPath = process.argv[7];
+      const testPath = process.argv[9];
       const timeout = testPath.includes('from-import-ui') ? 120000 : 20000;
 
       super(driver, browser, extensionUrl, timeout);
