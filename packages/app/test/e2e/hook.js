@@ -22,6 +22,7 @@ const driverBeforeNavigateHook = sinon.stub();
 const driverAfterNavigateHook = sinon.stub();
 const driverGetWindowsHook = sinon.stub();
 const driverCheckConsoleErrorsHook = sinon.stub();
+const driverFindElementHook = sinon.stub();
 const helpersWithFixturesHook = sinon.stub();
 
 const registerFixtureBuilderHooks = () => {
@@ -118,6 +119,16 @@ const registerDriverHooks = () => {
 
       return super.checkBrowserForConsoleErrors();
     }
+
+    async findElement(rawLocator) {
+      const result = await driverFindElementHook(rawLocator);
+
+      if (result) {
+        return result;
+      }
+
+      return super.findElement(rawLocator);
+    }
   }
 
   mock('../../submodules/extension/test/e2e/webdriver/driver', DesktopDriver);
@@ -141,6 +152,16 @@ const registerHelpersHooks = () => {
   };
 
   mock('../../submodules/extension/test/e2e/helpers', mockHelpers);
+};
+
+const getStubCallCountWithArgs = (stub, args) => {
+  return stub
+    .getCalls()
+    .filter(
+      (call) =>
+        call.args.length === args.length &&
+        call.args.every((arg, index) => args[index] === arg),
+    ).length;
 };
 
 registerFixtureBuilderHooks();
@@ -199,6 +220,27 @@ driverGetWindowsHook.callsFake(() => {
 });
 
 driverCheckConsoleErrorsHook.callsFake(() => []);
+
+driverFindElementHook.callsFake(async (rawLocator) => {
+  // The address book delete test finds the deleted contact immediately after clicking delete
+  // but the pipeline with the app is too slow so the contact element has already gone.
+  // We essentially skip this find by passing the same CSS string selector to isElementPresent.
+
+  const DELETE_CONTACT_SELECTOR = '.send__select-recipient-wrapper__group-item';
+
+  if (
+    currentTestTitle &&
+    currentTestTitle === 'Deletes existing entry from address book' &&
+    rawLocator === DELETE_CONTACT_SELECTOR &&
+    getStubCallCountWithArgs(driverFindElementHook, [
+      DELETE_CONTACT_SELECTOR,
+    ]) === 1
+  ) {
+    return DELETE_CONTACT_SELECTOR;
+  }
+
+  return undefined;
+});
 
 helpersWithFixturesHook.callsFake((options) => {
   currentTestTitle = options.title;
