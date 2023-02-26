@@ -82,6 +82,9 @@ const electronBridge = {
       metricsDecision,
     );
   },
+  getDesktopMetricsDecision: () => {
+    return ipcRenderer.invoke('get-desktop-metrics-decision');
+  },
 };
 
 contextBridge.exposeInMainWorld('electronBridge', electronBridge);
