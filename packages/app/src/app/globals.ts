@@ -98,16 +98,10 @@ if (!global.self) {
           const extensionMetaMetricsOptIn =
             extensionState.store?.metamask?.participateInMetaMetrics;
 
-          const desktopMetaMetricsOptInValue = readPersistedSettingFromAppState(
-            {
-              defaultValue: false,
-              key: 'metametricsOptIn',
-            },
-          );
-          const desktopMetaMetricsOptIn =
-            typeof desktopMetaMetricsOptInValue === 'string'
-              ? desktopMetaMetricsOptInValue === 'true'
-              : desktopMetaMetricsOptInValue;
+          const desktopMetaMetricsOptIn = readPersistedSettingFromAppState({
+            defaultValue: false,
+            key: 'metametricsOptIn',
+          });
 
           // Desktop opt in must be enabled
           // Extension opt in must be enabled if desktop currently enabled

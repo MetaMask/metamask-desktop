@@ -2461,8 +2461,11 @@
       "globals": {
         "Buffer.concat": true,
         "Buffer.from": true,
+        "__SENTRY_IPC__": true,
+        "__SENTRY__RENDERER_INIT__": "write",
         "clearInterval": true,
         "console.error": true,
+        "fetch": true,
         "process.arch": true,
         "process.execPath": true,
         "process.getSystemMemoryInfo": true,
@@ -2480,6 +2483,7 @@
         "setTimeout": true
       },
       "packages": {
+        "@sentry/browser": true,
         "@sentry/browser>@sentry/core": true,
         "@sentry/electron>@sentry/node": true,
         "@sentry/electron>deepmerge": true,
