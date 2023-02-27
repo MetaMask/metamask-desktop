@@ -62,7 +62,6 @@ executors:
       APP_DIR: << pipeline.parameters.app-dir >>
       COMMON_DIR: << pipeline.parameters.common-dir >>
       EXTENSION_DIR: << pipeline.parameters.extension-dir >>
-      NODE_OPTIONS: --max_old_space_size=8192
   playwright:
     docker:
       - image: mcr.microsoft.com/playwright:v1.23.1-focal
