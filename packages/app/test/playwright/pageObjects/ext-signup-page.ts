@@ -7,7 +7,7 @@ export class ExtensionSignUpPage {
 
   readonly extensionId: string;
 
-  readonly getStartedBtn: Locator;
+  readonly riskBtn: Locator;
 
   readonly importWalletBtn: Locator;
 
@@ -35,10 +35,12 @@ export class ExtensionSignUpPage {
 
   readonly gotItBtn: Locator;
 
+  readonly whatsNewCloseBtn: Locator;
+
   constructor(page: Page, extensionId: string) {
     this.page = page;
     this.extensionId = extensionId;
-    this.getStartedBtn = page.locator('button:has-text("Get started")');
+    this.riskBtn = page.locator('button:has-text("I accept the risks")');
     this.importWalletBtn = page.locator(
       'button:has-text("Import an existing wallet")',
     );
@@ -63,6 +65,7 @@ export class ExtensionSignUpPage {
 
     this.nextBtn = page.locator('button:has-text("Next")');
     this.gotItBtn = page.locator('button:has-text("Got it!")');
+    this.whatsNewCloseBtn = page.locator('data-testid=popover-close');
   }
 
   async goto() {
@@ -70,6 +73,7 @@ export class ExtensionSignUpPage {
   }
 
   async start() {
+    await this.riskBtn.click();
     await this.importWalletBtn.click();
     await this.noThanksBtn.click();
   }
@@ -92,6 +96,7 @@ export class ExtensionSignUpPage {
     await this.gotItBtn.click();
     await this.nextBtn.click();
     await this.doneBtn.click();
+    await this.whatsNewCloseBtn.click();
   }
 }
 

@@ -10,7 +10,7 @@ import {
 } from '../../../shared/constants/ui-routes';
 import TabBar from '../../../../submodules/extension/ui/components/app/tab-bar';
 import Typography from '../../../../submodules/extension/ui/components/ui/typography';
-import { TYPOGRAPHY } from '../../../../submodules/extension/ui/helpers/constants/design-system';
+import { TypographyVariant } from '../../../../submodules/extension/ui/helpers/constants/design-system';
 import useI18nContext from '../../hooks/useI18nContext';
 import GeneralTab from './general-tab';
 import AboutTab from './about-tab';
@@ -78,7 +78,7 @@ const Settings = ({ currentPath, isAboutPage, isPrivacyPage }) => {
 
     return (
       <div className="mmd-settings-page__subheader">
-        <Typography variant={TYPOGRAPHY.H4}>{subheaderText}</Typography>
+        <Typography variant={TypographyVariant.H4}>{subheaderText}</Typography>
       </div>
     );
   };
@@ -86,7 +86,7 @@ const Settings = ({ currentPath, isAboutPage, isPrivacyPage }) => {
   return (
     <div className="mmd-settings-page">
       <div className="mmd-settings-page__header">
-        <Typography variant={TYPOGRAPHY.H3}>{t('settings')}</Typography>
+        <Typography variant={TypographyVariant.H3}>{t('settings')}</Typography>
       </div>
       <div className="mmd-settings-page__content">
         <div className="mmd-settings-page__content__tabs">{renderTabs()}</div>

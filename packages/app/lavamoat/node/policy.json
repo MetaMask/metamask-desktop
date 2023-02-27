@@ -1710,7 +1710,6 @@
         "@metamask/snaps-controllers>@xstate/fsm": true,
         "@metamask/snaps-controllers>concat-stream": true,
         "@metamask/snaps-controllers>gunzip-maybe": true,
-        "@metamask/snaps-controllers>json-rpc-middleware-stream": true,
         "@metamask/snaps-controllers>nanoid": true,
         "@metamask/snaps-controllers>readable-web-to-node-stream": true,
         "@metamask/snaps-controllers>tar-stream": true,
@@ -1719,6 +1718,7 @@
         "@metamask/utils": true,
         "eth-rpc-errors": true,
         "json-rpc-engine": true,
+        "json-rpc-middleware-stream": true,
         "pump": true
       }
     },
@@ -1867,16 +1867,6 @@
       },
       "packages": {
         "eth-query>xtend": true,
-        "readable-stream": true
-      }
-    },
-    "@metamask/snaps-controllers>json-rpc-middleware-stream": {
-      "globals": {
-        "console.warn": true,
-        "setTimeout": true
-      },
-      "packages": {
-        "json-rpc-engine>@metamask/safe-event-emitter": true,
         "readable-stream": true
       }
     },
@@ -4236,6 +4226,11 @@
         "define": true
       }
     },
+    "eth-trezor-keyring>trezor-connect>bowser": {
+      "globals": {
+        "define": true
+      }
+    },
     "eth-trezor-keyring>trezor-connect>cbor-web": {
       "builtin": {
         "util": true
@@ -4849,7 +4844,12 @@
       }
     },
     "json-rpc-middleware-stream": {
+      "globals": {
+        "console.warn": true,
+        "setTimeout": true
+      },
       "packages": {
+        "json-rpc-engine>@metamask/safe-event-emitter": true,
         "readable-stream": true
       }
     },

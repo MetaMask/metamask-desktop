@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import Typography from '../../../../../submodules/extension/ui/components/ui/typography';
 import ToggleButton from '../../../../../submodules/extension/ui/components/ui/toggle-button';
-import { TYPOGRAPHY } from '../../../../../submodules/extension/ui/helpers/constants/design-system';
+import { TypographyVariant } from '../../../../../submodules/extension/ui/helpers/constants/design-system';
 import useI18nContext from '../../../hooks/useI18nContext';
 
 const PrivacyTab = ({ metametricsOptIn, updateMetametricsOptIn }) => {
@@ -12,10 +12,10 @@ const PrivacyTab = ({ metametricsOptIn, updateMetametricsOptIn }) => {
     return (
       <div className="mmd-settings-page__setting-row">
         <div className="mmd-settings-page__setting-item">
-          <Typography variant={TYPOGRAPHY.H5}>
+          <Typography variant={TypographyVariant.H5}>
             {t('participateInMetaMetrics')}
           </Typography>
-          <Typography variant={TYPOGRAPHY.H6}>
+          <Typography variant={TypographyVariant.H6}>
             {t('participateInMetaMetricsDescription')}
           </Typography>
         </div>
