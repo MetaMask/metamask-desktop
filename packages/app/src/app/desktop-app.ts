@@ -264,10 +264,6 @@ class DesktopApp extends EventEmitter {
     extensionConnection.on('paired', () => {
       this.status.isDesktopPaired = true;
       this.appNavigation.setPairedTrayIcon();
-      this.metricsService.track(EVENT_NAMES.DESKTOP_APP_PAIRED, {
-        paired: true,
-        createdAt: new Date(),
-      });
     });
 
     extensionConnection.getPairing().on('invalid-otp', () => {
