@@ -88,9 +88,6 @@ jobs:
       - name: Run common build
         shell: bash
         run: yarn common build
-      - name: Run setup extension
-        shell: bash
-        run: yarn setup:extension
       - name: Run extension install deps
         shell: bash
         run: yarn extension

@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
-# Use common workspace in extension
-cd packages/app/submodules/extension
-yarn link ../../../common
-cd -
+if [ ! "$NO_COMMON_LINK" ]; then
+  # Use common workspace in extension
+  cd packages/app/submodules/extension
+  yarn link ../../../common
+  cd -
+fi
 
 # Ensure an extension env file exists
 if [ ! -f "packages/app/submodules/extension/.metamaskrc" ]; then
