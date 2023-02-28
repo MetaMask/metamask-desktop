@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Button from '../../../../../submodules/extension/ui/components/ui/button';
 
 import {
@@ -9,13 +9,6 @@ import useI18nContext from '../../../hooks/useI18nContext';
 
 const AboutTab = () => {
   const t = useI18nContext();
-  const [desktopVersion, setDesktopVersion] = useState('');
-
-  useEffect(() => {
-    window.electronBridge.desktopVersion().then((value) => {
-      setDesktopVersion(value);
-    });
-  }, []);
 
   const handleLinkClick = (link) => (event) => {
     event.preventDefault();
@@ -26,7 +19,9 @@ const AboutTab = () => {
     <>
       <div className="about-tab__item">
         <div className="about-tab__link-header">MetaMask Desktop</div>
-        <div className="about-tab__version-number">{desktopVersion}</div>
+        <div className="about-tab__version-number">
+          {window.electronBridge.desktopVersion}
+        </div>
       </div>
       <hr className="about-tab__separator" />
       <div className="about-tab__link-header">{t('links')}</div>

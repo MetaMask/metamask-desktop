@@ -18,7 +18,6 @@ import { StatusMessage } from './types/message';
 import { forwardEvents } from './utils/events';
 import { determineLoginItemSettings } from './utils/settings';
 import cfg from './utils/config';
-import { getDesktopVersion } from './utils/version';
 import ExtensionConnection from './extension-connection';
 import { updateCheck } from './update-check';
 import {
@@ -151,10 +150,6 @@ class DesktopApp extends EventEmitter {
         app.setLoginItemSettings(determineLoginItemSettings(preferredStartup));
       });
     }
-
-    ipcMain.handle('get-desktop-version', () => {
-      return getDesktopVersion();
-    });
 
     ipcMain.handle('get-desktop-metrics-decision', () => {
       return readPersistedSettingFromAppState({

@@ -1,5 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron';
 import { Properties, Traits } from '../types/metrics';
+import { getDesktopVersion } from '../utils/version';
 
 const uiStoreBridge = (name: string) => {
   return {
@@ -18,9 +19,7 @@ const uiStoreBridge = (name: string) => {
 const electronBridge = {
   appStore: uiStoreBridge('app'),
   pairStatusStore: uiStoreBridge('pair-status'),
-  desktopVersion: () => {
-    return ipcRenderer.invoke('get-desktop-version') as Promise<string>;
-  },
+  desktopVersion: getDesktopVersion(),
   onStatusChange: (callback: (statusData: unknown) => void) => {
     ipcRenderer.on('status', (_, statusData) => {
       callback(statusData);

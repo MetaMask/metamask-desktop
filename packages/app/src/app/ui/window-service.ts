@@ -48,6 +48,7 @@ export default class WindowService {
       titleBarOverlay: titleBarOverlayOpts.light,
       webPreferences: {
         preload: path.resolve(__dirname, './preload.js'),
+        sandbox: false,
       },
       icon: path.resolve(__dirname, '../dist/app/icon.png'),
     });
