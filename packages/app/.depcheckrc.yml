@@ -55,12 +55,14 @@ ignores:
   - '@metamask/controllers'
   - '@metamask/design-tokens'
   - '@metamask/eth-json-rpc-infura'
+  - '@metamask/eth-json-rpc-middleware'
   - '@metamask/eth-keyring-controller'
   - '@metamask/eth-ledger-bridge-keyring'
   - '@metamask/eth-token-tracker'
   - '@metamask/etherscan-link'
   - '@metamask/gas-fee-controller'
   - '@metamask/jazzicon'
+  - '@metamask/key-tree'
   - '@metamask/logo'
   - '@metamask/metamask-eth-abis'
   - '@metamask/notification-controller'
@@ -106,7 +108,6 @@ ignores:
   - eth-block-tracker
   - eth-ens-namehash
   - eth-json-rpc-filters
-  - eth-json-rpc-middleware
   - eth-keyring-controller
   - eth-method-registry
   - eth-query
