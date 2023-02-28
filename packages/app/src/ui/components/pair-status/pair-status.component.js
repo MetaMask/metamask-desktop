@@ -8,8 +8,8 @@ import Chip from '../../../../submodules/extension/ui/components/ui/chip';
 import Typography from '../../../../submodules/extension/ui/components/ui/typography';
 import Button from '../../../../submodules/extension/ui/components/ui/button';
 import {
-  COLORS,
-  TYPOGRAPHY,
+  Color,
+  TypographyVariant,
   FONT_WEIGHT,
 } from '../../../../submodules/extension/ui/helpers/constants/design-system';
 import { formatDate } from '../../../../submodules/extension/ui/helpers/utils/util';
@@ -24,8 +24,8 @@ const PairStatus = ({
   const history = useHistory();
 
   const renderChip = ({ isActive }) => {
-    const color = isActive ? COLORS.SUCCESS_DEFAULT : COLORS.ERROR_DEFAULT;
-    const bgColor = isActive ? COLORS.SUCCESS_MUTED : COLORS.ERROR_MUTED;
+    const color = isActive ? Color.successDefault : Color.errorDefault;
+    const bgColor = isActive ? Color.successMuted : Color.errorMuted;
     const label = isActive ? t('active') : t('inactive');
 
     return (
@@ -35,7 +35,7 @@ const PairStatus = ({
         backgroundColor={bgColor}
       >
         <Typography
-          variant={TYPOGRAPHY.Paragraph}
+          variant={TypographyVariant.Paragraph}
           fontWeight={FONT_WEIGHT.BOLD}
           color={color}
         >

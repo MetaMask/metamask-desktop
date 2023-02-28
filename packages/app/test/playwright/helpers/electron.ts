@@ -15,7 +15,7 @@ export async function electronStartup(): Promise<ElectronApplication> {
 
 export async function resetConfigFiles() {
   try {
-    await runInShell('yarn', ['clear:electron-state']);
+    await runInShell('yarn', ['clear:electron-state'], undefined as any);
   } catch {
     // Ignore errors
   }

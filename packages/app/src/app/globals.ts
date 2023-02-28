@@ -53,7 +53,9 @@ if (!global.self) {
     location: {
       href: 'test.com',
     },
+    /// fetch-with-timeout
     fetch,
+    AbortController,
     // required by the background to send CONNECTION_READY (mv3) and contentscript
     postMessage: () => undefined,
     // add listeners required by deep link, phishing warning page on the background

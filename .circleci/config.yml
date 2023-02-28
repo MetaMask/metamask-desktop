@@ -96,6 +96,9 @@ workflows:
       - install-deps-extension:
           requires:
             - build-common
+      - update-extension-policies:
+          requires:
+            - install-deps-extension
       - validate-deps:
           requires:
             - install-deps
@@ -134,13 +137,13 @@ workflows:
             - install-deps-extension
       - build-extension-test-extension:
           requires:
-            - install-deps-extension
+            - update-extension-policies
       - build-extension-test-app:
           requires:
-            - install-deps-extension
+            - update-extension-policies
       - build-extension-test-mv3:
           requires:
-            - install-deps-extension
+            - update-extension-policies
       - lint-common:
           requires:
             - install-deps
@@ -297,6 +300,20 @@ jobs:
             - << pipeline.parameters.extension-dir >>/yarn.lock
             - << pipeline.parameters.extension-dir >>/package.json
             - << pipeline.parameters.extension-dir >>/node_modules
+
+  update-extension-policies:
+    executor: node-browsers
+    steps:
+      - checkout_with_submodule
+      - attach_workspace:
+          at: .
+      - run:
+          name: Generate extension browserify LavaMoat policies for desktop build type
+          command: yarn extension lavamoat:webapp:auto:ci -t desktop
+      - persist_to_workspace:
+          root: .
+          paths:
+            - << pipeline.parameters.extension-dir >>/lavamoat/browserify/desktop/policy.json
 
   validate-deps:
     executor: node-browsers
@@ -496,7 +513,7 @@ jobs:
           at: .
       - run:
           name: build
-          command: yarn extension build:test:desktop:extension
+          command: yarn app build:extension:test
       - run:
           name: Move dist to avoid conflicts
           command: mv ./${EXTENSION_DIR}/dist ./${EXTENSION_DIR}/dist-extension-test
@@ -513,7 +530,7 @@ jobs:
           at: .
       - run:
           name: build
-          command: yarn extension build:test:desktop:app
+          command: yarn app build:extension:test:app
       - run:
           name: Move dist to avoid conflicts
           command: mv ./${EXTENSION_DIR}/dist ./${EXTENSION_DIR}/dist-extension-test-app
@@ -530,7 +547,7 @@ jobs:
           at: .
       - run:
           name: build
-          command: ENABLE_MV3=true yarn extension build:test:desktop:extension
+          command: ENABLE_MV3=true yarn app build:extension:test
       - run:
           name: Move dist to avoid conflicts
           command: mv ./${EXTENSION_DIR}/dist ./${EXTENSION_DIR}/dist-extension-test-mv3
@@ -611,7 +628,7 @@ jobs:
           command: |
             if .circleci/scripts/test-run-e2e.sh
             then
-              yarn app test:e2e:extension --retries 2
+              yarn app test:e2e:extension --retries 4
             fi
           no_output_timeout: 20m
 
@@ -643,7 +660,7 @@ jobs:
           command: |
             if .circleci/scripts/test-run-e2e.sh
             then
-              yarn app test:e2e:extension:snaps --retries 2
+              yarn app test:e2e:extension:snaps --retries 4
             fi
           no_output_timeout: 20m
 

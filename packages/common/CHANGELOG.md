@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0]
+### Uncategorized
+- chore: improve symmetric encryption performance ([#542](https://github.com/MetaMask/metamask-desktop/pull/542))
+- chore: replace github links ([#544](https://github.com/MetaMask/metamask-desktop/pull/544))
+- fix: set max totp attempts within 30 seconds to 5 ([#533](https://github.com/MetaMask/metamask-desktop/pull/533))
+- chore: remove vulnerabilities ([#525](https://github.com/MetaMask/metamask-desktop/pull/525))
+
 ## [0.2.0]
 ### Uncategorized
 - chore: remove common browser ([#511](https://github.com/MetaMask/metamask-desktop/pull/511))
@@ -41,6 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Move encryption and generic utils to common workspace ([#264](https://github.com/MetaMask/metamask-desktop/pull/264))
 - Move browser and version check logic to common workspace ([#259](https://github.com/MetaMask/metamask-desktop/pull/259))
 
-[Unreleased]: https://github.com/MetaMask/metamask-desktop/compare/@metamask/desktop@0.2.0...HEAD
+[Unreleased]: https://github.com/MetaMask/metamask-desktop/compare/@metamask/desktop@0.3.0...HEAD
+[0.3.0]: https://github.com/MetaMask/metamask-desktop/compare/@metamask/desktop@0.2.0...@metamask/desktop@0.3.0
 [0.2.0]: https://github.com/MetaMask/metamask-desktop/compare/@metamask/desktop@0.1.0...@metamask/desktop@0.2.0
 [0.1.0]: https://github.com/MetaMask/metamask-desktop/releases/tag/@metamask/desktop@0.1.0
