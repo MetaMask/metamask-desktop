@@ -6488,7 +6488,6 @@
         "path.relative": true
       },
       "globals": {
-        "console.log": true,
         "performantResolve": true,
         "process.platform": true
       },
