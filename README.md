@@ -17,6 +17,8 @@ You can find the latest version of MetaMask Desktop app on [our releases page](h
 
 For help using MetaMask Desktop, or for general questions, feature requests, and developer questions, see the [Discussions tab](https://github.com/MetaMask/metamask-desktop/discussions).
 
+Audit report for the MetaMask Desktop app can be found [here](https://consensys.net/diligence/audits/private/nz2e05ylhrkhzd/).
+
 
 ## Monorepo
 

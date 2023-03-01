@@ -13,6 +13,9 @@ import { DesktopPairing } from './pairing';
 jest.mock('@metamask/desktop/dist/utils/totp');
 jest.mock('@metamask/desktop/dist/encryption/symmetric');
 jest.mock('obj-multiplex');
+jest.mock('./metrics/metrics-service', () => ({ track: jest.fn() }), {
+  virtual: true,
+});
 
 jest.mock('@metamask/desktop/dist/utils/crypto', () => ({
   randomHex: jest.fn(() => []),
