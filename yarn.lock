@@ -3746,6 +3746,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@metamask/abi-utils@npm:^1.1.0":
+  version: 1.1.1
+  resolution: "@metamask/abi-utils@npm:1.1.1"
+  dependencies:
+    "@metamask/utils": ^3.4.1
+    superstruct: ^1.0.3
+  checksum: 475e6ef5f91daaeed86d757f092623dfb31f492969115a2886e499f7ac91f8cccb33abda3368112f4e4c1de3b124dd8a0f48990293ca25ac1de3978796bd622d
+  languageName: node
+  linkType: hard
+
 "@metamask/action-utils@npm:^0.0.2":
   version: 0.0.2
   resolution: "@metamask/action-utils@npm:0.0.2"
@@ -3789,20 +3799,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@metamask/assets-controllers@npm:^3.0.1":
-  version: 3.0.1
-  resolution: "@metamask/assets-controllers@npm:3.0.1"
+"@metamask/assets-controllers@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "@metamask/assets-controllers@npm:4.0.1"
   dependencies:
-    "@ethersproject/abi": ^5.7.0
     "@ethersproject/bignumber": ^5.7.0
     "@ethersproject/contracts": ^5.7.0
     "@ethersproject/providers": ^5.7.0
-    "@metamask/base-controller": ^1.1.1
+    "@metamask/abi-utils": ^1.1.0
+    "@metamask/base-controller": ^1.1.2
     "@metamask/contract-metadata": ^2.1.0
-    "@metamask/controller-utils": ^1.0.0
+    "@metamask/controller-utils": ^2.0.0
     "@metamask/metamask-eth-abis": 3.0.0
-    "@metamask/network-controller": ^2.0.0
-    "@metamask/preferences-controller": ^1.0.1
+    "@metamask/network-controller": ^4.0.0
+    "@metamask/preferences-controller": ^1.0.2
+    "@metamask/utils": ^3.3.1
     "@types/uuid": ^8.3.0
     abort-controller: ^3.0.0
     async-mutex: ^0.2.6
@@ -3815,8 +3826,8 @@ __metadata:
     single-call-balance-checker-abi: ^1.0.0
     uuid: ^8.3.2
   peerDependencies:
-    "@metamask/network-controller": ^2.0.0
-  checksum: c356a820929738e3ad83a5cfe20993a1e7c4dac6835b308d8cb32efe8542c339664ae3046a1dedce6ee2a4c45cec5528015309366fa96674837dca7ea001998f
+    "@metamask/network-controller": ^4.0.0
+  checksum: 18d3212640a50d2ff56134bceb275718880b80fccddc8b52b325f9119a6fb06919935320b9604550bbda1fc73f13122b3d185330cb423a616daf8f465ace29e8
   languageName: node
   linkType: hard
 
@@ -4257,6 +4268,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@metamask/network-controller@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "@metamask/network-controller@npm:4.0.0"
+  dependencies:
+    "@metamask/base-controller": ^1.1.2
+    "@metamask/controller-utils": ^2.0.0
+    async-mutex: ^0.2.6
+    babel-runtime: ^6.26.0
+    eth-json-rpc-infura: ^5.1.0
+    eth-query: ^2.1.2
+    immer: ^9.0.6
+    web3-provider-engine: ^16.0.3
+  checksum: 19dfa74cefc435f5205020c68b948956c52689cdfaa153dc37d116e866f61903396b4b19055975d6fc9ab4185b34e87a641eba8aebb864e9161ed5e561b35263
+  languageName: node
+  linkType: hard
+
 "@metamask/network-controller@npm:~1.0.0":
   version: 1.0.0
   resolution: "@metamask/network-controller@npm:1.0.0"
@@ -4385,7 +4412,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@metamask/preferences-controller@npm:^1.0.1":
+"@metamask/preferences-controller@npm:^1.0.2":
   version: 1.0.2
   resolution: "@metamask/preferences-controller@npm:1.0.2"
   dependencies:
@@ -4617,15 +4644,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@metamask/utils@npm:^3.0.1, @metamask/utils@npm:^3.0.3, @metamask/utils@npm:^3.3.0, @metamask/utils@npm:^3.4.0, @metamask/utils@npm:^3.4.1":
-  version: 3.4.1
-  resolution: "@metamask/utils@npm:3.4.1"
+"@metamask/utils@npm:^3.0.1, @metamask/utils@npm:^3.0.3, @metamask/utils@npm:^3.3.0, @metamask/utils@npm:^3.3.1, @metamask/utils@npm:^3.4.0, @metamask/utils@npm:^3.4.1":
+  version: 3.6.0
+  resolution: "@metamask/utils@npm:3.6.0"
   dependencies:
     "@types/debug": ^4.1.7
     debug: ^4.3.4
     semver: ^7.3.8
     superstruct: ^1.0.3
-  checksum: 0799cefc17effecba4b4cd34879113f9f826a7aff4d21bfdcca64ef31c117be3e6a30cdd49c0b91289f22efbf7e56901322f4ce1b4d638dd2fc3bc3e81e3c87d
+  checksum: 1ebc6677bb017e4d09d4af143621fe27194d8ed815234cfd76469c3c734dc1db2ea7b577c01a2096c21c04d8c9c4d721d3035b5353fe2ded3b4737f326755e43
   languageName: node
   linkType: hard
 
@@ -10149,7 +10176,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"async-limiter@npm:^1.0.0, async-limiter@npm:~1.0.0":
+"async-limiter@npm:~1.0.0":
   version: 1.0.1
   resolution: "async-limiter@npm:1.0.1"
   checksum: 2b849695b465d93ad44c116220dee29a5aeb63adac16c1088983c339b0de57d76e82533e8e364a93a9f997f28bbfc6a92948cefc120652bd07f3b59f8d75cf2b
@@ -24713,24 +24740,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"luxon@npm:3.1.0":
-  version: 3.1.0
-  resolution: "luxon@npm:3.1.0"
-  checksum: f8a850b759ba7a2e009d904c522ed7bc264bf4add57578f8948e52a0ed96b627b025b5aad8032295b570ae19fac41f0ffab91bdb128715fb0cc020798a7ba886
-  languageName: node
-  linkType: hard
-
-"luxon@npm:^3.2.1":
+"luxon@npm:3.2.1":
   version: 3.2.1
   resolution: "luxon@npm:3.2.1"
   checksum: 3fa3def2c5f5d3032b4c46220c4da8aeb467ac979888fc9d2557adcd22195f93516b4ad5909a75862bec8dc6ddc0953b0f38e6d2f4a8ab8450ddc531a83cf20d
   languageName: node
   linkType: hard
 
-"luxon@patch:luxon@npm%3A3.1.0#./.yarn/patches/luxon-npm-3.1.0-16e2508500.patch::locator=desktop%40workspace%3A.":
-  version: 3.1.0
-  resolution: "luxon@patch:luxon@npm%3A3.1.0#./.yarn/patches/luxon-npm-3.1.0-16e2508500.patch::version=3.1.0&hash=cbeda1&locator=desktop%40workspace%3A."
-  checksum: 4ab1d73a2ef272d953048b6a59c10d3787a8690449c5c2784e99e9f8b3c2869dc1ea54e69f2e6f31b44acc5b9ef0e9d198af9a6680f45675eb015a60f727ebb8
+"luxon@patch:luxon@npm%3A3.2.1#./.yarn/patches/luxon-npm-3.2.1-56f8d97395.patch::locator=desktop%40workspace%3A.":
+  version: 3.2.1
+  resolution: "luxon@patch:luxon@npm%3A3.2.1#./.yarn/patches/luxon-npm-3.2.1-56f8d97395.patch::version=3.2.1&hash=aef1f3&locator=desktop%40workspace%3A."
+  checksum: a1758bc8aa02c6faadef4f012d7f35af2ab7722ed79bfcbeb828bc960faf3c8001d6d659d8cc13ebbd96ccd957381bc848ad6d10e2fe88cd2996a65816efcc84
   languageName: node
   linkType: hard
 
@@ -25332,7 +25352,7 @@ __metadata:
     "@metamask/address-book-controller": ^1.0.0
     "@metamask/announcement-controller": ^1.0.0
     "@metamask/approval-controller": ^1.0.0
-    "@metamask/assets-controllers": ^3.0.1
+    "@metamask/assets-controllers": ^4.0.1
     "@metamask/auto-changelog": ^2.1.0
     "@metamask/base-controller": ^1.0.0
     "@metamask/contract-metadata": ^2.2.0
@@ -25865,16 +25885,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimatch@npm:3.0.4":
-  version: 3.0.4
-  resolution: "minimatch@npm:3.0.4"
-  dependencies:
-    brace-expansion: ^1.1.7
-  checksum: 66ac295f8a7b59788000ea3749938b0970344c841750abd96694f80269b926ebcafad3deeb3f1da2522978b119e6ae3a5869b63b13a7859a456b3408bd18a078
-  languageName: node
-  linkType: hard
-
-"minimatch@npm:^3.0.2, minimatch@npm:^3.0.4, minimatch@npm:^3.1.1, minimatch@npm:^3.1.2":
+"minimatch@npm:^3.0.2, minimatch@npm:^3.0.4, minimatch@npm:^3.0.5, minimatch@npm:^3.1.1, minimatch@npm:^3.1.2":
   version: 3.1.2
   resolution: "minimatch@npm:3.1.2"
   dependencies:
@@ -29600,13 +29611,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"qs@npm:6.7.0":
-  version: 6.7.0
-  resolution: "qs@npm:6.7.0"
-  checksum: dfd5f6adef50e36e908cfa70a6233871b5afe66fbaca37ecc1da352ba29eb2151a3797991948f158bb37fccde51bd57845cb619a8035287bfc24e4591172c347
-  languageName: node
-  linkType: hard
-
 "qs@npm:6.9.6":
   version: 6.9.6
   resolution: "qs@npm:6.9.6"
@@ -29623,10 +29627,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"qs@npm:~6.5.2":
-  version: 6.5.2
-  resolution: "qs@npm:6.5.2"
-  checksum: 24af7b9928ba2141233fba2912876ff100403dba1b08b20c3b490da9ea6c636760445ea2211a079e7dfa882a5cf8f738337b3748c8bdd0f93358fa8881d2db8f
+"qs@npm:~6.5.3":
+  version: 6.5.3
+  resolution: "qs@npm:6.5.3"
+  checksum: 6f20bf08cabd90c458e50855559539a28d00b2f2e7dddcb66082b16a43188418cb3cb77cbd09268bcef6022935650f0534357b8af9eeb29bf0f27ccb17655692
+  languageName: node
+  linkType: hard
+
+"qs@npm:~6.7.3":
+  version: 6.7.3
+  resolution: "qs@npm:6.7.3"
+  checksum: c91046d3a648374d4cb98a872b69753a039a5d57f879bd56174b57d80014ab2bea4f7bcaa5db5e6c1ca7d2e29119b4f844125a082a0facf30adeb90e8e686078
   languageName: node
   linkType: hard
 
@@ -31135,7 +31146,7 @@ __metadata:
     mime-types: ~2.1.19
     oauth-sign: ~0.9.0
     performance-now: ^2.1.0
-    qs: ~6.5.2
+    qs: ~6.5.3
     safe-buffer: ^5.1.2
     tough-cookie: ~2.5.0
     tunnel-agent: ^0.6.0
@@ -36922,15 +36933,6 @@ __metadata:
     utf-8-validate:
       optional: true
   checksum: 3a32e15dffe633dd5ce99659793dbcf1440ea25d2da1060c88cbd22efdfb7986a6933e68aaa4b098fc3f1f7870cb386afd378a1ceaca4b31748471576d5a8b52
-  languageName: node
-  linkType: hard
-
-"ws@npm:7.1.0":
-  version: 7.1.0
-  resolution: "ws@npm:7.1.0"
-  dependencies:
-    async-limiter: ^1.0.0
-  checksum: 9cf09adf7866dbe912620c9b13615b0420f3a0de469084446bcf146155497951a90ec3e39c7ac248dffb4a97932da539d727198a44870a3c80835d0b940fddf9
   languageName: node
   linkType: hard
 

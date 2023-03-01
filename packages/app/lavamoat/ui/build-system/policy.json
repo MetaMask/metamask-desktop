@@ -2326,10 +2326,10 @@
         "eslint>json-stable-stringify-without-jsonify": true,
         "eslint>levn": true,
         "eslint>lodash.merge": true,
-        "eslint>minimatch": true,
         "eslint>natural-compare": true,
         "eslint>regexpp": true,
         "globby>ignore": true,
+        "mocha>minimatch": true,
         "nock>debug": true
       }
     },
@@ -2406,6 +2406,7 @@
         "eslint-plugin-react>array-includes": true,
         "eslint>is-glob": true,
         "eslint>minimatch": true,
+        "mocha>minimatch": true,
         "typescript": true
       }
     },
@@ -2703,7 +2704,8 @@
         "eslint-plugin-node>minimatch": true,
         "eslint-plugin-node>semver": true,
         "eslint>minimatch": true,
-        "globby>ignore": true
+        "globby>ignore": true,
+        "mocha>minimatch": true
       }
     },
     "eslint-plugin-node>eslint-plugin-es": {
@@ -2780,8 +2782,8 @@
         "eslint-plugin-react>object.hasown": true,
         "eslint-plugin-react>resolve": true,
         "eslint-plugin-react>semver": true,
-        "eslint>minimatch": true,
         "lavamoat>object.fromentries": true,
+        "mocha>minimatch": true,
         "prop-types": true,
         "string.prototype.matchall": true
       }
@@ -2905,6 +2907,7 @@
         "eslint>minimatch": true,
         "eslint>strip-json-comments": true,
         "globby>ignore": true,
+        "mocha>minimatch": true,
         "nock>debug": true
       }
     },
@@ -2933,6 +2936,7 @@
         "eslint>@humanwhocodes/config-array>@humanwhocodes/object-schema": true,
         "eslint>@humanwhocodes/config-array>minimatch": true,
         "eslint>minimatch": true,
+        "mocha>minimatch": true,
         "nock>debug": true
       }
     },
@@ -3066,17 +3070,6 @@
     "eslint>levn>type-check": {
       "packages": {
         "eslint>levn>prelude-ls": true
-      }
-    },
-    "eslint>minimatch": {
-      "builtin": {
-        "path": true
-      },
-      "globals": {
-        "console": true
-      },
-      "packages": {
-        "mocha>minimatch>brace-expansion": true
       }
     },
     "eslint>strip-ansi": {
@@ -6693,6 +6686,17 @@
         "memoizee>es5-ext": true
       }
     },
+    "mocha>minimatch": {
+      "builtin": {
+        "path": true
+      },
+      "globals": {
+        "console": true
+      },
+      "packages": {
+        "mocha>minimatch>brace-expansion": true
+      }
+    },
     "mocha>minimatch>brace-expansion": {
       "packages": {
         "mocha>minimatch>brace-expansion>concat-map": true,
@@ -6783,8 +6787,8 @@
         "process.platform": true
       },
       "packages": {
-        "eslint>minimatch": true,
         "gulp-watch>path-is-absolute": true,
+        "mocha>minimatch": true,
         "nyc>glob>fs.realpath": true,
         "nyc>glob>inflight": true,
         "pump>once": true,
