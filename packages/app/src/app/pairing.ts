@@ -11,11 +11,15 @@ import {
   PairingResultMessage,
 } from '@metamask/desktop/dist/types';
 import * as rawState from '@metamask/desktop/dist/utils/state';
+import MetricsService from './metrics/metrics-service';
+import { EVENT_NAMES } from './metrics/metrics-constants';
 
 export class DesktopPairing extends EventEmitter {
   private requestStream: Duplex;
 
   private keyStream: Duplex;
+
+  private metricsService: typeof MetricsService;
 
   constructor(stream: Duplex) {
     super();
@@ -24,6 +28,7 @@ export class DesktopPairing extends EventEmitter {
 
     this.requestStream = streams.requestStream;
     this.keyStream = streams.keyStream;
+    this.metricsService = MetricsService;
   }
 
   public init() {
@@ -60,6 +65,11 @@ export class DesktopPairing extends EventEmitter {
     });
 
     log.debug('Saved pairing key', pairingKey);
+
+    this.metricsService.track(EVENT_NAMES.DESKTOP_APP_PAIRED, {
+      paired: true,
+      createdAt: new Date(),
+    });
 
     acknowledge(this.requestStream);
   }
