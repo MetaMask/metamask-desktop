@@ -33,6 +33,6 @@ While paired with the MetaMask extension, MetaMask desktop stores all MetaMask s
 
 All private keys remain encrypted as in the extension, but as a further security measure, the entire file is encrypted again using AES-CBC with a 256-bit key.
 
-The encryption itself is powered by [electron-store](https://github.com/sindresorhus/electron-store#encryptionkey), but the key is stored securely using [safeStoage](https://www.electronjs.org/docs/latest/api/safe-storage) which uses the operating system keychain to prevent unauthorised access.
+The encryption itself is powered by [electron-store](https://github.com/sindresorhus/electron-store#encryptionkey), but the key is stored securely using [safeStorage](https://www.electronjs.org/docs/latest/api/safe-storage) which uses the operating system keychain to prevent unauthorised access.
 
 This code is found in the [Obfuscated Store](../packages/app/src/app/storage/storage.ts) class.
