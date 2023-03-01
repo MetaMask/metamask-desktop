@@ -137,6 +137,7 @@
     "plugin-error@^1.0.1": "patch:plugin-error@npm%3A1.0.1#./.yarn/patches/plugin-error-npm-1.0.1-7d15e880d6.patch",
     "plugin-error@1.0.1": "patch:plugin-error@npm%3A1.0.1#./.yarn/patches/plugin-error-npm-1.0.1-7d15e880d6.patch",
     "pubnub/superagent-proxy": "^3.0.0",
+    "qs@6.7.0": "~6.7.3",
     "regenerator-runtime@^0.13.4": "patch:regenerator-runtime@npm%3A0.13.7#./.yarn/patches/regenerator-runtime-npm-0.13.7-41bcbe64ea.patch",
     "regenerator-runtime@^0.13.7": "patch:regenerator-runtime@npm%3A0.13.7#./.yarn/patches/regenerator-runtime-npm-0.13.7-41bcbe64ea.patch",
     "regenerator-runtime@^0.11.0": "patch:regenerator-runtime@npm%3A0.13.7#./.yarn/patches/regenerator-runtime-npm-0.13.7-41bcbe64ea.patch",
