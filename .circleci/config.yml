@@ -12,7 +12,7 @@ parameters:
     default: packages/app/submodules/extension
   extension-release:
     type: boolean
-    default: false    
+    default: false
   extension-release-branch:
     type: string
     default: main
@@ -40,19 +40,19 @@ commands:
             and: # All must be true to trigger
             - equal: [true, << pipeline.parameters.extension-release >>]
           steps:
-          - run: 
+          - run:
               name: checkout
               command: git clone -b "<< pipeline.parameters.app-stable-branch >>" "https://github.com/MetaMask/metamask-desktop.git" .
           - add_ssh_keys:
               fingerprints:
-                - "aa:9c:7b:e9:01:de:82:e6:d4:ae:5e:ff:c3:fa:d9:5c"            
+                - "aa:9c:7b:e9:01:de:82:e6:d4:ae:5e:ff:c3:fa:d9:5c"
           - run:
               name: Setup submodule
-              command: | 
+              command: |
                 ssh-keyscan github.com >> ~/.ssh/known_hosts
                 sh scripts/init-submodule.sh
                 cd packages/app/submodules/extension
-                git checkout << pipeline.parameters.extension-release-branch >>   
+                git checkout << pipeline.parameters.extension-release-branch >>
 
 executors:
   node-browsers:
@@ -90,15 +90,12 @@ workflows:
   test_and_release:
     when:
       and: # All must be true to trigger
-      - equal: [false, << pipeline.parameters.extension-release >>]  
+      - equal: [false, << pipeline.parameters.extension-release >>]
     jobs:
       - install-deps
       - install-deps-extension:
           requires:
             - build-common
-      - update-extension-policies:
-          requires:
-            - install-deps-extension
       - validate-deps:
           requires:
             - install-deps
@@ -137,13 +134,13 @@ workflows:
             - install-deps-extension
       - build-extension-test-extension:
           requires:
-            - update-extension-policies
+            - install-deps-extension
       - build-extension-test-app:
           requires:
-            - update-extension-policies
+            - install-deps-extension
       - build-extension-test-mv3:
           requires:
-            - update-extension-policies
+            - install-deps-extension
       - lint-common:
           requires:
             - install-deps
@@ -174,8 +171,8 @@ workflows:
       - test-e2e-extension-mv3:
           requires:
             - build-app-test-extension
-            - build-ui-test-extension          
-            - build-extension-test-mv3           
+            - build-ui-test-extension
+            - build-extension-test-mv3
       - package-windows:
           requires:
             - build-app
@@ -193,7 +190,6 @@ workflows:
     when:
       and: # All must be true to trigger
       - equal: [true, << pipeline.parameters.extension-release >>]
-
     jobs:
       - install-deps
       - install-deps-extension:
@@ -291,29 +287,31 @@ jobs:
           paths:
             - << pipeline.parameters.extension-dir >>/.yarn/cache/
             - << pipeline.parameters.extension-dir >>/node_modules/
-      - run:
-          name: Initialise extension
-          command: yarn setup:extension
+      - when:
+          condition:
+            and:
+              - not:
+                  matches: { pattern: "^release/.+$", value: << pipeline.git.branch >> }
+              - not:
+                  equal: [ app-stable, << pipeline.git.branch >> ]
+              - equal: [false, << pipeline.parameters.extension-release >>]
+          steps:
+            - run:
+                name: Initialise extension
+                command: yarn setup:extension
+            - run:
+                name: Generate extension browserify LavaMoat policies for desktop build type
+                command: yarn extension lavamoat:webapp:auto:ci -t desktop
+            - persist_to_workspace:
+                root: .
+                paths:
+                  - << pipeline.parameters.extension-dir >>/lavamoat/browserify/desktop/policy.json
       - persist_to_workspace:
           root: .
           paths:
             - << pipeline.parameters.extension-dir >>/yarn.lock
             - << pipeline.parameters.extension-dir >>/package.json
             - << pipeline.parameters.extension-dir >>/node_modules
-
-  update-extension-policies:
-    executor: node-browsers
-    steps:
-      - checkout_with_submodule
-      - attach_workspace:
-          at: .
-      - run:
-          name: Generate extension browserify LavaMoat policies for desktop build type
-          command: yarn extension lavamoat:webapp:auto:ci -t desktop
-      - persist_to_workspace:
-          root: .
-          paths:
-            - << pipeline.parameters.extension-dir >>/lavamoat/browserify/desktop/policy.json
 
   validate-deps:
     executor: node-browsers

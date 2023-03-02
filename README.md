@@ -75,3 +75,7 @@ yarn [package] [script]
 
 e.g. yarn app package:mac
 ```
+
+# Additional Documentation
+
+- [Encryption](docs/encryption.md)
