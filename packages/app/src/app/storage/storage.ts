@@ -6,6 +6,8 @@ import { app } from 'electron';
 import log from 'loglevel';
 import cfg from '../utils/config';
 
+console.log("test")
+
 let safeStorage: Electron.SafeStorage;
 
 if (!cfg().isExtensionTest && !cfg().isAppTest) {
