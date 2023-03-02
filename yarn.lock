@@ -4100,6 +4100,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@metamask/eth-json-rpc-middleware@npm:^10.0.0":
+  version: 10.0.0
+  resolution: "@metamask/eth-json-rpc-middleware@npm:10.0.0"
+  dependencies:
+    "@metamask/eth-sig-util": ^5.0.0
+    "@metamask/safe-event-emitter": ^2.0.0
+    "@metamask/utils": ^3.0.3
+    btoa: ^1.2.1
+    clone: ^2.1.1
+    eth-block-tracker: ^5.0.1
+    eth-rpc-errors: ^4.0.3
+    json-rpc-engine: ^6.1.0
+    json-stable-stringify: ^1.0.1
+    node-fetch: ^2.6.7
+    pify: ^3.0.0
+  checksum: c754b3a39f175698070b4d07076e692d3080738bd25157c3b93114d286c975ee6895d5793b4188ca3d0abbcdef04bfde9e2d4835251a6b725b002d3750bf98de
+  languageName: node
+  linkType: hard
+
 "@metamask/eth-keyring-controller@npm:^10.0.0":
   version: 10.0.0
   resolution: "@metamask/eth-keyring-controller@npm:10.0.0"
@@ -4221,7 +4240,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@metamask/key-tree@npm:^6.2.0":
+"@metamask/key-tree@npm:^6.2.0, @metamask/key-tree@npm:^6.2.1":
   version: 6.2.1
   resolution: "@metamask/key-tree@npm:6.2.1"
   dependencies:
@@ -4364,9 +4383,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@metamask/phishing-controller@npm:^1.1.0":
-  version: 1.1.1
-  resolution: "@metamask/phishing-controller@npm:1.1.1"
+"@metamask/phishing-controller@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@metamask/phishing-controller@npm:2.0.0"
   dependencies:
     "@metamask/base-controller": ^1.1.2
     "@metamask/controller-utils": ^2.0.0
@@ -4374,7 +4393,7 @@ __metadata:
     eth-phishing-detect: ^1.2.0
     isomorphic-fetch: ^3.0.0
     punycode: ^2.1.1
-  checksum: 3a29345e0295679cf1d60af689a2e549c7dc19a72a7360f1ab51970d8eb5303488f7f09d9a7e6d28f87ecac324a6fc46da2559775bc854448444741a1d3d0d97
+  checksum: 8ad20a7cdac8fc5f450bb157d19b0b780d82490571f4d33e1afde871ace078cf4f885e2e5be4abc6e1e551986d5f44a3200b076d5545764f5492dfaf005419e4
   languageName: node
   linkType: hard
 
@@ -4644,7 +4663,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@metamask/utils@npm:^3.0.1, @metamask/utils@npm:^3.0.3, @metamask/utils@npm:^3.3.0, @metamask/utils@npm:^3.3.1, @metamask/utils@npm:^3.4.0, @metamask/utils@npm:^3.4.1":
+"@metamask/utils@npm:^3.0.1, @metamask/utils@npm:^3.0.3, @metamask/utils@npm:^3.3.0, @metamask/utils@npm:^3.3.1, @metamask/utils@npm:^3.4.0, @metamask/utils@npm:^3.4.1, @metamask/utils@npm:^3.6.0":
   version: 3.6.0
   resolution: "@metamask/utils@npm:3.6.0"
   dependencies:
@@ -16552,16 +16571,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eth-json-rpc-filters@npm:^5.1.0":
-  version: 5.1.0
-  resolution: "eth-json-rpc-filters@npm:5.1.0"
+"eth-json-rpc-filters@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "eth-json-rpc-filters@npm:6.0.0"
   dependencies:
     "@metamask/safe-event-emitter": ^2.0.0
     async-mutex: ^0.2.6
     eth-query: ^2.1.2
     json-rpc-engine: ^6.1.0
     pify: ^5.0.0
-  checksum: 864092e96277953c399a139df66572b864bd41247c5c1d18e6529973804d4fd8962658d8b10571152554802fa8daaa1003588aee79ffce754e0bc57c39b771d5
+  checksum: 59e21288b0d8f5c22b19cf1eceb8b09671c783d0c78b0e5bedc4ab777ddde8b5c2818e11bbe060966612737870abf9e4c25632d5efea49ebd16b5d082ce9d80f
   languageName: node
   linkType: hard
 
@@ -16611,25 +16630,6 @@ __metadata:
     node-fetch: ^2.6.7
     pify: ^3.0.0
   checksum: ec10bbc04e3b7696f82db2db528b052c8f6de811c90a12d4eb32f23cbe6ea198d86656afa5b53c52de06b631fef633cf29409bb56c04a16f173da94ee1d89ab6
-  languageName: node
-  linkType: hard
-
-"eth-json-rpc-middleware@npm:^9.0.1":
-  version: 9.0.1
-  resolution: "eth-json-rpc-middleware@npm:9.0.1"
-  dependencies:
-    "@metamask/eth-sig-util": ^5.0.0
-    "@metamask/safe-event-emitter": ^2.0.0
-    "@metamask/utils": ^3.0.3
-    btoa: ^1.2.1
-    clone: ^2.1.1
-    eth-block-tracker: ^5.0.1
-    eth-rpc-errors: ^4.0.3
-    json-rpc-engine: ^6.1.0
-    json-stable-stringify: ^1.0.1
-    node-fetch: ^2.6.7
-    pify: ^3.0.0
-  checksum: 9512829a6958df6ef739b891a0c0804b51a140407fd2e3ddaaa6b18d975796646cfcf7f7305a18beb7903db09e0c7a91b06dc5434b6bd2d6cdb85d992d9fd3ab
   languageName: node
   linkType: hard
 
@@ -25365,6 +25365,7 @@ __metadata:
     "@metamask/eslint-config-nodejs": ^9.0.0
     "@metamask/eslint-config-typescript": ^9.0.1
     "@metamask/eth-json-rpc-infura": ^7.0.0
+    "@metamask/eth-json-rpc-middleware": ^10.0.0
     "@metamask/eth-keyring-controller": ^10.0.0
     "@metamask/eth-ledger-bridge-keyring": ^0.13.0
     "@metamask/eth-token-tracker": ^4.0.0
@@ -25372,12 +25373,13 @@ __metadata:
     "@metamask/forwarder": ^1.1.0
     "@metamask/gas-fee-controller": ^1.0.0
     "@metamask/jazzicon": ^2.0.0
+    "@metamask/key-tree": ^6.2.1
     "@metamask/logo": ^3.1.1
     "@metamask/metamask-eth-abis": ^3.0.0
     "@metamask/notification-controller": ^1.0.0
     "@metamask/obs-store": ^5.0.0
     "@metamask/permission-controller": ^1.0.0
-    "@metamask/phishing-controller": ^1.1.0
+    "@metamask/phishing-controller": ^2.0.0
     "@metamask/phishing-warning": ^1.2.1
     "@metamask/post-message-stream": ^6.0.0
     "@metamask/providers": ^10.2.1
@@ -25391,7 +25393,7 @@ __metadata:
     "@metamask/snaps-utils": ^0.28.0
     "@metamask/subject-metadata-controller": ^1.0.0
     "@metamask/test-dapp": ^5.2.1
-    "@metamask/utils": ^3.4.1
+    "@metamask/utils": ^3.6.0
     "@ngraveio/bc-ur": ^1.1.6
     "@playwright/test": 1.23.1
     "@popperjs/core": ^2.4.0
@@ -25511,8 +25513,7 @@ __metadata:
     eslint-plugin-storybook: ^0.6.4
     eth-block-tracker: ^6.0.0
     eth-ens-namehash: ^2.0.8
-    eth-json-rpc-filters: ^5.1.0
-    eth-json-rpc-middleware: ^9.0.1
+    eth-json-rpc-filters: ^6.0.0
     eth-lattice-keyring: ^0.12.3
     eth-method-registry: ^2.0.0
     eth-query: ^2.1.2

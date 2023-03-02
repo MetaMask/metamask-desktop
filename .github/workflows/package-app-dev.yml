@@ -39,9 +39,6 @@ jobs:
       - name: Run common build
         shell: bash
         run: yarn common build
-      - name: Run setup extension
-        shell: bash
-        run: yarn setup:extension
       - name: Run extension install deps
         shell: bash
         run: yarn extension
@@ -50,7 +47,7 @@ jobs:
         run: yarn app build:ui:lavamoat:ci
       - name: Build desktop app
         shell: bash
-        run: yarn app build:app
+        run: yarn app build:app:prod
         env:
           INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
           METAMASK_ENVIRONMENT: 'development'
