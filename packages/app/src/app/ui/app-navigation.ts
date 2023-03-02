@@ -1,5 +1,5 @@
 import path from 'path';
-import { app, Tray, Menu, shell, dialog } from 'electron';
+import { app, Tray, Menu, shell, dialog, nativeImage } from 'electron';
 import { getDesktopState } from '@metamask/desktop/dist/utils/state';
 import { t } from '../utils/translation';
 import { MMD_WEBSITE, URL_SUBMIT_TICKET } from '../../shared/constants/links';
@@ -120,6 +120,13 @@ export default class AppNavigation {
       const dockMenuTemplate = [this.createAboutMenuItem()];
       const dockMenu = Menu.buildFromTemplate(dockMenuTemplate);
       app.dock.setMenu(dockMenu);
+
+      if (!app.isPackaged) {
+        const image = nativeImage.createFromPath(
+          path.resolve(__dirname, '../icons/icon.png'),
+        );
+        app.dock.setIcon(image);
+      }
     }
   }
 
