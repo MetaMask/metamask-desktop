@@ -11,6 +11,8 @@ const configurationPropertyNames = [
   'INFURA_PROJECT_ID',
   'SKIP_OTP_PAIRING_FLOW',
   'WEB_SOCKET_PORT',
+  'SENTRY_DSN',
+  'SEGMENT_WRITE_KEY',
 ];
 
 /**
