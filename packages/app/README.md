@@ -108,3 +108,5 @@ yarn app clear:electron-state
 ```
 
 Note: _This will remove data for all Electron apps ran in development mode._
+
+Test
