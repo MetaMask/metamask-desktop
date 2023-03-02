@@ -1,4 +1,5 @@
 import { Locator, Page, BrowserContext } from '@playwright/test';
+import { MMD_PASSWORD, SEED_PHRASE } from '../helpers/constants';
 import { ChromeExtensionPage } from './ext-chrome-extension-page';
 
 export class ExtensionSignUpPage {
@@ -6,7 +7,7 @@ export class ExtensionSignUpPage {
 
   readonly extensionId: string;
 
-  readonly getStartedBtn: Locator;
+  readonly riskBtn: Locator;
 
   readonly importWalletBtn: Locator;
 
@@ -26,49 +27,76 @@ export class ExtensionSignUpPage {
 
   readonly unlockBtn: Locator;
 
+  readonly confirmSecretBtn: Locator;
+
+  readonly importMyWalletBtn: Locator;
+
+  readonly nextBtn: Locator;
+
+  readonly gotItBtn: Locator;
+
+  readonly whatsNewCloseBtn: Locator;
+
   constructor(page: Page, extensionId: string) {
     this.page = page;
     this.extensionId = extensionId;
-    this.getStartedBtn = page.locator('button:has-text("Get started")');
-    this.importWalletBtn = page.locator('button:has-text("Import wallet")');
+    this.riskBtn = page.locator('button:has-text("I accept the risks")');
+    this.importWalletBtn = page.locator(
+      'button:has-text("Import an existing wallet")',
+    );
+
+    this.confirmSecretBtn = page.locator(
+      'button:has-text("Confirm Secret Recovery Phrase")',
+    );
     this.agreeBtn = page.locator('button:has-text("I agree")');
     this.noThanksBtn = page.locator('button:has-text("No thanks")');
-    this.passwordTxt = page.locator('input#password');
-    this.passwordConfirmTxt = page.locator('input#confirm-password');
-    this.agreeCheck = page.locator(
-      'data-testid=create-new-vault__terms-checkbox',
+    this.passwordTxt = page.locator('data-testid=create-password-new');
+    this.passwordConfirmTxt = page.locator(
+      'data-testid=create-password-confirm',
     );
+
+    this.agreeCheck = page.locator('data-testid=create-password-terms');
     this.importBtn = page.locator('button:has-text("Import")');
-    this.doneBtn = page.locator('button:has-text("All Done")');
+    this.importMyWalletBtn = page.locator(
+      'button:has-text("Import my wallet")',
+    );
+    this.doneBtn = page.locator('button:has-text("Done")');
     this.unlockBtn = page.locator('button:has-text("Unlock")');
+
+    this.nextBtn = page.locator('button:has-text("Next")');
+    this.gotItBtn = page.locator('button:has-text("Got it!")');
+    this.whatsNewCloseBtn = page.locator('data-testid=popover-close');
   }
 
   async goto() {
     await this.page.goto(`chrome-extension://${this.extensionId}/home.html`);
-    this.getStartedBtn.click();
-    this.noThanksBtn.click();
-    // this.page.locator('button:has-text("I accept the risks")').click();
   }
 
   async start() {
+    await this.riskBtn.click();
     await this.importWalletBtn.click();
+    await this.noThanksBtn.click();
   }
 
   async authentication() {
-    const seeds = process.env.SEED_PHRASE?.trim().split(/\s+/u);
+    const seeds = SEED_PHRASE.trim().split(/\s+/u);
     for (const [index, element] of (seeds as string[]).entries()) {
       await this.page
         .locator(`data-testid=import-srp__srp-word-${index}`)
         .type(element);
     }
-    await this.passwordTxt.type(process.env.MMD_PASSWORD as string);
-    await this.passwordConfirmTxt.type(process.env.MMD_PASSWORD as string);
+    await this.confirmSecretBtn.click();
+    await this.passwordTxt.type(MMD_PASSWORD);
+    await this.passwordConfirmTxt.type(MMD_PASSWORD);
+    await this.agreeCheck.click();
+    await this.importMyWalletBtn.click();
   }
 
-  async termsAndConditions() {
-    await this.agreeCheck.click();
-    await this.importBtn.click();
+  async completed() {
+    await this.gotItBtn.click();
+    await this.nextBtn.click();
     await this.doneBtn.click();
+    await this.whatsNewCloseBtn.click();
   }
 }
 
@@ -84,6 +112,6 @@ export async function signUpFlow(page: Page, context: BrowserContext) {
   await signUp.goto();
   await signUp.start();
   await signUp.authentication();
-  await signUp.termsAndConditions();
+  await signUp.completed();
   return extensionId;
 }

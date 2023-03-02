@@ -9,6 +9,7 @@ import { ExtensionInitialPage } from '../pageObjects/ext-initial-page';
 import { electronStartup, getDesktopWindowByName } from '../helpers/electron';
 import { DesktopOTPPage } from '../pageObjects/desktop-otp-pairing-page';
 import { signInFlow } from '../pageObjects/ext-signin-page';
+import { delay } from '../helpers/utils';
 
 async function getAnotherBrowserSession(): Promise<BrowserContext> {
   const launchOptions = {
@@ -51,6 +52,7 @@ test.describe('Extension / Desktop connectivity issues', () => {
       electronApp,
       'MetaMask Desktop',
     );
+    await mainWindow.locator('text=No thanks').click();
     const otpWindow = new DesktopOTPPage(mainWindow);
 
     const extensionId = await signUpFlow(page, context);
@@ -85,6 +87,7 @@ test.describe('Extension / Desktop connectivity issues', () => {
       electronApp,
       'MetaMask Desktop',
     );
+    await mainWindow.locator('text=No thanks').click();
     const desktopWindow = new DesktopOTPPage(mainWindow);
 
     // BROWSER SESSION 1 START
@@ -114,7 +117,7 @@ test.describe('Extension / Desktop connectivity issues', () => {
       'If you want to start a new pairing, please remove the current connection.',
       'Go to Settings in MetaMask Desktop',
     ]);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await delay(1000);
     await initialPage.errorClickButton('Return to Settings Page');
 
     // This two lines disconnect session 1

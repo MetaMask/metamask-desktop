@@ -1,4 +1,6 @@
 import { Locator, Page } from '@playwright/test';
+import { MMD_PASSWORD } from '../helpers/constants';
+import { delay } from '../helpers/utils';
 
 export class ExtensionSignInPage {
   readonly page: Page;
@@ -23,8 +25,10 @@ export class ExtensionSignInPage {
   }
 
   async signIn() {
+    await delay(2000);
     await this.goto();
-    await this.passwordTxt.type(process.env.MMD_PASSWORD as string);
+    await delay(15000);
+    await this.passwordTxt.type(MMD_PASSWORD);
     await this.unlockBtn.click();
   }
 }

@@ -1,6 +1,5 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import { Server as WebSocketServer } from 'ws';
-import { browser } from '@metamask/desktop/dist/browser';
 import { WebSocketStream } from '@metamask/desktop/dist/web-socket-stream';
 import * as RawStateUtils from '@metamask/desktop/dist/utils/state';
 import EncryptedWebSocketStream from '@metamask/desktop/dist/encryption/web-socket-stream';
@@ -13,7 +12,7 @@ import {
   createExtensionConnectionMock,
 } from '../../test/mocks';
 import { simulateNodeEvent } from '../../test/utils';
-import cfg from '../utils/config';
+import cfg from './utils/config';
 import ExtensionConnection from './extension-connection';
 import { updateCheck } from './update-check';
 import DesktopApp from './desktop-app';
@@ -21,17 +20,16 @@ import DesktopApp from './desktop-app';
 jest.mock('extension-port-stream');
 jest.mock('@metamask/desktop/dist/encryption/web-socket-stream');
 jest.mock('./extension-connection');
-jest.mock('./app-navigation');
-jest.mock('./app-events');
-jest.mock('./window-service');
-jest.mock('./ui-state');
-jest.mock('./ui-storage', () => ({
+jest.mock('./ui/app-navigation');
+jest.mock('./ui/app-events');
+jest.mock('./ui/window-service');
+jest.mock('./ui/ui-state');
+jest.mock('./metrics/analytics');
+jest.mock('./storage/ui-storage', () => ({
   setUiStorage: jest.fn(),
+  readPersistedSettingFromAppState: jest.fn(),
 }));
-
-jest.mock('@metamask/desktop/dist/browser', () => ({
-  browser: { storage: { local: { get: jest.fn(), set: jest.fn() } } },
-}));
+jest.mock('./metrics/metrics-service', () => jest.fn(), { virtual: true });
 
 jest.mock('@metamask/desktop/dist/utils/state', () => ({
   getDesktopState: jest.fn(),
@@ -51,7 +49,11 @@ jest.mock(
 jest.mock(
   'electron',
   () => ({
-    app: { whenReady: jest.fn(), disableHardwareAcceleration: jest.fn() },
+    app: {
+      whenReady: jest.fn(),
+      disableHardwareAcceleration: jest.fn(),
+      getLoginItemSettings: jest.fn(),
+    },
     BrowserWindow: jest.fn(),
     ipcMain: { handle: jest.fn() },
   }),
@@ -76,7 +78,6 @@ describe('Desktop', () => {
   const webSocketServerMock = createWebSocketServerMock();
   const appMock = app as any;
   const extensionConnectionMock = createExtensionConnectionMock();
-  const browserMock = browser as any;
   const pairingMock = createEventEmitterMock();
   const rawStateUtilsMock = RawStateUtils as jest.Mocked<typeof RawStateUtils>;
   const IPCMainMock = ipcMain as jest.Mocked<any>;
@@ -127,8 +128,6 @@ describe('Desktop', () => {
         return webSocketServerMock;
       },
     );
-
-    browserMock.storage.local.get.mockResolvedValue({});
 
     rawStateUtilsMock.getDesktopState.mockResolvedValue({
       desktopEnabled: false,

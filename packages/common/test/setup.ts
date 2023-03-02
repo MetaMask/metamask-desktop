@@ -1,4 +1,8 @@
 /* eslint-disable import/unambiguous */
+/* eslint-disable @typescript-eslint/no-shadow */
+
+import { TextEncoder, TextDecoder } from 'util';
+
 // catch rejections that are still unhandled when tests exit
 const unhandledRejections = new Map();
 process.on('unhandledRejection', (reason, promise) => {
@@ -29,3 +33,8 @@ global.setImmediate =
 
 global.clearImmediate =
   global.clearImmediate || ((id) => global.clearTimeout(id));
+
+global.chrome = { runtime: { id: 'testid' } } as any;
+
+global.TextEncoder = TextEncoder as any;
+global.TextDecoder = TextDecoder as any;

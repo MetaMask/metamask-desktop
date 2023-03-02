@@ -1,12 +1,21 @@
 import 'global-agent/bootstrap';
-import './logger-init';
-import '../browser/browser-init';
+import './log/logger-init';
+import './browser/browser-init';
 import { webcrypto } from 'node:crypto';
-import { Headers } from 'node-fetch';
-import * as SentryElectron from '@sentry/electron/main';
-import setupSentry from '../../submodules/extension/app/scripts/lib/setupSentry';
-import { getDesktopVersion } from '../utils/version';
-import { ElectronBridge } from './renderer/preload';
+import electronLog from 'electron-log';
+import fetch, { Headers } from 'node-fetch';
+import * as Sentry from '@sentry/electron/main';
+import { Dedupe, ExtraErrorData } from '@sentry/integrations';
+import { Integration } from '@sentry/types/dist/integration';
+import { FilterEvents } from '../../submodules/extension/app/scripts/lib/sentry-filter-events';
+import {
+  beforeBreadcrumb,
+  rewriteReport,
+} from '../../submodules/extension/app/scripts/lib/setupSentry';
+import { getDesktopVersion } from './utils/version';
+import { ElectronBridge } from './ui/preload';
+import { getSentryDefaultOptions } from './log/setup-sentry';
+import { readPersistedSettingFromAppState } from './storage/ui-storage';
 
 declare global {
   interface Window {
@@ -32,6 +41,9 @@ if (!global.self) {
     userAgent: 'Firefox',
   } as Navigator;
 
+  // Use node-fetch which supports proxying with global-agent rather than built-in fetch provided by Node 18
+  global.fetch = fetch as any;
+
   // represents a window containing a DOM document
   global.window = {
     // supports fetchWithCache
@@ -41,6 +53,9 @@ if (!global.self) {
     location: {
       href: 'test.com',
     },
+    /// fetch-with-timeout
+    fetch,
+    AbortController,
     // required by the background to send CONNECTION_READY (mv3) and contentscript
     postMessage: () => undefined,
     // add listeners required by deep link, phishing warning page on the background
@@ -67,12 +82,53 @@ if (!global.self) {
   // the root compartment will populate this with hooks
   global.stateHooks = {};
 
-  // setup sentry error reporting
-  global.sentry = setupSentry({
-    release: getDesktopVersion(),
-    getState: () => global.stateHooks?.getSentryState?.() || {},
-    Sentry: SentryElectron,
-  } as any);
+  const getState = () => global.stateHooks?.getSentryState?.() || {};
+
+  // Init Sentry in the main process before lavamoat
+  const sentryOptions = getSentryDefaultOptions(getDesktopVersion());
+  Sentry.init({
+    ...sentryOptions,
+    ipcMode: Sentry.IPCMode.Both,
+    integrations: [
+      new FilterEvents({
+        getMetaMetricsEnabled: () => {
+          const extensionState = getState();
+
+          const hasValidExtensionState =
+            extensionState.store?.metamask?.desktopEnabled;
+
+          const extensionMetaMetricsOptIn =
+            extensionState.store?.metamask?.participateInMetaMetrics;
+
+          const desktopMetaMetricsOptIn = readPersistedSettingFromAppState({
+            defaultValue: false,
+            key: 'metametricsOptIn',
+          });
+
+          // Desktop opt in must be enabled
+          // Extension opt in must be enabled if desktop currently enabled
+          const shouldShareMetrics =
+            desktopMetaMetricsOptIn &&
+            (!hasValidExtensionState || extensionMetaMetricsOptIn);
+
+          electronLog.debug('Sentry metric filter for main process', {
+            hasValidExtensionState,
+            extensionMetaMetricsOptIn,
+            desktopMetaMetricsOptIn,
+            shouldShareMetrics,
+          });
+
+          return shouldShareMetrics;
+        },
+      }) as Integration,
+      new Dedupe() as Integration,
+      new ExtraErrorData() as Integration,
+    ],
+    beforeSend: (report) => rewriteReport(report, getState),
+    beforeBreadcrumb: beforeBreadcrumb(getState),
+  });
+
+  global.sentry = Sentry;
 }
 
 export {};

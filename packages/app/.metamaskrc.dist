@@ -1,0 +1,34 @@
+; Available environment variables to configure the extension
+
+; Extra environment variables
+PASSWORD=METAMASK PASSWORD
+INFURA_PROJECT_ID=00000000000
+SEGMENT_WRITE_KEY=
+ONBOARDING_V2=
+SWAPS_USE_DEV_APIS=
+NFTS_V1=
+PUBNUB_PUB_KEY=
+PUBNUB_SUB_KEY=
+TOKEN_ALLOWANCE_IMPROVEMENTS=
+PORTFOLIO_URL=
+TRANSACTION_SECURITY_PROVIDER=
+
+; Set this to '1' to enable support for Sign-In with Ethereum [EIP-4361](https://eips.ethereum.org/EIPS/eip-4361)
+SIWE_V1=
+
+; Set this to test changes to the phishing warning page.
+PHISHING_WARNING_PAGE_URL=
+
+; Desktop
+
+; Override the compatibility version used to verify if the current extension supports the desktop app
+COMPATIBILITY_VERSION_EXTENSION=
+
+; Set to 1 to disable all encryption when communicating with the desktop app
+DISABLE_WEB_SOCKET_ENCRYPTION=
+
+; Set to 1 to skip the pairing process when enabling desktop mode
+SKIP_OTP_PAIRING_FLOW=
+
+; Specify an alternate port for the web socket connection, defaults to 7071
+WEB_SOCKET_PORT=

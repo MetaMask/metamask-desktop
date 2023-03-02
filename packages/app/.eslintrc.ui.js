@@ -15,6 +15,10 @@ module.exports = {
   rules: {
     'no-shadow': 'off',
     'jsdoc/require-jsdoc': 'off',
+    'jsdoc/require-param-description': 'off',
+    'jsdoc/require-param-type': 'off',
+    'jsdoc/require-returns': 'off',
+    'jsdoc/require-description': 'off',
     'react/no-unused-prop-types': 'error',
     'react/no-unused-state': 'error',
     'react/jsx-boolean-value': 'error',
@@ -44,10 +48,21 @@ module.exports = {
       // no-go, so we grab it from React's package.json.
       version: reactVersion,
     },
+    'import/resolver': {
+      // When determining the location of an `import`, prefer TypeScript's
+      // resolution algorithm. Note that due to how we've configured
+      // TypeScript in `tsconfig.json`, we are able to import JavaScript
+      // files from TypeScript files.
+      typescript: {
+        // Always try to resolve types under `<root>/@types` directory even
+        // it doesn't contain any source code, like `@types/unist`
+        alwaysTryTypes: true,
+      },
+    },
   },
   overrides: [
     {
-      files: ['ui/**/*.ts'],
+      files: ['src/ui/**/*.ts'],
       extends: ['.eslintrc.typescript.js'],
     },
   ],

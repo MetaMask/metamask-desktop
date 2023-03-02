@@ -35,9 +35,11 @@ import {
 import {
   registerRequestStream,
   unregisterRequestStream,
-} from '../browser/node-browser';
-import { DesktopPairing } from '../shared/pairing';
-import { DesktopVersionCheck } from '../shared/version-check';
+} from './browser/node-browser';
+import { DesktopVersionCheck } from './version-check';
+import { DesktopPairing } from './pairing';
+import MetricsService from './metrics/metrics-service';
+import { EVENT_NAMES } from './metrics/metrics-constants';
 
 export default class ExtensionConnection extends EventEmitter {
   private stream: Duplex;
@@ -62,6 +64,8 @@ export default class ExtensionConnection extends EventEmitter {
 
   private pairing: DesktopPairing;
 
+  private metricsService: typeof MetricsService;
+
   public constructor(stream: Duplex) {
     super();
 
@@ -69,6 +73,7 @@ export default class ExtensionConnection extends EventEmitter {
     this.connections = [];
     this.clientStreams = {};
     this.multiplex = new ObjectMultiplex();
+    this.metricsService = MetricsService;
 
     this.newConnectionStream = this.multiplex.createStream(
       CLIENT_ID_NEW_CONNECTION,
@@ -134,6 +139,11 @@ export default class ExtensionConnection extends EventEmitter {
 
   public async disable() {
     log.debug('Desktop disabled');
+
+    this.metricsService.track(EVENT_NAMES.DESKTOP_APP_UNPAIRED, {
+      paired: false,
+      createdAt: new Date(),
+    });
 
     const shouldTransfer = this.canTransferState();
 

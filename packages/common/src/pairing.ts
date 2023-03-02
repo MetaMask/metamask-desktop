@@ -104,7 +104,7 @@ export class Pairing {
       return;
     }
 
-    const pairingKey = await createKey();
+    const pairingKey = Buffer.from(await createKey()).toString('hex');
     const pairingKeyHash = await hashString(pairingKey, { isHex: true });
 
     await rawState.setDesktopState({

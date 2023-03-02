@@ -247,6 +247,9 @@
     "@metamask/eth-ledger-bridge-keyring>ethereumjs-util>ethereum-cryptography>secp256k1": {
       "native": true
     },
+    "@metamask/eth-ledger-bridge-keyring>eth-sig-util>ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
+    },
     "@metamask/gas-fee-controller>ethereumjs-util>ethereum-cryptography>keccak": {
       "native": true
     },
@@ -333,6 +336,9 @@
         "hdkey>safe-buffer": true,
         "eth-sig-util>ethereumjs-util>safe-buffer": true
       }
+    },
+    "eth-sig-util>ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
     },
     "eth-trezor-keyring>@ethereumjs/tx>@ethereumjs/common>ethereumjs-util>ethereum-cryptography>keccak": {
       "native": true
@@ -497,15 +503,6 @@
         "writeOptions": false
       }
     },
-    "webextension-polyfill": {
-      "globals": {
-        "browser": false,
-        "chrome": false,
-        "console.error": false,
-        "console.warn": false,
-        "define": false
-      }
-    },
     "@metamask/permission-controller>nanoid": {
       "builtin": {
         "crypto": true
@@ -547,6 +544,17 @@
       "globals": {
         "process.argv": true
       }
+    },
+    "@metamask/assets-controllers": {
+      "globals": {
+        "window.Headers": true
+      }
+    },
+    "@metamask/eth-ledger-bridge-keyring>eth-sig-util>ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
+    },
+    "eth-sig-util>ethereumjs-util>ethereum-cryptography>secp256k1": {
+      "native": true
     }
   }
 }

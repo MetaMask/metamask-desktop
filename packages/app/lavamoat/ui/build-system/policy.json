@@ -380,6 +380,7 @@
       "packages": {
         "@babel/core": true,
         "@babel/core>@babel/helper-compilation-targets": true,
+        "@babel/preset-env>@babel/compat-data": true,
         "@babel/preset-env>@babel/helper-plugin-utils": true,
         "@babel/preset-env>@babel/plugin-syntax-object-rest-spread": true,
         "@babel/preset-env>@babel/plugin-transform-parameters": true
@@ -553,6 +554,7 @@
     "@babel/preset-env>@babel/plugin-transform-classes": {
       "packages": {
         "@babel/core": true,
+        "@babel/core>@babel/helper-compilation-targets": true,
         "@babel/preset-env>@babel/helper-plugin-utils": true,
         "@babel/preset-env>@babel/plugin-transform-classes>@babel/helper-annotate-as-pure": true,
         "@babel/preset-env>@babel/plugin-transform-classes>@babel/helper-optimise-call-expression": true,
@@ -575,6 +577,7 @@
     },
     "@babel/preset-env>@babel/plugin-transform-classes>@babel/helper-replace-supers": {
       "packages": {
+        "@babel/core>@babel/template": true,
         "@babel/core>@babel/types": true,
         "@babel/preset-env>@babel/plugin-transform-classes>@babel/helper-optimise-call-expression": true,
         "@babel/preset-env>@babel/plugin-transform-classes>@babel/helper-replace-supers>@babel/helper-member-expression-to-functions": true,
@@ -697,8 +700,7 @@
       "packages": {
         "@babel/core": true,
         "@babel/core>@babel/helper-module-transforms": true,
-        "@babel/preset-env>@babel/helper-plugin-utils": true,
-        "@babel/preset-env>@babel/plugin-transform-modules-amd>babel-plugin-dynamic-import-node": true
+        "@babel/preset-env>@babel/helper-plugin-utils": true
       }
     },
     "@babel/preset-env>@babel/plugin-transform-modules-commonjs": {
@@ -706,8 +708,7 @@
         "@babel/core": true,
         "@babel/core>@babel/helper-module-transforms": true,
         "@babel/core>@babel/helper-module-transforms>@babel/helper-simple-access": true,
-        "@babel/preset-env>@babel/helper-plugin-utils": true,
-        "@babel/preset-env>@babel/plugin-transform-modules-amd>babel-plugin-dynamic-import-node": true
+        "@babel/preset-env>@babel/helper-plugin-utils": true
       }
     },
     "@babel/preset-env>@babel/plugin-transform-modules-systemjs": {
@@ -718,7 +719,6 @@
         "@babel/core": true,
         "@babel/core>@babel/helper-module-transforms": true,
         "@babel/preset-env>@babel/helper-plugin-utils": true,
-        "@babel/preset-env>@babel/plugin-transform-modules-amd>babel-plugin-dynamic-import-node": true,
         "depcheck>@babel/traverse>@babel/helper-hoist-variables": true,
         "lavamoat>@babel/highlight>@babel/helper-validator-identifier": true
       }
@@ -883,17 +883,6 @@
     "@babel/preset-env>babel-plugin-polyfill-regenerator": {
       "packages": {
         "@babel/preset-env>babel-plugin-polyfill-corejs3>@babel/helper-define-polyfill-provider": true
-      }
-    },
-    "@babel/preset-env>core-js-compat": {
-      "packages": {
-        "@babel/preset-env>core-js-compat>semver": true
-      }
-    },
-    "@babel/preset-env>core-js-compat>semver": {
-      "globals": {
-        "console.error": true,
-        "process": true
       }
     },
     "@babel/preset-env>semver": {
@@ -1504,7 +1493,7 @@
         "brfs>static-module>scope-analyzer>es6-set": true,
         "brfs>static-module>scope-analyzer>estree-is-function": true,
         "brfs>static-module>scope-analyzer>get-assigned-identifiers": true,
-        "resolve-url-loader>es6-iterator>es6-symbol": true
+        "memoizee>es5-ext>es6-symbol": true
       }
     },
     "brfs>static-module>scope-analyzer>dash-ast": {
@@ -1514,20 +1503,25 @@
     },
     "brfs>static-module>scope-analyzer>es6-map": {
       "packages": {
-        "gulp-sourcemaps>debug-fabulous>memoizee>event-emitter": true,
-        "resolve-url-loader>es6-iterator": true,
-        "resolve-url-loader>es6-iterator>d": true,
-        "resolve-url-loader>es6-iterator>es5-ext": true,
-        "resolve-url-loader>es6-iterator>es6-symbol": true
+        "memoizee>d": true,
+        "memoizee>es5-ext": true,
+        "memoizee>es5-ext>es6-symbol": true,
+        "memoizee>event-emitter": true,
+        "resolve-url-loader>es6-iterator": true
       }
     },
     "brfs>static-module>scope-analyzer>es6-set": {
       "packages": {
-        "gulp-sourcemaps>debug-fabulous>memoizee>event-emitter": true,
-        "resolve-url-loader>es6-iterator": true,
-        "resolve-url-loader>es6-iterator>d": true,
-        "resolve-url-loader>es6-iterator>es5-ext": true,
-        "resolve-url-loader>es6-iterator>es6-symbol": true
+        "brfs>static-module>scope-analyzer>es6-set>es6-symbol": true,
+        "memoizee>d": true,
+        "memoizee>es5-ext": true,
+        "memoizee>event-emitter": true,
+        "resolve-url-loader>es6-iterator": true
+      }
+    },
+    "brfs>static-module>scope-analyzer>es6-set>es6-symbol": {
+      "packages": {
+        "memoizee>d": true
       }
     },
     "brfs>static-module>scope-analyzer>get-assigned-identifiers": {
@@ -2332,10 +2326,10 @@
         "eslint>json-stable-stringify-without-jsonify": true,
         "eslint>levn": true,
         "eslint>lodash.merge": true,
-        "eslint>minimatch": true,
         "eslint>natural-compare": true,
         "eslint>regexpp": true,
         "globby>ignore": true,
+        "mocha>minimatch": true,
         "nock>debug": true
       }
     },
@@ -2368,7 +2362,7 @@
         "process": true
       },
       "packages": {
-        "gulp-livereload>debug>ms": true,
+        "analytics-node>ms": true,
         "mocha>supports-color": true
       }
     },
@@ -2412,6 +2406,7 @@
         "eslint-plugin-react>array-includes": true,
         "eslint>is-glob": true,
         "eslint>minimatch": true,
+        "mocha>minimatch": true,
         "typescript": true
       }
     },
@@ -2482,7 +2477,7 @@
         "process": true
       },
       "packages": {
-        "gulp-livereload>debug>ms": true,
+        "analytics-node>ms": true,
         "mocha>supports-color": true
       }
     },
@@ -2564,9 +2559,9 @@
         "process.env": true
       },
       "packages": {
-        "dotenv-cli>minimist": true,
         "eslint-plugin-import>tsconfig-paths>json5": true,
-        "eslint-plugin-import>tsconfig-paths>strip-bom": true
+        "eslint-plugin-import>tsconfig-paths>strip-bom": true,
+        "wait-on>minimist": true
       }
     },
     "eslint-plugin-import>tsconfig-paths>json5": {
@@ -2709,7 +2704,8 @@
         "eslint-plugin-node>minimatch": true,
         "eslint-plugin-node>semver": true,
         "eslint>minimatch": true,
-        "globby>ignore": true
+        "globby>ignore": true,
+        "mocha>minimatch": true
       }
     },
     "eslint-plugin-node>eslint-plugin-es": {
@@ -2786,8 +2782,8 @@
         "eslint-plugin-react>object.hasown": true,
         "eslint-plugin-react>resolve": true,
         "eslint-plugin-react>semver": true,
-        "eslint>minimatch": true,
         "lavamoat>object.fromentries": true,
+        "mocha>minimatch": true,
         "prop-types": true,
         "string.prototype.matchall": true
       }
@@ -2911,6 +2907,7 @@
         "eslint>minimatch": true,
         "eslint>strip-json-comments": true,
         "globby>ignore": true,
+        "mocha>minimatch": true,
         "nock>debug": true
       }
     },
@@ -2939,6 +2936,7 @@
         "eslint>@humanwhocodes/config-array>@humanwhocodes/object-schema": true,
         "eslint>@humanwhocodes/config-array>minimatch": true,
         "eslint>minimatch": true,
+        "mocha>minimatch": true,
         "nock>debug": true
       }
     },
@@ -3072,17 +3070,6 @@
     "eslint>levn>type-check": {
       "packages": {
         "eslint>levn>prelude-ls": true
-      }
-    },
-    "eslint>minimatch": {
-      "builtin": {
-        "path": true
-      },
-      "globals": {
-        "console": true
-      },
-      "packages": {
-        "mocha>minimatch>brace-expansion": true
       }
     },
     "eslint>strip-ansi": {
@@ -3500,7 +3487,7 @@
       "packages": {
         "gulp-rtlcss>rtlcss>@choojs/findup": true,
         "gulp-rtlcss>rtlcss>postcss": true,
-        "mocha>strip-json-comments": true
+        "gulp-rtlcss>rtlcss>strip-json-comments": true
       }
     },
     "gulp-rtlcss>rtlcss>@choojs/findup": {
@@ -3737,7 +3724,7 @@
     "gulp-sourcemaps>debug-fabulous": {
       "packages": {
         "gulp-sourcemaps>debug-fabulous>debug": true,
-        "gulp-sourcemaps>debug-fabulous>memoizee": true,
+        "memoizee": true,
         "react>object-assign": true
       }
     },
@@ -3754,49 +3741,8 @@
         "process": true
       },
       "packages": {
-        "gulp-livereload>debug>ms": true,
+        "analytics-node>ms": true,
         "mocha>supports-color": true
-      }
-    },
-    "gulp-sourcemaps>debug-fabulous>memoizee": {
-      "globals": {
-        "clearTimeout": true,
-        "setTimeout": true
-      },
-      "packages": {
-        "gulp-sourcemaps>debug-fabulous>memoizee>event-emitter": true,
-        "gulp-sourcemaps>debug-fabulous>memoizee>is-promise": true,
-        "gulp-sourcemaps>debug-fabulous>memoizee>lru-queue": true,
-        "gulp-sourcemaps>debug-fabulous>memoizee>next-tick": true,
-        "gulp-sourcemaps>debug-fabulous>memoizee>timers-ext": true,
-        "resolve-url-loader>es6-iterator>d": true,
-        "resolve-url-loader>es6-iterator>es5-ext": true
-      }
-    },
-    "gulp-sourcemaps>debug-fabulous>memoizee>event-emitter": {
-      "packages": {
-        "resolve-url-loader>es6-iterator>d": true,
-        "resolve-url-loader>es6-iterator>es5-ext": true
-      }
-    },
-    "gulp-sourcemaps>debug-fabulous>memoizee>lru-queue": {
-      "packages": {
-        "resolve-url-loader>es6-iterator>es5-ext": true
-      }
-    },
-    "gulp-sourcemaps>debug-fabulous>memoizee>next-tick": {
-      "globals": {
-        "MutationObserver": true,
-        "WebKitMutationObserver": true,
-        "document": true,
-        "process": true,
-        "setImmediate": true,
-        "setTimeout": true
-      }
-    },
-    "gulp-sourcemaps>debug-fabulous>memoizee>timers-ext": {
-      "packages": {
-        "resolve-url-loader>es6-iterator>es5-ext": true
       }
     },
     "gulp-sourcemaps>through2": {
@@ -4090,15 +4036,10 @@
         "util.inspect": true
       },
       "packages": {
-        "gulp-watch>chokidar>braces>fill-range>extend-shallow": true,
+        "gulp-watch>chokidar>braces>extend-shallow": true,
         "gulp-watch>chokidar>braces>fill-range>is-number": true,
         "gulp-watch>chokidar>braces>fill-range>repeat-string": true,
         "gulp-watch>chokidar>braces>fill-range>to-regex-range": true
-      }
-    },
-    "gulp-watch>chokidar>braces>fill-range>extend-shallow": {
-      "packages": {
-        "gulp-watch>chokidar>braces>extend-shallow>is-extendable": true
       }
     },
     "gulp-watch>chokidar>braces>fill-range>is-number": {
@@ -4127,10 +4068,10 @@
         "__filename": true
       },
       "packages": {
+        "gulp-watch>chokidar>braces>extend-shallow": true,
         "gulp-watch>chokidar>braces>snapdragon>base": true,
         "gulp-watch>chokidar>braces>snapdragon>debug": true,
         "gulp-watch>chokidar>braces>snapdragon>define-property": true,
-        "gulp-watch>chokidar>braces>snapdragon>extend-shallow": true,
         "gulp-watch>chokidar>braces>snapdragon>map-cache": true,
         "gulp-watch>chokidar>braces>snapdragon>source-map": true,
         "gulp-watch>chokidar>braces>snapdragon>use": true,
@@ -4236,14 +4177,9 @@
     "gulp-watch>chokidar>braces>snapdragon>base>cache-base>set-value": {
       "packages": {
         "@babel/register>clone-deep>is-plain-object": true,
+        "gulp-watch>chokidar>braces>extend-shallow": true,
         "gulp-watch>chokidar>braces>extend-shallow>is-extendable": true,
-        "gulp-watch>chokidar>braces>snapdragon>base>cache-base>set-value>extend-shallow": true,
         "gulp-watch>chokidar>braces>split-string": true
-      }
-    },
-    "gulp-watch>chokidar>braces>snapdragon>base>cache-base>set-value>extend-shallow": {
-      "packages": {
-        "gulp-watch>chokidar>braces>extend-shallow>is-extendable": true
       }
     },
     "gulp-watch>chokidar>braces>snapdragon>base>cache-base>to-object-path": {
@@ -4377,11 +4313,6 @@
         "browserify>insert-module-globals>is-buffer": true
       }
     },
-    "gulp-watch>chokidar>braces>snapdragon>extend-shallow": {
-      "packages": {
-        "gulp-watch>chokidar>braces>extend-shallow>is-extendable": true
-      }
-    },
     "gulp-watch>chokidar>braces>snapdragon>use": {
       "packages": {
         "@babel/register>clone-deep>kind-of": true
@@ -4389,14 +4320,25 @@
     },
     "gulp-watch>chokidar>braces>split-string": {
       "packages": {
-        "gulp-zip>plugin-error>extend-shallow": true
+        "gulp-watch>chokidar>braces>split-string>extend-shallow": true
+      }
+    },
+    "gulp-watch>chokidar>braces>split-string>extend-shallow": {
+      "packages": {
+        "gulp-watch>chokidar>braces>split-string>extend-shallow>is-extendable": true,
+        "gulp-zip>plugin-error>extend-shallow>assign-symbols": true
+      }
+    },
+    "gulp-watch>chokidar>braces>split-string>extend-shallow>is-extendable": {
+      "packages": {
+        "@babel/register>clone-deep>is-plain-object": true
       }
     },
     "gulp-watch>chokidar>braces>to-regex": {
       "packages": {
         "gulp-watch>chokidar>braces>to-regex>define-property": true,
+        "gulp-watch>chokidar>braces>to-regex>extend-shallow": true,
         "gulp-watch>chokidar>braces>to-regex>safe-regex": true,
-        "gulp-zip>plugin-error>extend-shallow": true,
         "gulp>gulp-cli>matchdep>micromatch>regex-not": true
       }
     },
@@ -4404,6 +4346,17 @@
       "packages": {
         "gulp>gulp-cli>isobject": true,
         "gulp>gulp-cli>matchdep>micromatch>define-property>is-descriptor": true
+      }
+    },
+    "gulp-watch>chokidar>braces>to-regex>extend-shallow": {
+      "packages": {
+        "gulp-watch>chokidar>braces>to-regex>extend-shallow>is-extendable": true,
+        "gulp-zip>plugin-error>extend-shallow>assign-symbols": true
+      }
+    },
+    "gulp-watch>chokidar>braces>to-regex>extend-shallow>is-extendable": {
+      "packages": {
+        "@babel/register>clone-deep>is-plain-object": true
       }
     },
     "gulp-watch>chokidar>braces>to-regex>safe-regex": {
@@ -4850,10 +4803,10 @@
         "gulp-watch>chokidar>braces>snapdragon": true,
         "gulp-watch>chokidar>braces>to-regex": true,
         "gulp-watch>chokidar>readdirp>micromatch>define-property": true,
-        "gulp-watch>chokidar>readdirp>micromatch>extglob": true,
+        "gulp-watch>chokidar>readdirp>micromatch>extend-shallow": true,
         "gulp-zip>plugin-error>arr-diff": true,
-        "gulp-zip>plugin-error>extend-shallow": true,
         "gulp>gulp-cli>liftoff>fined>object.pick": true,
+        "gulp>gulp-cli>matchdep>micromatch>extglob": true,
         "gulp>gulp-cli>matchdep>micromatch>fragment-cache": true,
         "gulp>gulp-cli>matchdep>micromatch>nanomatch": true,
         "gulp>gulp-cli>matchdep>micromatch>regex-not": true
@@ -4865,36 +4818,21 @@
         "gulp>gulp-cli>matchdep>micromatch>define-property>is-descriptor": true
       }
     },
-    "gulp-watch>chokidar>readdirp>micromatch>extglob": {
+    "gulp-watch>chokidar>readdirp>micromatch>extend-shallow": {
       "packages": {
-        "gulp-watch>chokidar>braces>array-unique": true,
-        "gulp-watch>chokidar>braces>snapdragon": true,
-        "gulp-watch>chokidar>braces>to-regex": true,
-        "gulp-watch>chokidar>readdirp>micromatch>extglob>define-property": true,
-        "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets": true,
-        "gulp-watch>chokidar>readdirp>micromatch>extglob>extend-shallow": true,
-        "gulp>gulp-cli>matchdep>micromatch>fragment-cache": true,
-        "gulp>gulp-cli>matchdep>micromatch>regex-not": true
+        "gulp-watch>chokidar>readdirp>micromatch>extend-shallow>is-extendable": true,
+        "gulp-zip>plugin-error>extend-shallow>assign-symbols": true
       }
     },
-    "gulp-watch>chokidar>readdirp>micromatch>extglob>define-property": {
+    "gulp-watch>chokidar>readdirp>micromatch>extend-shallow>is-extendable": {
       "packages": {
-        "gulp>gulp-cli>matchdep>micromatch>define-property>is-descriptor": true
+        "@babel/register>clone-deep>is-plain-object": true
       }
     },
     "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets": {
-      "globals": {
-        "__filename": true
-      },
       "packages": {
-        "gulp-watch>chokidar>braces>snapdragon": true,
         "gulp-watch>chokidar>braces>snapdragon>debug": true,
-        "gulp-watch>chokidar>braces>to-regex": true,
-        "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>debug": true,
-        "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>define-property": true,
-        "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>extend-shallow": true,
-        "gulp>gulp-cli>matchdep>micromatch>extglob>expand-brackets>posix-character-classes": true,
-        "gulp>gulp-cli>matchdep>micromatch>regex-not": true
+        "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>debug": true
       }
     },
     "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>debug": {
@@ -4915,48 +4853,6 @@
       },
       "packages": {
         "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>debug>ms": true
-      }
-    },
-    "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>define-property": {
-      "packages": {
-        "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>define-property>is-descriptor": true
-      }
-    },
-    "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>define-property>is-descriptor": {
-      "packages": {
-        "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-accessor-descriptor": true,
-        "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-data-descriptor": true,
-        "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>define-property>is-descriptor>kind-of": true
-      }
-    },
-    "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-accessor-descriptor": {
-      "packages": {
-        "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-accessor-descriptor>kind-of": true
-      }
-    },
-    "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-accessor-descriptor>kind-of": {
-      "packages": {
-        "browserify>insert-module-globals>is-buffer": true
-      }
-    },
-    "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-data-descriptor": {
-      "packages": {
-        "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-data-descriptor>kind-of": true
-      }
-    },
-    "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-data-descriptor>kind-of": {
-      "packages": {
-        "browserify>insert-module-globals>is-buffer": true
-      }
-    },
-    "gulp-watch>chokidar>readdirp>micromatch>extglob>expand-brackets>extend-shallow": {
-      "packages": {
-        "gulp-watch>chokidar>braces>extend-shallow>is-extendable": true
-      }
-    },
-    "gulp-watch>chokidar>readdirp>micromatch>extglob>extend-shallow": {
-      "packages": {
-        "gulp-watch>chokidar>braces>extend-shallow>is-extendable": true
       }
     },
     "gulp-watch>chokidar>upath": {
@@ -5142,11 +5038,11 @@
         "gulp-watch>chokidar>braces>snapdragon": true,
         "gulp-watch>chokidar>braces>to-regex": true,
         "gulp-zip>plugin-error>arr-diff": true,
-        "gulp-zip>plugin-error>extend-shallow": true,
         "gulp>glob-watcher>anymatch>micromatch>define-property": true,
-        "gulp>glob-watcher>anymatch>micromatch>extglob": true,
+        "gulp>glob-watcher>anymatch>micromatch>extend-shallow": true,
         "gulp>glob-watcher>chokidar>braces": true,
         "gulp>gulp-cli>liftoff>fined>object.pick": true,
+        "gulp>gulp-cli>matchdep>micromatch>extglob": true,
         "gulp>gulp-cli>matchdep>micromatch>fragment-cache": true,
         "gulp>gulp-cli>matchdep>micromatch>nanomatch": true,
         "gulp>gulp-cli>matchdep>micromatch>regex-not": true
@@ -5158,97 +5054,15 @@
         "gulp>gulp-cli>matchdep>micromatch>define-property>is-descriptor": true
       }
     },
-    "gulp>glob-watcher>anymatch>micromatch>extglob": {
+    "gulp>glob-watcher>anymatch>micromatch>extend-shallow": {
       "packages": {
-        "gulp-watch>chokidar>braces>array-unique": true,
-        "gulp-watch>chokidar>braces>snapdragon": true,
-        "gulp-watch>chokidar>braces>to-regex": true,
-        "gulp>glob-watcher>anymatch>micromatch>extglob>define-property": true,
-        "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets": true,
-        "gulp>glob-watcher>anymatch>micromatch>extglob>extend-shallow": true,
-        "gulp>gulp-cli>matchdep>micromatch>fragment-cache": true,
-        "gulp>gulp-cli>matchdep>micromatch>regex-not": true
+        "gulp-zip>plugin-error>extend-shallow>assign-symbols": true,
+        "gulp>glob-watcher>anymatch>micromatch>extend-shallow>is-extendable": true
       }
     },
-    "gulp>glob-watcher>anymatch>micromatch>extglob>define-property": {
+    "gulp>glob-watcher>anymatch>micromatch>extend-shallow>is-extendable": {
       "packages": {
-        "gulp>gulp-cli>matchdep>micromatch>define-property>is-descriptor": true
-      }
-    },
-    "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets": {
-      "globals": {
-        "__filename": true
-      },
-      "packages": {
-        "gulp-watch>chokidar>braces>snapdragon": true,
-        "gulp-watch>chokidar>braces>to-regex": true,
-        "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets>debug": true,
-        "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets>define-property": true,
-        "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets>extend-shallow": true,
-        "gulp>gulp-cli>matchdep>micromatch>extglob>expand-brackets>posix-character-classes": true,
-        "gulp>gulp-cli>matchdep>micromatch>regex-not": true
-      }
-    },
-    "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets>debug": {
-      "builtin": {
-        "fs.SyncWriteStream": true,
-        "net.Socket": true,
-        "tty.WriteStream": true,
-        "tty.isatty": true,
-        "util": true
-      },
-      "globals": {
-        "chrome": true,
-        "console": true,
-        "document": true,
-        "localStorage": true,
-        "navigator": true,
-        "process": true
-      },
-      "packages": {
-        "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets>debug>ms": true
-      }
-    },
-    "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets>define-property": {
-      "packages": {
-        "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets>define-property>is-descriptor": true
-      }
-    },
-    "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets>define-property>is-descriptor": {
-      "packages": {
-        "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-accessor-descriptor": true,
-        "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-data-descriptor": true,
-        "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets>define-property>is-descriptor>kind-of": true
-      }
-    },
-    "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-accessor-descriptor": {
-      "packages": {
-        "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-accessor-descriptor>kind-of": true
-      }
-    },
-    "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-accessor-descriptor>kind-of": {
-      "packages": {
-        "browserify>insert-module-globals>is-buffer": true
-      }
-    },
-    "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-data-descriptor": {
-      "packages": {
-        "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-data-descriptor>kind-of": true
-      }
-    },
-    "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets>define-property>is-descriptor>is-data-descriptor>kind-of": {
-      "packages": {
-        "browserify>insert-module-globals>is-buffer": true
-      }
-    },
-    "gulp>glob-watcher>anymatch>micromatch>extglob>expand-brackets>extend-shallow": {
-      "packages": {
-        "gulp-watch>chokidar>braces>extend-shallow>is-extendable": true
-      }
-    },
-    "gulp>glob-watcher>anymatch>micromatch>extglob>extend-shallow": {
-      "packages": {
-        "gulp-watch>chokidar>braces>extend-shallow>is-extendable": true
+        "@babel/register>clone-deep>is-plain-object": true
       }
     },
     "gulp>glob-watcher>anymatch>normalize-path": {
@@ -5316,20 +5130,15 @@
     "gulp>glob-watcher>chokidar>braces": {
       "packages": {
         "gulp-watch>chokidar>braces>array-unique": true,
+        "gulp-watch>chokidar>braces>extend-shallow": true,
         "gulp-watch>chokidar>braces>repeat-element": true,
         "gulp-watch>chokidar>braces>snapdragon": true,
         "gulp-watch>chokidar>braces>snapdragon-node": true,
         "gulp-watch>chokidar>braces>split-string": true,
         "gulp-watch>chokidar>braces>to-regex": true,
-        "gulp>glob-watcher>chokidar>braces>extend-shallow": true,
         "gulp>glob-watcher>chokidar>braces>fill-range": true,
         "gulp>gulp-cli>isobject": true,
         "gulp>undertaker>arr-flatten": true
-      }
-    },
-    "gulp>glob-watcher>chokidar>braces>extend-shallow": {
-      "packages": {
-        "gulp-watch>chokidar>braces>extend-shallow>is-extendable": true
       }
     },
     "gulp>glob-watcher>chokidar>braces>fill-range": {
@@ -5337,15 +5146,10 @@
         "util.inspect": true
       },
       "packages": {
+        "gulp-watch>chokidar>braces>extend-shallow": true,
         "gulp-watch>chokidar>braces>fill-range>repeat-string": true,
-        "gulp>glob-watcher>chokidar>braces>fill-range>extend-shallow": true,
         "gulp>glob-watcher>chokidar>braces>fill-range>is-number": true,
         "gulp>glob-watcher>chokidar>braces>fill-range>to-regex-range": true
-      }
-    },
-    "gulp>glob-watcher>chokidar>braces>fill-range>extend-shallow": {
-      "packages": {
-        "gulp-watch>chokidar>braces>extend-shallow>is-extendable": true
       }
     },
     "gulp>glob-watcher>chokidar>braces>fill-range>is-number": {
@@ -5838,9 +5642,35 @@
         "@babel/register>clone-deep>kind-of": true
       }
     },
-    "gulp>gulp-cli>matchdep>micromatch>extglob>expand-brackets": {
+    "gulp>gulp-cli>matchdep>micromatch>extglob": {
       "packages": {
+        "gulp-watch>chokidar>braces>array-unique": true,
+        "gulp-watch>chokidar>braces>extend-shallow": true,
+        "gulp-watch>chokidar>braces>snapdragon": true,
+        "gulp-watch>chokidar>braces>to-regex": true,
+        "gulp>gulp-cli>matchdep>micromatch>extglob>define-property": true,
+        "gulp>gulp-cli>matchdep>micromatch>extglob>expand-brackets": true,
+        "gulp>gulp-cli>matchdep>micromatch>fragment-cache": true,
+        "gulp>gulp-cli>matchdep>micromatch>regex-not": true
+      }
+    },
+    "gulp>gulp-cli>matchdep>micromatch>extglob>define-property": {
+      "packages": {
+        "gulp>gulp-cli>matchdep>micromatch>define-property>is-descriptor": true
+      }
+    },
+    "gulp>gulp-cli>matchdep>micromatch>extglob>expand-brackets": {
+      "globals": {
+        "__filename": true
+      },
+      "packages": {
+        "gulp-watch>chokidar>braces>extend-shallow": true,
+        "gulp-watch>chokidar>braces>snapdragon": true,
+        "gulp-watch>chokidar>braces>snapdragon>define-property": true,
+        "gulp-watch>chokidar>braces>to-regex": true,
         "gulp>gulp-cli>matchdep>micromatch>extglob>expand-brackets>debug": true,
+        "gulp>gulp-cli>matchdep>micromatch>extglob>expand-brackets>posix-character-classes": true,
+        "gulp>gulp-cli>matchdep>micromatch>regex-not": true,
         "gulp>gulp-cli>matchdep>micromatch>snapdragon>debug": true
       }
     },
@@ -5881,10 +5711,10 @@
         "gulp-watch>chokidar>braces>snapdragon": true,
         "gulp-watch>chokidar>braces>to-regex": true,
         "gulp-zip>plugin-error>arr-diff": true,
-        "gulp-zip>plugin-error>extend-shallow": true,
         "gulp>gulp-cli>liftoff>fined>object.pick": true,
         "gulp>gulp-cli>matchdep>micromatch>fragment-cache": true,
         "gulp>gulp-cli>matchdep>micromatch>nanomatch>define-property": true,
+        "gulp>gulp-cli>matchdep>micromatch>nanomatch>extend-shallow": true,
         "gulp>gulp-cli>matchdep>micromatch>nanomatch>is-odd": true,
         "gulp>gulp-cli>matchdep>micromatch>regex-not": true,
         "nyc>spawn-wrap>is-windows": true
@@ -5896,6 +5726,17 @@
         "gulp>gulp-cli>matchdep>micromatch>define-property>is-descriptor": true
       }
     },
+    "gulp>gulp-cli>matchdep>micromatch>nanomatch>extend-shallow": {
+      "packages": {
+        "gulp-zip>plugin-error>extend-shallow>assign-symbols": true,
+        "gulp>gulp-cli>matchdep>micromatch>nanomatch>extend-shallow>is-extendable": true
+      }
+    },
+    "gulp>gulp-cli>matchdep>micromatch>nanomatch>extend-shallow>is-extendable": {
+      "packages": {
+        "@babel/register>clone-deep>is-plain-object": true
+      }
+    },
     "gulp>gulp-cli>matchdep>micromatch>nanomatch>is-odd": {
       "packages": {
         "gulp>undertaker>bach>array-last>is-number": true
@@ -5904,7 +5745,18 @@
     "gulp>gulp-cli>matchdep>micromatch>regex-not": {
       "packages": {
         "gulp-watch>chokidar>braces>to-regex>safe-regex": true,
-        "gulp-zip>plugin-error>extend-shallow": true
+        "gulp>gulp-cli>matchdep>micromatch>regex-not>extend-shallow": true
+      }
+    },
+    "gulp>gulp-cli>matchdep>micromatch>regex-not>extend-shallow": {
+      "packages": {
+        "gulp-zip>plugin-error>extend-shallow>assign-symbols": true,
+        "gulp>gulp-cli>matchdep>micromatch>regex-not>extend-shallow>is-extendable": true
+      }
+    },
+    "gulp>gulp-cli>matchdep>micromatch>regex-not>extend-shallow>is-extendable": {
+      "packages": {
+        "@babel/register>clone-deep>is-plain-object": true
       }
     },
     "gulp>gulp-cli>replace-homedir>is-absolute": {
@@ -5962,11 +5814,11 @@
         "gulp>undertaker>arr-map": true,
         "gulp>undertaker>bach": true,
         "gulp>undertaker>collection-map": true,
-        "gulp>undertaker>es6-weak-map": true,
         "gulp>undertaker>last-run": true,
         "gulp>undertaker>object.defaults": true,
         "gulp>undertaker>object.reduce": true,
-        "gulp>undertaker>undertaker-registry": true
+        "gulp>undertaker>undertaker-registry": true,
+        "memoizee>es6-weak-map": true
       }
     },
     "gulp>undertaker>arr-map": {
@@ -6023,21 +5875,13 @@
         "gulp>undertaker>object.reduce>for-own": true
       }
     },
-    "gulp>undertaker>es6-weak-map": {
-      "packages": {
-        "resolve-url-loader>es6-iterator": true,
-        "resolve-url-loader>es6-iterator>d": true,
-        "resolve-url-loader>es6-iterator>es5-ext": true,
-        "resolve-url-loader>es6-iterator>es6-symbol": true
-      }
-    },
     "gulp>undertaker>last-run": {
       "builtin": {
         "assert": true
       },
       "packages": {
-        "gulp>undertaker>es6-weak-map": true,
-        "gulp>undertaker>last-run>default-resolution": true
+        "gulp>undertaker>last-run>default-resolution": true,
+        "memoizee>es6-weak-map": true
       }
     },
     "gulp>undertaker>last-run>default-resolution": {
@@ -6478,15 +6322,46 @@
         "setTimeout": true
       },
       "packages": {
-        "@lavamoat/lavapack": true,
         "duplexify": true,
+        "lavamoat-browserify>@lavamoat/lavapack": true,
         "lavamoat-browserify>browser-resolve": true,
         "lavamoat-browserify>concat-stream": true,
+        "lavamoat-browserify>lavamoat-core": true,
         "lavamoat-browserify>readable-stream": true,
         "lavamoat-browserify>through2": true,
         "lavamoat>@lavamoat/aa": true,
+        "lavamoat>json-stable-stringify": true
+      }
+    },
+    "lavamoat-browserify>@lavamoat/lavapack": {
+      "builtin": {
+        "assert": true,
+        "buffer.Buffer.from": true,
+        "fs.promises.readFile": true,
+        "fs.promises.writeFile": true,
+        "fs.readFileSync": true,
+        "path.join": true,
+        "path.relative": true
+      },
+      "globals": {
+        "__dirname": true,
+        "process.cwd": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "@lavamoat/lavapack>combine-source-map": true,
+        "@lavamoat/lavapack>umd": true,
+        "browserify>JSONStream": true,
+        "lavamoat-browserify>@lavamoat/lavapack>through2": true,
+        "lavamoat-browserify>lavamoat-core": true,
+        "lavamoat-browserify>readable-stream": true,
         "lavamoat>json-stable-stringify": true,
-        "lavamoat>lavamoat-core": true
+        "nyc>convert-source-map": true
+      }
+    },
+    "lavamoat-browserify>@lavamoat/lavapack>through2": {
+      "packages": {
+        "lavamoat-browserify>readable-stream": true
       }
     },
     "lavamoat-browserify>browser-resolve": {
@@ -6512,6 +6387,28 @@
       "packages": {
         "lavamoat-browserify>readable-stream": true,
         "pumpify>inherits": true
+      }
+    },
+    "lavamoat-browserify>lavamoat-core": {
+      "builtin": {
+        "events": true,
+        "fs.existsSync": true,
+        "fs.readFileSync": true,
+        "fs.writeFileSync": true,
+        "path.extname": true,
+        "path.join": true
+      },
+      "globals": {
+        "__dirname": true,
+        "console.error": true,
+        "console.warn": true,
+        "define": true
+      },
+      "packages": {
+        "lavamoat>json-stable-stringify": true,
+        "lavamoat>lavamoat-core>merge-deep": true,
+        "lavamoat>lavamoat-tofu": true,
+        "nyc>process-on-spawn>fromentries": true
       }
     },
     "lavamoat-browserify>readable-stream": {
@@ -6717,6 +6614,89 @@
         "loose-envify>js-tokens": true
       }
     },
+    "memoizee": {
+      "globals": {
+        "clearTimeout": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "memoizee>d": true,
+        "memoizee>es5-ext": true,
+        "memoizee>event-emitter": true,
+        "memoizee>is-promise": true,
+        "memoizee>lru-queue": true,
+        "memoizee>next-tick": true,
+        "memoizee>timers-ext": true
+      }
+    },
+    "memoizee>d": {
+      "packages": {
+        "memoizee>d>type": true,
+        "memoizee>es5-ext": true
+      }
+    },
+    "memoizee>es5-ext": {
+      "packages": {
+        "memoizee>es5-ext>es6-symbol": true
+      }
+    },
+    "memoizee>es5-ext>es6-symbol": {
+      "packages": {
+        "memoizee>d": true,
+        "memoizee>es5-ext>es6-symbol>ext": true
+      }
+    },
+    "memoizee>es5-ext>es6-symbol>ext": {
+      "globals": {
+        "__global__": true
+      }
+    },
+    "memoizee>es6-weak-map": {
+      "packages": {
+        "memoizee>d": true,
+        "memoizee>es5-ext": true,
+        "memoizee>es5-ext>es6-symbol": true,
+        "resolve-url-loader>es6-iterator": true
+      }
+    },
+    "memoizee>event-emitter": {
+      "packages": {
+        "memoizee>d": true,
+        "memoizee>es5-ext": true
+      }
+    },
+    "memoizee>lru-queue": {
+      "packages": {
+        "memoizee>es5-ext": true
+      }
+    },
+    "memoizee>next-tick": {
+      "globals": {
+        "MutationObserver": true,
+        "WebKitMutationObserver": true,
+        "document": true,
+        "process": true,
+        "queueMicrotask": true,
+        "setImmediate": true,
+        "setTimeout": true
+      }
+    },
+    "memoizee>timers-ext": {
+      "packages": {
+        "memoizee>es5-ext": true
+      }
+    },
+    "mocha>minimatch": {
+      "builtin": {
+        "path": true
+      },
+      "globals": {
+        "console": true
+      },
+      "packages": {
+        "mocha>minimatch>brace-expansion": true
+      }
+    },
     "mocha>minimatch>brace-expansion": {
       "packages": {
         "mocha>minimatch>brace-expansion>concat-map": true,
@@ -6807,8 +6787,8 @@
         "process.platform": true
       },
       "packages": {
-        "eslint>minimatch": true,
         "gulp-watch>path-is-absolute": true,
+        "mocha>minimatch": true,
         "nyc>glob>fs.realpath": true,
         "nyc>glob>inflight": true,
         "pump>once": true,
@@ -7025,24 +7005,9 @@
     },
     "resolve-url-loader>es6-iterator": {
       "packages": {
-        "resolve-url-loader>es6-iterator>d": true,
-        "resolve-url-loader>es6-iterator>es5-ext": true,
-        "resolve-url-loader>es6-iterator>es6-symbol": true
-      }
-    },
-    "resolve-url-loader>es6-iterator>d": {
-      "packages": {
-        "resolve-url-loader>es6-iterator>es5-ext": true
-      }
-    },
-    "resolve-url-loader>es6-iterator>es5-ext": {
-      "packages": {
-        "resolve-url-loader>es6-iterator>es6-symbol": true
-      }
-    },
-    "resolve-url-loader>es6-iterator>es6-symbol": {
-      "packages": {
-        "resolve-url-loader>es6-iterator>d": true
+        "memoizee>d": true,
+        "memoizee>es5-ext": true,
+        "memoizee>es5-ext>es6-symbol": true
       }
     },
     "resolve-url-loader>rework>css>source-map-resolve": {

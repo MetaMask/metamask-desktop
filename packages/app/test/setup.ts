@@ -7,6 +7,7 @@ global.document = window.document;
 global.navigator = window.navigator;
 global.Element = window.Element;
 global.HTMLElement = window.HTMLElement;
+global.chrome = { runtime: { id: 'testid' } } as any;
 
 global.setImmediate =
   global.setImmediate ||

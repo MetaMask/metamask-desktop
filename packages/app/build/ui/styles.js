@@ -6,9 +6,7 @@ const sourcemaps = require('gulp-sourcemaps');
 const rtlcss = require('gulp-rtlcss');
 const rename = require('gulp-rename');
 const pump = pify(require('pump'));
-const {
-  TASKS,
-} = require('../../submodules/extension/development/build/constants');
+const { TASKS } = require('./constants');
 const { createTask } = require('./task');
 
 let sass;
@@ -20,8 +18,8 @@ function createStyleTasks() {
   const prod = createTask(
     TASKS.STYLES_PROD,
     createScssBuildTask({
-      src: 'ui/css/index.scss',
-      dest: 'ui/css/output',
+      src: 'src/ui/css/index.scss',
+      dest: 'src/ui/css/output',
       devMode: false,
     }),
   );
@@ -29,10 +27,10 @@ function createStyleTasks() {
   const dev = createTask(
     TASKS.STYLES_DEV,
     createScssBuildTask({
-      src: 'ui/css/index.scss',
-      dest: 'ui/css/output',
+      src: 'src/ui/css/index.scss',
+      dest: 'src/ui/css/output',
       devMode: true,
-      pattern: '{ui, submodules/extension/ui}/**/*.scss',
+      pattern: '**/{ui, submodules/extension/ui}/**/*.scss',
     }),
   );
 

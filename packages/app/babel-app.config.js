@@ -25,8 +25,10 @@ module.exports = function (api) {
           ],
         ],
     ignore: [
+      'src/ui',
       '**/*.config.js',
       '**/*.test.js',
+      '**/*.test.ts',
       '**/node_modules',
       'build/code-fencing-babel.js',
       'dist',

@@ -1,7 +1,7 @@
 import { Duplex } from 'stream';
 import log from '../utils/log';
 import { BrowserProxyRequest, BrowserProxyResponse } from '../types/browser';
-import { browser } from './browser-polyfill';
+import { browser } from '.';
 
 let responseStream: Duplex;
 

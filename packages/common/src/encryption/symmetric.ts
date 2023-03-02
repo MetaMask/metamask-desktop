@@ -3,8 +3,8 @@ const KEY_LENGTH = 256;
 const KEY_FORMAT = 'raw';
 const KEY_USAGES: KeyUsage[] = ['encrypt', 'decrypt'];
 
-const deserializeKey = async (keyHex: string): Promise<CryptoKey> => {
-  const keyBuffer = Buffer.from(keyHex, 'hex');
+const deserializeKey = async (keyBytes: number[]): Promise<CryptoKey> => {
+  const keyBuffer = Uint8Array.from(keyBytes);
 
   const key = await global.crypto.subtle.importKey(
     KEY_FORMAT,
@@ -17,7 +17,7 @@ const deserializeKey = async (keyHex: string): Promise<CryptoKey> => {
   return key;
 };
 
-export const createKey = async (): Promise<string> => {
+export const createKey = async (): Promise<number[]> => {
   const key = await global.crypto.subtle.generateKey(
     {
       name: ALGORITHM,
@@ -28,44 +28,44 @@ export const createKey = async (): Promise<string> => {
   );
 
   const keyBuffer = await global.crypto.subtle.exportKey(KEY_FORMAT, key);
-  const keyHex = Buffer.from(keyBuffer).toString('hex');
+  const keyBytes = Array.from(new Uint8Array(keyBuffer));
 
-  return keyHex;
+  return keyBytes;
 };
 
-export const encrypt = async (data: string, keyHex: string) => {
+export const encrypt = async (data: string, keyBytes: number[]) => {
   const iv = global.crypto.getRandomValues(new Uint8Array(12));
-  const ivHex = Buffer.from(iv).toString('hex');
-  const key = await deserializeKey(keyHex);
-  const dataBuffer = Buffer.from(data, 'utf8');
+  const key = await deserializeKey(keyBytes);
+  const dataBuffer = new TextEncoder().encode(data);
 
-  const encryptedArrayBuffer = await global.crypto.subtle.encrypt(
+  const encrypted = await global.crypto.subtle.encrypt(
     { name: ALGORITHM, iv },
     key,
     dataBuffer,
   );
 
-  const encryptedHex = Buffer.from(encryptedArrayBuffer).toString('hex');
+  const encryptedBytes = Array.from(new Uint8Array(encrypted));
+  const ivBytes = Array.from(iv);
 
-  return { data: encryptedHex, iv: ivHex };
+  return { data: encryptedBytes, iv: ivBytes };
 };
 
 export const decrypt = async (
-  data: string,
-  keyHex: string,
-  ivHex: string,
+  dataBytes: number[],
+  keyBytes: number[],
+  ivBytes: number[],
 ): Promise<string> => {
-  const iv = Buffer.from(ivHex, 'hex');
-  const key = await deserializeKey(keyHex);
-  const dataBuffer = Buffer.from(data, 'hex');
+  const key = await deserializeKey(keyBytes);
+  const data = Uint8Array.from(dataBytes);
+  const iv = Uint8Array.from(ivBytes);
 
-  const decryptedArrayBuffer = await global.crypto.subtle.decrypt(
+  const decrypted = await global.crypto.subtle.decrypt(
     { name: ALGORITHM, iv },
     key,
-    dataBuffer,
+    data,
   );
 
-  const decryptedString = Buffer.from(decryptedArrayBuffer).toString('utf8');
+  const decryptedString = new TextDecoder().decode(decrypted);
 
   return decryptedString;
 };

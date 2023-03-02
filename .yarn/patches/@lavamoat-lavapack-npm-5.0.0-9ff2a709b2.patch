@@ -1,0 +1,55 @@
+diff --git a/src/pack.js b/src/pack.js
+index 7526ef1eb17fb68265dd2c640cbb6acbc30d3691..3b87ff23bc194b05aefe32302eeb1ca476ec5bf4 100644
+--- a/src/pack.js
++++ b/src/pack.js
+@@ -229,7 +229,7 @@ function createPacker({
+     const jsonSerializeableData = {
+       // id,
+       package: packageName,
+-      file: relativeFilePath,
++      // file: relativeFilePath,
+       // deps,
+       // source: sourceMeta.code
+     }
+diff --git a/src/runtime.js b/src/runtime.js
+index aeb826b69aef5999589e36a0ae114f4527a547e0..1ec9a0460d018a27b847684a6f64ad8b31deffd5 100644
+--- a/src/runtime.js
++++ b/src/runtime.js
+@@ -11532,14 +11532,36 @@ module.exports = {
+       return packageCompartment
+     }
+ 
++    function isPackageNameExternal (packageName) {
++      return packageName.startsWith('external:');
++    }
++
+     // this gets the lavaMoat config for a module by packageName
+     // if there were global defaults (e.g. everything gets "console") they could be applied here
+     function getPolicyForPackage (config, packageName) {
++      const isExternal = isPackageNameExternal(packageName);
++
++      if(isExternal) {
++        packageName = packageName.replace(/\\/gu, '/');
++      }
++
+       const packageConfig = (config.resources || {})[packageName] || {}
+       packageConfig.globals = packageConfig.globals || {}
+       packageConfig.packages = packageConfig.packages || {}
+       packageConfig.builtin = packageConfig.builtin || {}
+-      return packageConfig
++
++      packageConfig.packages = Object.keys(packageConfig.packages).reduce((result, currentPackageName) => {
++        if(!isPackageNameExternal(currentPackageName)) return result;
++
++          const policyValue = result[currentPackageName];
++          const windowsPackageName = currentPackageName.replace(/\//gu, '\\');
++
++          result[windowsPackageName] = policyValue;
++      
++          return result;
++      }, packageConfig.packages);
++      
++      return packageConfig;
+     }
+ 
+     // util for getting the prototype chain as an array
