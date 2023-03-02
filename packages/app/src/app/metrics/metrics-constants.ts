@@ -11,6 +11,7 @@ export const EVENT_NAMES = {
   UI_CRITICAL_ERROR: 'Desktop UI Critical Error',
   DESKTOP_APP_UNPAIRED: 'Desktop App Unpaired',
   DESKTOP_APP_OPENED_STARTUP: 'Desktop App Opened at Startup',
+  DESKTOP_APP_FACTORY_RESET: 'Desktop App Factory Reset',
 };
 
 export enum MetricsDecision {
