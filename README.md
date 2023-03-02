@@ -79,3 +79,5 @@ e.g. yarn app package:mac
 # Additional Documentation
 
 - [Encryption](docs/encryption.md)
+
+Test
