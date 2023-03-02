@@ -25,8 +25,8 @@ Audit report for the MetaMask Desktop app can be found [here](https://consensys.
 This repo is a monorepo organised in workspaces:
 | Name | Description
 | --- | --- |
-| app | The MetaMask Desktop app, built with [Electron](https://www.electronjs.org/docs/latest), which can be paired with the Flask extension to improve its overall performance. |
-| common | The JavaScript library used by the Flask extension to connect to the Desktop app. |
+| [app](packages/app/README.md) | The MetaMask Desktop app, built with [Electron](https://www.electronjs.org/docs/latest), which can be paired with the Flask extension to improve its overall performance. |
+| [common](packages/common/README.md) | The JavaScript library used by the Flask extension to connect to the Desktop app. |
 
 ## Getting Started
 
