@@ -155,6 +155,25 @@ const GeneralTab = ({
     );
   };
 
+  const renderFactoryResetButton = () => {
+    return (
+      <div className="mmd-settings-page__setting-row">
+        <div className="mmd-settings-page__setting-item">
+          <div className="mmd-settings-page__setting-col">
+            <Button
+              type="danger"
+              onClick={() => {
+                window.electronBridge.factoryReset();
+              }}
+            >
+              {t('factoryReset')}
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
       <PairStatus
@@ -168,6 +187,7 @@ const GeneralTab = ({
       {renderPreferredStartupOptions()}
       {isSuccessfulPairSeen &&
         (isWebSocketConnected ? renderUnpairButton() : renderResetButton())}
+      {renderFactoryResetButton()}
     </>
   );
 };

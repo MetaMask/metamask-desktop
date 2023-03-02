@@ -1,5 +1,6 @@
 import { Duplex, EventEmitter } from 'stream';
 import path from 'path';
+import { readdir, unlink } from 'fs/promises';
 import { app, BrowserWindow, ipcMain, shell, dialog } from 'electron';
 // eslint-disable-next-line @typescript-eslint/no-shadow
 import { Server as WebSocketServer, WebSocket } from 'ws';
@@ -38,6 +39,7 @@ import {
 } from './storage/ui-storage';
 import MetricsService from './metrics/metrics-service';
 import { EVENT_NAMES } from './metrics/metrics-constants';
+import { encryptedCypherFilePath } from './storage/storage';
 
 // Set protocol for deeplinking
 if (!cfg().isUnitTest) {
@@ -161,6 +163,43 @@ class DesktopApp extends EventEmitter {
         defaultValue: false,
         key: 'metametricsOptIn',
       });
+    });
+
+    ipcMain.handle('factory-reset', async () => {
+      if (this.status.isDesktopPaired) {
+        dialog.showMessageBox({
+          type: 'info',
+          title: t('unpairFirst'),
+          message: t('beforeFactoryReset'),
+        });
+        return;
+      }
+
+      dialog
+        .showMessageBox({
+          type: 'info',
+          title: t('factoryResetMetaMaskDesktop'),
+          message: t('factoryResetDesc'),
+          buttons: [t('yes'), t('no')],
+        })
+        .then(async (value) => {
+          if (value.response === 0) {
+            this.metricsService.track(EVENT_NAMES.DESKTOP_APP_FACTORY_RESET);
+            // Regex to match all json files/stores in the userData folder
+            const regex = new RegExp(/.json$/u, 'u');
+            const storesPath = app.getPath('userData');
+            const files = await readdir(storesPath);
+            files
+              .filter((file) => regex.test(file))
+              .map((file) => unlink(path.resolve(storesPath, file)));
+
+            // Delete the encrypted cypher file
+            await unlink(encryptedCypherFilePath());
+
+            app.relaunch();
+            app.exit();
+          }
+        });
     });
 
     setUiStorage(uiAppStorage);
