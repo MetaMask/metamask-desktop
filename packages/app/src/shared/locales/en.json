@@ -20,6 +20,9 @@
   "attributions": {
     "message": "Attributions"
   },
+  "beforeFactoryReset": {
+    "message": "In order to do factory reset, you need to unpair your MetaMask Desktop application from your MetaMask extension."
+  },
   "cancel": {
     "message": "Cancel"
   },
@@ -115,6 +118,15 @@
   },
   "exit": {
     "message": "Exit"
+  },
+  "factoryReset": {
+    "message": "Reset MetaMask Desktop application"
+  },
+  "factoryResetDesc": {
+    "message": "This will reset your MetaMask Desktop application to its default state. This will not affect your MetaMask extension. Do you want to continue?"
+  },
+  "factoryResetMetaMaskDesktop": {
+    "message": "Reset MetaMask Desktop application"
   },
   "foundUpdates": {
     "message": "Found Updates"
@@ -278,6 +290,9 @@
   },
   "typeTheSixDigitCodeBelow": {
     "message": "Enter the six-digit code visible on the MetaMask Extension screen"
+  },
+  "unpairFirst": {
+    "message": "Unpair needed"
   },
   "unpairMetaMaskDesktop": {
     "message": "Unpair MetaMask Desktop"

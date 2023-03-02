@@ -85,6 +85,9 @@ const electronBridge = {
   getDesktopMetricsDecision: () => {
     return ipcRenderer.invoke('get-desktop-metrics-decision');
   },
+  factoryReset: () => {
+    return ipcRenderer.invoke('factory-reset');
+  },
 };
 
 contextBridge.exposeInMainWorld('electronBridge', electronBridge);
