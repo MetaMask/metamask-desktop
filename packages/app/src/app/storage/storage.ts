@@ -21,7 +21,7 @@ const createPrivateKey = (size: number = KEY_LENGTH): Buffer => {
   return randomBytes(size);
 };
 
-const encryptedCypherFilePath = () => {
+export const encryptedCypherFilePath = () => {
   const defaultCwd = app.getPath(DEAFULT_ELECTRON_USER_PATH);
   return path.join(defaultCwd, ENCRYPTED_CYPHER_FILE);
 };
