@@ -24,7 +24,7 @@ In order to avoid changing the MetaMask extension code as much as possible, thes
 
 Some methods still need to be performed in the user's browser, such as displaying a window or changing the extension badge. These method calls are sent to the MetaMask extension to be executed in the real browser, and any return values are sent back to MetaMask Desktop. 
 
-These proxy methods are defined in a whitelist in [node-browser](../packages/app/src/app/browser/node-browser.ts). A second list of unhanled methods is also maintained which simply logs a warning in the console.
+These proxy methods are defined in a whitelist in [node-browser](../packages/app/src/app/browser/node-browser.ts). A second list of unhandled methods is also maintained which simply logs a warning in the console.
 
 ## Connections
 
@@ -38,11 +38,11 @@ This is communicated with using the [window.postMessage](https://developer.mozil
 
 ### Web Socket Server
 
-All communication with MetaMask desktop is done using a WebSocket server, powered by [ws](https://github.com/websockets/ws).
+All communication with MetaMask Desktop is done using a WebSocket server, powered by [ws](https://github.com/websockets/ws).
 
 When the background connection is first required, a single WebSocket connection is created from the MetaMask extension to MetaMask Desktop, this is abstracted using the [WebSocketStream](../packages/common/src/web-socket-stream.ts) and the required [encryption](encryption.md) is initialised.
 
-Whenever the extension background page receives a new connection, we immediately pipe the UI stream to the WebSocket stream so all requests received by the background page in the extension are forwarded to MetaMask desktop, and all responses from MetaMask Desktop are ultimately sent back to the extension UI.
+Whenever the extension background page receives a new connection, we immediately pipe the UI stream to the WebSocket stream so all requests received by the background page in the extension are forwarded to MetaMask Desktop, and all responses from MetaMask Desktop are ultimately sent back to the extension UI.
 
 The WebSocket server is initialised in the [DesktopApp](../packages//app/src/app/desktop-app.ts) class.
 
@@ -68,7 +68,7 @@ Each of these background connections creates an additional client stream within 
 | newConnection | Notify MetaMask Desktop when a new background connection is required. |
 | pairing | Transfer OTP requests and pairing keys to the extension. |
 | state | Keep the MetaMask state synchronised between the extension and MetaMask Desktop. |
-| version | Verify the MetaMask extension and MetaMask desktop versions are compatible. |
+| version | Verify the MetaMask extension and MetaMask Desktop versions are compatible. |
 
 ## State
 
