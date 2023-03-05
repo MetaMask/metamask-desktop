@@ -80,3 +80,4 @@ e.g. yarn app package:mac
 
 - [Architecture](docs/architecture.md)
 - [Encryption](docs/encryption.md)
+- [TOTP Pairing flow](docs/totp-pairing-flow.md)
