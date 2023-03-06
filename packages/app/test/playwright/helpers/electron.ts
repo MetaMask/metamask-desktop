@@ -1,4 +1,8 @@
-import { ElectronApplication, Page, _electron as electron } from 'playwright';
+import {
+  ElectronApplication,
+  Page,
+  _electron as electron,
+} from '@playwright/test';
 import { runInShell } from '../../../submodules/extension/development/lib/run-command';
 import { ELECTRON_APP_PATH } from './constants';
 
