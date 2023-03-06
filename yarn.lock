@@ -3404,19 +3404,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lavamoat/lavapack@npm:5.0.0":
-  version: 5.0.0
-  resolution: "@lavamoat/lavapack@npm:5.0.0"
+"@lavamoat/lavapack@npm:3.1.0":
+  version: 3.1.0
+  resolution: "@lavamoat/lavapack@npm:3.1.0"
   dependencies:
     JSONStream: ^1.3.5
     combine-source-map: ^0.8.0
     convert-source-map: ^1.7.0
     json-stable-stringify: ^1.0.1
-    lavamoat-core: ^14.0.0
+    lavamoat-core: ^12.2.0
     readable-stream: ^3.6.0
     through2: ^4.0.2
     umd: ^3.0.3
-  checksum: 93b60ced99a23a87f83bf354f6996029757ea76d6b92e8b4b874ef50224515feda47dadd62cdda88c53e703111ddf36a8ef8f19c682e85ad4218f709a4081dbd
+  checksum: 01d87fe76194591e3542171c6f7eccd0efadcbe27213af5d251480a5ca3cc95a77724de103995ee7c96a4b7e7a269c8dfe446a0a3028f8cf4952d7168817fa4a
   languageName: node
   linkType: hard
 
@@ -3436,19 +3436,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lavamoat/lavapack@patch:@lavamoat/lavapack@npm%3A5.0.0#./.yarn/patches/@lavamoat-lavapack-npm-5.0.0-9ff2a709b2.patch::locator=desktop%40workspace%3A.":
-  version: 5.0.0
-  resolution: "@lavamoat/lavapack@patch:@lavamoat/lavapack@npm%3A5.0.0#./.yarn/patches/@lavamoat-lavapack-npm-5.0.0-9ff2a709b2.patch::version=5.0.0&hash=fa9b0b&locator=desktop%40workspace%3A."
+"@lavamoat/lavapack@patch:@lavamoat/lavapack@npm%3A3.1.0#./.yarn/patches/@lavamoat-lavapack-npm-3.1.0-34c65d233b.patch::locator=desktop%40workspace%3A.":
+  version: 3.1.0
+  resolution: "@lavamoat/lavapack@patch:@lavamoat/lavapack@npm%3A3.1.0#./.yarn/patches/@lavamoat-lavapack-npm-3.1.0-34c65d233b.patch::version=3.1.0&hash=31df32&locator=desktop%40workspace%3A."
   dependencies:
     JSONStream: ^1.3.5
     combine-source-map: ^0.8.0
     convert-source-map: ^1.7.0
     json-stable-stringify: ^1.0.1
-    lavamoat-core: ^14.0.0
+    lavamoat-core: ^12.2.0
     readable-stream: ^3.6.0
     through2: ^4.0.2
     umd: ^3.0.3
-  checksum: e862232d33884a98cc455f0927fe7d87d0cbc0491c880faeadfac9a07c54bbdb1f8732e176e3d05e5563a52d37f276d057ce6685da8cd1d5abcdab885eef3ee0
+  checksum: 08a871044151e61093ebc1506b821dc3b35f9f2ba6dff661509daaff4e6ae81653535110b404c1fe3a32a802949d20ce765bd522acf67c7484b05d38e907b6ba
   languageName: node
   linkType: hard
 
@@ -24027,7 +24027,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lavamoat-browserify@npm:^15.5.0":
+"lavamoat-browserify@npm:^15.2.0":
   version: 15.5.0
   resolution: "lavamoat-browserify@npm:15.5.0"
   dependencies:
@@ -24057,18 +24057,6 @@ __metadata:
     lavamoat-tofu: ^6.0.2
     merge-deep: ^3.0.2
   checksum: 432a8968035370feb51e50f35306e7f85015e3b56440dbd41b6d3eec7f4bc82c3d1f16c6a627549df2665499c49bcb6e55fa697bccc6839bac1de12804019c1d
-  languageName: node
-  linkType: hard
-
-"lavamoat-core@npm:^14.0.0":
-  version: 14.0.0
-  resolution: "lavamoat-core@npm:14.0.0"
-  dependencies:
-    fromentries: ^1.2.0
-    json-stable-stringify: ^1.0.1
-    lavamoat-tofu: ^6.0.2
-    merge-deep: ^3.0.2
-  checksum: 16c2402aceba339ab25b830d476e95078edc1c978ef2623497ecb07f6b5eb8241541f67755a06cf3562680c1834b69d7e86ca421848b670378ad4fb0d62923ad
   languageName: node
   linkType: hard
 
@@ -24110,7 +24098,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lavamoat@npm:^6.3.0":
+"lavamoat@npm:6.4.0":
   version: 6.4.0
   resolution: "lavamoat@npm:6.4.0"
   dependencies:
@@ -24130,6 +24118,29 @@ __metadata:
     lavamoat: src/cli.js
     lavamoat-run-command: src/run-command.js
   checksum: 5a058b0b62fa4d6baa477775dc03433c0064e7ab0f14f4a540aa033154c3484cd9b59ec66e2968e387087c24531b09cbd6a70a3a11f4b52e3b4519cd3672c54c
+  languageName: node
+  linkType: hard
+
+"lavamoat@patch:lavamoat@npm%3A6.4.0#./.yarn/patches/lavamoat-npm-6.4.0-f3cd9c168f.patch::locator=desktop%40workspace%3A.":
+  version: 6.4.0
+  resolution: "lavamoat@patch:lavamoat@npm%3A6.4.0#./.yarn/patches/lavamoat-npm-6.4.0-f3cd9c168f.patch::version=6.4.0&hash=ee5fe8&locator=desktop%40workspace%3A."
+  dependencies:
+    "@babel/code-frame": ^7.10.4
+    "@babel/highlight": ^7.10.4
+    "@lavamoat/aa": ^3.1.0
+    bindings: ^1.5.0
+    htmlescape: ^1.1.1
+    json-stable-stringify: ^1.0.1
+    lavamoat-core: ^12.3.0
+    lavamoat-tofu: ^6.0.2
+    node-gyp-build: ^4.2.3
+    object.fromentries: ^2.0.2
+    resolve: ^1.17.0
+    yargs: ^16.0.0
+  bin:
+    lavamoat: src/cli.js
+    lavamoat-run-command: src/run-command.js
+  checksum: cb553f0a4d8ac164622b15be06266f33873d9c77ef5a06ea7ca7d44a353a7f76a6ef10068425830399c1bbd6922d0dda306e552241fd35259f671c33424950e6
   languageName: node
   linkType: hard
 
@@ -25434,7 +25445,7 @@ __metadata:
     "@keystonehq/bc-ur-registry-eth": ^0.12.1
     "@keystonehq/metamask-airgapped-keyring": ^0.6.1
     "@lavamoat/allow-scripts": ^2.0.3
-    "@lavamoat/lavapack": ^5.0.0
+    "@lavamoat/lavapack": ^3.1.0
     "@lavamoat/snow": ^1.4.1
     "@ledgerhq/hw-app-eth": ^6.29.8
     "@ledgerhq/hw-transport-node-hid-noevents": ^6.27.5
@@ -25670,8 +25681,8 @@ __metadata:
     junit-report-merger: ^4.0.0
     koa: ^2.7.0
     labeled-stream-splicer: ^2.0.2
-    lavamoat: ^6.3.0
-    lavamoat-browserify: ^15.5.0
+    lavamoat: ^6.4.0
+    lavamoat-browserify: ^15.2.0
     lavamoat-viz: ^6.0.9
     localforage: ^1.9.0
     lockfile-lint: ^4.9.6
@@ -25691,7 +25702,6 @@ __metadata:
     nyc: ^15.0.0
     obj-multiplex: ^1.0.0
     pify: ^5.0.0
-    playwright: ^1.29.2
     playwright-core: 1.29.1
     polyfill-crypto.getrandomvalues: ^1.0.0
     prettier: ^2.7.1
@@ -28630,7 +28640,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"playwright@npm:^1.14.0, playwright@npm:^1.29.2":
+"playwright@npm:^1.14.0":
   version: 1.31.2
   resolution: "playwright@npm:1.31.2"
   dependencies:
