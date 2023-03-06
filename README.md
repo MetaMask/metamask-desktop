@@ -78,4 +78,5 @@ e.g. yarn app package:mac
 
 # Additional Documentation
 
+- [Architecture](docs/architecture.md)
 - [Encryption](docs/encryption.md)
