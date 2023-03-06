@@ -4,6 +4,7 @@ import { PropTypes } from 'prop-types';
 import PairStatus from '../../../components/pair-status';
 import Typography from '../../../../../submodules/extension/ui/components/ui/typography';
 import Button from '../../../../../submodules/extension/ui/components/ui/button';
+import ToggleButton from '../../../../../submodules/extension/ui/components/ui/toggle-button';
 import Dropdown from '../../../components/dropdown';
 import { TYPOGRAPHY } from '../../../../../submodules/extension/ui/helpers/constants/design-system';
 import { LocaleIndex } from '../../../../shared/constants/locale';
@@ -22,8 +23,36 @@ const GeneralTab = ({
   updateTheme,
   preferredStartup,
   updatePreferredStartup,
+  isDesktopPopupEnabled,
+  updateDesktopPopupEnabled,
 }) => {
   const t = useI18nContext();
+  const isDesktopPopupOptionAvailable = window.config.enableDesktopPopup; 
+
+  const renderDesktopPopupToggle = () => {
+    return (
+      <div className="mmd-settings-page__setting-row">
+        <div className="mmd-settings-page__setting-item">
+          <Typography variant={TYPOGRAPHY.H5}>
+            Desktop Popup
+          </Typography>
+          <Typography variant={TYPOGRAPHY.H6}>
+            Desktop Popup description
+          </Typography>
+        </div>
+        <div className="mmd-settings-page__setting-item">
+          <div className="mmd-settings-page__setting-col">
+            <ToggleButton
+              value={isDesktopPopupEnabled}
+              onToggle={(value) => updateDesktopPopupEnabled(!value)}
+              offLabel={t('off')}
+              onLabel={t('on')}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   const renderLanguageSettings = () => {
     const localeOptions = LocaleIndex.map((locale) => {
@@ -159,6 +188,7 @@ const GeneralTab = ({
         isDesktopPaired={isDesktopPaired}
         isSuccessfulPairSeen={isSuccessfulPairSeen}
       />
+      {isDesktopPopupOptionAvailable && renderDesktopPopupToggle()}
       {renderLanguageSettings()}
       {renderThemeSettings()}
       {renderPreferredStartupOptions()}
