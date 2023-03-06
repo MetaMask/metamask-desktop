@@ -19,7 +19,6 @@ sequenceDiagram
         Note over MME: Generates TOTP
     MME->>User: display Pairing Page to the user
     User->>MMD: submit TOTP (6 digits) displayed in the MME
-    MMD->>MME: send TOTP to MME
     Note over MME: - Validate TOTP<br/>- Create Pairing Key
     Note over MME: - Save the pairing key hash<br/>- Enable desktop app
     MME->>MMD: send pairing key
@@ -46,6 +45,6 @@ After the user enters the 6 digits and the TOTP is [validated](../packages/commo
 - Desktop mode is enabled in the extension.
 - The hash of the pairing key is saved in the extension state.
 
-Once the pairing is completed, whenever a new connection occurs, the extension waits for the desktop pairing key, hashes it, and checks if it matches the stored hash before establishing the authorised connection and transfering the current MetaMask state.
+Once the pairing is completed, whenever a new connection occurs, the extension waits for the desktop pairing key, hashes it, and checks if it matches the stored hash before establishing the authorised connection and transferring the current MetaMask state.
 
 Once the authorised connection is active, the state is continuously synchronised between MetaMask Desktop and the MetaMask extension whenever the persisted state is updated.
