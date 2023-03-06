@@ -22,6 +22,8 @@ import { getDesktopVersion } from './utils/version';
 import {
   registerTabsHandler,
   registerWindowHandler,
+  unregisterTabsHandler,
+  unregisterWindowHandler,
 } from './browser/node-browser';
 import { WindowCreateRequest, WindowUpdateRequest } from './types/window';
 import ExtensionConnection from './extension-connection';
@@ -37,7 +39,10 @@ import AppEvents from './ui/app-events';
 import WindowService from './ui/window-service';
 import UIState from './ui/ui-state';
 import { setLanguage, t } from './utils/translation';
-import { setUiStorage } from './storage/ui-storage';
+import {
+  setUiStorage,
+  readPersistedSettingFromAppState,
+} from './storage/ui-storage';
 import MetricsService from './metrics/metrics-service';
 import { EVENT_NAMES } from './metrics/metrics-constants';
 import { IPCRendererStream } from './ipc-renderer-stream';
@@ -111,6 +116,10 @@ class DesktopApp extends EventEmitter {
 
     ipcMain.handle('minimize', () => this.UIState.mainWindow?.minimize());
 
+    ipcMain.handle('ui-dialog', (_event, method: string, params) => {
+      return dialog[method](params);
+    });
+
     ipcMain.handle('unpair', async () => {
       if (cfg().isExtensionTest || cfg().isAppTest) {
         await this.extensionConnection?.disable();
@@ -156,6 +165,14 @@ class DesktopApp extends EventEmitter {
       shell.openExternal(link);
     });
 
+    ipcMain.handle('toggle-desktop-popup', (_event, isEnabled) => {
+      if (cfg().enableDesktopPopup && isEnabled) {
+        this.enableDesktopPopup();
+      } else {
+        this.disableDesktopPopup();
+      }
+    });
+
     if (!cfg().ui.preventOpenOnStartup) {
       ipcMain.handle('set-preferred-startup', (_event, preferredStartup) => {
         app.setLoginItemSettings(determineLoginItemSettings(preferredStartup));
@@ -192,21 +209,12 @@ class DesktopApp extends EventEmitter {
       });
     }
 
-    if (cfg().enableDesktopPopup) {
-      await this.windowService.createApprovalWindow();
-
-      registerWindowHandler({
-        create: (request: WindowCreateRequest) => this.onWindowCreate(request),
-        remove: (windowId: string) => this.onWindowRemove(windowId),
-        update: (request: WindowUpdateRequest) => this.onWindowUpdate(request),
-      });
-
-      registerTabsHandler({ query: (_request: TabsQuery) => [] });
-
-      this.approvalStream = new IPCRendererStream(
-        this.UIState.approvalWindow as any,
-        'approval-ui',
-      );
+    const isDesktopPopupEnabled = readPersistedSettingFromAppState({
+      key: 'isDesktopPopupEnabled',
+      defaultValue: true,
+    });
+    if (cfg().enableDesktopPopup && isDesktopPopupEnabled) {
+      this.enableDesktopPopup();
     }
 
     log.debug('Initialised desktop app');
@@ -236,6 +244,31 @@ class DesktopApp extends EventEmitter {
 
   public hideApprovalWindow() {
     this.UIState.approvalWindow?.hide();
+  }
+
+  private async enableDesktopPopup() {
+    if (!this.UIState.approvalWindow) {
+      await this.windowService.createApprovalWindow();
+    }
+
+    registerWindowHandler({
+      create: (request: WindowCreateRequest) => this.onWindowCreate(request),
+      remove: (windowId: string) => this.onWindowRemove(windowId),
+      update: (request: WindowUpdateRequest) => this.onWindowUpdate(request),
+    });
+
+    registerTabsHandler({ query: (_request: TabsQuery) => [] });
+
+    this.approvalStream = new IPCRendererStream(
+      this.UIState.approvalWindow as any,
+      'approval-ui',
+    );
+  }
+
+  private disableDesktopPopup() {
+    this.approvalStream = undefined;
+    unregisterWindowHandler();
+    unregisterTabsHandler();
   }
 
   private updateMainWindow() {

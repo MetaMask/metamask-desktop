@@ -85,8 +85,16 @@ const electronBridge = {
       metricsDecision,
     );
   },
+  toggleDesktopPopup: async (isEnabled: boolean) => {
+    await ipcRenderer.invoke('toggle-desktop-popup', isEnabled);
+  },
+  openDialog: (method: string, config: any) =>
+    ipcRenderer.invoke('ui-dialog', method, config),
 };
 
 contextBridge.exposeInMainWorld('electronBridge', electronBridge);
+contextBridge.exposeInMainWorld('config', {
+  enableDesktopPopup: process.env.DESKTOP_POPUP === 'true',
+});
 
 export type ElectronBridge = typeof electronBridge;
