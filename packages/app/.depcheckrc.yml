@@ -100,6 +100,7 @@ ignores:
   - base64-js
   - bignumber.js
   - bn.js
+  - bowser
   - classnames
   - copy-to-clipboard
   - currency-formatter
@@ -258,10 +259,15 @@ ignores:
   - gulp-watch
   - gulp-zip
   - history
+  - husky
   - improved-yarn-audit
+  - istanbul-lib-coverage
+  - istanbul-lib-report
+  - istanbul-reports
   - ini
   - jest-canvas-mock
   - js-yaml
+  - junit-report-merger
   - koa
   - lavamoat-browserify
   - lavamoat-viz
