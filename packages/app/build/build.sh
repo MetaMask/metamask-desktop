@@ -1,6 +1,7 @@
 #!/bin/sh
 
 APP_DIR="src/app"
+BUILD_DIR="build"
 SHARED_DIR="src/shared"
 SOURCE_HW_DIR="$APP_DIR/hw"
 EXTENSION_DIR="submodules/extension"
@@ -34,6 +35,7 @@ mkdir -p $OUTPUT_APP_DIR/build-types/desktop/images
 mkdir -p $OUTPUT_APP_DIR/build-types/flask/images
 cp $EXTENSION_APP_DIR/build-types/desktop/images/desktop-mascot.json $OUTPUT_APP_DIR/build-types/desktop/images/
 cp $EXTENSION_APP_DIR/build-types/flask/images/flask-mascot.json $OUTPUT_APP_DIR/build-types/flask/images/
+cp $BUILD_DIR/icon.png $OUTPUT_DIR/src/app/icons/icon.png
 cp -r $APP_DIR/icons $OUTPUT_DIR/src/app
 
 # Export all shell variables
