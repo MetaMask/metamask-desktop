@@ -1,5 +1,5 @@
 diff --git a/src/index.js b/src/index.js
-index 070b772..d741c3a 100644
+index 070b77231f6678deb9926f9414730ea6e018f86d..8fa231feab459f0a8255fae9db91cfd3ea564fff 100644
 --- a/src/index.js
 +++ b/src/index.js
 @@ -76,6 +76,7 @@ function getDependencies(packageDir, includeDevDeps) {
@@ -10,17 +10,23 @@ index 070b772..d741c3a 100644
      ...Object.keys(includeDevDeps ? packageJson.devDependencies || {} : {}),
    ].sort(comparePreferredPackageName)
    return depsToWalk
-@@ -156,6 +157,16 @@ function getPackageNameForModulePath(canonicalNameMap, modulePath) {
+@@ -156,6 +157,22 @@ function getPackageNameForModulePath(canonicalNameMap, modulePath) {
    const relativeToPackageDir = path.relative(packageDir, modulePath)
    // files should never be associated with a package directory across a package boundary (as tested via the presense of "node_modules" in the path)
    if (relativeToPackageDir.includes('node_modules')) {
-+
 +    // TO REMOVE ONCE WE PUBLISH THE DESKTOP PACKAGE
 +    // Which is not the case until we have our own UI components and stop importing the extension ones.
 +    // This is happening because of how browserify lavamoat resolves require paths
 +    const dirSeparator = process.platform === 'win32' ? '\\' : '/';
++    const contextDir = process.cwd();
++    const isSubmoduleContext = contextDir?.includes(`app${dirSeparator}submodules${dirSeparator}extension`);
 +    const nodeModulesPath = `submodules${dirSeparator}extension${dirSeparator}`;
-+    if (relativeToPackageDir.includes(nodeModulesPath)) {
++    if (relativeToPackageDir.includes(nodeModulesPath) && !isSubmoduleContext) {
++      return packageName;
++    }
++
++    const desktopAppReactPath = `packages${dirSeparator}app${dirSeparator}node_modules${dirSeparator}react`
++    if (packageDir.includes(desktopAppReactPath) && isSubmoduleContext) {
 +      return packageName;
 +    }
 +
