@@ -103,6 +103,7 @@ export default class AppEvents {
         app.exit(0);
       } else {
         event.preventDefault();
+        app.dock.hide();
         this.UIState.mainWindow?.hide();
       }
     }
