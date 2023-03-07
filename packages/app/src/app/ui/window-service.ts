@@ -67,12 +67,6 @@ export default class WindowService {
       }
     });
 
-    mainWindow.on('hide', () => {
-      if (process.platform === 'darwin') {
-        app.dock.hide();
-      }
-    });
-
     mainWindow.on('show', () => {
       if (process.platform === 'darwin') {
         app.dock.show();

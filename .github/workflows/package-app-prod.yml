@@ -100,6 +100,8 @@ jobs:
         env:
           INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
           METAMASK_ENVIRONMENT: 'production'
+          SEGMENT_WRITE_KEY: ${{ secrets.SEGMENT_WRITE_KEY }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
       - name: Package app for ${{ matrix.os }}
         shell: bash
         run:  |
