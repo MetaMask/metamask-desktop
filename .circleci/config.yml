@@ -384,6 +384,9 @@ jobs:
           name: Validate app LavaMoat policy
           command: SCRIPT='app lavamoat' .circleci/scripts/validate-lavamoat-policy.sh
       - run:
+          name: Setup UI build
+          command: yarn setup:ui:build
+      - run:
           name: Validate UI LavaMoat policy
           command: SCRIPT='app lavamoat:ui' .circleci/scripts/validate-lavamoat-policy.sh
 
