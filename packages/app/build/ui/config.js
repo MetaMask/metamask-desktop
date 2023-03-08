@@ -1,20 +1,7 @@
 const path = require('path');
 const { readFile } = require('fs/promises');
 
-const configurationPropertyNames = [
-  'COMPATIBILITY_VERSION_DESKTOP',
-  'DESKTOP_ENABLE_UPDATES',
-  'DESKTOP_PREVENT_OPEN_ON_STARTUP',
-  'DESKTOP_UI_ENABLE_DEV_TOOLS',
-  'DESKTOP_UI_FORCE_CLOSE',
-  'DISABLE_WEB_SOCKET_ENCRYPTION',
-  'INFURA_PROJECT_ID',
-  'METAMASK_DEBUG',
-  'SKIP_OTP_PAIRING_FLOW',
-  'WEB_SOCKET_PORT',
-  'SENTRY_DSN',
-  'SEGMENT_WRITE_KEY',
-];
+const configurationPropertyNames = ['SENTRY_DSN'];
 
 /**
  * Get configuration for non-production builds.
