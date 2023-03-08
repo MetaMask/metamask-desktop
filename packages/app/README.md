@@ -32,6 +32,38 @@ Generate a suitable installer package for a specific operating system:
 | MacOS | DMG Image | `yarn app package:mac` |
 | Linux | AppImage | `yarn app package:linux` |
 
+## Submodule
+
+The Electron application requires the MetaMask extension code to provide the controller and background logic.
+
+Rather than duplicating the code, a Git submodule is used to dynamically include the code directly from the [metamask-extension](https://github.com/MetaMask/metamask-extension) repository.
+
+The submodule is automatically setup by the `yarn setup` command.
+
+Below are some additional commands to support working with the submodule.
+
+Change the extension commit used by the submodule:
+
+```
+cd packages/app/submodules/extension
+git checkout [COMMIT SHA OR BRANCH]
+```
+
+Re-register the submodule and update the local files:
+```
+yarn setup:submodule
+```
+
+Display the current commit referenced by the submodule:
+```
+git submodule status
+```
+
+Remove the submodule and local files:
+```
+git submodule deinit -all --force
+```
+
 ## Test
 
 ### Unit Tests
