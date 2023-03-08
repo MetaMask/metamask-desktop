@@ -76,7 +76,6 @@ jobs:
       - name: Checkout Git Repository
         uses: actions/checkout@v3
         with:
-          token: ${{ secrets.ACCESS_TOKEN }}
           submodules: true
       - name: Setup Node.js
         uses: actions/setup-node@v3
