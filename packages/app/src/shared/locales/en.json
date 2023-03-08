@@ -83,6 +83,12 @@
   "desktopOutdatedErrorTitle": {
     "message": "MetaMask Desktop is outdated"
   },
+  "desktopPopup": {
+    "message": "Enable Desktop Popup (beta)"
+  },
+  "desktopPopupDescription": {
+    "message": "This replaces the MetaMask extension popup. Enabling it improves MetaMask’s performance without changing your experience."
+  },
   "desktopRouteNotFoundErrorDescription": {
     "message": "The page you are looking for does not exist."
   },
@@ -97,6 +103,9 @@
   },
   "desktopUnexpectedErrorTitle": {
     "message": "Something went wrong..."
+  },
+  "enableDesktopPopup": {
+    "message": "The Desktop Companion app popup is experimental. Do you want to enable it?"
   },
   "errorCode": {
     "message": "Code: $1"
@@ -223,7 +232,7 @@
     "message": "ON"
   },
   "openAtLogin": {
-    "message": "Open at Login"
+    "message": "Open at login"
   },
   "os": {
     "message": "System"

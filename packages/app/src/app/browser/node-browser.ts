@@ -236,3 +236,11 @@ export const registerWindowHandler = (handler: WindowHandler) => {
 export const registerTabsHandler = (handler: TabsHandler) => {
   tabHandler = handler;
 };
+
+export const unregisterWindowHandler = () => {
+  windowHandler = undefined;
+};
+
+export const unregisterTabsHandler = () => {
+  tabHandler = undefined;
+};
