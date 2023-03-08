@@ -80,3 +80,4 @@ e.g. yarn app package:mac
 
 - [Architecture](docs/architecture.md)
 - [Encryption](docs/encryption.md)
+- [Release Process](docs/release.md)
