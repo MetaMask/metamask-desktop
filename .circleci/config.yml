@@ -57,15 +57,14 @@ commands:
                 cd packages/app/submodules/extension
                 git checkout << pipeline.parameters.extension-release-branch >>
   notify_slack_ci_failure:
-    # steps:
-    #   - when:
-    #       condition:
-    #         and: # All must be true to trigger
-    #         - equal: [true, << pipeline.parameters.extension-release >>]
+    steps:
+      - when:
+          condition:
+            and: # All must be true to trigger
+            - equal: [true, << pipeline.parameters.extension-release >>]
           steps:
           - slack/notify:
-              # branch_pattern: "^release/.+$"
-              # mentions: '@metamask-desktop'
+              mentions: '@metamask-desktop'
               template: basic_fail_1
               event: fail
 
@@ -111,16 +110,112 @@ workflows:
       - install-deps-extension:
           requires:
             - build-common
+      - validate-deps:
+          requires:
+            - install-deps
+      - validate-lock-duplicates:
+          requires:
+            - install-deps
+      - lint-lockfile:
+          requires:
+            - install-deps
+      - validate-lavamoat-config:
+          requires:
+            - install-deps-extension
+      - audit:
+          requires:
+            - install-deps
+      - build-common:
+          requires:
+            - install-deps
+      - build-app:
+          requires:
+            - install-deps-extension
+      - build-app-test-extension:
+          requires:
+            - install-deps-extension
+      - build-app-test-app:
+          requires:
+            - install-deps-extension
+      - build-ui:
+          requires:
+            - install-deps-extension
+      - build-ui-test-extension:
+          requires:
+            - install-deps-extension
+      - build-ui-test-app:
+          requires:
+            - install-deps-extension
+      - build-extension-test-extension:
+          requires:
+            - install-deps-extension
+      - build-extension-test-app:
+          requires:
+            - install-deps-extension
+      - build-extension-test-mv3:
+          requires:
+            - install-deps-extension
+      - lint-common:
+          requires:
+            - install-deps
+      - lint-app:
+          requires:
+            - build-common
+      - test-unit-common:
+          requires:
+            - install-deps
+      - test-unit-app:
+          requires:
+            - build-common
+      - test-e2e-extension:
+          requires:
+            - build-app-test-extension
+            - build-ui-test-extension
+            - build-extension-test-extension
+      - test-e2e-extension-snaps:
+          requires:
+            - build-app-test-extension
+            - build-ui-test-extension
+            - build-extension-test-extension
+      - test-e2e-app:
+          requires:
+            - build-app-test-app
+            - build-ui-test-app
+            - build-extension-test-app
+      - test-e2e-extension-mv3:
+          requires:
+            - build-app-test-extension
+            - build-ui-test-extension
+            - build-extension-test-mv3
+      - package-windows:
+          requires:
+            - build-app
+            - build-ui
+      - package-linux:
+          requires:
+            - build-app
+            - build-ui
+      - package-mac:
+          requires:
+            - build-app
+            - build-ui
+
+  released_extension_test:
+    when:
+      and: # All must be true to trigger
+      - equal: [true, << pipeline.parameters.extension-release >>]
+    jobs:
+      - install-deps:
+          context: mm-desktop-slack-secrets
+      - install-deps-extension:
+          requires:
+            - build-common
           context: mm-desktop-slack-secrets
       - validate-deps:
           requires:
             - install-deps
           context: mm-desktop-slack-secrets
       - validate-lock-duplicates:
-          requires:
-            - install-deps
-          context: mm-desktop-slack-secrets
-      - lint-lockfile:
           requires:
             - install-deps
           context: mm-desktop-slack-secrets
@@ -136,19 +231,11 @@ workflows:
           requires:
             - install-deps
           context: mm-desktop-slack-secrets
-      - build-app:
-          requires:
-            - install-deps-extension
-          context: mm-desktop-slack-secrets
       - build-app-test-extension:
           requires:
             - install-deps-extension
           context: mm-desktop-slack-secrets
       - build-app-test-app:
-          requires:
-            - install-deps-extension
-          context: mm-desktop-slack-secrets
-      - build-ui:
           requires:
             - install-deps-extension
           context: mm-desktop-slack-secrets
@@ -168,26 +255,6 @@ workflows:
           requires:
             - install-deps-extension
           context: mm-desktop-slack-secrets
-      - build-extension-test-mv3:
-          requires:
-            - install-deps-extension
-          context: mm-desktop-slack-secrets
-      - lint-common:
-          requires:
-            - install-deps
-          context: mm-desktop-slack-secrets
-      - lint-app:
-          requires:
-            - build-common
-          context: mm-desktop-slack-secrets
-      - test-unit-common:
-          requires:
-            - install-deps
-          context: mm-desktop-slack-secrets
-      - test-unit-app:
-          requires:
-            - build-common
-          context: mm-desktop-slack-secrets
       - test-e2e-extension:
           requires:
             - build-app-test-extension
@@ -206,45 +273,12 @@ workflows:
             - build-ui-test-app
             - build-extension-test-app
           context: mm-desktop-slack-secrets
-      - test-e2e-extension-mv3:
-          requires:
-            - build-app-test-extension
-            - build-ui-test-extension
-            - build-extension-test-mv3
-          context: mm-desktop-slack-secrets
-      - package-windows:
-          requires:
-            - build-app
-            - build-ui
-          context: mm-desktop-slack-secrets
-      - package-linux:
-          requires:
-            - build-app
-            - build-ui
-          context: mm-desktop-slack-secrets
-      - package-mac:
-          requires:
-            - build-app
-            - build-ui
-          context: mm-desktop-slack-secrets
       - notify-slack-ci-success:
           requires:
-            # - install-deps
-            # - install-deps-extension
             - validate-deps
-            # - build-common
             - validate-lock-duplicates
             - validate-lavamoat-config
             - audit
-            # - build-app
-            # - build-app-test-extension
-            # - build-app-test-app
-            # - build-ui
-            # - build-ui-test-extension
-            # - build-ui-test-app
-            # - build-extension-test-extension
-            # - build-extension-test-app
-            # - build-extension-test-mv3
             - lint-app
             - lint-common
             - test-unit-common
@@ -257,64 +291,6 @@ workflows:
             - package-linux
             - package-mac
           context: mm-desktop-slack-secrets
-
-  released_extension_test:
-    when:
-      and: # All must be true to trigger
-      - equal: [true, << pipeline.parameters.extension-release >>]
-    jobs:
-      - install-deps
-      - install-deps-extension:
-          requires:
-            - build-common
-      - validate-deps:
-          requires:
-            - install-deps
-      - validate-lock-duplicates:
-          requires:
-            - install-deps
-      - validate-lavamoat-config:
-          requires:
-            - install-deps-extension
-      - audit:
-          requires:
-            - install-deps
-      - build-common:
-          requires:
-            - install-deps
-      - build-app-test-extension:
-          requires:
-            - install-deps-extension
-      - build-app-test-app:
-          requires:
-            - install-deps-extension
-      - build-ui-test-extension:
-          requires:
-            - install-deps-extension
-      - build-ui-test-app:
-          requires:
-            - install-deps-extension
-      - build-extension-test-extension:
-          requires:
-            - install-deps-extension
-      - build-extension-test-app:
-          requires:
-            - install-deps-extension
-      - test-e2e-extension:
-          requires:
-            - build-app-test-extension
-            - build-ui-test-extension
-            - build-extension-test-extension
-      - test-e2e-extension-snaps:
-          requires:
-            - build-app-test-extension
-            - build-ui-test-extension
-            - build-extension-test-extension
-      - test-e2e-app:
-          requires:
-            - build-app-test-app
-            - build-ui-test-app
-            - build-extension-test-app
 
 jobs:
   install-deps:
@@ -342,6 +318,7 @@ jobs:
             - node_modules
             - << pipeline.parameters.app-dir >>/node_modules
             - << pipeline.parameters.common-dir >>/node_modules
+      - notify_slack_ci_failure
 
   notify-slack-ci-success:
       executor: node-browsers
