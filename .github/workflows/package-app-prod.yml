@@ -91,6 +91,9 @@ jobs:
       - name: Run extension install deps
         shell: bash
         run: yarn extension
+      - name: Setup desktop ui build
+        shell: bash
+        run: yarn setup:ui:build
       - name: Build desktop ui
         shell: bash
         run: yarn app build:ui:lavamoat:ci

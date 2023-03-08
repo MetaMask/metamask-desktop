@@ -10,8 +10,11 @@ module.exports = {
       extends: ['.eslintrc.app.js'],
     },
     {
-      files: ['src/ui/**/*.{js,ts,jsx,tsx}', 'src/shared/**/*.{js,ts,jsx,tsx}'],
-      excludedFiles: ['src/ui/**/*.{test,spec}.{js,ts,jsx,tsx}'],
+      files: [
+        'src/{ui,popup-ui}/**/*.{js,ts,jsx,tsx}',
+        'src/shared/**/*.{js,ts,jsx,tsx}',
+      ],
+      excludedFiles: ['src/{ui,popup-ui}/**/*.{test,spec}.{js,ts,jsx,tsx}'],
       extends: ['.eslintrc.ui.js'],
     },
     {
