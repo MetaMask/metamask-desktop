@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  slack: circleci/slack@4.1
+
 parameters:
   app-dir:
     type: string
@@ -53,6 +56,18 @@ commands:
                 sh scripts/init-submodule.sh
                 cd packages/app/submodules/extension
                 git checkout << pipeline.parameters.extension-release-branch >>
+  notify_slack_ci_failure:
+    # steps:
+    #   - when:
+    #       condition:
+    #         and: # All must be true to trigger
+    #         - equal: [true, << pipeline.parameters.extension-release >>]
+          steps:
+          - slack/notify:
+              # branch_pattern: "^release/.+$"
+              # mentions: '@metamask-desktop'
+              template: basic_fail_1
+              event: fail
 
 executors:
   node-browsers:
@@ -96,95 +111,152 @@ workflows:
       - install-deps-extension:
           requires:
             - build-common
+          context: mm-desktop-slack-secrets
       - validate-deps:
           requires:
             - install-deps
+          context: mm-desktop-slack-secrets
       - validate-lock-duplicates:
           requires:
             - install-deps
+          context: mm-desktop-slack-secrets
       - lint-lockfile:
           requires:
             - install-deps
+          context: mm-desktop-slack-secrets
       - validate-lavamoat-config:
           requires:
             - install-deps-extension
+          context: mm-desktop-slack-secrets
       - audit:
           requires:
             - install-deps
+          context: mm-desktop-slack-secrets
       - build-common:
           requires:
             - install-deps
+          context: mm-desktop-slack-secrets
       - build-app:
           requires:
             - install-deps-extension
+          context: mm-desktop-slack-secrets
       - build-app-test-extension:
           requires:
             - install-deps-extension
+          context: mm-desktop-slack-secrets
       - build-app-test-app:
           requires:
             - install-deps-extension
+          context: mm-desktop-slack-secrets
       - build-ui:
           requires:
             - install-deps-extension
+          context: mm-desktop-slack-secrets
       - build-ui-test-extension:
           requires:
             - install-deps-extension
+          context: mm-desktop-slack-secrets
       - build-ui-test-app:
           requires:
             - install-deps-extension
+          context: mm-desktop-slack-secrets
       - build-extension-test-extension:
           requires:
             - install-deps-extension
+          context: mm-desktop-slack-secrets
       - build-extension-test-app:
           requires:
             - install-deps-extension
+          context: mm-desktop-slack-secrets
       - build-extension-test-mv3:
           requires:
             - install-deps-extension
+          context: mm-desktop-slack-secrets
       - lint-common:
           requires:
             - install-deps
+          context: mm-desktop-slack-secrets
       - lint-app:
           requires:
             - build-common
+          context: mm-desktop-slack-secrets
       - test-unit-common:
           requires:
             - install-deps
+          context: mm-desktop-slack-secrets
       - test-unit-app:
           requires:
             - build-common
+          context: mm-desktop-slack-secrets
       - test-e2e-extension:
           requires:
             - build-app-test-extension
             - build-ui-test-extension
             - build-extension-test-extension
+          context: mm-desktop-slack-secrets
       - test-e2e-extension-snaps:
           requires:
             - build-app-test-extension
             - build-ui-test-extension
             - build-extension-test-extension
+          context: mm-desktop-slack-secrets
       - test-e2e-app:
           requires:
             - build-app-test-app
             - build-ui-test-app
             - build-extension-test-app
+          context: mm-desktop-slack-secrets
       - test-e2e-extension-mv3:
           requires:
             - build-app-test-extension
             - build-ui-test-extension
             - build-extension-test-mv3
+          context: mm-desktop-slack-secrets
       - package-windows:
           requires:
             - build-app
             - build-ui
+          context: mm-desktop-slack-secrets
       - package-linux:
           requires:
             - build-app
             - build-ui
+          context: mm-desktop-slack-secrets
       - package-mac:
           requires:
             - build-app
             - build-ui
+          context: mm-desktop-slack-secrets
+      - notify-slack-ci-success:
+          requires:
+            # - install-deps
+            # - install-deps-extension
+            - validate-deps
+            # - build-common
+            - validate-lock-duplicates
+            - validate-lavamoat-config
+            - audit
+            # - build-app
+            # - build-app-test-extension
+            # - build-app-test-app
+            # - build-ui
+            # - build-ui-test-extension
+            # - build-ui-test-app
+            # - build-extension-test-extension
+            # - build-extension-test-app
+            # - build-extension-test-mv3
+            - lint-app
+            - lint-common
+            - test-unit-common
+            - test-unit-app
+            - test-e2e-extension
+            - test-e2e-extension-snaps
+            - test-e2e-app
+            - test-e2e-extension-mv3
+            - package-windows
+            - package-linux
+            - package-mac
+          context: mm-desktop-slack-secrets
 
   released_extension_test:
     when:
@@ -271,6 +343,38 @@ jobs:
             - << pipeline.parameters.app-dir >>/node_modules
             - << pipeline.parameters.common-dir >>/node_modules
 
+  notify-slack-ci-success:
+      executor: node-browsers
+      steps:
+        - slack/notify:
+            custom: |
+              {
+                "text": "",
+                "blocks": [
+                  {
+                    "type": "section",
+                    "text": {
+                      "type": "mrkdwn",
+                      "text": "✅ *Success* #${CIRCLE_BUILD_NUM} `${CIRCLE_PROJECT_REPONAME}` on `${CIRCLE_BRANCH}`"
+                    }
+                  },
+                  {
+                    "type": "actions",
+                    "elements": [
+                      {
+                        "type": "button",
+                        "text": {
+                          "type": "plain_text",
+                          "text": "View Job"
+                        },
+                        "url": "${CIRCLE_BUILD_URL}"
+                      }
+                    ]
+                  }
+                ]
+              }
+            event: always
+
   install-deps-extension:
     executor: node-browsers
     steps:
@@ -312,6 +416,7 @@ jobs:
             - << pipeline.parameters.extension-dir >>/yarn.lock
             - << pipeline.parameters.extension-dir >>/package.json
             - << pipeline.parameters.extension-dir >>/node_modules
+      - notify_slack_ci_failure
 
   validate-deps:
     executor: node-browsers
@@ -321,13 +426,14 @@ jobs:
           at: .
       - run:
           name: root depcheck
-          command: yarn depcheck
+          command: yarn fail
       - run:
           name: common depcheck
           command: yarn depcheck ${COMMON_DIR}
       - run:
           name: app depcheck
           command: yarn depcheck ${APP_DIR}
+      - notify_slack_ci_failure
 
   validate-lock-duplicates:
     executor: node-browsers
@@ -338,6 +444,7 @@ jobs:
       - run:
           name: Detect yarn lock deduplications
           command: yarn dedupe --check
+      - notify_slack_ci_failure
 
   lint-lockfile:
     executor: node-browsers
@@ -348,6 +455,7 @@ jobs:
       - run:
           name: lockfile-lint
           command: yarn lint:lockfile
+      - notify_slack_ci_failure
 
   audit:
     executor: node-browsers
@@ -364,6 +472,7 @@ jobs:
       - run:
           name: app audit
           command: WORKSPACE='app' .circleci/scripts/yarn-audit.sh
+      - notify_slack_ci_failure
 
   validate-lavamoat-config:
     executor: node-browsers
@@ -389,6 +498,7 @@ jobs:
       - run:
           name: Validate UI LavaMoat policy
           command: SCRIPT='app lavamoat:ui' .circleci/scripts/validate-lavamoat-policy.sh
+      - notify_slack_ci_failure
 
   build-common:
     executor: node-browsers
@@ -403,6 +513,7 @@ jobs:
           root: .
           paths:
             - << pipeline.parameters.common-dir >>/dist
+      - notify_slack_ci_failure
 
   build-app:
     executor: node-browsers
@@ -420,6 +531,7 @@ jobs:
           root: .
           paths:
             - << pipeline.parameters.app-dir >>/dist-app
+      - notify_slack_ci_failure
 
   build-app-test-extension:
     executor: node-browsers
@@ -437,6 +549,7 @@ jobs:
           root: .
           paths:
             - << pipeline.parameters.app-dir >>/dist-app-test-extension
+      - notify_slack_ci_failure
 
   build-app-test-app:
     executor: node-browsers
@@ -454,6 +567,7 @@ jobs:
           root: .
           paths:
             - << pipeline.parameters.app-dir >>/dist-app-test-app
+      - notify_slack_ci_failure
 
   build-ui:
     executor: node-browsers
@@ -474,6 +588,7 @@ jobs:
           root: .
           paths:
             - << pipeline.parameters.app-dir >>/dist-ui
+      - notify_slack_ci_failure
 
   build-ui-test-extension:
     executor: node-browsers
@@ -494,6 +609,7 @@ jobs:
           root: .
           paths:
             - << pipeline.parameters.app-dir >>/dist-ui-test-extension
+      - notify_slack_ci_failure
 
   build-ui-test-app:
     executor: node-browsers
@@ -514,6 +630,7 @@ jobs:
           root: .
           paths:
             - << pipeline.parameters.app-dir >>/dist-ui-test-app
+      - notify_slack_ci_failure
 
   build-extension-test-extension:
     executor: node-browsers
@@ -531,6 +648,7 @@ jobs:
           root: .
           paths:
             - << pipeline.parameters.extension-dir >>/dist-extension-test
+      - notify_slack_ci_failure
 
   build-extension-test-app:
     executor: node-browsers
@@ -548,6 +666,7 @@ jobs:
           root: .
           paths:
             - << pipeline.parameters.extension-dir >>/dist-extension-test-app
+      - notify_slack_ci_failure
 
   build-extension-test-mv3:
     executor: node-browsers
@@ -565,6 +684,7 @@ jobs:
           root: .
           paths:
             - << pipeline.parameters.extension-dir >>/dist-extension-test-mv3
+      - notify_slack_ci_failure
 
   lint-common:
     executor: node-browsers
@@ -575,6 +695,7 @@ jobs:
       - run:
           name: lint
           command: yarn common lint
+      - notify_slack_ci_failure
 
   lint-app:
     executor: node-browsers
@@ -584,7 +705,8 @@ jobs:
           at: .
       - run:
           name: lint
-          command: yarn app lint
+          command: yarn app fail
+      - notify_slack_ci_failure
 
   test-unit-common:
     executor: node-browsers
@@ -597,6 +719,7 @@ jobs:
           command: yarn common test
       - store_test_results:
           path: << pipeline.parameters.common-dir >>/test/results/junit.xml
+      - notify_slack_ci_failure
 
   test-unit-app:
     executor: node-browsers
@@ -609,6 +732,7 @@ jobs:
           command: yarn app test
       - store_test_results:
           path: << pipeline.parameters.app-dir >>/test/results/junit.xml
+      - notify_slack_ci_failure
 
   test-e2e-extension:
     executor: node-browsers
@@ -641,6 +765,7 @@ jobs:
               yarn app test:e2e:extension --retries 4
             fi
           no_output_timeout: 20m
+      - notify_slack_ci_failure
 
   test-e2e-extension-snaps:
     executor: node-browsers
@@ -673,6 +798,7 @@ jobs:
               yarn app test:e2e:extension:snaps --retries 4
             fi
           no_output_timeout: 20m
+      - notify_slack_ci_failure
 
   test-e2e-extension-mv3:
     executor: node-browsers
@@ -705,6 +831,7 @@ jobs:
               yarn app test:e2e:extension:mv3 --retries 2 || echo "Temporarily suppressing MV3 e2e test failures"
             fi
           no_output_timeout: 20m
+      - notify_slack_ci_failure
 
   test-e2e-app:
     executor: playwright
@@ -748,6 +875,7 @@ jobs:
       - store_artifacts:
           name: screenshots and trace.zip
           path: ./<< pipeline.parameters.app-dir >>/test/playwright/test-results/
+      - notify_slack_ci_failure
 
   package-windows:
     executor: electron-builder
@@ -774,6 +902,7 @@ jobs:
             mv ./${APP_DIR}/packages/metamask-desktop-*-setup.exe ./${APP_DIR}/packages/artifacts/
       - store_artifacts:
           path: ./<< pipeline.parameters.app-dir >>/packages/artifacts
+      - notify_slack_ci_failure
 
   package-linux:
     executor: electron-builder
@@ -800,6 +929,7 @@ jobs:
             mv ./${APP_DIR}/packages/metamask-desktop-*.AppImage ./${APP_DIR}/packages/artifacts/
       - store_artifacts:
           path: ./<< pipeline.parameters.app-dir >>/packages/artifacts
+      - notify_slack_ci_failure
 
   package-mac:
     executor: mac
@@ -829,3 +959,4 @@ jobs:
             mv ./${APP_DIR}/packages/MetaMask*.dmg ./${APP_DIR}/packages/artifacts/
       - store_artifacts:
           path: ./<< pipeline.parameters.app-dir >>/packages/artifacts
+      - notify_slack_ci_failure
