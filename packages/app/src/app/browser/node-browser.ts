@@ -11,8 +11,16 @@ import {
   getDesktopVersion,
   getNumericalDesktopVersion,
 } from '../utils/version';
+import {
+  WindowCreateRequest,
+  WindowHandler,
+  WindowUpdateRequest,
+} from '../types/window';
+import cfg from '../utils/config';
+import { TabsHandler, TabsQuery } from '../types/tabs';
 
 const TIMEOUT_REQUEST = 5000;
+const PADDING_POPUP = 10;
 
 const UNHANDLED_FUNCTIONS = [
   'notifications.onClicked.addListener',
@@ -36,37 +44,14 @@ const PROXY_FUNCTIONS = [
   'browserAction.setBadgeText',
   'notifications.create',
   'runtime.getURL',
-  'tabs.query',
-  'windows.create',
   'windows.getAll',
   'windows.getLastFocused',
-  'windows.update',
 ];
 
 const requestPromises: { [id: string]: (result: any) => void } = {};
 let requestStream: Duplex | undefined;
-
-const raw = {
-  storage: {
-    local: {
-      get: () => ObfuscatedStore.getStore(),
-      set: async (data: any) => {
-        await ObfuscatedStore.setStore(data);
-      },
-      clear: () => ObfuscatedStore.clear(),
-    },
-  },
-  runtime: {
-    id: '1234',
-    lastError: undefined,
-    getManifest: () => ({
-      manifest_version: 2,
-      version: getNumericalDesktopVersion(),
-      version_name: getDesktopVersion(),
-    }),
-    getPlatformInfo: () => Promise.resolve({ os: 'mac' }),
-  },
-};
+let windowHandler: WindowHandler | undefined;
+let tabHandler: TabsHandler | undefined;
 
 const warn = (key: string[]) => {
   log.debug(`Browser method not supported - ${key.join('.')}`);
@@ -157,6 +142,75 @@ const init = (manualOverrides: any): Browser => {
   return browser;
 };
 
+const raw = {
+  storage: {
+    local: {
+      get: () => ObfuscatedStore.getStore(),
+      set: async (data: any) => {
+        await ObfuscatedStore.setStore(data);
+      },
+      clear: () => ObfuscatedStore.clear(),
+    },
+  },
+  runtime: {
+    id: '1234',
+    lastError: undefined,
+    getManifest: () => ({
+      manifest_version: 2,
+      version: getNumericalDesktopVersion(),
+      version_name: getDesktopVersion(),
+    }),
+    getPlatformInfo: () => Promise.resolve({ os: 'mac' }),
+  },
+  windows: {
+    create: (request: WindowCreateRequest) => {
+      let { left } = request;
+      let proxyWindowCreate;
+
+      if (!cfg().disableExtensionPopup) {
+        left -= request.width + PADDING_POPUP;
+        proxyWindowCreate = proxy(['windows', 'create'], [request]);
+      }
+
+      return (
+        windowHandler?.create({
+          ...request,
+          left,
+        }) || proxyWindowCreate
+      );
+    },
+    remove: (windowId: string) => {
+      let proxyWindowRemove;
+
+      if (!cfg().disableExtensionPopup) {
+        proxyWindowRemove = proxy(['windows', 'remove'], [windowId]);
+      }
+
+      return windowHandler?.remove(windowId) || proxyWindowRemove;
+    },
+    update: (windowId: string, request: WindowUpdateRequest) => {
+      let proxyWindowUpdate;
+
+      if (!cfg().disableExtensionPopup) {
+        proxyWindowUpdate = proxy(['windows', 'update'], [windowId, request]);
+      }
+
+      return windowHandler?.update(request) || proxyWindowUpdate;
+    },
+  },
+  tabs: {
+    query: (opts: TabsQuery) => {
+      let proxyTabsQuery;
+
+      if (!cfg().disableExtensionPopup) {
+        proxyTabsQuery = proxy(['tabs', 'query'], [opts]);
+      }
+
+      return tabHandler?.query({}) || proxyTabsQuery;
+    },
+  },
+};
+
 export const browser: Browser = init(raw);
 
 export const registerRequestStream = (stream: Duplex) => {
@@ -173,4 +227,12 @@ export const unregisterRequestStream = () => {
 
   requestStream.removeAllListeners();
   requestStream = undefined;
+};
+
+export const registerWindowHandler = (handler: WindowHandler) => {
+  windowHandler = handler;
+};
+
+export const registerTabsHandler = (handler: TabsHandler) => {
+  tabHandler = handler;
 };

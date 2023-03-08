@@ -12,7 +12,7 @@ module.exports = function (api) {
       '@babel/preset-env',
       '@babel/preset-react',
     ],
-    plugins: [['./build/code-fencing-babel', { buildType: 'desktopui' }]],
+    plugins: [['./build/code-fencing-babel', { buildType: 'desktop' }]],
     ignore: [
       '**/*.config.js',
       '**/*.test.js',
@@ -23,7 +23,6 @@ module.exports = function (api) {
       'packages',
       'test',
       'playwright',
-      'submodules/extension/.storybook',
       'submodules/extension/.yarn',
       'submodules/extension/builds',
       'submodules/extension/development',

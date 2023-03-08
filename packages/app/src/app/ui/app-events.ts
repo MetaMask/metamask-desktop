@@ -61,6 +61,7 @@ export default class AppEvents {
     if (cfg().ui.enableDevTools) {
       globalShortcut.register('CommandOrControl+Shift+I', () => {
         this.UIState.mainWindow?.webContents.openDevTools();
+        this.UIState.approvalWindow?.webContents.openDevTools();
       });
     }
 

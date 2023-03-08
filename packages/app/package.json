@@ -423,7 +423,6 @@
     "vinyl-sourcemaps-apply": "^0.2.1",
     "wait-on": "^7.0.1",
     "watchify": "^4.0.0",
-    "webextension-polyfill": "^0.8.0",
     "webpack": "^5.75.0",
     "yargs": "^17.0.1"
   },
@@ -591,7 +590,8 @@
       "eth-json-rpc-filters>eth-json-rpc-middleware>ethereumjs-util>ethereum-cryptography>secp256k1": false,
       "eth-sig-util>ethereumjs-util>ethereum-cryptography>secp256k1": false,
       "@storybook/test-runner>playwright": false,
-      "memoizee>es5-ext": false
+      "memoizee>es5-ext": false,
+      "global-agent>core-js": false
     }
   }
 }
