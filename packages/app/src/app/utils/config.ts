@@ -49,7 +49,6 @@ const loadConfig = () => {
       url: `ws://localhost:${port}`,
     },
     segmentWriteKey: process.env.SEGMENT_WRITE_KEY || 'FAKE',
-    segmentHost: process.env.SEGMENT_HOST || 'http://localhost:9090',
   };
 };
 
