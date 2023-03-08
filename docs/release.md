@@ -11,7 +11,7 @@ To create a new release:
 1. Run `yarn release:app` then follow the instructions to specify which part of the version to update. After saving the file, it will automatically:
 
     - Increment the Electron application version defined in [packages/app/package/json](../packages/app/package.json).
-    - Increment the root major version defined in ][package.json](../package.json).
+    - Increment the root major version defined in [package.json](../package.json).
     - Update the Electron application changelog defined in [packages/app/CHANGELOG.md](../packages/app/CHANGELOG.md) using the commit messages since the last release.
     - Commit all the above in a new local branch with the name `release/app-[NEW VERSION]`.
 
