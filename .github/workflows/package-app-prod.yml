@@ -96,6 +96,8 @@ jobs:
       - name: Build desktop ui
         shell: bash
         run: yarn app build:ui:lavamoat:ci
+        env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
       - name: Build desktop app
         shell: bash
         run: yarn app build:app:prod
