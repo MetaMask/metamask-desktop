@@ -426,7 +426,7 @@ jobs:
           at: .
       - run:
           name: root depcheck
-          command: yarn fail
+          command: yarn depcheck
       - run:
           name: common depcheck
           command: yarn depcheck ${COMMON_DIR}
@@ -705,7 +705,7 @@ jobs:
           at: .
       - run:
           name: lint
-          command: yarn app fail
+          command: yarn app lint
       - notify_slack_ci_failure
 
   test-unit-common:
