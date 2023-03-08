@@ -106,6 +106,7 @@ jobs:
           METAMASK_ENVIRONMENT: 'production'
           SEGMENT_WRITE_KEY: ${{ secrets.SEGMENT_WRITE_KEY }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          DESKTOP_ENABLE_UPDATES: true
       - name: Package app for ${{ matrix.os }}
         shell: bash
         run:  |
