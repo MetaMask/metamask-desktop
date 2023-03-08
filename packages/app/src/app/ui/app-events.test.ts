@@ -10,6 +10,9 @@ jest.mock(
       on: jest.fn(),
       exit: jest.fn(),
       setLoginItemSettings: jest.fn(),
+      dock: {
+        hide: jest.fn(),
+      },
     },
     globalShortcut: {
       register: jest.fn(),

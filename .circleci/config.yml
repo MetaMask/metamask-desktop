@@ -64,7 +64,7 @@ executors:
       EXTENSION_DIR: << pipeline.parameters.extension-dir >>
   playwright:
     docker:
-      - image: mcr.microsoft.com/playwright:v1.23.1-focal
+      - image: mcr.microsoft.com/playwright:v1.29.1-focal
     resource_class: large
     environment:
       APP_DIR: << pipeline.parameters.app-dir >>

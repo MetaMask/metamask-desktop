@@ -555,6 +555,9 @@
     },
     "eth-sig-util>ethereumjs-util>ethereum-cryptography>secp256k1": {
       "native": true
+    },
+    "ganache>secp256k1": {
+      "native": true
     }
   }
 }

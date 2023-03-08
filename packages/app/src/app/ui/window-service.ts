@@ -49,7 +49,7 @@ export default class WindowService {
       webPreferences: {
         preload: path.resolve(__dirname, './preload.js'),
       },
-      icon: path.resolve(__dirname, '../dist/app/icon.png'),
+      icon: path.resolve(__dirname, '../icons/icon.png'),
     });
 
     if (process.platform === 'win32') {
@@ -64,12 +64,6 @@ export default class WindowService {
     mainWindow.once('ready-to-show', () => {
       if (!wasOpenedAsHidden) {
         mainWindow.show();
-      }
-    });
-
-    mainWindow.on('hide', () => {
-      if (process.platform === 'darwin') {
-        app.dock.hide();
       }
     });
 
