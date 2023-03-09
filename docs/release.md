@@ -27,7 +27,7 @@ To create a new release:
     - Build and package the Electron application for all platforms.
     - Create a new draft release on GitHub with the packages as artifacts.
 
-6. Publish the [draft release on GitHub](https://github.com/MetaMask/metamask-desktop/releases) to make it publically visible and to create the associated tag: `v[NEW VERSION]`
+6. Publish the [draft release on GitHub](https://github.com/MetaMask/metamask-desktop/releases) to make it publicly visible and to create the associated tag: `v[NEW VERSION]`
 
 7. Create a pull request to merge the release branch into the [main](https://github.com/MetaMask/metamask-desktop/tree/main) branch.
 
