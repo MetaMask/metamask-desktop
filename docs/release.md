@@ -20,15 +20,18 @@ To create a new release:
 
 3. Create a pull request with the release branch targetting the [app-stable](https://github.com/MetaMask/metamask-desktop/tree/app-stable) branch.
 
-4. Once the pull request is reviewed and merged, the GitHub workflow defined at [.github/workflows/package-app-prod.yml](../.github/workflows/package-app-prod.yml) will run if the commit message body starts with: `Release App [NEW VERSION]`.
+4. Once the pull request is reviewed, merge it using a merge commit. The GitHub workflow defined at [.github/workflows/package-app-prod.yml](../.github/workflows/package-app-prod.yml) will then automatically run if the commit message body starts with: `Release App [NEW VERSION]`.
 
 5. Go to the [action on GitHub](https://github.com/MetaMask/metamask-desktop/actions/workflows/package-app-prod.yml) and approve the workflow, this will automatically:
 
     - Build and package the Electron application for all platforms.
     - Create a new draft release on GitHub with the packages as artifacts.
-    - Create a new tag with the name: `v[NEW VERSION]`
 
-6. Open the [draft release on GitHub](https://github.com/MetaMask/metamask-desktop/releases) and publish it to make it visible to the public.
+6. Publish the [draft release on GitHub](https://github.com/MetaMask/metamask-desktop/releases) to make it publically visible and to create the associated tag: `v[NEW VERSION]`
+
+7. Create a pull request to merge the release branch into the [main](https://github.com/MetaMask/metamask-desktop/tree/main) branch.
+
+8. Once the pull request is reviewed, merge it using a merge commit.
 
 ## NPM Package
 
@@ -51,10 +54,8 @@ To create a new release:
 
     - Verify the commit message has the title: `Release Common [NEW VERSION]` before continuing.
     - Build the `@metamask/desktop` package.
-    - Create a new draft release on GitHub including the package files in a zipped artifact.
+    - Create a new public release on GitHub including the package files in a zipped artifact.
     - Create a tag with the name: `@metamask/desktop@[NEW VERSION]`
     - Perform a dry run to verify the package could be uploaded to NPM.
 
 5. Go to the [action on GitHub](https://github.com/MetaMask/metamask-desktop/actions/workflows/publish-common-release.yml) and approve the workflow, this will cause the new package to be published to NPM.
-
-6. Open the [draft release on GitHub](https://github.com/MetaMask/metamask-desktop/releases) and publish it to make it visible to the public.
