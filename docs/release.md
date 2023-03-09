@@ -13,18 +13,20 @@ To create a new release:
     - Increment the Electron application version defined in [packages/app/package/json](../packages/app/package.json).
     - Increment the root major version defined in [package.json](../package.json).
     - Update the Electron application changelog defined in [packages/app/CHANGELOG.md](../packages/app/CHANGELOG.md) using the commit messages since the last release.
-    - Commit all the above in a new local branch with the name `release/app-[NEW VERSION]`.
+    - Commit all the above in a new local branch with the name: `release/app-[NEW VERSION]`
+    - Create a new local tag with the name: `metamask-desktop-app@[NEW VERSION]`
 
-2. Push the branch to the [metamask-desktop](https://github.com/MetaMask/metamask-desktop) repository.
+2. Push the branch and tag to the [metamask-desktop](https://github.com/MetaMask/metamask-desktop) repository.
 
 3. Create a pull request with the release branch targetting the [app-stable](https://github.com/MetaMask/metamask-desktop/tree/app-stable) branch.
 
-4. Once the pull request is reviewed and merged, the GitHub workflow defined at [.github/workflows/package-app-prod.yml](../.github/workflows/package-app-prod.yml) will run if the commit message body starts with: `Release App [Version]`.
+4. Once the pull request is reviewed and merged, the GitHub workflow defined at [.github/workflows/package-app-prod.yml](../.github/workflows/package-app-prod.yml) will run if the commit message body starts with: `Release App [NEW VERSION]`.
 
 5. Go to the [action on GitHub](https://github.com/MetaMask/metamask-desktop/actions/workflows/package-app-prod.yml) and approve the workflow, this will automatically:
 
     - Build and package the Electron application for all platforms.
     - Create a new draft release on GitHub with the packages as artifacts.
+    - Create a new tag with the name: `v[NEW VERSION]`
 
 6. Open the [draft release on GitHub](https://github.com/MetaMask/metamask-desktop/releases) and publish it to make it visible to the public.
 
@@ -39,7 +41,7 @@ To create a new release:
     - Increment the common workspace version defined in [packages/common/package/json](../packages/common/package.json).
     - Increment the root major version defined in [package.json](../package.json).
     - Update the common workspace changelog defined in [packages/common/CHANGELOG.md](../packages/common/CHANGELOG.md) using the commit messages since the last release.
-    - Commit all the above in a new local branch with the name `release/common-[NEW VERSION]`.
+    - Commit all the above in a new local branch with the name: `release/common-[NEW VERSION]`
 
 2. Push the branch to the [metamask-desktop](https://github.com/MetaMask/metamask-desktop) repository.
 
@@ -47,9 +49,10 @@ To create a new release:
 
 4. Once the pull request is reviewed and merged, the GitHub workflow defined at [.github/workflows/publish-common-release.yml](../.github/workflows/publish-common-release.yml) will run. This will automatically:
 
-    - Verify the commit message has the title: `Release Common [Version]` before continuing.
+    - Verify the commit message has the title: `Release Common [NEW VERSION]` before continuing.
     - Build the `@metamask/desktop` package.
     - Create a new draft release on GitHub including the package files in a zipped artifact.
+    - Create a tag with the name: `@metamask/desktop@[NEW VERSION]`
     - Perform a dry run to verify the package could be uploaded to NPM.
 
 5. Go to the [action on GitHub](https://github.com/MetaMask/metamask-desktop/actions/workflows/publish-common-release.yml) and approve the workflow, this will cause the new package to be published to NPM.
