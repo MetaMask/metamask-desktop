@@ -61,6 +61,9 @@ const electronBridge = {
   setTheme: async (themeCode: string) => {
     await ipcRenderer.invoke('set-theme', themeCode);
   },
+  syncTheme: async (theme: string) => {
+    await ipcRenderer.invoke('sync-theme', theme);
+  },
   openExternalShell: async (link: string) => {
     await ipcRenderer.invoke('open-external', link);
   },

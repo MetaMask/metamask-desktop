@@ -1,0 +1,50 @@
+@import '../../../submodules/extension/ui/css/reset.scss';
+@import '../../../submodules/extension/ui/css/design-system/index';
+@import '../../../submodules/extension/ui/css/utilities/colors.scss';
+@import '../../../submodules/extension/ui/css/base-styles.scss';
+@import '../../../submodules/extension/ui/css/itcss/settings/index';
+@import '../../../submodules/extension/ui/components/component-library/component-library-components.scss';
+@import '../../../node_modules/@metamask/design-tokens/src/css/design-tokens';
+
+// Imported partials
+// @import '../../submodules/extension/ui/components/app/app-components';
+@import '../../../submodules/extension/ui/components/app/tab-bar/index.scss';
+
+// Imported partials
+// @import '../../submodules/extension/ui/components/ui/ui-components';
+@import '../../../submodules/extension/ui/components/ui/button/buttons.scss';
+@import '../../../submodules/extension/ui/components/ui/chip/chip.scss';
+@import '../../../submodules/extension/ui/components/ui/typography/typography.scss';
+@import '../../../submodules/extension/ui/components/ui/box/box.scss';
+@import '../../../submodules/extension/ui/components/ui/dropdown/dropdown.scss';
+@import '../../../submodules/extension/ui/components/ui/toggle-button/index.scss';
+
+@import '../../../submodules/extension/ui/pages/confirm-import-token';
+@import '../../../submodules/extension/ui/pages/confirm-add-suggested-token/index';
+@import '../../../submodules/extension/ui/pages/confirm-approve/index';
+@import '../../../submodules/extension/ui/pages/confirm-decrypt-message/confirm-decrypt-message';
+@import '../../../submodules/extension/ui/pages/confirm-encryption-public-key/confirm-encryption-public-key';
+@import '../../../submodules/extension/ui/pages/confirmation/confirmation';
+@import '../../../submodules/extension/ui/pages/permissions-connect/index';
+
+@import '../../../submodules/extension/ui/components/app/app-components.scss';
+@import '../../../submodules/extension/ui/components/ui/ui-components';
+@import '../../../submodules/extension/ui/css/loading.scss';
+
+body {
+  background-color: var(--color-background-default);
+}
+
+#mmd-popup-root {
+  height: 100%;
+  width: 100%;
+  overflow-y: scroll;
+  padding-top: 0;
+}
+
+#mmd-popup-content {
+  padding: 0 0 0 0;
+  height: 100%;
+  position: relative;
+  display: flex;
+}

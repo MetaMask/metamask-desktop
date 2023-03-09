@@ -6489,6 +6489,7 @@
       },
       "globals": {
         "performantResolve": true,
+        "process.cwd": true,
         "process.platform": true
       },
       "packages": {

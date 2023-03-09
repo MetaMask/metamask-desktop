@@ -16,6 +16,12 @@ import DesktopApp from './desktop-app';
 import metricsService from './metrics/metrics-service';
 import { EVENT_NAMES } from './metrics/metrics-constants';
 
+const onExtensionBackgroundMessage = (data: any) => {
+  if (data.data?.method === 'markNotificationPopupAsAutomaticallyClosed') {
+    DesktopApp.hideApprovalWindow();
+  }
+};
+
 /**
  * TODO
  * Gets user the preferred language code.
@@ -36,6 +42,8 @@ const registerStatePersistenceListener = () => {
 };
 
 const getPortStream = (remotePort: RemotePort) => {
+  remotePort.stream.on('data', (data) => onExtensionBackgroundMessage(data));
+
   return remotePort.stream;
 };
 
@@ -64,6 +72,20 @@ const registerConnectListeners = (
   DesktopApp.on('connect-external', (connectRequest) => {
     connectExternal(connectRequest);
   });
+
+  if (cfg().enableDesktopPopup) {
+    connectRemote({
+      stream: DesktopApp.approvalStream,
+      name: 'popup',
+      sender: {
+        id: 'egblhinadgaeepccffjicmccokcoddni',
+        url: 'chrome-extension://egblhinadgaeepccffjicmccokcoddni/popup.html',
+        origin: 'chrome-extension://egblhinadgaeepccffjicmccokcoddni',
+      },
+    } as any);
+
+    log.info('Created background connection for approval window');
+  }
 };
 
 /**
