@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import { persistReducer, createMigrate } from 'redux-persist';
 
 import pairStatusMigrations from '../migrations/pair-status';
-import rootMigrations from '../migrations/root';
+import appMigrations from '../migrations/app';
 import appReducer from './app/app';
 import pairStatusReducer from './pair-status/pair-status';
 
@@ -22,7 +22,7 @@ const persistedPairStatusReducer = persistReducer(
 const appPersistConfig = {
   key: 'app',
   storage: window.electronBridge.appStore,
-  migrate: createMigrate(rootMigrations, { debug: false }),
+  migrate: createMigrate(appMigrations, { debug: false }),
   version: 0,
 };
 const persistedAppReducer = persistReducer(appPersistConfig, appReducer);

@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import { persistReducer, createMigrate } from 'redux-persist';
-import rootMigrations from '../../ui/migrations/root';
+import appMigrations from '../../ui/migrations/app';
 import appReducer from '../../ui/ducks/app/app';
 import sendReducer from '../../../submodules/extension/ui/ducks/send/send';
 import historyReducer from '../../../submodules/extension/ui/ducks/history/history';
@@ -14,7 +14,7 @@ import localeMessagesReducer from '../../../submodules/extension/ui/ducks/locale
 const appPersistConfig = {
   key: 'app',
   storage: window.popupElectronBridge.appStore,
-  migrate: createMigrate(rootMigrations, { debug: false }),
+  migrate: createMigrate(appMigrations, { debug: false }),
   version: 0,
 };
 
