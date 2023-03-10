@@ -80,3 +80,4 @@ Your MetaMask Desktop app now acts as a companion app for your Flask extension w
 - [Architecture](docs/architecture.md)
 - [Encryption](docs/encryption.md)
 - [Release Process](docs/release.md)
+- [TOTP Pairing flow](docs/totp-pairing-flow.md)
