@@ -5,7 +5,7 @@ Migration description
 */
 
 function migration(state) {
-  console.log('Running first root migration');
+  console.log('Running first app migration');
   return {
     ...state,
   };

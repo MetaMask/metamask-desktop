@@ -19,7 +19,8 @@ const setTheme = (theme) => {
   } else {
     document.documentElement.setAttribute('data-theme', theme);
   }
-  window.electronBridge.setTheme(themeCode);
+  const electronBridge = window.electronBridge || window.popupElectronBridge;
+  electronBridge?.setTheme(themeCode);
 };
 
 export default setTheme;

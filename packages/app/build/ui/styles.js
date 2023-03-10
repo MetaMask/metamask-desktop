@@ -7,7 +7,7 @@ const rtlcss = require('gulp-rtlcss');
 const rename = require('gulp-rename');
 const pump = pify(require('pump'));
 const { TASKS } = require('./constants');
-const { createTask } = require('./task');
+const { createTask, composeParallel } = require('./task');
 
 let sass;
 
@@ -15,26 +15,44 @@ let sass;
 module.exports = createStyleTasks;
 
 function createStyleTasks() {
-  const prod = createTask(
-    TASKS.STYLES_PROD,
-    createScssBuildTask({
-      src: 'src/ui/css/index.scss',
-      dest: 'src/ui/css/output',
-      devMode: false,
+  return {
+    dev: createTasksForStyleBundles({
+      buildTarget: TASKS.STYLES_DEV,
     }),
-  );
-
-  const dev = createTask(
-    TASKS.STYLES_DEV,
-    createScssBuildTask({
-      src: 'src/ui/css/index.scss',
-      dest: 'src/ui/css/output',
-      devMode: true,
-      pattern: '**/{ui, submodules/extension/ui}/**/*.scss',
+    prod: createTasksForStyleBundles({
+      buildTarget: TASKS.PROD,
     }),
-  );
+  };
+}
 
-  return { prod, dev };
+function createTasksForStyleBundles({ buildTarget }) {
+  const isDev = buildTarget === TASKS.STYLES_DEV;
+
+  const allStyleTasks = ['desktop-ui', 'popup-ui'].map((bundleUi) => {
+    if (bundleUi === 'popup-ui') {
+      return createTask(
+        `${buildTarget}:desktop:popup`,
+        createScssBuildTask({
+          src: 'src/popup-ui/css/index.scss',
+          dest: 'src/popup-ui/css/output',
+          devMode: isDev,
+          pattern: '**/{popup-ui,submodules/extension/ui}/**/*.scss',
+        }),
+      );
+    }
+
+    return createTask(
+      `${buildTarget}:`,
+      createScssBuildTask({
+        src: 'src/ui/css/index.scss',
+        dest: 'src/ui/css/output',
+        devMode: isDev,
+        pattern: '**/{ui,submodules/extension/ui}/**/*.scss',
+      }),
+    );
+  });
+
+  return composeParallel(...allStyleTasks);
 
   function createScssBuildTask({ src, dest, devMode, pattern }) {
     return async function () {
@@ -70,10 +88,9 @@ async function buildScssPipeline(src, dest, devMode, rtl) {
       // pre-process
       gulp.src(src),
       devMode && sourcemaps.init(),
-      sass({ includePaths: ['submodules/extension/ui/css/', 'ui/'] }).on(
-        'error',
-        sass.logError,
-      ),
+      sass({
+        includePaths: ['submodules/extension/ui/css/', 'ui/', 'popup-ui/'],
+      }).on('error', sass.logError),
       autoprefixer(),
       rtl && rtlcss(),
       rtl && rename({ suffix: '-rtl' }),

@@ -22,11 +22,19 @@ Audit report for the MetaMask Desktop app can be found [here](https://consensys.
 
 ## Monorepo
 
-This repo is a monorepo organised in workspaces:
+This repository is a monorepo organised into workspaces:
+
 | Name | Description
 | --- | --- |
 | [app](packages/app/README.md) | The MetaMask Desktop app, built with [Electron](https://www.electronjs.org/docs/latest), which can be paired with the Flask extension to improve its overall performance. |
 | [common](packages/common/README.md) | The JavaScript library used by the Flask extension to connect to the Desktop app. |
+
+To run a script for a specific package:
+```
+yarn [package] [script]
+
+e.g. yarn app package:mac
+```
 
 ## Getting Started
 
@@ -67,16 +75,9 @@ If you see "All set Fox" message displayed in your Desktop app, it means you're 
 
 Your MetaMask Desktop app now acts as a companion app for your Flask extension which shall improve its overall performance.
 
-## Other Scripts
-
-Run a script for a specific package:
-```
-yarn [package] [script]
-
-e.g. yarn app package:mac
-```
-
 # Additional Documentation
 
 - [Architecture](docs/architecture.md)
 - [Encryption](docs/encryption.md)
+- [Release Process](docs/release.md)
+- [TOTP Pairing flow](docs/totp-pairing-flow.md)

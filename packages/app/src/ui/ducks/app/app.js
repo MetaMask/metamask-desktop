@@ -28,6 +28,7 @@ export default function appReducer(state = initialAppState, action) {
   switch (action.type) {
     case UPDATE_THEME: {
       setTheme(action.payload);
+      window.electronBridge.syncTheme(action.payload);
       return {
         ...state,
         theme: action.payload,

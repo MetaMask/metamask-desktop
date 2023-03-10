@@ -62,7 +62,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['src/ui/**/*.ts'],
+      files: ['src/{ui,popup-ui}/**/*.ts'],
       extends: ['.eslintrc.typescript.js'],
     },
   ],

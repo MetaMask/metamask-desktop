@@ -76,12 +76,20 @@ module.exports = function createStaticAssetTasks({
 function getCopyTargets(shouldIncludeLockdown) {
   const allCopyTargets = [
     {
+      src: `./submodules/extension/app/images/icons/`,
+      dest: `images/icons`,
+    },
+    {
       src: `./submodules/extension/app/fonts/`,
       dest: `fonts`,
     },
     {
       src: `./submodules/extension/app/vendor/`,
       dest: `vendor`,
+    },
+    {
+      src: `./submodules/extension/app/_locales/`,
+      dest: `_locales`,
     },
     {
       src: `./node_modules/@fortawesome/fontawesome-free/webfonts/`,
@@ -95,6 +103,11 @@ function getCopyTargets(shouldIncludeLockdown) {
       src: `./src/ui/css/output/`,
       pattern: `*.css`,
       dest: ``,
+    },
+    {
+      src: `./src/popup-ui/css/output/`,
+      pattern: `*.css`,
+      dest: `popup-`,
     },
     {
       src: `./node_modules/globalthis/dist/browser.js`,

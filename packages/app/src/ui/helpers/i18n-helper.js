@@ -5,7 +5,7 @@ import { getPureMessage } from '../../shared/locales/getPureMessage';
 const missingSubstitutionErrors = {};
 
 export const getMessage = (localeCode, localeMessages, key, substitutions) => {
-  let phrase = getPureMessage(localeCode, localeMessages, key);
+  let phrase = getPureMessage(localeCode, localeMessages, key, __electronLog);
   if (phrase === null) {
     return null;
   }

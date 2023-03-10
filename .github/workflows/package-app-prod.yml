@@ -76,7 +76,6 @@ jobs:
       - name: Checkout Git Repository
         uses: actions/checkout@v3
         with:
-          token: ${{ secrets.ACCESS_TOKEN }}
           submodules: true
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -91,9 +90,14 @@ jobs:
       - name: Run extension install deps
         shell: bash
         run: yarn extension
+      - name: Setup desktop ui build
+        shell: bash
+        run: yarn setup:ui:build
       - name: Build desktop ui
         shell: bash
         run: yarn app build:ui:lavamoat:ci
+        env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
       - name: Build desktop app
         shell: bash
         run: yarn app build:app:prod
@@ -102,6 +106,7 @@ jobs:
           METAMASK_ENVIRONMENT: 'production'
           SEGMENT_WRITE_KEY: ${{ secrets.SEGMENT_WRITE_KEY }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          DESKTOP_ENABLE_UPDATES: true
       - name: Package app for ${{ matrix.os }}
         shell: bash
         run:  |
