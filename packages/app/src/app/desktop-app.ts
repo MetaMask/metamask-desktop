@@ -255,10 +255,7 @@ class DesktopApp extends EventEmitter {
       });
     }
 
-    const isDesktopPopupEnabled = readPersistedSettingFromAppState({
-      key: 'isDesktopPopupEnabled',
-      defaultValue: false,
-    });
+    const isDesktopPopupEnabled = this.isDesktopPopupEnabled();
     if (cfg().enableDesktopPopup && isDesktopPopupEnabled) {
       this.enableDesktopPopup(true);
     }
@@ -266,6 +263,8 @@ class DesktopApp extends EventEmitter {
     log.debug('Initialised desktop app');
 
     updateCheck();
+
+    return { isDesktopPopupEnabled };
   }
 
   public getConnection(): ExtensionConnection | undefined {
@@ -290,6 +289,14 @@ class DesktopApp extends EventEmitter {
 
   public hideApprovalWindow() {
     this.UIState.approvalWindow?.hide();
+  }
+
+  public isDesktopPopupEnabled(): boolean {
+    const isDesktopPopupEnabled = readPersistedSettingFromAppState({
+      key: 'isDesktopPopupEnabled',
+      defaultValue: false,
+    });
+    return isDesktopPopupEnabled;
   }
 
   private async enableDesktopPopup(isInitial = false) {
