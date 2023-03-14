@@ -5,6 +5,7 @@ export const initialAppState = {
   theme: 'os',
   language: 'en',
   metametricsOptIn: false,
+  isDesktopPopupEnabled: false,
   isMetametricsOptionSelected: false,
   preferredStartup: 'minimized',
   window: {
@@ -22,6 +23,7 @@ export const UPDATE_METAMETRICS_OPT_IN = 'UPDATE_METAMETRICS_OPT_IN';
 export const UPDATE_PREFERRED_STARTUP = 'UPDATE_PREFFERED_STARTUP';
 export const UPDATE_WINDOW_SIZE = 'UPDATE_WINDOW_SIZE';
 export const UPDATE_WINDOW_POSITION = 'UPDATE_WINDOW_POSITION';
+export const UPDATE_DESKTOP_POPUP_ENABLED = 'UPDATE_DESKTOP_POPUP_ENABLED';
 
 // Reducer
 export default function appReducer(state = initialAppState, action) {
@@ -78,6 +80,14 @@ export default function appReducer(state = initialAppState, action) {
         },
       };
     }
+
+    case UPDATE_DESKTOP_POPUP_ENABLED: {
+      window.electronBridge.toggleDesktopPopup(action.isEnabled);
+      return {
+        ...state,
+        isDesktopPopupEnabled: action.isEnabled,
+      };
+    }
     default:
       return state;
   }
@@ -88,6 +98,8 @@ export const getTheme = (state) => state.app.theme;
 export const getLanguage = (state) => state.app.language;
 export const getMetametricsOptIn = (state) => state.app.metametricsOptIn;
 export const getPreferredStartup = (state) => state.app.preferredStartup;
+export const getDesktopPopupEnabled = (state) =>
+  state.app.isDesktopPopupEnabled;
 
 // Action Creators
 export function updateTheme(payload) {
@@ -112,4 +124,8 @@ export function updateWindowSize(size) {
 
 export function updateWindowPosition(position) {
   return { type: UPDATE_WINDOW_POSITION, position };
+}
+
+export function updateDesktopPopupEnabled(isEnabled) {
+  return { type: UPDATE_DESKTOP_POPUP_ENABLED, isEnabled };
 }

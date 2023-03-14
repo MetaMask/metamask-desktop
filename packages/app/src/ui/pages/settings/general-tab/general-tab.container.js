@@ -9,6 +9,8 @@ import {
   getLanguage,
   getPreferredStartup,
   updatePreferredStartup,
+  updateDesktopPopupEnabled,
+  getDesktopPopupEnabled,
 } from '../../../ducks/app/app';
 import {
   getLastActivation,
@@ -27,6 +29,7 @@ function mapStateToProps(state) {
     language: getLanguage(state),
     theme: getTheme(state),
     preferredStartup: getPreferredStartup(state),
+    isDesktopPopupEnabled: getDesktopPopupEnabled(state),
   };
 }
 
@@ -36,6 +39,8 @@ function mapDispatchToProps(dispatch) {
     updateTheme: (newTheme) => dispatch(updateTheme(newTheme)),
     updatePreferredStartup: (openAtLogin) =>
       dispatch(updatePreferredStartup(openAtLogin)),
+    updateDesktopPopupEnabled: (isEnabled) =>
+      dispatch(updateDesktopPopupEnabled(isEnabled)),
   };
 }
 
