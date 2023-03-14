@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.5]
+### Uncategorized
+- Merge branch 'main' into release/app-0.0.4
+- fix: add segement and sentry env vars
+- feat: implement factory reset ([#554](https://github.com/MetaMask/metamask-desktop/pull/554))
+- Release app-0.0.4
+
 ## [0.0.4]
 ### Uncategorized
 - Update release desktop workflow to avoid link common package ([#561](https://github.com/MetaMask/metamask-desktop/pull/561))
@@ -70,7 +77,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - chore: switch json translation files ([#417](https://github.com/MetaMask/metamask-desktop/pull/417))
 - Fix/update patch electron log target version ([#419](https://github.com/MetaMask/metamask-desktop/pull/419))
 
-[Unreleased]: https://github.com/MetaMask/metamask-desktop/compare/metamask-desktop-app@0.0.4...HEAD
+[Unreleased]: https://github.com/MetaMask/metamask-desktop/compare/metamask-desktop-app@0.0.5...HEAD
+[0.0.5]: https://github.com/MetaMask/metamask-desktop/compare/metamask-desktop-app@0.0.4...metamask-desktop-app@0.0.5
 [0.0.4]: https://github.com/MetaMask/metamask-desktop/compare/metamask-desktop-app@0.0.3...metamask-desktop-app@0.0.4
 [0.0.3]: https://github.com/MetaMask/metamask-desktop/compare/metamask-desktop-app@0.0.2...metamask-desktop-app@0.0.3
 [0.0.2]: https://github.com/MetaMask/metamask-desktop/releases/tag/metamask-desktop-app@0.0.2
