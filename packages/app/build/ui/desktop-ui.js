@@ -187,7 +187,7 @@ prod: Create an optimized build for a production environment.`,
     task,
   } = argv;
 
-  const buildType = BuildType.desktopui;
+  const buildType = BuildType.desktop;
 
   // Manually default this to `false` for dev builds only.
   const shouldLintFenceFiles = lintFenceFiles ?? !/dev/iu.test(task);

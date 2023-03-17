@@ -49,6 +49,7 @@ import { EVENT_NAMES } from './metrics/metrics-constants';
 import { encryptedCypherFilePath } from './storage/storage';
 import { IPCRendererStream } from './ipc-renderer-stream';
 import { TabsQuery } from './types/tabs';
+import sleep from './utils/sleep';
 
 // Set protocol for deeplinking
 if (!cfg().isUnitTest) {
@@ -122,8 +123,10 @@ class DesktopApp extends EventEmitter {
       return dialog.showMessageBox(params);
     });
 
-    ipcMain.handle('toggle-desktop-popup', (_event, isEnabled) => {
+    ipcMain.handle('toggle-desktop-popup', async (_event, isEnabled) => {
       if (cfg().enableDesktopPopup && isEnabled) {
+        // quick hack to avoid race condition between emit the restart and having the UI persisting the isDesktopPopupEnabled
+        await sleep(500);
         this.enableDesktopPopup(false);
       } else {
         this.disableDesktopPopup();

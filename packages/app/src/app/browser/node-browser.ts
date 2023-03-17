@@ -167,7 +167,7 @@ const raw = {
       let { left } = request;
       let proxyWindowCreate;
 
-      if (!cfg().disableExtensionPopup) {
+      if (!cfg().disableExtensionPopup || !windowHandler) {
         left -= request.width + PADDING_POPUP;
         proxyWindowCreate = proxy(['windows', 'create'], [request]);
       }
@@ -182,7 +182,7 @@ const raw = {
     remove: (windowId: string) => {
       let proxyWindowRemove;
 
-      if (!cfg().disableExtensionPopup) {
+      if (!cfg().disableExtensionPopup || !windowHandler) {
         proxyWindowRemove = proxy(['windows', 'remove'], [windowId]);
       }
 
@@ -191,7 +191,7 @@ const raw = {
     update: (windowId: string, request: WindowUpdateRequest) => {
       let proxyWindowUpdate;
 
-      if (!cfg().disableExtensionPopup) {
+      if (!cfg().disableExtensionPopup || !windowHandler) {
         proxyWindowUpdate = proxy(['windows', 'update'], [windowId, request]);
       }
 
@@ -202,7 +202,7 @@ const raw = {
     query: (opts: TabsQuery) => {
       let proxyTabsQuery;
 
-      if (!cfg().disableExtensionPopup) {
+      if (!cfg().disableExtensionPopup || !tabHandler) {
         proxyTabsQuery = proxy(['tabs', 'query'], [opts]);
       }
 
