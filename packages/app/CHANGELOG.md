@@ -6,12 +6,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.0]
+### Uncategorized
+- Chore/package with desktop popup feature enabled ([#601](https://github.com/MetaMask/metamask-desktop/pull/601))
+- feat: implement desktop popup ui toggle ([#598](https://github.com/MetaMask/metamask-desktop/pull/598))
+- chore: add ui documentation ([#581](https://github.com/MetaMask/metamask-desktop/pull/581))
+- chore: add submodule doc ([#592](https://github.com/MetaMask/metamask-desktop/pull/592))
+- Fine tune package GitHub actions env vars ([#596](https://github.com/MetaMask/metamask-desktop/pull/596))
+- desktop popup poc ([#532](https://github.com/MetaMask/metamask-desktop/pull/532))
+- fix: add app icon on dev mode ([#572](https://github.com/MetaMask/metamask-desktop/pull/572))
+- chore: update extension commit ([#584](https://github.com/MetaMask/metamask-desktop/pull/584))
+- fix: hide app icon only after closing window rather than using window.hide event ([#573](https://github.com/MetaMask/metamask-desktop/pull/573))
+
 ## [0.0.5]
 ### Uncategorized
-- Merge branch 'main' into release/app-0.0.4
 - fix: add segement and sentry env vars
 - feat: implement factory reset ([#554](https://github.com/MetaMask/metamask-desktop/pull/554))
-- Release app-0.0.4
 
 ## [0.0.4]
 ### Uncategorized
@@ -42,9 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - chore: change app icon and packaged app name ([#488](https://github.com/MetaMask/metamask-desktop/pull/488))
 - Sync repo 2022-01-31 ([#477](https://github.com/MetaMask/metamask-desktop/pull/477))
 - chore: update pull request template ([#485](https://github.com/MetaMask/metamask-desktop/pull/485))
-- Merge branch 'main' into release/4.0.0
 - fix: desktopui constants added ([#478](https://github.com/MetaMask/metamask-desktop/pull/478))
-- Merge branch 'main' into release/4.0.0
 - chore: update electron app folder structure ([#474](https://github.com/MetaMask/metamask-desktop/pull/474))
 - chore: add extension e2e mv3 tests in pipeline ([#475](https://github.com/MetaMask/metamask-desktop/pull/475))
 - feat: implement error boundary to ui ([#458](https://github.com/MetaMask/metamask-desktop/pull/458))
@@ -62,7 +70,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - feat: implement metametrics opt-in page ([#436](https://github.com/MetaMask/metamask-desktop/pull/436))
 - feat: change tray icon to indicate whether if mmd is paired or not ([#446](https://github.com/MetaMask/metamask-desktop/pull/446))
 - feat: implement support ticket action to mmd ([#445](https://github.com/MetaMask/metamask-desktop/pull/445))
-- Release 4.0.0
 
 ## [0.0.3]
 ### Uncategorized
@@ -77,7 +84,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - chore: switch json translation files ([#417](https://github.com/MetaMask/metamask-desktop/pull/417))
 - Fix/update patch electron log target version ([#419](https://github.com/MetaMask/metamask-desktop/pull/419))
 
-[Unreleased]: https://github.com/MetaMask/metamask-desktop/compare/metamask-desktop-app@0.0.5...HEAD
+[Unreleased]: https://github.com/MetaMask/metamask-desktop/compare/metamask-desktop-app@0.1.0...HEAD
+[0.1.0]: https://github.com/MetaMask/metamask-desktop/compare/metamask-desktop-app@0.0.5...metamask-desktop-app@0.1.0
 [0.0.5]: https://github.com/MetaMask/metamask-desktop/compare/metamask-desktop-app@0.0.4...metamask-desktop-app@0.0.5
 [0.0.4]: https://github.com/MetaMask/metamask-desktop/compare/metamask-desktop-app@0.0.3...metamask-desktop-app@0.0.4
 [0.0.3]: https://github.com/MetaMask/metamask-desktop/compare/metamask-desktop-app@0.0.2...metamask-desktop-app@0.0.3
