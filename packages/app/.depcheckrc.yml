@@ -158,6 +158,7 @@ ignores:
   - react-responsive-carousel
   - react-router-dom
   - react-simple-file-input
+  - react-syntax-highlighter
   - react-tippy
   - react-toggle-button
   - react-transition-group
