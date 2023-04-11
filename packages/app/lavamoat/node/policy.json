@@ -1586,12 +1586,27 @@
     "@metamask/permission-controller": {
       "packages": {
         "@metamask/base-controller": true,
-        "@metamask/controller-utils": true,
+        "@metamask/permission-controller>@metamask/controller-utils": true,
         "@metamask/permission-controller>nanoid": true,
         "deep-freeze-strict": true,
         "eth-rpc-errors": true,
         "immer": true,
         "json-rpc-engine": true
+      }
+    },
+    "@metamask/permission-controller>@metamask/controller-utils": {
+      "globals": {
+        "Buffer.from": true,
+        "console.error": true,
+        "fetch": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "@metamask/controller-utils>isomorphic-fetch": true,
+        "@metamask/snaps-utils>fast-deep-equal": true,
+        "eth-ens-namehash": true,
+        "ethereumjs-util": true,
+        "ethjs>ethjs-unit": true
       }
     },
     "@metamask/permission-controller>nanoid": {
@@ -1732,14 +1747,11 @@
       }
     },
     "@metamask/rpc-methods": {
-      "globals": {
-        "console.warn": true
-      },
       "packages": {
         "@metamask/key-tree": true,
         "@metamask/key-tree>@noble/hashes": true,
-        "@metamask/permission-controller": true,
         "@metamask/rpc-methods>@metamask/browser-passworder": true,
+        "@metamask/rpc-methods>@metamask/permission-controller": true,
         "@metamask/rpc-methods>nanoid": true,
         "@metamask/snaps-ui": true,
         "@metamask/snaps-utils": true,
@@ -1771,6 +1783,41 @@
       },
       "globals": {
         "Buffer.allocUnsafe": true
+      }
+    },
+    "@metamask/rpc-methods>@metamask/permission-controller": {
+      "globals": {
+        "console.error": true
+      },
+      "packages": {
+        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/base-controller": true,
+        "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils": true,
+        "@metamask/rpc-methods>nanoid": true,
+        "deep-freeze-strict": true,
+        "eth-rpc-errors": true,
+        "immer": true,
+        "json-rpc-engine": true
+      }
+    },
+    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/base-controller": {
+      "packages": {
+        "immer": true
+      }
+    },
+    "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils": {
+      "globals": {
+        "Buffer.from": true,
+        "console.error": true,
+        "fetch": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "@metamask/snaps-utils>fast-deep-equal": true,
+        "@metamask/utils": true,
+        "@spruceid/siwe-parser": true,
+        "eth-ens-namehash": true,
+        "ethereumjs-util": true,
+        "ethjs>ethjs-unit": true
       }
     },
     "@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak": {
@@ -1883,20 +1930,17 @@
         "chrome.offscreen.createDocument": true,
         "chrome.offscreen.hasDocument": true,
         "clearTimeout": true,
-        "console.error": true,
-        "console.info": true,
-        "console.log": true,
-        "console.warn": true,
         "document.getElementById": true,
         "fetch.bind": true,
         "setTimeout": true
       },
       "packages": {
-        "@metamask/base-controller": true,
-        "@metamask/permission-controller": true,
         "@metamask/post-message-stream": true,
         "@metamask/providers>@metamask/object-multiplex": true,
         "@metamask/rpc-methods": true,
+        "@metamask/snaps-controllers>@metamask/base-controller": true,
+        "@metamask/snaps-controllers>@metamask/permission-controller": true,
+        "@metamask/snaps-controllers>@metamask/subject-metadata-controller": true,
         "@metamask/snaps-controllers>@xstate/fsm": true,
         "@metamask/snaps-controllers>concat-stream": true,
         "@metamask/snaps-controllers>gunzip-maybe": true,
@@ -1904,7 +1948,6 @@
         "@metamask/snaps-controllers>readable-web-to-node-stream": true,
         "@metamask/snaps-controllers>tar-stream": true,
         "@metamask/snaps-utils": true,
-        "@metamask/subject-metadata-controller": true,
         "@metamask/utils": true,
         "eth-rpc-errors": true,
         "json-rpc-engine": true,
@@ -1912,11 +1955,46 @@
         "pump": true
       }
     },
+    "@metamask/snaps-controllers>@metamask/base-controller": {
+      "packages": {
+        "immer": true
+      }
+    },
+    "@metamask/snaps-controllers>@metamask/base-controller>@metamask/controller-utils": {
+      "globals": {
+        "Buffer.from": true,
+        "console.error": true,
+        "fetch": true,
+        "setTimeout": true
+      },
+      "packages": {
+        "@metamask/snaps-utils>fast-deep-equal": true,
+        "@metamask/utils": true,
+        "@spruceid/siwe-parser": true,
+        "eth-ens-namehash": true,
+        "ethereumjs-util": true,
+        "ethjs>ethjs-unit": true
+      }
+    },
     "@metamask/snaps-controllers>@metamask/base-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak": {
       "native": true
     },
     "@metamask/snaps-controllers>@metamask/base-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>secp256k1": {
       "native": true
+    },
+    "@metamask/snaps-controllers>@metamask/permission-controller": {
+      "globals": {
+        "console.error": true
+      },
+      "packages": {
+        "@metamask/snaps-controllers>@metamask/base-controller": true,
+        "@metamask/snaps-controllers>@metamask/base-controller>@metamask/controller-utils": true,
+        "@metamask/snaps-controllers>nanoid": true,
+        "deep-freeze-strict": true,
+        "eth-rpc-errors": true,
+        "immer": true,
+        "json-rpc-engine": true
+      }
     },
     "@metamask/snaps-controllers>@metamask/rpc-methods>@metamask/permission-controller>@metamask/controller-utils>ethereumjs-util>ethereum-cryptography>keccak": {
       "native": true
@@ -1930,6 +2008,11 @@
       },
       "globals": {
         "Buffer.allocUnsafe": true
+      }
+    },
+    "@metamask/snaps-controllers>@metamask/subject-metadata-controller": {
+      "packages": {
+        "@metamask/snaps-controllers>@metamask/base-controller": true
       }
     },
     "@metamask/snaps-controllers>@xstate/fsm": {
@@ -2189,7 +2272,6 @@
         "fs.promises.readFile": true,
         "fs.promises.stat": true,
         "fs.promises.writeFile": true,
-        "fs/promises": true,
         "path": true
       },
       "globals": {
@@ -2197,6 +2279,9 @@
         "TextDecoder": true,
         "URL": true,
         "__dirname": true,
+        "console.error": true,
+        "console.log": true,
+        "console.warn": true,
         "document.body.appendChild": true,
         "document.createElement": true
       },
@@ -2207,6 +2292,7 @@
         "@metamask/snaps-utils>@babel/types": true,
         "@metamask/snaps-utils>cron-parser": true,
         "@metamask/snaps-utils>fast-deep-equal": true,
+        "@metamask/snaps-utils>fast-json-stable-stringify": true,
         "@metamask/snaps-utils>rfdc": true,
         "@metamask/snaps-utils>validate-npm-package-name": true,
         "@metamask/utils": true,
@@ -3520,25 +3606,38 @@
         "console.warn": true
       },
       "packages": {
+        "eth-lattice-keyring>@ethereumjs/util>@chainsafe/ssz": true,
         "eth-lattice-keyring>@ethereumjs/util>@ethereumjs/rlp": true,
-        "eth-lattice-keyring>@ethereumjs/util>async": true,
         "eth-lattice-keyring>@ethereumjs/util>ethereum-cryptography": true
+      }
+    },
+    "eth-lattice-keyring>@ethereumjs/util>@chainsafe/ssz": {
+      "globals": {
+        "Buffer.alloc": true
+      },
+      "packages": {
+        "eth-lattice-keyring>@ethereumjs/util>@chainsafe/ssz>@chainsafe/as-sha256": true,
+        "eth-lattice-keyring>@ethereumjs/util>@chainsafe/ssz>@chainsafe/persistent-merkle-tree": true,
+        "eth-lattice-keyring>@ethereumjs/util>@chainsafe/ssz>case": true
+      }
+    },
+    "eth-lattice-keyring>@ethereumjs/util>@chainsafe/ssz>@chainsafe/as-sha256": {
+      "globals": {
+        "WebAssembly.Instance": true,
+        "WebAssembly.Module": true
+      }
+    },
+    "eth-lattice-keyring>@ethereumjs/util>@chainsafe/ssz>@chainsafe/persistent-merkle-tree": {
+      "globals": {
+        "WeakRef": true
+      },
+      "packages": {
+        "eth-lattice-keyring>@ethereumjs/util>@chainsafe/ssz>@chainsafe/as-sha256": true
       }
     },
     "eth-lattice-keyring>@ethereumjs/util>@ethereumjs/rlp": {
       "globals": {
         "TextEncoder": true
-      }
-    },
-    "eth-lattice-keyring>@ethereumjs/util>async": {
-      "globals": {
-        "clearTimeout": true,
-        "console": true,
-        "define": true,
-        "process": true,
-        "queueMicrotask": true,
-        "setImmediate": true,
-        "setTimeout": true
       }
     },
     "eth-lattice-keyring>@ethereumjs/util>ethereum-cryptography": {
@@ -3572,7 +3671,15 @@
       "packages": {
         "@metamask/key-tree>@noble/hashes": true,
         "@metamask/key-tree>@scure/base": true,
-        "eth-lattice-keyring>@ethereumjs/util>ethereum-cryptography>@noble/secp256k1": true
+        "eth-lattice-keyring>@ethereumjs/util>ethereum-cryptography>@scure/bip32>@noble/secp256k1": true
+      }
+    },
+    "eth-lattice-keyring>@ethereumjs/util>ethereum-cryptography>@scure/bip32>@noble/secp256k1": {
+      "builtin": {
+        "crypto": true
+      },
+      "globals": {
+        "crypto": true
       }
     },
     "eth-lattice-keyring>bn.js": {
