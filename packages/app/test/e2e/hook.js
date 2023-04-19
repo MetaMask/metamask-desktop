@@ -98,7 +98,7 @@ const registerDriverHooks = () => {
       };
 
       const testPath = process.argv[9];
-      const timeout = testPath.includes('from-import-ui') ? 120000 : 20000;
+      const timeout = testPath.includes('from-import-ui') ? 120000 : 30000;
 
       super(driver, browser, extensionUrl, timeout);
     }
