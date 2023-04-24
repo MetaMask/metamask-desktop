@@ -3,7 +3,7 @@ import './log/logger-init';
 import './browser/browser-init';
 import { webcrypto } from 'node:crypto';
 import electronLog from 'electron-log';
-import fetch, { Headers } from 'node-fetch';
+import nodeFetch, { Headers } from 'node-fetch';
 import * as Sentry from '@sentry/electron/main';
 import { Dedupe, ExtraErrorData } from '@sentry/integrations';
 import { Integration } from '@sentry/types/dist/integration';
@@ -41,8 +41,22 @@ if (!global.self) {
     userAgent: 'Firefox',
   } as Navigator;
 
-  // Use node-fetch which supports proxying with global-agent rather than built-in fetch provided by Node 18
-  global.fetch = fetch as any;
+  const nativeFetch = fetch;
+
+  const fetchWrapper = (url: any, options: any) => {
+    const requestURL = new URL(url);
+
+    if (['https:', 'http:'].includes(requestURL.protocol)) {
+      // Use node-fetch which supports proxying with global-agent rather than built-in fetch provided by Node 18
+      console.log('Using node-fetch', url);
+      return nodeFetch(url, options);
+    }
+    // Some controllers use fetch with other protocols (like data:), which is not supported by node-fetch.
+    // Example is the NFT Controller. In this case, we use the built-in fetch provided by Node 18.
+    return nativeFetch(url, options);
+  };
+
+  global.fetch = fetchWrapper as any;
 
   // represents a window containing a DOM document
   global.window = {
