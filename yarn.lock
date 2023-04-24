@@ -8068,6 +8068,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node@npm:^18.15.13":
+  version: 18.15.13
+  resolution: "@types/node@npm:18.15.13"
+  checksum: 79cc5a2b5f98e8973061a4260a781425efd39161a0e117a69cd089603964816c1a14025e1387b4590c8e82d05133b7b4154fa53a7dffb3877890a66145e76515
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:^8.10.11":
   version: 8.10.48
   resolution: "@types/node@npm:8.10.48"
@@ -25769,7 +25776,7 @@ __metadata:
     "@types/lodash": ^4.14.191
     "@types/madge": ^5.0.0
     "@types/memoizee": ^0.4.8
-    "@types/node": ^17.0.21
+    "@types/node": ^18.15.13
     "@types/node-fetch": ^2.6.1
     "@types/pify": ^5.0.1
     "@types/pump": ^1.1.1
