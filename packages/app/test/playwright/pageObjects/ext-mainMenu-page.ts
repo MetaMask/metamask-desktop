@@ -129,7 +129,9 @@ export class ExtensionMainMenuPage {
     await this.page.locator('text=Experimental').click();
     await this.page.locator('text=Enable desktop app').click();
     const optKey = await this.page
-      .locator(':nth-match(.desktop-pairing, 2) >> :nth-match(p, 1)')
+      .locator(
+        ':nth-match(.desktop-pairing__tooltip-wrapper, 1) >> :nth-match(h1, 1)',
+      )
       .innerText();
     if (messages) {
       await this.checkWarningActionableMessage(messages);
