@@ -754,14 +754,6 @@
         "external:../common/node_modules/@metamask/obs-store/dist/ObservableStore.js": true
       }
     },
-    "external:../common/node_modules/@metamask/obs-store/dist/LocalStorageStore.js": {
-      "globals": {
-        "localStorage": true
-      },
-      "packages": {
-        "external:../common/node_modules/@metamask/obs-store/dist/ObservableStore.js": true
-      }
-    },
     "external:../common/node_modules/@metamask/obs-store/dist/MergedStore.js": {
       "packages": {
         "external:../common/node_modules/@metamask/obs-store/dist/ObservableStore.js": true
@@ -780,7 +772,6 @@
     "external:../common/node_modules/@metamask/obs-store/dist/index.js": {
       "packages": {
         "external:../common/node_modules/@metamask/obs-store/dist/ComposedStore.js": true,
-        "external:../common/node_modules/@metamask/obs-store/dist/LocalStorageStore.js": true,
         "external:../common/node_modules/@metamask/obs-store/dist/MergedStore.js": true,
         "external:../common/node_modules/@metamask/obs-store/dist/ObservableStore.js": true,
         "external:../common/node_modules/@metamask/obs-store/dist/asStream.js": true,
