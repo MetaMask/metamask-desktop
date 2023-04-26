@@ -48,7 +48,6 @@ if (!global.self) {
 
     if (['https:', 'http:'].includes(requestURL.protocol)) {
       // Use node-fetch which supports proxying with global-agent rather than built-in fetch provided by Node 18
-      console.log('Using node-fetch', url);
       return nodeFetch(url, options);
     }
     // Some controllers use fetch with other protocols (like data:), which is not supported by node-fetch.
