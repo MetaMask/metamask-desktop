@@ -90,7 +90,6 @@ ignores:
   - '@sentry/integrations'
   - '@sentry/types'
   - '@sentry/utils'
-  - '@spruceid/siwe-parser'
   - '@truffle/codec'
   - '@truffle/decoder'
   - '@zxing/browser'

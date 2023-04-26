@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import {
   Icon,
   ICON_NAMES,
-} from '../../../../submodules/extension/ui/components/component-library';
+} from '../../../../submodules/extension/ui/components/component-library/icon/deprecated';
 
 const Dropdown = ({
   className,
