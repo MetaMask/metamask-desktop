@@ -7,7 +7,7 @@ module.exports = function (api) {
       strictMode: true,
     },
     targets: {
-      electron: '22',
+      electron: '23',
     },
     sourceMaps: isProd ? false : 'inline',
     presets: [

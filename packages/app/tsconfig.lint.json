@@ -1,4 +1,13 @@
 {
-  "exclude": ["dist", "node_modules", "packages", "submodules", "src/popup-ui"],
+  "exclude": [
+    "dist",
+    "node_modules",
+    "packages",
+    "submodules",
+    "src/popup-ui",
+    "**/*.test.js",
+    "**/*.test.ts",
+    "**/*.test.tsx"
+  ],
   "extends": "./tsconfig.json"
 }
