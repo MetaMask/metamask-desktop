@@ -56,7 +56,7 @@ ignores:
   - '@metamask/design-tokens'
   - '@metamask/eth-json-rpc-infura'
   - '@metamask/eth-json-rpc-middleware'
-  - '@metamask/eth-json-rpc-provider
+  - '@metamask/eth-json-rpc-provider'
   - '@metamask/eth-keyring-controller'
   - '@metamask/eth-ledger-bridge-keyring'
   - '@metamask/eth-token-tracker'
@@ -66,7 +66,7 @@ ignores:
   - '@metamask/key-tree'
   - '@metamask/logo'
   - '@metamask/metamask-eth-abis'
-  - '@metamask/message-manager
+  - '@metamask/message-manager'
   - '@metamask/notification-controller'
   - '@metamask/obs-store'
   - '@metamask/permission-controller'
@@ -75,7 +75,7 @@ ignores:
   - '@metamask/providers'
   - '@metamask/rate-limit-controller'
   - '@metamask/rpc-methods'
-  - '@metamask/safe-event-emitter
+  - '@metamask/safe-event-emitter'
   - '@metamask/scure-bip39'
   - '@metamask/slip44'
   - '@metamask/smart-transactions-controller'
@@ -83,7 +83,7 @@ ignores:
   - '@metamask/snaps-ui'
   - '@metamask/snaps-utils'
   - '@metamask/subject-metadata-controller'
-  - '@metamask/swappable-obj-proxy
+  - '@metamask/swappable-obj-proxy'
   - '@metamask/utils'
   - '@ngraveio/bc-ur'
   - '@popperjs/core'
