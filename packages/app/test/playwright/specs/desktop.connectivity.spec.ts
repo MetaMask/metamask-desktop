@@ -39,7 +39,9 @@ test.describe('Extension / Desktop connectivity issues', () => {
       initialPage.errorClickButton('Download MetaMask Desktop'),
     ]);
 
-    expect(newPage.url()).toStrictEqual('https://metamask.io/');
+    expect(newPage.url()).toStrictEqual(
+      'https://github.com/MetaMask/metamask-desktop/releases',
+    );
   });
 
   test('Extension error when desktop close unexpectedly', async ({
