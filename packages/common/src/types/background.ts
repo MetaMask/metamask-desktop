@@ -4,6 +4,7 @@ export interface RemotePortData {
   name: string;
   sender: {
     url: string;
+    id: string;
   };
 }
 

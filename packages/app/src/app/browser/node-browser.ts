@@ -21,6 +21,7 @@ import { TabsHandler, TabsQuery } from '../types/tabs';
 
 const TIMEOUT_REQUEST = 5000;
 const PADDING_POPUP = 10;
+const DEFAULT_RUNTIME_ID = '1234';
 
 const UNHANDLED_FUNCTIONS = [
   'notifications.onClicked.addListener',
@@ -153,7 +154,7 @@ const raw = {
     },
   },
   runtime: {
-    id: '1234',
+    id: DEFAULT_RUNTIME_ID,
     lastError: undefined,
     getManifest: () => ({
       manifest_version: 2,
@@ -213,6 +214,13 @@ const raw = {
 
 export const browser: Browser = init(raw);
 
+export const updateBrowserRuntimeId = (id?: string) => {
+  if (id && id !== browser.runtime.id) {
+    log.debug('Updating browser runtime ID', { id });
+    browser.runtime.id = id;
+  }
+};
+
 export const registerRequestStream = (stream: Duplex) => {
   requestStream = stream;
   requestStream.on('data', (data: BrowserProxyResponse) =>
@@ -226,7 +234,7 @@ export const unregisterRequestStream = () => {
   }
 
   requestStream.removeAllListeners();
-  requestStream = undefined;
+  browser.runtime.id = DEFAULT_RUNTIME_ID;
 };
 
 export const registerWindowHandler = (handler: WindowHandler) => {

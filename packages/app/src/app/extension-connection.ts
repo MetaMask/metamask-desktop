@@ -35,6 +35,7 @@ import {
 import {
   registerRequestStream,
   unregisterRequestStream,
+  updateBrowserRuntimeId,
 } from './browser/node-browser';
 import { DesktopVersionCheck } from './version-check';
 import { DesktopPairing } from './pairing';
@@ -191,6 +192,8 @@ export default class ExtensionConnection extends EventEmitter {
 
     switch (connectionType) {
       case ConnectionType.INTERNAL:
+        updateBrowserRuntimeId(data.remotePort.sender.id);
+
         this.emit('connect-remote', connectArgs);
         break;
 
