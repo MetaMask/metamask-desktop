@@ -51,6 +51,7 @@ jest.mock(
   () => ({
     registerRequestStream: jest.fn(),
     unregisterRequestStream: jest.fn(),
+    updateBrowserRuntimeId: jest.fn(),
   }),
   {
     virtual: true,
