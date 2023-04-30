@@ -2,6 +2,7 @@ import 'global-agent/bootstrap';
 import './log/logger-init';
 import './browser/browser-init';
 import { webcrypto } from 'node:crypto';
+import dns from 'node:dns';
 import electronLog from 'electron-log';
 import nodeFetch, { Headers } from 'node-fetch';
 import * as Sentry from '@sentry/electron/main';
@@ -16,6 +17,18 @@ import { getDesktopVersion } from './utils/version';
 import { ElectronBridge } from './ui/preload';
 import { getSentryDefaultOptions } from './log/setup-sentry';
 import { readPersistedSettingFromAppState } from './storage/ui-storage';
+import cfg from './utils/config';
+
+if (cfg().isAppTest || cfg().isExtensionTest) {
+  // There is an issue with node 18 where it will
+  // auto resolve to ipv6 first first.
+  // This causes localhost connections to fail.
+  // As localhost resolves to ::1:<port> instead of 127.0.0.1:<port>
+  // see this - https://github.com/nodejs/node/issues/40702
+  // and this - https://github.com/node-fetch/node-fetch/issues/1624
+  // To be removed once we are using node 20
+  dns.setDefaultResultOrder('ipv4first');
+}
 
 declare global {
   interface Window {
