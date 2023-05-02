@@ -58,6 +58,13 @@ else
     echo "No environment variable file found"
 fi
 
+# IN_TEST means that the build is for Extension testing (especially e2e tests)
+# Same behavior exists in the Extension.
+if [ "$IN_TEST" = "true" ]; then
+    export INFURA_PROJECT_ID="00000000000000000000000000000000"
+    echo "EXTENSION TEST BUILD - SET INFURA_PROJECT_ID=$INFURA_PROJECT_ID"
+fi
+
 echo "Transpiling JavaScript"
 if [ "$CI" = "true" ]; then
     babel ./ \
