@@ -33,6 +33,11 @@ import {
   waitForAcknowledge,
 } from '@metamask/desktop/dist/utils/stream';
 import {
+  ENVIRONMENT_TYPE_NOTIFICATION,
+  ENVIRONMENT_TYPE_POPUP,
+  ENVIRONMENT_TYPE_FULLSCREEN,
+} from '../../submodules/extension/shared/constants/app';
+import {
   registerRequestStream,
   unregisterRequestStream,
   updateBrowserRuntimeId,
@@ -192,7 +197,16 @@ export default class ExtensionConnection extends EventEmitter {
 
     switch (connectionType) {
       case ConnectionType.INTERNAL:
-        updateBrowserRuntimeId(data.remotePort.sender.id);
+        if (
+          [
+            ENVIRONMENT_TYPE_POPUP,
+            ENVIRONMENT_TYPE_NOTIFICATION,
+            ENVIRONMENT_TYPE_FULLSCREEN,
+          ].includes(data.remotePort.name)
+        ) {
+          const url = new URL(data.remotePort.sender.url);
+          updateBrowserRuntimeId(url.hostname);
+        }
 
         this.emit('connect-remote', connectArgs);
         break;
