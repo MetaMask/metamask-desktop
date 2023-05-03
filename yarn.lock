@@ -4694,7 +4694,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@metamask/snaps-execution-environments@npm:^0.32.2":
+"@metamask/snaps-execution-environments@npm:0.32.2":
   version: 0.32.2
   resolution: "@metamask/snaps-execution-environments@npm:0.32.2"
   dependencies:
@@ -4711,6 +4711,26 @@ __metadata:
     stream-browserify: ^3.0.0
     superstruct: ^1.0.3
   checksum: 10d5d727dea00628c0644ab639bd734b9fb793cdc01ebe5d1101db3041de54b854acc8f935ec8acff134fa12a5713c038c466c2f2813b038dd1eea84d700856f
+  languageName: node
+  linkType: hard
+
+"@metamask/snaps-execution-environments@patch:@metamask/snaps-execution-environments@npm%3A0.32.2#./.yarn/patches/@metamask-snaps-execution-environments-npm-0.32.2-88525c499a.patch::locator=desktop%40workspace%3A.":
+  version: 0.32.2
+  resolution: "@metamask/snaps-execution-environments@patch:@metamask/snaps-execution-environments@npm%3A0.32.2#./.yarn/patches/@metamask-snaps-execution-environments-npm-0.32.2-88525c499a.patch::version=0.32.2&hash=f8477e&locator=desktop%40workspace%3A."
+  dependencies:
+    "@metamask/object-multiplex": ^1.2.0
+    "@metamask/post-message-stream": ^6.1.1
+    "@metamask/providers": ^10.2.0
+    "@metamask/rpc-methods": ^0.32.2
+    "@metamask/snaps-utils": ^0.32.2
+    "@metamask/utils": ^5.0.0
+    eth-rpc-errors: ^4.0.3
+    json-rpc-engine: ^6.1.0
+    pump: ^3.0.0
+    ses: ^0.18.1
+    stream-browserify: ^3.0.0
+    superstruct: ^1.0.3
+  checksum: abeace94143cd04e8026bff5f0045b2e79fb20045f8e55ca764ce40495b40576860d91f12e47296d15b07e1406daa9674ff723c9219cf149c0e254d0664267c8
   languageName: node
   linkType: hard
 
