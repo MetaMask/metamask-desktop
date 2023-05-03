@@ -22,6 +22,7 @@ import { TabsHandler, TabsQuery } from '../types/tabs';
 const TIMEOUT_REQUEST = 5000;
 const PADDING_POPUP = 10;
 const DEFAULT_RUNTIME_ID = '1234';
+const DEFAULT_BROWSER_PROTOCOL = 'moz-extension:';
 
 const UNHANDLED_FUNCTIONS = [
   'notifications.onClicked.addListener',
@@ -44,7 +45,7 @@ const PROXY_FUNCTIONS = [
   'browserAction.setBadgeBackgroundColor',
   'browserAction.setBadgeText',
   'notifications.create',
-  'runtime.getURL',
+  'tabs.update',
   'windows.getAll',
   'windows.getLastFocused',
 ];
@@ -155,6 +156,7 @@ const raw = {
   },
   runtime: {
     id: DEFAULT_RUNTIME_ID,
+    protocol: DEFAULT_BROWSER_PROTOCOL,
     lastError: undefined,
     getManifest: () => ({
       manifest_version: 2,
@@ -162,6 +164,13 @@ const raw = {
       version_name: getDesktopVersion(),
     }),
     getPlatformInfo: () => Promise.resolve({ os: 'mac' }),
+    getURL: (urlPath?: string) => {
+      if (urlPath === 'home.html') {
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
+        return `${browser.runtime.protocol}//${browser.runtime.id}/home.html`;
+      }
+      return proxy(['runtime', 'getURL'], [urlPath]);
+    },
   },
   windows: {
     create: (request: WindowCreateRequest) => {
@@ -221,6 +230,13 @@ export const updateBrowserRuntimeId = (id?: string) => {
   }
 };
 
+export const updateBrowserRuntimeProtocol = (protocol?: string) => {
+  if (protocol && protocol !== browser.runtime.protocol) {
+    log.debug('Updating browser runtime protocol', { protocol });
+    browser.runtime.protocol = protocol;
+  }
+};
+
 export const registerRequestStream = (stream: Duplex) => {
   requestStream = stream;
   requestStream.on('data', (data: BrowserProxyResponse) =>
@@ -235,6 +251,7 @@ export const unregisterRequestStream = () => {
 
   requestStream.removeAllListeners();
   browser.runtime.id = DEFAULT_RUNTIME_ID;
+  browser.runtime.protocol = DEFAULT_BROWSER_PROTOCOL;
 };
 
 export const registerWindowHandler = (handler: WindowHandler) => {

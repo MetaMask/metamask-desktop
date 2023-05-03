@@ -41,6 +41,7 @@ import {
   registerRequestStream,
   unregisterRequestStream,
   updateBrowserRuntimeId,
+  updateBrowserRuntimeProtocol,
 } from './browser/node-browser';
 import { DesktopVersionCheck } from './version-check';
 import { DesktopPairing } from './pairing';
@@ -206,6 +207,7 @@ export default class ExtensionConnection extends EventEmitter {
         ) {
           const url = new URL(data.remotePort.sender.url);
           updateBrowserRuntimeId(url.hostname);
+          updateBrowserRuntimeProtocol(url.protocol);
         }
 
         this.emit('connect-remote', connectArgs);
