@@ -1757,10 +1757,10 @@
     },
     "@metamask/phishing-controller>isomorphic-fetch": {
       "globals": {
-        "Headers": "write",
-        "Request": "write",
-        "Response": "write",
-        "fetch": "write"
+        "Headers": true,
+        "Request": true,
+        "Response": true,
+        "fetch": true
       },
       "packages": {
         "@metamask/eth-json-rpc-infura>node-fetch": true
@@ -4069,7 +4069,7 @@
         "clearTimeout": true,
         "console": true,
         "document.cookie": true,
-        "fetch": "write",
+        "fetch": true,
         "localStorage": true,
         "location": true,
         "navigator": true,
