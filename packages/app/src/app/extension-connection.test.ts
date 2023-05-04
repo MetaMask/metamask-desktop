@@ -68,6 +68,12 @@ jest.mock(
   },
 );
 
+jest.mock('../../submodules/extension/shared/constants/app', () => ({
+  ENVIRONMENT_TYPE_NOTIFICATION: 'notification',
+  ENVIRONMENT_TYPE_POPUP: 'popup',
+  ENVIRONMENT_TYPE_FULLSCREEN: 'fullscreen',
+}));
+
 describe('Extension Connection', () => {
   const streamMock = createStreamMock();
   const multiplexMock = createMultiplexMock();

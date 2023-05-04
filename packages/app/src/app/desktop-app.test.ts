@@ -70,6 +70,12 @@ jest.mock(
   { virtual: true },
 );
 
+jest.mock('../../submodules/extension/shared/constants/app', () => ({
+  ENVIRONMENT_TYPE_NOTIFICATION: 'notification',
+  ENVIRONMENT_TYPE_POPUP: 'popup',
+  ENVIRONMENT_TYPE_FULLSCREEN: 'fullscreen',
+}));
+
 describe('Desktop', () => {
   const browserWindowConstructorMock = BrowserWindow as any;
   const webSocketServerConstructorMock = WebSocketServer as any;
