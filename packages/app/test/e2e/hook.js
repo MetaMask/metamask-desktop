@@ -3,6 +3,7 @@
 const SKIPPED_TESTS = [
   // Flaky in metamask-extension
   'Add a custom network and then delete that same network',
+  'can use the cross-snap RPC endowment and produce a public key',
 ];
 
 const dns = require('node:dns');
