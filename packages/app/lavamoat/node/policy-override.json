@@ -558,6 +558,19 @@
     },
     "ganache>secp256k1": {
       "native": true
+    },
+    "@metamask/phishing-controller>isomorphic-fetch": {
+      "globals": {
+        "Headers": true,
+        "Request": true,
+        "Response": true,
+        "fetch": true
+      }
+    },
+    "eth-trezor-keyring>trezor-connect": {
+      "globals": {
+        "fetch": true
+      }
     }
   }
 }

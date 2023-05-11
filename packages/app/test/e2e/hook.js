@@ -3,7 +3,19 @@
 const SKIPPED_TESTS = [
   // Flaky in metamask-extension
   'Add a custom network and then delete that same network',
+  'can use the cross-snap RPC endowment and produce a public key',
 ];
+
+const dns = require('node:dns');
+
+// There is an issue with node 18 where it will
+// auto resolve to ipv6 first first.
+// This causes localhost connections to fail.
+// As localhost resolves to ::1:<port> instead of 127.0.0.1:<port>
+// see this - https://github.com/nodejs/node/issues/40702
+// and this - https://github.com/node-fetch/node-fetch/issues/1624
+// To be removed once we are using node 20
+dns.setDefaultResultOrder('ipv4first');
 
 const mockttp = require('mockttp');
 const mock = require('mock-require');

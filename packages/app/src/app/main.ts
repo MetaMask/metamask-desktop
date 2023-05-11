@@ -105,17 +105,22 @@ const initialize = async ({
   const initLangCode = await getFirstPreferredLangCode();
   registerStatePersistenceListener();
 
-  await setupController(initState, initLangCode, {
-    registerConnectListeners: registerConnectListeners(isDesktopPopupEnabled),
-    getPortStream,
-    getOrigin,
-    createSnapExecutionService,
-    keyrings: {
-      trezor: TrezorKeyring,
-      ledger: LedgerKeyring,
-      lattice: LatticeKeyring,
+  await setupController(
+    initState,
+    initLangCode,
+    {
+      registerConnectListeners: registerConnectListeners(isDesktopPopupEnabled),
+      getPortStream,
+      getOrigin,
+      createSnapExecutionService,
+      keyrings: {
+        trezor: TrezorKeyring,
+        ledger: LedgerKeyring,
+        lattice: LatticeKeyring,
+      },
     },
-  });
+    true,
+  );
 
   log.info('MetaMask initialization complete.');
 };

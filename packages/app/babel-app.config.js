@@ -7,7 +7,7 @@ module.exports = function (api) {
       strictMode: true,
     },
     targets: {
-      electron: '22',
+      electron: '23',
     },
     sourceMaps: isProd ? false : 'inline',
     presets: [
@@ -18,6 +18,7 @@ module.exports = function (api) {
     plugins: isUnitTest
       ? []
       : [
+          ['./build/remove-require-extension', {}],
           ['./build/code-fencing-babel', { buildType: 'desktop' }],
           [
             'transform-inline-environment-variables',
@@ -31,9 +32,11 @@ module.exports = function (api) {
       '**/*.test.ts',
       '**/node_modules',
       'build/code-fencing-babel.js',
+      'build/remove-require-extension.js',
       'dist',
       'build',
       'packages',
+      'lavamoat',
       'test',
       'playwright',
       'submodules/extension/.storybook',

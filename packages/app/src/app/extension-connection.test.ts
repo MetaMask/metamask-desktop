@@ -51,6 +51,7 @@ jest.mock(
   () => ({
     registerRequestStream: jest.fn(),
     unregisterRequestStream: jest.fn(),
+    updateBrowserRuntimeId: jest.fn(),
   }),
   {
     virtual: true,
@@ -66,6 +67,12 @@ jest.mock(
     virtual: true,
   },
 );
+
+jest.mock('../../submodules/extension/shared/constants/app', () => ({
+  ENVIRONMENT_TYPE_NOTIFICATION: 'notification',
+  ENVIRONMENT_TYPE_POPUP: 'popup',
+  ENVIRONMENT_TYPE_FULLSCREEN: 'fullscreen',
+}));
 
 describe('Extension Connection', () => {
   const streamMock = createStreamMock();

@@ -14,6 +14,12 @@ jest.mock(
   },
 );
 
+jest.mock('../../submodules/extension/shared/constants/app', () => ({
+  ENVIRONMENT_TYPE_NOTIFICATION: 'notification',
+  ENVIRONMENT_TYPE_POPUP: 'popup',
+  ENVIRONMENT_TYPE_FULLSCREEN: 'fullscreen',
+}));
+
 describe('App Desktop Controller', () => {
   const desktopAppMock = desktopApp as jest.Mocked<typeof desktopApp>;
   const extensionConnectionMock = createExtensionConnectionMock();

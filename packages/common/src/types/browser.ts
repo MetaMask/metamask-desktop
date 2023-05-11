@@ -8,9 +8,11 @@ export interface Browser {
   };
   runtime: {
     id: string;
+    protocol: string;
     reload: () => undefined;
     sendMessage: (data: any) => Promise<any>;
     getManifest: () => Promise<any>;
+    getURL: (path?: string) => string | Promise<string>;
   };
 }
 

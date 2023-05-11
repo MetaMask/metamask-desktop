@@ -5,7 +5,7 @@ module.exports = function (api) {
       strictMode: true,
     },
     targets: {
-      electron: '22',
+      electron: '23',
     },
     presets: ['@babel/preset-typescript', '@babel/preset-env'],
     plugins: [],

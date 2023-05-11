@@ -279,17 +279,9 @@ workflows:
             - validate-lock-duplicates
             - validate-lavamoat-config
             - audit
-            - lint-app
-            - lint-common
-            - test-unit-common
-            - test-unit-app
             - test-e2e-extension
             - test-e2e-extension-snaps
             - test-e2e-app
-            - test-e2e-extension-mv3
-            - package-windows
-            - package-linux
-            - package-mac
           context: mm-desktop-slack-secrets
 
 jobs:
