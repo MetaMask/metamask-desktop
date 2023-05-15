@@ -6,6 +6,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.0]
+### Uncategorized
+- Chore/prepare silent release ([#603](https://github.com/MetaMask/metamask-desktop/pull/603))
+- Chore/package with desktop popup feature enabled ([#601](https://github.com/MetaMask/metamask-desktop/pull/601))
+- Merge branch 'main' into release/app-0.0.5
+- feat: implement desktop popup ui toggle ([#598](https://github.com/MetaMask/metamask-desktop/pull/598))
+- Merge branch 'main' into release/app-0.0.5
+- chore: add ui documentation ([#581](https://github.com/MetaMask/metamask-desktop/pull/581))
+- chore: add submodule doc ([#592](https://github.com/MetaMask/metamask-desktop/pull/592))
+- Fine tune package GitHub actions env vars ([#596](https://github.com/MetaMask/metamask-desktop/pull/596))
+- desktop popup poc ([#532](https://github.com/MetaMask/metamask-desktop/pull/532))
+- Merge branch 'main' into release/app-0.0.5
+- fix: add app icon on dev mode ([#572](https://github.com/MetaMask/metamask-desktop/pull/572))
+- chore: update extension commit ([#584](https://github.com/MetaMask/metamask-desktop/pull/584))
+- fix: hide app icon only after closing window rather than using window.hide event ([#573](https://github.com/MetaMask/metamask-desktop/pull/573))
+- Release app-0.0.5
+
 ## [0.0.5]
 ### Uncategorized
 - Merge branch 'main' into release/app-0.0.4
@@ -77,7 +94,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - chore: switch json translation files ([#417](https://github.com/MetaMask/metamask-desktop/pull/417))
 - Fix/update patch electron log target version ([#419](https://github.com/MetaMask/metamask-desktop/pull/419))
 
-[Unreleased]: https://github.com/MetaMask/metamask-desktop/compare/metamask-desktop-app@0.0.5...HEAD
+[Unreleased]: https://github.com/MetaMask/metamask-desktop/compare/metamask-desktop-app@0.1.0...HEAD
+[0.1.0]: https://github.com/MetaMask/metamask-desktop/compare/metamask-desktop-app@0.0.5...metamask-desktop-app@0.1.0
 [0.0.5]: https://github.com/MetaMask/metamask-desktop/compare/metamask-desktop-app@0.0.4...metamask-desktop-app@0.0.5
 [0.0.4]: https://github.com/MetaMask/metamask-desktop/compare/metamask-desktop-app@0.0.3...metamask-desktop-app@0.0.4
 [0.0.3]: https://github.com/MetaMask/metamask-desktop/compare/metamask-desktop-app@0.0.2...metamask-desktop-app@0.0.3
