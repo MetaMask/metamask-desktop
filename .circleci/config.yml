@@ -375,10 +375,14 @@ jobs:
             - run:
                 name: Generate extension browserify LavaMoat policies for desktop build type
                 command: yarn extension lavamoat:webapp:auto:ci -t desktop
+            - run:
+                name: Generate desktop ui browserify LavaMoat policies
+                command: yarn app lavamoat:ui:webapp
             - persist_to_workspace:
                 root: .
                 paths:
                   - << pipeline.parameters.extension-dir >>/lavamoat/browserify/desktop/policy.json
+                  - << pipeline.parameters.app-dir >>/lavamoat/ui/browserify/policy.json
       - persist_to_workspace:
           root: .
           paths:
@@ -464,9 +468,16 @@ jobs:
       - run:
           name: Setup UI build
           command: yarn setup:ui:build
-      - run:
-          name: Validate UI LavaMoat policy
-          command: SCRIPT='app lavamoat:ui' .circleci/scripts/validate-lavamoat-policy.sh
+      - when:
+          condition:
+            or:
+              - matches: { pattern: "^release/.+$", value: << pipeline.git.branch >> }
+              - equal: [ app-stable, << pipeline.git.branch >> ]
+              - equal: [true, << pipeline.parameters.extension-release >>]
+          steps:
+            - run:
+                name: Validate UI LavaMoat policy
+                command: SCRIPT='app lavamoat:ui' .circleci/scripts/validate-lavamoat-policy.sh
       - notify_slack_ci_failure
 
   build-common:
