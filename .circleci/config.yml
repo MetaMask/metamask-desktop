@@ -125,6 +125,9 @@ workflows:
       - audit:
           requires:
             - install-deps
+      - update-lavamoat-ui:
+          requires:
+            - install-deps-extension
       - build-common:
           requires:
             - install-deps
@@ -139,13 +142,13 @@ workflows:
             - install-deps-extension
       - build-ui:
           requires:
-            - install-deps-extension
+            - update-lavamoat-ui
       - build-ui-test-extension:
           requires:
-            - install-deps-extension
+            - update-lavamoat-ui
       - build-ui-test-app:
           requires:
-            - install-deps-extension
+            - update-lavamoat-ui
       - build-extension-test-extension:
           requires:
             - install-deps-extension
@@ -227,6 +230,10 @@ workflows:
           requires:
             - install-deps
           context: mm-desktop-slack-secrets
+      - update-lavamoat-ui:
+          requires:
+            - install-deps-extension
+          context: mm-desktop-slack-secrets
       - build-common:
           requires:
             - install-deps
@@ -241,11 +248,11 @@ workflows:
           context: mm-desktop-slack-secrets
       - build-ui-test-extension:
           requires:
-            - install-deps-extension
+            - update-lavamoat-ui
           context: mm-desktop-slack-secrets
       - build-ui-test-app:
           requires:
-            - install-deps-extension
+            - update-lavamoat-ui
           context: mm-desktop-slack-secrets
       - build-extension-test-extension:
           requires:
@@ -375,14 +382,10 @@ jobs:
             - run:
                 name: Generate extension browserify LavaMoat policies for desktop build type
                 command: yarn extension lavamoat:webapp:auto:ci -t desktop
-            - run:
-                name: Generate desktop ui browserify LavaMoat policies
-                command: yarn app lavamoat:ui:webapp
             - persist_to_workspace:
                 root: .
                 paths:
                   - << pipeline.parameters.extension-dir >>/lavamoat/browserify/desktop/policy.json
-                  - << pipeline.parameters.app-dir >>/lavamoat/ui/browserify/policy.json
       - persist_to_workspace:
           root: .
           paths:
@@ -462,12 +465,6 @@ jobs:
       - run:
           name: Validate app allow-scripts config
           command: SCRIPT='app allow-scripts' .circleci/scripts/validate-allow-scripts.sh
-      - run:
-          name: Validate app LavaMoat policy
-          command: SCRIPT='app lavamoat' .circleci/scripts/validate-lavamoat-policy.sh
-      - run:
-          name: Setup UI build
-          command: yarn setup:ui:build
       - when:
           condition:
             or:
@@ -475,6 +472,12 @@ jobs:
               - equal: [ app-stable, << pipeline.git.branch >> ]
               - equal: [true, << pipeline.parameters.extension-release >>]
           steps:
+            - run:
+                name: Validate app LavaMoat policy
+                command: SCRIPT='app lavamoat' .circleci/scripts/validate-lavamoat-policy.sh
+            - run:
+                name: Setup UI build
+                command: yarn setup:ui:build
             - run:
                 name: Validate UI LavaMoat policy
                 command: SCRIPT='app lavamoat:ui' .circleci/scripts/validate-lavamoat-policy.sh
@@ -547,6 +550,45 @@ jobs:
           root: .
           paths:
             - << pipeline.parameters.app-dir >>/dist-app-test-app
+      - notify_slack_ci_failure
+
+  update-lavamoat-ui:
+    executor: node-browsers
+    steps:
+      - when:
+          condition:
+            and:
+              - not:
+                  matches: { pattern: "^release/.+$", value: << pipeline.git.branch >> }
+              - not:
+                  equal: [ app-stable, << pipeline.git.branch >> ]
+              - equal: [false, << pipeline.parameters.extension-release >>]
+          steps:
+            - checkout_with_submodule
+            - attach_workspace:
+                at: .
+            - restore_cache:
+                key: dependency-cache-extension-v1-{{ checksum "<< pipeline.parameters.extension-dir >>/yarn.lock" }}
+            - run:
+                name: Setup app ui build
+                command: yarn setup:ui:build
+            - run:
+                name: Generate desktop ui browserify LavaMoat policies
+                command: yarn app lavamoat:ui:webapp
+            - persist_to_workspace:
+                root: .
+                paths:
+                  - << pipeline.parameters.app-dir >>/lavamoat/ui/browserify/policy.json
+      - when:
+          condition:
+            or:
+              - matches: { pattern: "^release/.+$", value: << pipeline.git.branch >> }
+              - equal: [ app-stable, << pipeline.git.branch >> ]
+              - equal: [true, << pipeline.parameters.extension-release >>]
+          steps:
+            - run:
+                name: Running on release mode - not updating lavamoat ui
+                command: echo "Nothing to do here"
       - notify_slack_ci_failure
 
   build-ui:
