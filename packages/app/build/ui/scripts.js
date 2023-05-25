@@ -30,6 +30,9 @@ const lavamoatBrowserify = require('lavamoat-browserify');
 const terser = require('terser');
 
 const bifyModuleGroups = require('bify-module-groups');
+const {
+  generateIconNames,
+} = require('../../submodules/extension/development/generate-icon-names');
 
 const appVersion = require('../../package.json').version;
 
@@ -44,9 +47,6 @@ const {
   logError,
   getEnvironment,
 } = require('../../submodules/extension/development/build/utils');
-const {
-  generateIconNames,
-} = require('../../submodules/extension/development/generate-icon-names');
 const { runInChildProcess, createTask, composeParallel } = require('./task');
 const { getConfig } = require('./config');
 
@@ -109,7 +109,10 @@ function createScriptTasks({ applyLavaMoat, buildType, policyOnly }) {
         applyLavaMoat,
         buildTarget,
         buildType,
-        entryFiles: ['desktop-ui'].map((label) => {
+        entryFiles: ['desktop-ui', 'popup-ui'].map((label) => {
+          if (label === 'popup-ui') {
+            return `./src/${label}/${label}.js`;
+          }
           return `./src/ui/${label}.js`;
         }),
         policyOnly,
@@ -289,6 +292,23 @@ function createFactoredBuild({
 
             renderHtmlFile({
               htmlName: 'desktop-ui-dark',
+              groupSet,
+              commonSet,
+              applyLavaMoat,
+            });
+            break;
+          }
+
+          case 'popup-ui': {
+            renderHtmlFile({
+              htmlName: 'popup-ui',
+              groupSet,
+              commonSet,
+              applyLavaMoat,
+            });
+
+            renderHtmlFile({
+              htmlName: 'popup-ui-dark',
               groupSet,
               commonSet,
               applyLavaMoat,
@@ -600,16 +620,7 @@ async function getEnvironmentVariables({ buildTarget, _buildType }) {
   const iconNames = await generateIconNames();
 
   return {
-    COMPATIBILITY_VERSION_DESKTOP: config.COMPATIBILITY_VERSION_DESKTOP,
-    DESKTOP_ENABLE_UPDATES: config.DESKTOP_ENABLE_UPDATES,
-    DESKTOP_PREVENT_OPEN_ON_STARTUP: config.DESKTOP_PREVENT_OPEN_ON_STARTUP,
-    DESKTOP_UI_ENABLE_DEV_TOOLS: config.DESKTOP_UI_ENABLE_DEV_TOOLS,
-    DESKTOP_UI_FORCE_CLOSE: config.DESKTOP_UI_FORCE_CLOSE,
-    DISABLE_WEB_SOCKET_ENCRYPTION: config.DISABLE_WEB_SOCKET_ENCRYPTION,
     ICON_NAMES: iconNames,
-    INFURA_PROJECT_ID: config.INFURA_PROJECT_ID,
-    SKIP_OTP_PAIRING_FLOW: config.SKIP_OTP_PAIRING_FLOW,
-    WEB_SOCKET_PORT: config.WEB_SOCKET_PORT,
     METAMASK_DEBUG: config.METAMASK_DEBUG,
     METAMASK_ENVIRONMENT: environment,
     SENTRY_DSN: config.SENTRY_DSN,
@@ -623,7 +634,12 @@ function renderHtmlFile({ htmlName, groupSet, commonSet, applyLavaMoat }) {
       'build/scripts/renderHtmlFile - must specify "applyLavaMoat" option',
     );
   }
-  const htmlFilePath = `./src/ui/html/${htmlName}.html`;
+  let htmlFilePath = `./src/ui/html/${htmlName}.html`;
+
+  if (htmlName.includes('popup')) {
+    htmlFilePath = `./src/popup-ui/html/${htmlName}.html`;
+  }
+
   const htmlTemplate = readFileSync(htmlFilePath, 'utf8');
   const jsBundles = [...commonSet.values(), ...groupSet.values()].map(
     (label) => `./${label}.js`,

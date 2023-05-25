@@ -5,14 +5,14 @@ module.exports = function (api) {
       strictMode: true,
     },
     targets: {
-      browsers: ['chrome >= 66', 'firefox >= 68'],
+      browsers: ['chrome >= 80', 'firefox >= 78'],
     },
     presets: [
       '@babel/preset-typescript',
       '@babel/preset-env',
       '@babel/preset-react',
     ],
-    plugins: [['./build/code-fencing-babel', { buildType: 'desktopui' }]],
+    plugins: [['./build/code-fencing-babel', { buildType: 'desktop' }]],
     ignore: [
       '**/*.config.js',
       '**/*.test.js',
@@ -23,7 +23,6 @@ module.exports = function (api) {
       'packages',
       'test',
       'playwright',
-      'submodules/extension/.storybook',
       'submodules/extension/.yarn',
       'submodules/extension/builds',
       'submodules/extension/development',

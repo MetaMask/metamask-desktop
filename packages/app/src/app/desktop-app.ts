@@ -20,6 +20,13 @@ import { forwardEvents } from './utils/events';
 import { determineLoginItemSettings } from './utils/settings';
 import cfg from './utils/config';
 import { getDesktopVersion } from './utils/version';
+import {
+  registerTabsHandler,
+  registerWindowHandler,
+  unregisterTabsHandler,
+  unregisterWindowHandler,
+} from './browser/node-browser';
+import { WindowCreateRequest, WindowUpdateRequest } from './types/window';
 import ExtensionConnection from './extension-connection';
 import { updateCheck } from './update-check';
 import {
@@ -40,6 +47,9 @@ import {
 import MetricsService from './metrics/metrics-service';
 import { EVENT_NAMES } from './metrics/metrics-constants';
 import { encryptedCypherFilePath } from './storage/storage';
+import { IPCRendererStream } from './ipc-renderer-stream';
+import { TabsQuery } from './types/tabs';
+import sleep from './utils/sleep';
 
 // Set protocol for deeplinking
 if (!cfg().isUnitTest) {
@@ -55,6 +65,8 @@ if (!cfg().isUnitTest) {
 }
 
 class DesktopApp extends EventEmitter {
+  public approvalStream?: IPCRendererStream;
+
   private extensionConnection?: ExtensionConnection;
 
   private additionalExtensionConnection?: ExtensionConnection;
@@ -107,6 +119,20 @@ class DesktopApp extends EventEmitter {
 
     ipcMain.handle('minimize', () => this.UIState.mainWindow?.minimize());
 
+    ipcMain.handle('ui-dialog', (_event, params) => {
+      return dialog.showMessageBox(params);
+    });
+
+    ipcMain.handle('toggle-desktop-popup', async (_event, isEnabled) => {
+      if (cfg().enableDesktopPopup && isEnabled) {
+        // quick hack to avoid race condition between emit the restart and having the UI persisting the isDesktopPopupEnabled
+        await sleep(500);
+        this.enableDesktopPopup(false);
+      } else {
+        this.disableDesktopPopup();
+      }
+    });
+
     ipcMain.handle('unpair', async () => {
       if (cfg().isExtensionTest || cfg().isAppTest) {
         await this.extensionConnection?.disable();
@@ -138,6 +164,10 @@ class DesktopApp extends EventEmitter {
       win?.setTitleBarOverlay?.(
         titleBarOverlayOpts[theme as keyof typeof titleBarOverlayOpts],
       );
+    });
+
+    ipcMain.handle('sync-theme', (_event, theme) => {
+      this.UIState.approvalWindow?.webContents.send('theme-changed', theme);
     });
 
     ipcMain.handle('set-language', (_event, language) => {
@@ -228,9 +258,16 @@ class DesktopApp extends EventEmitter {
       });
     }
 
+    const isDesktopPopupEnabled = this.isDesktopPopupEnabled();
+    if (cfg().enableDesktopPopup && isDesktopPopupEnabled) {
+      this.enableDesktopPopup(true);
+    }
+
     log.debug('Initialised desktop app');
 
     updateCheck();
+
+    return { isDesktopPopupEnabled };
   }
 
   public getConnection(): ExtensionConnection | undefined {
@@ -251,6 +288,52 @@ class DesktopApp extends EventEmitter {
     }
 
     this.UIState.latticeWindow.webContents.send(channel, ...args);
+  }
+
+  public hideApprovalWindow() {
+    this.UIState.approvalWindow?.hide();
+  }
+
+  public isDesktopPopupEnabled(): boolean {
+    const isDesktopPopupEnabled = readPersistedSettingFromAppState({
+      key: 'isDesktopPopupEnabled',
+      defaultValue: false,
+    });
+    return isDesktopPopupEnabled;
+  }
+
+  private async enableDesktopPopup(isInitial = false) {
+    await this.windowService.createApprovalWindow();
+    registerWindowHandler({
+      create: (request: WindowCreateRequest) => this.onWindowCreate(request),
+      remove: (windowId: string) => this.onWindowRemove(windowId),
+      update: (request: WindowUpdateRequest) => this.onWindowUpdate(request),
+    });
+
+    registerTabsHandler({ query: (_request: TabsQuery) => [] });
+
+    this.approvalStream = new IPCRendererStream(
+      this.UIState.approvalWindow as any,
+      'approval-ui',
+    );
+
+    if (!isInitial) {
+      // We need to trigger a restart to ensure registerConnectListeners is called
+      // with the new approvalStream
+      this.emit('restart');
+    }
+  }
+
+  private disableDesktopPopup() {
+    this.approvalStream?.removeAllListeners();
+    this.approvalStream?.destroy();
+    this.approvalStream = undefined;
+
+    this.UIState.approvalWindow?.destroy();
+    this.UIState.approvalWindow = undefined;
+
+    unregisterWindowHandler();
+    unregisterTabsHandler();
   }
 
   private updateMainWindow() {
@@ -369,6 +452,32 @@ class DesktopApp extends EventEmitter {
     this.appNavigation.setUnPairedTrayIcon();
 
     this.emit('restart');
+  }
+
+  private onWindowCreate(
+    request: WindowCreateRequest,
+  ): BrowserWindow | undefined {
+    const { approvalWindow } = this.UIState;
+
+    if (!approvalWindow) {
+      return undefined;
+    }
+
+    approvalWindow.setSize(request.width, request.height);
+    approvalWindow.setPosition(request.left, request.top);
+    approvalWindow.setTitle('MetaMask Desktop Notification');
+    approvalWindow.webContents.send('show');
+    approvalWindow.show();
+
+    return approvalWindow;
+  }
+
+  private onWindowRemove(_windowId: string) {
+    this.UIState?.approvalWindow?.hide();
+  }
+
+  private onWindowUpdate(_request: WindowUpdateRequest) {
+    // Not required yet as only used in FireFox to position window
   }
 
   private async createWebSocketServer(): Promise<WebSocketServer> {

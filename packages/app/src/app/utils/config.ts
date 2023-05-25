@@ -24,6 +24,10 @@ const loadConfig = () => {
       : compatibilityVersionDesktop;
 
   return {
+    disableExtensionPopup:
+      envBool(process.env.DESKTOP_POPUP) &&
+      envBool(process.env.DISABLE_EXTENSION_POPUP),
+    enableDesktopPopup: envBool(process.env.DESKTOP_POPUP),
     enableUpdates: envBool(process.env.DESKTOP_ENABLE_UPDATES),
     isExtensionTest: envBool(process.env.IN_TEST),
     isAppTest,
@@ -45,7 +49,6 @@ const loadConfig = () => {
       url: `ws://localhost:${port}`,
     },
     segmentWriteKey: process.env.SEGMENT_WRITE_KEY || 'FAKE',
-    segmentHost: process.env.SEGMENT_HOST || 'http://localhost:9090',
   };
 };
 

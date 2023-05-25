@@ -11,8 +11,18 @@ import {
   getDesktopVersion,
   getNumericalDesktopVersion,
 } from '../utils/version';
+import {
+  WindowCreateRequest,
+  WindowHandler,
+  WindowUpdateRequest,
+} from '../types/window';
+import cfg from '../utils/config';
+import { TabsHandler, TabsQuery } from '../types/tabs';
 
 const TIMEOUT_REQUEST = 5000;
+const PADDING_POPUP = 10;
+const DEFAULT_RUNTIME_ID = '1234';
+const DEFAULT_BROWSER_PROTOCOL = 'moz-extension:';
 
 const UNHANDLED_FUNCTIONS = [
   'notifications.onClicked.addListener',
@@ -35,38 +45,15 @@ const PROXY_FUNCTIONS = [
   'browserAction.setBadgeBackgroundColor',
   'browserAction.setBadgeText',
   'notifications.create',
-  'runtime.getURL',
-  'tabs.query',
-  'windows.create',
+  'tabs.update',
   'windows.getAll',
   'windows.getLastFocused',
-  'windows.update',
 ];
 
 const requestPromises: { [id: string]: (result: any) => void } = {};
 let requestStream: Duplex | undefined;
-
-const raw = {
-  storage: {
-    local: {
-      get: () => ObfuscatedStore.getStore(),
-      set: async (data: any) => {
-        await ObfuscatedStore.setStore(data);
-      },
-      clear: () => ObfuscatedStore.clear(),
-    },
-  },
-  runtime: {
-    id: '1234',
-    lastError: undefined,
-    getManifest: () => ({
-      manifest_version: 2,
-      version: getNumericalDesktopVersion(),
-      version_name: getDesktopVersion(),
-    }),
-    getPlatformInfo: () => Promise.resolve({ os: 'mac' }),
-  },
-};
+let windowHandler: WindowHandler | undefined;
+let tabHandler: TabsHandler | undefined;
 
 const warn = (key: string[]) => {
   log.debug(`Browser method not supported - ${key.join('.')}`);
@@ -157,7 +144,98 @@ const init = (manualOverrides: any): Browser => {
   return browser;
 };
 
+const raw = {
+  storage: {
+    local: {
+      get: () => ObfuscatedStore.getStore(),
+      set: async (data: any) => {
+        await ObfuscatedStore.setStore(data);
+      },
+      clear: () => ObfuscatedStore.clear(),
+    },
+  },
+  runtime: {
+    id: DEFAULT_RUNTIME_ID,
+    protocol: DEFAULT_BROWSER_PROTOCOL,
+    lastError: undefined,
+    getManifest: () => ({
+      manifest_version: 2,
+      version: getNumericalDesktopVersion(),
+      version_name: getDesktopVersion(),
+    }),
+    getPlatformInfo: () => Promise.resolve({ os: 'mac' }),
+    getURL: (urlPath?: string) => {
+      if (urlPath === 'home.html') {
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
+        return `${browser.runtime.protocol}//${browser.runtime.id}/home.html`;
+      }
+      return proxy(['runtime', 'getURL'], [urlPath]);
+    },
+  },
+  windows: {
+    create: (request: WindowCreateRequest) => {
+      let { left } = request;
+      let proxyWindowCreate;
+
+      if (!cfg().disableExtensionPopup || !windowHandler) {
+        left -= request.width + PADDING_POPUP;
+        proxyWindowCreate = proxy(['windows', 'create'], [request]);
+      }
+
+      return (
+        windowHandler?.create({
+          ...request,
+          left,
+        }) || proxyWindowCreate
+      );
+    },
+    remove: (windowId: string) => {
+      let proxyWindowRemove;
+
+      if (!cfg().disableExtensionPopup || !windowHandler) {
+        proxyWindowRemove = proxy(['windows', 'remove'], [windowId]);
+      }
+
+      return windowHandler?.remove(windowId) || proxyWindowRemove;
+    },
+    update: (windowId: string, request: WindowUpdateRequest) => {
+      let proxyWindowUpdate;
+
+      if (!cfg().disableExtensionPopup || !windowHandler) {
+        proxyWindowUpdate = proxy(['windows', 'update'], [windowId, request]);
+      }
+
+      return windowHandler?.update(request) || proxyWindowUpdate;
+    },
+  },
+  tabs: {
+    query: (opts: TabsQuery) => {
+      let proxyTabsQuery;
+
+      if (!cfg().disableExtensionPopup || !tabHandler) {
+        proxyTabsQuery = proxy(['tabs', 'query'], [opts]);
+      }
+
+      return tabHandler?.query({}) || proxyTabsQuery;
+    },
+  },
+};
+
 export const browser: Browser = init(raw);
+
+export const updateBrowserRuntimeId = (id?: string) => {
+  if (id && id !== browser.runtime.id) {
+    log.debug('Updating browser runtime ID', { id });
+    browser.runtime.id = id;
+  }
+};
+
+export const updateBrowserRuntimeProtocol = (protocol?: string) => {
+  if (protocol && protocol !== browser.runtime.protocol) {
+    log.debug('Updating browser runtime protocol', { protocol });
+    browser.runtime.protocol = protocol;
+  }
+};
 
 export const registerRequestStream = (stream: Duplex) => {
   requestStream = stream;
@@ -172,5 +250,22 @@ export const unregisterRequestStream = () => {
   }
 
   requestStream.removeAllListeners();
-  requestStream = undefined;
+  browser.runtime.id = DEFAULT_RUNTIME_ID;
+  browser.runtime.protocol = DEFAULT_BROWSER_PROTOCOL;
+};
+
+export const registerWindowHandler = (handler: WindowHandler) => {
+  windowHandler = handler;
+};
+
+export const registerTabsHandler = (handler: TabsHandler) => {
+  tabHandler = handler;
+};
+
+export const unregisterWindowHandler = () => {
+  windowHandler = undefined;
+};
+
+export const unregisterTabsHandler = () => {
+  tabHandler = undefined;
 };

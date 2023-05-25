@@ -1,0 +1,75 @@
+diff --git a/dist/browserify/node-thread/bundle.js b/dist/browserify/node-thread/bundle.js
+index 32872e41d577384c15488a93bb97d39016e6abd1..7c3658e6845a0d4beb859e9993019b209c57411d 100644
+--- a/dist/browserify/node-thread/bundle.js
++++ b/dist/browserify/node-thread/bundle.js
+@@ -14356,7 +14356,7 @@ function wrappy(n,r){if(n&&r)return wrappy(n)(r);if("function"!=typeof n)throw n
+       'use strict';
+       // source: /home/runner/work/snaps-monorepo/snaps-monorepo/packages/snaps-execution-environments/src/common/endowments/crypto.ts
+       return function (require, module, exports) {
+-"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.default=void 0;var _globalObject=require("../globalObject");const createCrypto=()=>{if("crypto"in _globalObject.rootRealmGlobal&&"object"==typeof _globalObject.rootRealmGlobal.crypto&&"SubtleCrypto"in _globalObject.rootRealmGlobal&&"function"==typeof _globalObject.rootRealmGlobal.SubtleCrypto)return{crypto:harden(_globalObject.rootRealmGlobal.crypto),SubtleCrypto:harden(_globalObject.rootRealmGlobal.SubtleCrypto)};const t=require("crypto").webcrypto;return{crypto:harden(t),SubtleCrypto:harden(t.subtle.constructor)}},endowmentModule={names:["crypto","SubtleCrypto"],factory:createCrypto};var _default=endowmentModule;exports.default=_default;
++"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.default=void 0;var _globalObject=require("../globalObject");const createCrypto=()=>{if("crypto"in _globalObject.rootRealmGlobal&&"object"==typeof _globalObject.rootRealmGlobal.crypto&&"SubtleCrypto"in _globalObject.rootRealmGlobal&&"function"==typeof _globalObject.rootRealmGlobal.SubtleCrypto)return{crypto:harden(_globalObject.rootRealmGlobal.crypto),SubtleCrypto:harden(_globalObject.rootRealmGlobal.SubtleCrypto)};const t=require("crypto").webcrypto;return{crypto:harden(t),SubtleCrypto:harden(t.subtle.constructor)}},endowmentModule={names:["crypto","SubtleCrypto"],factory:createCrypto};exports.createCrypto=createCrypto;var _default=endowmentModule;exports.default=_default;
+ 
+       };
+     };
+@@ -14405,14 +14405,14 @@ function wrappy(n,r){if(n&&r)return wrappy(n)(r);if("function"!=typeof n)throw n
+   }
+   }
+ }, {package:"$root$",file:"src/common/endowments/interval.ts",}],
+-[196, {"../globalObject":202}, function(){
++[196, {"../globalObject":202,"./crypto":192}, function(){
+   with (this.scopeTerminator) {
+   with (this.globalThis) {
+     return function() {
+       'use strict';
+       // source: /home/runner/work/snaps-monorepo/snaps-monorepo/packages/snaps-execution-environments/src/common/endowments/math.ts
+       return function (require, module, exports) {
+-"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.default=void 0;var _globalObject=require("../globalObject");function createMath(){const e=Object.getOwnPropertyNames(_globalObject.rootRealmGlobal.Math).reduce(((e,t)=>"random"===t?e:{...e,[t]:_globalObject.rootRealmGlobal.Math[t]}),{});return harden({Math:{...e,random:()=>crypto.getRandomValues(new Uint32Array(1))[0]/2**32}})}const endowmentModule={names:["Math"],factory:createMath};var _default=endowmentModule;exports.default=_default;
++"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.default=void 0;var _globalObject=require("../globalObject");var _crypto_1=require("./crypto");function createMath(){const e=Object.getOwnPropertyNames(_globalObject.rootRealmGlobal.Math).reduce(((e,t)=>"random"===t?e:{...e,[t]:_globalObject.rootRealmGlobal.Math[t]}),{});const hardenedCrypto=_crypto_1.createCrypto();return harden({Math:{...e,random:()=>hardenedCrypto.crypto.getRandomValues(new Uint32Array(1))[0]/2**32}})}const endowmentModule={names:["Math"],factory:createMath};var _default=endowmentModule;exports.default=_default;
+ 
+       };
+     };
+diff --git a/dist/common/endowments/crypto.js b/dist/common/endowments/crypto.js
+index 8c2a667fd80e406a5ed3eb9f474e305688e5dcad..2607d9f1990c4187228b9cca21766cb00dc53b87 100644
+--- a/dist/common/endowments/crypto.js
++++ b/dist/common/endowments/crypto.js
+@@ -20,6 +20,9 @@ const createCrypto = () => {
+         SubtleCrypto: harden(crypto.subtle.constructor),
+     };
+ };
++
++exports.createCrypto = createCrypto;
++
+ const endowmentModule = {
+     names: ['crypto', 'SubtleCrypto'],
+     factory: createCrypto,
+diff --git a/dist/common/endowments/math.js b/dist/common/endowments/math.js
+index 9d2f5c8d6d2394d1bf106c076b01cc10af2d02ac..666e8596c726d6bd74b82c364861cba370730e59 100644
+--- a/dist/common/endowments/math.js
++++ b/dist/common/endowments/math.js
+@@ -1,6 +1,7 @@
+ "use strict";
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const globalObject_1 = require("../globalObject");
++const crypto_1 = require("./crypto");
+ /**
+  * Create a {@link Math} object, with the same properties as the global
+  * {@link Math} object, but with the {@link Math.random} method replaced.
+@@ -18,6 +19,9 @@ function createMath() {
+         }
+         return { ...target, [key]: globalObject_1.rootRealmGlobal.Math[key] };
+     }, {});
++
++    // Since the math endowment requires crypto, we can leverage the crypto endowment factory to get a hardened and platform agnostic instance of webcrypto
++    const hardenedCrypto = crypto_1.createCrypto();
+     return harden({
+         Math: {
+             ...math,
+@@ -38,7 +42,7 @@ function createMath() {
+                 //
+                 // - https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/generateKey
+                 // - https://developer.mozilla.org/en-US/docs/Web/API/Crypto/getRandomValues
+-                return crypto.getRandomValues(new Uint32Array(1))[0] / 2 ** 32;
++                return hardenedCrypto.crypto.getRandomValues(new Uint32Array(1))[0] / 2 ** 32;
+             },
+         },
+     });

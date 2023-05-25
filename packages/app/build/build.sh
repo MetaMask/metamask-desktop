@@ -1,6 +1,7 @@
 #!/bin/sh
 
 APP_DIR="src/app"
+BUILD_DIR="build"
 SHARED_DIR="src/shared"
 SOURCE_HW_DIR="$APP_DIR/hw"
 EXTENSION_DIR="submodules/extension"
@@ -34,6 +35,7 @@ mkdir -p $OUTPUT_APP_DIR/build-types/desktop/images
 mkdir -p $OUTPUT_APP_DIR/build-types/flask/images
 cp $EXTENSION_APP_DIR/build-types/desktop/images/desktop-mascot.json $OUTPUT_APP_DIR/build-types/desktop/images/
 cp $EXTENSION_APP_DIR/build-types/flask/images/flask-mascot.json $OUTPUT_APP_DIR/build-types/flask/images/
+cp $BUILD_DIR/icon.png $OUTPUT_DIR/src/app/icons/icon.png
 cp -r $APP_DIR/icons $OUTPUT_DIR/src/app
 
 # Export all shell variables
@@ -54,6 +56,13 @@ if [ -f ".env" ]; then
     export $(< .env grep -v "#" | grep -v -e '^$' | grep -v -e '=$')
 else
     echo "No environment variable file found"
+fi
+
+# IN_TEST means that the build is for Extension testing (especially e2e tests)
+# Same behavior exists in the Extension.
+if [ "$IN_TEST" = "true" ]; then
+    export INFURA_PROJECT_ID="00000000000000000000000000000000"
+    echo "EXTENSION TEST BUILD - SET INFURA_PROJECT_ID=$INFURA_PROJECT_ID"
 fi
 
 echo "Transpiling JavaScript"

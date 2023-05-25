@@ -2,7 +2,7 @@ import { ObservableStore } from '@metamask/obs-store';
 import { TestConnectionResult } from '../types';
 
 export abstract class DesktopController {
-  private store: ObservableStore;
+  private store: ObservableStore<Record<string, any>>;
 
   constructor({ initState }: { initState: any }) {
     this.store = new ObservableStore({

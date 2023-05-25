@@ -16,6 +16,12 @@ import DesktopApp from './desktop-app';
 import metricsService from './metrics/metrics-service';
 import { EVENT_NAMES } from './metrics/metrics-constants';
 
+const onExtensionBackgroundMessage = (data: any) => {
+  if (data.data?.method === 'markNotificationPopupAsAutomaticallyClosed') {
+    DesktopApp.hideApprovalWindow();
+  }
+};
+
 /**
  * TODO
  * Gets user the preferred language code.
@@ -36,6 +42,8 @@ const registerStatePersistenceListener = () => {
 };
 
 const getPortStream = (remotePort: RemotePort) => {
+  remotePort.stream.on('data', (data) => onExtensionBackgroundMessage(data));
+
   return remotePort.stream;
 };
 
@@ -50,41 +58,69 @@ const createSnapExecutionService = (args: any) => {
 /**
  * Register Desktop App specific extension connect listeners.
  *
- * @param connectRemote - A remotePort object for internal connections.
- * @param connectExternal - A remotePort object for external connections.
+ * @param isDesktopPopupEnabled - Whether the desktop popup is enabled.
+ * @returns A function that registers the listeners.
  */
-const registerConnectListeners = (
-  connectRemote: (remotePort: RemotePort) => void,
-  connectExternal: (remotePort: RemotePort) => void,
-) => {
-  DesktopApp.on('connect-remote', (connectRequest) => {
-    connectRemote(connectRequest);
-  });
+const registerConnectListeners =
+  (isDesktopPopupEnabled: boolean) =>
+  (
+    connectRemote: (remotePort: RemotePort) => void,
+    connectExternal: (remotePort: RemotePort) => void,
+  ) => {
+    DesktopApp.on('connect-remote', (connectRequest) => {
+      connectRemote(connectRequest);
+    });
 
-  DesktopApp.on('connect-external', (connectRequest) => {
-    connectExternal(connectRequest);
-  });
-};
+    DesktopApp.on('connect-external', (connectRequest) => {
+      connectExternal(connectRequest);
+    });
+
+    if (cfg().enableDesktopPopup && isDesktopPopupEnabled) {
+      connectRemote({
+        stream: DesktopApp.approvalStream,
+        name: 'popup',
+        sender: {
+          id: 'egblhinadgaeepccffjicmccokcoddni',
+          url: 'chrome-extension://egblhinadgaeepccffjicmccokcoddni/popup.html',
+          origin: 'chrome-extension://egblhinadgaeepccffjicmccokcoddni',
+        },
+      } as any);
+
+      log.info('Created background connection for approval window');
+    }
+  };
 
 /**
  * Initialize the wallet logic.
+ *
+ * @param options - Options bag.
+ * @param options.isDesktopPopupEnabled - Whether the desktop popup is enabled.
  */
-const initialize = async () => {
+const initialize = async ({
+  isDesktopPopupEnabled,
+}: {
+  isDesktopPopupEnabled: boolean;
+}) => {
   const initState = await loadStateFromPersistence();
   const initLangCode = await getFirstPreferredLangCode();
   registerStatePersistenceListener();
 
-  await setupController(initState, initLangCode, {
-    registerConnectListeners,
-    getPortStream,
-    getOrigin,
-    createSnapExecutionService,
-    keyrings: {
-      trezor: TrezorKeyring,
-      ledger: LedgerKeyring,
-      lattice: LatticeKeyring,
+  await setupController(
+    initState,
+    initLangCode,
+    {
+      registerConnectListeners: registerConnectListeners(isDesktopPopupEnabled),
+      getPortStream,
+      getOrigin,
+      createSnapExecutionService,
+      keyrings: {
+        trezor: TrezorKeyring,
+        ledger: LedgerKeyring,
+        lattice: LatticeKeyring,
+      },
     },
-  });
+    true,
+  );
 
   log.info('MetaMask initialization complete.');
 };
@@ -100,11 +136,13 @@ const onDesktopRestart = async (desktopApp: typeof DesktopApp) => {
     return;
   }
 
+  const isDesktopPopupEnabled = DesktopApp.isDesktopPopupEnabled();
+
   desktopApp.removeAllListeners();
   desktopApp.on('restart', () => onDesktopRestart(desktopApp));
 
   log.debug('Re-initializing background script');
-  await initialize();
+  await initialize({ isDesktopPopupEnabled });
 };
 
 /**
@@ -112,8 +150,9 @@ const onDesktopRestart = async (desktopApp: typeof DesktopApp) => {
  */
 const initDesktopApp = async () => {
   metricsService.track(EVENT_NAMES.DESKTOP_APP_STARTING);
-  await DesktopApp.init();
+  const { isDesktopPopupEnabled } = await DesktopApp.init();
   DesktopApp.on('restart', () => onDesktopRestart(DesktopApp));
+  return { isDesktopPopupEnabled };
 };
 
 initDesktopApp().then(initialize).catch(log.error);

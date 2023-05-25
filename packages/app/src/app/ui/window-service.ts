@@ -49,7 +49,7 @@ export default class WindowService {
       webPreferences: {
         preload: path.resolve(__dirname, './preload.js'),
       },
-      icon: path.resolve(__dirname, '../dist/app/icon.png'),
+      icon: path.resolve(__dirname, '../icons/icon.png'),
     });
 
     if (process.platform === 'win32') {
@@ -57,19 +57,16 @@ export default class WindowService {
       mainWindow?.setMenu(null);
     }
 
-    mainWindow.loadFile(this.getHtmlPath(), this.getAppStartupPage());
+    mainWindow.loadFile(
+      this.getHtmlPath({ popup: false }),
+      this.getAppStartupPage(),
+    );
 
     log.debug('Created main window');
 
     mainWindow.once('ready-to-show', () => {
       if (!wasOpenedAsHidden) {
         mainWindow.show();
-      }
-    });
-
-    mainWindow.on('hide', () => {
-      if (process.platform === 'darwin') {
-        app.dock.hide();
       }
     });
 
@@ -98,6 +95,29 @@ export default class WindowService {
     );
 
     this.UIState.mainWindow = mainWindow;
+  }
+
+  public async createApprovalWindow() {
+    const approvalWindow = new BrowserWindow({
+      show: false,
+      webPreferences: {
+        preload: path.resolve(__dirname, './preload-popup.js'),
+      },
+      icon: path.resolve(__dirname, '../dist/app/icon.png'),
+    });
+
+    approvalWindow.setAlwaysOnTop(true, 'screen-saver');
+
+    if (process.platform === 'win32') {
+      // Keep this to prevent "alt" key is not triggering menu in Windows
+      approvalWindow?.setMenu(null);
+    }
+
+    approvalWindow.loadFile(this.getHtmlPath({ popup: true }), { hash: '/' });
+
+    log.debug('Created approval window');
+
+    this.UIState.approvalWindow = approvalWindow;
   }
 
   public async createTrezorWindow() {
@@ -154,14 +174,14 @@ export default class WindowService {
     this.UIState.latticeWindow = latticeWindow;
   }
 
-  private getHtmlPath() {
+  private getHtmlPath({ popup }: { popup: boolean }) {
     const darkHtmlPath = path.resolve(
       __dirname,
-      '../../../../ui/desktop-ui-dark.html',
+      `../../../../ui/${popup ? 'popup' : 'desktop'}-ui-dark.html`,
     );
     const lightHtmlPath = path.resolve(
       __dirname,
-      '../../../../ui/desktop-ui.html',
+      `../../../../ui/${popup ? 'popup' : 'desktop'}-ui.html`,
     );
     let htmlPath;
 

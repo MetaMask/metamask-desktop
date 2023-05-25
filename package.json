@@ -1,6 +1,6 @@
 {
   "name": "desktop",
-  "version": "9.0.0",
+  "version": "10.0.0",
   "private": true,
   "repository": {
     "type": "git",
@@ -13,8 +13,9 @@
     "build:test:extension": "yarn common build && concurrently -n extension,ui,app  \"yarn app build:extension:test\" \"yarn app build:ui:lavamoat\"  \"yarn app build:app:test:extension\"",
     "build:test:extension:mv3": "yarn common build && concurrently -n extension,ui,app  \"ENABLE_MV3=true yarn app build:extension:test\" \"yarn app build:ui:lavamoat\"  \"yarn app build:app:test:extension\"",
     "lint:lockfile": "lockfile-lint --path yarn.lock --allowed-hosts npm yarn github.com codeload.github.com --empty-hostname true --allowed-schemes \"https:\" \"git+https:\" \"npm:\" \"patch:\" \"workspace:\"",
-    "setup": "yarn setup:submodule && yarn && yarn common build && yarn setup:extension && yarn extension",
+    "setup": "yarn setup:submodule && yarn && yarn common build && yarn setup:extension && yarn setup:ui:build && yarn extension",
     "setup:extension": "sh scripts/init-extension.sh",
+    "setup:ui:build": "sh scripts/symlink-deps-extension.sh",
     "setup:submodule": "sh scripts/init-submodule.sh",
     "app": "yarn workspace metamask-desktop-app",
     "common": "yarn workspace @metamask/desktop",
@@ -155,7 +156,10 @@
     "web3@^0.20.7": "patch:web3@npm%3A0.20.7#./.yarn/patches/web3-npm-0.20.7-ee7ef00c57.patch",
     "ws@7.1.0": "^7",
     "zxcvbn@^4.4.2": "patch:zxcvbn@npm%3A4.4.2#./.yarn/patches/zxcvbn-npm-4.4.2-6527983856.patch",
-    "electron-log@5.0.0-beta.14": "patch:electron-log@npm%3A5.0.0-beta.14#./.yarn/patches/electron-log-npm-5.0.0-beta.14-c717427c39.patch"
+    "electron-log@5.0.0-beta.14": "patch:electron-log@npm%3A5.0.0-beta.14#./.yarn/patches/electron-log-npm-5.0.0-beta.14-c717427c39.patch",
+    "webextension-polyfill@^0.8.0": "patch:webextension-polyfill@npm%3A0.8.0#./.yarn/patches/webextension-polyfill-npm-0.8.0-eab1744c30.patch",
+    "webextension-polyfill@^0.7.0": "patch:webextension-polyfill@npm%3A0.8.0#./.yarn/patches/webextension-polyfill-npm-0.8.0-eab1744c30.patch",
+    "@metamask/snaps-execution-environments@^0.32.2": "patch:@metamask/snaps-execution-environments@npm%3A0.32.2#./.yarn/patches/@metamask-snaps-execution-environments-npm-0.32.2-88525c499a.patch"
   },
   "devDependencies": {
     "@lavamoat/allow-scripts": "^2.0.3",

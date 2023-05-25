@@ -2,8 +2,9 @@ import 'global-agent/bootstrap';
 import './log/logger-init';
 import './browser/browser-init';
 import { webcrypto } from 'node:crypto';
+import dns from 'node:dns';
 import electronLog from 'electron-log';
-import fetch, { Headers } from 'node-fetch';
+import nodeFetch, { Headers } from 'node-fetch';
 import * as Sentry from '@sentry/electron/main';
 import { Dedupe, ExtraErrorData } from '@sentry/integrations';
 import { Integration } from '@sentry/types/dist/integration';
@@ -16,6 +17,18 @@ import { getDesktopVersion } from './utils/version';
 import { ElectronBridge } from './ui/preload';
 import { getSentryDefaultOptions } from './log/setup-sentry';
 import { readPersistedSettingFromAppState } from './storage/ui-storage';
+import cfg from './utils/config';
+
+if (cfg().isAppTest || cfg().isExtensionTest) {
+  // There is an issue with node 18 where it will
+  // auto resolve to ipv6 first first.
+  // This causes localhost connections to fail.
+  // As localhost resolves to ::1:<port> instead of 127.0.0.1:<port>
+  // see this - https://github.com/nodejs/node/issues/40702
+  // and this - https://github.com/node-fetch/node-fetch/issues/1624
+  // To be removed once we are using node 20
+  dns.setDefaultResultOrder('ipv4first');
+}
 
 declare global {
   interface Window {
@@ -41,8 +54,21 @@ if (!global.self) {
     userAgent: 'Firefox',
   } as Navigator;
 
-  // Use node-fetch which supports proxying with global-agent rather than built-in fetch provided by Node 18
-  global.fetch = fetch as any;
+  const nativeFetch = fetch;
+
+  const fetchWrapper = (url: any, options: any) => {
+    const requestURL = new URL(url);
+
+    if (['https:', 'http:'].includes(requestURL.protocol)) {
+      // Use node-fetch which supports proxying with global-agent rather than built-in fetch provided by Node 18
+      return nodeFetch(url, options);
+    }
+    // Some controllers use fetch with other protocols (like data:), which is not supported by node-fetch.
+    // Example is the NFT Controller. In this case, we use the built-in fetch provided by Node 18.
+    return nativeFetch(url, options);
+  };
+
+  global.fetch = fetchWrapper as any;
 
   // represents a window containing a DOM document
   global.window = {

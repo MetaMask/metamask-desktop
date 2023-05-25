@@ -6,7 +6,7 @@ set -o pipefail
 
 yarn ${SCRIPT}
 
-if git diff --exit-code -- ":(exclude)packages/app/submodules/extension"
+if git diff --exit-code -- ":(exclude)packages/app/submodules/extension" ":(exclude)packages/app/lavamoat"
 then
   echo "allow-scripts configuration is up-to-date"
 else

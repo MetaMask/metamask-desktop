@@ -17,6 +17,7 @@
   "exclude": [
     "**/*.test.js",
     "**/*.test.ts",
+    "**/*.test.tsx",
     "dist",
     "node_modules",
     "packages",

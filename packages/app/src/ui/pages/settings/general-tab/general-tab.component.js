@@ -4,6 +4,7 @@ import { PropTypes } from 'prop-types';
 import PairStatus from '../../../components/pair-status';
 import Typography from '../../../../../submodules/extension/ui/components/ui/typography';
 import Button from '../../../../../submodules/extension/ui/components/ui/button';
+import ToggleButton from '../../../../../submodules/extension/ui/components/ui/toggle-button';
 import Dropdown from '../../../components/dropdown';
 import { TypographyVariant } from '../../../../../submodules/extension/ui/helpers/constants/design-system';
 import { LocaleIndex } from '../../../../shared/constants/locale';
@@ -22,8 +23,52 @@ const GeneralTab = ({
   updateTheme,
   preferredStartup,
   updatePreferredStartup,
+  isDesktopPopupEnabled,
+  updateDesktopPopupEnabled,
 }) => {
   const t = useI18nContext();
+  const isDesktopPopupOptionAvailable = window.config.enableDesktopPopup;
+
+  const renderDesktopPopupToggle = () => {
+    return (
+      <div className="mmd-settings-page__setting-row">
+        <div className="mmd-settings-page__setting-item">
+          <Typography variant={TypographyVariant.H5}>
+            {t('desktopPopup')}
+          </Typography>
+          <Typography variant={TypographyVariant.H6}>
+            {t('desktopPopupDescription')}
+          </Typography>
+        </div>
+        <div className="mmd-settings-page__setting-item">
+          <div className="mmd-settings-page__setting-col">
+            <ToggleButton
+              value={isDesktopPopupEnabled}
+              onToggle={(toggleValue) => {
+                if (toggleValue) {
+                  updateDesktopPopupEnabled(!toggleValue);
+                } else {
+                  window.electronBridge
+                    .openDialog({
+                      type: 'info',
+                      message: t('enableDesktopPopup'),
+                      buttons: [t('yes'), t('no')],
+                    })
+                    .then(async (value) => {
+                      if (value.response === 0) {
+                        updateDesktopPopupEnabled(!toggleValue);
+                      }
+                    });
+                }
+              }}
+              offLabel={t('off')}
+              onLabel={t('on')}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   const renderLanguageSettings = () => {
     const localeOptions = LocaleIndex.map((locale) => {
@@ -182,6 +227,7 @@ const GeneralTab = ({
         isDesktopPaired={isDesktopPaired}
         isSuccessfulPairSeen={isSuccessfulPairSeen}
       />
+      {isDesktopPopupOptionAvailable && renderDesktopPopupToggle()}
       {renderLanguageSettings()}
       {renderThemeSettings()}
       {renderPreferredStartupOptions()}
@@ -233,6 +279,14 @@ GeneralTab.propTypes = {
    * Updates the user's preferred startup option
    */
   updatePreferredStartup: PropTypes.func,
+  /**
+   * Updates the desktop popup enabled state
+   */
+  updateDesktopPopupEnabled: PropTypes.func,
+  /**
+   * Whether the desktop popup option is available
+   */
+  isDesktopPopupEnabled: PropTypes.bool,
 };
 
 export default GeneralTab;
