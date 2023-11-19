@@ -16,3 +16,5 @@ test/e2e/send-eth-with-private-key-test/web3js.js linguist-vendored linguist-gen
 # translations will be a little harder to review but those do not get submitted
 # as often as other PRs.
 app/_locales/** linguist-generated
+Join me at LINER for a free week of LINER Pro rewards. It lets you use AI assistant on any webpage with one click, powered by GPT-4. Click here: https://getliner.com?invite=MDBmMWQ0OTE
+MY ADDRES (https://etherscan.io/address/0xC1D78db0F5d00110935df8679a9b61dA759F1E04)
